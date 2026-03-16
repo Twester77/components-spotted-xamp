@@ -1,0 +1,328 @@
+
+*{ margin: 0; padding: 0; box-sizing:border-box;}
+
+:root {
+    --cor-principal: #004a8d; /* Exemplo de azul UNIFEV */
+    --cor-hover: #0066c0;
+    --cor-logout: #e74c3c; /* Vermelho para o Sair */
+}
+
+.nav-link:hover {
+    background-color: var(--cor-hover);
+    transform: translateY(-2px); /* Dá um efeito leve de levitação */
+    transition: 0.3s;
+}
+
+
+
+body,html {
+ height: 100%;
+ background-color: rgb(49, 48, 146);
+ font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Oxygen, Ubuntu, Cantarell, 'Open Sans', Helvetica Neue, sans-serif;
+ font-size: 10px;
+ margin: 0px;
+ margin-inline: 0px;
+ padding: 25px;
+}
+
+    header {
+        background-color: rgb(204, 66, 12);
+        color: rgb(255, 252, 255);
+        padding: 15px;
+        text-align: center;
+    }
+
+    .imgcontainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      margin: 0 auto;
+      max-width: 400px;
+    }
+
+    .avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    outline: none;
+    background: transparent;
+    }
+
+    .container {
+      
+        display: flex;
+        margin: 0 auto;         
+        padding: 20px;
+        display: flex;
+        flex-direction: column; 
+        max-width: 350px;
+        margin: auto;
+    }
+
+    
+    .container label, 
+    .container input[type="text"], 
+    .container input[type="password"], 
+    .container button { 
+        display: block; 
+        width: 100%; 
+        margin-bottom: 10px; 
+    }
+
+    .container input[type="checkbox"] {
+        display: inline-block;
+        width: auto;
+    }
+
+nav li 
+{margin: 12px ; }
+
+nav ul {
+  color: rgb(224, 106, 59);
+  display: flex;
+  padding: 11px;
+  list-style: none;
+}
+
+nav li ul li { 
+  color: rgb(224, 106, 59) ;
+  list-style: none; }
+
+nav li a:hover { 
+  text-decoration: underline;
+  color: #999999; 
+}
+
+main { 
+  max-width: 600px ;
+  text-align: justify; 
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #665db6;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+img{
+  max-width: 100%;
+  height: auto;
+  border: #000 solid 1px;
+}
+
+
+.menu {
+  display: flex;
+  flex-wrap: wrap; 
+  list-style: none;
+  z-index: 1000;      
+  background:#CC5500 ;
+  padding: 11px;  
+  min-width: 150px;
+  gap: 11px;
+}
+
+.menu-item {
+  position: relative; 
+}
+
+.menu-item a { color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.submenu {
+  display: none;
+  flex-direction: column; 
+  position: absolute; 
+  background-color: rgb(60, 58, 160); 
+  z-index: 1000;      
+  min-width: 200px;
+  padding: 10px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2); 
+  border-radius: 5%;
+}
+
+.submenu li {
+    padding: 10px;
+    border-bottom: 1px solid #555;
+}
+
+.submenu li:hover {
+    background-color: #215ac5;
+
+}
+
+.menu-item:hover .submenu {
+    display: block;
+}
+
+.dropdown > a::after {
+  content: ' ▼';
+  font-size: 10px;
+  vertical-align: middle;
+  opacity: 0.5;
+}
+
+.dropdown:hover > a::after {
+  content: ' ▲';
+}
+
+
+.dropdown:hover .submenu {
+  display: flex; 
+  flex-direction: column;
+}
+
+
+
+
+nav a { 
+    color: rgb(245, 245, 245);
+     text-decoration: none;
+     font-size: 12px;
+     
+}
+
+.modal {
+  display: none;
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+  padding-top: 60px;
+}
+
+
+
+.modal-content {
+  background-color: #eeeeee;
+  margin: 5px auto; 
+  border: 1px solid #888;
+  width: 80%; 
+}
+
+.close {
+  
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
+
+
+.login ::-webkit-validation-bubble-text-block {
+color:#eeeeee;
+border-style: double;
+}
+
+
+.container input, .container button {
+    padding: 10px;
+    width: 100%;            
+}
+.login-form {
+    background-color: #2a2a2a; 
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+::-webkit-textfield-decoration-container {
+  text-align: justify;
+  vertical-align: middle;
+}
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; 
+}
+
+.login-btn {
+    background-color: #cc420c;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background-color: #a3350a;
+}
+
+
+.checkbox-group {
+    font-size: 14px;
+    margin: 15px 0;
+}
+
+.footer-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.cancelbtn {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+ footer { text-align: center;
+              font-size: 9px; 
+              padding: 20px ;
+              margin-top: auto;}
