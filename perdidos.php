@@ -1,5 +1,5 @@
-<?php include 'header.php'; ?>
-<?php include 'navbar.php'; ?>
+<?php include 'components/header.php'; ?>
+<?php include 'components/navbar.php'; ?>
 
 <main style="max-width: 600px; margin: auto;">
    <article>
@@ -46,4 +46,4 @@
     </section>
 </article>
 
-<?php include 'footer.php'; ?>
+<?php include 'components/footer.php'; ?>

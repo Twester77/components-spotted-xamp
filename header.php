@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="estilos.css">
 </head>
 
-<body style="color:rgb(255, 255, 255); background-color: rgb(49, 48, 146);">
+<body style="color:rgb(255, 255, 255); background-color: rgb(57, 55, 148);">
     <header>
         <h1> A Fenda - Spotted Universitário </h1>
     </header>

@@ -1,6 +1,6 @@
 
-<?php include 'header.php'; ?>
-<?php include 'navbar.php'; ?>
+<?php include 'components/header.php'; ?>
+<?php include 'components/navbar.php'; ?>
 
 <main style="max-width: 800px; margin: auto; padding: 20px;">
     <article style="text-align: center;">
@@ -27,4 +27,4 @@
     </article>
 </main>
 
-<?php include 'footer.php'; ?>
+<?php include 'components/footer.php'; ?>
