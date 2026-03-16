@@ -15,7 +15,7 @@
     Marcar alguns rolês ? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, talvez um churras com piscina ( Votuporanga né, só por deus) no final de semana, marcar um karaokê pra postar nos stories ( ou melhor não, depois do álcool a gente faz cada coisa que não é bom nem comentar). Quem sabe combinar uma carona? 
     <p> E por quê não, marcar um date e achar o amor da sua vida ( ou um trauma e 6 meses de terapia, alô pessoal da Psico!) . Porque não marcar um duelo ao meio dia ? ( embora eu duvide muito que alguém vai ter tanto tempo sobrando assim mas enfim ...). Minha nossa senhora, é tanta coisa que deu até preguiça de digitar.</p>
     <p> Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros </p>
-    Tratem TODOS ( sim, isso inclui todos: desde animais, pessoas, bactérias, terraplanistas e até ET's) com educação que é o mínimo que todos nós pedimos. Ser doido e um tanto quanto anárquico não é desculpa pra ser mal educado, respeito é uma via de mão dupla. </p>
+    <p> Tratem TODOS ( sim, isso inclui todos: desde animais, pessoas, bactérias, terraplanistas e até ET's) com educação que é o mínimo que todos nós pedimos. Ser doido e um tanto quanto anárquico não é desculpa pra ser mal educado, respeito é uma via de mão dupla. </p>
         <p> E por último porém não menos importante: Usem camisinha, não construam casa no terreno da sogra, invistam em Bitcoin, NÃO é NÃO, bebam água e é claro, divirtam-se! </p>
     </article>
 

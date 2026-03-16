@@ -30,6 +30,8 @@ body,html {
         color: rgb(255, 252, 255);
         padding: 15px;
         text-align: center;
+        border: none;
+        border-radius: 5px;
     }
 
     .imgcontainer {
@@ -84,6 +86,8 @@ nav ul {
   display: flex;
   padding: 11px;
   list-style: none;
+  border: none;
+  border-radius: 5px;
 }
 
 nav li ul li { 
@@ -121,6 +125,8 @@ img{
   padding: 11px;  
   min-width: 150px;
   gap: 11px;
+  border:none;
+  border-radius: 5px ;
 }
 
 .menu-item {
@@ -287,7 +293,6 @@ border-style: double;
     background-color: #cc420c;
     color: white;
     padding: 14px 20px;
-    border: none;
     border-radius: 5px;
     cursor: pointer;
     width: 100%;

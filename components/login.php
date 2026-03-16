@@ -24,7 +24,7 @@
      </label>
    </div>
 
-        <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px; width: 100%; cursor: pointer;">
+        <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px; width: 100%; cursor: pointer;  border-radius: 1px;">
             Login
         </button>
     

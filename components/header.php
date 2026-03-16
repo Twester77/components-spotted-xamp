@@ -1,3 +1,8 @@
+<?php
+session_start(); 
+$usuario_logado = isset($_SESSION['id_usuario']);
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR"> 
 <head>
@@ -14,3 +19,7 @@
     <header>
         <h1> A Fenda - Spotted Universitário </h1>
     </header>
+
+   
+
+
