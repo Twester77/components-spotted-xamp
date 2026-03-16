@@ -3,6 +3,7 @@
 <?php include 'components/navbar.php'; ?>
 
 <main style="max-width: 800px; margin: auto; padding: 20px;">
+    <?php include 'components/login.php'; ?>
     <article style="text-align: center;">
         <h2 style="font-size: 22px; text-align: center; margin-bottom: 20px;"> Bem vindos "A Fenda" (e não, não é do bíquini). A sua Comunidade Universitária da UNIFEV! </h2>
         <img src="imagensfoto/Capa Entrada.jpg" alt="Capa Home do Site" style="width: 60%; border-radius: 10px; margin: 20px 0;">
