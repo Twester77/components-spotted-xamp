@@ -21,7 +21,7 @@
         </div>
 
         <div class="post-item" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: rgba(255,255,255,0.1);">
-            <p><strong>@FuturaDra:</strong> Perdi minha carteira com estampa florida no bloco de Direito, sala 12!</p>
+            <p><strong>@FuturaDra:</strong> Perdi minha carteira com estampa florida no bloco 1, Lab 2 !</p>
             <div style="margin-left: 20px; border-left: 2px solid rgb(204, 66, 12); padding-left: 10px;">
                 <p style="font-size: 14px;"><strong>@DireitoUnifev:</strong> "Vi uma carteira assim na cantina agora pouco!"</p>
                 <p style="font-size: 14px; color: #00ff00;"><strong>@FuturaDra:</strong> "Era essa mesmo! Muito obrigada! 😭🙏"</p>
