@@ -1,5 +1,6 @@
 <?php
 include 'conexao.php'; // Conecta ao banco
+session_start();
 
 if(isset($_SESSION['usuario_id'])) {
     header("Location: feed.php"); 
