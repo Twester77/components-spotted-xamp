@@ -10,8 +10,9 @@ if(isset($_SESSION['usuario_id'])) {
 
 // Processa : 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Agora batendo com os 'names' do formulário que você copiou!
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $senha = $_POST['senha'];
+    $senha = $_POST['senha']; 
 
     $sql = "SELECT * FROM usuarios WHERE email = '$email'";
     $resultado = mysqli_query($conn, $sql);
