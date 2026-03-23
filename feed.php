@@ -1,13 +1,12 @@
 
 <?php
-session_start();
 include 'conexao.php';
 
 $sql = "SELECT * FROM mensagens ORDER BY id DESC";
 $resultado = mysqli_query($conn, $sql);
 
 include 'components/header.php'; 
-include 'components/menu.php'; 
+include 'components/navbar.php'; 
 ?>
 
 <main>

@@ -1,5 +1,5 @@
-<?php
-session_start(); 
+<?php 
+session_start();
 $usuario_logado = isset($_SESSION['id_usuario']);
 ?>
 
