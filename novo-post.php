@@ -14,7 +14,7 @@ session_start();
 <div class="form-container">
     <h2>🚀 Lançar na Fenda</h2>
     <form action="enviar-post.php" method="POST">
-        <textarea name="mensagem" placeholder="O que tá rolando na UNIFEV?" required maxlength="500"></textarea>
+        <textarea name="mensagem" placeholder="O que tá rolando na UNIFEV?" required maxlength="800"></textarea>
         
         <label for="categoria">Categoria:</label>
         <select name="categoria" id="categoria">
@@ -22,14 +22,14 @@ session_start();
             <option value="comunidade">👥 Comunidade / Evento </option>
             <option value="pergunta">❓ Pergunta </option>
             <option value="elogio">💖 Elogio </option>
-            <option value="ranço"> 👌 Ranço </option>
+            <option value="ranco"> 👌 Ranço </option>
             <option value="desabafo"> 😩 Acaba pelo amor de Deus </option>
 
         
 
         </select>
 
-        <button type="submit"> Lançar ao Mar!</button>
+        <button type="lancar"> Lançar ao Mar!</button>
         <a href="feed.php" style="display:block; text-align:center; color:#666; text-decoration:none;">Voltar ao Feed</a>
     </form>
 </div>

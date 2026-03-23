@@ -3,7 +3,7 @@
 $host = "localhost";
 $usuario = "root";    // O padrão do XAMPP é root
 $senha = "";          // O padrão do XAMPP é vazio
-$banco = "spotted_db"; // O nome que você criou no PHPMyAdmin
+$banco = "spotted_db"; // O nome criado no PHPMyAdmin
 
 // Criando a conexão
 $conn = mysqli_connect($host, $usuario, $senha, $banco);
@@ -13,6 +13,6 @@ if (!$conn) {
     die("Uga! Conexão falhou: " . mysqli_connect_error());
 }
 
-// Opcional: Ajusta para aceitar acentos (ç, á, é) do Brasil
+// Opcional: Ajusta para aceitar acentos do Brasil
 mysqli_set_charset($conn, "utf8mb4");
 ?>

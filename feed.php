@@ -12,7 +12,7 @@ include 'components/navbar.php';
 <main>
     <?php if(!isset($_SESSION['usuario_id'])): ?>
         <div class="aviso-login">
-            <p>Você está vendo o mural público. <a href="index.php"> Realize Login </a> para poder postar o seu Spotted!</p>
+            <p>Você está vendo o mural público. <a href="index.php">  Realize Login  </a> para poder postar o seu Spotted!</p>
         </div>
     <?php endif; ?>
 
@@ -22,7 +22,7 @@ include 'components/navbar.php';
 
 <div class="container-feed">
     <?php 
-    // O segredo está aqui: enquanto houver mensagens no banco...
+    // O segredo: enquanto houver mensagens no banco...
     while($linha = mysqli_fetch_assoc($resultado)) { 
     ?>
         <article class="card-spotted <?php echo $linha['categoria']; ?>">
