@@ -1,6 +1,6 @@
 <?php 
 session_start();
-$usuario_logado = isset($_SESSION['id_usuario']);
+$usuario_logado = isset($_SESSION['usuario_id']);
 ?>
 
 <!DOCTYPE html>

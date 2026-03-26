@@ -13,7 +13,7 @@
   <div style="display: flex; gap: 10px; justify-content:center;">
    <img src="imagensfoto/Capa Termos de Segurança.jpg" alt="Capa dos Termos de Segurança" width=50%>
   </div>
-  <article style="color: #b1a508; font-size: 13px; padding: 20px; line-height: 1.6;"> 
+  <article style="color: #b1a508; font-size: 14px; padding: 20px; line-height: 1.6; text-wrap: auto;"> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.

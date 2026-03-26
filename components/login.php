@@ -20,7 +20,7 @@
         <div style="margin: 15px 0; display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="terms" id="terms" required>
             <label for="terms" style="font-size: 13px; color: #ddc80e; font-weight: bold;">
-                Eu aceito as <a href="diretrizes.php" style="color: #ddc80e; text-decoration: underline;">Diretrizes de Segurança</a>
+                Eu aceito as <a href="diretrizes.php" style="color: #ddc80e; text-decoration: underline;"> Diretrizes de Segurança </a>
             </label>
         </div>
 
@@ -28,8 +28,8 @@
             Login
         </button>
         
-        <p style="text-align: center; margin-top: 15px; font-size: 14px;">
-            Ainda não tem conta? <a href="cadastro.php" style="color: #209752; font-weight: bold;">Cadastre-se aqui</a>
+        <p style="text-align: center; margin-top: 15px; font-size: 13px;">
+            Ainda não tem conta? <a href="cad-usuarios.php" style="color: #2b9c5ae8; font-weight: bold;">Cadastre-se aqui</a>
         </p>
     </div> 
 </form>
