@@ -60,3 +60,4 @@
 </main>
 
 <?php include 'components/footer.php'; ?>
+</html>

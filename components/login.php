@@ -29,7 +29,7 @@
         </button>
         
         <p style="text-align: center; margin-top: 15px; font-size: 14px;">
-            Ainda não tem conta? <a href="cadastro.php" style="color: #004a8d; font-weight: bold;">Cadastre-se aqui</a>
+            Ainda não tem conta? <a href="cadastro.php" style="color: #209752; font-weight: bold;">Cadastre-se aqui</a>
         </p>
     </div> 
 </form>

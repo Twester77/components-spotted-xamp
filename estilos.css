@@ -2,14 +2,14 @@
 *{ margin: 0; padding: 0; box-sizing:border-box;}
 
 :root {
-    --cor-principal: #004a8d; /* Exemplo de azul UNIFEV */
+    --cor-principal: #004a8d; 
     --cor-hover: #0066c0;
-    --cor-logout: #e74c3c; /* Vermelho para o Sair */
+    --cor-logout: #e74c3c; 
 }
 
 .nav-link:hover {
     background-color: var(--cor-hover);
-    transform: translateY(-2px); /* Dá um efeito leve de levitação */
+    transform: translateY(-2px); 
     transition: 0.3s;
 }
 
@@ -18,21 +18,27 @@
 body,html {
  height: 100%;
  background-color: rgb(49, 48, 146);
- font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Oxygen, Ubuntu, Cantarell, 'Open Sans', Helvetica Neue, sans-serif;
- font-size: 13px;
+ font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+ -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale;
  margin: 0px;
  margin-inline: 0px;
  padding: 25px;
 }
 
     header {
-        background-color: rgb(204, 66, 12);
-        color: rgb(255, 252, 255);
-        padding: 15px;
-        text-align: center;
-        border: none;
-        border-radius: 5px;
-    }
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+    header h1 {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+}
 
 
     .imgcontainer {
@@ -46,9 +52,10 @@ body,html {
 
 
     .avatar {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
+    border: none;
     object-fit: cover;
     outline: none;
     background: transparent;
@@ -140,6 +147,8 @@ img{
 .menu-item a { color: white;
   text-decoration: none;
   font-weight: bold;
+  font-size: 16px;
+  justify-content: flex-start;
 }
 
 .submenu {
@@ -359,7 +368,7 @@ border-style: double;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80vh; /* Garante que fique centralizado na tela */
+    min-height: 80vh; 
      }
     .form-container select {
     margin-top: 10px;
@@ -407,33 +416,13 @@ border-style: double;
       button:hover { background: #014a8e; }
 
 .container-feed {
-    max-width: 400px;
+    max-width: 500px;
     margin: 20px auto;
     display: flex;
     flex-direction: column;
-    gap: 15px; 
+    gap: 20px; 
 }
 
-.card-spotted {
-    background: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    border-left: 5px solid #0f5494; 
-}
-
-.card-spotted.ranco { border-left-color: #e74c3c; }
-.card-spotted.elogio { border-left-color: #f192b3; }
-.card-spotted.desabafo { border-left-color: #f39c12; }
-.card-spotted.comunidade, .card-spotted.pergunta { border-left-color: #459e1cb9;}
-.card-spotted.anonimo { border-left-color: #7a3aafb4; }
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
 
 .badge {
     background: #eee;
@@ -453,7 +442,7 @@ border-style: double;
     font-size: 1.4rem; 
     color: #333;
     line-height: 1.4;
-    word-wrap: break-word; /* Força a quebra de palavras gigantes */
+    word-wrap: break-word; 
     overflow-wrap: break-word;
 }
 
@@ -489,3 +478,87 @@ border-style: double;
 }
 
 
+/* --- DAQUI PARA BAIXO É O QUE VOCÊ COLA PARA O NOVO FEED --- */
+
+.container-feed {
+    max-width: 500px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+.spotted-card {
+    background: rgba(255, 255, 255, 0.08); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.spotted-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+
+.spotted-card.ranco { border-left: 6px solid #e74c3c; }
+.spotted-card.elogio { border-left: 6px solid #f192b3; }
+.spotted-card.desabafo { border-left: 6px solid #f39c12; }
+.spotted-card.comunidade, .spotted-card.pergunta { border-left: 6px solid #459e1c; }
+.spotted-card.anonimo { border-left: 6px solid #7a3aaf; }
+.spotted-card.correio { border-left: 6px solid #ff4081; }
+.spotted-card.perdidos { border-left: 6px solid #ffd600; }
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.category-tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.post-time {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.post-content {
+    font-size: 1.1rem;
+    color: #fff;
+    line-height: 1.6;
+    word-wrap: break-word;
+    margin-bottom: 15px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-like {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-like:hover {
+    color: #ff4081;
+    transform: scale(1.2);
+}

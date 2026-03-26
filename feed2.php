@@ -1,25 +1,3 @@
-
-<?php
-include 'conexao.php';
-
-$sql = "SELECT * FROM mensagens ORDER BY id DESC";
-$resultado = mysqli_query($conn, $sql);
-
-include 'components/header.php'; 
-include 'components/navbar.php'; 
-?>
-
-<main>
-    <?php if(!isset($_SESSION['usuario_id'])): ?>
-        <div class="aviso-login">
-            <p>Você está vendo o mural público. <a href="index.php">  Realize Login  </a> para poder postar o seu Spotted!</p>
-        </div>
-    <?php endif; ?>
-
-    <?php if(isset($_SESSION['usuario_id'])): ?>
-        <a href="novo-post.php" class="btn-flutuante">+</a>
-    <?php endif; ?>
-
 <div class="container-feed">
     <?php 
     while($linha = mysqli_fetch_assoc($resultado)) { 
@@ -46,7 +24,3 @@ include 'components/navbar.php';
 
     <?php } ?>
 </div>
-</main>
-
-<?php include 'components/footer.php' ; ?>
-</html>
