@@ -9,15 +9,15 @@
     <article>
         <h2>Achados e Perdidos</h2>
         <div style="display: flex; gap: 10px; justify-content:center;">
-            <img src="imagensfoto/Capa Achados e Perdidos.jpg" alt="Capa do Achados e Perdidos" width="80%">
+            <img src="imagensfoto/Capa Achados e Perdidos.jpg" alt="Capa do Achados e Perdidos" width="70%">
         </div>
-        <p style="text-align: center; font-style: italic;">
+        <p style="text-align: center; font-style: italic; margin-top:10px ; margin-bottom: 5px;">
             Perdeu o juízo? Disso a gente não cuida. Agora se você perdeu a chave ou a garrafinha, você está no lugar certo!
         </p>
 
         <div class="post-item" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: rgba(255,255,255,0.1);">
             <p><strong>@Anônimo:</strong> Galera, achei um <strong>estojo de óculos preto</strong> em cima da mesa na Biblioteca do Centro. Deixei na recepção!</p>
-            <button type="button" style="font-size: 12px;">Comentar</button>
+            <button type="button" style="font-size: 9px;">Comentar</button>
         </div>
 
         <div class="post-item" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: rgba(255,255,255,0.1);">

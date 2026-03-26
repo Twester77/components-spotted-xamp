@@ -11,7 +11,7 @@
   <h2 style="font-size: 22px; text-align: center; margin-bottom: 20px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
     </article>
   <div style="display: flex; gap: 10px; justify-content:center;">
-   <img src="imagensfoto/Capa Termos de Segurança.jpg" alt="Capa dos Termos de Segurança" width=50%>
+   <img src="imagensfoto/Capa Termos de Segurança.jpg" alt="Capa dos Termos de Segurança" width=60%>
   </div>
   <article style="color: #b1a508; font-size: 14px; padding: 20px; line-height: 1.6; text-wrap: auto;"> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
@@ -56,7 +56,7 @@
     </ul>
 
     <div style="display: flex; justify-content: center; margin-top: 15px;">
-        <img src="imagensfoto/seguranca universitaria.jpg" alt="Dica de Segurança" width="50%" style="border-radius: 5px;">
+        <img src="imagensfoto/seguranca universitaria.jpg" alt="Dica de Segurança" width="60%" style="border-radius: 5px;">
     </div>
     </article>
   <br>

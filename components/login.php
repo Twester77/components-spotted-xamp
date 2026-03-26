@@ -29,7 +29,7 @@
         </button>
         
         <p style="text-align: center; margin-top: 15px; font-size: 13px;">
-            Ainda não tem conta? <a href="cad-usuarios.php" style="color: #2b9c5ae8; font-weight: bold;">Cadastre-se aqui</a>
+            Ainda não tem conta? <a href="cad-usuario.php" style="color: #08d888ab; font-weight: bold;">Cadastre-se aqui</a>
         </p>
     </div> 
 </form>

@@ -69,7 +69,7 @@ body,html {
         padding: 20px;
         display: flex;
         flex-direction: column; 
-        max-width: 350px;
+        max-width: 250px;
         margin: auto;
     }
 
@@ -117,6 +117,13 @@ main {
   padding: 20px;
   background-color: #665db6;
   background-color: rgba(255, 255, 255, 0.1);
+  background: rgba(180, 150, 255, 0.15); 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    padding: 30px;
 }
 
 
@@ -127,45 +134,57 @@ img{
 }
 
 
-.menu {
-  display: flex;
-  flex-wrap: wrap; 
-  list-style: none;
-  z-index: 1000;      
-  background:#CC5500 ;
-  padding: 11px;  
-  min-width: 150px;
-  gap: 11px;
-  border:none;
-  border-radius: 5px ;
+  .menu {
+    display: flex;
+    flex-wrap: wrap; 
+    list-style: none;
+    background: rgba(241, 103, 5, 0.795); 
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
+    padding: 10px 20px;  
+    gap: 20px;
+    border-radius: 5px; 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%; 
+    align-items: center;
 }
 
 .menu-item {
   position: relative; 
 }
 
-.menu-item a { color: white;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 16px;
-  justify-content: flex-start;
-}
+.menu-item a { 
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 8px 12px;
+    display: block;
+    transition: 0.3s;}
+
+.menu-item:hover > a {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: #ffd600 !important;}
 
 .submenu {
-  display: none;
-  flex-direction: column; 
-  position: absolute; 
-  background-color: rgb(60, 58, 160); 
-  z-index: 1000;      
-  min-width: 200px;
-  padding: 10px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.2); 
-  border-radius: 5%;
+  display: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 0;
+    background: rgb(60, 58, 160); 
+    min-width: 220px;
+    padding: 10px 0;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.4); 
+    border-radius: 5px;
+    list-style: none;
+    z-index: 9999; 
 }
 
 .submenu li {
-    padding: 10px;
-    border-bottom: 1px solid #555;
+    padding: 10px 20px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .submenu li:hover {
@@ -173,9 +192,13 @@ img{
 
 }
 
+ li:last-child a { border-bottom: none; }
+
 .menu-item:hover .submenu {
-    display: block;
+   display: flex;
+   flex-direction: column
 }
+
 
 .dropdown > a::after {
   content: ' ▼';
@@ -193,7 +216,6 @@ img{
   display: flex; 
   flex-direction: column;
 }
-
 
 
 
@@ -477,8 +499,22 @@ border-style: double;
     width: 100%;
 }
 
+btn-like {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
 
-/* --- DAQUI PARA BAIXO É O QUE VOCÊ COLA PARA O NOVO FEED --- */
+.btn-like:hover {
+    color: #ff4081;
+    transform: scale(1.2);
+}
+
+
+/*  FEED  */
 
 .container-feed {
     max-width: 500px;
@@ -549,16 +585,3 @@ border-style: double;
     justify-content: flex-end;
 }
 
-.btn-like {
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-like:hover {
-    color: #ff4081;
-    transform: scale(1.2);
-}

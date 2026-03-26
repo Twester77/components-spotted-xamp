@@ -12,7 +12,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     <meta property="og:title" content="A Fenda - Spotted Universitário">
     <meta name="description" content="O ponto de encontro anônimo dos universitários de Votuporanga. Envie seu correio elegante, confissões e mensagens no feed compartilhado.">
     
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="./estilos.css">
 </head>
 
 <body style="color:rgb(255, 255, 255); background-color: rgb(57, 55, 148);">

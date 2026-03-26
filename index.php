@@ -14,7 +14,7 @@ if(isset($_SESSION['id_usuario'])) {
     <?php include 'components/login.php'; ?>
 
     <article style="text-align: center;">
-        <h2 style="font-size: 22px; margin-bottom: 20px;"> 
+        <h2 style="font-size: 22px; margin-bottom: 20px; margin-top: 15px;"> 
             Bem-vindos à "A Fenda" (e não, não é do biquíni) <span style="font-size: 14px; opacity: 0.7;"> </span>
         </h2>
         <img src="imagensfoto/Capa Entrada.jpg" alt="Capa Home do Site" style="width: 70%; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
