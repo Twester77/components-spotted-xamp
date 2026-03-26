@@ -1,6 +1,5 @@
-
 <?php
-include 'conexao.php';
+include 'conexao.php'; 
 
 $sql = "SELECT * FROM mensagens ORDER BY id DESC";
 $resultado = mysqli_query($conn, $sql);
@@ -27,9 +26,10 @@ include 'components/navbar.php';
         <article class="spotted-card <?php echo $linha['categoria']; ?>">
             
             <div class="card-header">
-                <span class="category-tag">
-                    #<?php echo (is_null($linha['usuario_id'])) ? "Anônimo" : "Estudante"; ?>
-                </span>
+              <span class="category-tag">
+               #<?php echo strtoupper($linha['categoria']); ?> 
+               <?php echo (is_null($linha['usuario_id'])) ? "Anônimo" : "Estudante"; ?>
+             </span>
                 <span class="post-time">
                     <?php echo date('d/m', strtotime($linha['data_post'])); ?>
                 </span>
