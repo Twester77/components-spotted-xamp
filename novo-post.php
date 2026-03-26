@@ -4,28 +4,26 @@ include 'components/header.php';
 include 'components/navbar.php'; 
 ?>
 
+<main class="main-novo-post">
+    <div class="form-container">
+        <h2>Enviar Novo Post</h2>
+        <form action="enviar-post.php" method="POST">
+            <textarea name="mensagem" placeholder="O que tá rolando na UNIFEV?" required maxlength="800"></textarea>
+            
+            <label for="categoria">Categoria:</label>
+            <select name="categoria" id="categoria">
+                <option value="anonimo">🕵️ Anônimo </option>
+                <option value="comunidade">👥 Comunidade / Evento </option>
+                <option value="pergunta">❓ Pergunta </option>
+                <option value="elogio">💖 Correio Elegante </option>
+                <option value="ranco"> 👌 Ranço </option>
+                <option value="desabafo"> 😩 Acaba pelo amor de Deus </option>
+            </select>
 
-<div class="form-wrapper"> <div class="form-container">
-    <h2> Enviar Novo Post </h2>
-    <form action="enviar-post.php" method="POST">
-        <textarea name="mensagem" placeholder="O que tá rolando na UNIFEV?" required maxlength="800"></textarea>
-        
-        <label for="categoria">Categoria:</label>
+            <button type="submit" class="btn-lancar">Lançar ao Mar!</button>
+            <a href="feed.php" style="display:block; text-align:center; color:#ffbc00; text-decoration:none; margin-top: 15px; font-size: 14px;">Voltar ao Feed</a>
+        </form>
+    </div>
+</main>
 
-        <select name="categoria" id="categoria">
-            <option value="anonimo">🕵️ Anônimo </option>
-            <option value="comunidade">👥 Comunidade / Evento </option>
-            <option value="pergunta">❓ Pergunta </option>
-            <option value="elogio">💖 Elogio </option>
-            <option value="ranco"> 👌 Ranço </option>
-            <option value="desabafo"> 😩 Acaba pelo amor de Deus </option>
-
-        </select>
-
-        <button type="submit"> Lançar ao Mar!</button>
-        <a href="feed.php" style="display:block; text-align:center; color:#666; text-decoration:none;"> Voltar ao Feed</a>
-    </form>
-</div>
-
-</body>
-</html>
+<?php include 'components/footer.php'; ?>

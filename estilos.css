@@ -189,8 +189,7 @@ main {
 }
 
 /* BOTÕES (ACTION BUTTONS) */
-.login-btn, .btn-lancar {
-    background-color: #cc420c;
+.login-btn {
     color: white;
     padding: 14px 20px;
     border: none;
@@ -200,7 +199,6 @@ main {
     transition: 0.3s;
 }
 
-.login-btn:hover, .btn-lancar:hover { background-color: #a3350a; }
 
 /* Botão Flutuante (+) */
 .btn-flutuante {
@@ -240,11 +238,12 @@ main {
 }
 
 /* Cores das Categorias */
-.spotted-card.ranco { border-left: 10px solid #e74c3c; }
-.spotted-card.elogio { border-left: 10px solid #f192b3; }
-.spotted-card.desabafo { border-left: 10px solid #f39c12; }
-.spotted-card.comunidade { border-left: 10px solid #459e1c; }
-.spotted-card.perdidos { border-left: 10px solid #ffd600; }
+.spotted-card.ranco { border-left: 10px solid #e74c3c !important; }
+.spotted-card.elogio { border-left: 10px solid #f5709f !important; }
+.spotted-card.desabafo { border-left: 10px solid #f39c12 !important; }
+.spotted-card.comunidade { border-left: 10px solid #459e1c !important; }
+.spotted-card.perdidos { border-left: 10px solid #ffd600 !important; }
+.spotted-card.pergunta { border-left: 10px solid #3498db !important; }
 
 
 /* --- PÁGINA ACHADOS E PERDIDOS (ORGANIZAÇÃO) --- */
@@ -330,3 +329,83 @@ footer {
 }
 
 footer a { color: #fff; text-decoration: underline; }
+
+
+
+
+/* Parei de editar aqui*/
+.main-novo-post {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+
+    .form-container {
+        background: rgba(255, 255, 255, 0.05); 
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .form-container h2 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 24px;
+    }
+
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-container textarea {
+        width: 100%;
+        height: 150px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        font-family: sans-serif;
+        resize: none; 
+    }
+
+    .form-container label {
+        color: #eee;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .form-container select {
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+    }
+
+    .btn-lancar {
+        background-color: #08d888; 
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .btn-lancar:hover {
+        background-color: #06b371;
+        transform: translateY(-2px);
+    }
