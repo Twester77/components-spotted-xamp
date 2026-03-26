@@ -28,7 +28,7 @@
             Login
         </button>
         
-        <p style="text-align: center; margin-top: 15px; font-size: 13px;">
+        <p style="text-align: center; margin-top: 15px; margin-bottom: 15px; font-size: 13px;">
             Ainda não tem conta? <a href="cad-usuario.php" style="color: #08d888ab; font-weight: bold;">Cadastre-se aqui</a>
         </p>
     </div> 
