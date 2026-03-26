@@ -17,7 +17,7 @@ if(isset($_SESSION['id_usuario'])) {
         <h2 style="font-size: 22px; margin-bottom: 20px;"> 
             Bem-vindos à "A Fenda" (e não, não é do biquíni) <span style="font-size: 14px; opacity: 0.7;"> </span>
         </h2>
-        <img src="imagensfoto/Capa Entrada.jpg" alt="Capa Home do Site" style="width: 70%; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <img src="imagensfoto/Capa Entrada.jpg" alt="Capa Home do Site" style="width: 65%; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     </article>
 
     <article style="font-size: 15px; line-height: 1.6; text-align: justify; color: #e0e0e0;">
@@ -46,4 +46,4 @@ if(isset($_SESSION['id_usuario'])) {
 
 <?php include 'components/footer.php'; ?>
 
-</html>
+

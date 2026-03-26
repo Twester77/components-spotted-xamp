@@ -49,4 +49,4 @@ include 'components/navbar.php';
 </main>
 
 <?php include 'components/footer.php' ; ?>
-</html>
+
