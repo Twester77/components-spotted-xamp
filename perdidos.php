@@ -91,4 +91,18 @@
     </article>
 </main>
 
+<script>
+    document.querySelector('.form-publicar').addEventListener('submit', function(e) {
+        e.preventDefault(); // Impede a página de recarregar por enquanto
+        
+        const texto = this.querySelector('textarea').value;
+        
+        if(texto.trim() === "") {
+            alert("Ei, descreva o que você achou ou perdeu antes de publicar!");
+        } else {
+            alert("Boa! Seu post foi enviado para a moderação da Fenda e aparecerá no feed em breve.");
+            this.reset(); // Limpa o formulário
+        }
+    });
+</script>
 <?php include 'components/footer.php'; ?>

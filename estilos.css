@@ -124,9 +124,10 @@ header h1 {
 
 .menu-item:hover .submenu { display: flex; flex-direction: column; }
 
-/* Setinhas do Dropdown */
+/* Setas do Dropdown */
 .dropdown > a::after { content: ' ▼'; font-size: 10px; opacity: 0.5; }
 .dropdown:hover > a::after { content: ' ▲'; }
+
 
 /* CONTEÚDO PRINCIPAL (MAIN / CONTAINER)  */
 main { 
@@ -245,6 +246,7 @@ main {
 .spotted-card.comunidade { border-left: 10px solid #459e1c; }
 .spotted-card.perdidos { border-left: 10px solid #ffd600; }
 
+
 /* --- PÁGINA ACHADOS E PERDIDOS (ORGANIZAÇÃO) --- */
 .achados-perdidos-header {
     text-align: center;
@@ -283,7 +285,8 @@ main {
 }
 
 .status-resolvido {
-    border-left-color: #00ff00; 
+    border-left: 3px solid #2ecc71 !important; 
+    background: rgba(46, 204, 113, 0.05);
 }
 
 /* Seção de Publicar */
@@ -304,11 +307,20 @@ main {
     margin: 15px 0;
     border-radius: 4px;
 }
-.alerta-login a{
-    color: #459e1c;
-}
 
-/* FOOTER */
+.alerta-login {
+    background: rgba(255, 188, 0, 0.1);
+    border: 1px dashed #ffbc00;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    margin-top: 20px;
+} 
+
+.alerta-login a { color: #ffbc00; font-weight: bold; }
+
+
 footer { 
     text-align: center;
     padding: 30px;
