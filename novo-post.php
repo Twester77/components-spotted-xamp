@@ -22,7 +22,7 @@ include 'includes/bolhas.php';
             </select>
 
             <button type="submit" class="btn-lancar">Lançar ao Mar!</button>
-            <a href="feed.php" style="display:block; text-align:center; color:#ffbc00; text-decoration:none; margin-top: 15px; font-size: 14px;">Voltar ao Feed</a>
+            <a href="feed.php" style="display:block; text-align:center; color:#ffbc00; text-decoration:none; margin-top: 15px;">Voltar ao Feed</a>
         </form>
     </div>
 </main>
