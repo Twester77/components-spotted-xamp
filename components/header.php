@@ -31,7 +31,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     <div class="bolha" style="left: 90%; width: 30px; height: 30px; animation-duration: 20s; animation-delay: 2s;"></div> 
 
     <header>
-        <h1>A Fenda - Spotted Universitário</h1>
+        <h1><A:link></A:link>A Fenda - Spotted Universitário</h1>
         </header>
    
 
