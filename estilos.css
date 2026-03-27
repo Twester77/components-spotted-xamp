@@ -16,10 +16,17 @@
 body, html {
     height: 100%;
     background-color: rgb(49, 48, 146);
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     padding: 10px; 
+    font-size:16px;
 }
+
+body{
+    position: relative;
+    overflow-x: hidden; /* Evita rolagens laterais indesejadas */
+}
+
 
 /* CABEÇALHO (HEADER) */
 header {
@@ -37,6 +44,16 @@ header h1 {
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
+
+article h3 {
+    color: #ffbc00; /* Um amarelo mais vivo para os títulos */
+    margin-top: 25px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 188, 0, 0.3);
+    padding-bottom: 5px;
+    font-size: 1.2rem;
+}
+
 
 /* Container da logo/avatar no topo */
 .imgcontainer {
@@ -409,3 +426,74 @@ footer a { color: #fff; text-decoration: underline; }
         background-color: #06b371;
         transform: translateY(-2px);
     }
+
+
+
+/* Bolhas de Ar da Fenda */
+.bolha {
+    position: fixed;
+    bottom: -10px;
+    background: rgba(255, 255, 255, 0.258);
+    border-radius: 50%;
+    animation: subirBolhas 10s infinite ease-in;
+    z-index: -1;
+}
+
+@keyframes subirBolhas {
+    0%   { transform: translateY(0) scale(1); opacity: 0.5; }
+    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+}
+
+
+/* --- AMBIENTAÇÃO ICONOGRÁFICA DA FENDA (RESOLUÇÃO) --- */
+
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('imagensfoto/silhueta-criaturas.png'); 
+    background-repeat: no-repeat;
+    filter: brightness(0) invert(1) opacity(0.1); 
+    z-index: -1; 
+}
+
+/* AJUSTE ESPECÍFICO PARA PC (Telas Maiores)  */
+@media screen and (min-width: 992px) {
+    body::before {
+        /* No PC, a gente aumenta MUITO a imagem */
+        background-size: 150%; /* Faz a imagem cobrir toda a moldura */
+        background-position: center; /* Centraliza a "rede" de silhuetas */
+        filter: brightness(0) invert(1) opacity(0.08); /* Ainda mais suave no PC */
+    }
+}
+
+/*  AJUSTE ESPECÍFICO PARA CELULAR   */
+@media screen and (max-width: 991px) {
+    body::before {
+        
+        background-size: contain;
+        background-position: bottom right;
+        filter: brightness(0) invert(1) opacity(0.12);
+    }
+}
+/* Opcional: Adicionar outro detalhe no canto oposto (superior esquerdo) */
+body::after {
+    content: '';
+    position: fixed;
+    top: -50px; left: -50px; 
+    width: 200px; height: 200px;
+    background-image: url('imagensfoto/moldura-fenda.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: top left;
+    
+    filter: brightness(0) invert(1);
+    opacity: 0.1; /* Super discreto */
+    
+    z-index: -1;
+}
+
