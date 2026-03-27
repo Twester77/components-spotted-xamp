@@ -3,7 +3,7 @@
     exit();
 } ?>
 <?php
-include 'components/navbar.php'; 
+include 'includes/navbar.php'; 
 ?>
 <main class="main-novo-post">
     <div class="form-container">
@@ -25,5 +25,5 @@ include 'components/navbar.php';
 </main>
 
 <?php 
-include 'components/footer.php'; 
+include 'includes/footer.php'; 
 ?>

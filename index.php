@@ -1,6 +1,6 @@
 <?php
 include 'conexao.php'; 
-include 'components/header.php'; 
+include 'includes/header.php'; 
 
 if(isset($_SESSION['id_usuario'])) {
     header("Location: feed.php"); 
@@ -51,4 +51,4 @@ if(isset($_SESSION['id_usuario'])) {
     </article>
 </main>
 
-<?php include 'components/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>

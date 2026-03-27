@@ -1,8 +1,8 @@
-<?php include 'components/header.php'; ?>
-<?php include 'components/navbar.php'; ?>
+<?php include 'includes/header.php'; ?>
+<?php include 'includes/navbar.php'; ?>
 
 <main class="main-perdidos">
-    <?php include 'components/login.php'; ?>
+    <?php include 'includes/login.php'; ?>
     
     <article class="conteudo-principal">
         <header class="achados-perdidos-header">
@@ -105,4 +105,4 @@
         }
     });
 </script>
-<?php include 'components/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>

@@ -26,4 +26,4 @@ include 'components/navbar.php';
     </div>
 </main>
 
-<?php include 'components/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>
