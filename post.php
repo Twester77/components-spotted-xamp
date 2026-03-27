@@ -39,11 +39,11 @@ if (!$post) {
     </article>
 
     <section class="sessao-publicar">
-        <h3 style="margin-bottom: 15px; color: #ffbc00;"> Fofocas sobre isso:</h3>
+        <h3 style="margin-bottom: 15px; color: #ffbc00;"> Opino ou prefiro não opinar?</h3>
         
         <form action="enviar-comentario.php" method="POST" class="form-fofoca">
             <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
-            <textarea name="comentario" placeholder="Opino ou prefiro não opinar?" required 
+            <textarea name="comentario" placeholder="" required 
                       style="width: 100%; min-height: 80px; padding: 10px; border-radius: 8px; margin-bottom: 10px;"></textarea>
             <button type="submit" class="btn-lancar">Lançar Fofoca</button>
         </form>
@@ -62,7 +62,7 @@ if (!$post) {
                 while ($c = $res_c->fetch_assoc()): ?>
                     <div class="comentario-item">
                         <p><?php echo htmlspecialchars($c['comentario']); ?></p>
-                        <small style="opacity: 0.6;">Postado em: <?php echo date('d/m H:i', strtotime($c['data_post'])); ?></small>
+                    <small>Postado em: <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?></small>
                     </div>
                 <?php endwhile;
             else: ?>
