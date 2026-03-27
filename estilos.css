@@ -432,37 +432,36 @@ footer a { color: #fff; text-decoration: underline; }
     }
 
 
-/* BOLHAS  DA FENDA */
+/* BOLHAS DA FENDA REFORMULADAS */
 .bolha {
     position: fixed;
-    bottom: -50px;
+    bottom: -10vh; 
     background: radial-gradient(circle at 30% 30%, 
                 rgba(255, 255, 255, 0.4) 0%, 
                 rgba(255, 255, 255, 0.1) 40%, 
                 rgba(255, 255, 255, 0.2) 60%, 
                 rgba(255, 255, 255, 0.05) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Bordinha bem fina */
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    animation: subirEBalancar 12s infinite ease-in;
+    animation: subirEBalancar 8s infinite ease-in; 
     z-index: -1;
     pointer-events: none;
 }
 
-
 @keyframes subirEBalancar {
     0% {
-        transform: translateY(0) translateX(0) scale(0.8);
+        transform: translateY(0) translateX(0) scale(0.5);
         opacity: 0;
     }
-    10% {
-        opacity: 0.8;
+    20% {
+        opacity: 0.6;
     }
     50% {
-        /* Balanço para o lado no meio da subida */
-        transform: translateY(-50vh) translateX(30px) scale(1.1);
+        transform: translateY(-60vh) translateX(50px) scale(1.2);
+        opacity: 0.4;
     }
     100% {
-        transform: translateY(-110vh) translateX(-20px) scale(1.5);
+        transform: translateY(-120vh) translateX(-30px) scale(1.8);
         opacity: 0;
     }
 }

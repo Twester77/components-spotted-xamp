@@ -13,8 +13,9 @@ $sql .= " ORDER BY id DESC";
 $resultado = mysqli_query($conn, $sql); ?>
 
 <?php
-include 'components/header.php'; 
-include 'components/navbar.php'; 
+include 'includes/header.php'; 
+include 'includes/navbar.php';
+include 'includes/bolhas.php'; 
 ?>
 
 <main>
@@ -28,7 +29,7 @@ include 'components/navbar.php';
         <a href="novo-post.php" class="btn-flutuante">+</a>
     <?php endif; ?>
 
-<?php include 'components/filtros.php';?>
+<?php include 'includes/filtros.php';?>
 
 <div class="container-feed">
     <?php 
@@ -59,5 +60,5 @@ include 'components/navbar.php';
 </div>
 </main>
 
-<?php include 'components/footer.php' ; ?>
+<?php include 'includes/footer.php' ; ?>
 

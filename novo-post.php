@@ -1,7 +1,8 @@
 <?php
 include 'conexao.php';
-include 'components/header.php'; 
-include 'components/navbar.php'; 
+include 'includes/header.php'; 
+include 'includes/navbar.php';
+include 'includes/bolhas.php'; 
 ?>
 
 <main class="main-novo-post">

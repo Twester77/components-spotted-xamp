@@ -8,10 +8,11 @@ if(isset($_SESSION['id_usuario'])) {
 }
 ?>
 
-<?php include 'components/navbar.php'; ?>
+<?php include 'includes/navbar.php'; ?>
+<?php include 'includes/bolhas.php'; ?>
 
 <main style="max-width: 800px; margin: auto; padding: 20px;">
-    <?php include 'components/login.php'; ?>
+    <?php include 'includes/login.php'; ?>
 
     <article style="text-align: center;">
         <h2 style="font-size: 22px; margin-bottom: 20px; margin-top: 40px;"> 

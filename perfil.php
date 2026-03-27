@@ -4,6 +4,7 @@
 } ?>
 <?php
 include 'includes/navbar.php'; 
+include 'includes/bolhas.php';
 ?>
 <main class="main-novo-post">
     <div class="form-container">

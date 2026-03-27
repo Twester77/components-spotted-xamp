@@ -1,7 +1,8 @@
 
 
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/navbar.php'; ?>
+<?php include 'includes/header.php'; 
+      include 'includes/navbar.php'; 
+      include 'includes/bolhas.php'; ?>
 
 
 </nav>
