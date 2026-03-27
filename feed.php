@@ -1,9 +1,18 @@
 <?php
-include 'conexao.php'; 
+include 'conexao.php';
+$categoria_selecionada = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
-$sql = "SELECT * FROM mensagens ORDER BY id DESC";
-$resultado = mysqli_query($conn, $sql);
+$sql = "SELECT * FROM mensagens";
 
+if (!empty($categoria_selecionada)) {
+    // Aqui usamos o nome da coluna que está no seu banco
+    $sql .= " WHERE categoria = '$categoria_selecionada'";
+}
+$sql .= " ORDER BY id DESC";
+
+$resultado = mysqli_query($conn, $sql); ?>
+
+<?php
 include 'components/header.php'; 
 include 'components/navbar.php'; 
 ?>
@@ -18,6 +27,8 @@ include 'components/navbar.php';
     <?php if(isset($_SESSION['usuario_id'])): ?>
         <a href="novo-post.php" class="btn-flutuante">+</a>
     <?php endif; ?>
+
+<?php include 'components/filtros.php';?>
 
 <div class="container-feed">
     <?php 
@@ -40,7 +51,7 @@ include 'components/navbar.php';
             </div>
 
             <div class="card-footer">
-                <button class="btn-like"><i class="fa-solid fa-heart"></i></button>
+                <button class="btn-like"><i class="fa-solid fa-heart"> </i> </button>
             </div>
         </article>
 
