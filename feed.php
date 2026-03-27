@@ -48,30 +48,30 @@ include 'includes/bolhas.php';
                     <p class="post-content"><?php echo $linha['mensagem']; ?></p>
                 </div>
 
-                <div class="card-footer">
-                    <div class="reacoes-container reacoes-popup">
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'amei')" title="Correio Elegante">💖</button>
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'perplecto')" title="Perplecto">😲</button>
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'haha')" title="Haha">😂</button>
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'ranco')" title="Ranço">👌</button>
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'forca')" title="Força">🫂</button>
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'triste')" title="Magoei">😢</button>
-                        <button onclick="reagir(<?php echo $linha['id']; ?>, 'tendi-nada')" title="Tendi foi nada">🤔</button>
-                    </div>
+          <div class="footer-links">
+           <div class="container-reacoes-wrapper">
+             <span class="btn-trigger-reacoes">
+               <i class="fa-solid fa-face-smile"></i> Reagir
+             </span>
+        
+            <div class="reacoes-popup">
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=amei" title="Amei">💖</a>
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=perplecto" title="Perplecto">😲</a>
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=haha" title="Haha">😂</a>
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=ranco" title="Ranço">😠</a>
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=forca" title="Força">🫂</a>
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=triste" title="Magoei">😢</a>
+                   <a href="reagir.php?id=<?php echo $linha['id']; ?>&tipo=tendi-nada" title="Tendi foi nada">🤔</a>
+            </div>
+          </div>
+    
+             <a href="post.php?id=<?php echo $linha['id']; ?>" class="btn-comentar">
+               <i class="fa-solid fa-comment"></i> Fofocar
+             </a>
+         </div>
+        </article>
 
-                    <div class="footer-links">
-                        <span class="btn-trigger-reacoes">
-                            <i class="fa-solid fa-face-smile"></i> Reagir
-                        </span>
-
-                        <a href="post.php?id=<?php echo $linha['id']; ?>" class="btn-comentar">
-                            <i class="fa-solid fa-comment"></i> Fofocar
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-        <?php } // Fim do while ?>
+        <?php } ?> /* Fim do loop do while */ 
     </div>
 </main>
 
