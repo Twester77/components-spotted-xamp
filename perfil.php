@@ -1,14 +1,10 @@
-
-<?php include 'components/header.php'; 
-if (!$usuario_logado) {
-    header("Location: login.php"); 
+ <?php if (!$usuario_logado) {
+    header("Location:login.php");
     exit();
-}
-
-include 'components/nav.php'; 
+} ?>
+<?php
+include 'components/navbar.php'; 
 ?>
-
-
 <main class="main-novo-post">
     <div class="form-container">
         <h2>Configurações de Perfil</h2>
@@ -29,5 +25,5 @@ include 'components/nav.php';
 </main>
 
 <?php 
-include 'includes/footer.php'; 
+include 'components/footer.php'; 
 ?>
