@@ -23,8 +23,12 @@ body, html {
 }
 
 body{
-    position: relative;
-    overflow-x: hidden; /* Evita rolagens laterais indesejadas */
+   background-color: rgb(57, 55, 148); /* O roxo/azul que você escolheu */
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
 
@@ -70,7 +74,7 @@ article h3 {
     height: 100px;
     object-fit: cover;
     border-radius: 50%;
-    border: none !important; /* Remove qualquer borda */
+    border: none !important; 
     /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
     -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
     mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
@@ -428,72 +432,37 @@ footer a { color: #fff; text-decoration: underline; }
     }
 
 
-
-/* Bolhas de Ar da Fenda */
+/* BOLHAS  DA FENDA */
 .bolha {
     position: fixed;
-    bottom: -10px;
-    background: rgba(255, 255, 255, 0.258);
+    bottom: -50px;
+    background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.4) 0%, 
+                rgba(255, 255, 255, 0.1) 40%, 
+                rgba(255, 255, 255, 0.2) 60%, 
+                rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Bordinha bem fina */
     border-radius: 50%;
-    animation: subirBolhas 10s infinite ease-in;
+    animation: subirEBalancar 12s infinite ease-in;
     z-index: -1;
-}
-
-@keyframes subirBolhas {
-    0%   { transform: translateY(0) scale(1); opacity: 0.5; }
-    100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    pointer-events: none;
 }
 
 
-/* --- AMBIENTAÇÃO ICONOGRÁFICA DA FENDA (RESOLUÇÃO) --- */
-
-
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('imagensfoto/silhueta-criaturas.png'); 
-    background-repeat: no-repeat;
-    filter: brightness(0) invert(1) opacity(0.1); 
-    z-index: -1; 
-}
-
-/* AJUSTE ESPECÍFICO PARA PC (Telas Maiores)  */
-@media screen and (min-width: 992px) {
-    body::before {
-        /* No PC, a gente aumenta MUITO a imagem */
-        background-size: 150%; /* Faz a imagem cobrir toda a moldura */
-        background-position: center; /* Centraliza a "rede" de silhuetas */
-        filter: brightness(0) invert(1) opacity(0.08); /* Ainda mais suave no PC */
+@keyframes subirEBalancar {
+    0% {
+        transform: translateY(0) translateX(0) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    50% {
+        /* Balanço para o lado no meio da subida */
+        transform: translateY(-50vh) translateX(30px) scale(1.1);
+    }
+    100% {
+        transform: translateY(-110vh) translateX(-20px) scale(1.5);
+        opacity: 0;
     }
 }
-
-/*  AJUSTE ESPECÍFICO PARA CELULAR   */
-@media screen and (max-width: 991px) {
-    body::before {
-        
-        background-size: contain;
-        background-position: bottom right;
-        filter: brightness(0) invert(1) opacity(0.12);
-    }
-}
-/* Opcional: Adicionar outro detalhe no canto oposto (superior esquerdo) */
-body::after {
-    content: '';
-    position: fixed;
-    top: -50px; left: -50px; 
-    width: 200px; height: 200px;
-    background-image: url('imagensfoto/moldura-fenda.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: top left;
-    
-    filter: brightness(0) invert(1);
-    opacity: 0.1; /* Super discreto */
-    
-    z-index: -1;
-}
-
