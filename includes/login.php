@@ -5,7 +5,15 @@
       <img src="imagensfoto/img_avatar2.jpg" alt="Avatar" class="avatar" >
       <img src="imagensfoto/img_avatar1.jpg" alt="Avatar" class="avatar" >
     </div>
-
+    
+    <?php if (isset($_GET['erro'])): ?>
+    <div style="color: #ff4d4d; text-align: center; margin-bottom: 15px; font-weight: bold; font-size: 14px;">
+        <?php 
+            if ($_GET['erro'] == 'senha') echo "Senha incorreta!";
+            if ($_GET['erro'] == 'usuario') echo "Usuário não encontrado!";
+        ?>
+    </div>
+<?php endif; ?>
     <div class="container">
         <div class="input-group">
             <label for="email"><b>E-mail</b></label>

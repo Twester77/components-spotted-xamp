@@ -47,4 +47,4 @@
     </form>
 </main>
 
-<?php include 'components/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>

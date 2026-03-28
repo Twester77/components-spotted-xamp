@@ -71,7 +71,7 @@ include 'includes/bolhas.php';
          </div>
         </article>
 
-        <?php } ?> /* Fim do loop do while */ 
+        <?php } ?>
     </div>
 </main>
 
