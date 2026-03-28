@@ -1,6 +1,6 @@
 
-<?php include 'components/header.php'; ?>
-<?php include 'components/navbar.php'; ?>
+<?php include 'includes/header.php'; ?>
+<?php include 'includes/navbar.php'; ?>
 
 <main style="max-width: 500px; margin: 40px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
     
