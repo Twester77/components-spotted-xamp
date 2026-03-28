@@ -1,23 +1,21 @@
 <?php
 include 'conexao.php';
+session_start(); // 1. IMPORTANTE: Inicie a sessão para pegar o ID!
 
-// Verifica se os dados vieram via POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    // Captura os dados do formulário
-    // O nome dentro do [''] deve ser igual ao 'name' do seu HTML
     $mensagem = $_POST['mensagem'];
     $categoria = $_POST['categoria'];
+    $usuario_id = $_SESSION['usuario_id']; // 2. Pegue o ID de quem está logado
 
-    // Prepara o SQL para evitar SQL Injection (Segurança em 1º lugar!)
-    $sql = "INSERT INTO mensagens (mensagem, categoria) VALUES (?, ?)";
+    // 3. Adicione o usuario_id no seu INSERT
+    $sql = "INSERT INTO mensagens (mensagem, categoria, usuario_id, data_post) VALUES (?, ?, ?, NOW())";
     $stmt = $conn->prepare($sql);
     
-    // "ss" significa que estamos enviando duas Strings
-    $stmt->bind_param("ss", $mensagem, $categoria);
+    // "ssi" -> string, string, integer (o ID é número)
+    $stmt->bind_param("ssi", $mensagem, $categoria, $usuario_id);
 
     if ($stmt->execute()) {
-        // Se deu certo, volta para o feed para ver o post novo
         header("Location: feed.php");
         exit();
     } else {

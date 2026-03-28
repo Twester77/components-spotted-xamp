@@ -5,7 +5,11 @@
       <img src="imagensfoto/img_avatar2.jpg" alt="Avatar" class="avatar" >
       <img src="imagensfoto/img_avatar1.jpg" alt="Avatar" class="avatar" >
     </div>
-    
+    <?php if (isset($_GET['msg']) && $_GET['msg'] == 'sucesso'): ?>
+    <div style="background-color: #4CAF50; color: white; text-align: center; padding: 10px; margin-bottom: 15px; border-radius: 4px; font-weight: bold; font-size: 14px;">
+        ✅ Cadastro realizado! Agora é só logar.
+    </div>
+<?php endif; ?>
     <?php if (isset($_GET['erro'])): ?>
     <div style="color: #ff4d4d; text-align: center; margin-bottom: 15px; font-weight: bold; font-size: 14px;">
         <?php 

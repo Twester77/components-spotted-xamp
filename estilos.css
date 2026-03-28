@@ -72,7 +72,13 @@ article h3 {
     margin: 0 auto;
     gap: 30px; 
 }
-
+.avatar-pequeno {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Isso aqui faz a mágica: corta a foto sem distorcer */
+    border-radius: 50%;
+    border: 3px solid #ff7011; /* Uma bordinha laranja para combinar com o botão + */
+}
 .avatar {
     width: 100px;
     height: 100px;
