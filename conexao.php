@@ -4,9 +4,7 @@ $usuario = "root";
 $senha = "";         
 $banco = "spotted_db"; 
 
-
 $conn = mysqli_connect($host, $usuario, $senha, $banco);
-
 
 if (!$conn) {
     die("Uga! Conexão falhou: " . mysqli_connect_error());

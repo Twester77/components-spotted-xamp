@@ -1,10 +1,10 @@
 <?php
-include 'conexao.php';
+include '../conexao.php';
 session_start();
 
 // 1. Verificamos se o usuário está logado 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: index.php?erro=login");
+    header("Location:../index.php?erro=login");
     exit();
 }
 
@@ -40,7 +40,7 @@ if (mysqli_num_rows($res_check) == 0) {
 if(isset($_SERVER['HTTP_REFERER'])) {
     header("Location: " . $_SERVER['HTTP_REFERER']);
 } else {
-    header("Location: feed.php");
+    header("Location:../feed.php");
 }
 exit();
 ?>
