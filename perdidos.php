@@ -1,6 +1,11 @@
-<?php include 'includes/header.php'; 
-      include 'includes/navbar.php'; 
-      include 'includes/bolhas.php'; ?>
+<?php 
+// 1. CONFIGURAÇÃO DO FILTRO (O segredo do sucesso)
+$_GET['cat'] = 'perdidos'; 
+
+include 'includes/header.php'; 
+include 'includes/navbar.php'; 
+include 'includes/bolhas.php'; 
+?>
 
 <main class="main-perdidos">
     <?php include 'includes/login.php'; ?>
@@ -9,101 +14,55 @@
         <header class="achados-perdidos-header">
             <h2>Achados e Perdidos</h2>
             <div class="capa-container">
-                <img src="imagensfoto/capa-achados-e-perdidos.jpg" alt="Capa do Achados e Perdidos" class="img-capa" style="max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <img src="imagensfoto/capa-achados-e-perdidos.jpg" alt="Capa" class="img-capa" style="max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             </div>
             <p class="frase-efeito">
-                Perdeu o juízo? Disso a gente não cuida. Agora se você perdeu a chave ou a garrafinha, você está no lugar certo!
+                Perdeu o juízo? Disso a gente não cuida. Mas se perdeu a chave ou a garrafinha, está no lugar certo!
             </p>
         </header>
 
-        <div class="container-feed">
-            
-            <div class="spotted-card perdidos">
-                <div class="card-header">
-                    <span class="category-tag">Achado</span>
-                    <strong>@Anônimo</strong>
-                </div>
-                <div class="post-content">
-                    <p>Galera, achei um <strong>estojo de óculos preto</strong> em cima da mesa na Biblioteca do Centro. Deixei na recepção!</p>
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn-comentar">Comentar</button>
-                </div>
-            </div>
-
-            <div class="spotted-card perdidos">
-                <div class="card-header">
-                    <span class="category-tag">Perdido</span>
-                    <strong>@FuturaDra</strong>
-                </div>
-                <div class="post-content">
-                    <p>Perdi minha carteira com estampa florida no bloco 1, Lab 2!</p>
-                </div>
-                
-                <div class="reply-container">
-                    <div class="reply-box">
-                        <p><strong>@DireitoUnifev:</strong> "Vi uma carteira assim na cantina agora pouco!"</p>
-                    </div>
-                    <div class="reply-box status-resolvido">
-                        <p><strong>@FuturaDra:</strong> "Era essa mesmo! Muito obrigada! 😭🙏"</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        <section class="feed-filtrado">
+            <?php include 'feed.php'; // Aqui a mágica acontece! ?>
+        </section>
 
         <section class="sessao-publicar">
-            <h3>Perdeu ou Achou algo? Publique aqui:</h3>
+            <h3>Perdeu ou Achou algo?</h3>
             
             <div class="nota-seguranca">
-                <strong>⚠️ NOTA DE SEGURANÇA:</strong> Ao postar fotos de documentos ou cartões, cubra dados sensíveis. O Spotted não se responsabiliza.
+                <strong>⚠️ NOTA DE SEGURANÇA:</strong> Ao postar fotos, cubra dados sensíveis (CPF, números de cartão). O Spotted não se responsabiliza.
             </div>
 
             <?php if ($usuario_logado): ?>
-                <form class="form-publicar">
+                <form action="processa_post.php" method="POST" enctype="multipart/form-data" class="form-publicar">
+                    <input type="hidden" name="categoria" value="perdidos">
+
                     <div class="input-group">
                         <label>O que aconteceu?</label>
-                        <select name="tipo_post">
-                            <option>Eu perdi algo...</option>
-                            <option>Eu achei algo...</option>
+                        <select name="subcategoria" required>
+                            <option value="perdi">❌ Eu perdi algo...</option>
+                            <option value="achei">✅ Eu achei algo...</option>
                         </select>
                     </div>
 
                     <div class="input-group">
-                        <textarea placeholder="Descreva o objeto e o local..."></textarea>
+                        <textarea name="mensagem" placeholder="Descreva o objeto e o local onde foi visto por último..." required></textarea>
                     </div>
 
                     <div class="input-group">
-                        <label for="foto" class="label-file">📸 Anexar foto do objeto:</label>
+                        <label for="foto" class="label-file">📸 Foto do objeto (opcional):</label>
                         <input type="file" id="foto" name="foto" class="input-file">
                     </div>
 
-                    <button type="submit" class="btn-lancar">
-                        Publicar no Feed
-                    </button>
+                    <button type="submit" class="btn-lancar">Publicar na Fenda</button>
                 </form>
             <?php else: ?>
                 <div class="alerta-login">
-                    <p><strong>Opa!</strong> Você precisa estar logado para poder publicar.</p>
-                    <p class="sub-alerta">Faça login na <a href="index.php">Página Inicial</a> para continuar.</p>
+                    <p><strong>Opa!</strong> Você precisa estar logado para publicar.</p>
+                    <p class="sub-alerta">Faça login na <a href="index.php">Página Inicial</a>.</p>
                 </div>
             <?php endif; ?>
         </section>
     </article>
 </main>
 
-<script>
-    document.querySelector('.form-publicar').addEventListener('submit', function(e) {
-        e.preventDefault(); // Impede a página de recarregar por enquanto
-        
-        const texto = this.querySelector('textarea').value;
-        
-        if(texto.trim() === "") {
-            alert("Ei, descreva o que você achou ou perdeu antes de publicar!");
-        } else {
-            alert("Boa! Seu post foi enviado para a moderação da Fenda e aparecerá no feed em breve.");
-            this.reset(); // Limpa o formulário
-        }
-    });
-</script>
 <?php include 'includes/footer.php'; ?>

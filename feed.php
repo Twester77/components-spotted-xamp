@@ -56,6 +56,12 @@ include 'includes/bolhas.php';
                 <span class="category-tag">
                     #<?php echo strtoupper($linha['categoria']); ?> 
                     <?php echo (empty($linha['usuario_id'])) ? "Anônimo" : "Estudante"; ?>
+                    <?php if ($linha['subcategoria'] == 'achei'): ?>
+        <span class="badge-achado">✨ ACHADO</span>
+    <?php else: ?>
+        <span class="badge-perdido">🔍 PERDIDO</span>
+    <?php endif; ?>
+    <strong>@<?php echo $linha['usuario']; ?></strong>
                 </span>
                 <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
             </div>

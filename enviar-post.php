@@ -1,21 +1,27 @@
 <?php
 include 'conexao.php';
-session_start(); // 1. IMPORTANTE: Inicie a sessão para pegar o ID!
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     $mensagem = $_POST['mensagem'];
     $categoria = $_POST['categoria'];
-    $usuario_id = $_SESSION['usuario_id']; // 2. Pegue o ID de quem está logado
+    
+    // Pega a subcategoria (se não existir no post, fica nula)
+    $subcategoria = isset($_POST['subcategoria']) ? $_POST['subcategoria'] : null;
+    
+    $usuario_id = $_SESSION['usuario_id']; 
 
-    // 3. Adicione o usuario_id no seu INSERT
-    $sql = "INSERT INTO mensagens (mensagem, categoria, usuario_id, data_post) VALUES (?, ?, ?, NOW())";
+    // 3. Adicionamos 'subcategoria' no INSERT e um "?" a mais
+    $sql = "INSERT INTO mensagens (mensagem, categoria, subcategoria, usuario_id, data_post) VALUES (?, ?, ?, ?, NOW())";
     $stmt = $conn->prepare($sql);
     
-    // "ssi" -> string, string, integer (o ID é número)
-    $stmt->bind_param("ssi", $mensagem, $categoria, $usuario_id);
+    // "sssi" -> string (msg), string (cat), string (subcat), integer (id)
+    $stmt->bind_param("sssi", $mensagem, $categoria, $subcategoria, $usuario_id);
 
     if ($stmt->execute()) {
+        // Se postou de dentro do perdidos.php, pode até voltar pra lá
+        // Mas o feed.php é o destino padrão seguro
         header("Location: feed.php");
         exit();
     } else {
@@ -25,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
     $conn->close();
 } else {
-    // Se tentarem acessar esse arquivo direto, manda de volta pro formulário
     header("Location: novo-post.php");
     exit();
 }

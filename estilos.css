@@ -271,34 +271,38 @@ main {
 
 .container-feed {
     max-width: 550px;
-    margin: 30px auto;
+    margin: 20px auto 30px; 
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    margin-top: 20px;
+    gap: 35px; 
+    padding: 10px;
 }
 
 .spotted-card:first-child {
-    margin-top: 0; /* Remove a margem extra só do primeiro card */}
+    margin-top: 0; }
 
 .container-feed {
-    padding-top: 10px; /* Controla o espaço do topo por aqui, fica mais organizado */}
+    padding-top: 10px; }
 
 
 .spotted-card {
     background: rgba(255, 255, 255, 0.1); 
     backdrop-filter: blur(15px); 
     border-radius: 18px;
-    margin-bottom: 35px; 
-    padding: 25px;       
+    padding: 30px; /* Aumentei de 25px para 30px para dar mais fôlego */
     border: 1px solid rgba(255, 255, 255, 0.15);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all 0.3s ease;
+    position: relative;
+    width: 100%;
+    display: flex; /* Adicionado para garantir a ordem */
+    flex-direction: column;
+}
 
 .spotted-card:hover {
-    transform: translateY(-12px); /* O card sobe de leve */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); /* Sombra para dar profundidade */
+    transform: translateY(-15px); /* O card sobe de leve */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); 
     background: rgba(255, 255, 255, 0.12); /* Brilha um pouquinho mais */
-    border-color: rgba(255, 255, 255, 0.3); /* A borda destaca */
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 
@@ -314,11 +318,27 @@ main {
 
 
 
+
 /*  PÁGINA ACHADOS E PERDIDOS (ORGANIZAÇÃO)  */
 
 .achados-perdidos-header {
     text-align: center;
     margin-bottom: 40px;
+}
+.badge-achado {
+    background-color: #2ecc71; /* Verde */
+    color: white;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+}
+
+.badge-perdido {
+    background-color: #e74c3c; /* Vermelho */
+    color: white;
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.8rem;
 }
 
 .img-capa {
@@ -593,17 +613,19 @@ footer a { color: #fff; text-decoration: underline; }
 
 /* Estilizando os links das reações */
 
-.container-reacoes-wrapper:hover .reacoes-popup {
+.reacao-wrapper:hover .reacoes-popup {
     opacity: 1; 
     visibility: visible; 
     transform: translateX(-50%) translateY(0); /* Finaliza centralizado e na altura correta */
 }
+
 .reacoes-popup a {
     text-decoration: none;
     font-size: 1.4rem;
     display: inline-block; 
     transition: transform 0.2s ease;
 }
+
 .reacoes-popup::before {
     content: '';
     position: absolute;
@@ -624,7 +646,7 @@ footer a { color: #fff; text-decoration: underline; }
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.btn-trigger-reacoes, .btn-comentar {
+.btn-reagir, .btn-fofocar {
     color: #ccc;
     text-decoration: none;
     font-size: 0.9rem;
@@ -636,7 +658,7 @@ footer a { color: #fff; text-decoration: underline; }
     gap: 8px;
 }
 
-.btn-trigger-reacoes:hover, .btn-comentar:hover {
+.btn-reagir:hover, .btn-fofocar:hover {
     color: #ffbc00;
 }
 
@@ -694,19 +716,21 @@ footer a { color: #fff; text-decoration: underline; }
     gap: 10px;
 }
 
-/* Estilo das pílulas de reação tipo Facebook */
+
 .container-pilulas-reacoes {
     display: flex;
     gap: 5px;
-    padding: 10px 15px;
-    margin-top: -10px; /* Sobe um pouco para encostar no corpo do post */
+    padding: 10px 0; 
+    margin-top: 10px; 
+    position: static; /* Garante que não está flutuando sobre o texto */
 }
 
 .badge-reacao {
-    background: #2a2a2a; /* Fundo escuro igual ao seu tema */
-    border: 1px solid #444;
+
+    background: rgba(0, 0, 0, 0.5); /* Fundo mais escuro para destacar o emoji */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
     border-radius: 20px;
-    padding: 2px 10px;
     font-size: 0.85rem;
     color: #eee;
     display: flex;
@@ -717,7 +741,7 @@ footer a { color: #fff; text-decoration: underline; }
 }
 
 .badge-reacao:hover {
-    transform: scale(1.1); /* Efeitinho de aumentar ao passar o mouse */
-    border-color: #ff7011; /* Cor da Fenda */
+    transform: scale(1.1); 
+    border-color: #ff7011;
 }
 
