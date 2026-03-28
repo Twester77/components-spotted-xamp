@@ -9,7 +9,7 @@
         <header class="achados-perdidos-header">
             <h2>Achados e Perdidos</h2>
             <div class="capa-container">
-                <img src="imagensfoto/Capa Achados e Perdidos.jpg" alt="Capa do Achados e Perdidos" class="img-capa" style="max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <img src="imagensfoto/capa-achados-e-perdidos.jpg" alt="Capa do Achados e Perdidos" class="img-capa" style="max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             </div>
             <p class="frase-efeito">
                 Perdeu o juízo? Disso a gente não cuida. Agora se você perdeu a chave ou a garrafinha, você está no lugar certo!
