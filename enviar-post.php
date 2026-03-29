@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: feed.php");
         exit();
     } else {
-        echo "Erro ao lançar ao mar: " . $conn->error;
+       die("ERRO DE BANCO: " . $stmt->error . " | SQL: " . $sql);
     }
 
     $stmt->close();

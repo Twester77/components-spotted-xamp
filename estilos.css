@@ -203,6 +203,7 @@ main {
     border: 1px solid #ccc;
     margin-bottom: 15px;
     display: block;
+    font-family: 'Inter', sans-serif;
 }
 
 .login-form {
@@ -314,7 +315,7 @@ main {
 .spotted-card.comunidade { border-left: 12px solid #459e1c !important; }
 .spotted-card.perdidos { border-left: 12px solid #ffd600 !important; }
 .spotted-card.pergunta { border-left: 12px solid #3498db !important; }
-.spotted-card.acaba-pelo-amor-de-deus { border-left: 15px solid #760cb8e9 !important; }
+.spotted-card.acaba-pelo-amor-de-deus { border-left: 12px solid #55117f !important; }
 
 
 
@@ -325,20 +326,33 @@ main {
     text-align: center;
     margin-bottom: 40px;
 }
-.badge-achado {
-    background-color: #2ecc71; /* Verde */
-    color: white;
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-}
 
 .badge-perdido {
-    background-color: #e74c3c; /* Vermelho */
+    background-color: #ff4757; /* Vermelho mais moderno */
     color: white;
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 0.8rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-achado {
+    background-color: #2ed573;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .img-capa {
@@ -387,6 +401,7 @@ main {
     border-radius: 15px;
     margin-top: 40px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
 }
 
 .nota-seguranca {
@@ -468,9 +483,10 @@ footer a { color: #fff; text-decoration: underline; }
         border-radius: 8px;
         border: none;
         background: rgba(255, 255, 255, 0.9);
-        font-family: sans-serif;
+        font-family: 'Inter',sans-serif;
         resize: none; 
-        font-size: 18px;
+        font-size: 16px;
+        font-weight: bold;
     }
 
     .form-container label {

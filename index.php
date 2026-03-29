@@ -2,17 +2,27 @@
 include 'conexao.php'; 
 include 'includes/header.php'; 
 
-if(isset($_SESSION['id_usuario'])) {
-    header("Location: feed.php"); 
-    exit(); 
-}
+// O redirecionamento que estava aqui foi removido para você conseguir ver a Home logado!
 ?>
 
 <?php include 'includes/navbar.php'; ?>
 <?php include 'includes/bolhas.php'; ?>
 
 <main style="max-width: 800px; margin: auto; padding: 20px;">
-    <?php include 'includes/login.php'; ?>
+    
+    <?php if(!isset($_SESSION['usuario_id'])): ?>
+        <?php include 'includes/login.php'; ?>
+    <?php else: ?>
+        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid #ffbc00; box-shadow: 0 4px 15px rgba(255,188,0,0.2);">
+            <p style="color: #fff; margin-bottom: 15px; font-size: 18px;">
+                E aí, <strong><?php echo $_SESSION['usuario_nome']; ?></strong>! Já está na Fenda? 🎓
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <a href="feed.php" style="background: #ffbc00; color: #000; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s;">Ir para o Feed</a>
+                <button onclick="deslogar()" style="background: #cc420c; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s;">Sair da Conta</button>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <article style="text-align: center;">
         <h2 style="font-size: 20px; margin-bottom: 20px; margin-top: 40px;"> 

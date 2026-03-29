@@ -55,15 +55,27 @@ include 'includes/bolhas.php';
             <div class="card-header">
                 <span class="category-tag">
                     #<?php echo strtoupper($linha['categoria']); ?> 
-                    <?php echo (empty($linha['usuario_id'])) ? "Anônimo" : "Estudante"; ?>
-                    <?php if ($linha['subcategoria'] == 'achei'): ?>
-        <span class="badge-achado">✨ ACHADO</span>
-    <?php else: ?>
-        <span class="badge-perdido">🔍 PERDIDO</span>
-    <?php endif; ?>
-    <strong>@<?php echo $linha['usuario']; ?></strong>
-                </span>
-                <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
+                   <?php if ($linha['categoria'] == 'perdidos'): ?>
+           <?php if ($linha['subcategoria'] == 'achei'): ?>
+               <span class="badge-achado">✨ ACHADO</span>
+            <?php else: ?>
+          <span class="badge-perdido">🔍 PERDIDO</span>
+            <?php endif; ?>
+            <?php endif; ?>
+
+            <strong>
+              <?php 
+         // Se o post tiver um ID de usuário, e esse ID for igual ao seu, mostra seu nome, do contrario, mostra 'Anônimo' (padrão do Spotted)
+               if (!empty($linha['usuario_id'])) {
+             echo "@Estudante_" . $linha['usuario_id']; 
+               } else {
+               echo "@Anônimo";
+               }
+            ?>
+          </strong> 
+        </span>
+
+        <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
             </div>
             
             <div class="card-body">
@@ -93,7 +105,7 @@ include 'includes/bolhas.php';
                 </div>
                 <a href="post.php?id=<?php echo $linha['id']; ?>" class="btn-fofocar">Fofocar</a>
             </div>
-
         </article> <?php } // FIM DO WHILE ?>
 </div> 
 </main>
+
