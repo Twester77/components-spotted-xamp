@@ -1,40 +1,33 @@
 <?php
-// Função para transformar @username em links azuis
-function formatarMencoes($texto) {
-    // Procura @ seguido de letras, números, pontos ou underlines
-    // E troca por um link que leva para o perfil
-    $padrao = '/@([a-zA-Z0-9._]+)/';
-    $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ff7011; font-weight: bold; text-decoration: none;">@$1</a>';
-    
-    return preg_replace($padrao, $substituicao, $texto);
-}
-?>
+// 1. LÓGICA DE SEGURANÇA E CONFIGURAÇÃO (Sempre no topo!)
+include 'conexao.php'; // Aqui já roda o ob_start() que segura os headers
+session_start();
 
-<?php
-// 1. INCLUDES DE CONFIGURAÇÃO E LÓGICA
-include 'conexao.php';
-include 'includes/header.php'; // O session_start() já acontece aqui dentro!
-
-// 2. TRAVA DE SEGURANÇA: Se não tiver logado, tchau!
+// TRAVA DE SEGURANÇA: Se não tiver logado, tchau!
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit();
 }
 
-$usuario_id = $_SESSION['usuario_id'];
+// 2. FUNÇÕES AUXILIARES
+function formatarMencoes($texto) {
+    // Procura @ seguido de letras, números, pontos ou underlines
+    $padrao = '/@([a-zA-Z0-9._]+)/';
+    $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ff7011; font-weight: bold; text-decoration: none;">@$1</a>';
+    return preg_replace($padrao, $substituicao, $texto);
+}
 
-//  Busca os dados reais do usuário logado 
+// 3. BUSCA DE DADOS DO USUÁRIO LOGADO
+$usuario_id = $_SESSION['usuario_id'];
 $query_user = "SELECT nome, foto, username FROM usuarios WHERE id = '$usuario_id'";
 $res_user = mysqli_query($conn, $query_user);
 $user_data = mysqli_fetch_assoc($res_user);
 
 $foto_perfil = !empty($user_data['foto']) ? "uploads/" . $user_data['foto'] : "imagensfoto/img_avatar1.jpg";
 $nome_exibicao = !empty($user_data['username']) ? "@" . $user_data['username'] : $user_data['nome'];
-// -----------------------------------------------------------------
 
-// 3. LOGICA DE FILTRO DOS POSTS
+// 4. LÓGICA DE FILTRO DOS POSTS
 $categoria_selecionada = isset($_GET['categoria']) ? $_GET['categoria'] : '';
-// Busca as mensagens JUNTANDO com a tabela de usuários para pegar o username
 $sql = "SELECT m.*, u.username 
         FROM mensagens m 
         LEFT JOIN usuarios u ON m.usuario_id = u.id";
@@ -46,7 +39,8 @@ if (!empty($categoria_selecionada)) {
 $sql .= " ORDER BY m.id DESC";
 $resultado = mysqli_query($conn, $sql);
 
-// 4. OUTROS INCLUDES DE INTERFACE
+// 5. INCLUDES DE INTERFACE (Visual só começa aqui!)
+include 'includes/header.php'; 
 include 'includes/navbar.php';
 include 'includes/bolhas.php'; 
 ?>

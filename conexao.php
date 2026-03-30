@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $host = "localhost";
 $usuario = "root";    
 $senha = "";         

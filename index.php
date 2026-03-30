@@ -13,12 +13,14 @@ include 'includes/header.php';
     <?php if(!isset($_SESSION['usuario_id'])): ?>
         <?php include 'includes/login.php'; ?>
     <?php else: ?>
-        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid #ffbc00; box-shadow: 0 4px 15px rgba(255,188,0,0.2);">
-            <p style="color: #fff; margin-bottom: 15px; font-size: 18px;">
-                E aí, <strong><?php echo $_SESSION['usuario_nome']; ?></strong>! Já está na Fenda? 🎓
+        <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid #ffbc00; box-shadow: 0 4px 15px rgba(255,188,0,0.2);">
+            <p style="color: #fff; margin-bottom: 20px; font-size: 18px;">
+                E aí, <strong><?php echo $_SESSION['usuario_nome']; ?></strong>! Bem-vindo à Fenda! 🎓
             </p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
+            
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
                 <a href="feed.php" style="background: #ffbc00; color: #000; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s;">Ir para o Feed</a>
+                <a href="perfil.php" style="background: rgba(255,255,255,0.1); color: #fff; padding: 10px 25px; border-radius: 8px; text-decoration: none; border: 1px solid #ffbc00; font-weight: bold;">Meu Perfil ⚙️</a>
                 <button onclick="deslogar()" style="background: #cc420c; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s;">Sair da Conta</button>
             </div>
         </div>
