@@ -17,6 +17,7 @@ A Receita (Template): Primeiro, você manda para o banco de dados apenas o "esqu
 
 * O banco de dados é inteligente: ele pega esse dado e trata ele apenas como texto, nunca como um comando.
 
+
 ## Minuto 1: O Problema e a Solução
 Fala: "Bom dia/noite, professor. O projeto 'A Fenda' nasceu da necessidade de centralizar a comunicação dos alunos da UNIFEV de forma anárquica, porém organizada. É um sistema de Spotted com foco em comunidade."
 
@@ -43,7 +44,7 @@ Fala: "O projeto já conta com sistema de login, feed interativo e perfil editá
 **Destaque: Clique no seu novo botão de Editar Perfil e encerre com chave de ouro.**
 
 
-## Este projeto foi desenvolvido de ponta a ponta por mim  , unindo a precisão da programação com a necessidade humana de se conectar. 'A Fenda' não é apenas um site, é um espaço vivo. Muito obrigado a todos, eu sou Leonardo, idealizador do projeto da nossa Fenda, espero que tenham gostado!
+## Este projeto foi desenvolvido de ponta a ponta por mim  , unindo a precisão da programação com a necessidade humana de se conectar. 'A Fenda' não é apenas um site, é um espaço vivo. Muito obrigado a todos, eu sou Leonardo, idealizador do projeto da nossa Fenda, espero que tenham gostado! Com isso, encerramos a fase Alpha do projeto 'A Fenda'. O que era uma ideia de primeiro bimestre hoje é um sistema funcional pronto para evoluir para a versão Beta com a nossa turma de ADS. Muito obrigado!
 
 
 ## Perguntas : Se alguém na sala falar: "Ah, mas não dá pra dar like?", você responde :
