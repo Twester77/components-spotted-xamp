@@ -44,3 +44,34 @@ Fala: "O projeto já conta com sistema de login, feed interativo e perfil editá
 
 
 ## Este projeto foi desenvolvido de ponta a ponta por mim  , unindo a precisão da programação com a necessidade humana de se conectar. 'A Fenda' não é apenas um site, é um espaço vivo. Muito obrigado a todos, eu sou Leonardo, idealizador do projeto da nossa Fenda, espero que tenham gostado!
+
+
+## Perguntas : Se alguém na sala falar: "Ah, mas não dá pra dar like?", você responde :
+
+* "A Fenda prioriza, neste lançamento, a comunicação direta e o utilitarismo. As reações são elementos estéticos que pretendemos implementar com AJAX na próxima etapa para não comprometer a performance do carregamento inicial." *
+
+ Pergunta 1: "E se alguém postar algo ofensivo? Como você modera?"
+
+* "Excelente pergunta. Nesta fase MVP (Produto Mínimo Viável), a moderação é feita diretamente no banco de dados pelo administrador. Porém, o projeto já prevê na Seção de LGPD  que a responsabilidade e o anonimato são monitorados. O próximo passo é implementar um botão de 'Denunciar' que envia um alerta automático para o nosso painel de controle." *
+
+ Pergunta 2: "Por que você usou PHP puro e não um Framework (como Laravel)?"
+A Resposta de Mestre:
+
+* "Para este primeiro ciclo, a decisão foi pedagógica e técnica. Usar PHP estruturado me permitiu dominar os fundamentos da linguagem, a manipulação de sessões e a segurança via Prepared Statements na 'unha'. É como aprender a dirigir em um carro manual antes de ir para o automático; agora eu entendo exatamente como o motor do servidor funciona." *
+
+ Pergunta 3: "O site é seguro contra hackers? Alguém pode apagar o banco?"
+
+* "A integridade é nossa prioridade. Como mencionei, utilizamos Prepared Statements em todas as consultas que recebem dados externos. Isso cria uma camada de abstração que neutraliza tentativas de SQL Injection, tratando qualquer entrada maliciosa apenas como texto inofensivo." *
+
+ Pergunta 4: "Como você fez para o site ficar bom no celular e no PC ao mesmo tempo?"
+
+* "Utilizei o conceito de Mobile First e Media Queries no CSS. O layout é fluido, e como vocês viram na gravação da tela [o seu vídeo!], os elementos se reorganizam dinamicamente. A 'Fenda' foi pensada para o aluno que está no corredor da faculdade usando o 4G, então a leveza do código foi essencial." *
+
+Pergunta 5: "Onde os dados ficam salvos de verdade?"
+
+* "Atualmente o ambiente está rodando em um servidor local via Apache, com o banco de dados MySQL gerenciado pelo phpMyAdmin. A estrutura está pronta para ser migrada para um serviço de nuvem (como AWS ou Google Cloud) bastando apenas alterar as constantes de conexão." *
+
+
+## Se alguém fizer uma pergunta muito difícil que eu não saiba a resposta técnica exata, uso a Saída de Emergência do Desenvolvedor:
+
+* "Essa é uma abordagem interessante e está sendo documentada para a nossa análise de requisitos da Versão 2.0. O foco atual foi a estabilidade do Core (núcleo) do sistema." *
