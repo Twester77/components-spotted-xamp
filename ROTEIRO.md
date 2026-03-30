@@ -1,4 +1,22 @@
 # Projeto a Fenda
+"Professor, o projeto 'A Fenda' é um portal de interação estudantil desenvolvido em PHP e MySQL. Ele conta com um sistema de gerenciamento de estado via sessões, permitindo postagens identificadas ou anônimas, e utiliza Prepared Statements para garantir a integridade do banco de dados."
+
+## O que é "Prepared Statements"? 
+Imagine que o seu banco de dados é o tanque de combustível de um carro. O SQL Injection (o ataque dos hackers) é como se alguém tentasse jogar areia ou açúcar no seu tanque para ferrar com o motor.
+
+O Prepared Statement (ou Declaração Preparada) é como um filtro de combustível de alta performance que você coloca antes da entrada do motor.
+
+Como que isso funciona na prática:
+A Receita (Template): Primeiro, você manda para o banco de dados apenas o "esqueleto" da ordem. Ex: "SELECT * FROM usuarios WHERE email = ?"
+
+**Note que você não mandou o e-mail ainda, só mandou o lugarzinho guardado pelo ponto de interrogação (?).**
+
+* A Blindagem: O banco de dados prepara essa ordem e já sabe exatamente o que ela vai fazer.
+
+* O Envio do Dado (Bind): Depois, você manda o dado (o e-mail do usuário) separado.
+
+* O banco de dados é inteligente: ele pega esse dado e trata ele apenas como texto, nunca como um comando.
+
 ## Minuto 1: O Problema e a Solução
 Fala: "Bom dia/noite, professor. O projeto 'A Fenda' nasceu da necessidade de centralizar a comunicação dos alunos da UNIFEV de forma anárquica, porém organizada. É um sistema de Spotted com foco em comunidade."
 

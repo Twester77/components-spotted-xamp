@@ -24,7 +24,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
 </a>
 <style>
     .icon-fenda {
-        font-size: 1.8rem; 
+        font-size: 2.0rem; 
         color: #ffbc00;    
         transition: all 0.3s ease;
         display: inline-block;
