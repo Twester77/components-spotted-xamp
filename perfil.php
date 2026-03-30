@@ -31,7 +31,7 @@ include 'includes/bolhas.php';
                 <img src="uploads/<?php echo $foto_atual; ?>" style="width: 130px; height: 130px; border-radius: 50%; border: 4px solid #111; object-fit: cover; background: #222; box-shadow: 0 0 20px rgba(255, 188, 0, 0.4);">
             </div>
         </div>
-        <p style="color: #ffbc00; text-align: center; font-weight: bold; margin-top: 65px; letter-spacing: 2px;">
+        <p style="color: #ffbc00; text-align: center; font-weight: bold; margin-top: 65px; margin-bottom:30px; letter-spacing: 2px;">
             ⚠️ VOCÊ ESTÁ DIANTE DA PRESENÇA.
         </p>
 
@@ -44,28 +44,37 @@ include 'includes/bolhas.php';
             <span style="color: #666; font-size: 12px; text-transform: uppercase;">Membro da Fenda</span>
         </div>
     <?php endif; ?>
+    
     <div class="form-container" style="padding: 30px;">
         <h3 style="color: #ffbc00; margin-bottom: 20px; font-size: 18px;">Configurações de Perfil</h3>
         
         <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <label style="color: #ccc; font-size: 13px;">Avatar:</label>
-                    <input type="file" name="foto" accept="image/*" style="color: #fff; font-size: 12px; display: block; margin-top: 5px;">
-                </div>
-                <div>
-                    <label style="color: #ccc; font-size: 13px;">Foto de Capa:</label>
-                    <input type="file" name="capa" accept="image/*" style="color: #fff; font-size: 12px; display: block; margin-top: 5px;">
-                </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+           <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid #444;">
+             <label style="color: #ffbc00; font-size: 14px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px;">
+            <i class="fas fa-user-circle"></i> Avatar:
+             </label>
+             <input type="file" name="foto" accept="image/*" 
+               style="color: #fff; font-size: 13px; width: 100%; cursor: pointer;">
+        </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid #444;">
+              <label style="color: #ffbc00; font-size: 14px; font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 8px;">
+                <i class="fas fa-image"></i> Foto de Capa:
+              </label>
+           <input type="file" name="capa" accept="image/*" 
+               style="color: #fff; font-size: 13px; width: 100%; cursor: pointer;">
+         </div>
+    </div>
             </div>
 
             <div style="margin-top: 20px;">
-                <label style="color: #ccc; font-size: 13px;">Nome de Exibição:</label>
+                <label style="color: #ccc; font-size: 16px;">Nome de Exibição:</label>
                 <input type="text" name="nome" value="<?php echo $nome_atual; ?>" style="width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; outline: none;">
             </div>
             <div style="margin-top: 20px;">
-             <label style="color: #ffbc00; font-size: 13px; font-weight: bold;">Seu @ de usuário (Único):</label>
+             <label style="color: #ffbc00; font-size: 16px; font-weight: bold;">Seu @ de usuário (Único):</label>
              <div style="display: flex; align-items: center; background: #222; border: 1px solid #444; border-radius: 8px; padding-left: 10px;">
             <span style="color: #ffbc00;">@</span>
                   <input type="text" name="username" value="<?php echo $dados['username'] ?? ''; ?>" placeholder="ex: apresenca" style="width: 100%; padding: 12px; background: transparent; border: none; color: #fff; outline: none;">
@@ -73,12 +82,12 @@ include 'includes/bolhas.php';
            </div>
 
             <div style="margin-top: 20px;">
-                <label style="color: #ccc; font-size: 13px;">Bio (Sua frase de impacto):</label>
+                <label style="color: #ccc; font-size: 16px;">Bio (Sua frase de impacto):</label>
                 <textarea name="bio" rows="3" placeholder="Conte algo sobre você..." style="width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; resize: none; outline: none;"><?php echo $bio_atual; ?></textarea>
             </div>
 
             <button type="submit" style="background: #ffbc00; color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; width: 100%; margin-top: 25px; cursor: pointer; transition: 0.3s;">
-                Salvar Alterações Épicas
+                Salvar Alterações 
             </button>
         </form>
     </div>

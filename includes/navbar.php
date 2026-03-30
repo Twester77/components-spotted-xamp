@@ -1,8 +1,6 @@
 
 <?php if(isset($_SESSION['usuario_id'])): ?>
-    <a href="perfil.php" title="Configurações">
-        <img src="imagensfoto/engrenagem.png" style="width: 25px;"> 
-        </a>
+    
 <?php endif; ?>
 <nav>
     <ul class="menu">
