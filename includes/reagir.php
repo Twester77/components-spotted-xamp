@@ -37,10 +37,7 @@ if (mysqli_num_rows($res_check) == 0) {
 }
 
 // 4. Volta para a página de onde o usuário veio (Feed ou Post Detalhes)
-if(isset($_SERVER['HTTP_REFERER'])) {
-    header("Location: " . $_SERVER['HTTP_REFERER']);
-} else {
-    header("Location:../feed.php");
-}
+
+header("Location: ../feed.php#post-" . $post_id);
 exit();
 ?>

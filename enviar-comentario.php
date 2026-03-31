@@ -6,10 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_mensagem = $_POST['id_mensagem'];
     $comentario = $_POST['comentario'];
 
-    // Pegamos o nome da sessão se existir, senão fica vazio (para o banco tratar como anônimo)
+    // Pegamos o nome da sessão se existir, senão ele fica vazio (para o banco tratar como anônimo)
     $usuario_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : null;
 
-    // IMPORTANTE: Sua tabela 'comentarios' PRECISA ter a coluna 'usuario_nome'
+    // IMPORTANTE: A tabela 'comentarios' tem a coluna 'usuario_nome'
     $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     

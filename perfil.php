@@ -36,7 +36,7 @@ include 'includes/bolhas.php';
         </p>
 
     <?php else: ?>
-        <div class="capa-comum" style="width: 100%; height: 150px; background: url('uploads/<?php echo $capa_atual; ?>') center/cover; border-bottom: 1px solid #333;">
+        <div class="capa-comum" style="width: 100%; height: 200px; background: url('uploads/<?php echo $capa_atual; ?>') center/cover; border-bottom: 1px solid #333;">
         </div>
         <div style="text-align: center; margin-top: -50px;">
             <img src="uploads/<?php echo $foto_atual; ?>" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid #ffbc00; object-fit: cover; background: #111;">
@@ -92,5 +92,7 @@ include 'includes/bolhas.php';
         </form>
     </div>
 </main>
-
+<div id="meuModalSair" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center;">
+    
+    
 <?php include 'includes/footer.php'; ?>

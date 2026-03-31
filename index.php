@@ -63,4 +63,19 @@ include 'includes/header.php';
     </article>
 </main>
 
+<div id="meuModalSair" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+    
+    <div style="background: #1a1a1a; padding: 40px; border-radius: 25px; border: 2px solid #ff7011; text-align: center; max-width: 350px; box-shadow: 0 0 50px rgba(255, 112, 17, 0.6); position: relative; overflow: hidden;">
+        
+        <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,112,17,0.1) 0%, transparent 70%); pointer-events: none;"></div>
+
+        <h3 style="color: #fff; margin-bottom: 15px; font-size: 24px;">Deseja sair?</h3>
+        <p style="color: #ccc; font-size: 15px; margin-bottom: 30px;">A Fenda vai sentir sua falta! <br>Vê se volta logo pro QG.</p>
+        
+        <div style="display: flex; gap: 15px; justify-content: center; position: relative; z-index: 1;">
+            <button onclick="confirmarSaida()" style="background: #ff7011; color: #fff; border: none; padding: 12px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(255,112,17,0.4);">Sim, tchau!</button>
+            <button onclick="fecharModal()" style="background: #333; color: #fff; border: none; padding: 12px 25px; border-radius: 12px; cursor: pointer; transition: 0.3s;">Ficar</button>
+        </div>
+    </div>
+</div>
 <?php include 'includes/footer.php'; ?>

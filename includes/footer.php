@@ -4,13 +4,32 @@
     <p>&copy; <?php echo date('Y'); ?> Desenvolvido por Leonardo - Todos os Direitos Reservados </p>  
 </footer>
 
+<audio id="som-oceano" loop preload="auto">
+    <source src="imagensfoto/ondas.mp3" type="audio/mpeg">
+</audio>
+
 <script>
-    function deslogar() {
-        if (confirm("Deseja realmente sair da conta?")) {
-            window.location.href = "logout.php"; 
+document.addEventListener('click', function() {
+    var audio = document.getElementById('som-oceano');
+    
+    // Se o áudio já estiver tocando, não faz nada
+    if (!audio.paused) return;
+
+    audio.volume = 0; 
+    audio.play();
+    
+    var fadeIn = setInterval(function() {
+        if (audio.volume < 0.07) { 
+            audio.volume += 0.01;
+        } else {
+            audio.volume = 0.07;
+            clearInterval(fadeIn);
         }
-    }
+    }, 120); 
+}, { once: true });
 </script>
 
+</body>
+</html>
 </body>
 </html>

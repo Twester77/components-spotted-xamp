@@ -68,6 +68,11 @@ A Resposta de Mestre:
 
 * "Utilizei o conceito de Mobile First e Media Queries no CSS. O layout é fluido, e como vocês viram na gravação da tela [o seu vídeo!], os elementos se reorganizam dinamicamente. A 'Fenda' foi pensada para o aluno que está no corredor da faculdade usando o 4G, então a leveza do código foi essencial." *
 
+Pra explicar pro Menechelli:
+## Se ele te perguntar: "Leonardo, por que você usou esse ponto de interrogação no estilo do botão?"
+
+* "Professor, utilizei um operador ternário para tornar a folha de estilo dinâmica. Assim, o CSS reage em tempo real ao status do relacionamento entre os usuários no banco de dados, melhorando a experiência do usuário (UX)." *
+
 Pergunta 5: "Onde os dados ficam salvos de verdade?"
 
 * "Atualmente o ambiente está rodando em um servidor local via Apache, com o banco de dados MySQL gerenciado pelo phpMyAdmin. A estrutura está pronta para ser migrada para um serviço de nuvem (como AWS ou Google Cloud) bastando apenas alterar as constantes de conexão." *

@@ -13,22 +13,20 @@
     --laranja-fenda: rgba(241, 103, 5, 0.9);
 }
 
-body, html {
-    height: 100%;
-    background-color: rgb(49, 48, 146);
-    font-family: 'Inter', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    padding: 10px; 
-    font-size:16px;
-}
-
-body{
-   background-color: rgb(57, 55, 148); /* O roxo/azul que você escolheu */
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
+html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    min-height: 100vh; 
+    background-color: #2b308b; /* Azul único da Fenda */
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; 
+    font-size: 18px;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 
@@ -192,7 +190,11 @@ main {
     margin: 0 auto;
 }
 
-
+/* Garante que o conteúdo do site fique NA FRENTE das bolhas */
+main, navbar, footer {
+    position: relative;
+    z-index: 10; 
+}
 
 /* FORMULÁRIOS E INPUTS*/
 
@@ -245,7 +247,15 @@ main {
     transition: 0.3s;
 }
 
-
+button:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+.container-perfil {
+    backdrop-filter: blur(10px); /* Efeito de vidro */
+    background: rgba(26, 26, 26, 0.9) !important;
+}
 
 /* Botão Flutuante (+) */
 
@@ -265,8 +275,19 @@ main {
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 3000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
 }
 
+.btn-flutuante:hover {
+    background-color: #ff5500; 
+    transform: scale(1.2); 
+    box-shadow: 0 8px 20px rgba(255, 112, 17, 0.5); 
+    filter: brightness(1.2); 
+}
+
+.btn-flutuante:active {
+    transform: scale(0.9); 
+}
 
 /* FEED E CARDS (SPOTTEDS) */
 
@@ -534,10 +555,11 @@ footer a { color: #fff; text-decoration: underline; }
                 rgba(255, 255, 255, 0.2) 60%, 
                 rgba(255, 255, 255, 0.05) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
+    border-radius: 65%;
     animation: subirEBalancar 8s infinite ease-in; 
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
+    
 }
 
 @keyframes subirEBalancar {
@@ -551,6 +573,10 @@ footer a { color: #fff; text-decoration: underline; }
     50% {
         transform: translateY(-60vh) translateX(50px) scale(1.2);
         opacity: 0.4;
+    }
+    80% {
+        transform: translateY(-100vh) translateX(-10px) scale(1.5);
+        opacity: 0.2;
     }
     100% {
         transform: translateY(-120vh) translateX(-30px) scale(1.8);
@@ -785,4 +811,5 @@ footer a { color: #fff; text-decoration: underline; }
     left: 30px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
+
 

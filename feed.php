@@ -71,8 +71,7 @@ include 'includes/bolhas.php';
             while($rc = mysqli_fetch_assoc($res_contas)) { $reacoes[$rc['tipo_reacao']] = $rc['total']; }
         ?>
 
-        <article class="spotted-card <?php echo $linha['categoria']; ?>">
-            <div class="card-header">
+          <article id="post-<?php echo $linha['id']; ?>" class="spotted-card <?php echo $linha['categoria']; ?>">            <div class="card-header">
                 <span class="category-tag">
                     #<?php echo strtoupper($linha['categoria']); ?> 
                     <?php if ($linha['categoria'] == 'perdidos'): ?>
