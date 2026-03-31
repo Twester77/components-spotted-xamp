@@ -2,30 +2,35 @@
 include 'conexao.php';
 session_start();
 
+// 1. Verificação de Segurança
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    $mensagem = $_POST['mensagem'];
-    $categoria = $_POST['categoria'];
-    
-    // Pega a subcategoria (se não existir no post, fica nula)
-    $subcategoria = isset($_POST['subcategoria']) ? $_POST['subcategoria'] : null;
-    
+    // 2. Higienização básica
+    $mensagem = mysqli_real_escape_string($conn, $_POST['mensagem']);
+    $categoria = mysqli_real_escape_string($conn, $_POST['categoria']);
     $usuario_id = $_SESSION['usuario_id']; 
 
-    // 3. Adicionamos 'subcategoria' no INSERT e um "?" a mais
-    $sql = "INSERT INTO mensagens (mensagem, categoria, subcategoria, usuario_id, data_post) VALUES (?, ?, ?, ?, NOW())";
+    // 3. Preparação do SQL (Segurança Máxima)
+    // Note que se você não usa subcategoria aqui, tiramos do INSERT para não dar erro
+    $sql = "INSERT INTO mensagens (mensagem, categoria, usuario_id, data_post) VALUES (?, ?, ?, NOW())";
+    
     $stmt = $conn->prepare($sql);
     
-    // "sssi" -> string (msg), string (cat), string (subcat), integer (id)
-    $stmt->bind_param("sssi", $mensagem, $categoria, $subcategoria, $usuario_id);
+    // "ssi" -> string (msg), string (cat), integer (id)
+    $stmt->bind_param("ssi", $mensagem, $categoria, $usuario_id);
 
     if ($stmt->execute()) {
-        // Se postou de dentro do perdidos.php, pode até voltar pra lá
-        // Mas o feed.php é o destino padrão seguro
+        // Sucesso! Volta para o feed
         header("Location: feed.php");
         exit();
     } else {
-       die("ERRO DE BANCO: " . $stmt->error . " | SQL: " . $sql);
+        // Se der erro, ele te avisa o que é (ex: coluna faltando)
+        die("ERRO AO SALVAR: " . $stmt->error);
     }
 
     $stmt->close();

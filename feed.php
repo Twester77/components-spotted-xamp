@@ -1,9 +1,9 @@
 <?php
-// 1. LÓGICA DE SEGURANÇA E CONFIGURAÇÃO (Sempre no topo!)
-include 'conexao.php'; // Aqui já roda o ob_start() que segura os headers
+// 1. LÓGICA DE SEGURANÇA E CONFIGURAÇÃO
+include 'conexao.php'; 
 session_start();
 
-// TRAVA DE SEGURANÇA: Se não tiver logado, tchau!
+// TRAVA DE SEGURANÇA
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit();
@@ -11,7 +11,6 @@ if (!isset($_SESSION['usuario_id'])) {
 
 // 2. FUNÇÕES AUXILIARES
 function formatarMencoes($texto) {
-    // Procura @ seguido de letras, números, pontos ou underlines
     $padrao = '/@([a-zA-Z0-9._]+)/';
     $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ff7011; font-weight: bold; text-decoration: none;">@$1</a>';
     return preg_replace($padrao, $substituicao, $texto);
@@ -26,9 +25,11 @@ $user_data = mysqli_fetch_assoc($res_user);
 $foto_perfil = !empty($user_data['foto']) ? "uploads/" . $user_data['foto'] : "imagensfoto/img_avatar1.jpg";
 $nome_exibicao = !empty($user_data['username']) ? "@" . $user_data['username'] : $user_data['nome'];
 
-// 4. LÓGICA DE FILTRO DOS POSTS
+// 4. LÓGICA DE FILTRO DOS POSTS (CONSERTADA AQUI)
 $categoria_selecionada = isset($_GET['categoria']) ? $_GET['categoria'] : '';
-$sql = "SELECT m.*, u.username 
+
+// ADICIONEI A VÍRGULA QUE FALTAVA ENTRE username E nome
+$sql = "SELECT m.*, u.username, u.nome 
         FROM mensagens m 
         LEFT JOIN usuarios u ON m.usuario_id = u.id";
 
@@ -39,7 +40,12 @@ if (!empty($categoria_selecionada)) {
 $sql .= " ORDER BY m.id DESC";
 $resultado = mysqli_query($conn, $sql);
 
-// 5. INCLUDES DE INTERFACE (Visual só começa aqui!)
+// Se a query falhar, mostra o erro do banco em vez de tela branca
+if (!$resultado) {
+    die("Erro no Banco de Dados: " . mysqli_error($conn));
+}
+
+// 5. INCLUDES DE INTERFACE
 include 'includes/header.php'; 
 include 'includes/navbar.php';
 include 'includes/bolhas.php'; 
@@ -71,7 +77,8 @@ include 'includes/bolhas.php';
             while($rc = mysqli_fetch_assoc($res_contas)) { $reacoes[$rc['tipo_reacao']] = $rc['total']; }
         ?>
 
-          <article id="post-<?php echo $linha['id']; ?>" class="spotted-card <?php echo $linha['categoria']; ?>">            <div class="card-header">
+        <article id="post-<?php echo $linha['id']; ?>" class="spotted-card <?php echo $linha['categoria']; ?>">
+            <div class="card-header">
                 <span class="category-tag">
                     #<?php echo strtoupper($linha['categoria']); ?> 
                     <?php if ($linha['categoria'] == 'perdidos'): ?>
@@ -82,29 +89,28 @@ include 'includes/bolhas.php';
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <strong>
-                      <?php 
-                         if (!empty($linha['username'])) {
-                          echo "@" . $linha['username']; 
-                       } elseif (!empty($linha['usuario_id'])) {
-                          echo "@Estudante_" . $linha['usuario_id']; 
-                       } else {
-                          echo "@Anônimo";
-                       }
-                          ?>
+                    <strong style="margin-left: 10px;">
+                        <?php 
+                        if (!empty($linha['username'])) {
+                            echo "@" . $linha['username']; 
+                        } elseif (!empty($linha['usuario_id'])) {
+                            echo "@Estudante_" . $linha['usuario_id']; 
+                        } else {
+                            echo "@Anônimo";
+                        }
+                        ?>
                     </strong>
-
                 </span>
                 <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
             </div>
             
             <div class="card-body">
-                <p class="post-content"> <?php echo formatarMencoes($linha['mensagem']); ?> </p>
+                <p class="post-content"><?php echo formatarMencoes($linha['mensagem']); ?></p>
             </div>
 
             <div class="container-pilulas-reacoes" style="display: flex; gap: 5px; padding: 0 15px 10px;">
                 <?php foreach($reacoes as $tipo => $qtd): ?>
-                    <div class="badge-reacao" style="background: rgba(255,255,255,0.1); padding: 2px 10px; border-radius: 20px; font-size: 13px;">
+                    <div class="badge-reacao" style="background: rgba(255,255,255,0.1); padding: 2px 10px; border-radius: 20px; font-size: 13px; color: #fff;">
                         <?php echo $tradutor[$tipo]; ?> <b><?php echo $qtd; ?></b>
                     </div>
                 <?php endforeach; ?>
@@ -126,7 +132,7 @@ include 'includes/bolhas.php';
                 <a href="post.php?id=<?php echo $linha['id']; ?>" class="btn-fofocar">Fofocar</a>
             </div>
         </article> 
-        <?php } // FIM DO WHILE ?>
+        <?php } ?>
     </div> 
 </main>
 

@@ -38,32 +38,36 @@ if (!$post) {
         </div>
     </article>
 
-    <section class="sessao-publicar">
-        <h3 style="margin-bottom: 15px; color: #ffbc00;"> Opino ou prefiro não opinar?</h3>
-        
-        <form action="enviar-comentario.php" method="POST" class="form-fofoca">
-            <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
+   <section class="sessao-publicar">
+    <h3 style="margin-bottom: 15px; color: #ffbc00;">Opino ou prefiro não opinar?</h3>
     
-            <textarea name="comentario" placeholder="Sabe de algo? Conta aí..." required 
-              style="width: 100%; min-height: 80px; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: #222; color: #fff; border: 1px solid #444;"></textarea>
+    <form action="enviar-comentario.php" method="POST" class="form-fofoca">
+        <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
 
-            <?php if (isset($_SESSION['usuario_id'])): ?>
-                <button type="submit" class="btn-lancar" style="background: #ffbc00; color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">
-                    Lançar Fofoca como @<?php echo $_SESSION['usuario_nome']; ?> 🚀
+        <textarea name="comentario" placeholder="Sabe de algo? Conta aí..." required 
+          style="width: 100%; min-height: 80px; padding: 10px; border-radius: 8px; margin-bottom: 10px; background: #222; color: #fff; border: 1px solid #444;"></textarea>
+
+        <?php if (isset($_SESSION['usuario_id'])): 
+            // Buscamos o nome atualizado da sessão ou do banco se preferir
+            $exibir_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : $_SESSION['nome'];
+        ?>
+            <button type="submit" class="btn-lancar" style="background: #ffbc00; color: #000; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">
+                Lançar Fofoca como @<?php echo htmlspecialchars($exibir_nome); ?> 🚀
+            </button>
+        <?php else: ?>
+            <div style="background: rgba(255, 188, 0, 0.1); padding: 15px; border-radius: 8px; border: 1px dashed #ffbc00; margin-bottom: 10px;">
+                <p style="color: #ffbc00; font-size: 14px; margin-bottom: 10px; text-align: center;">
+                    ⚠️ Você não está logado. Sua fofoca será enviada como <strong>Anônimo</strong>.
+                </p>
+                <button type="submit" class="btn-lancar" style="background: #555; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">
+                    Lançar Fofoca Anônima 👤
                 </button>
-            <?php else: ?>
-                <div style="background: rgba(255, 188, 0, 0.1); padding: 15px; border-radius: 8px; border: 1px dashed #ffbc00; margin-bottom: 10px;">
-                    <p style="color: #ffbc00; font-size: 14px; margin-bottom: 10px; text-align: center;">
-                        ⚠️ Você não está logado. Sua fofoca será enviada como <strong>Anônimo</strong>.
-                    </p>
-                    <button type="submit" class="btn-lancar" style="background: #555; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">
-                        Lançar Fofoca Anônima 👤
-                    </button>
-                </div>
-            <?php endif; ?>
-        </form>
+            </div>
+        <?php endif; ?>
+    </form>
 
-        <hr style="margin: 25px 0; opacity: 0.1;">
+    <hr style="margin: 25px 0; opacity: 0.1;">
+    </section>
 
         <div class="lista-comentarios">
             <?php
