@@ -11,7 +11,7 @@ if (!isset($_SESSION['usuario_id'])) {
 
 // 2. FUNÇÕES AUXILIARES
 function formatarMencoes($texto) {
-    $padrao = '/@([a-zA-Z0-9._]+)/';
+    $padrao = '/@([a-zA-Z0-9._-]+)/';
     $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ff7011; font-weight: bold; text-decoration: none;">@$1</a>';
     return preg_replace($padrao, $substituicao, $texto);
 }
@@ -22,7 +22,7 @@ $query_user = "SELECT nome, foto, username FROM usuarios WHERE id = '$usuario_id
 $res_user = mysqli_query($conn, $query_user);
 $user_data = mysqli_fetch_assoc($res_user);
 
-$foto_perfil = !empty($user_data['foto']) ? "uploads/" . $user_data['foto'] : "imagensfoto/img_avatar1.jpg";
+$foto_perfil = !empty($user_data['foto']) ? "uploads/" . $user_data['foto'] : "imagensfoto/img_avatar_generico.jpg";
 $nome_exibicao = !empty($user_data['username']) ? "@" . $user_data['username'] : $user_data['nome'];
 
 // 4. LÓGICA DE FILTRO DOS POSTS (CONSERTADA AQUI)

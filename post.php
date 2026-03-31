@@ -60,7 +60,7 @@ if (!$post) {
                     ⚠️ Você não está logado. Sua fofoca será enviada como <strong>Anônimo</strong>.
                 </p>
                 <button type="submit" class="btn-lancar" style="background: #555; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;">
-                    Lançar Fofoca Anônima 👤
+                    Lançar Fofoca Anônima 
                 </button>
             </div>
         <?php endif; ?>

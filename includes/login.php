@@ -1,6 +1,6 @@
 
 
-<form action="logar.php" method="post">
+<form action="confirma-login.php" method="post">
     <div class="imgcontainer"> 
       <img src="imagensfoto/img_avatar2.jpg" alt="Avatar" class="avatar" >
       <img src="imagensfoto/img_avatar1.jpg" alt="Avatar" class="avatar" >
