@@ -1,7 +1,7 @@
 <section class="filtros-container">
     <form action="feed.php" method="GET">
         <select name="categoria">
-            <option value="">Todas as Categorias</option>
+            <option value=""> <style = font-size: 14px; weight:bold; >Todas as Categorias </style> </option>
             
             <?php
             // 1. Busca as categorias únicas que já existem no banco
@@ -18,6 +18,6 @@
             }
             ?>
         </select>
-        <button type="submit" class="btn-filtrar">Filtrar</button>
+        <button type="submit" class="btn-filtrar"> Filtrar </button>
     </form>
-</section>
+</section> 

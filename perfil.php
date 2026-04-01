@@ -23,7 +23,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perfil" style="max-width: 700px; margin: 20px auto; background: #111; border-radius: 20px; overflow: hidden; border: 1px solid #333;">
+<main class="main-perfil" style="max-width: 700px; margin: 15px auto; background: #111; border-radius: 20px; overflow: hidden; border: 1px solid #333;">
     
     <?php if ($usuario_id == 1): ?>
         <div class="capa-preview" style="width: 100%; height: 250px; background: url('uploads/<?php echo $capa_atual; ?>') center/cover; position: relative; border-bottom: 3px solid #ffbc00;">

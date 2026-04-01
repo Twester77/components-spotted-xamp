@@ -4,31 +4,34 @@ include 'conexao.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     
-    //  Validação do domínio 
+    // 1. Validação do domínio
     if (!str_ends_with($email, '@unifev.edu.br')) {
         header("Location: cad-usuario.php?erro=dominio");
         exit();
     }
 
-    // Checar se o e-mail já está cadastrado
+    // 2. Checar se já existe
     $check_sql = "SELECT id FROM usuarios WHERE email = '$email'";
     $check_res = mysqli_query($conn, $check_sql);
 
     if (mysqli_num_rows($check_res) > 0) {
-        // Se achou alguém, manda de volta com erro de "já existe"
         header("Location: cad-usuario.php?erro=ja_existe");
         exit();
     }
 
-    //  Se passou pelas travas, aí sim cadastra
+    // 3. Dados e Senha
     $nome = mysqli_real_escape_string($conn, $_POST['nome']);
     $senha = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+    $token = bin2hex(random_bytes(16)); 
 
-    $sql = "INSERT INTO usuarios (nome, email, senha) VALUES ('$nome', '$email', '$senha')";
+    // 4. Inserção (Apenas UMA vez!)
+    $sql = "INSERT INTO usuarios (nome, email, senha, token, ativo) 
+            VALUES ('$nome', '$email', '$senha', '$token', 0)";
 
     if (mysqli_query($conn, $sql)) {
-        header("Location: index.php?msg=sucesso");
+       header("Location: sucesso.php?email=" . $email);
         exit();
+
     } else {
         echo "Erro no banco: " . mysqli_error($conn);
     }

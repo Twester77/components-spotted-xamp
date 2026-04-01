@@ -85,7 +85,7 @@ include 'includes/bolhas.php';
                         <span class="category-tag" style="font-weight: bold; color: #ffbc00;">
                             #PERDIDOS 
                             <?php echo ($linha['subcategoria'] == 'achei') ? '<span style="color:#4caf50;">✨ ACHADO</span>' : '<span style="color:#f44336;">🔍 PERDIDO</span>'; ?>
-                            <small style="color: #fff; margin-left: 10px;">@<?php echo !empty($linha['username']) ? $linha['username'] : "Estudante"; ?></small>
+                            <small style="color: #fff; margin-left: 10px;"><?php echo !empty($linha['username']) ? "@" . $linha['username'] : "Anônimo"; ?></small>
                         </span>
                         <span style="font-size: 12px; opacity: 0.6;"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
                     </div>

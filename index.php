@@ -13,14 +13,51 @@ include 'includes/header.php';
     <?php if(!isset($_SESSION['usuario_id'])): ?>
         <?php include 'includes/login.php'; ?>
     <?php else: ?>
-        <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 30px; border: 1px solid #ffbc00; box-shadow: 0 4px 15px rgba(255,188,0,0.2);">
-            <p style="color: #fff; margin-bottom: 20px; font-size: 18px;">
-                E aí, <strong><?php echo $_SESSION['usuario_nome']; ?></strong>! Bem-vindo à Fenda! 🎓
+        <div style="background: rgba(255, 255, 255, 0.07); 
+                    backdrop-filter: blur(10px); 
+                    padding: 30px; 
+                    border-radius: 20px; 
+                    text-align: center; 
+                    margin-bottom: 40px; 
+                    border: 1px solid rgba(255, 188, 0, 0.3); 
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+            
+            <div style="font-size: 40px; margin-bottom: 10px;">🎓</div>
+            
+            <p style="color: #fff; margin-bottom: 25px; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                E aí, <span style="color: #ffbc00; font-weight: bold;"><?php echo $_SESSION['usuario_nome']; ?></span>! <br>
+                <span style="font-size: 16px; opacity: 0.8;">Bem-vindo à Fenda, o QG virtual da UNIFEV.</span>
             </p>
             
-            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                <a class="btn-fenda" href="feed.php" style="background: #ffbc00; color: #000; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: 0.3s;">Ir para o Feed</a>
-                <button onclick="deslogar()" style="background: #cc420c; color: #fff; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s;">Sair da Conta</button>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="feed.php" style="
+                    background: #ffbc00; 
+                    color: #000; 
+                    padding: 12px 35px; 
+                    border-radius: 12px; 
+                    text-decoration: none; 
+                    font-weight: bold; 
+                    font-size: 16px;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(255, 188, 0, 0.3);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;">
+                    🚀 Ir para o Feed
+                </a>
+
+                <button onclick="deslogar()" style="
+                    background: rgba(204, 66, 12, 0.2); 
+                    color: #ff6347; 
+                    border: 1px solid #cc420c; 
+                    padding: 12px 35px; 
+                    border-radius: 12px; 
+                    cursor: pointer; 
+                    font-weight: bold; 
+                    font-size: 16px;
+                    transition: all 0.3s ease;">
+                    🔒 Sair da Conta
+                </button>
             </div>
         </div>
     <?php endif; ?>

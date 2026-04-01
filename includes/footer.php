@@ -30,10 +30,10 @@ document.addEventListener('click', function() {
     audio.play();
     
     var fadeIn = setInterval(function() {
-        if (audio.volume < 0.05) { 
+        if (audio.volume < 0.04) { 
             audio.volume += 0.01;
         } else {
-            audio.volume = 0.05;
+            audio.volume = 0.04;
             clearInterval(fadeIn);
         }
     }, 120); 
