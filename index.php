@@ -8,7 +8,7 @@ include 'includes/header.php';
 <?php include 'includes/navbar.php'; ?>
 <?php include 'includes/bolhas.php'; ?>
 
-<main style="max-width: 800px; margin: auto; padding: 20px;">
+<main>
     
     <?php if(!isset($_SESSION['usuario_id'])): ?>
         <?php include 'includes/login.php'; ?>
@@ -70,11 +70,11 @@ include 'includes/header.php';
         </div>
     <?php endif; ?>
 
-    <article style="text-align: center;">
-        <h2 style="font-size: 20px; margin-bottom: 20px; margin-top: 40px;"> 
+    <article>
+        <h2 style="font-size: 20px; margin-bottom: 20px; margin-top: 30px;text-align:center"> 
             Bem-vindos à "A Fenda" (e não, não é do biquíni)
         </h2>
-        <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"> 
+        <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"> 
     </article>
 
     <article style="font-size: 15px; line-height: 1.6; text-align: left; color: #e0e0e0; word-wrap: break-word;">
@@ -101,10 +101,10 @@ include 'includes/header.php';
 
     <article style="text-align: center; margin-top: 40px;">
         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <img src="imagensfoto/campus-centro.jpg" alt="UNIFEV- Câmpus Centro" style="width: 45%; min-width: 280px; border-radius: 8px;">
-            <img src="imagensfoto/cidade-universitaria.jpg" alt="Cidade Universitária" style="width: 45%; min-width: 280px; border-radius: 8px;">
+            <img src="imagensfoto/campus-centro.jpg" alt="UNIFEV- Câmpus Centro" style="width: 40%; min-width: 280px; border-radius: 8px;">
+            <img src="imagensfoto/cidade-universitaria.jpg" alt="Cidade Universitária" style="width: 40%; min-width: 280px; border-radius: 8px;">
         </div>
-        <figcaption style="margin-top: 15px; opacity: 0.8;">Nossos QGs: Câmpus Centro e Cidade Universitária</figcaption>
+        <figcaption style="margin-top: 15px; opacity: 0.75; font-style: italic; text-align: center;">Nossos QGs: Câmpus Centro e Cidade Universitária</figcaption>
     </article>
 </main>
 
