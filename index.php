@@ -29,6 +29,15 @@ include 'includes/header.php';
                 <span style="font-size: 16px; opacity: 0.8;">Bem-vindo à Fenda, o QG virtual da UNIFEV.</span>
             </p>
             
+            <style>
+                    a[href="feed.php"]:hover {
+                    transition: all 0.3s ease;
+                    transform: translateY(-5px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    filter: brightness(1.2); /
+                    }
+                    </style>
+
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <a href="feed.php" style="
                     background: #ffbc00; 
@@ -38,11 +47,10 @@ include 'includes/header.php';
                     text-decoration: none; 
                     font-weight: bold; 
                     font-size: 16px;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 15px rgba(255, 188, 0, 0.3);
                     display: flex;
                     align-items: center;
-                    gap: 8px;">
+                    gap: 10px; 
+                    ">
                     🚀 Ir para o Feed
                 </a>
 
@@ -66,7 +74,7 @@ include 'includes/header.php';
         <h2 style="font-size: 20px; margin-bottom: 20px; margin-top: 40px;"> 
             Bem-vindos à "A Fenda" (e não, não é do biquíni)
         </h2>
-        <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" style="width: 80%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"> 
     </article>
 
     <article style="font-size: 15px; line-height: 1.6; text-align: left; color: #e0e0e0; word-wrap: break-word;">
@@ -75,11 +83,11 @@ include 'includes/header.php';
         
         <p style="margin-bottom: 15px;">Falar mal do: coleguinha / fulano / beltrano / herculano / vida acadêmica / perrengues cotidianos / presidente / do papa / MEC / obsolecência programada / aquecimento global / segunda guerra mundial / apocalipse zumbi / político / ex BBB / porteiro (mãe não, porque não pode), ou só desabafar um pouco e afogar as lágrimas depois de um semestre nada fácil.</p> 
 
-        <p style="margin-bottom: 15px;">Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, talvez um churras com piscina (Votuporanga né, só por deus) no final de semana, marcar um karaokê pra postar nos stories (ou melhor não, depois do álcool a gente faz cada coisa que não é bom nem comentar). Quem sabe combinar uma carona?</p> 
+        <p style="margin-bottom: 15px;">Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, talvez um churras com piscina (Votuporanga né, só por deus) no final de semana... Marcar um karaokê pra postar nos stories (ou melhor não, depois do álcool a gente faz cada coisa que não é bom nem comentar). Quem sabe combinar uma carona?</p> 
 
         <p style="margin-bottom: 15px;">E por que não, marcar um date e achar o amor da sua vida (ou um trauma e 6 meses de terapia, alô pessoal da Psico!). Porque não marcar um duelo ao meio dia? (embora eu duvide muito que alguém vai ter tanto tempo sobrando assim mas enfim.. Minha nossa senhora, é tanta coisa que deu até preguiça de digitar.</p>
 
-        <p style="font-style: italic; opacity: 0.8; margin-bottom: 20px;"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros.</p>
+        <p style="font-style: italic; opacity: 0.7; margin-bottom: 20px;"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros.</p>
 
         <blockquote style="border-left: 4px solid #cc420c; padding-left: 15px; margin: 25px 0; font-style: italic; background: rgba(255,255,255,0.03); padding: 15px;">
             "Tratem todos: (Sim, isso inclui todos, desde animais, pessoas, bactérias, terraplanistas e até ET's) com educação. Ser doido e um tanto quanto anárquico não é desculpa para ser mal-educado, respeito é via de mão dupla."

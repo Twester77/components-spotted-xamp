@@ -17,26 +17,23 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
 </head>
-<body> <header>
+<body> 
+    <header>
         <h1>A Fenda - Spotted Universitário</h1>
-        <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
-    <i class="fas fa-cog icon-fenda"></i>
-</a>
-<style>
-    .icon-fenda {
-        font-size: 2.0rem; 
-        color: #ffbc00;    
-        transition: all 0.3s ease;
-        display: inline-block;
-        vertical-align: middle; 
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
+    <?php 
+    $pagina_atual = basename($_SERVER['PHP_SELF']); 
+    if ($pagina_atual !== 'index.php'): 
+    ?>
 
-    .btn-config:hover .icon-fenda {
-        transform: rotate(90deg) scale(1.1); 
-        color: #fff; 
-        filter: drop-shadow(0 0 5px rgba(255, 188, 0, 0.7)); 
-    }
-</style>
+    <div class="header-icons" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; align-items: center;">
+        <a href="buscar-usuario.php" class="btn-header" title="Buscar Usuários">
+            <i class="fas fa-search icon-fenda"> </i>
+        </a>
+        <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
+           <i class="fas fa-cog icon-fenda"> </i>
+        </a>
+    </div>
+        <?php endif; ?>
+
     </header>
+    

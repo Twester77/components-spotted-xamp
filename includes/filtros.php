@@ -1,8 +1,7 @@
 <section class="filtros-container">
     <form action="feed.php" method="GET">
         <select name="categoria">
-            <option value=""> <style = font-size: 14px; weight:bold; >Todas as Categorias </style> </option>
-            
+            <option value="">Todas as Categorias</option>
             <?php
             // 1. Busca as categorias únicas que já existem no banco
             $sql_categorias = "SELECT DISTINCT categoria FROM mensagens WHERE categoria IS NOT NULL AND categoria != ''";
@@ -20,4 +19,4 @@
         </select>
         <button type="submit" class="btn-filtrar"> Filtrar </button>
     </form>
-</section> 
+    <section>

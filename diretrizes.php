@@ -12,7 +12,7 @@
   <h2 style="font-size: 20px; text-align: center; margin-bottom: 20px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
     </article>
   <div style="display: flex; gap: 10px; justify-content:center;">
-   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" width=80%>
+   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
   <article style="color: #b1a508; font-size: 16px; padding: 20px; line-height: 1.6; text-wrap: auto; margin: 20px ;"> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
@@ -45,7 +45,7 @@
    Ao clicar em "Entrar" ou realizar um post, você confirma que leu, entendeu e concorda com todos os pontos acima, ciente de que o descumprimento resultará no banimento imediato da conta e exclusão do conteúdo.
     </article>
 
-  <article style="background-color: rgba(204, 66, 12, 0.1); padding: 20px; line-height: 1.6;">
+  <article style="background-color: rgba(204, 66, 12, 0.1); padding: 30px; line-height: 1.6;">
     <h2> *Extra: Dicas de Segurança para Encontros Reais </h2>
     <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
@@ -57,7 +57,7 @@
     </ul>
 
     <div style="display: flex; justify-content: center; margin-top: 15px;">
-        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" width="60%" style="border-radius: 3px;">
+        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 70%; height: auto; border-radius: 15px; opacity: 0.7; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     </div>
     </article>
   <br>

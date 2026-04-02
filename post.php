@@ -81,8 +81,8 @@ if (!$post) {
             // Verificamos SE existem comentários
             if ($res_c->num_rows > 0): 
                 while ($c = $res_c->fetch_assoc()): ?>
-                    <div class="comentario-item" style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid #ffbc00;">
-                        <p style="margin-bottom: 5px;">
+                    <div class="comentario-item" style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid #1c85dcc4;">
+                        <p style="margin-bottom: 10px;">
                             <strong style="color: #ffbc00; font-size: 14px;">
                                 <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>:
                             </strong> 
@@ -94,7 +94,7 @@ if (!$post) {
                     </div>
                 <?php endwhile; ?>
             <?php else: ?> 
-                <p class="sem-fofoca" style="text-align: center; opacity: 0.5;">Ninguém fofocou nada ainda... </p> 
+                <p class="sem-fofoca" style="text-align: center; opacity: 0.6;">Ninguém fofocou nada ainda... </p> 
             <?php endif; ?>
         </div>
     </section>

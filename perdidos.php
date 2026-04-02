@@ -41,7 +41,7 @@ include 'includes/bolhas.php';
         <header class="achados-perdidos-header" style="text-align: center;">
             <h2>Achados e Perdidos</h2>
             <div class="capa-container">
-                <img src="imagensfoto/capa-achados-e-perdidos.jpg" alt="Capa" class="img-capa" style="max-width: 100%; height: auto; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <img src="imagensfoto/capa-achados-e-perdidos.jpg" alt="Capa" class="img-capa" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.83; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             </div>
             <p class="frase-efeito" style="font-style: italic; color: #ccc;">
                 Perdeu o juízo? Disso a gente não cuida. Mas se perdeu a chave ou a garrafinha, está no lugar certo!
