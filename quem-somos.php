@@ -1,7 +1,9 @@
 
-<?php include 'includes/header.php'; 
-      include 'includes/navbar.php'; 
-      include 'includes/bolhas.php';?>
+<?php 
+$body_class = "pg-fundo-azul";
+include 'includes/header.php'; 
+include 'includes/navbar.php'; 
+include 'includes/bolhas.php';?>
 
 
 </nav>

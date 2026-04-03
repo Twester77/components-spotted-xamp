@@ -1,0 +1,1136 @@
+
+/* CONFIGURAÇÕES GERAIS E VARIÁVEIS */
+* {  
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+:root {
+    --cor-principal: #004a8d; 
+    --cor-hover: #1b77c7;
+    --cor-logout: #e74c3c;
+    --laranja-fenda: rgba(241, 103, 5, 0.9);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; 
+    background-color: #2b308b; /* Azul único da Fenda */
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; 
+    font-size: 16px;
+     
+}
+.bg-dark-fenda {
+    background-color: #050505 !important; 
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (max-width: 600px) {
+
+       .header-icons {
+        position: relative !important; 
+        right: auto !important;
+        top: auto !important;
+        transform: none !important;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+       }
+
+
+    .header {
+        padding: 30px 20px; 
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .btn-header {
+    transform:scale(1.1);
+    filter:brightness(1.5);
+    transition: transform 0.3s ;
+    color:#fff;
+
+    }
+
+    .header h1 {
+        font-size: 1.1rem; 
+        margin-bottom: 10px;
+        max-width: 70%; }
+
+    .container-feed {
+        padding-top: 20px;
+    }
+
+    .spotted-card {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 20px; 
+        border-left-width: 8px;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .reacoes-popup {
+        padding: 8px 10px;
+        gap: 8px; 
+        min-width: 140px; }
+
+    .reacoes-popup a {
+        font-size: 1.1rem; 
+    }
+
+    .icon-fenda {
+        font-size: 2.3rem; 
+
+    }
+
+     .filtros-container {
+        width: 100%;
+     }
+
+    .popup-notificacao {
+        width: auto !important;
+        height: 95px !important;    
+        left: 10%;
+        bottom: 30px;
+        top: 40%;
+    }
+
+@keyframes deslizar {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; } }
+
+} 
+
+/* CABEÇALHO (HEADER) */
+
+
+header {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    position: relative;
+}
+
+header h1 {
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.header-icons {
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    gap:25px; 
+    top:30px;
+    right:30px;
+    left:auto;
+}
+    
+
+article h3 {
+    color: #ffbc00; 
+    margin-top: 25px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 188, 0, 0.3);
+    padding-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.card-header {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+
+/* Container da logo/avatar no topo */
+
+.imgcontainer {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    padding: 20px;
+    margin: 0 auto;
+    gap: 30px; 
+}
+.avatar-pequeno {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Isso aqui faz a mágica: corta a foto sem distorcer */
+    border-radius: 50%;
+    border: 3px solid #ff7011; 
+}
+.avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: none !important; 
+    /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
+    -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
+    mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
+    transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+    transform: scale(1.1);
+}
+
+.avatar-perfil {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ff7011;
+    margin-bottom: 15px;
+}
+
+
+/* MENU DE NAVEGAÇÃO E SUBMENUS */
+
+.menu {
+    display: flex;
+    flex-wrap: wrap; 
+    list-style: none;
+    background: rgba(241, 103, 5, .8);
+    backdrop-filter: blur(10px); 
+    padding: 10px;
+    gap: 8px;
+    border-radius: 5px; 
+    width: 100%; 
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 9999; /* Garante que fique acima de tudo */
+    font-size: large;
+}
+
+.menu-item { position: relative; }
+
+.menu-item a { 
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px!important;
+    padding: 15px 20px;
+    display: block;
+    transition: 0.3s;
+}
+
+.menu-item:hover > a {
+    background: rgba(255, 255, 255, 0.15); /* Mais translúcido */
+    border-radius: 4px;
+    color: #ffd600 !important;
+    backdrop-filter: blur(2px);
+}
+
+
+
+/* Submenu Dropdown */
+
+.submenu {
+    display: none; 
+    position: absolute; 
+    top: 100%; 
+    left: 0;
+    background: rgb(60, 58, 160); 
+    min-width: 200px;
+    padding: 5px 0;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.4); 
+    border-radius: 5px;
+    list-style: none;
+    z-index: 10000; 
+}
+
+.submenu li {
+    padding: 10px 15px;
+    padding: 12px 20px !important;
+    line-height: 1.4;
+}
+
+
+.submenu li a {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.submenu li:hover {
+     background-color: rgb(57, 55, 175);
+     background: rgba(255, 255, 255, 0.199);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter:blur(12px);  
+    box-shadow: 0 1px 5px rgba(0,0,0,0.5);
+
+}
+
+.menu-item:hover .submenu { display: flex; flex-direction: column; }
+
+
+/* Setas do Dropdown */
+
+.dropdown > a::after { content: ' ▼'; font-size: 10px; opacity: 0.5; }
+.dropdown:hover > a::after { content: ' ▲'; }
+
+
+
+/* CONTEÚDO PRINCIPAL (MAIN / CONTAINER)  */
+
+
+main {
+    width: 95%; /* TIREI O !IMPORTANT */
+    max-width: 800px; /* TIREI O !IMPORTANT */
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; 
+    background: rgba(255, 255, 255, 0.05); 
+    backdrop-filter: blur(15px);           
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 20px;                  
+    padding: 40px;                         
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+}
+
+.container, .login-form, form[action="confirma-login.php"] {
+    max-width: 400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+}
+
+
+main article {
+    width: 100% !important;
+    text-align: left !important;
+}
+
+main img {
+    max-width:80% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 20px auto !important;
+}
+
+.main-perfil {
+    max-width: 450px;       
+    width: 90%;             
+    margin: 30px auto;      
+    border-radius: 25px;    
+    padding: 20px;
+    min-height: auto!important;      
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.main-perfil form {
+    max-width: 450px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+
+main img, .capa-preview, .img-capa {
+    width: 100% !important;
+    height: 250px !important; /* Mantenha sua altura */
+    
+    /* ADICIONE ESTAS DUAS LINHAS AQUI 👇 */
+    object-fit: cover !important; 
+    object-position: center !important; 
+}
+
+.main-novo-post .form-container, .main-perfil form {
+    width: 100%;
+    max-width: 450px !important;
+    margin: 0 auto;
+}
+
+.main-perfil form, .main-novo-post form {
+    max-width: 450px !important; /* Define um tamanho máximo humano */
+    width: 90% !important;
+    margin: 0 auto !important; /* Centraliza o form no meio do card */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Alinha os inputs no meio */
+}
+.spotted-card img, .img-capa, .capa-preview {
+    width: 100% !important;
+    height: 250px !important;
+    object-fit: cover !important; /* CORTE INTELIGENTE */
+    object-position: center;
+    border-radius: 12px;
+}
+
+/* Garante que inputs e textarea preencham o form centralizado */
+.main-perfil input, .main-perfil textarea, 
+.main-novo-post textarea, .main-novo-post select {
+    width: 100% !important;
+    text-align: center !important; 
+}
+
+/* Conserta o tamanho da capivara na Busca (`image_14.png`) */
+.buscar-suusuario-container img {
+    max-width: 200px !important;
+    border-radius: 50% !important;
+    margin: 20px auto !important;
+}
+
+@keyframes pulsar {
+    0% { opacity: 0.7; text-shadow: 0 0 5px #ffbc00; }
+    50% { opacity: 1; text-shadow: 0 0 20px #ffbc00; }
+    100% { opacity: 0.7; text-shadow: 0 0 5px #ffbc00; }
+}
+
+
+/* Garante que o conteúdo do site fique NA FRENTE das bolhas */
+main, navbar, footer {
+    position: relative;
+    z-index: 10; 
+}
+
+nav, .navbar {
+    padding: 8px 0; /* Diminua o primeiro número se estiver muito largo */
+}
+
+/* FORMULÁRIOS E INPUTS*/
+
+.container input, .container button, select, textarea {
+    padding: 12px;
+    width: 100%;
+    border-radius: 10px; 
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    display: block;
+    font-family: 'Inter', sans-serif;
+}
+
+.container, .login-form {
+
+    flex-direction: column; 
+    width: 100%;
+    max-width: 400px; 
+    margin: 0 auto 40px auto; 
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+
+/* BOTÕES (ACTION BUTTONS) */
+
+    .icon-fenda {
+        font-size: 2.2rem; 
+        color: #ffbc00;    
+        transition: all 0.3s ease;
+        display: inline-block;
+        vertical-align: middle; 
+        margin-top: 20px;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+
+    .btn-config:hover .icon-fenda {
+        transform: rotate(90deg) scale(1.3); 
+        color: #fff; 
+        filter: drop-shadow(0 0 5px rgba(255, 188, 0, 0.7)); 
+    }
+
+
+
+.login-btn {
+    background: linear-gradient(135deg, #ff7011, #ffbc00) !important; 
+    color: #fff !important;
+    border: none;
+    width: 100%; /* Garante que ele ocupe a largura toda */
+    padding: 14px 20px !important;
+    border-radius: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 112, 17, 0.4); /* Brilho laranja para destacar do azul */
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    transform: translateY(-5px); /* Efeito de levante */
+    box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);
+    filter: brightness(1.1);
+}
+
+button:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+
+
+.configuracoes-container, [style*="background: #111"], .perfil-box {
+    background: rgba(0, 0, 0, 0.8) !important; 
+    backdrop-filter: blur(10px)!important;
+    border: 1px solid #333 !important;
+}
+
+/* Botão Flutuante (+) */
+
+.btn-flutuante {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #cc420c;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 3000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+.btn-flutuante:hover {
+    background-color: #ff5500; 
+    transform: scale(1.2); 
+    box-shadow: 0 8px 20px rgba(255, 112, 17, 0.5); 
+    filter: brightness(1.2); 
+}
+
+.btn-flutuante:active {
+    transform: scale(0.9); 
+}
+
+/* FEED E CARDS (SPOTTEDS) */
+
+.container-feed {
+    max-width: 550px;
+    margin: 20px auto 30px; 
+    display: flex;
+    flex-direction: column;
+    gap: 35px; 
+    padding: 10px;
+}
+
+.spotted-card:first-child {
+    margin-top: 0; }
+
+.container-feed {
+    padding-top: 10px; }
+
+
+.spotted-card {
+    background: rgba(255, 255, 255, 0.08); 
+    backdrop-filter: blur(15px); 
+    border-radius: 22px;
+    padding: 20px;       
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-left-width: 8px;
+    transition: all 0.3s ease;
+    width: 100% !important;
+    margin-bottom: 30px; 
+    position: center !important;
+}
+.post-content {
+    font-size: 1.2rem !important;
+    line-height: 1.6;
+    color: #ffffff;
+    margin: 15px 0;
+    font-weight: 500;
+}
+
+.spotted-card:hover {
+    transform: translateY(-15px); /* O card sobe de leve */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); 
+    background: rgba(255, 255, 255, 0.12); /* Brilha um pouquinho mais */
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+
+/* Cores das Categorias */
+
+.spotted-card.ranco { border-left: 12px solid #d12b18 !important; }
+.spotted-card.elogio { border-left: 12px solid #f5709f !important; }
+.spotted-card.comunidade { border-left: 12px solid #379c09df !important; }
+.spotted-card.perdidos { border-left: 12px solid #ffd600 !important; }
+.spotted-card.pergunta { border-left: 12px solid #3498db !important; }
+.spotted-card.acaba-pelo-amor-de-deus { border-left: 12px solid #641c90 !important; }
+
+
+
+
+/*  PÁGINA ACHADOS E PERDIDOS (ORGANIZAÇÃO)  */
+
+.achados-perdidos-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.badge-perdido {
+    background-color: #ff4757; /* Vermelho mais moderno */
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-achado {
+    background-color: #2ed573;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-left: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.img-capa {
+    width: 70%;
+    border-radius: 15px;
+    margin: 10px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.frase-efeito {
+    font-style: italic;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 85%;
+    margin: 15px auto;
+}
+
+
+/* Ajuste para as respostas (desgrudar linhas) */
+
+.reply-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+}
+
+.reply-box {
+    padding-left: 15px;
+    border-left: 3px solid #cc420c; 
+    font-size: 0.95rem;
+    color: #eee;
+    line-height: 1.4;
+}
+
+.status-resolvido {
+    border-left: 3px solid #29d16f !important; 
+    background: rgba(46, 204, 113, 0.05);
+}
+
+/* Seção de Publicar */
+
+.sessao-publicar {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+}
+
+.nota-seguranca {
+    background-color: #ffffcc;
+    color: #000;
+    padding: 12px;
+    font-size: 0.85em;
+    border-left: 5px solid #ffcc00;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+.alerta-login {
+    background: rgba(255, 188, 0, 0.1);
+    border: 1px dashed #ffbc00;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: #fff;
+    margin-top: 20px;
+} 
+
+.alerta-login a { color: #ffbc00; font-weight: bold; }
+
+
+footer { 
+    text-align: center;
+    padding: 30px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    margin-top: 50px;
+}
+
+footer a { color: #fff; text-decoration: underline; }
+
+
+
+
+/* Parei de editar aqui*/
+
+
+.main-novo-post {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+
+    .form-container {
+        background: rgba(255, 255, 255, 0.05); 
+        -webkit-backdrop-filter: blur(15px);
+         backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .form-container h2 {
+        color: #fff;
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 24px;
+    }
+
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-container textarea {
+        width: 100%;
+        height: 150px;
+        padding: 12px;
+        border-radius: 8px;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        font-family: 'Inter',sans-serif;
+        resize: none; 
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .form-container label {
+        color: #eee;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+
+    .form-container select {
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        background: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+    }
+
+    .btn-lancar {
+        background-color: #08d888; 
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .btn-lancar:hover {
+        background-color: #06b371;
+        transform: translateY(-2px);
+    }
+
+
+/* BOLHAS DA FENDA REFORMULADAS */
+
+.bolha {
+    position: fixed;
+    bottom: -10vh; 
+    background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.4) 0%, 
+                rgba(255, 255, 255, 0.1) 40%, 
+                rgba(255, 255, 255, 0.2) 60%, 
+                rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 65%;
+    animation: subirEBalancar 8s infinite ease-in; 
+    z-index: 1;
+    pointer-events: none;
+    
+}
+
+@keyframes subirEBalancar {
+    0% {
+        transform: translateY(0) translateX(0) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(-60vh) translateX(50px) scale(1.2);
+        opacity: 0.4;
+    }
+    80% {
+        transform: translateY(-100vh) translateX(-10px) scale(1.5);
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(-120vh) translateX(-30px) scale(1.8);
+        opacity: 0;
+    }
+}
+
+
+
+/* COMENTÁRIOS */
+
+.comentario-item {
+    background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+    border-left: 3px solid #ffbc00;
+    border-radius: 12px;
+    padding: 20px;           /* Aumentei de 15 pra 20 pra ela "respirar" */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;                /* Dá um espacinho entre o nome e o texto */
+}
+
+
+.comentario-item strong {
+    color: #ebc415;
+    font-size: 1.2rem;      /* Nome um pouquinho maior */
+}
+
+.comentario-item span {
+    font-size: 1.1rem;
+    line-height: 1.5;       /* Melhora a leitura se o texto for longo */
+}
+
+
+
+.footer-links {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    padding: 5px 10px;
+}
+ 
+
+/* Ajuste fino footer-links */
+
+.footer-links .btn-trigger-reacoes, 
+.footer-links .btn-comentar {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre o ícone e o texto */
+    font-size: 0.9rem;
+}
+
+
+
+/* REAÇÕES */
+
+.container-reacoes-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px; 
+    margin: -10px; 
+    cursor: pointer;
+}
+
+.reacoes-popup {
+    opacity: 0; 
+    visibility: hidden; 
+    transform: translateX(-50%) translateY(10px); /* Começa um pouco abaixo e centralizado no eixo X */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: absolute; 
+    bottom: 40px; /* Sobe a popup para ficar acima da palavra */
+    left: 50%; /*  Move o canto esquerdo da popup para o meio do "Reagir" */
+    background: #252542; 
+    padding: 8px 12px;
+    border-radius: 30px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap; /* Garante que os emojis não quebrem a linha */ 
+    bottom: 45px; /* Ajuste essa altura conforme o tamanho do seu botão */
+    padding: 10px 15px; /* Mais espaço para os dedos acertarem o emoji */
+}
+
+
+/* Estilizando os links das reações */
+
+.reacao-wrapper:hover .reacoes-popup {
+    opacity: 1; 
+    visibility: visible; 
+    transform: translateX(-50%) translateY(0); /* Finaliza centralizado e na altura correta */
+}
+
+.reacoes-popup a {
+    text-decoration: none;
+    font-size: 1.4rem;
+    display: inline-block; 
+    transition: transform 0.2s ease;
+}
+
+.reacoes-popup::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 20px;
+    bottom: -20px; /* Cria uma ponte invisível entre o botão e o menu */
+    left: 0;
+}
+
+.reacoes-popup a:hover {
+    transform: scale(1.5) translateY(-5px); 
+}
+
+.btn-comentar {
+    background: rgba(255, 255, 255, 0.08); /* A caixinha */
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-reagir, .btn-fofocar {
+    color: #ccc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-reagir:hover, .btn-fofocar:hover {
+    color: #ffbc00;
+}
+
+.btn-lancar-fofoca:hover {
+    filter: brightness(1.4);
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+
+
+/* CONTAINER DE FILTROS */
+
+
+.filtros-container{
+    margin-top: 25px;    
+    margin-bottom: 25px; 
+    display: flex;
+    justify-content: center; 
+    padding: 10px;
+}
+
+.aviso-login {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    text-align: center;
+    color: #e1aa13;
+}
+
+.btn-filtrar {
+    background-color: #ffbc00; 
+    color: #1a1a2e; 
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+
+.btn-filtrar:hover {
+    background-color: #e6a800; 
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
+}
+
+.filtros-container select {
+    margin-bottom: 0 !important; /* Remove aquela margem que empurra o botão pra baixo */
+    width: 100%;
+    padding: 9px 14px;      
+    font-size: 15px;         
+    border-radius: 8px;     
+    background-color: white; 
+    cursor: pointer;
+    max-width: 250px;
+    height: auto;
+
+}
+
+.filtros-container form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+
+.container-pilulas-reacoes {
+    display: flex;
+    gap: 5px;
+    padding: 10px 0; 
+    margin-top: 10px; 
+    position: static; /* Garante que não está flutuando sobre o texto */
+}
+
+.badge-reacao {
+
+    background: rgba(0, 0, 0, 0.5); /* Fundo mais escuro para destacar o emoji */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #eee;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.badge-reacao:hover {
+    transform: scale(1.1); 
+    border-color: #ff7011;
+}
+
+.category-tag {
+    font-size: 1.0rem;
+    color: #ffbc00; 
+    font-weight: bold;
+}
+
+/* CONTAINER DA CAPA DO PERFIL */
+
+.capa-preview {
+    width: 100%;
+    height: 350px; 
+    background-size: cover;      
+    background-position: center; 
+    background-repeat: no-repeat;
+    position: relative;
+    border-bottom: 3px solid #ffbc00; 
+}
+
+/* EFEITO PARA A FOTO DE PERFIL SOBREPOSTA */
+
+.foto-perfil-sobreposta {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 4px solid #111; 
+    object-fit: cover;
+    background: #222;
+    position: absolute;
+    bottom: -50px;
+    left: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.user-info img {
+    border-radius: 50%;
+    object-fit: cover; /* Garante que a imagem não fique esticada */
+}
+
+.popup-notificacao {
+    position: fixed;
+    top: 20%;
+    right: 5%; 
+    background: rgba(255, 188, 0, 0.85) !important; 
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); 
+    color: #000;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    z-index: 9999;
+    animation: slideIn 0.5s ease-out;
+    cursor: pointer;
+    width: 400px; 
+    transition: all 0.3s ease;
+    cursor: pointer;
+    animation: deslizar 0.5s ease-out;
+
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(0); }
+}

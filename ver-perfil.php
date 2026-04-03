@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'conexao.php';
+$body_class = "pg-fundo-azul";
 include 'includes/header.php';
 include 'includes/navbar.php';
 

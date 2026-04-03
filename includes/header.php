@@ -15,9 +15,9 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
 </head>
-<body> 
+
+<body class="<?php echo isset($body_class) ? $body_class : 'pg-fundo-azul'; ?>"></body>
     <header>
         <h1>A Fenda - Spotted Universitário</h1>
     <?php 
@@ -33,7 +33,6 @@ $usuario_logado = isset($_SESSION['usuario_id']);
            <i class="fas fa-cog icon-fenda"> </i>
         </a>
     </div>
-        <?php endif; ?>
+    <?php endif; ?>
 
     </header>
-    

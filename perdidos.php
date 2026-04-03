@@ -17,6 +17,7 @@ $resultado_perdidos = mysqli_query($conn, $sql_perdidos);
 $usuario_logado = isset($_SESSION['usuario_id']);
 
 // 3. INCLUDES DE INTERFACE
+$body_class = "pg-fundo-azul";
 include 'includes/header.php';  
 include 'includes/navbar.php'; 
 include 'includes/bolhas.php'; 
