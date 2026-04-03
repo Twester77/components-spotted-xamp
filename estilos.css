@@ -534,11 +534,15 @@ button:hover {
     position: center !important;
 }
 .post-content {
+    white-space: pre-wrap; /* Faz as quebras de linha do usuário funcionarem no HTML */
+    word-wrap: break-word;
     font-size: 1.2rem !important;
     line-height: 1.6;
     color: #ffffff;
     margin: 15px 0;
     font-weight: 500;
+    
+}
 }
 
 .spotted-card:hover {
