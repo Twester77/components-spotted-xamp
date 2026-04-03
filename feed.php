@@ -8,12 +8,19 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// 2. FUNÇÕES AUXILIARES (Para as menções @ virarem links)
+// 2. FUNÇÃO AUXILIAR (Limpa, segura e funcional)
 function formatarMencoes($texto) {
-    $padrao = '/@([a-zA-Z0-9._-]+)/';
-    // Nota: redireciona para ver-perfil.php conforme sua lógica
-    $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; font-size: 14px; text-decoration: none;">@$1</a>';
-    return preg_replace($padrao, $substituicao, $texto);
+    // 1. Primeiro, protegemos o texto contra ataques XSS (Segurança)
+    $texto_seguro = htmlspecialchars($texto);
+
+    // 2. Definimos o padrão: @ seguido de qualquer coisa que não seja espaço
+    $padrao = '/@([^\s]+)/';
+    
+    // 3. Definimos como o link deve ser (ajustado para perfil.php)
+    $substituicao = '<a href="perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>';
+
+    // 4. A máquina processa e devolve o texto pronto
+    return preg_replace($padrao, $substituicao, $texto_seguro);
 }
 
 // 3. BUSCA DE DADOS DO USUÁRIO LOGADO
@@ -96,9 +103,9 @@ include 'includes/bolhas.php';
             <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
             </div>
             
-            <div class="card-body">
-                <p class="post-content"><?php echo formatarMencoes($linha['mensagem']); ?></p>
-            </div>
+         <div class="card-body">
+             <p class="post-content"><?php echo formatarMencoes($linha['mensagem']); ?> </p>     
+         </div>
 
             <div class="container-pilulas-reacoes" style="display: flex; gap: 5px; padding: 0 15px 10px;">
                 <?php foreach($reacoes as $tipo => $qtd): ?>

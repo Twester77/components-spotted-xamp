@@ -1,6 +1,14 @@
+
 <?php
-include 'conexao.php';
 session_start();
+include 'conexao.php';
+if (!$conn) {
+    die("A conexão falhou, Léo! O erro foi: " . mysqli_connect_error());
+} else {
+    // echo "Conexão OK!"; // Descomente só pra testar e depois apague
+}
+
+
 
 // 1. Verificação de Segurança
 if (!isset($_SESSION['usuario_id'])) {
@@ -15,21 +23,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $categoria = mysqli_real_escape_string($conn, $_POST['categoria']);
     $usuario_id = $_SESSION['usuario_id']; 
 
-    // 3. Preparação do SQL (Segurança Máxima)
-    // Note que se você não usa subcategoria aqui, tiramos do INSERT para não dar erro
+    // 3. Preparação do SQL do Post
     $sql = "INSERT INTO mensagens (mensagem, categoria, usuario_id, data_post) VALUES (?, ?, ?, NOW())";
-    
     $stmt = $conn->prepare($sql);
-    
-    // "ssi" -> string (msg), string (cat), integer (id)
     $stmt->bind_param("ssi", $mensagem, $categoria, $usuario_id);
 
     if ($stmt->execute()) {
-        // Sucesso! Volta para o feed
+        
+       // --- 🧠 CÉREBRO DE MENÇÕES (VERSÃO FINAL) ---
+// Captura tudo que começa com @ até encontrar um espaço
+if (preg_match_all('/@([^\s]+)/', $mensagem, $matches)) {
+    $mencoes = $matches[0]; // Pega o nome completo: @test ou @apresença_fevN#1
+
+    foreach ($mencoes as $user_tag) {
+        // Busca na coluna 'username' OU 'nome' para garantir
+        $sql_busca = "SELECT id FROM usuarios WHERE username = ? OR nome = ?";
+        $stmt_busca = $conn->prepare($sql_busca);
+        $nome_limpo = str_replace('@', '', $user_tag); // 'test' sem o @
+        $stmt_busca->bind_param("ss", $user_tag, $nome_limpo);
+        $stmt_busca->execute();
+        $res = $stmt_busca->get_result();
+        
+        if ($alvo = $res->fetch_assoc()) {
+            $id_dest = $alvo['id'];
+            if($id_dest != $_SESSION['usuario_id']) {
+                $msg_n = $_SESSION['usuario_nome'] . " mencionou você!";
+                $sql_n = "INSERT INTO notificacoes (usuario_id, mensagem) VALUES (?, ?)";
+                $st_n = $conn->prepare($sql_n);
+                $st_n->bind_param("is", $id_dest, $msg_n);
+                $st_n->execute();
+            }
+        }
+    }
+}   // 🧠 FIM DO CÉREBRO DE MENÇÕES
+
         header("Location: feed.php");
         exit();
     } else {
-        // Se der erro, ele te avisa o que é (ex: coluna faltando)
         die("ERRO AO SALVAR: " . $stmt->error);
     }
 

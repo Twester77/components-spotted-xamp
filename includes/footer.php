@@ -1,14 +1,4 @@
 
-<div id="meuModalSair" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
-    <div style="background:#1a1a1a; padding:30px; border-radius:20px; text-align:center; border:2px solid #ff7011; box-shadow: 0 0 20px rgba(255,112,17,0.5); max-width: 300px;">
-        <h3 style="color:#fff; margin-bottom: 20px; font-family: sans-serif;">Deseja mesmo sair da Fenda? 🌊</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button onclick="confirmarSaida()" style="background:#ff7011; color:#fff; border:none; padding:12px; border-radius:10px; font-weight:bold; cursor:pointer;">Sim, Sair</button>
-            <button onclick="fecharModal()" style="background:#333; color:#eee; border:none; padding:10px; border-radius:10px; cursor:pointer;">Cancelar</button>
-        </div>
-    </div>
-</div>
-
 <footer>
     <p> <strong> Aviso:</strong> "A Fenda" é uma plataforma independente e colaborativa. Não possuímos vínculo administrativo ou oficial com a UNIFEV. O conteúdo é de responsabilidade exclusiva de seus autores.</p>
     <strong> Entre em contato com a gente: 0800 7070 6969 ou mande um email para floorspotted.fev@outlook.com </strong>
@@ -16,7 +6,7 @@
 </footer>
 
 <audio id="som-oceano" loop preload="auto">
-    <source src="imagensfoto/ondas.mp3" type="audio/mpeg">
+    <source src="imagensfoto/chuva.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -60,6 +50,46 @@ function confirmarSaida() {
     // Verifique se o seu arquivo é sair.php ou logout.php (no seu JS está logout)
     window.location.href = "logout.php"; 
 }
+
+
 </script>
+
+<script>
+function buscarNotificacoes() {
+   fetch('includes/checar_notificacoes.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.tem) {
+                mostrarPopup(data.msg);
+            }
+        });
+}
+
+function mostrarPopup(mensagem) {
+    // Cria o elemento da notificação dinamicamente
+    const popup = document.createElement('div');
+    popup.className = 'popup-notificacao'; // Usa aquele CSS que a gente fez!
+    popup.innerHTML = `
+        <span style="font-size: 20px;">🔔</span>
+        <div style="flex-grow: 1;">
+            <strong style="display: block; font-size: 13px;">Nova Menção!</strong>
+            <span style="font-size: 12px;">${mensagem}</span>
+        </div>
+        <span onclick="this.parentElement.remove()" style="cursor:pointer; font-weight:bold; margin-left:10px;">×</span>
+    `;
+
+    document.body.appendChild(popup);
+
+    // Some sozinho depois de 8 segundos
+    setTimeout(() => {
+        if(popup) popup.remove();
+    }, 8000);
+}
+
+// Verifica a cada 10 segundos (10000ms)
+setInterval(buscarNotificacoes, 10000);
+
+</script>
+
 </body>
 </html>

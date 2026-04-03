@@ -34,7 +34,6 @@ $total_seguindo = $dados_seguindo['total'];
 ?>
 
 <style>
-    /* SE FOR O ID 1 (A PRESENÇA), ATIVA O MODO LENDÁRIO */
     <?php if ($id_visto == 1): ?>
     body { background: #000 !important; }
     .card-perfil { border: 2px solid #ffbc00; box-shadow: 0 0 30px rgba(255, 188, 0, 0.3); }
@@ -42,7 +41,7 @@ $total_seguindo = $dados_seguindo['total'];
     <?php endif; ?>
 </style>
 
-<div class="container-perfil" style="max-width: 500px; width: 95%; margin: 40px auto; background: #1a1a1a; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid #333;">  
+<div class="container-perfil" style="max-width: 400px; width: 100%; margin: 40px auto; background: #1a1a1a; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 1px solid #333;">  
 
     <div class="capa" style="height: 180px; background: url('<?php echo $capa; ?>') center/cover;"></div>
 

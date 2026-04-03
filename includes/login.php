@@ -32,7 +32,9 @@
     <div class="container">
         <div class="input-group">
             <label for="email"><b>E-mail</b></label>
-           <input type="text" name="email" placeholder="Seu e-mail" required autocomplete="username">        <div class="input-group">
+           <input type="text" name="email" placeholder="Seu e-mail" required autocomplete="username"> 
+        </div>     
+        <div class="input-group">
             <label for="senha"><b>Senha</b></label>
            <input type="password" name="senha" placeholder="Digite sua senha" required autocomplete="current-password">
         </div>

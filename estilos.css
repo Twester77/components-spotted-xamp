@@ -23,13 +23,18 @@ html, body {
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden; 
     font-size: 16px;
+     
 }
+.bg-dark-fenda {
+    background-color: #050505 !important;
+}
+
 
 html {
     scroll-behavior: smooth;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 600px) {
 
        .header-icons {
         position: relative !important; 
@@ -38,7 +43,7 @@ html {
         transform: none !important;
         display: flex;
         justify-content: center;
-        gap: 30px;
+        gap: 20px;
        }
 
 
@@ -84,14 +89,25 @@ html {
     }
 
     .icon-fenda {
-        font-size: 2.8rem; 
+        font-size: 2.3rem; 
 
     }
-
 
      .filtros-container {
         width: 100%;
      }
+
+    .popup-notificacao {
+        width: auto !important;
+        height: 95px !important;    
+        left: 10%;
+        bottom: 30px;
+        top: 40%;
+    }
+
+@keyframes deslizar {
+    from { transform: translateY(100px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; } }
 
 } 
 
@@ -174,11 +190,18 @@ article h3 {
     transition: transform 0.3s ease;
 }
 
-
 .avatar:hover {
     transform: scale(1.1);
 }
 
+.avatar-perfil {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ff7011;
+    margin-bottom: 15px;
+}
 
 
 /* MENU DE NAVEGAÇÃO E SUBMENUS */
@@ -270,39 +293,81 @@ article h3 {
 /* CONTEÚDO PRINCIPAL (MAIN / CONTAINER)  */
 
 
-main { 
-  width: 90% !important; /* Ocupa quase a tela toda em telas pequenas */
-    max-width: 800px !important; /* Limite máximo para monitores grandes */
+main {
+    width: 95% !important;
+    max-width: 800px !important;
     margin: 40px auto !important;
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important; /* Faz o conteúdo interno querer ocupar a largura toda */
     text-align: left !important;
-    padding: 30px !important;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(15px);
-    border-radius: 20px;
-
+    background: rgba(255, 255, 255, 0.05) !important; 
+    backdrop-filter: blur(15px) !important;           
+    border: 1px solid rgba(255, 255, 255, 0.1) !important; 
+    border-radius: 20px !important;                  
+    padding: 40px !important;                         
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important; 
 }
+
+.container, .login-form, form[action="confirma-login.php"] {
+    max-width: 400px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+}
+
+
 main article {
     width: 100% !important;
-    display: block !important;
-    text-align: center !important; 
-    margin-bottom: 20px;
-}
-
-main p {
-    width: 100% !important;
-    max-width: 100% !important; 
     text-align: left !important;
-    word-wrap: break-word;
 }
 
 main img {
-    max-width: 80% !important;
+    max-width:80% !important;
     height: auto !important;
-    text-align:center!important;
+    display: block !important;
+    margin: 20px auto !important;
 }
 
+.main-perfil {
+    max-width: 450px;       
+    width: 90%;             
+    margin: 30px auto;      
+    border-radius: 25px;    
+    padding: 20px;
+    min-height: auto!important;      
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
+.main-perfil form {
+    max-width: 450px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.main-perfil input, .main-perfil textarea {
+    width: 100% !important;
+    text-align: center !important; /* Estética da Presença */
+}
+
+main img, .capa-preview, .img-capa {
+    width: 100% !important;
+    height: 250px !important; /* Ajuste a altura conforme preferir */
+    object-fit: cover !important; 
+    object-position: center !important;
+}
+@keyframes pulsar {
+    0% { opacity: 0.7; text-shadow: 0 0 5px #ffbc00; }
+    50% { opacity: 1; text-shadow: 0 0 20px #ffbc00; }
+    100% { opacity: 0.7; text-shadow: 0 0 5px #ffbc00; }
+}
 
 
 /* Garante que o conteúdo do site fique NA FRENTE das bolhas */
@@ -354,18 +419,18 @@ nav, .navbar {
 /* BOTÕES (ACTION BUTTONS) */
 
     .icon-fenda {
-        font-size: 2.0rem; 
+        font-size: 2.2rem; 
         color: #ffbc00;    
         transition: all 0.3s ease;
         display: inline-block;
         vertical-align: middle; 
-        margin-top: 10px;
+        margin-top: 20px;
         margin-bottom: 20px;
         cursor: pointer;
     }
 
     .btn-config:hover .icon-fenda {
-        transform: rotate(90deg) scale(1.2); 
+        transform: rotate(90deg) scale(1.3); 
         color: #fff; 
         filter: drop-shadow(0 0 5px rgba(255, 188, 0, 0.7)); 
     }
@@ -398,9 +463,12 @@ button:hover {
     transform: translateY(-2px);
     transition: 0.2s;
 }
-.container-perfil {
-    backdrop-filter: blur(10px); /* Efeito de vidro */
-    background: rgba(26, 26, 26, 0.9) !important;
+
+
+.configuracoes-container, [style*="background: #111"], .perfil-box {
+    background: rgba(0, 0, 0, 0.8) !important; 
+    backdrop-filter: blur(10px)!important;
+    border: 1px solid #333 !important;
 }
 
 /* Botão Flutuante (+) */
@@ -461,11 +529,12 @@ button:hover {
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-left-width: 8px;
     transition: all 0.3s ease;
-    width: 100%;
+    width: 100% !important;
     margin-bottom: 30px; 
+    position: center !important;
 }
 .post-content {
-    font-size: 1.1rem !important;
+    font-size: 1.2rem !important;
     line-height: 1.6;
     color: #ffffff;
     margin: 15px 0;
@@ -625,8 +694,8 @@ footer a { color: #fff; text-decoration: underline; }
 
     .form-container {
         background: rgba(255, 255, 255, 0.05); 
-        backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
+         backdrop-filter: blur(15px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 15px;
         padding: 30px;
@@ -970,6 +1039,7 @@ footer a { color: #fff; text-decoration: underline; }
 }
 
 /* CONTAINER DA CAPA DO PERFIL */
+
 .capa-preview {
     width: 100%;
     height: 350px; 
@@ -998,4 +1068,33 @@ footer a { color: #fff; text-decoration: underline; }
 .user-info img {
     border-radius: 50%;
     object-fit: cover; /* Garante que a imagem não fique esticada */
+}
+
+.popup-notificacao {
+    position: fixed;
+    top: 20%;
+    right: 5%; 
+    background: rgba(255, 188, 0, 0.85) !important; 
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); 
+    color: #000;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    z-index: 9999;
+    animation: slideIn 0.5s ease-out;
+    cursor: pointer;
+    width: 400px; 
+    transition: all 0.3s ease;
+    cursor: pointer;
+    animation: deslizar 0.5s ease-out;
+
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(0); }
 }
