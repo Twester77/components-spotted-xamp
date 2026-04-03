@@ -1102,3 +1102,236 @@ footer a { color: #fff; text-decoration: underline; }
     from { transform: translateX(-110%); }
     to { transform: translateX(0); }
 }
+
+
+/*CONTINUEI DAQUI - ponto de restauração*/
+
+
+/* Isso aqui é o "limitador de velocidade" das suas imagens */
+.avatar-p {
+    width: 45px !important; 
+    height: 45px !important;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Esse aqui é para aquela capivara gigante que apareceu no meio do post */
+.spotted-card img {
+    max-width: 100px; /* Ou o tamanho que você achar melhor */
+    height: auto;
+    border-radius: 10px;
+}
+
+
+
+
+/* 1. CONTAINER PRINCIPAL DO PERFIL (Pra centralizar tudo) */
+.container-perfil {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    color: white;
+    text-align: center;
+}
+
+/* 2. ÁREA DA CAPA (Onde está a água-viva) */
+.capa-wrapper {
+    width: 100%;
+    height: 250px; /* Ajuste a altura que quiser */
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    border: 2px solid #ffbc00; /* Borda amarela da Fenda */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.capa-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Faz a imagem preencher sem esticar */
+}
+
+/* 3. O AVATAR (A Capivara - Centralizada e por cima da capa) */
+.avatar-perfil-wrapper {
+    position: relative;
+    margin-top: -75px; /* Puxa metade do avatar pra cima da capa */
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+.avatar-perfil-wrapper img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #202020; /* Borda da cor do fundo pra destacar */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+}
+
+/* 4. BLOCO DE TEXTOS (Nome, Bio, etc) */
+.info-perfil-status {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 5. OS INPUTS DO FORMULÁRIO (Pra ficarem bonitos e alinhados) */
+.form-config-perfil {
+    max-width: 500px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.form-config-perfil label {
+    color: #ffbc00;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: -10px;
+}
+
+.form-config-perfil input,
+.form-config-perfil textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+}
+
+.form-config-perfil input:focus,
+.form-config-perfil textarea:focus {
+    outline: none;
+    border-color: #ffbc00;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 6. O BOTÃO SALVAR */
+.btn-salvar-perfil {
+    background: #ffbc00;
+    color: #1a1a1a;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.btn-salvar-perfil:hover {
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+
+/* CONTAINER PRINCIPAL DO PERFIL (Pra segurar a barra) */
+.main-perfil {
+    max-width: 800px;
+    margin: 20px auto; /* Centraliza a página */
+    padding: 20px;
+    color: white;
+}
+
+/* ÁREA DA CAPA (Água-viva) */
+.capa-container {
+    width: 100%;
+    height: 250px; /* Ajuste a altura que quiser */
+    border-radius: 15px;
+    overflow: hidden; /* Garante que a imagem não vaze */
+    position: relative;
+    border: 2px solid #ffbc00; /* Borda amarela da Fenda */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.capa-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Faz a imagem preencher sem esticar */
+}
+
+/* ÁREA DO AVATAR (Capivara - Centralizado e flutuando sobre a capa) */
+.avatar-perfil-wrapper {
+    position: relative;
+    margin-top: -75px; /* Puxa metade do avatar pra cima da capa */
+    display: flex;
+    justify-content: center;
+    z-index: 10; /* Garante que ele fique por cima */
+}
+
+.avatar-perfil-wrapper img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #202020; /* Borda da cor do fundo pra destacar */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+}
+
+/* BLOCO DE TEXTOS (Nome, Bio, Status) */
+.perfil-status-block {
+    text-align: center;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* AJUSTE DO FORMULÁRIO (Configurações) */
+.form-perfil-config {
+    max-width: 500px;
+    margin: 30px auto; /* Centraliza o formulário */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left; /* Alinha os labels pra esquerda */
+}
+
+.form-perfil-config label {
+    color: #ffbc00;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: -10px;
+}
+
+.form-perfil-config input,
+.form-perfil-config textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+}
+
+.form-perfil-config input:focus,
+.form-perfil-config textarea:focus {
+    outline: none;
+    border-color: #ffbc00;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* BOTÃO SALVAR */
+.btn-salvar-perfil {
+    background: #ffbc00;
+    color: #1a1a1a;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-salvar-perfil:hover {
+    background: #fff;
+    transform: translateY(-2px);
+}
