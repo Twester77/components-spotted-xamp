@@ -72,11 +72,9 @@ html {
     }
 
     .spotted-card {
-        background: rgba(255, 255, 255, 0.08);
-        padding: 20px; 
-        border-left-width: 8px;
-        width: 100%;
-        margin-bottom: 25px;
+        height: auto !important;
+        min-height: auto !important;
+        padding: 15px !important;
     }
 
     .reacoes-popup {
@@ -201,6 +199,26 @@ article h3 {
     border-radius: 50%;
     border: 3px solid #ff7011;
     margin-bottom: 15px;
+}
+/* Ajuste do Avatar no Perfil */
+.fenda-avatar-main {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 50% !important;
+    border: 4px solid #050505 !important;
+    margin-top: -60px !important; /* Sobe para cima da capa */
+    position: relative !important;
+    z-index: 10 !important;
+    object-fit: cover !important;
+}
+
+/* Corrigindo o fundo dos inputs para o padrão Fenda */
+.fenda-input-block input, 
+.fenda-input-block textarea {
+    background-color: #0d0d0d !important;
+    color: #ffffff !important;
+    border: 1px solid #f16705 !important;
+    border-radius: 8px !important;
 }
 
 
