@@ -22,7 +22,7 @@ $query_user = "SELECT nome, foto, username FROM usuarios WHERE id = '$usuario_id
 $res_user = mysqli_query($conn, $query_user);
 $user_data = mysqli_fetch_assoc($res_user);
 
-$foto_perfil = !empty($user_data['foto']) ? "uploads/" . $user_data['foto'] : "imagensfoto/img_avatar_generico.jpg";
+$foto_perfil = !empty($user_data['foto']) ? "uploads/" . $user_data['foto'] : "/spotted-unifev/imagensfoto/img_avatar_generico.jpg";
 $nome_exibicao = !empty($user_data['username']) ? "@" . $user_data['username'] : $user_data['nome'];
 
 // 4. LÓGICA DE FILTRO (COM JOIN PARA FOTOS E NOMES)
@@ -79,7 +79,7 @@ include 'includes/bolhas.php';
                     
                     <small style="margin-left: 10px; display: inline-flex; align-items: center; gap: 8px;">
                         <?php if (!empty($linha['username'])): 
-                            $foto_autor = !empty($linha['foto']) ? "uploads/" . $linha['foto'] : "imagensfoto/img_avatar_generico.jpg";
+                            $foto_autor = !empty($linha['foto']) ? "uploads/" . $linha['foto'] : "imagensfoto/default.jpg";
                         ?>
                             <img src="<?php echo $foto_autor; ?>" class="avatar-p" style="width: 25px; height: 25px; border-radius: 50%; object-fit: cover;">
                             <a href="perfil.php?id=<?php echo $linha['usuario_id']; ?>" style="color: #ffbc00; text-decoration: none; font-weight: bold;">

@@ -30,7 +30,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perfil" style="max-width: 500px; margin: 80px auto 50px auto; padding: 0 10px;">
+<main class="main-perfil" style="max-width: 450px; margin: 80px auto 50px auto; padding: 0 10px;">
     
     <div style="width: 100%; position: relative; margin-bottom: 70px;"> 
         <div style="width: 100%; height: 180px; background: url('<?php echo $capa_atual; ?>') center/cover; position: relative; border-radius: 20px; border: 3px solid #ffbc00; box-shadow: 0 0 15px rgba(255, 188, 0, 0.2);">

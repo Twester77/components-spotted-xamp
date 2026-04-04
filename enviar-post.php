@@ -1,14 +1,10 @@
-
 <?php
 session_start();
 include 'conexao.php';
+
 if (!$conn) {
     die("A conexão falhou, Léo! O erro foi: " . mysqli_connect_error());
-} else {
-    // echo "Conexão OK!"; // Descomente só pra testar e depois apague
 }
-
-
 
 // 1. Verificação de Segurança
 if (!isset($_SESSION['usuario_id'])) {
@@ -30,32 +26,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($stmt->execute()) {
         
-       // --- 🧠 CÉREBRO DE MENÇÕES (VERSÃO FINAL) ---
-// Captura tudo que começa com @ até encontrar um espaço
-if (preg_match_all('/@([^\s]+)/', $mensagem, $matches)) {
-    $mencoes = $matches[0]; // Pega o nome completo: @test ou @apresença_fevN#1
+        // --- 🎯 CAPTURA O ID DO POST QUE ACABOU DE SER CRIADO ---
+        $post_id_recem_criado = $conn->insert_id;
 
-    foreach ($mencoes as $user_tag) {
-        // Busca na coluna 'username' OU 'nome' para garantir
-        $sql_busca = "SELECT id FROM usuarios WHERE username = ? OR nome = ?";
-        $stmt_busca = $conn->prepare($sql_busca);
-        $nome_limpo = str_replace('@', '', $user_tag); // 'test' sem o @
-        $stmt_busca->bind_param("ss", $user_tag, $nome_limpo);
-        $stmt_busca->execute();
-        $res = $stmt_busca->get_result();
-        
-        if ($alvo = $res->fetch_assoc()) {
-            $id_dest = $alvo['id'];
-            if($id_dest != $_SESSION['usuario_id']) {
-                $msg_n = $_SESSION['usuario_nome'] . " mencionou você!";
-                $sql_n = "INSERT INTO notificacoes (usuario_id, mensagem) VALUES (?, ?)";
-                $st_n = $conn->prepare($sql_n);
-                $st_n->bind_param("is", $id_dest, $msg_n);
-                $st_n->execute();
+        // --- 🧠 CÉREBRO DE MENÇÕES (VERSÃO COM LINK) ---
+        if (preg_match_all('/@([^\s]+)/', $mensagem, $matches)) {
+            $mencoes = $matches[0]; 
+
+            foreach ($mencoes as $user_tag) {
+                $sql_busca = "SELECT id FROM usuarios WHERE username = ? OR nome = ?";
+                $stmt_busca = $conn->prepare($sql_busca);
+                $nome_limpo = str_replace('@', '', $user_tag); 
+                $stmt_busca->bind_param("ss", $user_tag, $nome_limpo);
+                $stmt_busca->execute();
+                $res = $stmt_busca->get_result();
+                
+                if ($alvo = $res->fetch_assoc()) {
+                    $id_dest = $alvo['id'];
+                    
+                    // Não notifica se o usuário marcar a si mesmo
+                    if($id_dest != $_SESSION['usuario_id']) {
+                        $msg_n = $_SESSION['usuario_nome'] . " mencionou você em um post!";
+                        
+                        // AGORA INCLUÍMOS O post_id NO INSERT
+                        $sql_n = "INSERT INTO notificacoes (usuario_id, post_id, mensagem) VALUES (?, ?, ?)";
+                        $st_n = $conn->prepare($sql_n);
+                        $st_n->bind_param("iis", $id_dest, $post_id_recem_criado, $msg_n);
+                        $st_n->execute();
+                    }
+                }
             }
-        }
-    }
-}   // 🧠 FIM DO CÉREBRO DE MENÇÕES
+        } 
+        // 🧠 FIM DO CÉREBRO DE MENÇÕES
 
         header("Location: feed.php");
         exit();

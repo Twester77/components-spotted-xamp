@@ -10,7 +10,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Fenda - Spotted Universitário (Votuporanga)</title>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="/spotted-unifev/estilos.css">    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
@@ -29,10 +29,17 @@ $usuario_logado = isset($_SESSION['usuario_id']);
         <a href="buscar-usuario.php" class="btn-header" title="Buscar Usuários">
             <i class="fas fa-search icon-fenda"> </i>
         </a>
+
+        <div class="notificacao-wrapper" style="position: relative; cursor: pointer;" onclick="window.location.href='notificacoes.php'">
+           <i class="fa-solid fa-bell" style="font-size: 2.0rem; color: #ffbc00;"></i>
+           <span id="badge-alertas" class="badge-alertas" style="display: none;">0</span>
+        </div>
+
         <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
            <i class="fas fa-cog icon-fenda"> </i>
         </a>
     </div>
+
         <?php endif; ?>
 
     </header>

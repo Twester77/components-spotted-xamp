@@ -55,8 +55,11 @@ function confirmarSaida() {
 </script>
 
 <script>
+    
+//SISTEMA DE NOTIFICAÇÕES E ALERTAS 
+
 function buscarNotificacoes() {
-   fetch('includes/checar_notificacoes.php')
+    fetch('includes/checar_notificacoes.php')
         .then(response => response.json())
         .then(data => {
             if (data.tem) {
@@ -66,29 +69,50 @@ function buscarNotificacoes() {
 }
 
 function mostrarPopup(mensagem) {
-    // Cria o elemento da notificação dinamicamente
     const popup = document.createElement('div');
-    popup.className = 'popup-notificacao'; // Usa aquele CSS que a gente fez!
+    popup.className = 'popup-notificacao';
     popup.innerHTML = `
         <span style="font-size: 20px;">🔔</span>
         <div style="flex-grow: 1;">
             <strong style="display: block; font-size: 13px;">Nova Menção!</strong>
-            <span style="font-size: 12px;">${mensagem}</span>
+            <span style="font-size: 13px;">${mensagem}</span>
         </div>
         <span onclick="this.parentElement.remove()" style="cursor:pointer; font-weight:bold; margin-left:10px;">×</span>
     `;
+    popup.style.cursor = 'pointer';
+    popup.onclick = function() {
+        window.location.href = 'notificacoes.php'; 
+    };
 
     document.body.appendChild(popup);
 
-    // Some sozinho depois de 8 segundos
     setTimeout(() => {
-        if(popup) popup.remove();
+        if (document.body.contains(popup)) {
+            popup.remove();
+        }
     }, 8000);
+} // <--- AQUI FECHA A MOSTRARPOPUP CORRETAMENTE
+
+function atualizarContadorAlertas() {
+    fetch('includes/contar_alertas.php')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('badge-alertas');
+            if (badge) { // Segurança caso o elemento não exista na página
+                if (data.total > 0) {
+                    badge.innerText = data.total;
+                    badge.style.display = 'block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        });
 }
 
-// Verifica a cada 10 segundos (10000ms)
-setInterval(buscarNotificacoes, 10000);
-
+// Inicializadores
+setInterval(buscarNotificacoes, 10000); // 10s para popups
+setInterval(atualizarContadorAlertas, 5000); // 5s para o número no sino
+atualizarContadorAlertas(); // Chama uma vez assim que carregar para não esperar 5s
 </script>
 
 </body>

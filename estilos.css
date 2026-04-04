@@ -1,10 +1,12 @@
 
 /* CONFIGURAÇÕES GERAIS E VARIÁVEIS */
+
 * {  
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
 }
+
 
 :root {
     --cor-principal: #004a8d; 
@@ -25,6 +27,7 @@ html, body {
     font-size: 16px;
      
 }
+
 .bg-dark-fenda {
     background-color: #050505 !important;
 }
@@ -33,6 +36,7 @@ html, body {
 html {
     scroll-behavior: smooth;
 }
+
 
 @media (max-width: 600px) {
 
@@ -94,20 +98,48 @@ html {
      .filtros-container {
         width: 100%;
      }
-
-    .popup-notificacao {
-        width: auto !important;
-        height: 95px !important;    
-        left: 10%;
-        bottom: 30px;
-        top: 40%;
+     .popup-notificacao {
+        left: 5%;
+        right: 5%;
+        width: 90%;
+        bottom: 20px;
     }
 
-@keyframes deslizar {
-    from { transform: translateY(100px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; } }
+   }
 
-} 
+
+
+ /* POPUP DE NOTIFICAÇÃO (Substituindo o antigo) */
+ 
+.popup-notificacao {
+    position: fixed;
+    width: 280px; 
+    height: 90px;    
+    right: 20px;  
+    bottom: 30px; 
+    background: rgba(0, 74, 141, 0.95);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #ffbc00;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: deslizar 0.5s ease-out; /* Usando a sua animação */
+}
+
+@keyframes deslizar {
+    from { 
+        transform: translateY(100px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
 
 /* CABEÇALHO (HEADER) */
 
@@ -341,7 +373,7 @@ main article {
 }
 
 main img {
-    max-width:80% !important;
+    max-width:100% !important;
     height: auto !important;
     display: block !important;
     margin: 20px auto !important;
@@ -349,7 +381,7 @@ main img {
 
 .main-perfil {
     max-width: 450px;       
-    width: 90%;             
+    width: 100%;             
     margin: 30px auto;      
     border-radius: 25px;    
     padding: 20px;
@@ -561,7 +593,7 @@ button:hover {
     font-weight: 500;
     
 }
-}
+
 
 .spotted-card:hover {
     transform: translateY(-15px); /* O card sobe de leve */
@@ -616,6 +648,22 @@ button:hover {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+}
+
+.badge-alertas {
+   position: absolute;
+    top: -5px;
+    right: -5px; /* Ajustei para ficar bem no cantinho do sino */
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 10px;
+    font-weight: bold;
+    border: 2px solid #1a1a1a; /* Cor de fundo do seu cabeçalho */
+    min-width: 15px;
+    text-align: center;
+    z-index: 10;
 }
 
 .img-capa {
@@ -1137,13 +1185,13 @@ footer a { color: #fff; text-decoration: underline; }
 .spotted-card img {
     max-width: 100px; /* Ou o tamanho que você achar melhor */
     height: auto;
-    border-radius: 10px;
+    border-radius: 50%;
 }
 
 
 
-
 /* 1. CONTAINER PRINCIPAL DO PERFIL (Pra centralizar tudo) */
+
 .container-perfil {
     max-width: 800px;
     margin: 20px auto;
@@ -1152,7 +1200,9 @@ footer a { color: #fff; text-decoration: underline; }
     text-align: center;
 }
 
+
 /* 2. ÁREA DA CAPA (Onde está a água-viva) */
+
 .capa-wrapper {
     width: 100%;
     height: 250px; /* Ajuste a altura que quiser */
@@ -1169,7 +1219,9 @@ footer a { color: #fff; text-decoration: underline; }
     object-fit: cover; /* Faz a imagem preencher sem esticar */
 }
 
+
 /* 3. O AVATAR (A Capivara - Centralizada e por cima da capa) */
+
 .avatar-perfil-wrapper {
     position: relative;
     margin-top: -75px; /* Puxa metade do avatar pra cima da capa */
@@ -1187,7 +1239,9 @@ footer a { color: #fff; text-decoration: underline; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.7);
 }
 
+
 /* 4. BLOCO DE TEXTOS (Nome, Bio, etc) */
+
 .info-perfil-status {
     margin-top: 15px;
     display: flex;
@@ -1196,7 +1250,9 @@ footer a { color: #fff; text-decoration: underline; }
     gap: 5px;
 }
 
+
 /* 5. OS INPUTS DO FORMULÁRIO (Pra ficarem bonitos e alinhados) */
+
 .form-config-perfil {
     max-width: 500px;
     margin: 30px auto;
@@ -1231,7 +1287,9 @@ footer a { color: #fff; text-decoration: underline; }
     background: rgba(255, 255, 255, 0.1);
 }
 
+
 /* 6. O BOTÃO SALVAR */
+
 .btn-salvar-perfil {
     background: #ffbc00;
     color: #1a1a1a;
@@ -1251,6 +1309,7 @@ footer a { color: #fff; text-decoration: underline; }
 
 
 /* CONTAINER PRINCIPAL DO PERFIL (Pra segurar a barra) */
+
 .main-perfil {
     max-width: 800px;
     margin: 20px auto; /* Centraliza a página */
@@ -1258,7 +1317,10 @@ footer a { color: #fff; text-decoration: underline; }
     color: white;
 }
 
+
+
 /* ÁREA DA CAPA (Água-viva) */
+
 .capa-container {
     width: 100%;
     height: 250px; /* Ajuste a altura que quiser */
@@ -1275,7 +1337,10 @@ footer a { color: #fff; text-decoration: underline; }
     object-fit: cover; /* Faz a imagem preencher sem esticar */
 }
 
+
+
 /* ÁREA DO AVATAR (Capivara - Centralizado e flutuando sobre a capa) */
+
 .avatar-perfil-wrapper {
     position: relative;
     margin-top: -75px; /* Puxa metade do avatar pra cima da capa */
@@ -1293,6 +1358,7 @@ footer a { color: #fff; text-decoration: underline; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.7);
 }
 
+
 /* BLOCO DE TEXTOS (Nome, Bio, Status) */
 .perfil-status-block {
     text-align: center;
@@ -1303,7 +1369,9 @@ footer a { color: #fff; text-decoration: underline; }
     gap: 5px;
 }
 
+
 /* AJUSTE DO FORMULÁRIO (Configurações) */
+
 .form-perfil-config {
     max-width: 500px;
     margin: 30px auto; /* Centraliza o formulário */
@@ -1338,6 +1406,7 @@ footer a { color: #fff; text-decoration: underline; }
 }
 
 /* BOTÃO SALVAR */
+
 .btn-salvar-perfil {
     background: #ffbc00;
     color: #1a1a1a;
