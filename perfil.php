@@ -79,12 +79,12 @@ include 'includes/bolhas.php';
                 </div>
 
                 <div style="margin-bottom: 15px;">
-                    <label style="color: #777; font-size: 11px; display: block; margin-bottom: 5px; margin-left: 5px;">Nome de Exibição</label>
+                    <label style="color: #777; font-size: 13px; display: block; margin-bottom: 5px; margin-left: 5px;">Nome de Exibição</label>
                     <input type="text" name="nome" value="<?php echo $nome_atual; ?>" style="width: 100%; padding: 12px; background: #151515; border: 1px solid #333; color: #fff; border-radius: 10px; box-sizing: border-box;">
                 </div>
 
                 <div style="margin-bottom: 15px;">
-                    <label style="color: #777; font-size: 11px; display: block; margin-bottom: 5px; margin-left: 5px;">Username (@)</label>
+                    <label style="color: #777; font-size: 13px; display: block; margin-bottom: 5px; margin-left: 5px;">Username (@)</label>
                     <div style="display: flex; align-items: center; background: #151515; border: 1px solid #333; border-radius: 10px; padding-left: 15px;">
                         <span style="color: #ffbc00; font-weight: bold;">@</span>
                         <input type="text" name="username" value="<?php echo $dados['username'] ?? ''; ?>" style="width: 100%; padding: 12px; background: transparent; border: none; color: #fff; outline: none;">
@@ -92,7 +92,7 @@ include 'includes/bolhas.php';
                 </div>
 
                 <div style="margin-bottom: 25px;">
-                    <label style="color: #777; font-size: 11px; display: block; margin-bottom: 5px; margin-left: 5px;">Bio</label>
+                    <label style="color: #777; font-size: 13px; display: block; margin-bottom: 5px; margin-left: 5px;">Bio</label>
                     <textarea name="bio" rows="3" style="width: 100%; padding: 12px; background: #151515; border: 1px solid #333; color: #fff; border-radius: 10px; resize: none; box-sizing: border-box;"><?php echo $bio_atual; ?></textarea>
                 </div>
 

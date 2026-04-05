@@ -66,7 +66,7 @@ include 'includes/header.php';
         <h2 style="font-size: 20px; margin-bottom: 20px; margin-top: 30px;text-align:center"> 
             Bem-vindos à "A Fenda" (e não, não é do biquíni)
         </h2>
-        <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"> 
+        <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"> 
     </article>
 
     <article style="font-size: 15px; line-height: 1.6; text-align: left; color: #e0e0e0; word-wrap: break-word;">

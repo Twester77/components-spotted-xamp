@@ -28,21 +28,18 @@ $resultado = $stmt->get_result();
 
     <?php if ($resultado->num_rows > 0): ?>
         <?php while ($row = $resultado->fetch_assoc()): ?>
-       
-       <a href="post.php?id=<?php echo $row['post_id']; ?>#fofocar" class="link-notificacao" style="text-decoration: none; display: block; margin-bottom: 10px;">
-       <div class="card-notificacao" style="border-left: 4px solid #ffbc00;">
-          <div class="comentario-item">
-             <p style="margin: 0; font-size: 1.1rem; color: #eee;">
-                 <?php echo $row['mensagem']; ?>
-             </p>
-             <small style="color: #666; display: block; margin-top: 5px;">
-                 <i class="far fa-clock"></i> <?php echo date('d/m/Y H:i', strtotime($row['data_criacao'])); ?>
-             </small>
-           </div>
+    <a href="post.php?id=<?php echo $row['post_id']; ?>#fofocar" class="link-notificacao">
+        <div class="card-notificacao <?php echo ($row['lida'] == 0) ? 'nova' : ''; ?>">
+            <div class="notificacao-conteudo">
+                <p><?php echo $row['mensagem']; ?></p>
+                <small>
+                    <i class="far fa-clock"></i> <?php echo date('d/m H:i', strtotime($row['data_criacao'])); ?>
+                </small>
+            </div>
+            <i class="fas fa-chevron-right seta-notificacao"></i>
         </div>
-        </a>
-        
-        <?php endwhile; ?>
+    </a>
+<?php endwhile; ?>
         
     <?php else: ?>
         <p style="text-align: center; color: #666;">A Fenda está silenciosa.</p>
