@@ -18,29 +18,29 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     
 </head>
 <body> 
-   <header>
-    <h1>A Fenda - Spotted Universitário</h1>
-    
+    <header>
+        <h1>A Fenda - Spotted Universitário</h1>
     <?php 
     $pagina_atual = basename($_SERVER['PHP_SELF']); 
     if ($pagina_atual !== 'index.php'): 
     ?>
 
-    <div class="header-icons">
+    <div class="header-icons" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; align-items: center;">
         <a href="buscar-usuario.php" class="btn-header" title="Buscar Usuários">
-            <i class="fas fa-search icon-fenda"></i>
+            <i class="fas fa-search icon-fenda"> </i>
         </a>
 
-        <div class="notificacao-wrapper" onclick="window.location.href='notificacoes.php'">
-           <i class="fa-solid fa-bell"></i>
+        <div class="notificacao-wrapper" style="position: relative; cursor: pointer;" onclick="window.location.href='notificacoes.php'">
+           <i class="fa-solid fa-bell" style="font-size: 1.8rem; color: #ffbc00;"></i>
            <span id="badge-alertas" class="badge-alertas" style="display: none;">0</span>
         </div>
-
+        
         <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
-           <i class="fas fa-cog icon-fenda"></i>
+           <i class="fas fa-cog icon-fenda"> </i>
         </a>
     </div>
 
-    <?php endif; ?>
-</header>
+        <?php endif; ?>
+
+    </header>
     

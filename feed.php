@@ -41,7 +41,7 @@ include 'includes/bolhas.php';
 ?>
 
 <div class="user-info" style="padding: 20px; text-align: center; background: rgba(0,0,0,0.1); border-bottom: 2px solid #ff7011;">
-    <img src="<?php echo $foto_perfil; ?>" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #ff7011;">
+    <img src="<?php echo $foto_perfil; ?>" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ff7011;">
     <div style="margin-top: 10px;">
         <span style="color: white; font-weight: bold; font-size: 1.2rem;">Olá, <?php echo $nome_exibicao; ?>!</span>
     </div>
@@ -63,20 +63,22 @@ include 'includes/bolhas.php';
     <article id="post-<?php echo $linha['id']; ?>" class="spotted-card <?php echo $linha['categoria']; ?>">
     <div class="card-header">
         <span class="category-tag">#<?php echo strtoupper($linha['categoria']); ?></span>
+    
+     <div class="user-info-post" style="text-align: right;">
+          <span class="post-time" style="display: block; font-size: 14px; opacity: 0.6;">
+            🕒 <?php echo date('d/m H:i', strtotime($linha['data_post'])); ?>
+          </span>
         
-        <div class="user-info-post">
-            <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
-            
-            <?php if (!empty($linha['username'])): ?>
-                <img src="<?php echo !empty($linha['foto']) ? 'uploads/'.$linha['foto'] : 'imagensfoto/default.jpg'; ?>" class="avatar-p">
-                <a href="perfil.php?id=<?php echo $linha['usuario_id']; ?>" class="user-mention">
-                    @<?php echo $linha['username']; ?>
-                </a>
-            <?php else: ?>
-                <img src="imagensfoto/default.jpg" class="avatar-p">
-                <span class="anonimo">🕵️ Anônimo</span>
-            <?php endif; ?>
-        </div>
+          <?php if (!empty($linha['username'])): ?>
+            <img src="<?php echo !empty($linha['foto']) ? 'uploads/'.$linha['foto'] : 'imagensfoto/default.jpg'; ?>" class="avatar-p">
+            <a href="perfil.php?id=<?php echo $linha['usuario_id']; ?>" class="user-mention">
+                @<?php echo $linha['username']; ?>
+            </a>
+          <?php else: ?>
+            <img src="imagensfoto/default.jpg" class="avatar-p">
+            <span class="anonimo">🕵️ Anônimo</span>
+        <?php endif; ?>
+      </div>
     </div>
     
     <div class="card-body">
@@ -84,10 +86,18 @@ include 'includes/bolhas.php';
     </div>
 
     <div class="footer-links">
-    <div class="reacao-wrapper" style="position: relative; display: inline-block;">
+    <div class="reacao-wrapper">
         <span class="btn-reagir">👍 Reagir</span>
         
+        <div class="reacoes-popup">
+            <a href="includes/reagir.php?id=<?php echo $linha['id']; ?>&tipo=amei" title="Amei">💖</a>
+            <a href="includes/reagir.php?id=<?php echo $linha['id']; ?>&tipo=perplecto" title="Tô Perplecto">😲</a>
+            <a href="includes/reagir.php?id=<?php echo $linha['id']; ?>&tipo=haha" title="Haha">😂</a>
+            <a href="includes/reagir.php?id=<?php echo $linha['id']; ?>&tipo=ranco" title="Que ranço!">😠</a>
+            <a href="includes/reagir.php?id=<?php echo $linha['id']; ?>&tipo=tendi-nada" title="Entendi nada">🤔</a>
+            <a href="includes/reagir.php?id=<?php echo $linha['id']; ?>&tipo=forca" title="Força">🫂</a>
         </div>
+    </div>
 
     <a href="post.php?id=<?php echo $linha['id']; ?>" class="btn-fofocar">
         <i class="fas fa-comments"></i> FOFOCAR

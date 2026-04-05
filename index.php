@@ -29,14 +29,6 @@ include 'includes/header.php';
                 <span style="font-size: 16px; opacity: 0.8;">Bem-vindo à Fenda, o QG virtual da UNIFEV.</span>
             </p>
             
-            <style>
-                    a[href="feed.php"]:hover {
-                    transition: all 0.3s ease;
-                    transform: translateY(-5px);
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                    filter: brightness(1.2); /
-                    }
-                    </style>
 
             <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
                 <a href="feed.php" style="

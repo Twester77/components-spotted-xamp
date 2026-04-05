@@ -41,6 +41,7 @@ $resultado = $stmt->get_result();
            </div>
         </div>
         </a>
+        
         <?php endwhile; ?>
         
     <?php else: ?>

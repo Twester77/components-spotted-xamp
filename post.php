@@ -37,7 +37,6 @@ if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
         <form action="enviar-comentario.php" method="POST" class="form-fofoca">
             <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
             <textarea name="comentario" placeholder="Sabe de algo? Conta aí..." required style="width: 100%; min-height: 80px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; margin: 10px 0;"></textarea>
-            
             <?php $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
                         // Buscamos o nome atualizado da sessão ou do banco se preferir
             if ($exibir_nome): ?>
@@ -59,10 +58,17 @@ if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
         // Verificamos SE existem comentários
         if ($res_c->num_rows > 0): 
             while ($c = $res_c->fetch_assoc()): ?>
-                <div class="comentario-item" style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid #ffbc00;">
-                    <strong style="color: #ffbc00;"><?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>:</strong> 
-                    <span style="color: #eee;"><?php echo htmlspecialchars($c['comentario']); ?></span>
-                </div>
+    <div class="comentario-item">
+           <p>
+             <strong style="color: #ffbc00;">
+                <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>:
+             </strong> 
+             <span> <?php echo htmlspecialchars($c['comentario']); ?> </span>
+           </p>
+        <small style="opacity: 0.5; font-size: 12px; display: block; margin-top: 5px;">
+            🕒 Postado em: <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?>
+        </small>
+    </div>
             <?php endwhile; 
         else: ?> 
             <p style="text-align: center; opacity: 0.6;">Ninguém fofocou nada ainda...</p> 
