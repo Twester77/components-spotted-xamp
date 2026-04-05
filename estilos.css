@@ -38,73 +38,75 @@ html {
 }
 
 
-@media (max-width: 600px) {
+/* --- EXCEÇÕES DE MOBILE --- */
 
-       .header-icons {
-        position: relative !important; 
-        right: auto !important;
-        top: auto !important;
-        transform: none !important;
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-       }
+@media (max-width: 768px) {
 
-
-    header {
-        display: flex !important; /* Força o flexbox */
-        justify-content: space-between !important; 
-        align-items: center !important;
-        padding: 10px 15px !important;
-        text-align: left !important; /* Tira o centro pra caber os ícones do lado */
+    body {
+        font-size: 14px; /* Ajuste a base para mobile */
     }
-
-    .btn-header {
-    transform:scale(1.1);
-    filter:brightness(1.5);
-    transition: transform 0.3s ;
-    color:#fff;
-
+    header {
+        padding: 15px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
 
     header h1 {
-        font-size: 1rem !important; /* Diminui bem o título no iPhone SE */
+        font-size: 1.2rem !important; 
         max-width: 50% !important;
         margin-bottom: 0 !important;
-    }
-    .container-feed {
-        padding-top: 20px;
-        padding-bottom: 20px;
+        text-align: left !important;
     }
 
-    .spotted-card {
-        height: auto !important;
-        min-height: auto !important;
-        padding: 15px !important;
-    }
-
-    .reacoes-popup {
-        padding: 8px 10px;
-        gap: 8px; 
-        min-width: 140px; }
-
-    .reacoes-popup a {
-        font-size: 1.1rem; 
+    .header-icons {
+        position: static !important; /* Tira o absolute para não vazar no iPhone */
+        display: flex !important;
+        gap: 15px !important;
+        right: auto !important;
+        transform: none !important;
     }
 
     .icon-fenda {
-        font-size: 2.3rem; 
+        font-size: 1.6rem !important; /* Ícones menores no celular */
+    }
 
+    .popup-notificacao {
+        left: 5%;
+        right: 5%;
+        width: 90%;
+        bottom: 20px;
+    }
+    
+    
+    .container-feed { padding-top: 20px; padding-bottom: 20px; }
+
+    .spotted-card {
+        padding: 15px; 
+        width: 95%;    
+        margin: 10px auto;
+    }
+
+    .card-header {
+        flex-direction: column; /* Empilha um em cima do outro */
+        align-items: flex-start; /* Alinha o texto à esquerda */
+        gap: 2px;
     }
 
      .filtros-container {
         width: 100%;
      }
+
      .popup-notificacao {
         left: 5%;
         right: 5%;
         width: 90%;
         bottom: 20px;
+    }
+
+    .btn-reagir, .btn-fofocar {
+        font-size: 0.9rem; /* Diminui um pouco o texto */
+        gap: 20px;
     }
 
    }
@@ -149,28 +151,26 @@ html {
 header {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
-    padding: 20px;
+    padding: 20px 40px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     position: relative;
 }
 
 header h1 {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #fff;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    margin: 0;
 }
 
 .header-icons {
-    position:absolute;
     display: flex;
-    justify-content: center;
-    gap:25px; 
-    top:30px;
-    right:30px;
-    left:auto;
+    gap: 25px;
+    align-items: center;
 }
     
 
@@ -190,6 +190,7 @@ article h3 {
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 10px;
+    width: 100%;
 }
 
 
@@ -572,6 +573,13 @@ button:hover {
 .container-feed {
     padding-top: 10px; }
 
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Importante para não expulsar a data do card */
+    gap: 5px;
+}
 
 .spotted-card {
     background: rgba(255, 255, 255, 0.08); 
@@ -660,7 +668,7 @@ button:hover {
     color: white;
     border-radius: 50%;
     padding: 2px 5px;
-    font-size: 10px;
+    font-size: 2.0rem;
     font-weight: bold;
     border: 2px solid #1a1a1a; /* Cor de fundo do seu cabeçalho */
     min-width: 15px;
@@ -906,7 +914,7 @@ footer a { color: #fff; text-decoration: underline; }
 
 .footer-links {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-around; 
     align-items: center;
     width: 100%;
     margin-top: 10px;
@@ -1137,10 +1145,23 @@ footer a { color: #fff; text-decoration: underline; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
+.user-info img, 
+.user-info-post img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
 .user-info img {
     border-radius: 50%;
     object-fit: cover; /* Garante que a imagem não fique esticada */
+     width: 35px;
+    height: 35px;
+    flex-shrink: 0; /* Não deixa a imagem achatar */
 }
+
 
 @keyframes slideIn {
     from { transform: translateX(-110%); }

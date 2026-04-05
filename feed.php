@@ -64,17 +64,17 @@ include 'includes/bolhas.php';
     <div class="card-header">
         <span class="category-tag">#<?php echo strtoupper($linha['categoria']); ?></span>
         
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <span class="post-time" style="margin-right: 10px;"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
+        <div class="user-info-post">
+            <span class="post-time"><?php echo date('d/m', strtotime($linha['data_post'])); ?></span>
             
             <?php if (!empty($linha['username'])): ?>
                 <img src="<?php echo !empty($linha['foto']) ? 'uploads/'.$linha['foto'] : 'imagensfoto/default.jpg'; ?>" class="avatar-p">
-                <a href="perfil.php?id=<?php echo $linha['usuario_id']; ?>" style="color: #ffbc00; text-decoration: none; font-weight: bold; font-size: 0.9rem;">
+                <a href="perfil.php?id=<?php echo $linha['usuario_id']; ?>" class="user-mention">
                     @<?php echo $linha['username']; ?>
                 </a>
             <?php else: ?>
                 <img src="imagensfoto/default.jpg" class="avatar-p">
-                <span style="opacity: 0.7; color: #fff; font-size: 0.9rem;">🕵️ Anônimo</span>
+                <span class="anonimo">🕵️ Anônimo</span>
             <?php endif; ?>
         </div>
     </div>
