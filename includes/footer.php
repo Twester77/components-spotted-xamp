@@ -91,6 +91,7 @@ function mostrarPopup(mensagem) {
             popup.remove();
         }
     }, 8000);
+    
 } // <--- AQUI FECHA A MOSTRARPOPUP CORRETAMENTE
 
 function atualizarContadorAlertas() {

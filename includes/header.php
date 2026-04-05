@@ -31,7 +31,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
         </a>
 
         <div class="notificacao-wrapper" style="position: relative; cursor: pointer;" onclick="window.location.href='notificacoes.php'">
-           <i class="fa-solid fa-bell" style="font-size: 2.0rem; color: #ffbc00;"></i>
+           <i class="fa-solid fa-bell" style="font-size: 1.8rem; color: #ffbc00;"></i>
            <span id="badge-alertas" class="badge-alertas" style="display: none;">0</span>
         </div>
 
