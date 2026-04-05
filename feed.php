@@ -126,7 +126,7 @@ include 'includes/bolhas.php';
         </div>
 
         <a href="post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar">
-            <i class="fas fa-comments"></i> 💬 FOFOCAR
+            <i class="fas fa-comments"></i> FOFOCAR
         </a>
     </div>
 </article> 
