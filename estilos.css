@@ -315,12 +315,25 @@ nav, .navbar {
 /* --- PERFIL MODO DARK (AJUSTE AQUI) --- */
 
 .main-perfil-container {
-    max-width: 600px;
-    margin: 40px auto;
-    background: #0a0a0a !important; /* Força o fundo preto no perfil */
-    border-radius: 20px;
-    overflow: hidden;
-    border: 5px solid #222;
+    max-width: 800px;
+    margin: 80px auto;
+    min-height: 450px; /* Altura mínima */
+    height: auto !important; /* Deixa crescer conforme o texto */
+    padding-bottom: 40px; /* Respira embaixo */
+    display: block;
+    position: relative;
+    background: var(--cor-secundaria); /* Ou sua cor de fundo */
+    border-radius: 15px;
+}
+
+.bio-box {
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+    display: block !important; /* Garante que não vire flex e quebre */
+    line-height: 1.5;
 }
 
 .form-perfil-corpo {
@@ -352,8 +365,8 @@ nav, .navbar {
 
 .titulo-pagina {
     color: var(--dourado); /* Dourado da Fenda */
-    font-size: 1.5rem;
-    margin-bottom: 25px;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -368,7 +381,7 @@ nav, .navbar {
     display: block;
     color: #bbb; 
     font-size: 14px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: bold;
 }
 
@@ -556,11 +569,9 @@ nav, .navbar {
 }
 
 .avatar-wrapper.viewer {
-    margin: -60px 0 15px 30px; /* Sobe -60px, mas joga 30px para a esquerda */
-    display: block;
+    margin: -60px 0 10px 30px; 
     width: fit-content;
-    position: relative;
-    z-index: 5;
+    float: left; 
 }
 
 /* --- EASTER EGG: A PRESENÇA (ID 1) --- */
@@ -579,15 +590,20 @@ nav, .navbar {
 
 
 .badge-presenca {
-    display: inline-block;
-    margin: 15px 0 10px 30px; /* Alinhado à esquerda também */
+    display: block;
+    width: fit-content;
+    margin: 25px 40px 0 auto;
     background: linear-gradient(45deg, var(--dourado), #fff000);
     color: #000;
-    padding: 6px 15px; 
-    border-radius: 4px; /* Quadradinho com borda arredondada fica mais moderno */
+    padding: 4px 12px; 
+    border-radius: 4px;
     font-weight: 900;
-    z-index: 10;
+    font-size: 0.7rem; 
+    text-transform: uppercase;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
     position: relative;
+    z-index: 10;
 }
     
 
@@ -749,6 +765,13 @@ nav, .navbar {
     color: #000;
 }
 
+.btn-editar-atalho, .btn-seguir-fenda {
+    display: block;
+    width: fit-content;
+    margin: 10px 30px 0 auto; /* Também joga para a direita */
+    clear: right; /* Garante que ele fique abaixo do selo se ambos existirem */
+}
+
 
 .btn-reagir, .btn-fofocar {
     color: #ccc;
@@ -847,7 +870,7 @@ nav, .navbar {
         border-radius: 15px;
         padding: 30px;
         width: 100%;
-        max-width: 400px;
+        max-width: 600px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
@@ -1329,9 +1352,111 @@ footer {
     padding: 8px 16px;  
 }
 
-.main-perfil-container {
-    max-width: 400px;
-    margin: 80px auto;
-}
+    /* 1. RESET DO CONTAINER - Forçando o empilhamento vertical */
+    .main-perfil-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        max-width: 95% !important;
+        margin: 20px auto !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* 2. CAPA - Ajustando a altura para não sumir */
+    .capa-wrapper.viewer {
+        width: 100% !important;
+        height: 180px !important;
+        position: relative !important;
+        order: 1 !important;
+        overflow: hidden !important;
+    }
+
+
+    /* 3. AVATAR (CAPIVARA) - Reduzida e centralizada */
+    .avatar-wrapper.viewer {
+        margin: -40px auto 10px auto !important; /* Morde a capa */
+        position: relative !important;
+        z-index: 99 !important;
+        float: none !important;
+        display: block !important;
+        order: 2 !important;
+        width: 110px !important; /* Ajustado para o novo tamanho que você quer */
+        height: 110px !important;
+        position: relative !important;
+        z-index: 10 !important;
+        
+    }
+    
+    .img-avatar-perfil {
+        width: 110px !important;
+        height: 110px !important;
+        border: 3px solid var(--dourado) !important;
+    }
+    
+
+    /* 4. TEXTOS (NOME E USERNAME) */
+    .perfil-info-publica {
+        width: 100% !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        order: 3 !important;
+        padding: 0 15px !important;
+        margin-top: 5px !important;
+        padding-bottom: 10px !important; 
+    }
+    
+    .nome-publico {
+        font-size: 1.4rem !important;
+        margin-top: 5px !important;
+    }
+
+
+    /* 5. (BOTÃO EDITAR/SEGUIR) - Forçado para baixo */
+
+    .btn-editar-perfil, .btn-seguir, .btn-editar-atalho, .btn-seguir-fenda {
+
+        position: static !important; 
+        float: none !important;
+        display: inline-block !important; /* Importante para o align-self funcionar */
+        width: auto !important;
+        min-width: 120px !important;
+        padding: 8px 20px !important;
+        margin: 30px 20px 20px auto !important;    
+        align-self: flex-end !important; /* Comando final para alinhar na direita do container flex */
+        text-align: center;    
+       
+    }
+
+    /* 6. SELO DA PRESENÇA - Ajustado */
+    
+    .badge-presenca {
+        display: table !important;
+        font-size: 0.6rem !important;
+        order: 3 !important;
+        display: table !important;
+        margin: 15px auto !important; 
+        position: static !important;
+    }
+
+    .bio-box {
+        width: 90% !important;
+        margin: 10px auto 20px auto !important;
+        text-align: center;
+        font-size: 0.9rem !important;
+    }
+
+    /* 7. STATS (Seguidores) */
+    .stats-perfil {
+        justify-content: center !important;
+        margin: 10px 0 !important;
+        order: 5 !important;
+    }
+
+
 
 }
+
+
