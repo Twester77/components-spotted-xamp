@@ -9,12 +9,12 @@
 
   <main style="max-width: 800px; margin: auto;">
     <article>
-  <h2 style="font-size: 20px; text-align: center; margin-bottom: 20px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
+  <h2 style="font-size: 1.5rem; text-align: center; margin-bottom: 20px; margin-top: 30px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
     </article>
-  <div style="display: flex; gap: 10px; justify-content:center;">
-   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+  <div style="display: flex; gap: 8px; justify-content:center;">
+   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
-  <article style="color: #b1a508; font-size: 16px; padding: 20px; line-height: 1.6; text-wrap: auto; margin: 20px ;"> 
+  <article style="color: #b1a508; font-size: 18px; text-align: center; margin-bottom: 15px; margin-top: 25px; ; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.
@@ -45,11 +45,11 @@
    Ao clicar em "Entrar" ou realizar um post, você confirma que leu, entendeu e concorda com todos os pontos acima, ciente de que o descumprimento resultará no banimento imediato da conta e exclusão do conteúdo.
     </article>
 
-  <article style="background-color: rgba(204, 66, 12, 0.1); padding: 30px; line-height: 1.6;">
-    <h2> *Extra: Dicas de Segurança para Encontros Reais </h2>
+  <article style="background-color: rgba(204, 66, 12, 0.1); padding: 20px; margin: 30px 0; padding-left: 25px; line-height: 1.6;">
+    <h2> * Extra: Dicas de Segurança para Encontros Reais </h2>
     <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
-    <ul style="line-height: 1.6;">
+    <ul style="line-height: 1.6; margin: 30px 0; padding-left: 25px;">
         <li><strong>Locais Públicos:</strong> Sempre marque o primeiro encontro em locais movimentados (como a própria praça de alimentação da UNIFEV ou cafeterias/lanchonetes/praças no centro).</li>
         <li><strong>Informe um Amigo:</strong> Avise alguém de sua confiança sobre onde você está indo e com quem, que hora você vai chegar, etc. Sempre é bom relembrar, se por ventura você não é maior de idade, NÃO SAIA sem autorização prévia dos seus pais e/ou responsáveis.</li>
         <li><strong>Transporte Próprio:</strong> Se possível, utilize seu próprio meio de transporte ou aplicativos de mobilidade conhecidos.</li>
@@ -57,7 +57,7 @@
     </ul>
 
     <div style="display: flex; justify-content: center; margin-top: 15px;">
-        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 70%; height: auto; border-radius: 15px; opacity: 0.7; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 80%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     </div>
     </article>
   <br>

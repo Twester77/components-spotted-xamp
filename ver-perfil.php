@@ -34,10 +34,11 @@ $is_presenca = ($id_visto == 1);
 <main class="main-perfil-container <?php echo $is_presenca ? 'perfil-gold' : ''; ?>">
     <div class="capa-wrapper viewer">
         <img src="<?php echo $capa; ?>" class="img-capa-preview">
-        <?php if($is_presenca): ?>
+    </div>
+
+    <?php if($is_presenca): ?>
             <div class="badge-presenca">VOCÊ ESTÁ DIANTE DA PRESENÇA 👑</div>
         <?php endif; ?>
-    </div>
 
     <div class="avatar-wrapper viewer">
         <img src="<?php echo $foto; ?>" class="img-avatar-perfil">
@@ -57,7 +58,7 @@ $is_presenca = ($id_visto == 1);
 
         <?php if ($_SESSION['usuario_id'] != $id_visto): ?>
             <a href="seguir.php?id=<?php echo $id_visto; ?>&user=<?php echo $user_get; ?>" class="btn-seguir-fenda">
-                Seguir Habitante
+                Seguir 
             </a>
         <?php else: ?>
             <a href="perfil.php" class="btn-editar-atalho">Editar meu perfil</a>

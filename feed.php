@@ -74,7 +74,7 @@ include 'includes/bolhas.php';
         <span class="category-tag">#<?php echo strtoupper($linha['categoria']); ?></span>
     
         <div class="user-info-post" style="text-align: right;">
-            <span class="post-time" style="display: block; font-size: 13px; opacity: 0.6;">
+            <span class="post-time" style="display: block; font-size: 14px; opacity: 0.6;">
                 🕒 <?php echo date('d/m H:i', strtotime($linha['data_post'])); ?>
             </span>
         

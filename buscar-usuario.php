@@ -27,13 +27,13 @@ include 'includes/navbar.php';
 ?>
 
 <main class="container-busca" style="padding: 20px; max-width: 600px; margin: 0 auto;">
-    <h2 style="color: #ffbc00; text-align: center; margin-bottom: 20px;">🔍 Buscar Estudantes</h2>
+    <h2 style="color: var(--dourado); font-size: 1.5rem; text-align: center; margin-bottom: 20px;">🔍 Buscar Estudantes</h2>
     
     <form action="buscar-usuario.php" method="GET" style="display: flex; gap: 10px; margin-bottom: 30px;">
         <input type="text" name="q" value="<?php echo htmlspecialchars($busca); ?>" 
                placeholder="Digite o nome ou @username..." 
-               style="flex: 1; padding: 12px; border-radius: 8px; border: 2px solid #ff7011; background: #222; color: white;">
-        <button type="submit" style="background: #ff7011; border: none; padding: 10px 20px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer;">
+               style="flex: 1; padding: 15px; font-size: 14px; border-radius: 8px; border: 2px solid var(--laranja-fenda); background: #222; color: white;">
+        <button type="submit" style="background: var(--laranja-fenda); border: none; padding: 10px 20px; border-radius: 8px; color: white; font-weight: bold; cursor: pointer;">
             IR
         </button>
     </form>
