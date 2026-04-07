@@ -315,15 +315,19 @@ nav, .navbar {
 /* --- PERFIL MODO DARK (AJUSTE AQUI) --- */
 
 .main-perfil-container {
-    max-width: 800px;
-    margin: 80px auto;
-    min-height: 450px; /* Altura mínima */
-    height: auto !important; /* Deixa crescer conforme o texto */
-    padding-bottom: 40px; /* Respira embaixo */
-    display: block;
+    width: 95%;
+    max-width: 850px;
+    min-height: 550px; /* Garante um tamanho mínimo */
+    height: auto;      /* LIBERDADE! O card cresce com o conteúdo */
+    margin: 20px auto;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05); /* Ou a cor que você definiu */
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--dourado);
     position: relative;
-    background: var(--cor-secundaria); /* Ou sua cor de fundo */
-    border-radius: 15px;
 }
 
 .bio-box {
@@ -337,21 +341,22 @@ nav, .navbar {
 }
 
 .form-perfil-corpo {
-    padding: 30px;
-    padding-bottom: 40px; 
-    background: #0a0a0a;
-    gap: 20px;
+    display: flex !important;
+    flex-direction: column !important; /* Força um embaixo do outro */
+    gap: 20px !important;            /* Dá respiro entre os campos */
+    width: 100% !important;
+    height: auto !important;
+    padding: 10px 0;
 }
 
 
 .campo-grupo input, .campo-grupo textarea {
     width: 100%;
     padding: 12px;
-    background: #1a1a1a;
-    border: 2px solid #333;
     border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 188, 0, 0.3);
     color: white;
-    margin-top: 5px;
 }
 
 
@@ -373,20 +378,21 @@ nav, .navbar {
 }
 
 .campo-grupo {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column; /* Label em cima, Input embaixo */
     text-align: left;
+    width: 100%;
 }
 
 .campo-grupo label {
-    display: block;
-    color: #bbb; 
-    font-size: 14px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    color: var(--dourado);
     font-weight: bold;
 }
 
 
-/* Estilo geral para Inputs e Textarea */
+/* Estilo geral para Input
+s e Textarea */
 
 .container input, .container button, select, textarea {
     padding: 12px;
@@ -1353,15 +1359,21 @@ footer {
 }
 
     /* 1. RESET DO CONTAINER - Forçando o empilhamento vertical */
-    .main-perfil-container {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        max-width: 95% !important;
-        margin: 20px auto !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-    }
+   .main-perfil-container {
+    width: 95%;
+    max-width: 800px;
+    min-height: 500px; /* Tamanho mínimo para não ficar pequeno */
+    height: auto !important; /* Deixa o card crescer se a Bio for grande */
+    margin: 20px auto;
+    padding: 30px;
+    display: flex;
+    flex-direction: column; /* Alinha tudo em coluna */
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    border: 1px solid var(--dourado);
+    overflow: visible; /* Garante que nada seja cortado */
+}
 
     /* 2. CAPA - Ajustando a altura para não sumir */
     .capa-wrapper.viewer {
@@ -1458,5 +1470,6 @@ footer {
 
 
 }
+
 
 
