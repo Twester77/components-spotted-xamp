@@ -641,6 +641,7 @@ nav, .navbar {
 
  .popup-notificacao {
     position: fixed;
+      width: 90%;
     width: 280px; 
     height: 90px;    
     right: 20px;  
@@ -658,10 +659,7 @@ nav, .navbar {
     animation: deslizar 0.5s ease-out; /* Usando a sua animação */
 }
 
- .popup-notificacao {
-        width: 90%;
-        bottom: 20px;
-    }
+ 
 
 @keyframes deslizar {
     from { 
@@ -1183,28 +1181,26 @@ nav, .navbar {
 .alerta-login a { color: var(--dourado); font-weight: bold; }
 
 
-footer { 
-    text-align: center;
-    padding: 30px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.8rem;
-    margin-top: 50px;
-    flex-shrink: 0; /* Impede o footer de ser "esmagado" */
-}
 
-footer a { color: #fff; text-decoration: underline; }
 
 
 
 
 /*---------FOTER E MODAL--------*/
 
+
+
+footer a { color: #fff; text-decoration: underline; }
+
 footer {
     background: rgba(0, 0, 0, 0.3);
-    padding: 20px;
     text-align: center;
     border-top: 1px solid rgba(255, 188, 0, 0.2);
     margin-top: 50px;
+    padding: 30px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    flex-shrink: 0; /* Impede o footer de ser "esmagado" */
 }
 
 
@@ -1290,173 +1286,5 @@ footer {
 
 .btn-ficar-terra:hover { background: #eab100; transform: translateY(-2px); }
 .btn-zarpar:hover { background: rgba(255, 99, 71, 0.2); border-color: #ff6347; }
-
-
-@media (max-width: 768px) {
-
-    body {
-        font-size: 14px; 
-    }
-    header {
-        padding: 15px !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }
-
-    header h1 {
-        font-size: 1.3rem !important; 
-        max-width: 50% !important;
-        margin-bottom: 0 !important;
-        text-align: left !important;
-    }
-
-    .header-icons {
-        position: static !important; /* Tira o absolute para não vazar no iPhone */
-        display: flex !important;
-        gap: 20px !important;
-        right: auto !important;
-        transform: none !important;
-    }
-
-
-    .popup-notificacao {
-        left: 5%;
-        right: 5%;
-        width: 90%;
-        bottom: 20px;
-    }
-    
-    .container-feed { padding-top: 20px; padding-bottom: 20px; }
-
-    .spotted-card {
-        padding: 10px; 
-        width: 90%;    
-        margin: 10px auto;
-        scroll-margin-top: 80px; 
-     }
-
-     .category-tag {
-        font-size: 0.8rem !important; /* Diminui um pouco a tag no celular */
-        white-space: nowrap;
-    }
-
-     .post-time {
-        font-size: 0.75rem;
-        order: 2; /* Joga a data para o final da linha */
-    }
-    .filtro-btn {
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 800;
-    padding: 8px 16px;  
-}
-
-    /* 1. RESET DO CONTAINER - Forçando o empilhamento vertical */
-    .main-perfil-container {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        max-width: 95% !important;
-        margin: 20px auto !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-    }
-
-    /* 2. CAPA - Ajustando a altura para não sumir */
-    .capa-wrapper.viewer {
-        width: 100% !important;
-        height: 180px !important;
-        position: relative !important;
-        order: 1 !important;
-        overflow: hidden !important;
-    }
-
-
-    /* 3. AVATAR (CAPIVARA) - Reduzida e centralizada */
-    .avatar-wrapper.viewer {
-        margin: -40px auto 10px auto !important; /* Morde a capa */
-        position: relative !important;
-        z-index: 99 !important;
-        float: none !important;
-        display: block !important;
-        order: 2 !important;
-        width: 110px !important; /* Ajustado para o novo tamanho que você quer */
-        height: 110px !important;
-        position: relative !important;
-        z-index: 10 !important;
-        
-    }
-    
-    .img-avatar-perfil {
-        width: 110px !important;
-        height: 110px !important;
-        border: 3px solid var(--dourado) !important;
-    }
-    
-
-    /* 4. TEXTOS (NOME E USERNAME) */
-    .perfil-info-publica {
-        width: 100% !important;
-        text-align: center !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        order: 3 !important;
-        padding: 0 15px !important;
-        margin-top: 5px !important;
-        padding-bottom: 10px !important; 
-    }
-    
-    .nome-publico {
-        font-size: 1.4rem !important;
-        margin-top: 5px !important;
-    }
-
-
-    /* 5. (BOTÃO EDITAR/SEGUIR) - Forçado para baixo */
-
-    .btn-editar-perfil, .btn-seguir, .btn-editar-atalho, .btn-seguir-fenda {
-
-        position: static !important; 
-        float: none !important;
-        display: inline-block !important; /* Importante para o align-self funcionar */
-        width: auto !important;
-        min-width: 120px !important;
-        padding: 8px 20px !important;
-        margin: 30px 20px 20px auto !important;    
-        align-self: flex-end !important; /* Comando final para alinhar na direita do container flex */
-        text-align: center;    
-       
-    }
-
-    /* 6. SELO DA PRESENÇA - Ajustado */
-    
-    .badge-presenca {
-        display: table !important;
-        font-size: 0.6rem !important;
-        order: 3 !important;
-        display: table !important;
-        margin: 15px auto !important; 
-        position: static !important;
-    }
-
-    .bio-box {
-        width: 90% !important;
-        margin: 10px auto 20px auto !important;
-        text-align: center;
-        font-size: 0.9rem !important;
-    }
-
-    /* 7. STATS (Seguidores) */
-    .stats-perfil {
-        justify-content: center !important;
-        margin: 10px 0 !important;
-        order: 5 !important;
-    }
-
-
-
-}
 
 

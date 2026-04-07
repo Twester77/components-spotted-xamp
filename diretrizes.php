@@ -14,7 +14,7 @@
   <div style="display: flex; gap: 8px; justify-content:center;">
    <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
-  <article style="color: #b1a508; font-size: 18px; text-align: center; margin-bottom: 15px; margin-top: 25px; ; "> 
+  <article style="color: #c5b911e5; font-size: 18px; text-align: center; margin-bottom: 15px; margin-top: 25px; ; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.
@@ -57,7 +57,7 @@
     </ul>
 
     <div style="display: flex; justify-content: center; margin-top: 15px;">
-        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 80%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
     </div>
     </article>
   <br>

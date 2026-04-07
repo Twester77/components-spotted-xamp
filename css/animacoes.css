@@ -1,0 +1,73 @@
+/* BOLHAS DA FENDA REFORMULADAS */
+
+.bolha {
+    position: fixed;
+    bottom: -10vh; 
+    background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.4) 0%, 
+                rgba(255, 255, 255, 0.1) 40%, 
+                rgba(255, 255, 255, 0.2) 60%, 
+                rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 65%;
+    animation: subirEBalancar 8s infinite ease-in; 
+    z-index: 1;
+    pointer-events: none;
+    
+}
+
+
+
+@keyframes subirEBalancar {
+    0% {
+        transform: translateY(0) translateX(0) scale(0.5);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(-60vh) translateX(50px) scale(1.2);
+        opacity: 0.4;
+    }
+    80% {
+        transform: translateY(-100vh) translateX(-10px) scale(1.5);
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(-120vh) translateX(-30px) scale(1.8);
+        opacity: 0;
+    }
+}
+
+
+
+@keyframes deslizar {
+    from { 
+        transform: translateY(100px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}
+
+
+@keyframes surgimentoModal {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+
+
+
+@keyframes slideIn {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(0); }
+}
+
+.card-notificacao:hover {
+    background-color: #252525 !important; 
+    transform: scale(1.05);
+    transition: all 0.2s ease;}

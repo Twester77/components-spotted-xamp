@@ -1,0 +1,37 @@
+/* ==========================================================================
+   A FENDA - CSS MASTER (VERSÃO REPARADA)
+   Mantendo a estrutura original e corrigindo os bugs solicitados.
+   ========================================================================== */
+
+:root {
+    --cor-principal: #004a8d; 
+    --cor-hover: #1b77c7;
+    --laranja-fenda: rgba(241, 103, 5, 0.9);
+    --dourado: #ffbc00;
+}
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    min-height: 100vh; 
+    background-color: var(--cor-principal); 
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;   
+    font-size: 16px;
+
+}
+
+body {
+    display: flex;
+    flex-direction: column; 
+    min-height: 100vh;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+

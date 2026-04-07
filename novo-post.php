@@ -22,7 +22,7 @@ include 'includes/bolhas.php';
             <select name="categoria" id="categoria">
                 <option value="anonimo">🕵️ Anônimo </option>
                 <option value="comunidade">👥 Comunidade / Evento </option>
-                <option value="academico">❓ Pergunta </option>
+                <option value="academico">❓ Dúvidas Acadêmicas </option>
                 <option value="elogio">💖 Correio Elegante </option>
                 <option value="ranco"> 👌 Ranço </option>
                 <option value="acaba-pelo-amor-de-deus"> 😭 Eu não estou suportando mais  </option>

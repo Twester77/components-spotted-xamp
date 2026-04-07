@@ -41,7 +41,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
             <img src="<?php echo $foto_atual; ?>" class="img-avatar-perfil">
             <label class="btn-mudar-avatar">
                 <i class="fas fa-pencil-alt"></i>
-                <input type="file" name="foto" style="display:none;">
+                <input type="file" name="foto" style="display:none ;">
             </label>
         </div>
 
@@ -50,20 +50,20 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo">
                 <label>Nome</label>
-                <input type="text" name="nome" value="<?php echo $dados['nome']; ?>" required>
+                <input type="text" name="nome" maxlength="20" value="<?php echo $dados['nome']; ?>" required>
             </div>
 
             <div class="campo-grupo">
                 <label>Username</label>
                 <div class="input-username-wrapper">
                     <span>@</span>
-                    <input type="text" name="username" value="<?php echo $dados['username']; ?>">
+                    <input type="text" name="username" maxlength="30" value="<?php echo $dados['username']; ?>">
                 </div>
             </div>
 
             <div class="campo-grupo">
                 <label>Sua Bio</label>
-                <textarea name="bio" rows="3"><?php echo $dados['bio']; ?></textarea>
+                <textarea name="bio" maxlength="450" rows="3"><?php echo $dados['bio']; ?></textarea>
             </div>
 
             <button type="submit" class="btn-salvar-perfil">SALVAR ALTERAÇÕES</button>

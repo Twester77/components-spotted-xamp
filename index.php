@@ -79,15 +79,15 @@ include 'includes/header.php';
 
         <p style="margin-bottom: 15px;">E por que não, marcar um date e achar o amor da sua vida (ou um trauma e 6 meses de terapia, alô pessoal da Psico!). Porque não marcar um duelo ao meio dia? Embora eu duvide muito que alguém vai ter tanto tempo sobrando assim mas enfim.. Minha nossa senhora, é tanta coisa que deu até preguiça de digitar.</p>
 
-        <p style="font-style: italic; opacity: 0.7; margin-bottom: 20px;"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros.</p>
+        <p style="font-style: italic; opacity: 0.75; margin-bottom: 20px;"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros.</p>
 
         <blockquote style="border-left: 4px solid #cc420c; padding-left: 15px; margin: 25px 0; font-style: italic; background: rgba(255,255,255,0.03); padding: 15px;">
             "Tratem todos: (Sim, isso inclui todos, desde animais, pessoas, bactérias, terraplanistas e até ET's) com educação. Ser doido e um tanto quanto anárquico não é desculpa para ser mal-educado, respeito é via de mão dupla."
         </blockquote>
 
-       <article style="padding: 20px; background: rgba(0, 0, 0, 0.2); border-radius: 15px;"> 
-    <ul style="font-weight: bold; text-align: left; margin: 30px 0; padding-left: 25px; color: #ff9900; line-height: 1.8; list-style-type: ' ✅ ';">
-        <span style="color: #fff; display: block; margin-bottom: 15px; margin-left: -20px; font-size: 1.2rem;">
+       <article style="padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 15px;"> 
+    <ul style="font-weight: bold; text-align: left; margin: 30px 0; padding-left: 20px; color: #ff9900; line-height: 1.6; list-style-type: ' - ';">
+        <span style="color: #fff; display: block; margin-bottom: 15px; margin-left: -20px; font-size: 1rem;">
             E por último, porém não menos importante:
         </span>
         <li>Usem camisinha;</li>
@@ -97,7 +97,7 @@ include 'includes/header.php';
         <li>Faculdade é igual o Titanic: se for pra afundar, que seja de primeira classe e com a música tocando;</li>
         <li>Invistam em Bitcoin;</li>
         <li>NÃO é NÃO;</li>
-        <li>Bebam água e, é claro, DIVIRTAM-SE!</li>
+        <li>Bebam água e, é claro... DIVIRTAM-SE!</li>
     </ul>
 </article>
     </article>
