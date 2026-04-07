@@ -61,13 +61,8 @@
 
 
 
-
 @keyframes slideIn {
     from { transform: translateX(-110%); }
     to { transform: translateX(0); }
 }
 
-.card-notificacao:hover {
-    background-color: #252525 !important; 
-    transform: scale(1.05);
-    transition: all 0.2s ease;}

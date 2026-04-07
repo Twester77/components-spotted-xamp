@@ -121,6 +121,7 @@
         document.body.appendChild(popup);
         setTimeout(() => { if (document.body.contains(popup)) popup.remove(); }, 8000);
     }
+    
     </script>
 </footer>
 </body>

@@ -359,15 +359,31 @@ footer a { color: #fff; text-decoration: underline; }
     animation: deslizar 0.5s ease-out; /* Usando a sua animação */
 }
 
+/* Seção de Publicar */
+
+.section .sessao-publicar {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.sessao-publicar {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+}
+
 .nota-seguranca {
     background-color: #ffffcc;
     color: #000;
     padding: 12px;
     font-size: 0.85em;
-    border-left: 5px solid var(--dourado);
+    border-left: 5px solid #ffcc00;
     margin: 15px 0;
     border-radius: 4px;
 }
+
 
 .alerta-login {
     background: rgba(255, 187, 0, 0);

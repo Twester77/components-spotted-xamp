@@ -37,10 +37,10 @@
 .container-feed { max-width: 600px; margin: 20px auto; padding: 0 15px; background: transparent;}
 
 .spotted-card {
-    /* 1. Fundo semi-transparente (ajuste o 0.2 para mais ou menos opacidade) */
-    background: rgba(255, 255, 255, 0.05); 
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(10px); /* Suporte para Safari */
+
+    background: rgba(10, 10, 10, 0.85); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px); 
     border: 2px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 15px; 
@@ -355,13 +355,10 @@
 }
 
 
-
-
 .card-notificacao:hover {
     background-color: #252525 !important; 
     transform: scale(1.05);
-    transition: all 0.2s ease;
-}
+    transition: all 0.2s ease;}
 
 
 
@@ -456,7 +453,7 @@
     padding: 4px 12px; 
     border-radius: 4px;
     font-weight: 900;
-    font-size: 0.7rem; 
+    font-size: 1.1rem; 
     text-transform: uppercase;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
