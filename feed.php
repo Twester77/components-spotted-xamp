@@ -15,7 +15,7 @@ function formatarMencoes($texto)
 {
     $texto_seguro = htmlspecialchars($texto);
     $padrao = '/@([^\\s]+)/';
-    $substituicao = '<a href="perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>';
+    $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>';
     return preg_replace($padrao, $substituicao, $texto_seguro);
 }
 
@@ -70,45 +70,36 @@ include 'includes/bolhas.php';
 ?>
      
 <article id="post-<?php echo $post_id_atual; ?>" class="spotted-card <?php echo $linha['categoria']; ?>">
-    <div class="card-header">
+    
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
         <span class="category-tag">#<?php echo strtoupper($linha['categoria']); ?></span>
-    
-        <div class="user-info-post" style="text-align: right;">
-            <span class="post-time" style="display: block; font-size: 14px; opacity: 0.6;">
-                 <?php echo date('d/m H:i', strtotime($linha['data_post'])); ?>
-            </span>
+        <span class="post-time" style="opacity: 0.7;">
+            <?php echo date('d/m H:i', strtotime($linha['data_post'])); ?>
+        </span>
+    </div>
+
+    <div class="user-info-post" style="text-align: left; display: flex; align-items: center; gap: 10px; margin: 10px 0;">
+    <?php if ($linha['categoria'] === 'anonimo'): ?>
+        <img src="imagensfoto/anonimo-default.jpg" class="avatar-p" style="flex-shrink: 0;">
+        <span class="anonimo" style="font-weight: bold; opacity: 0.75; color: #a1a1a1da; white-space: nowrap;">
+            Habitante Anônimo
+        </span>
+
+    <?php else: ?>
+        <?php 
+            $foto_post = !empty($linha['foto']) ? 'uploads/'.$linha['foto'] : 'imagensfoto/default.jpg'; 
+        ?>
+        <img src="<?php echo $foto_post; ?>" class="avatar-p" style="flex-shrink: 0;">
         
-            <?php if (!empty($linha['username'])): ?>
-                <img src="<?php echo !empty($linha['foto']) ? 'uploads/'.$linha['foto'] : 'imagensfoto/default.jpg'; ?>" class="avatar-p">
-                <a href="perfil.php?id=<?php echo $linha['usuario_id']; ?>" class="user-mention">
-                    @<?php echo $linha['username']; ?>
-                </a>
-            <?php else: ?>
-                <img src="imagensfoto/default.jpg" class="avatar-p">
-                <span class="anonimo">🕵️ Anônimo</span>
-            <?php endif; ?>
-        </div>
-    </div>
-    
-    <div class="card-body">
-        <p class="post-content"><?php echo formatarMencoes($linha['mensagem']); ?></p>   
-    </div>
+        <a href="ver-perfil.php?user=<?php echo $linha['username']; ?>" class="user-mention">
+            @<?php echo $linha['username']; ?>
+        </a>
+    <?php endif; ?>
+</div>
 
-    <div class="footer-links">
-        <div class="reacao-wrapper">
-            <span class="btn-reagir">👍 Reagir</span>
-            
-            <div class="reacoes-popup">
-                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=amei&ref=post-<?php echo $post_id_atual; ?>" title="Amei">💖</a>
-                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=perplecto&ref=post-<?php echo $post_id_atual; ?>" title="Tô Perplecto">😲</a>
-                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=haha&ref=post-<?php echo $post_id_atual; ?>" title="Haha">😂</a>
-                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=ranco&ref=post-<?php echo $post_id_atual; ?>" title="Que ranço!">😠</a>
-                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=tendi-nada&ref=post-<?php echo $post_id_atual; ?>" title="Entendi nada">🤔</a>
-                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=forca&ref=post-<?php echo $post_id_atual; ?>" title="Força">🫂</a>
-            </div>
-        </div>
-
-        <div class="reacoes-gravadas">
+<div class="card-body" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+    <p class="post-content"><?php echo formatarMencoes($linha['mensagem']); ?> </p>   
+     <div class="reacoes-gravadas" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px;">
             <?php
             $sql_contas = "SELECT tipo_reacao, COUNT(*) as total FROM curtidas WHERE mensagem_id = '$post_id_atual' GROUP BY tipo_reacao";
             $res_contas = mysqli_query($conn, $sql_contas);
@@ -124,6 +115,21 @@ include 'includes/bolhas.php';
             }
             ?>
         </div>
+</div>
+
+    <div class="footer-links">
+        <div class="reacao-wrapper">
+            <span class="btn-reagir">👍 Reagir</span>
+            
+            <div class="reacoes-popup">
+                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=amei&ref=post-<?php echo $post_id_atual; ?>" title="Amei">💖</a>
+                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=perplecto&ref=post-<?php echo $post_id_atual; ?>" title="Tô Perplecto">😲</a>
+                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=haha&ref=post-<?php echo $post_id_atual; ?>" title="Haha">😂</a>
+                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=ranco&ref=post-<?php echo $post_id_atual; ?>" title="Que ranço!">😠</a>
+                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=tendi-nada&ref=post-<?php echo $post_id_atual; ?>" title="Entendi nada">🤔</a>
+                <a href="includes/reagir.php?id=<?php echo $post_id_atual; ?>&tipo=forca&ref=post-<?php echo $post_id_atual; ?>" title="Força">🫂</a>
+            </div>
+        </div>
 
         <a href="post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar">
             <i class="fas fa-comments"></i> FOFOCAR
@@ -132,7 +138,7 @@ include 'includes/bolhas.php';
 </article> 
 <?php endwhile; ?>
     <?php else: ?>
-        <p style="text-align: center; padding: 50px;">Nenhum spotted encontrado nesta categoria. 🌊</p>
+        <p style="text-align: center; padding: 50px; opacity:0.7;">Nenhum spotted encontrado nesta categoria . </p>
     <?php endif; ?>
 </main>
 

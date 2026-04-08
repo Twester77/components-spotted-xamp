@@ -44,8 +44,8 @@ include 'includes/navbar.php';
                 <?php foreach ($resultados as $user): 
                     $foto = !empty($user['foto']) ? "uploads/" . $user['foto'] : "imagensfoto/img_avatar_generico.jpg";
                 ?>
-                    <a href="perfil.php?id=<?php echo $user['id']; ?>" style="text-decoration: none; color: inherit;">
-                        <div class="user-card" style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,188,0,0.2);">
+                    <a href="ver-perfil.php?user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
+                            <div class="user-card" style="display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,188,0,0.2);">
                             <img src="<?php echo $foto; ?>" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #ffbc00;">
                             <div>
                                 <strong style="display: block; color: white;"><?php echo $user['nome']; ?></strong>

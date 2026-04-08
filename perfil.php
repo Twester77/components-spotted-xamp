@@ -63,7 +63,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo">
                 <label>Sua Bio</label>
-                <textarea name="bio" maxlength="450" rows="3"><?php echo $dados['bio']; ?></textarea>
+                <textarea name="bio" maxlength="350" rows="3"><?php echo $dados['bio']; ?></textarea>
             </div>
 
             <button type="submit" class="btn-salvar-perfil">SALVAR ALTERAÇÕES</button>
