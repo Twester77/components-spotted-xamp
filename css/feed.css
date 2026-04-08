@@ -133,20 +133,28 @@
     gap: 4px;
 }
 
-.badge-alertas {
-   position: absolute;
-    top: -5px;
-    right: -5px; /* Ajustei para ficar bem no cantinho do sino */
-    background-color: #ff4444;
+.badge-alerta {
+    position: absolute;
+    top: -5px;      
+    right: -5px;    
+    background-color: #ff4757; 
     color: white;
-    border-radius: 50%;
-    padding: 2px 5px;
-    font-size: 2.0rem;
+    font-size: 10px;
     font-weight: bold;
-    border: 2px solid #1a1a1a; /* Cor de fundo do seu cabeçalho */
-    min-width: 15px;
-    text-align: center;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #121212; 
     z-index: 10;
+}
+
+/* Container do ícone do sino */
+.nav-item-notif {
+    position: relative; /* OBRIGATÓRIO para o badge se basear nele */
+    display: inline-block;
 }
 
 .img-capa {
@@ -427,12 +435,12 @@
     background: rgba(255, 255, 255, 0.1);
     margin-top: 15px;
     margin-bottom: 20px;
-    border-left: 3px solid var(--dourado);
+    border-left: 13px solid #70cde4be;
     border-radius: 12px;
-    padding: 20px;           
+    padding: 20px 10px;           
     display: flex;
     flex-direction: column;
-    gap: 8px;                
+    gap: 15px;                
 }
 
 .comentario-item strong {
@@ -441,8 +449,24 @@
 }
 
 .comentario-item span {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     line-height: 1.5;       
+}
+
+.mencao-comentario {
+    color: var(--dourado);
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s;
+    background: rgba(255, 188, 0, 0.1);
+    padding: 0 4px;
+    border-radius: 4px;
+}
+
+.mencao-comentario:hover {
+    background: var(--dourado);
+    color: #000;
+    text-shadow: none;
 }
 
 
@@ -589,6 +613,7 @@
         width: 80px !important;
         height: 80px !important;
         border: 3px solid var(--dourado) !important;
+        
     }
     
 
@@ -656,6 +681,17 @@
         margin: 10px 0 !important;
         order: 5 !important;
     }
+
+
+    .comentario-item strong {
+    color: #ebc415;
+    font-size: 1rem;     
+}
+
+    .comentario-item span {
+    font-size: 1.1rem;
+    line-height: 1.5;       
+}
 
 }
 

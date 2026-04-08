@@ -22,3 +22,14 @@ if (!$conn) {
 // Opcional: Ajusta para aceitar acentos do Brasil
 mysqli_set_charset($conn, "utf8mb4");
 ?>
+
+<?php
+function formatarMencoesGeral($texto) {
+    $texto_seguro = htmlspecialchars($texto);
+    // Encontra @usuarios e transforma em link dourado da Fenda
+    $padrao = '/@([^\s]+)/';
+    $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>';
+    return preg_replace($padrao, $substituicao, $texto_seguro);
+}
+?>
+

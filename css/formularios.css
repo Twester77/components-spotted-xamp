@@ -423,45 +423,60 @@
 }
 
 
-/* BOTÃO DE EDITAR ATALHO */
+/* 1. REGRAS GERAIS ( igual para todos) */
 
 .btn-seguir, 
 .btn-editar-atalho, 
 .btn-seguir-fenda {
-
-    position: relative !important;
-    float: none !important;
-    display: inline-flex !important;
+    position: relative;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 140px !important;
-    padding: 10px 20px !important;
-    margin: 15px 0 !important; /* Tira a margem negativa e dá respiro */
-    background: var(--dourado) !important;
-    color: #000 !important;
-    font-weight: 800 !important;
+    min-width: 140px;
+    padding: 10px 20px;
+    margin: 15px 0;
+    font-weight: 800;
     text-transform: uppercase;
     font-size: 0.8rem;
-    border-radius: 50px !important;
-    border: none !important;
+    border-radius: 50px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     text-decoration: none;
+    border: 2px solid transparent; 
 }
 
+/* 2. ESTADO PADRÃO (Dourado) */
+.btn-editar-atalho, 
+.btn-seguir-fenda {
+    background: var(--dourado);
+    color: #000;
+    width: fit-content;
+}
 
- .btn-editar-atalho:hover,  .btn-seguir:hover, .btn-seguir-fenda:hover {
+.btn-editar-atalho:hover, 
+.btn-seguir-fenda:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px var(--dourado);
+    background: var(--dourado); 
 }
 
-.btn-editar-atalho, 
-
-.btn-editar-atalho, .btn-seguir-fenda {
-    width: fit-content;
-    margin: 10px 30px 0 auto; /* Também joga para a direita */
-    clear: right; /* Garante que ele fique abaixo do selo se ambos existirem */
+/* 3. ESTADO SEGUINDO (O segredo do Verde) */
+.btn-seguir-fenda.seguindo {
+    background: rgba(38, 211, 110, 0.15) !important; 
+    border: 2px solid #26d36e !important;
+    color: #26d36e !important;
+    box-shadow: none !important;
 }
+
+/* 4. HOVER DO SEGUINDO (O "Deixar de Seguir" Vermelho) */
+.btn-seguir-fenda.seguindo:hover {
+    background: rgba(255, 71, 87, 0.2) !important;
+    border-color: #ff4757 !important;
+    color: #ff4757 !important;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.4) !important;
+    transform: scale(1.02);
+}
+
 
 
 

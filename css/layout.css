@@ -363,8 +363,16 @@ footer a { color: #fff; text-decoration: underline; }
 
 /* Seção de Publicar */
 
-.section .sessao-publicar {
+.sessao-publicar {
     background: rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+
 }
 
 .sessao-publicar {

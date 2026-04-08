@@ -36,7 +36,7 @@ if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
 
         <form action="enviar-comentario.php" method="POST" class="form-fofoca">
             <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
-            <textarea name="comentario" placeholder="Sabe de algo? Conta aí..." required style="width: 100%; min-height: 80px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; margin: 10px 0;"></textarea>
+            <textarea name="comentario" placeholder="Conte a fofoca aqui... use @ para marcar alguém!" required style="width: 100%; min-height: 80px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; margin: 10px 0;"></textarea>
             <?php $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
                         // Buscamos o nome atualizado da sessão ou do banco se preferir
             if ($exibir_nome): ?>
@@ -49,30 +49,29 @@ if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
 
          
     <div class="lista-comentarios">
-        <?php // Buscamos os comentários do banco
-        $stmt_c = $conn->prepare("SELECT * FROM comentarios WHERE id_mensagem = ? ORDER BY id DESC");
-        $stmt_c->bind_param("i", $id);
-        $stmt_c->execute();
-        $res_c = $stmt_c->get_result();
+    <?php 
+    $stmt_c = $conn->prepare("SELECT * FROM comentarios WHERE id_mensagem = ? ORDER BY id DESC");
+    $stmt_c->bind_param("i", $id);
+    $stmt_c->execute();
+    $res_c = $stmt_c->get_result();
 
-        // Verificamos SE existem comentários
-        if ($res_c->num_rows > 0): 
-            while ($c = $res_c->fetch_assoc()): ?>
-    <div class="comentario-item">
-           <p>
-             <strong style="color: var(--dourado);">
-                <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>:
-             </strong> 
-             <span> <?php echo htmlspecialchars($c['comentario']); ?> </span>
-           </p>
-        <small style="opacity: 0.5; font-size: 12px; display: block; margin-top: 5px;">
-            🕒 Postado em: <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?>
-        </small>
-    </div>
-            <?php endwhile; 
-        else: ?> 
-            <p style="text-align: center; opacity: 0.6;">Ninguém fofocou nada ainda...</p> 
-        <?php endif; ?>
-    </div>
+    if ($res_c->num_rows > 0): 
+        while ($c = $res_c->fetch_assoc()): ?>
+            <div class="comentario-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <p>
+                    <strong style="color: var(--dourado);">
+                        <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>:
+                    </strong> 
+                    <span><?php echo formatarMencoesGeral($c['comentario']); ?></span>
+                </p>
+                <small style="opacity: 0.7; font-size: 14px; display: block; margin-top: 5px;">
+                    🕒 <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?>
+                </small>
+            </div>
+        <?php endwhile; 
+    else: ?> 
+        <p style="text-align: center; opacity: 0.7;">Ninguém fofocou nada ainda...</p> 
+    <?php endif; ?>
+</div>
 </main>
 <?php include 'includes/footer.php'; ?>
