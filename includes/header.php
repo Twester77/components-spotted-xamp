@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 $usuario_logado = isset($_SESSION['usuario_id']);
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR"> 
 <head>
@@ -22,29 +23,47 @@ $usuario_logado = isset($_SESSION['usuario_id']);
     
 </head>
 <body> 
-    <header>
-        <h1>A Fenda - Spotted Universitário</h1>
+   <header>
+    <h1>A Fenda </h1>
+
     <?php 
     $pagina_atual = basename($_SERVER['PHP_SELF']); 
     if ($pagina_atual !== 'index.php'): 
     ?>
-
-    <div class="header-icons" style="position: absolute; right: 30px; top: 50%; transform: translateY(-50%); display: flex; gap: 15px; align-items: center;">
-        <a href="buscar-usuario.php" class="btn-header" title="Buscar Usuários">
-            <i class="fas fa-search icon-fenda"> </i>
+    
+    <div class="header-icons">
+        <a href="buscar-usuario.php" class="btn-header">
+            <i class="fas fa-search"></i>
         </a>
 
-        <div class="notificacao-wrapper" style="position: relative; cursor: pointer;" onclick="window.location.href='notificacoes.php'">
-           <i class="fa-solid fa-bell" style="font-size: 1.8rem; "></i>
-           <span id="badge-alertas" class="badge-alertas" style="display: none;">0</span>
+        <div class="notificacao-wrapper" onclick="window.location.href='notificacoes.php'">
+            <i class="fa-solid fa-bell"></i>
+            
+            <?php 
+            $u_id = $_SESSION['usuario_id'] ?? 0;
+            if ($u_id > 0) {
+                // A sua lógica de contagem continua firme e forte aqui
+                $stmt_count = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
+                $stmt_count->bind_param("i", $u_id);
+                $stmt_count->execute();
+                $res_count = $stmt_count->get_result()->fetch_assoc();
+                $total_n = $res_count['total'];
+
+                if ($total_n > 0): ?>
+                    <span class="badge-alerta">
+                        <?php echo $total_n; ?>
+                    </span>
+                <?php endif; 
+            }
+            ?>
         </div>
-        
-        <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
-           <i class="fas fa-cog icon-fenda"> </i>
+
+        <a href="perfil.php" class="btn-config">
+           <i class="fas fa-cog"></i>
         </a>
     </div>
 
-        <?php endif; ?>
+    <?php endif; ?>
 
-    </header>
+</header>
     

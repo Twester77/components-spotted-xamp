@@ -58,6 +58,7 @@ header {
     position: relative;
     margin-bottom: 0 ;
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     padding: 20px 40px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -754,7 +755,7 @@ nav, .navbar {
     border-radius: 20px;
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     transition: 0.3s;
 }
 
@@ -766,10 +767,17 @@ nav, .navbar {
 .btn-editar-atalho, .btn-seguir-fenda {
     display: block;
     width: fit-content;
-    margin: 10px 30px 0 auto; /* Também joga para a direita */
+    margin: 10px 30px 0 auto; 
     clear: right; /* Garante que ele fique abaixo do selo se ambos existirem */
 }
 
+.perfil-controles {
+    display: flex!important;         /* Coloca um do lado do outro */
+    flex-wrap: wrap!important;      /* Se a tela for pequena, ele pula linha em vez de esmagar */
+    gap: 20px;           
+    margin-top: 15px;     
+    justify-content: space-between; 
+}
 
 .btn-reagir, .btn-fofocar {
     color: #ccc;
@@ -936,15 +944,10 @@ nav, .navbar {
 /* Cores das Categorias */
 
 .spotted-card.ranco { border-left: 13px solid #d12b18 !important; }
-.spotted-card.elogio { border-left: 13px solid #e05586 !important; }
 .spotted-card.comunidade { border-left: 13px solid #5f9c438f !important; }
-.spotted-card.perdidos { border-left: 13px solid #ffbc00 !important; }
-.spotted-card.estudos { border-left: 13px solid #8511b3 !important; }
 .spotted-card.acaba-pelo-amor-de-deus { border-left: 13px solid #924dbd !important; }
 .spotted-card.anonimo { border-left: 13px solid #27136ecb !important; }
 .spotted-card.esportes { border-left: 13px solid #0db344ee !important; }
-.spotted-card.games { border-left: 13px solid #0d9ab3ee !important; }
-.spotted-card.caronas { border-left: 13px solid #263e4dee !important; }
 
 
 

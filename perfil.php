@@ -27,21 +27,25 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         
         <div class="capa-wrapper">
-            <img src="<?php echo $capa_atual; ?>" class="img-capa-preview">
+            <?php if(!empty($dados['capa'])): ?>
+                <img src="<?php echo $capa_atual; ?>" class="img-capa-preview">
+            <?php else: ?>
+                <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-weight: bold; font-size: 1.3rem;">BEM-VINDO À FENDA!</span>
+                </div>
+            <?php endif; ?>
+            
             <label class="btn-mudar-capa">
                 <i class="fas fa-camera"></i>
                 <input type="file" name="capa" style="display:none;">
             </label>
-            <?php if($id_meu == 1): ?>
-                <div class="coroa-admin">👑</div>
-            <?php endif; ?>
         </div>
 
         <div class="avatar-wrapper">
             <img src="<?php echo $foto_atual; ?>" class="img-avatar-perfil">
             <label class="btn-mudar-avatar">
                 <i class="fas fa-pencil-alt"></i>
-                <input type="file" name="foto" style="display:none ;">
+                <input type="file" name="foto" style="display:none;">
             </label>
         </div>
 
@@ -50,24 +54,27 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo">
                 <label>Nome</label>
-                <input type="text" name="nome" maxlength="20" value="<?php echo $dados['nome']; ?>" required>
+                <input type="text" name="nome" maxlength="30" value="<?php echo htmlspecialchars($dados['nome']); ?>" required>
             </div>
 
             <div class="campo-grupo">
                 <label>Username</label>
                 <div class="input-username-wrapper">
                     <span>@</span>
-                    <input type="text" name="username" maxlength="30" value="<?php echo $dados['username']; ?>">
+                    <input type="text" name="username" maxlength="20" value="<?php echo htmlspecialchars($dados['username']); ?>">
                 </div>
             </div>
 
             <div class="campo-grupo">
                 <label>Sua Bio</label>
-                <textarea name="bio" maxlength="350" rows="3"><?php echo $dados['bio']; ?></textarea>
+                <textarea name="bio" maxlength="400" rows="3"><?php echo htmlspecialchars($dados['bio']); ?></textarea>
             </div>
 
-            <button type="submit" class="btn-salvar-perfil">SALVAR ALTERAÇÕES</button>
-            <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-visualizar">Ver meu perfil público</a>
+        <div class="perfil-info-publica">
+        <div class="perfil-controles"> 
+            <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
+            <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">VER MEU PERFIL PÚBLICO</a>
+        </div>
         </div>
     </form>
 </main>

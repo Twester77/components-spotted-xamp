@@ -22,14 +22,19 @@ if (!$dados) {
 
 $id_visto = $dados['id'];
 $meu_id = $_SESSION['usuario_id']; // ID de quem está logado
-// NOVA LÓGICA: Verifica se eu já sigo esse habitante
+
+// Verifica se eu já sigo esse habitante
 $sql_check_segue = mysqli_query($conn, "SELECT id FROM seguidores WHERE id_seguidor = '$meu_id' AND id_seguido = '$id_visto'");
 $ja_segue = mysqli_num_rows($sql_check_segue) > 0;
 $foto = !empty($dados['foto']) ? "uploads/".$dados['foto'] : "imagensfoto/default.jpg";
-$capa = !empty($dados['capa']) ? "uploads/".$dados['capa'] : "imagensfoto/capa_padrao.jpg";
+
+// ---  CAPA EASTER EGG ---
+$tem_capa = !empty($dados['capa']);
+$capa_path = "uploads/".$dados['capa'];
 
 $sql_seg = mysqli_query($conn, "SELECT COUNT(*) as total FROM seguidores WHERE id_seguido = '$id_visto'");
 $total_seguidores = mysqli_fetch_assoc($sql_seg)['total'];
+
 
 // Lógica do Easter Egg da Presença
 $is_presenca = ($id_visto == 1);
@@ -37,20 +42,26 @@ $is_presenca = ($id_visto == 1);
 
 <main class="main-perfil-container <?php echo $is_presenca ? 'perfil-gold' : ''; ?>">
     <div class="capa-wrapper viewer">
-        <img src="<?php echo $capa; ?>" class="img-capa-preview">
+        <?php if(!empty($dados['capa'])): ?>
+            <img src="uploads/<?php echo $dados['capa']; ?>" class="img-capa-preview">
+        <?php else: ?>
+            <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); height: 200px; display: flex; align-items: center; justify-content: center;">
+                <span style="color: white; font-weight: bold; font-size: 1.2rem;">BEM-VINDO À FENDA!</span>
+            </div>
+        <?php endif; ?>
     </div>
 
     <?php if($is_presenca): ?>
-            <div class="badge-presenca">VOCÊ ESTÁ DIANTE DA PRESENÇA 👑</div>
-        <?php endif; ?>
+        <div class="badge-presenca">VOCÊ ESTÁ DIANTE DA PRESENÇA 👑</div>
+    <?php endif; ?>
 
     <div class="avatar-wrapper viewer">
         <img src="<?php echo $foto; ?>" class="img-avatar-perfil">
     </div>
 
     <div class="perfil-info-publica">
-        <h2 class="nome-publico"><?php echo $dados['nome']; ?></h2>
-        <span class="user-handle">@<?php echo $dados['username']; ?></span>
+        <h2 class="nome-publico"><?php echo htmlspecialchars($dados['nome']); ?></h2>
+        <span class="user-handle">@<?php echo htmlspecialchars($dados['username']); ?></span>
         
         <div class="stats-perfil">
             <span><strong><?php echo $total_seguidores; ?></strong> Seguidores</span>
@@ -60,22 +71,22 @@ $is_presenca = ($id_visto == 1);
             <p><?php echo !empty($dados['bio']) ? nl2br(htmlspecialchars($dados['bio'])) : "<i>Habitante misterioso da Fenda...</i>"; ?></p>
         </div>
 
+
+        <div class="perfil-info-publica">
+        <div class="perfil-controles"> 
         <?php if ($_SESSION['usuario_id'] != $id_visto): ?>
-    <?php if ($ja_segue): ?>
-        <a href="seguir.php?id=<?php echo $id_visto; ?>&user=<?php echo $user_get; ?>" class="btn-seguir-fenda seguindo">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-        <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-    Seguindo
-</a>
-    <?php else: ?>
-        <a href="seguir.php?id=<?php echo $id_visto; ?>&user=<?php echo $user_get; ?>" class="btn-seguir-fenda">
-            + Seguir
-        </a>
-    <?php endif; ?>
-<?php else: ?>
-    <a href="perfil.php" class="btn-editar-atalho">Editar meu perfil</a>
-<?php endif; ?>
+            <a href="seguir.php?id=<?php echo $id_visto; ?>&user=<?php echo $user_get; ?>" 
+               class="btn-seguir-fenda <?php echo $ja_segue ? 'seguindo' : ''; ?>">
+                <?php if ($ja_segue): ?>
+                    <i class="fa-solid fa-check"></i> Seguindo
+                <?php else: ?>
+                    + Seguir
+                <?php endif; ?>
+            </a>
+        <?php else: ?>
+            <a href="perfil.php" class="btn-editar-atalho">Editar meu perfil</a>
+        <?php endif; ?>
+        </div>
     </div>
 </main>
 

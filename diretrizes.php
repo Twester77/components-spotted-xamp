@@ -7,9 +7,9 @@
 
 </nav>
 
-  <main style="max-width: 800px; margin: auto;">
+  <main style="max-width: 1000px; margin: auto;">
     <article>
-  <h2 style="font-size: 1.5rem; text-align: center; margin-bottom: 20px; margin-top: 30px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
+  <h2 style="font-size: 2.0rem; text-align: center; margin-bottom: 20px; margin-top: 30px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
     </article>
   <div style="display: flex; gap: 8px; justify-content:center;">
    <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">

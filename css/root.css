@@ -35,3 +35,40 @@ html {
 }
 
 
+/* No seu CSS */
+.capa-default-fenda {
+    width: 100%;
+    height: 180px; /* Ou a altura que você já usa */
+    /* Degradê base: Azul profundo UNIFEV -> Teal Fenda */
+    background: linear-gradient(135deg, #004a8f 0%, #00a896 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px 12px 0 0; /* Arredonda só o topo */
+}
+
+.capa-default-fenda::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: radial-gradient(circle at 10% 150%, #ffbc00 10%, transparent 20%),
+                radial-gradient(circle at 90% 150%, #ffbc00 15%, transparent 25%);
+    opacity: 0.3; 
+}
+
+/* Texto de Boas-Vindas centralizado */
+.capa-default-fenda .boas-vindas-texto {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-family: 'Inter', sans-serif; 
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+    letter-spacing: 1px;
+}

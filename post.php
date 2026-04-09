@@ -16,7 +16,7 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
 
-if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
+if (!$post) { die("<main> <style = font-size:2.8rem; <p> Ops...Spotted não encontrado!</p> </style> </main>"); }
 ?>
 
 <main class="container-feed">
@@ -32,17 +32,17 @@ if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
 
     <section class="sessao-publicar" id="fofocar">
 
-        <h3 style="color: var(--dourado);">Opino ou prefiro não opinar?</h3>
+        <h3 style="color: var(--dourado); font-size: 1.3rem;">Opino ou prefiro não opinar?</h3>
 
         <form action="enviar-comentario.php" method="POST" class="form-fofoca">
             <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
-            <textarea name="comentario" placeholder="Conte a fofoca aqui... use @ para marcar alguém!" required style="width: 100%; min-height: 80px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; margin: 10px 0;"></textarea>
+            <textarea name="comentario" placeholder="Conte a fofoca aqui... use @ para marcar alguém!" required style="width: 100%; min-height: 100px; font-size: 14px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; margin: 10px 0;"></textarea>
             <?php $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
                         // Buscamos o nome atualizado da sessão ou do banco se preferir
             if ($exibir_nome): ?>
-                <button type="submit" style="background: var(--dourado); color: #000; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold;">Lançar Fofoca como @<?php echo htmlspecialchars($exibir_nome); ?> 🚀</button>
+                <button type="submit" style="background: var(--dourado); color: #000; border: none; padding: 15px; border-radius: 8px; width: 100%; font-weight: bold;">Mandar mensagem como @<?php echo htmlspecialchars($exibir_nome); ?> </button>
             <?php else: ?>
-                <button type="submit" style="background: #555; color: #fff; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold;">Lançar Fofoca Anônima</button>
+                <button type="submit" style="background: #555; color: #fff; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold;">Mensagem Anônima</button>
             <?php endif; ?>
         </form>
     </section>
@@ -70,7 +70,7 @@ if (!$post) { die("<main><p>Spotted não encontrado!</p> </main>"); }
             </div>
         <?php endwhile; 
     else: ?> 
-        <p style="text-align: center; opacity: 0.7;">Ninguém fofocou nada ainda...</p> 
+        <p style="text-align: center; opacity: 0.6; font-size: 1.3rem;">Ninguém fofocou nada ainda...</p> 
     <?php endif; ?>
 </div>
 </main>
