@@ -5,8 +5,8 @@ header {
     background: var(--laranja-fenda);
     max-width: 100%;
     position: relative;
-    margin-bottom: 0 ;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    margin-bottom: 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     padding: 15px 30px;
@@ -15,7 +15,7 @@ header {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    gap:30px;
+    gap: 30px;
 }
 
 header h1 {
@@ -24,12 +24,13 @@ header h1 {
     text-transform: uppercase;
     color: #fff;
     margin: 0;
-    
+
 }
 
 .header-content {
     width: 100%;
-    max-width: 1200px; /* Largura máxima ideal para PC */
+    max-width: 1200px;
+    /* Largura máxima ideal para PC */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,27 +42,30 @@ header h1 {
 .header-icons {
     display: flex;
     gap: 15px;
-    align-items:center;
-    
+    align-items: center;
+
 }
 
 .header-icons a {
     text-decoration: none;
     display: flex;
     align-items: center;
-    transition: all 0.3s ease; /* Transição suave para todos */
+    transition: all 0.3s ease;
+    /* Transição suave para todos */
 }
 
 .header-icons i {
     color: var(--dourado) !important;
     font-size: 1.6rem;
-    transition: all 0.3s ease; /* Para o ícone mudar de cor e tamanho suavemente */
+    transition: all 0.3s ease;
+    /* Para o ícone mudar de cor e tamanho suavemente */
 }
 
 /* HOVER GERAL */
 .header-icons a:hover i {
     color: #fff !important;
-    transform: scale(1.3); /* Cresce 30% */
+    transform: scale(1.3);
+    /* Cresce 30% */
 }
 
 /*  HOVER ESPECÍFICO DA ENGRENAGEM  */
@@ -72,16 +76,17 @@ header h1 {
 
 
 .notificacao-wrapper:hover .badge-alerta {
-    transform: scale(0.8) translateY(-5px); 
+    transform: scale(0.8) translateY(-5px);
 
 }
-    .btn-feed-home:hover {
+
+.btn-feed-home:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(255, 187, 0, 0.89);
     filter: brightness(1.2);
 }
 
-    
+
 
 /* --- MENU NAVBAR (RECUPERADO) --- */
 
@@ -91,45 +96,59 @@ main article {
 }
 
 main {
-    max-width: 800px; 
-    margin: 20px auto; 
-    padding: 0 20px; 
-    flex: 1 0 auto; /* O segredo! O main vira um "elástico" que preenche o vazio */
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+    flex: 1 0 auto;
+    /* O segredo! O main vira um "elástico" que preenche o vazio */
     width: 100%;
 }
 
-main, navbar, footer {
+main,
+navbar,
+footer {
     position: relative;
-    z-index: 10; 
+    z-index: 10;
 }
-nav, .navbar {
-    background: rgba(0,0,0,0.2); padding: 10px 0; /* Diminua o primeiro número se estiver muito largo */
+
+nav,
+.navbar {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px 0;
+    /* Diminua o primeiro número se estiver muito largo */
 }
 
 
-.menu { display: flex; justify-content: center; list-style: none; gap: 20px; }
 .menu {
     display: flex;
-    flex-wrap: wrap; 
+    justify-content: center;
+    list-style: none;
+    gap: 20px;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
     list-style: none;
     -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px);
     padding: 10px;
     gap: 8px;
-    border-radius: 5px; 
-    width: 100%; 
+    border-radius: 5px;
+    width: 100%;
     justify-content: center;
     margin-bottom: 30px;
     position: relative;
-    z-index: 9999; /* Garante que fique acima de tudo */
+    z-index: 9999;
+    /* Garante que fique acima de tudo */
 }
 
 
-.menu-item a { 
+.menu-item a {
     color: #ffffff !important;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.5rem!important;
+    font-size: 1.5rem !important;
     padding: 15px 20px;
     display: block;
     transition: 0.3s;
@@ -137,32 +156,42 @@ nav, .navbar {
 }
 
 
-.menu-item:hover > a {
-    background: rgba(255, 255, 255, 0.15); /* Mais translúcido */
+.menu-item:hover>a {
+    background: rgba(255, 255, 255, 0.034);
     border-radius: 5px;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
 }
 
 
-.dropdown { position: relative; }
-.dropdown > a::after { content: ' ▼'; font-size: 10px; opacity: 0.5; }
-.dropdown:hover > a::after { content: ' ▲'; }
+.dropdown {
+    position: relative;
+}
+
+.dropdown>a::after {
+    content: ' ▼';
+    font-size: 10px;
+    opacity: 0.5;
+}
+
+.dropdown:hover>a::after {
+    content: ' ▲';
+}
 
 
 
 .submenu {
-    display: none; 
-    position: absolute; 
-    top: 100%; 
+    display: none;
+    position: absolute;
+    top: 100%;
     left: 0;
-    background: #000000a8; ; 
+    background: #064ea0;
     min-width: 100px;
     padding: 5px 0;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.4); 
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
     border-radius: 8px;
     list-style: none;
-    z-index: 10000; 
+    z-index: 10000;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
 }
@@ -179,15 +208,23 @@ nav, .navbar {
 }
 
 .submenu li:hover {
-     background: rgba(255, 255, 255, 0.199);
+    background: rgba(255, 255, 255, 0.199);
     -webkit-backdrop-filter: blur(12px);
-    backdrop-filter:blur(12px);  
-    box-shadow: 0 1px 5px rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
 
 }
 
-.menu-item:hover .submenu { display: flex; flex-direction: column; }
+.submenu li:hover a {
+    color: #ff8c00 !important; 
+    transition: color 0.3s ease; 
+}
+
+.menu-item:hover .submenu {
+    display: flex;
+    flex-direction: column;
+}
 
 
 
@@ -201,16 +238,20 @@ footer {
     margin-top: 50px;
 }
 
-footer { 
+footer {
     text-align: center;
     padding: 25px;
     color: rgba(255, 255, 255, 0.6);
     font-size: 0.8rem;
     margin-top: 50px;
-    flex-shrink: 0; /* Impede o footer de ser "esmagado" */
+    flex-shrink: 0;
+    /* Impede o footer de ser "esmagado" */
 }
 
-footer a { color: #fff; text-decoration: underline; }
+footer a {
+    color: #fff;
+    text-decoration: underline;
+}
 
 
 
@@ -226,7 +267,8 @@ footer a { color: #fff; text-decoration: underline; }
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000; /* Garante que fica na frente de tudo */
+    z-index: 10000;
+    /* Garante que fica na frente de tudo */
 }
 
 .fenda-modal-content {
@@ -242,8 +284,15 @@ footer a { color: #fff; text-decoration: underline; }
 }
 
 @keyframes surgimentoModal {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 .fenda-modal-icon {
@@ -294,8 +343,15 @@ footer a { color: #fff; text-decoration: underline; }
     justify-content: center;
 }
 
-.btn-ficar-terra:hover { background: #eab100; transform: translateY(-2px); }
-.btn-zarpar:hover { background: rgba(255, 99, 71, 0.2); border-color: #ff6347; }
+.btn-ficar-terra:hover {
+    background: #eab100;
+    transform: translateY(-2px);
+}
+
+.btn-zarpar:hover {
+    background: rgba(255, 99, 71, 0.2);
+    border-color: #ff6347;
+}
 
 
 
@@ -316,7 +372,8 @@ footer a { color: #fff; text-decoration: underline; }
 .card-notificacao {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 4px solid #ffbc00; /* A famosa bordinha amarela */
+    border-left: 4px solid #ffbc00;
+    /* A famosa bordinha amarela */
     padding: 15px;
     border-radius: 8px;
     display: flex;
@@ -327,9 +384,9 @@ footer a { color: #fff; text-decoration: underline; }
 
 .link-notificacao:hover .card-notificacao {
     background: rgba(255, 188, 0, 0.08);
-    border-color:  rgba(255, 187, 0, 0.219);
-    border-left-width: 6px; /* Aumenta a bordinha suavemente */
-    transform: translateX(5px); /* Desloca pro lado em vez de tremer */
+    border-color: rgba(255, 187, 0, 0.219);
+    border-left-width: 6px;
+    transform: translateX(5px);
 }
 
 .notificacao-conteudo p {
@@ -359,69 +416,72 @@ footer a { color: #fff; text-decoration: underline; }
 .popup-notificacao {
     position: fixed;
     width: 90%;
-    width: 250px; 
-    height: 90px;    
-    right: 20px;  
-    bottom: 30px; 
+    width: 250px;
+    height: 90px;
+    right: 20px;
+    bottom: 30px;
     color: white;
     padding: 15px;
     border-radius: 12px;
     border: 1px solid var(--dourado);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     z-index: 9999;
     display: flex;
     align-items: center;
     gap: 12px;
-    animation: deslizar 0.5s ease-out; /* Usando a sua animação */
+    animation: deslizar 0.5s ease-out;
+    /* Usando a sua animação */
 }
 
 /* Seção de Publicar */
 
 .sessao-publicar {
-    margin-top: 40px; 
-    background: rgba(255, 255, 255, 0.096); 
-    padding: 30px; 
-    border-radius: 20px; 
-    border: 1px solid rgba(255, 188, 0, 0.2); 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
-    max-width: 400px ;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 800px;
     align-items: center;
-    
+    background-color: #4941411f !important; /* Preto quase total */
+    margin: 40px 0;
+    border: 1px solid rgba(131, 92, 92, 0.041); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra para dar profundidade */
 }
 
-.form-publicar select, 
+
+.form-publicar select,
 .form-publicar textarea {
-    width: 100%; 
-    padding: 15px; 
-    border-radius: 8px; 
-    background: rgba(0, 0, 0, 0.3) !important; 
-    color: #fff; 
-    border: 1px solid #444; 
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    border: 1px solid #444;
     margin-bottom: 15px;
     transition: 0.3s;
 }
 
-.form-publicar textarea { min-height: 100px;
-letter-spacing: 2px;;}
-
-.form-publicar select:focus, 
-.form-publicar textarea:focus {
-    border-color: #ffbc00; /* Brilha no foco */
-    outline: none;
-    background: rgba(0, 0, 0, 0.5) !important;
+.form-publicar textarea {
+    min-height: 100px;
+    letter-spacing: 2px;
     
+}
+
+.form-publicar select:focus,
+.form-publicar textarea:focus {
+    border-color: #ffbc00;
+    outline: none;
+    background: rgba(0, 0, 0, 0.589) !important;
+
 }
 
 /* O botão "Lançar" (Publicar) */
 .btn-lancar {
-    background: #00ff55c9; 
-    color: #000; 
-    border: none; 
-    padding: 15px; 
-    border-radius: 10px; 
-    font-weight: 800; 
+    background: #00ff55ab;
+    color: #000;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: 800;
     text-transform: uppercase;
-    cursor: pointer; 
+    cursor: pointer;
     width: 100%;
     transition: 0.3s;
 }
@@ -443,200 +503,43 @@ letter-spacing: 2px;;}
 }
 
 
-.alerta-login {
-    background: rgba(255, 187, 0, 0);
-    border: 1px dashed var(--dourado);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    color: #fff;
-    margin-top: 20px;
-} 
-
-.alerta-login a { color: var(--dourado); font-weight: bold; }
-
-
-
-@media (max-width: 600px) {
-
-    @media (hover: hover) {
-    .header-icons a:hover i {
-        color: #fff !important;
-        transform: scale(1.3);
-    }
-
-    .btn-config:hover i {
-        transform: rotate(90deg) scale(1.3) !important;
-        color: #fff !important;
-    }
-
-    body {
-        font-size: 14px; 
-    }
-
-    header {
-        padding: 20px !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }
-
-    header h1 {
-        font-size: 2.2rem !important; 
-        max-width: 50% !important;
-        margin-bottom: 0 !important;
-        text-align: left !important;
-    }
-
-    .header-icons {
-        font-size: 1.6rem;
-        position: static !important; /* Tira o absolute para não vazar no iPhone */
-        display: flex !important;
-        gap: 20px !important;
-        right: auto !important;
-        transform: none !important;
-    }
-
-
-    .popup-notificacao {
-        left: 5%;
-        right: 5%;
-        width: 90%;
-        bottom: 20px;
-    }
-    
-    .container-feed { padding-top: 20px; padding-bottom: 20px; }
-
-    .spotted-card {
-        padding: 10px; 
-        width: 90%;    
-        margin: 10px auto;
-        scroll-margin-top: 80px; 
-     }
-
-     .category-tag {
-        font-size: 0.8rem !important; /* Diminui um pouco a tag no celular */
-        white-space: nowrap;
-    }
-
-     .post-time {
-        font-size: 0.75rem;
-        order: 2; /* Joga a data para o final da linha */
-    }
-    .filtro-btn {
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 800;
-    padding: 8px 16px;  
+.badge-alerta {
+    position: absolute;
+    top: -8px;      
+    right: -10px;   
+    background-color: #ff4b2b;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    padding: 2px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ffbc00;
+    z-index: 10;
 }
 
-    /* 1. RESET DO CONTAINER - Forçando o empilhamento vertical */
-    .main-perfil-container {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        max-width: 95% !important;
-        margin: 20px auto !important;
-        padding: 10px !important;
-        overflow: hidden !important;
-    }
+/* Animação para chamar atenção (opcional, mas fica top) */
+@keyframes pulsarNotif {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
 
-    /* 2. CAPA - Ajustando a altura para não sumir */
-    .capa-wrapper.viewer {
-        width: 100% !important;
-        height: 250px !important;
-        position: relative !important;
-        order: 1 !important;
-        overflow: hidden !important;
-    }
+.notificacao-wrapper {
+    position: relative; /* CRUCIAL: Sem isso o número foge para o canto */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
-
-    /* 3. AVATAR (CAPIVARA) - Reduzida e centralizada */
-    .avatar-wrapper.viewer {
-        margin: -40px auto 10px auto !important; /* Morde a capa */
-        position: relative !important;
-        z-index: 99 !important;
-        float: none !important;
-        display: block !important;
-        order: 2 !important;
-        width: 90px !important; /* Ajustado para o novo tamanho que você quer */
-        height: 90px !important;
-        position: relative !important;
-        z-index: 10 !important;
-        
-    }
-    
-    .img-avatar-perfil {
-        width: 90px !important;
-        height: 90px !important;
-        border: 3px solid var(--dourado) !important;
-    }
-    
-
-    /* 4. TEXTOS (NOME E USERNAME) */
-    .perfil-info-publica {
-        width: 100% !important;
-        text-align: center !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        order: 3 !important;
-        padding: 0 15px !important;
-        margin-top: 5px !important;
-        padding-bottom: 10px !important; 
-    }
-    
-    .nome-publico {
-        font-size: 1.4rem !important;
-        margin-top: 5px !important;
-    }
+.alerta-login a {
+    color: var(--dourado);
+    font-weight: bold;
+}
 
 
-    /* 5. (BOTÃO EDITAR/SEGUIR) - Forçado para baixo */
 
-    .btn-editar-perfil, .btn-seguir, .btn-editar-atalho, .btn-seguir-fenda {
-
-        position: static !important; 
-        float: none !important;
-        display: inline-block !important; /* Importante para o align-self funcionar */
-        width: auto !important;
-        min-width: 120px !important;
-        padding: 8px 20px !important;
-        margin: 30px 20px 20px auto !important;    
-        align-self: flex-end !important; /* Comando final para alinhar na direita do container flex */
-        text-align: center;    
-       
-    }
-
-    /* 6. SELO DA PRESENÇA - Ajustado */
-    
-    .badge-presenca {
-        display: table !important;
-        font-size: 0.6rem !important;
-        order: 3 !important;
-        display: table !important;
-        margin: 15px auto !important; 
-        position: static !important;
-    }
-
-    .bio-box {
-        width: 90% !important;
-        margin: 20px auto 30px auto !important;
-        text-align: center;
-        font-size: 0.9rem !important;
-    }
-
-    /* 7. STATS (Seguidores) */
-    .stats-perfil {
-        justify-content: flex-start !important;
-        margin: 10px 0 auto !important;
-        order: 5 !important;
-        padding-left: 20px !important;
-    }
-    
-
-} /* Fecha o @Media Hover */
-
-
-} 
- 

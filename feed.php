@@ -59,7 +59,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<div style="margin-top: 100px;">
+<div style="margin-top: 60px;">
     <?php include 'includes/filtros.php'; ?>
 </div>
 

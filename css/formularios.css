@@ -37,7 +37,7 @@
 .main-novo-post input, 
 .main-novo-post textarea {
     width: 100% !important;
-    background: rgba(255, 255, 255, 0.05) !important;
+    background: rgba(255, 255, 255, 0) !important;
     border: 1px solid var(--dourado) !important;
     border-radius: 10px !important;
     padding: 15px !important;
@@ -59,15 +59,16 @@
 /* --- PERFIL MODO DARK --- */
 
 .main-perfil-container {
-    max-width: 700px;
-    margin: 60px auto;
+    max-width: 800px;
+    margin: 60px auto !important;
+    width: 95%;
     min-height: 40px; 
     height: auto !important; 
-    padding-bottom: 30px; 
+    padding: 30px; 
     display: block;
     position: relative;
     background: #0a0a0a;
-    border-radius: 15px;
+    border-radius: 20px;
     border: 2px solid #747474; 
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
     overflow: hidden; 
@@ -86,10 +87,10 @@
 }
 
 .form-perfil-corpo {
-    padding: 30px;
+    padding: 20px;
     padding-bottom: 40px; 
     background: #0a0a0a;
-    gap: 20px;
+    
 }
 
 
@@ -102,9 +103,9 @@
 
 .capa-container {
     width: 100%;
-    min-height: 280px; /* Ajuste a altura que quiser */
+    min-height: 300px; 
     border-radius: 15px;
-    overflow: hidden; /* Garante que a imagem não vaze */
+    overflow: hidden; 
     position: relative;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
@@ -118,11 +119,6 @@
 
 /* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
 
-
-.form-perfil-corpo {
-    padding: 30px;
-    background: #0a0a0a; /* Fundo escuro para destacar os campos */
-}
 
 .titulo-pagina {
     color: var(--dourado); /* Dourado da Fenda */
@@ -149,7 +145,8 @@
 /* Textarea (Bio) */
 .campo-grupo textarea {
     resize: vertical; /* Permite aumentar só a altura */
-    min-height: 120px;
+    min-height: 150px;
+    max-height: 300px;
 }
 
 /* Estilo geral para Inputs e Textarea */
@@ -222,10 +219,11 @@
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
 
+/* Página perdidos */
 
 .painel-sessao {
     max-width: 300px; 
-    min-height: 120px; 
+    min-height: 150px; 
     margin: 0 auto 30px auto; 
     background: rgba(255, 255, 255, 0.08); 
     padding: 20px; 
@@ -242,7 +240,7 @@
 .painel-sessao p {
     color: #fff;
     margin: 0;
-    font-size: 1.3rem; 
+    font-size: 1.4rem; 
     font-weight: 500;
     line-height: 1.2;
 }
@@ -278,8 +276,8 @@
 }
 
 .avatar {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
     border-radius: 50%;
     border: none !important; 
@@ -317,12 +315,22 @@
 
 .capa-wrapper {
     width: 100%;
-    height: 280px; 
+    max-height: 400px; 
     overflow: hidden;
     position: relative;
     background: #111;
     border-radius: 10px color #ccc ;
 }
+
+.img-capa-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 10px;
+    padding: 0;
+   
+}
+
 .btn-mudar-capa {
     position: absolute;
     right: 20px;
@@ -342,16 +350,29 @@
 }
 
 .btn-mudar-capa:hover {
-    background: var(--laranja-fenda); /* Usa o laranja que você já curte */
+    background: var(--laranja-fenda); 
     transform: scale(1.2);
 }
 
 
-.img-capa-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Faz a imagem preencher sem esticar */
+
+/* Container da Capa no PC */
+.capa-wrapper.viewer {
+    width: 100% !important;
+    height: 450px !important; /* Aumentamos bem a altura para caber a imagem */
+    min-height: 300px !important;
+    overflow: hidden !important;
+    background-color: #050505 !important;
+    border-radius: 15px 15px 0 0 !important;
 }
+
+.img-capa-preview {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; 
+    object-position: center !important; 
+}
+
 
 .category-tag {
     font-size: 1.1rem;
@@ -538,8 +559,6 @@
 }
 
 
-
-
 /* --- AVATAR E A PRESENÇA --- */
 
 .img-avatar-perfil {
@@ -553,9 +572,8 @@
 .avatar-wrapper.viewer {
     margin: -60px 0 10px 30px; 
     width: fit-content;
-    float: left; 
-}
-
+    float: left;   
+    }
 
 
 /* Stats (Seguidores/Seguindo)*/
@@ -591,12 +609,12 @@
 
 .perfil-gold .img-avatar-perfil {
     border-color: var(--dourado) !important;
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.5);
+    box-shadow: 0 0 15px rgba(255, 187, 0, 0.637);
 }
 
 .perfil-gold .img-capa-preview {
     border: 3px solid var(--dourado);
-    border-radius: 10px;
+    border-radius: 12px;
 }
 
 
@@ -609,13 +627,25 @@
     padding: 4px 12px; 
     border-radius: 4px;
     font-weight: 900;
-    font-size: 0.7rem; 
+    font-size: 1.1rem; 
     text-transform: uppercase;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
     position: relative;
     z-index: 10;
 }
+
+
+.badge-atletica {
+    width: 30px;      
+    height: 30px;
+    margin-left: 6px; 
+    vertical-align: middle; 
+    object-fit: contain;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+
 
 
 

@@ -84,19 +84,15 @@
 }
 
 .spotted-card.comunidade {
-    border-left: 15px solid #3bb602a8 !important;
+    border-left: 15px solid #bf0fd67e !important;
 }
 
 .spotted-card.acaba-pelo-amor-de-deus {
     border-left: 15px solid #f78605 !important;
 }
 
-.spotted-card.anonimo {
-    border-left: 15px solid #27136ecb !important;
-}
-
 .spotted-card.perdidos {
-    border-left: 13px solid #ffde38 !important;
+    border-left: 13px solid #d6d308 !important;
 }
 
 
@@ -116,7 +112,7 @@
     right: 30px;
     top: 60px;
     font-size: 1.8rem;
-    color: #e05586;
+    color: #e7427c;
     opacity: 0.6;
     padding: 10px;
     gap: 8px;
@@ -234,42 +230,86 @@
 
 /* --- APROVEITANDO SUAS BADGES --- */
 
-.badge-perdido {
-    background-color: #ff4757; color: white;
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-size: 11px;
+.btn-filtro {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: #fff;
+    text-decoration: none;
     font-weight: bold;
-    text-transform: uppercase;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    box-shadow: 0 2px 8px rgba(255, 71, 87, 0.3);
-    
+    transition: all 0.3s ease;
 }
 
-.badge-achado {
-    background-color: #26d36e;
+.btn-filtro:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-filtro.ativo {
+    background: var(--dourado);
+    /* Ou o seu laranja/amarelo */
+    color: #000;
+    border-color: var(--dourado);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+
+.badge-perdido {
+    background-color: #ff4b2b !important;
     color: white;
     padding: 3px 12px;
     border-radius: 20px;
-    font-size: 11px;
+    font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    box-shadow: 0 2px 8px rgba(38, 211, 110, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+}
+
+.badge-achado {
+    background-color: #2ecc71 !important;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+}
+
+.badge-perdido,
+.badge-achado {
+    background: rgba(255, 255, 255, 0.192);
+    /* Um fundinho bem sutil */
+    border-left-style: solid !important;
 }
 
 
+/* O container que envolve o formulário de postagem/comentário */
 .sessao-publicar {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.45) !important;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 188, 0, 0.2);
-    border-radius: 15px;
-    padding: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 20px !important;
+    padding: 25px !important;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+
+.sessao-publicar h3,
+.titulo-publicar {
+    color: var(--dourado) !important;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    text-align: center;
 }
 
 .link-fofoca {
@@ -313,27 +353,12 @@
 
 .nav-item-notif {
     position: relative;
-    /* OBRIGATÓRIO para o badge se basear nele */
     display: inline-block;
 }
 
 
 /* --- COMPONENTES DO CARD/PERFIL --- */
-.capa-wrapper {
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-    position: relative;
-    background: #111;
-}
 
-.img-capa-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 10px;
-    padding: 0;
-}
 
 .category-tag {
     font-size: 1.2rem;
@@ -347,7 +372,7 @@
     align-items: center;
     gap: 8px;
     min-height: 60px;
-    min-width: 300px;
+    
 
 }
 
@@ -423,7 +448,6 @@
     padding: 10px 0;
     margin-top: 10px;
     position: static;
-    /* Garante que não está flutuando sobre o texto */
 }
 
 .reacoes-popup {
@@ -435,7 +459,7 @@
     position: absolute;
     bottom: 40px;
     /* Sobe a popup para ficar acima da palavra */
-    left: 35%;
+    left: 40%;
     /*  Move o canto esquerdo da popup para o meio do "Reagir" */
     background: #252542;
     padding: 8px 12px;
@@ -448,9 +472,8 @@
     white-space: nowrap;
     /* Garante que os emojis não quebrem a linha */
     bottom: 30px;
-    /* Ajuste essa altura conforme o tamanho do botão */
     padding: 10px 15px;
-    /* Mais espaço para os dedos acertarem o emoji */
+
 }
 
 .reacao-wrapper:hover .reacoes-popup {
@@ -594,10 +617,10 @@
     gap: 15px;
 }
 
-.btn-fofoca:hover {
-    filter: brightness(1.3);
-    transform: scale(1.2);
-    transition: 0.3s background;
+.btn-fofocar:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+    transition: 0.3s background ease-in-out;
     color: #cc900e;
 }
 
@@ -644,9 +667,8 @@
 
 
 
-/* ============================================================
-   SEÇÃO:EASTER EGG FENDA GOLD (PERFIL GOLD)
-   ============================================================ */
+/* --- EASTER EGG: A PRESENÇA (ID 1) --- */
+
 
 .perfil-gold .img-avatar-perfil {
     border-color: var(--dourado) !important;
@@ -680,6 +702,22 @@
 
 @media (max-width: 600px) {
 
+    * {
+        box-sizing: border-box;
+    }
+
+    @media (hover: hover) {
+        .header-icons a:hover i {
+            color: #fff !important;
+            transform: scale(1.3);
+        }
+
+        .btn-config:hover i {
+            transform: rotate(90deg) scale(1.3) !important;
+            color: #fff !important;
+        }
+    }
+
     body {
         font-size: 14px;
     }
@@ -692,20 +730,21 @@
     }
 
     header h1 {
-        font-size: 1.3rem !important;
+        font-size: 1.8rem !important;
         max-width: 50% !important;
         margin-bottom: 0 !important;
         text-align: left !important;
     }
 
     .header-icons {
+        font-size: 1.6rem;
         position: static !important;
-        /* Tira o absolute para não vazar no iPhone */
         display: flex !important;
-        gap: 20px !important;
+        gap: 15px !important;
         right: auto !important;
         transform: none !important;
     }
+
 
     .popup-notificacao {
         left: 5%;
@@ -715,48 +754,27 @@
     }
 
     .container-feed {
-        margin-top: 15px;
-        margin-bottom: 30px;
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     .spotted-card {
-        padding: 20px;
+        padding: 10px;
         width: 90%;
         margin: 10px auto;
         scroll-margin-top: 80px;
     }
 
-    .avatar-p {
-        gap: 20px;
-        width: 45px;
-        height: 45px;
-
-    }
-
     .category-tag {
-        font-size: 0.9rem !important;
-        white-space: nowrap !important;
-        flex-shrink: 0;
-        flex: 1;
-        min-width: 0;
-
-    }
-
-    .post-time {
-        font-size: 12px;
+        font-size: 0.8rem !important;
         white-space: nowrap;
-        flex-shrink: 0;
-        opacity: 0.7;
     }
 
     .post-time {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+        order: 2;
+        /* Joga a data para o final da linha */
     }
-
-    .post-content {
-        font-size: 1.1rem !important;
-    }
-
 
     .filtro-btn {
         text-decoration: none;
@@ -765,142 +783,259 @@
         padding: 8px 16px;
     }
 
-
-    /* 1. RESET DO CONTAINER - Forçando o empilhamento vertical */
+    /* 1. O CONTAINER PAI: Dá o respiro das bordas da tela */
     .main-perfil-container {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        max-width: 95% !important;
-        margin: 20px auto !important;
-        padding: 0 !important;
-        overflow: hidden !important;
+        width: 92% !important;
+        margin: 30px auto !important;
+        padding: 15px !important;
+        background: rgba(10, 10, 10, 0.596) !important;
+        border-radius: 20px !important;
     }
 
-    /* 2. CAPA - Ajustando a altura para não sumir */
-    .capa-wrapper.viewer {
+
+    /* 3. O FORMULÁRIO */
+    form,
+    .form-perfil-corpo {
+        display: flex !important;
+        flex-direction: column !important;
         width: 100% !important;
-        height: 180px !important;
-        position: relative !important;
-        order: 1 !important;
-        overflow: hidden !important;
+        max-width: 100% !important;
+        padding: 5px !important;
+        margin: 20px 5px !important;
+        background: rgba(10, 10, 10, 0.596) !important;
+    }
+
+    .titulo-pagina {
+    color: var(--dourado); /* Dourado da Fenda */
+    font-size: 1rem!important;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+
+    /* 4. OS CAMPOS (Inputs e Textareas) */
+    .campo-grupo {
+        width: 100% !important;
+        display: flex;
+        flex-direction: column;
+       
+    }
+
+    .campo-grupo textarea {
+    height: auto !important; 
+    min-height: 90px !important; 
+    width: 100% !important;
+    max-width: 350px !important;
+    margin: 0 auto 15px auto !important;
+    padding: 10px !important; }
+
+    .campo-grupo input,
+    .campo-grupo textarea,
+    .input-username-wrapper {
+        max-width: 350px!important;
+        width: 100% !important;
+        margin: 0 auto; 
+    
+    }
+
+.campo-grupo input,
+.input-username-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    max-width: 350px !important;
+    width: 100% !important;
+    margin: 0 auto 15px auto !important;
+    height: 40px !important; /* Aqui trava a altura da caixa toda */
+    background: rgba(255, 255, 255, 0.05); /* Um fundinho de leve */
+    border-radius: 8px;
+    overflow: hidden; 
+}
+
+.input-username-wrapper span {
+    padding: 0 12px !important;
+    color: var(--dourado) !important;
+    font-weight: bold !important;
+    background: rgba(255, 255, 255, 0.05) !important; /* Dá um destaque no @ */
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.input-username-wrapper input {
+    flex: 1 !important;
+    height: 100% !important;
+    background: transparent !important; /* Tira o fundo para não cobrir o wrapper */
+    border: none !important; /* Tira as bordas para não duplicar */
+    color: #fff !important;
+    padding: 0 10px !important;
+    margin: 0 !important; /* Zera margens para não esticar o pai */
+}
+
+    form, .form-perfil-corpo {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* Centraliza os campos automaticamente */
+    width: 100% !important;
+    padding: 10px !important; 
+    
+}
+
+.campo-grupo input, .campo-grupo textarea {
+    width: 100% !important;
+    max-width: 350px !important; 
+    margin: 0 auto 15px auto !important; 
+}
+
+
+    /* 5. OS BOTÕES: Menores e um embaixo do outro se precisar */
+    
+   .capa-wrapper.viewer {
+    width: 100%;
+    height: 400px !important;    
+    position: relative;
+    overflow: hidden;
+    background-color: #000;      
+    border-radius: 12px 12px 0 0;
+}
+    .perfil-controles {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        width: 100% !important;
     }
 
 
-    /* 3. AVATAR (CAPIVARA) - Reduzida e centralizada */
+    /* 6. AJUSTE DA CAPA E AVATAR  */
+    .capa-wrapper {
+        width: 90% !important;
+        margin: 15px auto !important;
+        border-radius: 12px !important;
+        overflow: hidden;
+        height: 250px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
 
+    .avatar-wrapper {
+        margin-top: -45px !important;
+        transform: scale(0.85);
+        z-index: 10;
+    }
+
+
+/*  CAPA - PERFIL PÚBLICO  */
+.capa-wrapper.viewer {
+    width: 100% !important;
+    position: relative !important;
+    order: 1 !important;
+    overflow: hidden !important;
+}
+
+
+/*  AVATAR (CAPIVARA) */
+
+/* 1. O Container do Perfil: vira uma coluna e limpa tudo */
+    .perfil-header-container, 
+    .perfil-viewer-container {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important; /* Centraliza tudo no eixo X */
+        text-align: center !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    /* 2. O Wrapper do Avatar: para de voar e desce pra Terra */
     .avatar-wrapper.viewer {
-        margin: -40px auto 10px auto !important;
-        /* Morde a capa */
+        float: none !important;      /* Mata o float esquerda */
         position: relative !important;
-        z-index: 99 !important;
-        float: none !important;
-        display: block !important;
-        order: 2 !important;
+        display: flex !important;
+        justify-content: center !important;
+        /* Ajuste de altura: -50px faz ele ficar metade na capa, metade fora */
+        margin: -50px auto 10px auto !important; 
         width: 110px !important;
-        /* Ajustado para o novo tamanho que você quer */
         height: 110px !important;
-        position: relative !important;
-        z-index: 10 !important;
-
+        left: unset !important;      /* Tira deslocamentos laterais */
+        top: unset !important;       /* Tira o voo vertical */
     }
 
+    /* 3. A Imagem em si: redonda e centrada */
     .img-avatar-perfil {
-        width: 90px !important;
-        height: 90px !important;
-        border: 3px solid var(--dourado) !important;
-
+        width: 110px !important;
+        height: 110px !important;
+        border-radius: 50% !important;
+        border: 4px solid var(--dourado) !important;
+        margin: 0 !important;
+        position: static !important;
     }
 
-
-    /* 4. TEXTOS (NOME E USERNAME) */
-
+    /* 4. As informações (Nome, @usuario): Garante que apareçam embaixo */
     .perfil-info-publica {
         width: 100% !important;
-        text-align: center !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        order: 3 !important;
-        padding: 0 15px !important;
-        margin-top: 5px !important;
-        padding-bottom: 10px !important;
+        margin: 0 !important;
+        padding: 10px 0 !important;
+        position: static !important;
+        order: 2 !important; /* Garante que vem depois do avatar */
     }
 
     .nome-publico {
+        margin-top: 5px !important;
         font-size: 1.3rem !important;
-        margin-top: 10px !important;
-
     }
 
 
-    /* 5. (BOTÃO EDITAR/SEGUIR) - Forçado para baixo */
+/*  (BOTÃO EDITAR/SEGUIR) - Forçado para baixo */
 
-    .btn-editar-perfil,
-    .btn-seguir,
-    .btn-editar-atalho,
-    .btn-seguir-fenda {
+.btn-editar-perfil,
+.btn-seguir,
+.btn-editar-atalho,
+.btn-seguir-fenda 
+{
+    position: static !important;
+    float: none !important;
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 90px !important;
+    padding: 8px 20px !important;
+    margin: 10px 10px 10px 10px !important;
+    align-self: flex-end !important;
+    text-align: center;
+}
 
-        position: static !important;
-        float: none !important;
-        display: inline-block !important;
-        /* Importante para o align-self funcionar */
-        width: auto !important;
-        min-width: 120px !important;
-        padding: 8px 20px !important;
-        margin: 30px 20px 20px auto !important;
-        align-self: flex-end !important;
-        /* Comando final para alinhar na direita do container flex */
-        text-align: center;
+/*  SELO DA PRESENÇA - Ajustado */
 
-    }
+.badge-presenca {
+    display: table !important;
+    font-size: 0.8rem !important;
+    order: 3 !important;
+    display: table !important;
+    margin: 15px auto !important;
+    position: static !important;
 
-    .btn-reagir,
-    .btn-fofocar {
-        font-size: 1rem;
-        gap: 8px;
-    }
+}
 
-    .reacao-item {
-        padding: 2px 8px;
-        font-size: 0.95rem;
-    }
+.bio-box {
+    width: 90% !important;
+    margin: 20px auto 30px auto !important;
+    text-align: center;
+    font-size: 0.9rem !important;
+}
 
-    /* 6. SELO DA PRESENÇA - Ajustado */
+/* 7. STATS (Seguidores) */
+.stats-perfil {
+    justify-content: flex-start !important;
+    margin: 10px 0 auto !important;
+    order: 5 !important;
+    padding-left: 20px !important;
+}
 
-    .badge-presenca {
-        display: table !important;
-        font-size: 0.75rem !important;
-        order: 3 !important;
-        display: table !important;
-        margin: 15px auto !important;
-        position: static !important;
-    }
-
-    .bio-box {
-        width: 90% !important;
-        margin: 10px auto 20px auto !important;
-        text-align: center;
-        font-size: 0.95rem !important;
-    }
-
-    /* 7. STATS (Seguidores) */
-    .stats-perfil {
-        justify-content: center !important;
-        margin: 10px 0 !important;
-        order: 5 !important;
-    }
-
-
-    .comentario-item strong {
-        color: #ebc415;
-        font-size: 0.9rem;
-    }
-
-    .comentario-item span {
-        font-size: 1.1rem;
-        line-height: 1.5;
-        white-space: nowrap;
-    }
+/* Fecha o @Media Hover */
 
 }

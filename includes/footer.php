@@ -40,8 +40,8 @@
             audio.volume = 0; 
             audio.play();
             var fadeIn = setInterval(function() {
-                if (audio.volume < 0.03) { audio.volume += 0.01; } 
-                else { audio.volume = 0.03; clearInterval(fadeIn); }
+                if (audio.volume < 0.04) { audio.volume += 0.01; } 
+                else { audio.volume = 0.02; clearInterval(fadeIn); }
             }, 120); 
         }, { once: true });
 

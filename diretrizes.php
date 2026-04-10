@@ -1,11 +1,25 @@
 
 
-<?php include 'includes/header.php'; 
-      include 'includes/navbar.php'; 
-      include 'includes/bolhas.php'; ?>
+<?php 
+include 'conexao.php'; 
+include 'includes/header.php'; 
+include 'includes/navbar.php'; 
+include 'includes/bolhas.php'; 
+?>
 
 
 </nav>
+<style>
+  article p {
+    margin-bottom: 25px; /* Separa os blocos de texto */
+    display: block;      /* Garante que ele ocupe a linha toda */
+  }
+  article h3 {
+    margin-top: 40px;    /* Dá um espaço maior antes de cada título de seção */
+    margin-bottom: 15px;
+    color: var(--dourado); /* Se você tiver essa variável */
+  }
+</style>
 
   <main style="max-width: 1000px; margin: auto;">
     <article>
@@ -14,7 +28,7 @@
   <div style="display: flex; gap: 8px; justify-content:center;">
    <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
-  <article style="color: #c5b911e5; font-size: 18px; text-align: center; margin-bottom: 15px; margin-top: 25px; ; "> 
+  <article style="color: #c4b91bee; font-size: 18px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.
