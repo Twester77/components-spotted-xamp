@@ -658,3 +658,30 @@ textarea {
     z-index: 10;
 }
 
+<<<<<<< HEAD
+=======
+
+.insignia-atletica-mini {
+    width: 60px;      
+    height: 60px;
+    margin-left: 6px; 
+    vertical-align: right; 
+    object-fit: contain;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+
+}
+
+.insignia-atletica-mini.badge-especial {
+    width: 100px !important; 
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+    margin-left: 6px;
+    vertical-align: right; 
+    object-fit: contain;
+}
+
+
+
+
+
+
+>>>>>>> 9899676f4c0d3c40576b88d24664cc8551fc7dc9
