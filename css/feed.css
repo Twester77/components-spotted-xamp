@@ -892,7 +892,7 @@
 }
 
 
-    /* 5. OS BOTÕES: Menores e um embaixo do outro se precisar */
+    /* 5. OS BOTÕES */
     
    .capa-wrapper.viewer {
     width: 100%;
@@ -950,17 +950,18 @@
     }
 
     /* 2. O Wrapper do Avatar: para de voar e desce pra Terra */
+
     .avatar-wrapper.viewer {
-        float: none !important;      /* Mata o float esquerda */
+
+        float: none !important;     
         position: relative !important;
         display: flex !important;
         justify-content: center !important;
-        /* Ajuste de altura: -50px faz ele ficar metade na capa, metade fora */
         margin: -50px auto 10px auto !important; 
         width: 110px !important;
         height: 110px !important;
-        left: unset !important;      /* Tira deslocamentos laterais */
-        top: unset !important;       /* Tira o voo vertical */
+        left: unset !important;      
+        top: unset !important;       
     }
 
     /* 3. A Imagem em si: redonda e centrada */
@@ -982,7 +983,7 @@
         margin: 0 !important;
         padding: 10px 0 !important;
         position: static !important;
-        order: 2 !important; /* Garante que vem depois do avatar */
+        order: 2 !important; 
     }
 
     .nome-publico {

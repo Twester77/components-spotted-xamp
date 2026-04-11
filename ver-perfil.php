@@ -62,11 +62,15 @@ $is_presenca = ($id_visto == 1);
         <h2 class="nome-publico">
             <?php echo htmlspecialchars($dados['nome']); ?>
 
+          <?php if(!empty($dados['atletica_id'])): 
+           // Se for mecanica, adiciona a classe 'badge-especial', senão fica vazio
+          $classe_extra = ($dados['atletica_id'] == 'eng-mecanica') ? 'badge-especial' : '';
+          ?>
             <?php if (!empty($dados['atletica_id'])): ?>
-                <img src="../badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.png"
+                <img src="badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.png"
                     class="insignia-atletica-mini"
                     title="Membro da Atlética"
-                    style="width: 20px; vertical-align: middle; margin-left: 5px;">
+                    style=" vertical-align: middle; margin-left: 5px;">
             <?php endif; ?>
         </h2>
 
