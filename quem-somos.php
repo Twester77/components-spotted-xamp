@@ -9,7 +9,7 @@ include 'includes/bolhas.php';
 </nav>
 <main style="max-width: 1000px; margin: auto;">
   <article>
-    <h2 style="font-size: 1.8rem; text-align: center; margin-bottom: 15px; margin-top: 25px;"> MAS AFINAL, QUEM NÓS SOMOS? </h2>
+    <h2 style="font-size:2rem; text-align: center; margin-bottom: 15px; margin-top: 25px;"> MAS AFINAL, QUEM NÓS SOMOS? </h2>
     <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
       <img src="imagensfoto/capa-quem-somos-missao.jpg" alt="Capa do quem somos" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.82; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
       <div style="font-size: 16px; line-height: 1.6; text-align: left;">

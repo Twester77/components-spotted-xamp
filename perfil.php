@@ -26,7 +26,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
 <main class="main-perfil-container <?php echo $classe_presenca; ?>">
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
-
+        <div class="perfil-header-container">
         <div class="capa-wrapper">
             <?php if (!empty($dados['capa'])): ?>
                 <img src="<?php echo $capa_atual; ?>" class="img-capa-preview">
@@ -40,6 +40,8 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <i class="fas fa-camera"></i>
                 <input type="file" name="capa" style="display:none;">
             </label>
+        </div>
+
         </div>
 
         <div class="avatar-wrapper">
@@ -79,12 +81,12 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="eng-comp" <?php echo ($dados['atletica_id'] == 'eng-comp') ? 'selected' : ''; ?>>Engenharia de Computação (Octabit)</option>
                     <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica </option>
                     <option value="farmacia" <?php echo ($dados['atletica_id'] == 'farmacia') ? 'selected' : ''; ?>>Farmácia (Narcótica)</option>
-                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia (Fisio) </option>
+                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia  </option>
                     <option value="medicina" <?php echo ($dados['atletica_id'] == 'medicina') ? 'selected' : ''; ?>>Medicina (Javalaria)</option>
                     <option value="nutricao" <?php echo ($dados['atletica_id'] == 'nutricao') ? 'selected' : ''; ?>>Nutrição (Devoradores)</option>
                     <option value="pedagogia" <?php echo ($dados['atletica_id'] == 'pedagogia') ? 'selected' : ''; ?>>Pedagogia (Mediadores)</option>
                     <option value="psicologia" <?php echo ($dados['atletica_id'] == 'psicologia') ? 'selected' : ''; ?>>Psicologia (Psicose)</option>
-                    <option value="publicidade" <?php echo ($dados['atletica_id'] == 'publicidade') ? 'selected' : ''; ?>>Publicidade (Puleiro)</option>
+                    <option value="propaganda" <?php echo ($dados['atletica_id'] == 'propaganda') ? 'selected' : ''; ?>>Publicidade (Puleiro)</option>
                     <option value="veterinaria" <?php echo ($dados['atletica_id'] == 'veterinaria') ? 'selected' : ''; ?>>Medicina Veterinária (MedVet)</option>
                 </select>
             </div>

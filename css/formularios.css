@@ -14,10 +14,13 @@
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    max-width: 550px !important;    /* O "quadradinho" que você queria */
-    margin: 40px auto !important;   /* Centraliza e dá respiro */
+    max-width: 550px !important;
+    /* O "quadradinho" que você queria */
+    margin: 40px auto !important;
+    /* Centraliza e dá respiro */
     padding: 30px !important;
-    background: #0a0a0a38 !important; /* O fundo pretão sólido de volta */
+    background: #0a0a0a38 !important;
+    /* O fundo pretão sólido de volta */
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
     border-radius: 20px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
@@ -34,7 +37,7 @@
 }
 
 /* Fazendo os campos ocuparem 100% do quadradinho */
-.main-novo-post input, 
+.main-novo-post input,
 .main-novo-post textarea {
     width: 100% !important;
     background: rgba(255, 255, 255, 0) !important;
@@ -46,8 +49,9 @@
 }
 
 .main-novo-post textarea {
-    min-height: 180px !important; 
-    resize: vertical; /* Permite que o usuário estique se quiser, mas só pra baixo */
+    min-height: 180px !important;
+    resize: vertical;
+    /* Permite que o usuário estique se quiser, mas só pra baixo */
 }
 
 
@@ -59,61 +63,66 @@
 /* --- PERFIL MODO DARK --- */
 
 .main-perfil-container {
-    max-width: 800px;
+    max-width: 600px;
     margin: 60px auto !important;
     width: 95%;
-    min-height: 40px; 
-    height: auto !important; 
-    padding: 30px; 
+    min-height: 40px;
+    height: auto !important;
+    padding: 30px;
     display: block;
     position: relative;
     background: #0a0a0a;
     border-radius: 20px;
-    border: 2px solid #747474; 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
-    overflow: hidden; 
-   
+    border: 2px solid #747474;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+
 }
 
 .bio-box {
     width: 100%;
     max-width: 800px;
     margin: 10px auto;
-    word-wrap: break-word; 
+    word-wrap: break-word;
     overflow-wrap: break-word;
-    display: block !important; /* Garante que não vire flex e quebre */
+    display: block !important;
+    /* Garante que não vire flex e quebre */
     line-height: 1.5;
     font-style: italic;
 }
 
 .form-perfil-corpo {
     padding: 20px;
-    padding-bottom: 40px; 
+    padding-bottom: 40px;
     background: #0a0a0a;
-    
+
 }
 
 
-.container, .login-form, form[action="confirma-login.php"] {
-    max-width: 500px ;
-    margin-left: auto ;
-    margin-right: auto ;
+.container,
+.login-form,
+form[action="confirma-login.php"] {
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
     width: 100% !important;
 }
 
 .capa-container {
     width: 100%;
-    min-height: 300px; 
+    min-height: 300px;
     border-radius: 15px;
-    overflow: hidden; 
+    overflow: hidden;
     position: relative;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .capa-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Faz a imagem preencher sem esticar */
+    object-fit: cover;
+    /* Faz a imagem preencher sem esticar */
+    border-radius: 15px 15px 0 0;
 }
 
 
@@ -121,7 +130,7 @@
 
 
 .titulo-pagina {
-    color: var(--dourado); /* Dourado da Fenda */
+    color: var(--dourado);
     font-size: 1.1rem;
     margin-bottom: 20px;
     text-align: center;
@@ -136,7 +145,7 @@
 
 .campo-grupo label {
     display: block;
-    color: #bbb; 
+    color: #bbb;
     font-size: 14px;
     margin-bottom: 10px;
     font-weight: bold;
@@ -144,17 +153,20 @@
 
 /* Textarea (Bio) */
 .campo-grupo textarea {
-    resize: vertical; /* Permite aumentar só a altura */
+    resize: vertical;
     min-height: 150px;
     max-height: 300px;
 }
 
 /* Estilo geral para Inputs e Textarea */
 
-.container input, .container button, select, textarea {
+.container input,
+.container button,
+select,
+textarea {
     padding: 12px;
     width: 100%;
-    border-radius: 10px; 
+    border-radius: 10px;
     border: 1px solid #333;
     margin-bottom: 15px;
     display: block;
@@ -163,11 +175,11 @@
 
 
 
-.campo-grupo input[type="text"], 
+.campo-grupo input[type="text"],
 .campo-grupo textarea {
     width: 100%;
     padding: 12px 15px;
-    background: #1a1a1a; 
+    background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 8px;
     color: #fff;
@@ -178,10 +190,10 @@
 
 
 /* Efeito de foco (quando clica para digitar) */
-.campo-grupo input:focus, 
+.campo-grupo input:focus,
 .campo-grupo textarea:focus {
     outline: none;
-    border-color: var(--dourado); 
+    border-color: var(--dourado);
     background: #222;
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
@@ -222,25 +234,25 @@
 /* Página perdidos */
 
 .painel-sessao {
-    max-width: 300px; 
-    min-height: 150px; 
-    margin: 0 auto 30px auto; 
-    background: rgba(255, 255, 255, 0.08); 
-    padding: 20px; 
-    border-radius: 15px; 
+    max-width: 300px;
+    min-height: 150px;
+    margin: 0 auto 30px auto;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 15px;
     text-align: center;
     border: 1px solid rgba(255, 188, 0, 0.3);
     display: flex;
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center;   
-    gap: 15px; /
-} 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;/
+}
 
 .painel-sessao p {
     color: #fff;
     margin: 0;
-    font-size: 1.4rem; 
+    font-size: 1.4rem;
     font-weight: 500;
     line-height: 1.2;
 }
@@ -249,13 +261,13 @@
     background: #cc420c;
     color: #fff;
     border: none;
-    padding: 10px 25px; 
+    padding: 10px 25px;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     font-size: 16px;
     transition: 0.3s ease;
-    display: inline-block; 
+    display: inline-block;
 }
 
 .btn-sair-fenda:hover {
@@ -266,21 +278,13 @@
 
 /* ESTILO DOS BOTÕES DE EDIÇÃO */
 
-   .imgcontainer {
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-    padding: 20px;
-    margin: 0 auto;
-    gap: 30px; 
-}
 
 .avatar {
     width: 120px;
     height: 120px;
     object-fit: cover;
     border-radius: 50%;
-    border: none !important; 
+    border: none !important;
     /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
     -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
     mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
@@ -291,9 +295,10 @@
 .avatar-pequeno {
     width: 120px;
     height: 120px;
-    object-fit: cover; /* Isso aqui faz a mágica: corta a foto sem distorcer */
+    object-fit: cover;
+    /* Isso aqui faz a mágica: corta a foto sem distorcer */
     border-radius: 50%;
-    border: 3px solid #ff7011; 
+    border: 3px solid #ff7011;
 }
 
 
@@ -312,30 +317,33 @@
 
 
 /* 1. Botão da Câmera (Capa) */
+.perfil-header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
 
 .capa-wrapper {
     width: 100%;
-    max-height: 400px; 
-    overflow: hidden;
+    height: 300px !important;
     position: relative;
-    background: #111;
-    border-radius: 10px color #ccc ;
+    overflow: hidden;
 }
 
-.img-capa-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 10px;
-    padding: 0;
-   
+/* Posicionando o Avatar */
+.avatar-perfil-wrapper {
+    position: absolute;
+    bottom: -50px;
+    z-index: 5;
 }
+
 
 .btn-mudar-capa {
     position: absolute;
     right: 20px;
     bottom: 20px;
-    background: rgba(0, 0, 0, 0.6); 
+    background: rgba(0, 0, 0, 0.6);
     color: #fff;
     width: 40px;
     height: 40px;
@@ -350,7 +358,7 @@
 }
 
 .btn-mudar-capa:hover {
-    background: var(--laranja-fenda); 
+    background: var(--laranja-fenda);
     transform: scale(1.2);
 }
 
@@ -359,18 +367,18 @@
 /* Container da Capa no PC */
 .capa-wrapper.viewer {
     width: 100% !important;
-    height: 450px !important; /* Aumentamos bem a altura para caber a imagem */
-    min-height: 300px !important;
+    height: 300px !important;
+    min-height: 200px !important;
     overflow: hidden !important;
-    background-color: #050505 !important;
     border-radius: 15px 15px 0 0 !important;
 }
 
 .img-capa-preview {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; 
-    object-position: center !important; 
+    object-fit: cover !important;
+    object-position: center !important;
+    max-height: 300px;
 }
 
 
@@ -379,21 +387,23 @@
     color: var(--dourado);
     font-weight: bold;
 }
- 
 
-/* 2. Botão do Lápis (Avatar) */
+
+/* 2. Botão do Lápis (Trocar Avatar) */
 
 .avatar-wrapper {
-    width: 120px; height: 120px;
-    margin: -55px auto 10px;
-    position: relative; z-index: 5;
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: -60px auto 0 auto;
+    z-index: 10;
 }
 
 .btn-mudar-avatar {
     position: absolute;
     right: 0;
     bottom: 5px;
-    background: var(--dourado); 
+    background: var(--dourado);
     color: #000;
     width: 32px;
     height: 32px;
@@ -402,19 +412,21 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     transition: 0.3s;
-    border: 2px solid #0a0a0a; 
+    border: 2px solid #0a0a0a;
     z-index: 15;
 }
 
 .btn-mudar-avatar:hover {
     background: #fff;
-    transform: rotate(-15deg) scale(1.3); /* Efeito de inclinação no lápis */
+    transform: rotate(-15deg) scale(1.3);
+    /* Efeito de inclinação no lápis */
 }
 
 /* Ajuste do ícone dentro dos botões */
-.btn-mudar-capa i, .btn-mudar-avatar i {
+.btn-mudar-capa i,
+.btn-mudar-avatar i {
     font-size: 14px;
 }
 
@@ -452,36 +464,41 @@
 
 
 .login-btn {
-    background: linear-gradient(135deg, #ff7011, #ffbc00) !important; 
+    background: linear-gradient(135deg, #ff7011, #ffbc00) !important;
     color: #fff !important;
     border: none;
-    width: 100%; /* Garante que ele ocupe a largura toda */
+    width: 100%;
     padding: 14px 20px !important;
     border-radius: 10px;
     font-weight: bold;
     text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(255, 112, 17, 0.4); /* Brilho laranja para destacar do azul */
+    box-shadow: 0 4px 15px rgba(255, 112, 17, 0.4);
     cursor: pointer;
     margin-top: 10px;
     transition: 0.3s;
 }
 
 .login-btn:hover {
-    transform: translateY(-5px); /* Efeito de levante */
+    transform: translateY(-5px);
     box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);
     filter: brightness(1.1);
 }
 
 .btn-salvar-perfil {
     background: linear-gradient(135deg, #08d888, #05a870);
-    color: white; border: none; padding: 12px;
-    border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
-    margin-top: 20px; 
-    margin-bottom: 10px; 
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 .btn-salvar-perfil:hover {
-    background-color: #fff; /* Inverte a cor no hover */
+    background-color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
@@ -490,17 +507,17 @@
 
 /* 1. REGRAS GERAIS (Ajustadas para Flex) */
 
-.btn-editar-atalho, 
+.btn-editar-atalho,
 .btn-seguir-fenda {
-    position: static !important; /* Tira ele do modo 'fantasma' */
-    float: none !important;     /* Garante que não está flutuando */
+    position: static !important;
+    float: none !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
     width: fit-content !important;
     min-width: 140px;
     padding: 10px 20px;
-    margin: 0 !important;       
+    margin: 0 !important;
     font-weight: 800;
     text-transform: uppercase;
     font-size: 0.8rem;
@@ -511,20 +528,22 @@
 
 /* 2. ESTADO PADRÃO (Dourado) */
 
-.btn-editar-atalho, 
+.btn-editar-atalho,
 .btn-seguir-fenda {
     background: var(--dourado);
     color: #000000;
     width: fit-content;
 }
 
-.btn-editar-atalho:hover, 
+.btn-editar-atalho:hover,
 .btn-seguir-fenda:hover {
     transform: scale(1.05);
     box-shadow: 0 0 0 5px 0 var(--dourado);
-    background: var(--dourado); 
-    -webkit-backdrop-filter: brightness(1.1); ;
-    backdrop-filter: brightness(1.1); ;
+    background: var(--dourado);
+    -webkit-backdrop-filter: brightness(1.1);
+    ;
+    backdrop-filter: brightness(1.1);
+    ;
 
 }
 
@@ -533,17 +552,19 @@
 .perfil-controles {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: flex-start !important; /* Alinha na esquerda junto com o texto */
+    justify-content: flex-start !important;
+    /* Alinha na esquerda junto com o texto */
     gap: 30px !important;
-    margin: 20px 30px auto !important; 
-    clear: both !important;       /* Empurra para baixo de qualquer coisa que tenha float */
+    margin: 20px 30px auto !important;
+    clear: both !important;
+    /* Empurra para baixo de qualquer coisa que tenha float */
 }
 
 
 
 /* 4. ESTADO SEGUINDO (O segredo do Verde) */
 .btn-seguir-fenda.seguindo {
-    background: rgba(38, 211, 110, 0.15) !important; 
+    background: rgba(38, 211, 110, 0.15) !important;
     border: 2px solid #26d36e !important;
     color: #26d36e !important;
     box-shadow: none !important;
@@ -562,36 +583,38 @@
 /* --- AVATAR E A PRESENÇA --- */
 
 .img-avatar-perfil {
-    width: 120px;
-    height: 120px;
-    border: 4px solid #000; 
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
+    border: 4px solid var(--dourado);
     object-fit: cover;
+    background: #000;
 }
 
+
 .avatar-wrapper.viewer {
-    margin: -60px 0 10px 30px; 
     width: fit-content;
-    float: left;   
-    }
+}
 
 
 /* Stats (Seguidores/Seguindo)*/
 
 .stats-perfil {
     display: flex;
-    justify-content: flex-start; /* Agora vai para a esquerda de verdade */
+    justify-content: flex-start;
+    /* Agora vai para a esquerda de verdade */
     gap: 35px;
     padding: 20px 0;
-    margin: 20px 30px; 
+    margin: 20px 30px;
     color: #fff;
     font-size: 0.9rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1); 
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: auto;
 }
 
 .stats-perfil strong {
-    color: var(--dourado); /* Mudado para dourado para combinar com o tema */
+    color: var(--dourado);
+    /* Mudado para dourado para combinar com o tema */
     display: block;
     font-size: 1.2rem;
     font-weight: 800;
@@ -624,29 +647,14 @@
     margin: 25px 40px 0 auto;
     background: linear-gradient(45deg, var(--dourado), #fff000);
     color: #000;
-    padding: 4px 12px; 
+    padding: 4px 12px;
     border-radius: 4px;
     font-weight: 900;
-    font-size: 1.1rem; 
+    font-size: 1.1rem;
     text-transform: uppercase;
     border: 2px solid #fff;
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
     position: relative;
     z-index: 10;
 }
-
-
-.badge-atletica {
-    width: 30px;      
-    height: 30px;
-    margin-left: 6px; 
-    vertical-align: middle; 
-    object-fit: contain;
-    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
-}
-
-
-
-
-
 
