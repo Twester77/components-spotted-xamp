@@ -201,7 +201,6 @@ textarea {
 
 
 
-
 /* Wrapper do Username (Onde tem o @) */
 .input-username-wrapper {
     display: flex;
@@ -550,6 +549,7 @@ textarea {
 
 
 /* 3. O CONTAINER PAI  */
+
 .perfil-controles {
     display: flex !important;
     flex-direction: row !important;
@@ -562,7 +562,22 @@ textarea {
 
 
 
-/* 4. ESTADO SEGUINDO */
+/* 1. BOTÃO PADRÃO (ESTADO: SEGUIR) */
+.btn-seguir-fenda {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 20px !important;
+    border-radius: 20px !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+/* 2. ESTADO: JÁ ESTOU SEGUINDO (Verde suave com borda) */
 .btn-seguir-fenda.seguindo {
     background: rgba(38, 211, 110, 0.15) !important;
     border: 2px solid #26d36e !important;
@@ -570,13 +585,19 @@ textarea {
     box-shadow: none !important;
 }
 
+/* 3. HOVER DO SEGUIR (Feedback ao passar o mouse para seguir) */
+.btn-seguir-fenda:hover:not(.seguindo) {
+    opacity: 0.9;
+    transform: scale(1.05);
+    background-color: #218838 !important;
+}
 
-/* 5. HOVER DO SEGUINDO (O "Deixar de Seguir" Vermelho) */
+/* 4. HOVER DO SEGUINDO (Efeito "Deixar de Seguir" em Vermelho) */
 .btn-seguir-fenda.seguindo:hover {
     background: rgba(255, 71, 87, 0.2) !important;
     border-color: #ff4757 !important;
     color: #ff4757 !important;
-    box-shadow: 0 0 10px rgba(255, 71, 87, 0.4) !important;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.4) !important;
     transform: scale(1.02);
 }
 
@@ -657,3 +678,14 @@ textarea {
     position: relative;
     z-index: 10;
 }
+
+/* Especificidade máxima para vencer o sequestrador do layout.css */
+main.container-busca form input[type="text"] {
+    background: rgba(255, 255, 255, 0.1) !important; 
+    border: 1px solid var(--dourado) !important;
+    outline: none !important; 
+    padding: 12px 15px !important;
+    border-radius: 8px !important;
+    
+}
+

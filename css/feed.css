@@ -597,19 +597,20 @@
     filter: drop-shadow(0 0 12px var(--dourado)) !important; 
 }
 
-/* A "caixa" que envolve a logo */
+/* A caixa que envolve a logo */
 
 .atletica-item {
     display: flex !important;
     align-items: center;      
     justify-content: center;   
-    width: 160px !important;   
-    height: 160px !important;  
+    width: 180px !important;   
+    height: 180px !important;  
     margin: 0 auto !important;
-    overflow: hidden;          
+    overflow: hidden;   
+    border-radius: 50%;       
 }
 
-/* A logo em si */
+/* A logo */
 .insignia-atletica-link {
     max-width: 90% !important;  
     max-height: 90% !important; 
@@ -619,8 +620,10 @@
 
 .atletica-item:hover .insignia-atletica-link {
     transform: scale(1.1) !important;
-    filter: brightness(1.05);
+    filter: brightness(1.1);
+    filter: drop-shadow(0 0 12px var(--dourado)) !important;
 }
+
 .card-notificacao:hover {
     background-color: #252525 !important;
     transform: scale(1.05);
@@ -629,7 +632,7 @@
 
 
 
-/* SEÇÃO: ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
+/*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
 
 .avatar-p {
 
@@ -1127,6 +1130,15 @@
         justify-content: center !important;
         margin: 15px 0 !important;
         gap: 20px !important;
+    }
+
+    main.container-busca form {
+        flex-direction: column;
+    }
+    
+    main.container-busca form button {
+        width: 100%;
+        margin-top: 5px;
     }
 
 }

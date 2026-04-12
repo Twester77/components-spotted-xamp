@@ -25,6 +25,21 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 ?>
 
 <main class="main-perfil-container <?php echo $classe_presenca; ?>">
+    <?php if (isset($_GET['sucesso'])): ?>
+    <div id="toast-sucesso" class="toast-fenda">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>Perfil atualizado com sucesso!</span>
+    </div>
+
+    <script>
+        // Faz o popup sumir suavemente após 4 segundos
+        setTimeout(() => {
+            const toast = document.getElementById('toast-sucesso');
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 500); // Remove do HTML após o fade
+        }, 4000);
+    </script>
+<?php endif; ?>
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
             <div class="capa-wrapper">
@@ -81,7 +96,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="eng-comp" <?php echo ($dados['atletica_id'] == 'eng-comp') ? 'selected' : ''; ?>>Engenharia de Computação (Octabit)</option>
                     <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica </option>
                     <option value="farmacia" <?php echo ($dados['atletica_id'] == 'farmacia') ? 'selected' : ''; ?>>Farmácia (Narcótica)</option>
-                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia </option>
+                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia (Fisio) </option>
                     <option value="medicina" <?php echo ($dados['atletica_id'] == 'medicina') ? 'selected' : ''; ?>>Medicina (Javalaria)</option>
                     <option value="nutricao" <?php echo ($dados['atletica_id'] == 'nutricao') ? 'selected' : ''; ?>>Nutrição (Devoradores)</option>
                     <option value="pedagogia" <?php echo ($dados['atletica_id'] == 'pedagogia') ? 'selected' : ''; ?>>Pedagogia (Mediadores)</option>
@@ -97,8 +112,10 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
             </div>
             <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 10px; margin: 20px 0;">
                 <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                <a href="ver-perfil.php?user=..." class="btn-editar-atalho">VER PERFIL PÚBLICO</a>
-            </div>
+         <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
+            VER PERFIL PÚBLICO</a>  
+         </div>
+
         </div>
     </form>
 </main>

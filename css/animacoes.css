@@ -66,3 +66,32 @@
     to { transform: translateX(0); }
 }
 
+
+.toast-fenda {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    background: rgba(40, 167, 69, 0.9); 
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: slideDown 0.5s ease-out;
+    transition: opacity 0.5s ease;
+    z-index: 10000; /* Um nível acima da navbar*/
+
+}
+
+@keyframes slideDown {
+    from { transform: translate(-50%, -150px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}

@@ -468,7 +468,9 @@ footer a {
 
 }
 
+
 /* O botão "Lançar" (Publicar) */
+
 .btn-lancar {
     background: #00ff55ab;
     color: #000;
@@ -537,5 +539,24 @@ footer a {
     font-weight: bold;
 }
 
+
+
+/* Foca no input da página de busca */
+main.container-busca form input[type="text"] {
+    background: rgba(255, 255, 255, 0.15) !important; 
+    border: 1px solid var(--dourado) !important;      
+    color: #ffffff !important;                        
+    padding: 12px 15px !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;                      
+    width: 100% !important;
+    -webkit-text-fill-color: #ffffff !important;     
+    outline: none !important;
+}
+
+main.container-busca form input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.6) !important;
+}
 
 
