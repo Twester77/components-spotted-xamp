@@ -1,13 +1,12 @@
-/* ==========================================================================
-   A FENDA - CSS MASTER (VERSÃO REPARADA)
-   Mantendo a estrutura original e corrigindo os bugs solicitados.
-   ========================================================================== */
+/* A FENDA - CSS MASTER (VERSÃO REPARADA)
+   Mantendo a estrutura original e corrigindo os bugs */
 
 :root {
     --cor-principal: #004a8d; 
     --cor-hover: #1b77c7;
     --laranja-fenda: rgba(241, 103, 5, 0.9);
     --dourado: #ffbc00;
+
 }
 
 
@@ -35,15 +34,13 @@ html {
 }
 
 
-/* No seu CSS */
 .capa-default-fenda {
     width: 100%;
-    height: 180px; /* Ou a altura que você já usa */
-    /* Degradê base: Azul profundo UNIFEV -> Teal Fenda */
+    height: 180px; 
     background: linear-gradient(135deg, #004a8f 0%, #00a896 100%);
     position: relative;
     overflow: hidden;
-    border-radius: 12px 12px 0 0; /* Arredonda só o topo */
+    border-radius: 12px 12px 0 0; 
 }
 
 .capa-default-fenda::before {

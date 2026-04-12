@@ -16,7 +16,7 @@
             <a href="#">Utilidade Universitária</a>
             <ul class="submenu">
                 <li><a href="perdidos.php">Perdidos (porém achados)</a></li>
-                <li><a href="#">Classificados & Eventos</a></li>
+                <li><a href="classificados.php">Classificados & Eventos</a></li>
                 </ul>
         </li>
 

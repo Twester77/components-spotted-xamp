@@ -597,6 +597,30 @@
     filter: drop-shadow(0 0 12px var(--dourado)) !important; 
 }
 
+/* A "caixa" que envolve a logo */
+
+.atletica-item {
+    display: flex !important;
+    align-items: center;      
+    justify-content: center;   
+    width: 160px !important;   
+    height: 160px !important;  
+    margin: 0 auto !important;
+    overflow: hidden;          
+}
+
+/* A logo em si */
+.insignia-atletica-link {
+    max-width: 90% !important;  
+    max-height: 90% !important; 
+    object-fit: contain !important; 
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.atletica-item:hover .insignia-atletica-link {
+    transform: scale(1.1) !important;
+    filter: brightness(1.05);
+}
 .card-notificacao:hover {
     background-color: #252525 !important;
     transform: scale(1.05);
@@ -605,9 +629,7 @@
 
 
 
-/* ============================================================
-   SEÇÃO: ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES)
-   ============================================================ */
+/* SEÇÃO: ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
 
 .avatar-p {
 
@@ -1112,7 +1134,7 @@
 /* Fecha o @Media Hover */
 
 
-/* ---------PÁGINA DE COMUNIDADES (ATLÉTICAS)--------- */
+/* PÁGINA DE COMUNIDADES (ATLÉTICAS) */
 
 .comunidade-topo {
     text-align: center;
@@ -1179,7 +1201,9 @@
 }
 
 
-/* --- AJUSTES DO PERFIL (HABITANTE) --- */
+
+/*  AJUSTES DO PERFIL (HABITANTE)*/
+
 .avatar-posicionador {
     position: absolute;
     bottom: -50px;

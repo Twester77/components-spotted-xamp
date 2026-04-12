@@ -511,7 +511,6 @@ textarea {
 
 /* 1. REGRAS GERAIS (Ajustadas para Flex) */
 
-/*  UNIFICAÇÃO FINAL DOS BOTÕES EDITAR PERFIL */
 .btn-editar-atalho {
     display: inline-flex !important;
     align-items: center;
@@ -571,6 +570,7 @@ textarea {
     box-shadow: none !important;
 }
 
+
 /* 5. HOVER DO SEGUINDO (O "Deixar de Seguir" Vermelho) */
 .btn-seguir-fenda.seguindo:hover {
     background: rgba(255, 71, 87, 0.2) !important;
@@ -602,8 +602,7 @@ textarea {
 
 .stats-perfil {
     display: flex;
-    justify-content: flex-start;
-    /* Agora vai para a esquerda de verdade */
+    justify-content: flex-start; /* vai para a esquerda */
     gap: 35px;
     padding: 20px 0;
     margin: 20px 30px;

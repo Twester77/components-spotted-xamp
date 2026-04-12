@@ -74,7 +74,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="agronomia" <?php echo ($dados['atletica_id'] == 'agronomia') ? 'selected' : ''; ?>>Engenharia Agronômica (Usagro)</option>
                     <option value="arquitetura" <?php echo ($dados['atletica_id'] == 'arquitetura') ? 'selected' : ''; ?>>Arquitetura (Arcana)</option>
                     <option value="biomedicina" <?php echo ($dados['atletica_id'] == 'biomedicina') ? 'selected' : ''; ?>>Biomedicina (Leptospirados)</option>
-                    <option value="contabeis" <?php echo ($dados['atletica_id'] == 'contabeis') ? 'selected' : ''; ?>>Ciências Contábeis (Patrimonial)</option>
+                    <option value="contabeis" <?php echo ($dados['atletica_id'] == 'contabeis') ? 'selected' : ''; ?>>Ciências Contábeis (Panda)</option>
                     <option value="direito" <?php echo ($dados['atletica_id'] == 'direito') ? 'selected' : ''; ?>>Direito (Soberana)</option>
                     <option value="ed-fisica" <?php echo ($dados['atletica_id'] == 'ed-fisica') ? 'selected' : ''; ?>>Educação Física (Demolidores)</option>
                     <option value="enfermagem" <?php echo ($dados['atletica_id'] == 'enfermagem') ? 'selected' : ''; ?>>Enfermagem (Ferma)</option>
@@ -95,13 +95,11 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <label>Sua Bio</label>
                 <textarea name="bio" maxlength="400" rows="3"><?php echo htmlspecialchars($dados['bio']); ?></textarea>
             </div>
-
-            <div class="perfil-info-publica">
-                <div class="perfil-controles" style="width: 100% !important; display: flex !important; justify-content: center !important; gap: 15px; margin: 20px 0;">
-                    <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                    <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">VER PERFIL PÚBLICO</a>
-                </div>
+            <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 10px; margin: 20px 0;">
+                <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
+                <a href="ver-perfil.php?user=..." class="btn-editar-atalho">VER PERFIL PÚBLICO</a>
             </div>
+        </div>
     </form>
 </main>
 

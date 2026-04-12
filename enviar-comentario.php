@@ -1,16 +1,15 @@
 
 <?php
-session_start(); // OBRIGATÓRIO: Sem isso o PHP não lê o nome de quem logou!
+session_start(); // Sem isso o PHP não lê o nome de quem logou
 
 include 'conexao.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pegamos o nome da sessão se existir, senão ele fica vazio (para o banco tratar como anônimo)
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pega o nome da sessão se existir, do contrário ele fica vazio (para o banco de dados tratar como anônimo)
 
     $id_mensagem = $_POST['id_mensagem'];
     $comentario = $_POST['comentario'];
     $usuario_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : null;
         
-    // IMPORTANTE: A tabela 'comentarios' tem a coluna 'usuario_nome'
 
     $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -20,12 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pegamos o nome da sessão se ex
 
     if ($stmt->execute()) {
         
-        // --- 🧠 CÉREBRO DE MENÇÕES NOS COMENTÁRIOS ---
+        //   CÉREBRO DE MENÇÕES NOS COMENTÁRIOS 
         if (preg_match_all('/@([^\s]+)/', $comentario, $matches)) {
             $mencoes = $matches[1]; // Pega exatamente como no seu enviar-post.php
 
             foreach ($mencoes as $nome_usuario) {
-                // 1. Busca o ID do usuário mencionado
+
+                // 1. Busca o ID do usuário que foi mencionado
                 $stmt_busca = $conn->prepare("SELECT id FROM usuarios WHERE username = ?");
                 $stmt_busca->bind_param("s", $nome_usuario);
                 $stmt_busca->execute();
@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pegamos o nome da sessão se ex
                 }
             }
         }
-        // --- FIM DO CÉREBRO ---
+
+        //  FIM DO CÉREBRO 
 
         header("Location: post.php?id=" . $id_mensagem);
         exit();
