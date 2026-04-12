@@ -54,8 +54,8 @@ include 'includes/bolhas.php';
                 alt="Capa do Achados e Perdidos"
                 style="width: 100%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
 
-            <div style="font-size: 16px; font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 30px;">
-                <blackquote> Perdeu o juízo? Disso a gente não cuida. Mas se perdeu a chave ou a garrafinha, está no lugar certo!</blackquote>
+            <div style="font-size: 18px; font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 30px;">
+                <blackquote> Perdeu o juízo? Disso a gente não cuida. Mas se perdeu a chave ou a garrafinha, você está no lugar certo!</blackquote>
             </div>
         </div>
     </article>
@@ -64,7 +64,7 @@ include 'includes/bolhas.php';
         <h3 class="titulo-publicar">Perdeu ou Achou algo?</h3>
 
         <div class="nota-seguranca">
-            <strong>⚠️ NOTA DE SEGURANÇA:</strong> Ao postar fotos, cubra dados sensíveis.
+            <strong>⚠️ NOTA DE SEGURANÇA:</strong> Ao postar fotos, por favor, cubra dados sensíveis.
         </div>
 
         <?php if ($usuario_logado): ?>

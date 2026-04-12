@@ -17,8 +17,8 @@ $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
 // Configuração dos caminhos das imagens
-$foto_atual = !empty($dados['foto']) ? "uploads/".$dados['foto'] : "imagensfoto/default.jpg"; 
-$capa_atual = !empty($dados['capa']) ? "uploads/".$dados['capa'] : "imagensfoto/capa_padrao.jpg";
+$foto_atual = !empty($dados['foto']) ? "uploads/" . $dados['foto'] : "imagensfoto/default.jpg";
+$capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfoto/capa_padrao.jpg";
 
 // Verifica se é a "Presença" (ID 1) 
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
@@ -27,20 +27,20 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 <main class="main-perfil-container <?php echo $classe_presenca; ?>">
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
-        <div class="capa-wrapper">
-            <?php if (!empty($dados['capa'])): ?>
-                <img src="<?php echo $capa_atual; ?>" class="img-capa-preview">
-            <?php else: ?>
-                <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); height: 200px; display: flex; align-items: center; justify-content: center;">
-                    <span style="color: white; font-weight: bold; font-size: 1.3rem;">BEM-VINDO À FENDA!</span>
-                </div>
-            <?php endif; ?>
+            <div class="capa-wrapper">
+                <?php if (!empty($dados['capa'])): ?>
+                    <img src="<?php echo $capa_atual; ?>" class="img-capa-preview">
+                <?php else: ?>
+                    <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); height: 200px; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: white; font-weight: bold; font-size: 1.3rem;">BEM-VINDO À FENDA!</span>
+                    </div>
+                <?php endif; ?>
 
-            <label class="btn-mudar-capa">
-                <i class="fas fa-camera"></i>
-                <input type="file" name="capa" style="display:none;">
-            </label>
-        </div>
+                <label class="btn-mudar-capa">
+                    <i class="fas fa-camera"></i>
+                    <input type="file" name="capa" style="display:none;">
+                </label>
+            </div>
 
         </div>
 
@@ -81,7 +81,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="eng-comp" <?php echo ($dados['atletica_id'] == 'eng-comp') ? 'selected' : ''; ?>>Engenharia de Computação (Octabit)</option>
                     <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica </option>
                     <option value="farmacia" <?php echo ($dados['atletica_id'] == 'farmacia') ? 'selected' : ''; ?>>Farmácia (Narcótica)</option>
-                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia  </option>
+                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia </option>
                     <option value="medicina" <?php echo ($dados['atletica_id'] == 'medicina') ? 'selected' : ''; ?>>Medicina (Javalaria)</option>
                     <option value="nutricao" <?php echo ($dados['atletica_id'] == 'nutricao') ? 'selected' : ''; ?>>Nutrição (Devoradores)</option>
                     <option value="pedagogia" <?php echo ($dados['atletica_id'] == 'pedagogia') ? 'selected' : ''; ?>>Pedagogia (Mediadores)</option>
@@ -97,9 +97,9 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
             </div>
 
             <div class="perfil-info-publica">
-                <div class="perfil-controles">
+                <div class="perfil-controles" style="width: 100% !important; display: flex !important; justify-content: center !important; gap: 15px; margin: 20px 0;">
                     <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                    <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">VER MEU PERFIL PÚBLICO</a>
+                    <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">VER PERFIL PÚBLICO</a>
                 </div>
             </div>
     </form>

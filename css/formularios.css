@@ -110,24 +110,25 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    min-height: 300px;
-    border-radius: 15px;
-    overflow: hidden;
+    height: clamp(170px, 25vw, 300px) !important;
     position: relative;
+    overflow: visible;
+    /* Vital para o avatar aparecer */
+    background: #0a0a0a;
+    margin-bottom: 50px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-.capa-container img {
+.capa-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* Faz a imagem preencher sem esticar */
-    border-radius: 15px 15px 0 0;
+    object-position: center 20%;
 }
 
 
-/* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
 
+/* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
 
 .titulo-pagina {
     color: var(--dourado);
@@ -296,7 +297,6 @@ textarea {
     width: 120px;
     height: 120px;
     object-fit: cover;
-    /* Isso aqui faz a mágica: corta a foto sem distorcer */
     border-radius: 50%;
     border: 3px solid #ff7011;
 }
@@ -317,10 +317,14 @@ textarea {
 
 
 /* 1. Botão da Câmera (Capa) */
+
 .perfil-header-container {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
 }
 
@@ -377,8 +381,8 @@ textarea {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    object-position: center !important;
-    max-height: 300px;
+    object-position: center 20% !important;
+    height: clamp(180px, 25vw, 300px) !important;
 }
 
 
@@ -507,45 +511,43 @@ textarea {
 
 /* 1. REGRAS GERAIS (Ajustadas para Flex) */
 
-.btn-editar-atalho,
-.btn-seguir-fenda {
-    position: static !important;
-    float: none !important;
+/*  UNIFICAÇÃO FINAL DOS BOTÕES EDITAR PERFIL */
+.btn-editar-atalho {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    width: fit-content !important;
-    min-width: 140px;
-    padding: 10px 20px;
-    margin: 0 !important;
+    width: auto !important;
+    min-width: 140px; 
+    padding: 10px 25px !important;
+    white-space: nowrap !important;
+    font-size: clamp(0.55rem, 2vw, 0.8rem) !important;
     font-weight: 800;
     text-transform: uppercase;
-    font-size: 0.8rem;
-    border-radius: 50px;
+    text-decoration: none !important;
+    background: var(--dourado) !important;
+    color: #000 !important;
+    border-radius: 50px !important;
+    border: none !important;
     cursor: pointer;
-    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
-/* 2. ESTADO PADRÃO (Dourado) */
-
-.btn-editar-atalho,
-.btn-seguir-fenda {
-    background: var(--dourado);
-    color: #000000;
-    width: fit-content;
+.btn-editar-atalho:hover {
+    transform: scale(1.1) !important;
+    filter: brightness(1.1);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.4);
 }
 
+
+.btn-editar-perfil:hover,
+.btn-seguir:hover,
 .btn-editar-atalho:hover,
 .btn-seguir-fenda:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 5px 0 var(--dourado);
-    background: var(--dourado);
-    -webkit-backdrop-filter: brightness(1.1);
-    ;
-    backdrop-filter: brightness(1.1);
-    ;
-
+    transform: scale(1.1) !important;
+    filter: brightness(1.1);
+    box-shadow: 0 8px 20px rgba(255, 188, 0, 0.4);
 }
+
 
 
 /* 3. O CONTAINER PAI  */
@@ -553,7 +555,6 @@ textarea {
     display: flex !important;
     flex-direction: row !important;
     justify-content: flex-start !important;
-    /* Alinha na esquerda junto com o texto */
     gap: 30px !important;
     margin: 20px 30px auto !important;
     clear: both !important;
@@ -562,7 +563,7 @@ textarea {
 
 
 
-/* 4. ESTADO SEGUINDO (O segredo do Verde) */
+/* 4. ESTADO SEGUINDO */
 .btn-seguir-fenda.seguindo {
     background: rgba(38, 211, 110, 0.15) !important;
     border: 2px solid #26d36e !important;
@@ -580,7 +581,7 @@ textarea {
 }
 
 
-/* --- AVATAR E A PRESENÇA --- */
+/*  AVATAR E A PRESENÇA */
 
 .img-avatar-perfil {
     width: 100%;
@@ -614,7 +615,6 @@ textarea {
 
 .stats-perfil strong {
     color: var(--dourado);
-    /* Mudado para dourado para combinar com o tema */
     display: block;
     font-size: 1.2rem;
     font-weight: 800;
@@ -623,9 +623,10 @@ textarea {
 .stats-perfil span {
     color: #888;
     text-transform: uppercase;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
 }
+
 
 
 /* --- EASTER EGG: A PRESENÇA (ID 1) --- */
@@ -657,31 +658,3 @@ textarea {
     position: relative;
     z-index: 10;
 }
-
-<<<<<<< HEAD
-=======
-
-.insignia-atletica-mini {
-    width: 60px;      
-    height: 60px;
-    margin-left: 6px; 
-    vertical-align: right; 
-    object-fit: contain;
-    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
-
-}
-
-.insignia-atletica-mini.badge-especial {
-    width: 100px !important; 
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
-    margin-left: 6px;
-    vertical-align: right; 
-    object-fit: contain;
-}
-
-
-
-
-
-
->>>>>>> 9899676f4c0d3c40576b88d24664cc8551fc7dc9

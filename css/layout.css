@@ -29,8 +29,7 @@ header h1 {
 
 .header-content {
     width: 100%;
-    max-width: 1200px;
-    /* Largura máxima ideal para PC */
+    max-width: 1000px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,7 +37,6 @@ header h1 {
 
 
 /* --- ESTILO BASE DOS ÍCONES --- */
-
 .header-icons {
     display: flex;
     gap: 15px;
@@ -58,14 +56,12 @@ header h1 {
     color: var(--dourado) !important;
     font-size: 1.6rem;
     transition: all 0.3s ease;
-    /* Para o ícone mudar de cor e tamanho suavemente */
 }
 
 /* HOVER GERAL */
 .header-icons a:hover i {
     color: #fff !important;
     transform: scale(1.3);
-    /* Cresce 30% */
 }
 
 /*  HOVER ESPECÍFICO DA ENGRENAGEM  */
@@ -373,7 +369,6 @@ footer a {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 4px solid #ffbc00;
-    /* A famosa bordinha amarela */
     padding: 15px;
     border-radius: 8px;
     display: flex;
@@ -416,7 +411,7 @@ footer a {
 .popup-notificacao {
     position: fixed;
     width: 90%;
-    width: 250px;
+    width: 200px;
     height: 90px;
     right: 20px;
     bottom: 30px;
@@ -523,7 +518,7 @@ footer a {
     z-index: 10;
 }
 
-/* Animação para chamar atenção (opcional, mas fica top) */
+
 @keyframes pulsarNotif {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -531,7 +526,7 @@ footer a {
 }
 
 .notificacao-wrapper {
-    position: relative; /* CRUCIAL: Sem isso o número foge para o canto */
+    position: relative; /* Sem isso o número foge para o canto */
     display: inline-flex;
     align-items: center;
     justify-content: center;

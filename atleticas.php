@@ -21,8 +21,6 @@ $total_habitantes = mysqli_num_rows($res);
 ?>
 
 
-    
-
 <main>
     <section class="comunidade-topo">
         <img src="badges/<?php echo $atletica_id; ?>.png" class="img-comunidade-grande" onerror="this.src='badges/default.png'">
