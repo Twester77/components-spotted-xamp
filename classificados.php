@@ -125,8 +125,6 @@ include 'includes/navbar.php';
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">MED.VETERINÁRIA</p>
             </div>
 
-
-
         </div>
     </section>
 

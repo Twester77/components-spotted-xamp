@@ -25,7 +25,7 @@ include 'includes/header.php';
             <div style="font-size: 40px; margin-bottom: 10px;">🎓</div>
             
             <p style="color: #fff; margin-bottom: 25px; font-size: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                E aí, <span style="color: #ffbc00; font-weight: bold;"><?php echo $_SESSION['usuario_nome']; ?></span>! <br>
+                E aí, <span style="color: #ffbc00; font-weight: bold;"><?php echo $_SESSION['usuario_nome'] ?? 'Estudante'; ?></span>! <br>
                 <span style="font-size: 16px; opacity: 0.8;">Bem-vindo à Fenda, o QG virtual da UNIFEV.</span>
             </p>
             
@@ -111,5 +111,5 @@ include 'includes/header.php';
     </article>
 </main>
 
-</div>
+
 <?php include 'includes/footer.php'; ?>

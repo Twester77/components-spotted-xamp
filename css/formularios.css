@@ -4,9 +4,7 @@
 }
 
 
-/* ======================================================
-   ESTRUTURA DA PÁGINA DE POSTAGEM / EDIÇÃO
-   ====================================================== */
+/* ESTRUTURA DA PÁGINA DE POSTAGEM / EDIÇÃO */
 
 .main-novo-post {
 
@@ -15,12 +13,9 @@
     align-items: center !important;
     width: 95% !important;
     max-width: 550px !important;
-    /* O "quadradinho" que você queria */
     margin: 40px auto !important;
-    /* Centraliza e dá respiro */
     padding: 30px !important;
     background: #0a0a0a38 !important;
-    /* O fundo pretão sólido de volta */
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
     border-radius: 20px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
@@ -110,7 +105,7 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    height: clamp(170px, 25vw, 300px) !important;
+    height: clamp(180px, 25vw, 300px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
@@ -275,6 +270,86 @@ textarea {
     transform: scale(1.05);
 }
 
+/* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
+
+.sessao-publicar {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 30px auto;
+    max-width: 600px; 
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+
+}
+
+.titulo-publicar {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--dourado);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.nota-seguranca {
+    background: rgba(252, 144, 12, 0.1);
+    border-left: 4px solid #fc900c;
+    padding: 10px;
+    font-size: 0.85rem;
+    color: #eee;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+/* Ajuste dos inputs dentro do formulário */
+.form-publicar .input-group {
+    margin-bottom: 15px;
+}
+
+.fenda-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.fenda-input:focus {
+    border-color: var(--dourado);
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+}
+
+.fenda-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* O Botão de Publicar */
+.btn-lancar {
+    width: 100%;
+    background: var(--dourado);
+    color: black;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-lancar:hover {
+    background: #ffae00;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
+}
+
+
 
 /* ESTILO DOS BOTÕES DE EDIÇÃO */
 
@@ -291,7 +366,6 @@ textarea {
     transition: transform 0.3s ease;
 }
 
-
 .avatar-pequeno {
     width: 120px;
     height: 120px;
@@ -299,7 +373,6 @@ textarea {
     border-radius: 50%;
     border: 3px solid #ff7011;
 }
-
 
 .avatar:hover {
     transform: scale(1.1);
@@ -316,7 +389,6 @@ textarea {
 
 
 /* 1. Botão da Câmera (Capa) */
-
 .perfil-header-container {
     width: 100%;
     max-width: 1200px;
@@ -371,7 +443,7 @@ textarea {
 .capa-wrapper.viewer {
     width: 100% !important;
     height: 300px !important;
-    min-height: 200px !important;
+    min-height: 300px !important;
     overflow: hidden !important;
     border-radius: 15px 15px 0 0 !important;
 }
@@ -381,7 +453,7 @@ textarea {
     height: 100% !important;
     object-fit: cover !important;
     object-position: center 20% !important;
-    height: clamp(180px, 25vw, 300px) !important;
+    height: clamp(180px, 25vw, 350px) !important;
 }
 
 
@@ -396,8 +468,8 @@ textarea {
 
 .avatar-wrapper {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     margin: -60px auto 0 auto;
     z-index: 10;
 }
@@ -408,8 +480,8 @@ textarea {
     bottom: 5px;
     background: var(--dourado);
     color: #000;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -487,6 +559,18 @@ textarea {
     filter: brightness(1.1);
 }
 
+
+.login-btn:focus, 
+.container input:focus {
+    outline: none !important;
+}
+
+/* Tira o azul chato do Checkbox no Mobile */
+input[type="checkbox"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .btn-salvar-perfil {
     background: linear-gradient(135deg, #08d888, #05a870);
     color: white;
@@ -518,7 +602,7 @@ textarea {
     min-width: 140px; 
     padding: 10px 25px !important;
     white-space: nowrap !important;
-    font-size: clamp(0.55rem, 2vw, 0.8rem) !important;
+    font-size: clamp(0.7rem, 2vw, 0.9rem) !important;
     font-weight: 800;
     text-transform: uppercase;
     text-decoration: none !important;
@@ -643,7 +727,7 @@ textarea {
 .stats-perfil span {
     color: #888;
     text-transform: uppercase;
-    font-size: 0.75rem;
+    font-size: 1rem;
     letter-spacing: 1px;
 }
 
@@ -679,13 +763,69 @@ textarea {
     z-index: 10;
 }
 
-/* Especificidade máxima para vencer o sequestrador do layout.css */
-main.container-busca form input[type="text"] {
-    background: rgba(255, 255, 255, 0.1) !important; 
-    border: 1px solid var(--dourado) !important;
-    outline: none !important; 
-    padding: 12px 15px !important;
-    border-radius: 8px !important;
-    
+
+/* ============================================================
+   PADRONIZAÇÃO DEFINITIVA DO LOGIN (FENDA UNIFEV)
+   ============================================================ */
+
+/* 1. O Container Principal (Onde ficam as fotos e os campos) */
+form[action="confirma-login.php"] .container {
+    background: rgba(0, 0, 0, 0.4) !important; 
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 15px !important;
+    padding: 25px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    margin-top: 20px !important;
 }
 
+/* 2. Os Labels (E-mail e Senha - Texto em cima) */
+form[action="confirma-login.php"] label b {
+    color: #ddc80e !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+/* 3. Estilizando os Inputs (E-mail e Senha) */
+form[action="confirma-login.php"] .input-group {
+    border: none !important;
+    margin-bottom: 15px !important;
+    display: flex;
+    flex-direction: column;
+}
+
+form[action="confirma-login.php"] input[type="text"],
+form[action="confirma-login.php"] input[type="password"] {
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.08) !important; 
+    color: white !important;
+    border: 2px solid rgba(255, 188, 0, 0.5) !important; 
+    border-radius: 10px !important;
+    padding: 12px 15px !important;
+    font-size: 1rem !important;
+    margin-top: 5px !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    transition: 0.3s ease;
+}
+
+/* 4. Efeito de Foco */
+form[action="confirma-login.php"] input:focus {
+    border-color: #ddc80e !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 0 12px rgba(221, 200, 14, 0.3) !important;
+}
+
+/* 5. Checkbox e Links Inferiores */
+#terms {
+    accent-color: #ddc80e !important; 
+}
+
+/* Garante que o texto de "Cadastre-se" não suma no fundo escuro */
+form[action="confirma-login.php"] a {
+    color: #fc900c !important;
+    text-decoration: none;
+    font-weight: bold;
+}

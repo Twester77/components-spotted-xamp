@@ -30,8 +30,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perdidos" style="max-width: 1000px; margin: 90px auto 40px auto; padding: 20px;">
-    <?php if (!$usuario_logado): ?>
+<main class="main-perdidos" style="width: 100% !important; max-width: 1000px; margin: 50px auto; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
         <div class="sessao-login-top" style="margin-bottom: 40px;">
             <?php include 'includes/login.php'; ?>
         </div>
@@ -45,23 +44,23 @@ include 'includes/bolhas.php';
     <?php endif; ?>
 
     <article class="conteudo-principal">
-        <h2 style="font-size: 2.0rem; text-align: center; margin-bottom: 15px; margin-top: 30px; color: #fff;">
+        <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 10px; margin-top: 30px;">
             Achados & Perdidos
         </h2>
-    
+
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
             <img src="imagensfoto/capa-achados-e-perdidos.jpg"
                 alt="Capa do Achados e Perdidos"
                 style="width: 100%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
 
-            <div style="font-size: 18px; font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 30px;">
+            <div style="font-size: 16px; font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 30px;">
                 <blackquote> Perdeu o juízo? Disso a gente não cuida. Mas se perdeu a chave ou a garrafinha, você está no lugar certo!</blackquote>
             </div>
         </div>
     </article>
 
-    <section class="sessao-publicar">
-        <h3 class="titulo-publicar">Perdeu ou Achou algo?</h3>
+<section class="sessao-publicar" style="width: 100% !important; margin: 20px 0 !important; border-radius: 0 !important;">
+            <h3 class="titulo-publicar">Perdeu ou Achou algo?</h3>
 
         <div class="nota-seguranca">
             <strong>⚠️ NOTA DE SEGURANÇA:</strong> Ao postar fotos, por favor, cubra dados sensíveis.
@@ -90,10 +89,10 @@ include 'includes/bolhas.php';
     </section>
 
     <div class="filtros-perdidos" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;">
-            <a href="perdidos.php?filtro=todos" class="btn-filtro <?php echo ($filtro == 'todos') ? 'ativo' : ''; ?>">Todos</a>
-            <a href="perdidos.php?filtro=perdi" class="btn-filtro <?php echo ($filtro == 'perdi') ? 'ativo' : ''; ?>">❌ Só Perdidos</a>
-            <a href="perdidos.php?filtro=achei" class="btn-filtro <?php echo ($filtro == 'achei') ? 'ativo' : ''; ?>">✅ Só Achados</a>
-        </div>
+        <a href="perdidos.php?filtro=todos" class="btn-filtro <?php echo ($filtro == 'todos') ? 'ativo' : ''; ?>">Todos</a>
+        <a href="perdidos.php?filtro=perdi" class="btn-filtro <?php echo ($filtro == 'perdi') ? 'ativo' : ''; ?>">❌ Só Perdidos</a>
+        <a href="perdidos.php?filtro=achei" class="btn-filtro <?php echo ($filtro == 'achei') ? 'ativo' : ''; ?>">✅ Só Achados</a>
+    </div>
 
     <section class="feed-filtrado" style="margin-top: 30px;">
         <div class="container-feed">
@@ -103,33 +102,32 @@ include 'includes/bolhas.php';
             ?>
                     <article class="spotted-card perdidos-item <?php echo ($linha['subcategoria'] == 'achei') ? 'card-achado' : 'card-perdido'; ?>">
                         <div class="card-header">
-                            <div class="card-header">
-                                <span class="category-tag">
-                                    <?php if ($linha['subcategoria'] == 'achei'): ?>
-                                        <span class="badge-achado"><i class="fas fa-check-circle"></i> #ACHADO</span>
-                                    <?php else: ?>
-                                        <span class="badge-perdido"><i class="fas fa-search"></i> #PERDIDO</span>
-                                    <?php endif; ?>
+                            <span class="category-tag">
+                                <?php if ($linha['subcategoria'] == 'achei'): ?>
+                                    <span class="badge-achado"><i class="fas fa-check-circle"></i> #ACHADO</span>
+                                <?php else: ?>
+                                    <span class="badge-perdido"><i class="fas fa-search"></i> #PERDIDO</span>
+                                <?php endif; ?>
 
-                                    <small>@<?php echo !empty($linha['username']) ? $linha['username'] : "Anônimo"; ?></small>
-                                </span>
+                                <small>@<?php echo !empty($linha['username']) ? $linha['username'] : "Anônimo"; ?></small>
+                            </span>
 
-                                <span class="data-post" style="float: right; opacity: 0.6; font-size: 14px;">
-                                    <?php echo date('d/m', strtotime($linha['data_post'])); ?>
-                                </span>
+                            <span class="data-post" style="float: right; opacity: 0.6; font-size: 14px;">
+                                <?php echo date('d/m', strtotime($linha['data_post'])); ?>
+                            </span>
 
-                                <div style="clear: both;"></div>
-                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
 
-                            <div class="card-body">
-                                <p><?php echo $linha['mensagem']; ?></p>
-                            </div>
+                        <div class="card-body">
+                            <p><?php echo $linha['mensagem']; ?></p>
+                        </div>
 
-                            <div class="card-footer" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                                <a href="post.php?id=<?php echo $linha['id']; ?>" class="link-fofoca">
-                                    <i class="fas fa-comment-dots"></i> Ver detalhes / Ajudar a encontrar →
-                                </a>
-                            </div>
+                        <div class="card-footer" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                            <a href="post.php?id=<?php echo $linha['id']; ?>" class="link-fofoca">
+                                <i class="fas fa-comment-dots"></i> Ver detalhes / Ajudar a encontrar →
+                            </a>
+                        </div>
                     </article>
                 <?php endwhile;
             else: ?>

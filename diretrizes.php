@@ -11,24 +11,25 @@ include 'includes/bolhas.php';
 </nav>
 <style>
   article p {
-    margin-bottom: 25px; /* Separa os blocos de texto */
-    display: block;      /* Garante que ele ocupe a linha toda */
+    margin-bottom: 25px; 
+    display: block;      
   }
   article h3 {
-    margin-top: 40px;    /* Dá um espaço maior antes de cada título de seção */
+    margin-top: 40px;    
     margin-bottom: 15px;
-    color: var(--dourado); /* Se você tiver essa variável */
+    color: var(--dourado); 
   }
 </style>
 
   <main style="max-width: 1000px; margin: auto;">
     <article>
-  <h2 style="font-size: 2.0rem; text-align: center; margin-bottom: 20px; margin-top: 30px;"> TERMOS DE USO E DIRETRIZES DE CONDUTA - A FENDA (SPOTTED UNIFEV) </h2>
-    </article>
+<h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 15px; margin-top: 25px;">
+   TERMOS E DIRETRIZES DE SEGURANÇA
+</h2>
   <div style="display: flex; gap: 8px; justify-content:center;">
-   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.82; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.8; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
-  <article style="color: #c4b91bee; font-size: 18px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
+  <article style="color: #dacd1cee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.
@@ -39,7 +40,7 @@ include 'includes/bolhas.php';
    <h3> 3. Proteção de Dados e Sigilo (RA e Dados Sensíveis)</h3>
    Para garantir a segurança dos alunos:
    Proibição de Dados Acadêmicos: É estritamente proibida a divulgação de RA (Registro Acadêmico), CPF, número de celular pessoal ou endereços residenciais sem autorização expressa da pessoa citada.
-   Sigilo de Identidade: A plataforma se compromete com o anonimato nas ferramentas "Mensagem Anônima", porém, cooperará com autoridades judiciais caso haja crimes de calúnia, injúria ou difamação, conforme a legislação brasileira * . A administração reserva-se o direito de remover, sem aviso prévio, qualquer mensagem anônima que contenha ataques diretos a honra, exposição de RAs ou dados privados, visando manter a integridade da comunidade universitária.
+   * Sigilo de Identidade: A plataforma se compromete com o anonimato nas ferramentas "Mensagem Anônima", porém, cooperará com autoridades judiciais caso haja crimes de calúnia, injúria ou difamação, conforme a legislação brasileira * . <p> A administração reserva-se o direito de remover, sem aviso prévio, qualquer mensagem anônima que contenha ataques diretos a honra, exposição de RAs ou dados privados, visando manter a integridade da comunidade universitária. </p>
    <p><strong> * Os registros de acesso (IP, data e hora) serão mantidos por 180 dias, conforme exigido pelo Art. 15 da Lei 12.965/14 (Marco Civil da Internet)*. </strong></p>
    <h3> 4. Código de Conduta e Crimes Virtuais</h3>
    Não serão toleradas publicações que configurem:

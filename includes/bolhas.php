@@ -1,7 +1,7 @@
 <div class="bubbles-container">
     <?php
     // Gera 20 bolhas automaticamente
-    for ($i = 0; $i < 20; $i++) {
+    for ($i = 0; $i < 15; $i++) {
         $left = rand(0, 100); // Posição horizontal aleatória (0 a 100%)
         $delay = rand(0, 8);  // Atraso aleatório para não subirem todas juntas
         $size = rand(10, 40); // Tamanhos diferentes para dar profundidade

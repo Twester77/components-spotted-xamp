@@ -33,7 +33,7 @@
             if (modal) modal.style.display = 'none';
         };
 
-        // --- 2. SOM DO OCEANO (FADE IN) ---
+        // --- 2. SOM DO OCEANO (COM FADE IN) ---
         document.addEventListener('click', function() {
             var audio = document.getElementById('som-oceano');
             if (!audio || !audio.paused) return;
@@ -105,23 +105,54 @@
         atualizarContadorAlertas();
     });
 
-    // Função de Popup Global
-    function mostrarPopup(mensagem) {
-        const popup = document.createElement('div');
-        popup.className = 'notificacao-popup';
-        popup.innerHTML = `
-            <div style="font-size: 20px;">🔔</div>
-            <div style="flex-grow: 1;">
-                <strong style="display: block; font-size: 13px;">Nova Menção!</strong>
-                <span style="font-size: 13px;">${mensagem}</span>
-            </div>
-            <span onclick="this.parentElement.remove()" style="cursor:pointer; font-weight:bold; margin-left:10px;">×</span>
-        `;
-        popup.onclick = function(e) { if(e.target.innerText !== '×') window.location.href = 'notificacoes.php'; };
-        document.body.appendChild(popup);
-        setTimeout(() => { if (document.body.contains(popup)) popup.remove(); }, 8000);
-    }
+// Função de Popup Global 
+function mostrarPopup(mensagem) {
+    const popup = document.createElement('div');
+    popup.className = 'notificacao-popup'; // Aqui ele puxa o CSS
     
+    popup.innerHTML = `
+        <div style="font-size: 20px;">🔔</div>
+        <div style="flex-grow: 1;">
+            <strong style="display: block; font-size: 13px; color: var(--dourado);">Nova Interação!</strong>
+            <span style="font-size: 13px;">${mensagem}</span>
+        </div>
+        <span onclick="event.stopPropagation(); this.parentElement.remove()" style="cursor:pointer; font-weight:bold; padding: 5px;">×</span>
+    `;
+
+    popup.onclick = function(e) { 
+        if(e.target.innerText !== '×') window.location.href = 'notificacoes.php'; 
+    };
+
+    document.body.appendChild(popup);
+
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+        popup.style.opacity = '0';
+        popup.style.transform = 'translateX(100px)';
+        setTimeout(() => popup.remove(), 500);
+    }, 5000);
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Função para resetar e aplicar o sistema de expansão
+    function configurarPosts() {
+        document.querySelectorAll('.post-content').forEach(post => {
+            // Se o conteúdo for maior que a altura travada
+            if (post.scrollHeight > post.offsetHeight) {
+                post.style.cursor = "pointer";
+                
+                // Adiciona o evento de clique se já não tiver
+                post.onclick = function() {
+                    this.classList.toggle('expandido');
+                };
+            }
+        });
+    }
+
+    // Roda uma vez ao carregar
+    setTimeout(configurarPosts, 500);
+});
+
     </script>
 </footer>
 </body>

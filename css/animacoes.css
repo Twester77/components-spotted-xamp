@@ -9,7 +9,7 @@
                 rgba(255, 255, 255, 0.2) 60%, 
                 rgba(255, 255, 255, 0.05) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 65%;
+    border-radius: 60%;
     animation: subirEBalancar 8s infinite ease-in; 
     z-index: 1;
     pointer-events: none;
@@ -95,3 +95,5 @@
     from { transform: translate(-50%, -150px); opacity: 0; }
     to { transform: translate(-50%, 0); opacity: 1; }
 }
+
+

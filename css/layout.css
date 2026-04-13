@@ -19,7 +19,7 @@ header {
 }
 
 header h1 {
-    font-size: 2.1rem;
+    font-size: 2.2rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: #fff;
@@ -54,7 +54,7 @@ header h1 {
 
 .header-icons i {
     color: var(--dourado) !important;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     transition: all 0.3s ease;
 }
 
@@ -89,74 +89,52 @@ header h1 {
 main article {
     width: 100% !important;
     text-align: left !important;
+    margin: 10px auto;
+    padding: 0 15px;   
+    width: 100%;
+    box-sizing: border-box; 
 }
 
 main {
     max-width: 800px;
-    margin: 20px auto;
-    padding: 0 20px;
-    flex: 1 0 auto;
-    /* O segredo! O main vira um "elástico" que preenche o vazio */
+    margin: 10px auto;
+    padding: 0 15px !important; /* Isso devolve o respiro nas laterais */
     width: 100%;
+    box-sizing: border-box;
 }
 
-main,
-.navbar,
-footer {
-    position: relative;
-    z-index: 10;
-}
-
-nav,
-.navbar {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px 0;
-    /* Diminua o primeiro número se estiver muito largo */
-}
-
-
-.menu {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    gap: 20px;
-}
-
+/* --- MENU NAVBAR (VERSÃO FINAL UNIFICADA) --- */
 .menu {
     display: flex;
     flex-wrap: wrap;
     list-style: none;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    padding: 10px;
+    padding: 5px; 
     gap: 8px;
     border-radius: 5px;
     width: 100%;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px; 
     position: relative;
     z-index: 9999;
-    /* Garante que fique acima de tudo */
+    background: rgba(0, 0, 0, 0.2); 
 }
-
 
 .menu-item a {
     color: #ffffff !important;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.5rem !important;
-    padding: 15px 20px;
+    font-size: 1.6rem !important; 
+    padding: 8px 18px;           
     display: block;
     transition: 0.3s;
     border-radius: 5px;
 }
 
-
-.menu-item:hover>a {
-    background: rgba(255, 255, 255, 0.034);
+.menu-item:hover > a {
+    background: rgba(255, 255, 255, 0.151);
     border-radius: 5px;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
 }
 
 
@@ -166,7 +144,7 @@ nav,
 
 .dropdown>a::after {
     content: ' ▼';
-    font-size: 10px;
+    font-size: 12px;
     opacity: 0.5;
 }
 
@@ -181,7 +159,7 @@ nav,
     position: absolute;
     top: 100%;
     left: 0;
-    background: #064ea0;
+    background: #04458ffd;
     min-width: 100px;
     padding: 5px 0;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
@@ -192,21 +170,24 @@ nav,
     backdrop-filter: blur(2px);
 }
 
+
 .submenu li a {
     padding: 10px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.4rem !important; 
+    font-weight: normal !important; 
+    text-align: left; 
 }
 
 .submenu li {
-    padding: 10px 15px;
-    padding: 12px 20px !important;
-    line-height: 1.4;
+    padding: 8px 15px !important;
+    line-height: 1.2;
 }
 
 .submenu li:hover {
     background: rgba(255, 255, 255, 0.199);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
 
@@ -408,28 +389,42 @@ footer a {
     background: rgba(255, 187, 0, 0);
 }
 
-.popup-notificacao {
+/* ESTILO DO CARD DE NOTIFICAÇÃO (TOAST) */
+.notificacao-popup {
     position: fixed;
-    width: 90%;
-    width: 200px;
-    height: 90px;
-    right: 20px;
-    bottom: 30px;
+    bottom: 25px;
+    right: 25px;
+    background: rgba(10, 10, 10, 0.95); /* Fundo escuro igual ao seu formulário */
     color: white;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid var(--dourado);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    z-index: 9999;
+    padding: 15px 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 188, 0, 0.3); /* Borda dourada suave */
+    border-left: 5px solid var(--dourado);     /* Destaque dourado na lateral */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    z-index: 10001;
     display: flex;
     align-items: center;
     gap: 12px;
-    animation: deslizar 0.5s ease-out;
-    /* Usando a sua animação */
+    min-width: 280px;
+    cursor: pointer;
+    animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
 }
 
-/* Seção de Publicar */
+/* Animação de entrada (surgindo da direita) */
+@keyframes entrarNotif {
+    from { transform: translateX(100%) opacity 0; }
+    to { transform: translateX(0) opacity 1; }
+}
 
+.notificacao-popup:hover {
+    transform: translateY(-5px);
+    border-color: var(--dourado);
+    box-shadow: 0 15px 35px rgba(255, 188, 0, 0.2);
+}
+
+
+/* Seção de Publicar */
 .sessao-publicar {
     padding: 30px;
     border-radius: 20px;
@@ -541,22 +536,119 @@ footer a {
 
 
 
-/* Foca no input da página de busca */
-main.container-busca form input[type="text"] {
-    background: rgba(255, 255, 255, 0.15) !important; 
-    border: 1px solid var(--dourado) !important;      
-    color: #ffffff !important;                        
-    padding: 12px 15px !important;
-    border-radius: 10px !important;
-    font-size: 16px !important;                      
+/*  SESSÃO DE BUSCA - FORMULÁRIO E RESULTADOS  */
+
+/* 1. O Formulário (Tamanho Desktop e Mobile) */
+
+.form-busca-fenda {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    gap: 8px !important;
     width: 100% !important;
-    -webkit-text-fill-color: #ffffff !important;     
+    max-width: 600px !important; 
+    margin: 25px auto !important;
+    background: transparent !important; 
+    border: none !important;
+    min-height: 70px;
+}
+
+.form-busca-fenda input[type="text"] {
+    flex: 1 !important;
+    min-width: 0 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+    border: 2px solid rgba(255, 188, 0, 0.5) !important; 
+    outline: none !important; 
+    box-shadow: none !important; 
+    -webkit-appearance: none !important;
+    appearance: none ;
+    border-radius: 10px !important;
+    padding: 15px 20px !important; 
+    font-size: 1.2rem !important; 
+    box-sizing: border-box !important;
+}
+
+/* Quando você clica para digitar */
+.form-busca-fenda input[type="text"]:focus {
+    border-color: #fc900c !important; 
+    background: rgba(255, 255, 255, 0.12) !important;
+    outline: none !important;
+    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3) !important; 
+}
+
+.form-busca-fenda button {
+    flex: 0 0 auto !important;
+    min-width: 75px !important; 
+    background: #fc900c !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 900 !important; 
+    font-size: 1rem !important;
+    cursor: pointer !important;
+    padding: 0 20px !important;
     outline: none !important;
 }
 
-main.container-busca form input::placeholder {
-    color: rgba(255, 255, 255, 0.6) !important;
-    -webkit-text-fill-color: rgba(255, 255, 255, 0.6) !important;
+/* 2. Lista de Resultados  */
+.lista-resultados {
+    width: 100% !important;
+    max-width: 600px !important;
+    margin: 20px auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+/* 3. O Card de Usuário  */
+.user-card {
+    display: flex !important;
+    align-items: center !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+}
+
+.user-card:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    transform: translateX(5px); 
+}
+
+/* 4. A Foto do Usuário (Tamanho fixo anti-erro) */
+.avatar-busca {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important; 
+    margin-right: 15px !important;
+    border: 2px solid var(--dourado) !important;
+    flex-shrink: 0 !important;
+}
+
+/* 5. Textos dentro do Card */
+.nome-user {
+    display: block !important;
+    color: #fff !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+}
+
+.username-user {
+    color: var(--dourado) !important;
+    font-size: 1rem !important;
+    opacity: 0.8;
 }
 
 
+.fenda-glass-container {
+    width: 90% !important;
+    max-width: 400px !important; /* Garante que não estique demais no celular */
+    margin: 40px auto !important;
+    padding: 25px !important;
+    background: rgba(255, 255, 255, 0.1) !important; /* Efeito vidro */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}

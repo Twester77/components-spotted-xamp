@@ -16,7 +16,7 @@ html, body {
     min-height: 100vh; 
     background-color: var(--cor-principal); 
     color: #ffffff;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;   
     font-size: 16px;
@@ -27,6 +27,14 @@ body {
     display: flex;
     flex-direction: column; 
     min-height: 100vh;
+}
+
+main {
+    flex: 1 0 auto; 
+}
+
+footer {
+    flex-shrink: 0;
 }
 
 html {

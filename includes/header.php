@@ -26,7 +26,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
 
 <body>
     <header>
-        <h1>A Fenda </h1>
+        <h1>A Fenda - Spotted Universitário </h1>
 
         <?php
         $pagina_atual = basename($_SERVER['PHP_SELF']);
