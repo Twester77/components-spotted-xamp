@@ -5,7 +5,7 @@ session_start();
 // 1. SÓ EXECUTA SE VIER DO FORMULÁRIO 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
     
-    // 2. Limpeza total (O trim )
+    // 2. Limpeza total (O tal do trim )
     $email_bruto = trim($_POST['email']);
     $email = mysqli_real_escape_string($conn, $email_bruto);
     $senha = $_POST['senha']; 

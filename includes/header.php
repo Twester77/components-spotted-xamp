@@ -10,7 +10,6 @@ $usuario_logado = isset($_SESSION['usuario_id']);
 
 <head>
     <meta charset="UTF-8">
-    <meta charset="UTF-16">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Fenda - Spotted Universitário (Votuporanga)</title>
     <link rel="stylesheet" href="css/root.css">
@@ -55,10 +54,11 @@ $usuario_logado = isset($_SESSION['usuario_id']);
                         $total_n = $res_count['total'];
 
                         if ($total_n > 0): ?>
-                            <span class="badge-alerta">
+                            <span id="badge-alertas" class="badge-alerta">
                                 <?php echo $total_n; ?>
                             </span>
                     <?php endif;
+                    
                     }
 
                     ?>

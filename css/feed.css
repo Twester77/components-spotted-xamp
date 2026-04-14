@@ -280,6 +280,7 @@
     gap: 10px;
     width: 100%;
     flex-wrap: wrap;
+    max-width: 600px;
 }
 
 .card-body p {
@@ -418,8 +419,8 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.nav-item-notif {
-    position: relative;
+.notificacao-wrapper {
+    position: relative; /* Isso faz o badge ficar preso ao sino */
     display: inline-block;
 }
 
@@ -477,44 +478,6 @@
 }
 
 
-/* Efeito de Hover notificações que não quebra a borda */
-
-.link-notificacao:hover .card-notificacao {
-    background: rgba(255, 188, 0, 0.08);
-    border-color: rgba(255, 188, 0, 0.3);
-    border-left-width: 6px;
-    transform: translateX(5px);
-    /* Desloca pro lado em vez de tremer */
-}
-
-.notificacao-conteudo p {
-    margin: 0;
-    font-size: 1.3rem;
-    color: #eee;
-    line-height: 1.4;
-}
-
-.notificacao-conteudo small {
-    color: #888;
-    display: block;
-    margin-top: 5px;
-}
-
-.seta-notificacao {
-    color: #ffbc00;
-    opacity: 0.5;
-    font-size: 0.9rem;
-}
-
-/* Estilo para notificações que ainda não foram abertas */
-.card-notificacao.nova {
-    background: rgba(255, 188, 0, 0.05);
-}
-
-.card-notificacao {
-    max-width: 800px;
-    font-size: 1.2rem;
-}
 
 
 
@@ -699,11 +662,7 @@
     filter: brightness(1.1) drop-shadow(0 0 12px var(--dourado)) !important;
 }
 
-.card-notificacao:hover {
-    background-color: #252525 !important;
-    transform: scale(1.05);
-    transition: all 0.2s ease;
-}
+
 
 
 
@@ -883,7 +842,7 @@
         margin-bottom: 20px !important;
         border-width: 2px !important;
     }
-    
+
     h1,
     .titulo-fenda {
         font-size: 1.8rem !important;
@@ -901,17 +860,12 @@
 }
 
 .bio-texto {
-    max-width: 700px;
-    /* largura máxima confortável */
+    max-width: 700px;   /* largura máxima confortável */
     margin: 20px auto;
-    /* centraliza */
     padding: 20px;
-    /* respiro lateral */
-    word-wrap: break-word;
-    /* quebra palavras muito longas */
+    word-wrap: break-word; /* quebra palavras muito longas */
     overflow-wrap: break-word;
     white-space: normal;
-    /* garante quebra de linha */
     text-align: center;
     color: #ddd;
     line-height: 1.5;
@@ -991,13 +945,22 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .popup-notificacao {
-        left: 5%;
-        right: 5%;
-        width: 90%;
-        bottom: 20px;
+   .notificacao-popup {
+        width: 94%;
+        left: 3%;
+        right: 3%;
+        padding: 15px 20px;
     }
 
+   /*Som para telas menores */
+    .audio-choices-container {
+        flex-direction: column;
+    }
+    .btn-audio-choice {
+        width: 100%;
+    }
+
+    
 
     /* O formulário agora vai de ponta a ponta */
     .sessao-publicar {
@@ -1356,13 +1319,10 @@
         height: 55px;
     }
 
-    .info-usuario-section {
-        padding-top: 0 !important;
-    }
-
+   
     .bio-texto {
         width: 90% !important;
-        margin: 20px auto 30px auto !important;
+        margin: 10px auto 20px auto !important;
         text-align: center;
         font-size: 0.9rem !important;
         word-wrap: break-word !important;
@@ -1375,7 +1335,7 @@
     width: 90% !important;
     margin: 20px auto 30px auto !important;
     text-align: center;
-    font-size: 0.9rem !important;
+    font-size: 1.1rem !important;
 }
 
 /* STATS (Seguidores) */

@@ -153,7 +153,6 @@ main {
 }
 
 
-
 .submenu {
     display: none;
     position: absolute;
@@ -333,8 +332,6 @@ footer a {
 
 
 
-
-
 /* Efeito de Hover notificações que não quebra a borda */
 
 /* --- ESTILIZAÇÃO DAS NOTIFICAÇÕES (VERSÃO FENDA) --- */
@@ -346,6 +343,7 @@ footer a {
     transition: transform 0.2s ease;
 }
 
+
 .card-notificacao {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -356,6 +354,12 @@ footer a {
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
+}
+
+.card-notificacao:hover {
+    background-color: #252525 !important;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
 }
 
 .link-notificacao:hover .card-notificacao {
@@ -389,6 +393,8 @@ footer a {
     background: rgba(255, 187, 0, 0);
 }
 
+
+
 /* ESTILO DO CARD DE NOTIFICAÇÃO (TOAST) */
 .notificacao-popup {
     position: fixed;
@@ -396,7 +402,7 @@ footer a {
     right: 25px;
     background: rgba(10, 10, 10, 0.95); /* Fundo escuro igual ao seu formulário */
     color: white;
-    padding: 15px 20px;
+    padding: 18px 25px;
     border-radius: 15px;
     border: 1px solid rgba(255, 188, 0, 0.3); /* Borda dourada suave */
     border-left: 5px solid var(--dourado);     /* Destaque dourado na lateral */
@@ -404,8 +410,8 @@ footer a {
     z-index: 10001;
     display: flex;
     align-items: center;
-    gap: 12px;
-    min-width: 280px;
+    gap: 20px;
+    min-width: 350px;
     cursor: pointer;
     animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transition: all 0.3s ease;
@@ -422,6 +428,103 @@ footer a {
     border-color: var(--dourado);
     box-shadow: 0 15px 35px rgba(255, 188, 0, 0.2);
 }
+
+.notificacao-popup strong {
+    font-size: 15px !important; /* Título mais visível */
+    margin-bottom: 3px;
+}
+
+
+
+
+/*  PAINEL DE ÁUDIO - A FENDA (ESTILO STEALTH) */
+
+/* Card que envolve as opções */
+.audio-settings-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 18px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* Container dos botões de Chuva/Onda/Mudo */
+.audio-choices-container {
+    display: flex; 
+    gap: 10px; 
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+/* Estilo Base dos Botões de Escolha */
+.btn-audio-choice {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #999;
+    padding: 10px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-audio-choice i {
+    margin-right: 5px; 
+    font-size: 0.9rem;
+}
+
+.btn-audio-choice:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ESTADO ATIVO: Quando o som está selecionado */
+.btn-audio-choice.active {
+    background: rgba(255, 188, 0, 0.15) !important;
+    border-color: #ddc80e !important; /* Cor Dourada da Fenda */
+    color: #ddc80e !important;
+    box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
+}
+
+/* Botão de Toggle (Radar/Notificações) */
+.btn-stealth-toggle {
+    background: rgba(255, 188, 0, 0.1);
+    border: 1px solid #ddc80e;
+    color: #ddc80e;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    min-width: 110px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Estado Mudo do Toggle */
+.btn-stealth-toggle.mudo {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #555;
+    color: #777;
+}
+
+.btn-stealth-toggle:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+}
+
 
 
 /* Seção de Publicar */
@@ -669,4 +772,63 @@ form[action="confirma-login.php"] input[type="password"] {
 .imgcontainer {
     text-align: center;
     margin-bottom: 20px;
+}
+
+
+/*  AJUSTE FINAL: PERFIL DO HABITANTE (PC & LANDSCAPE) */
+
+/* Alvos: Telas maiores que 1024px OU Tablets/Celulares deitados */
+@media screen and (min-width: 1025px), 
+       screen and (max-height: 600px) and (orientation: landscape) {
+
+    /* Centraliza e dá largura ao container principal no PC */
+    .main-perfil-container {
+        max-width: 900px !important;
+        margin: 40px auto !important;
+        background: rgba(13, 13, 13, 0.9) !important;
+        border-radius: 30px !important;
+        overflow: hidden !important;
+        border: 1px solid rgba(255, 188, 0, 0.1) !important;
+    }
+
+    /* Coloca os campos em duas colunas no Desktop */
+    .form-perfil-corpo {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important; /* Duas colunas iguais */
+        gap: 20px !important;
+        padding: 40px !important;
+        align-items: start !important;
+    }
+
+    /* Título, Bio e Controles ocupam as duas colunas (largura total) */
+    .titulo-pagina,
+    .campo-grupo:has(textarea),
+    .campo-grupo:has(.audio-settings-card),
+    .perfil-controles {
+        grid-column: span 2 !important;
+    }
+
+    /* Estilização dos botões para não ficarem gigantes no PC */
+    .btn-editar-atalho {
+        min-width: 250px !important;
+        max-width: 300px !important;
+    }
+}
+
+/*  CORREÇÃO DE TEXTO (BIO E USERNAME) */
+/* Impede que textos gigantes quebrem o layout em qualquer tela */
+.input-username-wrapper input,
+textarea[name="bio"] {
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+}
+
+/* Ajuste do Avatar no PC para não ficar "voando" em cima do texto */
+@media screen and (min-width: 1025px) {
+    .avatar-wrapper {
+        margin-top: -60px !important;
+        margin-left: 40px !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
 }

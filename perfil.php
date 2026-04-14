@@ -26,20 +26,20 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
 <main class="main-perfil-container <?php echo $classe_presenca; ?>">
     <?php if (isset($_GET['sucesso'])): ?>
-    <div id="toast-sucesso" class="toast-fenda">
-        <i class="fa-solid fa-circle-check"></i>
-        <span>Perfil atualizado com sucesso!</span>
-    </div>
+        <div id="toast-sucesso" class="toast-fenda">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Perfil atualizado com sucesso!</span>
+        </div>
 
-    <script>
-        // Faz o popup sumir suavemente após 4 segundos
-        setTimeout(() => {
-            const toast = document.getElementById('toast-sucesso');
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 500); // Remove do HTML após o fade
-        }, 4000);
-    </script>
-<?php endif; ?>
+        <script>
+            // Faz o popup sumir suavemente após 4 segundos
+            setTimeout(() => {
+                const toast = document.getElementById('toast-sucesso');
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500); // Remove do HTML após o fade
+            }, 4000);
+        </script>
+    <?php endif; ?>
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
             <div class="capa-wrapper">
@@ -110,11 +110,41 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <label>Sua Bio</label>
                 <textarea name="bio" maxlength="400" rows="3"><?php echo htmlspecialchars($dados['bio']); ?></textarea>
             </div>
+            <div class="campo-grupo" style="margin-top: 15px;">
+                <label>Configurações de Áudio</label>
+                <div class="audio-settings-card">
+
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Música de Fundo</span>
+                    <div class="audio-choices-container">
+                        <button type="button" id="btn-som-chuva" class="btn-audio-choice" onclick="mudarSomAmbiente('chuva')">Chuva</button>
+                        <button type="button" id="btn-som-ondas" class="btn-audio-choice" onclick="mudarSomAmbiente('ondas')">Ondas</button>
+                        <button type="button" id="btn-som-off" class="btn-audio-choice" onclick="mudarSomAmbiente('off')">Mudo</button>
+                    </div>
+
+                    <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
+
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
+                    <div class="audio-choices-container">
+                        <button type="button" id="btn-notif-padrao" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')">
+                            <i class="fas fa-dot-circle"></i> Padrão
+                        </button>
+                        <button type="button" id="btn-notif-resident" class="btn-audio-choice" onclick="mudarTemaNotif('resident')">
+                            <i class="fas fa-biohazard"></i> Biohazard
+                        </button>
+                        <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')">
+                            <i class="fas fa-crosshairs"></i> CS 
+                        </button>
+                        <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')">
+                            <i class="fas fa-bell-slash"></i> Mudo
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 10px; margin: 20px 0;">
                 <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-         <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
-            VER PERFIL PÚBLICO</a>  
-         </div>
+                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
+                    VER PERFIL PÚBLICO</a>
+            </div>
 
         </div>
     </form>

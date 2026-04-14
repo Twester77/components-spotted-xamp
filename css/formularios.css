@@ -148,8 +148,6 @@ form[action="confirma-login.php"] {
 
 
 
-
-
 /* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
 
 .titulo-pagina {
@@ -194,6 +192,7 @@ textarea {
     margin-bottom: 15px;
     display: block;
     font-family: 'Inter', sans-serif;
+    
 }
 
 
