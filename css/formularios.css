@@ -57,22 +57,55 @@
 
 /* --- PERFIL MODO DARK --- */
 
-.main-perfil-container {
-    max-width: 600px;
-    margin: 60px auto !important;
-    width: 95%;
-    min-height: 40px;
-    height: auto !important;
-    padding: 30px;
-    display: block;
-    position: relative;
-    background: #0a0a0a;
-    border-radius: 20px;
-    border: 2px solid #747474;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
+/* --- AJUSTE FINAL: CAPA E BIO (UNIFICADO) --- */
 
+.main-perfil-container {
+    background-color: #0d0d0d !important; /* Garante o preto no tablet */
+    border-radius: 20px !important;
+    overflow: hidden !important;
 }
+
+/* Capa: impede de achatar no tablet */
+.capa-wrapper {
+    width: 100% !important;
+    height: clamp(180px, 25vw, 300px) !important; 
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.img-capa-preview {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; 
+    object-position: center !important;
+}
+
+/* Bio: Centralizada e com limite de largura */
+.campo-grupo textarea#bio, 
+textarea[name="bio"] {
+    width: 100% !important; /* Ocupa a largura disponível... */
+    max-width: 400px !important; /* ...mas não passa disso no Tablet/PC */
+    min-height: 120px !important;
+    margin: 0 auto !important; /* CENTRALIZA no meio do formulário */
+    display: block !important;
+    box-sizing: border-box !important; /* Garante que o padding não estique a caixa */
+    padding: 15px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    line-height: 1.5 !important;
+    resize: none !important;
+}
+
+
+/* Centraliza o rótulo "Bio" também */
+.campo-grupo label[for="bio"] {
+    display: block !important;
+    text-align: center !important;
+    margin-top: 10px;
+}
+
 
 .bio-box {
     width: 100%;
@@ -85,14 +118,6 @@
     line-height: 1.5;
     font-style: italic;
 }
-
-.form-perfil-corpo {
-    padding: 20px;
-    padding-bottom: 40px;
-    background: #0a0a0a;
-
-}
-
 
 .container,
 .login-form,
@@ -120,6 +145,8 @@ form[action="confirma-login.php"] {
     object-fit: cover;
     object-position: center 20%;
 }
+
+
 
 
 
@@ -399,12 +426,6 @@ textarea {
     position: relative;
 }
 
-.capa-wrapper {
-    width: 100%;
-    height: 300px !important;
-    position: relative;
-    overflow: hidden;
-}
 
 /* Posicionando o Avatar */
 .avatar-perfil-wrapper {

@@ -46,7 +46,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <?php if (!empty($dados['capa'])): ?>
                     <img src="<?php echo $capa_atual; ?>" class="img-capa-preview">
                 <?php else: ?>
-                    <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); display: flex; align-items: center; justify-content: center;">
                         <span style="color: white; font-weight: bold; font-size: 1.3rem;">BEM-VINDO À FENDA!</span>
                     </div>
                 <?php endif; ?>

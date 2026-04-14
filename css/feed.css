@@ -3,18 +3,18 @@
 .filtros-container {
     display: flex;
     justify-content: center;
-    gap: 8px;            
-    padding: 10px 10px;  
+    gap: 8px;
+    padding: 10px 10px;
     flex-wrap: wrap;
-    margin-bottom: 25px;  
-      
+    margin-bottom: 25px;
+
 }
 
 .filtro-btn {
     text-decoration: none;
-    font-size: 18px;    
+    font-size: 18px;
     font-weight: 800;
-    padding: 8px 16px;   
+    padding: 8px 16px;
     border-radius: 20px;
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
@@ -39,21 +39,22 @@
     display: grid !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    align-items: flex-start !important; /* Mantém cada card no seu tamanho real */
+    align-items: flex-start !important;
+    /* Mantém cada card no seu tamanho real */
     gap: 20px !important;
-    max-width: 1200px !important; 
+    max-width: 1200px !important;
     margin: 20px auto !important;
     padding: 20px !important;
-    column-count: auto !important; 
-    grid-template-columns: repeat(3, 1fr) !important; 
+    column-count: auto !important;
+    grid-template-columns: repeat(3, 1fr) !important;
     /* Isso aqui força 3 colunas iguais no PC */
 }
 
 /* O CARD */
 .container-feed article {
     display: block !important;
-    flex: 1 1 350px !important; 
-    max-width: 400px !important; 
+    flex: 1 1 350px !important;
+    max-width: 400px !important;
     min-width: 300px !important;
     margin: 0 !important;
 }
@@ -64,15 +65,16 @@
     display: block !important;
     overflow: hidden;
     position: relative;
-    max-height: 7.5em; 
+    max-height: 7.5em;
     line-height: 1.5;
-    word-break: break-word; /* Evita que post enormes explodam o layout */
+    word-break: break-word;
+    /* Evita que post enormes explodam o layout */
     overflow-wrap: break-word;
     white-space: pre-wrap;
     color: #fff;
     transition: max-height 0.4s ease;
     margin-bottom: 15px;
-    font-size: 18px!important;
+    font-size: 18px !important;
 }
 
 /* Quando expandido */
@@ -93,7 +95,7 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    background: linear-gradient(to left, rgba(10,10,10,1) 70%, transparent); 
+    background: linear-gradient(to left, rgba(10, 10, 10, 1) 70%, transparent);
     padding-left: 40px;
     color: var(--dourado);
     font-weight: bold;
@@ -102,7 +104,7 @@
 
 .post-content.tem-mais:not(.expandido) {
     position: relative;
-   
+
 }
 
 .spotted-card {
@@ -116,9 +118,11 @@
     transition: transform 0.3s ease;
     flex-direction: column;
     padding: 10px !important;
-    break-inside: avoid; /* Impede que o card quebre no meio entre colunas */
+    break-inside: avoid;
+    /* Impede que o card quebre no meio entre colunas */
     margin-bottom: 20px;
-    display: inline-block; /* Necessário para o column-count funcionar bem */
+    display: inline-block;
+    /* Necessário para o column-count funcionar bem */
     width: 100%;
 
 }
@@ -146,19 +150,23 @@
 
 
 .spotted-card.ranco {
-    border-left: 15px solid #ce0f0f !important;  box-shadow: -5px 0 15px rgba(206, 15, 15, 0.2);
+    border-left: 15px solid #ce0f0f !important;
+    box-shadow: -5px 0 15px rgba(206, 15, 15, 0.2);
 }
 
 .spotted-card.comunidade {
-    border-left: 15px solid #bf0fd67e !important; box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
+    border-left: 15px solid #bf0fd67e !important;
+    box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
 }
 
 .spotted-card.acaba-pelo-amor-de-deus {
-    border-left: 15px solid #f78605 !important; box-shadow: -5px 0 15px rgba(206, 117, 15, 0.2);
+    border-left: 15px solid #f78605 !important;
+    box-shadow: -5px 0 15px rgba(206, 117, 15, 0.2);
 }
 
 .spotted-card.perdidos {
-    border-left: 15px solid #d6d308 !important; box-shadow: -5px 0 15px rgba(187, 206, 15, 0.2);
+    border-left: 15px solid #d6d308 !important;
+    box-shadow: -5px 0 15px rgba(187, 206, 15, 0.2);
 }
 
 
@@ -300,7 +308,7 @@
     text-decoration: none;
     font-weight: bold;
     transition: all 0.3s ease;
-   }
+}
 
 .btn-filtro:hover {
     background: rgba(255, 255, 255, 0.15);
@@ -432,15 +440,19 @@
     min-height: 60px;
     margin-right: 6px;
     display: inline-block !important;
-    max-width: 150px !important; /* Limita a largura da tag */
-    white-space: nowrap !important; /* Impede que ela quebre em duas linhas */
-    overflow: hidden !important; /* Esconde o que sobrar */
-    text-overflow: ellipsis !important; /* Coloca os "..." se o nome for gigante */
+    max-width: 150px !important;
+    /* Limita a largura da tag */
+    white-space: nowrap !important;
+    /* Impede que ela quebre em duas linhas */
+    overflow: hidden !important;
+    /* Esconde o que sobrar */
+    text-overflow: ellipsis !important;
+    /* Coloca os "..." se o nome for gigante */
     vertical-align: middle;
 
 }
 
-.category-tag  {
+.category-tag {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -627,43 +639,44 @@
 /* INSÍGNIA DA ATLÉTICA  */
 
 .insignia-atletica-bottom {
-    width: 70px; 
+    width: 70px;
     height: 70px;
     object-fit: contain !important;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
-    margin: 0 !important;    
-    flex-wrap: wrap;   
-    flex-shrink: 0; 
+    margin: 0 !important;
+    flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 
 .insignia-atletica-bottom:hover {
-    transform: scale(1.15) rotate(5deg) !important; 
-    filter: drop-shadow(0 0 12px var(--dourado)) !important; 
+    transform: scale(1.15) rotate(5deg) !important;
+    filter: drop-shadow(0 0 12px var(--dourado)) !important;
 }
 
 .nome-linha {
     display: flex;
-    align-items: center;    
-    justify-content: center; 
-    gap: 12px;              
-    width: 100%;            
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
 }
 
 
 /* A caixa que envolve a logo no classificados */
 .atletica-item {
     display: flex !important;
-    align-items: center;      
-    justify-content: center;   
-    width: 160px !important;   
-    height: 160px !important;  
+    align-items: center;
+    justify-content: center;
+    width: 160px !important;
+    height: 160px !important;
     margin: 0 auto !important;
-    overflow: visible !important; /* Mude para visible para o brilho não cortar */
+    overflow: visible !important;
+    /* Mude para visible para o brilho não cortar */
     background: none !important;
-    border: none !important;   
+    border: none !important;
 }
 
 .atletica-item:hover .insignia-atletica-link {
@@ -675,9 +688,9 @@
 
 /* A logo */
 .insignia-atletica-link {
-    max-width: 90% !important;  
-    max-height: 90% !important; 
-    object-fit: contain !important; 
+    max-width: 90% !important;
+    max-height: 90% !important;
+    object-fit: contain !important;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
@@ -821,22 +834,24 @@
 
 
 
-   /* 1. CONFIGURAÇÕES GERAIS PARA QUALQUER TELA MENOR QUE PC (Mobile e Tablet) */
+/* 1. CONFIGURAÇÕES GERAIS PARA QUALQUER TELA MENOR QUE PC (Mobile e Tablet) */
 @media screen and (max-width: 1024px) {
     body {
-        background-color: #004a99 !important; /* Ajuste para o seu azul oficial */     
+        background-color: #004a99 !important;
+        /* Ajuste para o seu azul oficial */
         background-attachment: fixed !important;
         background-size: cover !important;
     }
 
-    main, .main-content {
+    main,
+    .main-content {
         background: transparent !important;
     }
 
     /* Regra geral do feed para mobile/tablet */
     .container-feed {
         display: grid !important;
-        gap: 20px; 
+        gap: 20px;
         padding: 20px;
         align-items: start;
     }
@@ -847,16 +862,18 @@
 @media screen and (min-width: 761px) and (max-width: 1024px) {
 
     .main-perfil-container {
-        background-color: #0d0d0d !important; 
+        background-color: #0d0d0d !important;
         max-width: 85% !important;
         margin: 20px auto !important;
         padding: 20px !important;
         border-radius: 20px !important;
     }
-    
-    .container-feed, .feed-container, .posts-grid {
+
+    .container-feed,
+    .feed-container,
+    .posts-grid {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important; 
+        grid-template-columns: 1fr 1fr !important;
         max-width: 95% !important;
         margin: 0 auto !important;
     }
@@ -864,7 +881,7 @@
     .perdidos-item {
         padding: 20px !important;
         margin-bottom: 20px !important;
-        border-width: 2px !important; 
+        border-width: 2px !important;
     }
 
     .fenda-glass-container {
@@ -872,22 +889,38 @@
         margin: 20px auto !important;
     }
 
-    h1, .titulo-fenda {
+    h1,
+    .titulo-fenda {
         font-size: 1.8rem !important;
     }
 
     .img-capa-preview {
-    width: 100% !important;
-    height: 100% !important; 
-    object-fit: cover !important; 
-    object-position: center !important; 
-    
-}
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+
+    }
 
 
 }
 
-
+.bio-texto {
+    max-width: 700px;
+    /* largura máxima confortável */
+    margin: 20px auto;
+    /* centraliza */
+    padding: 20px;
+    /* respiro lateral */
+    word-wrap: break-word;
+    /* quebra palavras muito longas */
+    overflow-wrap: break-word;
+    white-space: normal;
+    /* garante quebra de linha */
+    text-align: center;
+    color: #ddd;
+    line-height: 1.5;
+}
 
 
 /*----------- PARA AS CONFIGURAÇÕES MOBILE------------ */
@@ -897,7 +930,7 @@
     * {
         box-sizing: border-box;
     }
-    
+
     .container-feed {
         /* volta a ser uma coluna só para não esmagar tudo */
         grid-template-columns: 1fr !important;
@@ -905,7 +938,7 @@
     }
 
     body {
-        background-image: none !important;    
+        background-image: none !important;
         font-size: 16px;
     }
 
@@ -924,7 +957,7 @@
     }
 
     .header-icons {
-        font-size: 1.3rem!important;
+        font-size: 1.3rem !important;
         position: static !important;
         display: flex !important;
         gap: 15px !important;
@@ -932,12 +965,12 @@
         transform: none !important;
     }
 
-    
+
     /* O estado ativo disparado pelo JS */
     .menu-item.dropdown.active .submenu {
         display: flex !important;
         flex-direction: column;
-        position: static; 
+        position: static;
         width: 100%;
         border-radius: 8px;
         margin-top: 5px;
@@ -945,15 +978,22 @@
     }
 
     @keyframes deslizarMenu {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
     /* Ajuste pros links não ficarem gigantes em celulares menores */
     .menu-item.dropdown.active .submenu li a {
         padding: 12px 20px !important;
         font-size: 1.4rem !important;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .popup-notificacao {
@@ -967,8 +1007,8 @@
     /* O formulário agora vai de ponta a ponta */
     .sessao-publicar {
         width: 100% !important;
-        margin: 20px 0 !important; 
-        border-radius: 0 !important; 
+        margin: 20px 0 !important;
+        border-radius: 0 !important;
         border-left: none !important;
         border-right: none !important;
         padding: 20px 15px !important;
@@ -981,31 +1021,32 @@
         margin-right: 0 !important;
         border-radius: 8px !important;
     }
-    
+
     .titulo-publicar {
         font-size: 1.3rem;
     }
 
     .perdidos-item {
-        width: 100% !important; 
-        padding: 22px !important; 
+        width: 100% !important;
+        padding: 22px !important;
         margin: 0 auto 25px auto !important;
         border-radius: 18px !important;
-        background: rgba(10, 10, 10, 0.6) !important; 
+        background: rgba(10, 10, 10, 0.6) !important;
         border: 2px solid rgba(255, 255, 255, 0.1) !important;
     }
 
     /* As Badges  (#ACHADO / #PERDIDO) */
-    .badge-achado, .badge-perdido {
-        font-size: 15px !important; 
+    .badge-achado,
+    .badge-perdido {
+        font-size: 15px !important;
         padding: 8px 15px !important;
         letter-spacing: 1px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     /* O texto da mensagem */
     .perdidos-item .card-body p {
-        font-size: 1.3rem !important; 
+        font-size: 1.3rem !important;
         line-height: 1.5;
         margin: 20px 0 !important;
         font-weight: 500;
@@ -1016,8 +1057,8 @@
         display: block !important;
         width: 100%;
         text-align: center;
-        background: var(--dourado) !important; 
-        color: #000 !important; 
+        background: var(--dourado) !important;
+        color: #000 !important;
         padding: 14px !important;
         border-radius: 10px;
         text-decoration: none;
@@ -1044,18 +1085,18 @@
 
     .post-content {
         font-size: 1.4rem;
-        max-height: 6em; 
+        max-height: 6em;
     }
 
     .category-tag {
-    font-size: 0.9rem !important; 
-    display: inline-block !important;
-    max-width: 150px !important; 
-    white-space: nowrap !important; 
-    overflow: hidden !important; 
-    text-overflow: ellipsis !important; 
-    vertical-align: middle;
-}
+        font-size: 0.9rem !important;
+        display: inline-block !important;
+        max-width: 150px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        vertical-align: middle;
+    }
 
     .post-time {
         font-size: 0.85rem;
@@ -1082,120 +1123,112 @@
 
     .filtro-btn {
         text-decoration: none;
-        font-size: 14px!important;
+        font-size: 14px !important;
         font-weight: 800;
-        padding: 8px 0 !important;
+        padding: 8px 10px !important;
+        align-content: center;
     }
 
-    /* O CONTAINER PAI: Dá o respiro das bordas da tela */
+
+    /* --- AJUSTE CORRIGIDO PARA O FORMULÁRIO MOBILE --- */
+
     .main-perfil-container {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         width: 92% !important;
-        margin: 30px auto !important;
+        margin: 20px auto !important;
         padding: 15px !important;
         border-radius: 20px !important;
-        background-color: #0d0d0d !important; /* Cor preta original */
+        background-color: #0d0d0d !important;
     }
 
 
-    /* O FORMULÁRIO */
-    form,
     .form-perfil-corpo {
-        display: flex !important;
-        flex-direction: column !important;
+        display: block !important;
+        /* Volta ao fluxo normal de blocos */
         width: 100% !important;
-        max-width: 100% !important;
-        padding: 5px !important;
-        margin: 20px 5px !important;
-        background: rgb(10, 10, 10) !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
     }
 
-    .titulo-pagina {
-        color: var(--dourado);
-        font-size: 1rem !important;
-        margin-bottom: 10px;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-
-    /*  OS CAMPOS (Inputs e Textareas) */
+    /* OS CAMPOS (Organização vertical) */
     .campo-grupo {
         width: 100% !important;
-        display: flex;
-        flex-direction: column;
-
-    }
-
-    .campo-grupo textarea {
-        height: auto !important;
-        min-height: 90px !important;
-        width: 100% !important;
         max-width: 350px !important;
-        margin: 0 auto 15px auto !important;
-        padding: 10px !important;
+        display: block !important;
+        flex-direction: column !important;
+        margin-bottom: 15px !important;
+        display: block !important;
+        box-sizing: border-box !important;
+
     }
 
-    .campo-grupo input,
+    .campo-grupo label {
+        text-align: left !important;
+        width: 100% !important;
+        margin-bottom: 5px !important;
+        color: #bbb;
+    }
+
+    /* Nome, Username e Bio unificados */
+    .campo-grupo input[type="text"],
+    .campo-grupo select,
     .campo-grupo textarea,
     .input-username-wrapper {
-        max-width: 350px !important;
         width: 100% !important;
-        margin: 0 auto;
-
+        max-width: 350px !important;
+        box-sizing: border-box !important;
+        /* ISSO AQUI resolve o vazamento da Bio */
+        margin: 0 auto !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid #333 !important;
+        border-radius: 8px !important;
+        color: #fff !important;
     }
 
-    .campo-grupo input,
+    /* Correção do campo @Username */
     .input-username-wrapper {
         display: flex !important;
+        height: 45px !important;
         align-items: center !important;
-        max-width: 350px !important;
-        width: 100% !important;
-        margin: 0 auto 15px auto !important;
-        height: 40px !important;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        overflow: hidden;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        overflow: hidden !important;
     }
 
+
     .input-username-wrapper span {
+        background: rgba(255, 255, 255, 0.1) !important;
         padding: 0 12px !important;
-        color: var(--dourado) !important;
-        font-weight: bold !important;
-        background: rgba(255, 255, 255, 0.05) !important;
         height: 100%;
         display: flex;
         align-items: center;
+        color: var(--dourado);
     }
 
     .input-username-wrapper input {
         flex: 1 !important;
-        height: 100% !important;
-        background: transparent !important;
         border: none !important;
-        color: #fff !important;
-        padding: 0 10px !important;
+        background: transparent !important;
+        height: 100% !important;
         margin: 0 !important;
     }
 
-    form,
-    .form-perfil-corpo {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        width: 100% !important;
-        padding: 10px !important;
-
+    /* Bio Ajustada */
+    .campo-grupo textarea {
+        min-height: 110px !important;
+        resize: none !important;
+        padding: 12px !important;
     }
 
-    .campo-grupo input,
-    .campo-grupo textarea {
-        width: 100% !important;
-        max-width: 350px !important;
-        margin: 0 auto 15px auto !important;
+    textarea[name="bio"] {
+        min-height: 120px !important;
+        resize: none !important;
+        word-wrap: break-word !important;
+        /* O que você sugeriu */
+        overflow-wrap: break-word !important;
     }
 
 
@@ -1227,8 +1260,8 @@
 
     .avatar-wrapper {
         position: relative;
-        width: 90px!important;
-        height: 90px!important;
+        width: 90px !important;
+        height: 90px !important;
         z-index: 10;
     }
 
@@ -1287,9 +1320,9 @@
     }
 
     .avatar-posicionador {
-    width: 90px!important;
-    height: 90px!important;
-}
+        width: 90px !important;
+        height: 90px !important;
+    }
 
 
     /* As informações (Nome, @usuario): Garante que apareçam embaixo */
@@ -1324,51 +1357,60 @@
     }
 
     .insignia-atletica-bottom {
-    width: 55px; 
-    height: 55px;
+        width: 55px;
+        height: 55px;
     }
 
     .info-usuario-section {
         padding-top: 0 !important;
     }
 
-
-    /*  SELO DA PRESENÇA - Ajustado */
-    .bio-box {
+    .bio-texto {
         width: 90% !important;
         margin: 20px auto 30px auto !important;
         text-align: center;
         font-size: 0.9rem !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
     }
+}
 
-    /* STATS (Seguidores) */
-    .stats-perfil {
-        justify-content: center !important;
-        margin: 15px 0 !important;
-        gap: 20px !important;
-    }
+/*  SELO DA PRESENÇA - Ajustado */
+.bio-box {
+    width: 90% !important;
+    margin: 20px auto 30px auto !important;
+    text-align: center;
+    font-size: 0.9rem !important;
+}
 
-    .stats-perfil span {
-    font-size: 0.8rem!important;
-    letter-spacing: 1px; }
+/* STATS (Seguidores) */
+.stats-perfil {
+    justify-content: center !important;
+    margin: 15px 0 !important;
+    gap: 20px !important;
+}
 
- .form-busca-fenda {
-        max-width: 95% !important;
-        gap: 5px !important;
-    }
+.stats-perfil span {
+    font-size: 0.8rem !important;
+    letter-spacing: 1px;
+}
 
-    .form-busca-fenda input[type="text"] {
-        padding: 12px 15px !important; 
-        font-size: 1.1rem !important; 
-    }
+.form-busca-fenda {
+    max-width: 95% !important;
+    gap: 5px !important;
+}
 
-    .form-busca-fenda button {
-        padding: 0 15px !important;
-        font-size: 1rem !important;
-    }
+.form-busca-fenda input[type="text"] {
+    padding: 12px 15px !important;
+    font-size: 1.1rem !important;
+}
 
+.form-busca-fenda button {
+    padding: 0 15px !important;
+    font-size: 1rem !important;
+}
 
-} /* Fecha o @Media Hover  */
+/* Fecha o @Media Hover  */
 
 
 
@@ -1445,7 +1487,8 @@
 
 .avatar-posicionador {
     position: absolute;
-    bottom: -80px!important; /* Quanto ocupa da capa */
+    bottom: -80px !important;
+    /* Quanto ocupa da capa */
     left: 50%;
     transform: translateX(-50%);
     width: 120px;
@@ -1510,8 +1553,8 @@
 }
 
 .info-usuario-section h1.nome-publico {
-    margin: 0; 
-    display: inline-block; 
+    margin: 0;
+    display: inline-block;
 }
 
 .perfil-controles {
@@ -1520,4 +1563,3 @@
     justify-content: center;
     width: 100%;
 }
-
