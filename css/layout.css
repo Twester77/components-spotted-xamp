@@ -643,12 +643,30 @@ footer a {
 }
 
 
+/* --- LOGIN MODO SR-71 STEALTH (TOTALMENTE INVISÍVEL) --- */
+
 .fenda-glass-container {
-    width: 90% !important;
-    max-width: 400px !important; /* Garante que não estique demais no celular */
-    margin: 40px auto !important;
-    padding: 25px !important;
-    background: rgba(255, 255, 255, 0.1) !important; /* Efeito vidro */
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent !important;      
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: none !important;                 
+    box-shadow: none !important;             
+    width: 100% !important;
+    max-width: 450px !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
+}
+
+/* Mantendo os inputs visíveis no escuro */
+form[action="confirma-login.php"] input[type="text"],
+form[action="confirma-login.php"] input[type="password"] {
+    background: rgba(255, 255, 255, 0.05) !important; 
+    border: 1px solid rgba(255, 188, 0, 0.4) !important; 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Centralizando os avatares no modo stealth */
+.imgcontainer {
+    text-align: center;
+    margin-bottom: 20px;
 }
