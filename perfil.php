@@ -132,7 +132,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                             <i class="fas fa-biohazard"></i> Biohazard
                         </button>
                         <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')">
-                            <i class="fas fa-crosshairs"></i> CS 
+                            <i class="fas fa-crosshairs"></i> CS
                         </button>
                         <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')">
                             <i class="fas fa-bell-slash"></i> Mudo
@@ -140,10 +140,23 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     </div>
                 </div>
             </div>
-            <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
-                <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
-                    VER PERFIL PÚBLICO</a>
+            <div class="perfil-controles" style=" 
+            width: 100% !important;  display: flex !important;  flex-direction: row !important; 
+            flex-wrap: wrap !important; 
+            justify-content: center !important; 
+            align-items: center !important; 
+            gap: 12px !important; 
+            margin: 20px auto !important; 
+            padding: 0 10px !important;
+            "></div>
+   
+                <button type="submit" class="btn-editar-atalho" style="flex: 0 1 auto !important; max-width: 300px !important; min-width: 140px !important;">
+                    SALVAR ALTERAÇÕES
+                </button>
+
+                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho" style="flex: 0 1 auto !important; max-width: 300px !important; min-width: 140px !important; text-decoration: none;">
+                    VER PERFIL PÚBLICO
+                </a>
             </div>
 
         </div>

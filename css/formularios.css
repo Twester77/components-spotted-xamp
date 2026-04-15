@@ -11,9 +11,10 @@
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
 select, option {
     background-color: #1a1a1afd !important; 
-    color: #ffffff !important;          
-    appearance: none;                   
-    -webkit-appearance: none;
+    color: #ffffff !important;
+    -webkit-appearance: none; 
+    appearance: none;        
+                     
 }
 
 select:focus {
@@ -22,9 +23,12 @@ select:focus {
 }
 
 
-form {
-    margin: 20px 5px !important;
-    height: auto !important;
+form, .main-novo-post, .main-perfil-container {
+    width: 95% !important;
+    max-width: 850px !important; /* Ou o tamanho que você preferir */
+    margin: 20px auto !important; 
+    display: block !important; 
+    float: none !important; /* Garante que nada esteja "puxando" para o lado */
 }
 
 
@@ -35,8 +39,8 @@ form {
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    max-width: 100% !important;
-    margin: 40px auto !important;
+    max-width: 400px!important;
+    margin: 30px auto !important;
     padding: 30px !important;
     background: #0a0a0a38 !important;
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
@@ -104,9 +108,11 @@ form {
 /* Capa: impede de achatar no tablet */
 .capa-wrapper {
     width: 100% !important;
-    height: clamp(180px, 25vw, 400px) !important; 
     position: relative !important;
     overflow: hidden !important;
+    min-height: 150px !important;   
+    max-height: 400px!important;    
+    overflow: hidden;
 }
 
 .img-capa-preview {
@@ -120,8 +126,8 @@ form {
 /* Bio: Centralizada e com limite de largura */
 .campo-grupo textarea#bio, 
 textarea[name="bio"] {
-    width: 100% !important; /* Ocupa a largura disponível... */
-    max-width: 100% !important; /* ...mas não passa disso no Tablet/PC */
+    width: 100% !important; 
+    max-width: 100% !important; 
     margin: 0 auto !important; /* CENTRALIZA no meio do formulário */
     display: block !important;
     box-sizing: border-box !important; /* Garante que o padding não estique a caixa */
@@ -166,7 +172,9 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    height: clamp(200px, 25vw, 400px) !important;
+    min-height: 180px;    /* Garante que não fique minúsculo no celular */
+    max-height: 350px;    /* Garante que não vire um outdoor no PC */
+    overflow: hidden;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
@@ -180,6 +188,7 @@ form[action="confirma-login.php"] {
     height: 100%;
     object-fit: cover;
     object-position: center 20%;
+    aspect-ratio: 16 / 6; /* Define que a altura é sempre uma fração da largura */
 }
 
 .bio-texto, .post-content, .card-body p, .comentario-item span {
@@ -507,6 +516,7 @@ textarea {
     min-height: 300px !important;
     overflow: hidden !important;
     border-radius: 15px 15px 0 0 !important;
+    aspect-ratio: 16 / 6; /* Define que a altura é sempre uma fração da largura */
 }
 
 .img-capa-preview {
@@ -514,7 +524,10 @@ textarea {
     height: 100% !important;
     object-fit: cover !important;
     object-position: center 20% !important;
-    height: clamp(200px, 25vw, 600px) !important;
+    min-height: 180px;   
+    max-height: 400px;    
+    overflow: hidden;
+    aspect-ratio: 16 / 6; /* Define que a altura é sempre uma fração da largura */
 }
 
 
@@ -825,9 +838,7 @@ input[type="checkbox"]:focus {
 }
 
 
-/* ============================================================
-   PADRONIZAÇÃO DEFINITIVA DO LOGIN (FENDA UNIFEV)
-   ============================================================ */
+/* PADRONIZAÇÃO DEFINITIVA DO LOGIN (FENDA UNIFEV)*/
 
 /* 1. O Container Principal (Onde ficam as fotos e os campos) */
 form[action="confirma-login.php"] .container {

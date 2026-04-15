@@ -52,7 +52,7 @@
 .container-feed article {
     display: block !important;
     flex: 1 1 350px !important;
-    max-width: 500px !important;
+    max-width: 700px !important;
     min-width: 300px !important;
     margin: 0 !important;
 }
@@ -599,7 +599,7 @@
     align-items: center;
     gap: 15px;
     font-size: 1.8rem;
-    margin: 20px 0 20px 0 !important;
+    margin: 20px 0 !important;
     /* Margem apenas embaixo para afastar do username/bio */
     justify-content: center !important;
 }
