@@ -43,8 +43,8 @@
 
         <div style="margin: 15px 0; display: flex; align-items: center; gap: 8px; justify-content: flex-start;">
             <input type="checkbox" name="terms" id="terms" required style="width: auto; margin: 0; cursor: pointer;">
-            <label for="terms" style="font-size: 14px; color: #ddc80e; font-weight: bold; cursor: pointer; line-height: 1;">
-                Eu aceito as <a href="diretrizes.php" style="color: #ddc80e; text-decoration: underline; display: inline;">Diretrizes de Segurança</a>
+            <label for="terms" style="font-size: 14px; color: #e4ce0d33; font-weight: bold; cursor: pointer; line-height: 1;">
+                Eu aceito as <a href="diretrizes.php" style="color: #d6a70d; text-decoration: underline; display: inline;">Diretrizes de Segurança</a>
             </label>
         </div>
 

@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box !important;
-} 
+}
 
 /* --- HEADER E ÍCONES (CORREÇÃO AQUI) --- */
 
@@ -32,7 +32,7 @@ header h1 {
 
 .header-content {
     width: 100%;
-    max-width: 1000px;
+    max-width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -93,15 +93,16 @@ main article {
     width: 100% !important;
     text-align: left !important;
     margin: 10px auto;
-    padding: 0 15px;   
+    padding: 0 15px;
     width: 100%;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 main {
-    max-width: 800px;
+    max-width: 900px;
     margin: 10px auto;
-    padding: 0 15px !important; /* Isso devolve o respiro nas laterais */
+    padding: 0 15px !important;
+    /* Isso devolve o respiro nas laterais */
     width: 100%;
     box-sizing: border-box;
 }
@@ -113,29 +114,29 @@ main {
     list-style: none;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    padding: 5px; 
+    padding: 5px;
     gap: 8px;
     border-radius: 5px;
     width: 100%;
     justify-content: center;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
     position: relative;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.2); 
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .menu-item a {
     color: #ffffff !important;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.6rem !important; 
-    padding: 8px 18px;           
+    font-size: 1.6rem !important;
+    padding: 8px 18px;
     display: block;
     transition: 0.3s;
     border-radius: 5px;
 }
 
-.menu-item:hover > a {
+.menu-item:hover>a {
     background: rgba(255, 255, 255, 0.151);
     border-radius: 5px;
 }
@@ -176,9 +177,9 @@ main {
 .submenu li a {
     padding: 10px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 1.4rem !important; 
-    font-weight: normal !important; 
-    text-align: left; 
+    font-size: 1.4rem !important;
+    font-weight: normal !important;
+    text-align: left;
 }
 
 .submenu li {
@@ -196,8 +197,8 @@ main {
 }
 
 .submenu li:hover a {
-    color: #ff8c00 !important; 
-    transition: color 0.3s ease; 
+    color: #ff8c00 !important;
+    transition: color 0.3s ease;
 }
 
 .menu-item:hover .submenu {
@@ -231,7 +232,6 @@ footer a {
     color: #fff;
     text-decoration: underline;
 }
-
 
 
 .fenda-modal-overlay {
@@ -403,12 +403,15 @@ footer a {
     position: fixed;
     bottom: 25px;
     right: 25px;
-    background: rgba(10, 10, 10, 0.95); /* Fundo escuro igual ao seu formulário */
+    background: rgba(10, 10, 10, 0.95);
+    /* Fundo escuro igual ao seu formulário */
     color: white;
     padding: 18px 25px;
     border-radius: 15px;
-    border: 1px solid rgba(255, 188, 0, 0.3); /* Borda dourada suave */
-    border-left: 5px solid var(--dourado);     /* Destaque dourado na lateral */
+    border: 1px solid rgba(255, 188, 0, 0.3);
+    /* Borda dourada suave */
+    border-left: 5px solid var(--dourado);
+    /* Destaque dourado na lateral */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     z-index: 10001;
     display: flex;
@@ -422,8 +425,13 @@ footer a {
 
 /* Animação de entrada (surgindo da direita) */
 @keyframes entrarNotif {
-    from { transform: translateX(100%) opacity 0; }
-    to { transform: translateX(0) opacity 1; }
+    from {
+        transform: translateX(100%) opacity 0;
+    }
+
+    to {
+        transform: translateX(0) opacity 1;
+    }
 }
 
 .notificacao-popup:hover {
@@ -433,7 +441,8 @@ footer a {
 }
 
 .notificacao-popup strong {
-    font-size: 15px !important; /* Título mais visível */
+    font-size: 15px !important;
+    /* Título mais visível */
     margin-bottom: 3px;
 }
 
@@ -456,8 +465,8 @@ footer a {
 
 /* Container dos botões de Chuva/Onda/Mudo */
 .audio-choices-container {
-    display: flex; 
-    gap: 10px; 
+    display: flex;
+    gap: 10px;
     flex-wrap: wrap;
     margin-top: 5px;
 }
@@ -482,7 +491,7 @@ footer a {
 }
 
 .btn-audio-choice i {
-    margin-right: 5px; 
+    margin-right: 5px;
     font-size: 0.9rem;
 }
 
@@ -495,7 +504,8 @@ footer a {
 /* ESTADO ATIVO: Quando o som está selecionado */
 .btn-audio-choice.active {
     background: rgba(255, 188, 0, 0.15) !important;
-    border-color: #ddc80e !important; /* Cor Dourada da Fenda */
+    border-color: #ddc80e !important;
+    /* Cor Dourada da Fenda */
     color: #ddc80e !important;
     box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
 }
@@ -534,12 +544,14 @@ footer a {
 .sessao-publicar {
     padding: 30px;
     border-radius: 20px;
-    max-width: 800px;
+    max-width: auto;
     align-items: center;
-    background-color: #4941411f !important; /* Preto quase total */
+    background-color: #4941411f !important;
+    /* Preto quase total */
     margin: 40px 0;
-    border: 1px solid rgba(131, 92, 92, 0.041); 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra para dar profundidade */
+    border: 1px solid rgba(131, 92, 92, 0.041);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    /* Sombra para dar profundidade */
 }
 
 
@@ -558,7 +570,7 @@ footer a {
     min-height: 100px;
     letter-spacing: 2px;
     font-size: 14px;
-    
+
 }
 
 .form-publicar select:focus,
@@ -603,8 +615,8 @@ footer a {
 
 .badge-alerta {
     position: absolute;
-    top: -8px;      
-    right: -10px;   
+    top: -8px;
+    right: -10px;
     background-color: #ff4b2b;
     color: white;
     font-size: 10px;
@@ -622,13 +634,22 @@ footer a {
 
 
 @keyframes pulsarNotif {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .notificacao-wrapper {
-    position: relative; /* Sem isso o número foge para o canto */
+    position: relative;
+    /* Sem isso o número foge para o canto */
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -651,9 +672,9 @@ footer a {
     align-items: stretch !important;
     gap: 8px !important;
     width: 100% !important;
-    max-width: 600px !important; 
+    max-width: 600px !important;
     margin: 25px auto !important;
-    background: transparent !important; 
+    background: transparent !important;
     border: none !important;
     min-height: 70px;
 }
@@ -663,33 +684,33 @@ footer a {
     min-width: 0 !important;
     background: rgba(255, 255, 255, 0.08) !important;
     color: white !important;
-    border: 2px solid rgba(255, 188, 0, 0.5) !important; 
-    outline: none !important; 
-    box-shadow: none !important; 
+    border: 2px solid rgba(255, 188, 0, 0.5) !important;
+    outline: none !important;
+    box-shadow: none !important;
     -webkit-appearance: none !important;
-    appearance: none ;
+    appearance: none;
     border-radius: 10px !important;
-    padding: 15px 20px !important; 
-    font-size: 1.2rem !important; 
+    padding: 15px 20px !important;
+    font-size: 1.2rem !important;
     box-sizing: border-box !important;
 }
 
 /* Quando você clica para digitar */
 .form-busca-fenda input[type="text"]:focus {
-    border-color: #fc900c !important; 
+    border-color: #fc900c !important;
     background: rgba(255, 255, 255, 0.12) !important;
     outline: none !important;
-    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3) !important; 
+    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3) !important;
 }
 
 .form-busca-fenda button {
     flex: 0 0 auto !important;
-    min-width: 75px !important; 
+    min-width: 75px !important;
     background: #fc900c !important;
     color: #000 !important;
     border: none !important;
     border-radius: 10px !important;
-    font-weight: 900 !important; 
+    font-weight: 900 !important;
     font-size: 1rem !important;
     cursor: pointer !important;
     padding: 0 20px !important;
@@ -698,8 +719,8 @@ footer a {
 
 /* 2. Lista de Resultados  */
 .lista-resultados {
-    width: 100% !important;
-    max-width: 600px !important;
+    width: 300px !important;
+    max-width: auto !important;
     margin: 20px auto !important;
     display: flex !important;
     flex-direction: column !important;
@@ -719,7 +740,7 @@ footer a {
 
 .user-card:hover {
     background: rgba(255, 255, 255, 0.1) !important;
-    transform: translateX(5px); 
+    transform: translateX(5px);
 }
 
 /* 4. A Foto do Usuário (Tamanho fixo anti-erro) */
@@ -727,7 +748,7 @@ footer a {
     width: 60px !important;
     height: 60px !important;
     border-radius: 50% !important;
-    object-fit: cover !important; 
+    object-fit: cover !important;
     margin-right: 15px !important;
     border: 2px solid var(--dourado) !important;
     flex-shrink: 0 !important;
@@ -751,13 +772,13 @@ footer a {
 /* --- LOGIN MODO SR-71 STEALTH (TOTALMENTE INVISÍVEL) --- */
 
 .fenda-glass-container {
-    background: transparent !important;      
+    background: transparent !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    border: none !important;                 
-    box-shadow: none !important;             
+    border: none !important;
+    box-shadow: none !important;
     width: 100% !important;
-    max-width: 450px !important;
+    max-width: 500px !important;
     margin: 0 auto !important;
     padding: 20px !important;
 }
@@ -765,8 +786,8 @@ footer a {
 /* Mantendo os inputs visíveis no escuro */
 form[action="confirma-login.php"] input[type="text"],
 form[action="confirma-login.php"] input[type="password"] {
-    background: rgba(255, 255, 255, 0.05) !important; 
-    border: 1px solid rgba(255, 188, 0, 0.4) !important; 
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 188, 0, 0.4) !important;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
 }
 
@@ -774,9 +795,8 @@ form[action="confirma-login.php"] input[type="password"] {
 .imgcontainer {
     text-align: center;
     margin-bottom: 20px;
+    
 }
-
-
 
 
 /* ============================================================
@@ -793,7 +813,6 @@ form[action="confirma-login.php"] input[type="password"] {
 
     .container-feed {
         grid-template-columns: 1fr !important;
-        /* Uma coluna só */
         padding: 10px !important;
     }
 
@@ -830,7 +849,7 @@ form[action="confirma-login.php"] input[type="password"] {
     }
 
     .header-icons {
-        font-size: 1.3rem !important;
+        font-size: 1.4rem !important;
         position: static !important;
         display: flex !important;
         gap: 15px !important;
@@ -929,7 +948,7 @@ form[action="confirma-login.php"] input[type="password"] {
 
     /* O texto da mensagem */
     .perdidos-item .card-body p {
-        font-size: 1.3rem !important;
+        font-size: 1.2rem !important;
         line-height: 1.5;
         margin: 20px 0 !important;
         font-weight: 500;
@@ -982,7 +1001,7 @@ form[action="confirma-login.php"] input[type="password"] {
     }
 
     .post-time {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         order: 2;
         /* Joga a data para o final da linha */
     }
@@ -1009,7 +1028,6 @@ form[action="confirma-login.php"] input[type="password"] {
         font-size: 14px !important;
         font-weight: 800;
         padding: 8px 10px !important;
-        align-content: center;
     }
 
 
@@ -1020,7 +1038,7 @@ form[action="confirma-login.php"] input[type="password"] {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        width: 92% !important;
+        width: 95% !important;
         margin: 20px auto !important;
         padding: 15px !important;
         border-radius: 20px !important;
@@ -1036,12 +1054,14 @@ form[action="confirma-login.php"] input[type="password"] {
         width: 100% !important;
         padding: 20px !important;
         box-sizing: border-box !important;
+        margin: 10px !important;
+
     }
 
     /* OS CAMPOS (Organização vertical) */
     .campo-grupo {
         width: 100% !important;
-        max-width: 800px !important;
+        max-width: 100% !important;
         display: block !important;
         flex-direction: column !important;
         margin-bottom: 15px !important;
@@ -1063,7 +1083,7 @@ form[action="confirma-login.php"] input[type="password"] {
     .campo-grupo textarea,
     .input-username-wrapper {
         width: 100% !important;
-        max-width: 1000px !important;
+        max-width: auto !important;
         box-sizing: border-box !important;
         /* ISSO AQUI resolve o vazamento da Bio */
         margin: 0 auto !important;
@@ -1108,7 +1128,7 @@ form[action="confirma-login.php"] input[type="password"] {
 
     /* Bio Ajustada */
     .campo-grupo textarea {
-        min-height: 110px !important;
+        min-height: 120px !important;
         resize: none !important;
         padding: 12px !important;
     }
@@ -1143,7 +1163,7 @@ form[action="confirma-login.php"] input[type="password"] {
     /*  AJUSTE DA CAPA E AVATAR  */
     .capa-wrapper {
         width: 100%;
-        height: 280px !important;
+        height: auto !important;
         position: relative;
         overflow: hidden;
         min-height: 180px;
@@ -1159,7 +1179,6 @@ form[action="confirma-login.php"] input[type="password"] {
     /* Move o Avatar para o CENTRO e diminui um pouco o tamanho */
 
     .avatar-perfil-wrapper {
-        left: 50% !important;
         transform: translateX(-50%);
         bottom: -40px !important;
     }
@@ -1193,7 +1212,7 @@ form[action="confirma-login.php"] input[type="password"] {
         position: relative !important;
         display: flex !important;
         justify-content: center !important;
-        margin: -50px auto 10px auto !important;
+        margin: -70px auto 10px auto !important;
         width: 120px !important;
         height: 120px !important;
         left: unset !important;
@@ -1202,6 +1221,7 @@ form[action="confirma-login.php"] input[type="password"] {
 
     /* A Imagem em si: redonda e centrada */
     .img-avatar-perfil {
+        top: 30px!important;
         width: 100%;
         height: 100%;
         border-radius: 50%;
@@ -1247,29 +1267,33 @@ form[action="confirma-login.php"] input[type="password"] {
     }
 
     .insignia-atletica-bottom {
-        width: 55px;
-        height: 55px;
+        width: 50px;
+        height: 50px;
     }
 
 
     .bio-texto {
-        width: 90% !important;
+        width: 100% !important;
         margin: 10px auto 20px auto !important;
         text-align: center;
         font-size: 0.9rem !important;
         word-wrap: break-word !important;
         overflow-wrap: break-word !important;
     }
-} /* Fecha o @Media Hover  */
+
+}
+
+/* Fecha o @Media Hover  */
 
 
 /* 2. TABLETS, KINDLE E CELULAR DEITADO (O "Meio termo") */
 
 @media screen and (min-width: 601px) and (max-width: 1024px),
-screen and (max-height: 500px) and (orientation: landscape) {
+screen and (max-height: 600px) and (orientation: landscape) {
 
     .post-content {
-        font-size: 1.1rem !important; /* Texto um pouco maior para leitura no tablet */
+        font-size: 1.3rem !important;
+        /* Texto um pouco maior para leitura no tablet */
     }
 
     .container-feed {
@@ -1283,6 +1307,12 @@ screen and (max-height: 500px) and (orientation: landscape) {
         max-width: 100% !important;
     }
 
+    .btn-reagir,
+    .btn-fofocar {
+        font-size: 0.8rem;
+        gap: 8px;
+    }
+
     /* Ajuste do Perfil para não sumir com as coisas no Kindle */
     .form-perfil-corpo {
         grid-template-columns: 1fr 1fr !important;
@@ -1290,26 +1320,28 @@ screen and (max-height: 500px) and (orientation: landscape) {
     }
 
     /* Impede a Bio de explodir para os lados */
-    .bio-texto, 
-    .post-content, 
+    .bio-texto,
+    .post-content,
     .perfil-info-publica p {
         word-wrap: break-word !important;
         overflow-wrap: anywhere !important;
         white-space: pre-wrap !important;
-        max-width: 100% !important; /* Não deixa passar do pai */
+        max-width: 100% !important;
+        /* Não deixa passar do pai */
     }
 
     /* Ajuste para o formulário de EDITAR no tablet/deitado */
     .form-perfil-corpo {
-        display: flex !important; /* Flex é mais seguro que Grid aqui */
+        display: flex !important;
+        /* Flex é mais seguro que Grid aqui */
         flex-direction: column !important;
         gap: 15px !important;
         padding: 20px !important;
     }
 
     /* Garante que os inputs não fiquem gigantes e sumam da tela */
-    .campo-grupo input, 
-    .campo-grupo textarea, 
+    .campo-grupo input,
+    .campo-grupo textarea,
     .input-username-wrapper {
         width: 100% !important;
         box-sizing: border-box !important;
@@ -1317,9 +1349,10 @@ screen and (max-height: 500px) and (orientation: landscape) {
 
     /* Ajuste do container principal do perfil no deitado */
     .main-perfil-container {
-        width: 95% !important;
-        margin: 10px auto !important;
-        max-height: none !important; /* Garante que role a tela se for longo */
+        width: 100% !important;
+        margin: 10px 5px !important;
+        max-height: auto !important;
+        /* Garante que role a tela se for longo */
     }
 }
 
@@ -1331,30 +1364,44 @@ screen and (max-height: 500px) and (orientation: landscape) {
         grid-template-columns: repeat(3, 1fr) !important;
     }
 
+    form {
+        max-width: 1200px !important;/
+    }
+
     .main-perfil-container {
-        max-width: 1000px !important;
-        height: auto !important; 
+        max-width: auto !important;
+        height: auto !important;
         min-height: fit-content;
         margin: 40px auto !important;
-        display: block !important; 
+        display: block !important;
     }
 
     .form-perfil-corpo {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 25px !important;
+        gap: 15px !important;
         width: 100% !important;
         box-sizing: border-box !important;
+        align-content: start !important;
+        /* Empilha no topo e cresce para baixo */
+        height: auto !important;
     }
 
     /* Aqui você agrupa o que ocupa as duas colunas */
-    .campo-grupo:has(textarea), 
+    .campo-grupo:has(textarea),
     .campo-grupo:has(.audio-settings-card),
-    .campo-grupo.bio-grupo, 
+    .campo-grupo.bio-grupo,
     .campo-grupo.full-width {
         grid-column: span 2 !important;
     }
+
+    .bio-texto,
+    .post-content,
+    .perfil-info-publica p {
+        word-wrap: break-word !important;
+        overflow-wrap: anywhere !important;
+        white-space: pre-wrap !important;
+        max-width: 100% !important;
+        /* Não deixa passar do pai */
+    }
 }
-
-
-

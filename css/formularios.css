@@ -1,18 +1,41 @@
+/* para evitar bugs em tudo */
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
 .input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px #000 inset !important;
+    -webkit-box-shadow: 0 0 0 30px #00000086 inset !important;
     -webkit-text-fill-color: #fff !important;
+}
+
+/* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
+select, option {
+    background-color: #1a1a1afd !important; 
+    color: #ffffff !important;          
+    appearance: none;                   
+    -webkit-appearance: none;
+}
+
+select:focus {
+    background-color: #00000071 !important;
+    color: var(--dourado) !important;
+}
+
+
+form {
+    margin: 20px 5px !important;
+    height: auto !important;
 }
 
 
 /* ESTRUTURA DA PÁGINA DE POSTAGEM / EDIÇÃO */
 
 .main-novo-post {
-
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    max-width: 550px !important;
+    max-width: 100% !important;
     margin: 40px auto !important;
     padding: 30px !important;
     background: #0a0a0a38 !important;
@@ -44,7 +67,7 @@
 }
 
 .main-novo-post textarea {
-    min-height: 180px !important;
+    min-height: 300px !important;
     resize: vertical;
     /* Permite que o usuário estique se quiser, mas só pra baixo */
 }
@@ -55,9 +78,11 @@
 }
 
 
+
+
 /* --- PERFIL MODO DARK --- */
 
-/* --- AJUSTE FINAL: CAPA E BIO (UNIFICADO) --- */
+/* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
 
 .main-perfil-container {
     background-color: #0d0d0d !important; /* Garante o preto no tablet */
@@ -65,10 +90,21 @@
     overflow: hidden !important;
 }
 
+.main-perfil-container .perfil-gold {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin: 20px auto !important;
+        padding: 15px !important;
+        border-radius: 20px !important;
+        background-color: #0d0d0d !important;
+        width: auto;
+    }
+
 /* Capa: impede de achatar no tablet */
 .capa-wrapper {
     width: 100% !important;
-    height: clamp(180px, 25vw, 300px) !important; 
+    height: clamp(180px, 25vw, 400px) !important; 
     position: relative !important;
     overflow: hidden !important;
 }
@@ -78,14 +114,14 @@
     height: 100% !important;
     object-fit: cover !important; 
     object-position: center !important;
+    margin: auto;
 }
 
 /* Bio: Centralizada e com limite de largura */
 .campo-grupo textarea#bio, 
 textarea[name="bio"] {
     width: 100% !important; /* Ocupa a largura disponível... */
-    max-width: 400px !important; /* ...mas não passa disso no Tablet/PC */
-    min-height: 120px !important;
+    max-width: 100% !important; /* ...mas não passa disso no Tablet/PC */
     margin: 0 auto !important; /* CENTRALIZA no meio do formulário */
     display: block !important;
     box-sizing: border-box !important; /* Garante que o padding não estique a caixa */
@@ -109,7 +145,7 @@ textarea[name="bio"] {
 
 .bio-box {
     width: 100%;
-    max-width: 800px;
+    max-width: auto;
     margin: 10px auto;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -130,7 +166,7 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    height: clamp(180px, 25vw, 300px) !important;
+    height: clamp(200px, 25vw, 400px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
@@ -146,6 +182,12 @@ form[action="confirma-login.php"] {
     object-position: center 20%;
 }
 
+.bio-texto, .post-content, .card-body p, .comentario-item span {
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+}
 
 
 /* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
@@ -176,7 +218,7 @@ form[action="confirma-login.php"] {
 .campo-grupo textarea {
     resize: vertical;
     min-height: 150px;
-    max-height: 300px;
+    max-height: 100%;
 }
 
 /* Estilo geral para Inputs e Textarea */
@@ -253,9 +295,8 @@ textarea {
 }
 
 /* Página perdidos */
-
 .painel-sessao {
-    max-width: 300px;
+    max-width: auto;
     min-height: 150px;
     margin: 0 auto 30px auto;
     background: rgba(255, 255, 255, 0.08);
@@ -304,7 +345,7 @@ textarea {
     border-radius: 15px;
     padding: 20px;
     margin: 30px auto;
-    max-width: 600px; 
+    max-width: 90%; 
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
 
@@ -417,7 +458,7 @@ textarea {
 /* 1. Botão da Câmera (Capa) */
 .perfil-header-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -462,7 +503,7 @@ textarea {
 /* Container da Capa no PC */
 .capa-wrapper.viewer {
     width: 100% !important;
-    height: 300px !important;
+    height: 100% !important;
     min-height: 300px !important;
     overflow: hidden !important;
     border-radius: 15px 15px 0 0 !important;
@@ -473,7 +514,7 @@ textarea {
     height: 100% !important;
     object-fit: cover !important;
     object-position: center 20% !important;
-    height: clamp(180px, 25vw, 350px) !important;
+    height: clamp(200px, 25vw, 600px) !important;
 }
 
 
@@ -617,12 +658,12 @@ input[type="checkbox"]:focus {
 .btn-editar-atalho {
     display: inline-flex !important;
     align-items: center;
-    justify-content: center;
+    justify-content: auto;
     width: auto !important;
-    min-width: 140px; 
+    min-width: 150px; 
     padding: 10px 25px !important;
     white-space: nowrap !important;
-    font-size: clamp(0.7rem, 2vw, 0.9rem) !important;
+    font-size: clamp(0.6rem, 2vw, 0.9rem) !important;
     font-weight: 800;
     text-transform: uppercase;
     text-decoration: none !important;
@@ -659,7 +700,7 @@ input[type="checkbox"]:focus {
     flex-direction: row !important;
     justify-content: flex-start !important;
     gap: 30px !important;
-    margin: 20px 30px auto !important;
+    margin: 20px auto !important;
     clear: both !important;
     /* Empurra para baixo de qualquer coisa que tenha float */
 }

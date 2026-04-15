@@ -54,7 +54,7 @@ $usuario_logado = isset($_SESSION['usuario_id']);
                         $total_n = $res_count['total'];
 
                         if ($total_n > 0): ?>
-                            <span id="badge-alertas" class="badge-alerta">
+                            <span id="badge-alertas" class="badge-alertas">
                                 <?php echo $total_n; ?>
                             </span>
                     <?php endif;

@@ -140,7 +140,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     </div>
                 </div>
             </div>
-            <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 10px; margin: 20px 0;">
+            <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
                 <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
                 <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
                     VER PERFIL PÚBLICO</a>
