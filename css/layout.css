@@ -1039,10 +1039,9 @@ form[action="confirma-login.php"] input[type="password"] {
         flex-direction: column !important;
         align-items: center !important;
         width: 95% !important;
-        margin: 20px auto !important;
+        margin: 15px auto !important;
         padding: 15px !important;
-        border-radius: 20px !important;
-        background-color: #0d0d0d !important;
+       
     }
 
 
@@ -1141,25 +1140,32 @@ form[action="confirma-login.php"] input[type="password"] {
         overflow-wrap: break-word !important;
     }
 
-    .capa-wrapper.viewer {
-        /* No celular, 16/6 fica muito fino. 16/8 ou 16/9 é o ideal */
-        aspect-ratio: 16 / 8 !important; 
-        border-radius: 0px !important; 
-    }
-    
-    .img-capa-preview {
-        object-position: center center !important;
-    }
-
 
     /* OS BOTÕES: Menores e um embaixo do outro se precisar */
-    
+    .capa-wrapper.viewer {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        background-color: #000;
+        border-radius: 12px 12px 0 0;
+    }
+
     .perfil-controles {
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
         width: 100% !important;
         justify-content: center;
+    }
+
+
+    /*  AJUSTE DA CAPA E AVATAR  */
+    .capa-wrapper {
+        width: 100%;
+        height: auto !important;
+        position: relative;
+        overflow: hidden;
+        min-height: 180px;
     }
 
     .avatar-wrapper {
@@ -1247,7 +1253,7 @@ form[action="confirma-login.php"] input[type="password"] {
     }
 
     .capa-container {
-        margin-bottom: 10px !important;
+        margin-bottom: 20px !important;
     }
 
     .nome-linha {
@@ -1310,6 +1316,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
     .form-perfil-corpo {
         grid-template-columns: 1fr 1fr !important;
         gap: 15px !important;
+        padding: 20px !important;
     }
 
     /* Impede a Bio de explodir para os lados */
@@ -1346,8 +1353,15 @@ screen and (max-height: 600px) and (orientation: landscape) {
         margin: 10px 5px !important;
         max-height: auto !important;
         /* Garante que role a tela se for longo */
+        display: flex !important;
+        flex-direction: column !important;
+        width: 95% !important;
+        padding: 15px !important;
+        background-color: #0d0d0d !important;
     }
-}
+
+    }
+
 
 
 
@@ -1365,8 +1379,11 @@ screen and (max-height: 600px) and (orientation: landscape) {
         max-width: auto !important;
         height: auto !important;
         min-height: fit-content;
-        margin: 40px auto !important;
+        margin: 30px auto !important;
         display: block !important;
+        background-color: #0d0d0d !important;
+        padding: 20px;
+
     }
 
     .form-perfil-corpo {

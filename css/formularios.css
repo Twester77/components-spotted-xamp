@@ -35,8 +35,8 @@ form {
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    max-width: 100% !important;
-    margin: 40px auto !important;
+    max-width: 400px !important;
+    margin: 30px auto !important;
     padding: 30px !important;
     background: #0a0a0a38 !important;
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
@@ -67,7 +67,7 @@ form {
 }
 
 .main-novo-post textarea {
-    min-height: 300px !important;
+    min-height: 150px !important;
     resize: vertical;
     /* Permite que o usuário estique se quiser, mas só pra baixo */
 }
@@ -80,15 +80,9 @@ form {
 
 
 
-/* --- PERFIL MODO DARK --- */
 
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
 
-.main-perfil-container {
-    background-color: #0d0d0d !important; /* Garante o preto no tablet */
-    border-radius: 20px !important;
-    overflow: hidden !important;
-}
 
 .main-perfil-container .perfil-gold {
         display: flex !important;
@@ -101,13 +95,7 @@ form {
         width: auto;
     }
 
-/* Capa: impede de achatar no tablet */
-.capa-wrapper {
-    width: 100% !important;
-    height: clamp(180px, 25vw, 400px) !important; 
-    position: relative !important;
-    overflow: hidden !important;
-}
+
 
 
 /* Bio: Centralizada e com limite de largura */
@@ -902,6 +890,8 @@ form[action="confirma-login.php"] a {
     margin: 40px auto !important;
     float: none !important;
     padding: 20px !important;
+    border-radius: 20px !important;
+    background-color: #0d0d0d !important;
 }
 
 /* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
