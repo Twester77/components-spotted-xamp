@@ -1141,32 +1141,25 @@ form[action="confirma-login.php"] input[type="password"] {
         overflow-wrap: break-word !important;
     }
 
-
-    /* OS BOTÕES: Menores e um embaixo do outro se precisar */
     .capa-wrapper.viewer {
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-        background-color: #000;
-        border-radius: 12px 12px 0 0;
+        /* No celular, 16/6 fica muito fino. 16/8 ou 16/9 é o ideal */
+        aspect-ratio: 16 / 8 !important; 
+        border-radius: 0px !important; 
+    }
+    
+    .img-capa-preview {
+        object-position: center center !important;
     }
 
+
+    /* OS BOTÕES: Menores e um embaixo do outro se precisar */
+    
     .perfil-controles {
         display: flex !important;
         flex-direction: column !important;
         gap: 10px !important;
         width: 100% !important;
         justify-content: center;
-    }
-
-
-    /*  AJUSTE DA CAPA E AVATAR  */
-    .capa-wrapper {
-        width: 100%;
-        height: auto !important;
-        position: relative;
-        overflow: hidden;
-        min-height: 180px;
     }
 
     .avatar-wrapper {

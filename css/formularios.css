@@ -109,13 +109,6 @@ form {
     overflow: hidden !important;
 }
 
-.img-capa-preview {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important; 
-    object-position: center !important;
-    margin: auto;
-}
 
 /* Bio: Centralizada e com limite de largura */
 .campo-grupo textarea#bio, 
@@ -180,6 +173,7 @@ form[action="confirma-login.php"] {
     height: 100%;
     object-fit: cover;
     object-position: center 20%;
+     aspect-ratio: 16/6;
 }
 
 .bio-texto, .post-content, .card-body p, .comentario-item span {
@@ -500,23 +494,28 @@ textarea {
 
 
 
-/* Container da Capa no PC */
+/* Container da Capa (O molde) */
 .capa-wrapper.viewer {
     width: 100% !important;
-    height: 100% !important;
-    min-height: 300px !important;
+    max-width: 100% !important;
+    /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
+    aspect-ratio: 16 / 6 !important; 
     overflow: hidden !important;
     border-radius: 15px 15px 0 0 !important;
+    background: #1a1a1a; 
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
+/* A Imagem da Capa (O conteúdo) */
 .img-capa-preview {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
-    object-position: center 20% !important;
-    height: clamp(200px, 25vw, 600px) !important;
+    object-fit: cover !important; 
+    object-position: center 25% !important; /* Foca um pouco acima do meio */
+    display: block !important;
 }
-
 
 .category-tag {
     font-size: 1.1rem;
@@ -889,4 +888,69 @@ form[action="confirma-login.php"] a {
     color: #fc900c !important;
     text-decoration: none;
     font-weight: bold;
+}
+
+
+
+/* A VINGANÇA CONTRA O IPHONE 4 E O CAPIROTO DA ESQUERDA */
+
+/* 1. Reset de Centralização do Container Principal */
+.main-perfil-container {
+    display: block !important;
+    width: 95% !important;
+    max-width: 800px !important; 
+    margin: 40px auto !important;
+    float: none !important;
+    padding: 20px !important;
+}
+
+/* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
+.form-perfil-corpo {
+    display: flex !important;
+    flex-direction: column !important; 
+    gap: 20px !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* 3. Garantir que cada campo ocupe 100% da largura disponível */
+.campo-grupo {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-column: span 1 !important; /
+}
+
+/* 4. Estilo dos Inputs para não vazarem */
+input[type="text"], 
+input[type="password"], 
+select, 
+textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 12px !important;
+}
+
+/* 5. Seletor de Áudio (Ajuste do aspecto) */
+.audio-selector-container {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+/* 6. Botões de Ação (Respeitando seu inline, mas garantindo o centro) */
+.perfil-controles {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 30px !important;
+}
+
+/* 7. Mata qualquer margem fantasma no body/html que empurre pra esquerda */
+body, html {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
