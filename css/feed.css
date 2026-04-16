@@ -160,13 +160,14 @@
 
 .spotted-card.acaba-pelo-amor-de-deus {
     border-left: 18px solid #f78605 !important;
-    box-shadow: -5px 0 15px rgba(206, 117, 15, 0.2);
+    box-shadow: -5px 0 15px rgba(206, 117, 15, 0.253);
 }
 
 .spotted-card.perdidos {
-    border-left: 18px solid #d6d308 !important;
-    box-shadow: -5px 0 15px rgba(187, 206, 15, 0.2);
+    border-left: 18px solid #ddda0d !important;
+    box-shadow: -5px 0 15px rgba(206, 203, 15, 0.253);
 }
+
 
 /*  ELOGIOS - Correio Elegante */
 .spotted-card.elogio {

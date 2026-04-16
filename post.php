@@ -7,7 +7,10 @@ include 'includes/bolhas.php';
 // 1. Pegamos o ID da URL de forma segura
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-if ($id == 0) { header("Location: feed.php"); exit(); }
+if ($id == 0) {
+    header("Location: feed.php");
+    exit();
+}
 
 // 2. Buscamos o post específico
 
@@ -16,62 +19,81 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
 
-if (!$post) { die("<main> <style = font-size:2.8rem; <p> Ops...Spotted não encontrado!</p> </style> </main>"); }
+if (!$post) {
+    die("<main> <style = font-size:2.8rem; <p> Ops...Spotted não encontrado!</p> </style> </main>");
+}
 ?>
 
-<main class="container-feed">
-    <article class="spotted-card <?php echo $post['categoria']; ?>">
-        <div class="card-header">
-            <span class="category-tag">#<?php echo strtoupper($post['categoria']); ?></span>
-            <span class="post-time"><?php echo date('d/m', strtotime($post['data_post'])); ?></span>
-        </div>
-        <div class="card-body">
-            <p class="post-content"><?php echo htmlspecialchars($post['mensagem']); ?></p>
-        </div>
-    </article>
+<main class="container-post-foco">
+    <div class="box-post-central">
+        <a href="feed.php" class="btn-voltar-fenda">
+            <i class="fas fa-arrow-left"></i> Voltar para o Feed
+        </a>
 
-    <section class="sessao-publicar" id="fofocar">
-
-        <h3 style="color: var(--dourado); font-size: 1.3rem;">Opino ou prefiro não opinar?</h3>
-
-        <form action="enviar-comentario.php" method="POST" class="form-fofoca">
-            <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
-            <textarea name="comentario" placeholder="Conte a fofoca aqui... use @ para marcar alguém!" required style="width: 100%; min-height: 100px; font-size: 14px; background: #222; color: #fff; border: 1px solid #444; border-radius: 8px; padding: 10px; margin: 10px 0;"></textarea>
-            <?php $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
-                        // Buscamos o nome atualizado da sessão ou do banco se preferir
-            if ($exibir_nome): ?>
-                <button type="submit" style="background: var(--dourado); color: #000; border: none; padding: 15px; border-radius: 8px; width: 100%; font-weight: bold;">Mandar mensagem como @<?php echo htmlspecialchars($exibir_nome); ?> </button>
-            <?php else: ?>
-                <button type="submit" style="background: #555; color: #fff; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold;">Mensagem Anônima</button>
-            <?php endif; ?>
-        </form>
-    </section>
-
-         
-    <div class="lista-comentarios">
-    <?php 
-    $stmt_c = $conn->prepare("SELECT * FROM comentarios WHERE id_mensagem = ? ORDER BY id DESC");
-    $stmt_c->bind_param("i", $id);
-    $stmt_c->execute();
-    $res_c = $stmt_c->get_result();
-
-    if ($res_c->num_rows > 0): 
-        while ($c = $res_c->fetch_assoc()): ?>
-            <div class="comentario-item" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <p>
-                    <strong style="color: var(--dourado);">
-                        <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>:
-                    </strong> 
-                    <span><?php echo formatarMencoesGeral($c['comentario']); ?></span>
-                </p>
-                <small style="opacity: 0.7; font-size: 14px; display: block; margin-top: 5px;">
-                    🕒 <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?>
-                </small>
+        <article class="spotted-card <?php echo $post['categoria']; ?> card-focado">
+            <div class="card-header">
+                <span class="category-tag">#<?php echo strtoupper($post['categoria']); ?></span>
+                <span class="post-time"><?php echo date('d/m', strtotime($post['data_post'])); ?></span>
             </div>
-        <?php endwhile; 
-    else: ?> 
-        <p style="text-align: center; opacity: 0.6; font-size: 1.3rem;">Ninguém fofocou nada ainda...</p> 
-    <?php endif; ?>
-</div>
+            <div class="card-body">
+                <p class="post-content-focado"><?php echo htmlspecialchars($post['mensagem']); ?></p>
+            </div>
+        </article>
+
+        <section class="sessao-fofoca-focada" id="fofocar">
+            <h3 class="titulo-fofoca">Opino ou prefiro não opinar?</h3>
+
+            <form action="enviar-comentario.php" method="POST" class="form-fenda">
+                <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
+
+                <textarea name="comentario" class="textarea-fenda" placeholder="Conte a fofoca aqui... use @ para marcar alguém!" required></textarea>
+
+                <?php
+                $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
+                if ($exibir_nome): ?>
+                    <button type="submit" class="btn-enviar-fenda">Mandar mensagem como @<?php echo htmlspecialchars($exibir_nome); ?> </button>
+                <?php else: ?>
+                    <button type="submit" class="btn-enviar-fenda anonimo">Mensagem Anônima</button>
+                <?php endif; ?>
+            </form>
+        </section>
+
+        <div class="lista-comentarios-social">
+            <?php
+            $stmt_c = $conn->prepare("SELECT * FROM comentarios WHERE id_mensagem = ? ORDER BY id DESC");
+            $stmt_c->bind_param("i", $id);
+            $stmt_c->execute();
+            $res_c = $stmt_c->get_result();
+
+            if ($res_c->num_rows > 0):
+                while ($c = $res_c->fetch_assoc()): ?>
+                    <div class="comentario-item">
+                        <div class="comentario-meta">
+                            <strong class="comentario-autor">
+                                <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
+                            </strong>
+                            <span class="comentario-data">🕒 <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?></span>
+                        </div>
+                        <p class="comentario-texto"><?php echo formatarMencoesGeral($c['comentario']); ?></p>
+                    </div>
+                <?php endwhile;
+            else: ?>
+                <p class="sem-comentarios">Ninguém fofocou nada ainda... Seja o primeiro!</p>
+            <?php endif; ?>
+        </div>
+    </div>
 </main>
+
+<script>
+    // Se a URL tiver um parâmetro de sucesso ou se acabamos de postar
+    // Vamos fazer a página deslizar suavemente até a lista de comentários
+    window.onload = function() {
+        if (window.location.search.includes('comentario=sucesso') || document.referrer.includes('enviar-comentario')) {
+            document.querySelector('.lista-comentarios-social').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+    };
+</script>
+
 <?php include 'includes/footer.php'; ?>

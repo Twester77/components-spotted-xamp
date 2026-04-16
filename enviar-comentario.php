@@ -9,16 +9,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pega o nome da sessão se exist
     $id_mensagem = $_POST['id_mensagem'];
     $comentario = $_POST['comentario'];
     $usuario_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : null;
-        
+
 
     $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iss", $id_mensagem, $comentario, $usuario_nome);
 
-             // "iss" -> i (inteiro), s (string comentário), s (string nome)
+    // "iss" -> i (inteiro), s (string comentário), s (string nome)
 
     if ($stmt->execute()) {
-        
+
         //   CÉREBRO DE MENÇÕES NOS COMENTÁRIOS 
         if (preg_match_all('/@([^\s]+)/', $comentario, $matches)) {
             $mencoes = $matches[1]; // Pega exatamente como no seu enviar-post.php
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pega o nome da sessão se exist
 
         //  FIM DO CÉREBRO 
 
-        header("Location: post.php?id=" . $id_mensagem);
+        header("Location: post.php?id=$id_mensagem&comentario=sucesso");
         exit();
     } else {
         echo "Erro ao comentar: " . $conn->error;
