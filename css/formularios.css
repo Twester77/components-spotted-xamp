@@ -37,7 +37,7 @@ form {
     width: 95% !important;
     max-width: 400px !important;
     margin: 30px auto !important;
-    padding: 30px !important;
+    padding: 20px !important;
     background: #0a0a0a38 !important;
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
     border-radius: 20px !important;
@@ -147,13 +147,15 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    height: clamp(200px, 25vw, 400px) !important;
+    height: clamp(200px, 35vw, 800px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
     background: #0a0a0a;
     margin-bottom: 50px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid #98529e9c;
+    border-radius: 20px;
 }
 
 .capa-img {
@@ -161,7 +163,8 @@ form[action="confirma-login.php"] {
     height: 100%;
     object-fit: cover;
     object-position: center 20%;
-     aspect-ratio: 16/6;
+     aspect-ratio: 16/9!important;
+    
 }
 
 .bio-texto, .post-content, .card-body p, .comentario-item span {
@@ -279,13 +282,12 @@ textarea {
 /* Página perdidos */
 .painel-sessao {
     max-width: auto;
-    min-height: 150px;
+    min-height: 100px;
     margin: 0 auto 30px auto;
-    background: rgba(255, 255, 255, 0.08);
+    background: transparent;
     padding: 20px;
     border-radius: 15px;
     text-align: center;
-    border: 1px solid rgba(255, 188, 0, 0.3);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -296,7 +298,7 @@ textarea {
 .painel-sessao p {
     color: #fff;
     margin: 0;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 500;
     line-height: 1.2;
 }
@@ -428,8 +430,8 @@ textarea {
 }
 
 .avatar-perfil {
-    width: 120px;
-    height: 120px;
+    max-width: 300px;
+    max-height: 300px;
     object-fit: cover;
     border-radius: 50%;
     border: 3px solid #ff7011;
@@ -516,9 +518,10 @@ textarea {
 
 .avatar-wrapper {
     position: relative;
-    width: 120px;
-    height: 120px;
-    margin: -60px auto 0 auto;
+    max-width: 200px;
+    max-height: 200px;
+    aspect-ratio: 1/1;
+    margin: -60px auto 0 auto!important;
     z-index: 10;
 }
 
@@ -650,7 +653,6 @@ input[type="checkbox"]:focus {
     min-width: 150px; 
     padding: 10px 25px !important;
     white-space: nowrap !important;
-    font-size: clamp(0.6rem, 2vw, 0.9rem) !important;
     font-weight: 800;
     text-transform: uppercase;
     text-decoration: none !important;

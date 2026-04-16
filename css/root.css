@@ -3,7 +3,7 @@
 
 :root {
     --cor-principal: #004a8d; 
-    --cor-hover: #1b77c7;
+    --cor-hover: #126fc0;
     --laranja-fenda: rgba(241, 103, 5, 0.9);
     --dourado: #ffbc00;
 
@@ -42,6 +42,17 @@ html {
     scroll-behavior: smooth;
 }
 
+/* Só permite o efeito se NÃO for dispositivo touch */
+body:not(.is-touch-device) .comentario-item:hover {
+    transform: scale(1.02);
+    filter: brightness(1.2);
+    transition: 0.3s;
+}
+
+/* No touch, a gente usa o :active pra dar aquele feedback rápido de clique */
+body.is-touch-device .comentario-item:active {
+    background: rgba(255,255,255,0.2);
+}
 
 .capa-default-fenda {
     width: 100%;

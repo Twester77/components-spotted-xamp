@@ -101,17 +101,53 @@
         }
     }, { once: true });
 
-    //  NAVBAR MOBILE 
-    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
-    dropdownLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768) {
+    // NAVBAR MOBILE & LANDSCAPE 
+const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
+
+dropdownLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Checa se é touch ou se a tela é pequena (cobre mobile em pé e deitado)
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        const isMobileWidth = window.innerWidth <= 1024; // Aumentamos pra pegar celular deitado
+
+        if (isTouch || isMobileWidth) {
+            const pai = this.parentElement;
+            
+            // Se o menu não está aberto, a gente abre e impede o link
+            if (!pai.classList.contains('active')) {
                 e.preventDefault();
-                const pai = this.parentElement;
-                pai.classList.toggle('active');
-            }
-        });
+                
+                // Opcional: Fecha outros menus que estiverem abertos
+                document.querySelectorAll('.menu-item.dropdown').forEach(item => {
+                    if (item !== pai) item.classList.remove('active');
+                });
+
+                pai.classList.add('active');
+            } 
+            // Se já está aberto, ele segue o link normalmente (segundo clique)
+        }
     });
+});
+
+    function ajustarHoverMobile() {
+    // Checa se o dispositivo é touch E se está deitado (landscape)
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+
+    if (isTouch) {
+        // Se for touch, a gente pode adicionar uma classe no body pra desativar os hovers no CSS
+        document.body.classList.add('is-touch-device');
+        console.log("Modo Touch Detectado: Desativando efeitos de hover para evitar bugs.");
+    } else {
+        document.body.classList.remove('is-touch-device');
+    }
+}
+
+// Roda ao carregar e ao girar a tela
+window.addEventListener('resize', ajustarHoverMobile);
+window.addEventListener('load', ajustarHoverMobile);
+window.addEventListener('orientationchange', ajustarHoverMobile);
+
 
     // REAÇÕES MOBILE 
     const botoesReagir = document.querySelectorAll('.btn-reagir');

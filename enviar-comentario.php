@@ -6,16 +6,21 @@ include 'conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {   // Pega o nome da sessão se existir, do contrário ele fica vazio (para o banco de dados tratar como anônimo)
 
+    // Pega o parent_id se vier do formulário, senão deixa NULL
+    $parent_id = !empty($_POST['parent_id']) ? intval($_POST['parent_id']) : null;
     $id_mensagem = $_POST['id_mensagem'];
     $comentario = $_POST['comentario'];
     $usuario_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : null;
+    $vibe = $_POST['pref_vibe_comentario'] ?? 'vibe-glass';
+    $cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
 
-
-    $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome) VALUES (?, ?, ?)";
+    // Adicionamos o parent_id no SQL
+    $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome, parent_id, pref_vibe_comentario, pref_cor_borda) 
+        VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iss", $id_mensagem, $comentario, $usuario_nome);
-
-    // "iss" -> i (inteiro), s (string comentário), s (string nome)
+    
+    // i = int, s = string, s = string, i = int (ou null), s = string, s = string
+$stmt->bind_param("ississ", $id_mensagem, $comentario, $usuario_nome, $parent_id, $vibe, $cor_borda);
 
     if ($stmt->execute()) {
 

@@ -11,14 +11,18 @@ if (!isset($_SESSION['usuario_id'])) {
 
 $id_meu = $_SESSION['usuario_id'];
 
-// BUSCA DE DADOS (Uma única vez)
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id FROM usuarios WHERE id = '$id_meu'";
+// BUSCA DE DADOS - Agora incluindo as vibes e mantendo o resto
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
-// Configuração dos caminhos das imagens
+// Configuração dos caminhos
 $foto_atual = !empty($dados['foto']) ? "uploads/" . $dados['foto'] : "imagensfoto/default.jpg";
 $capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfoto/capa_padrao.jpg";
+
+// Variáveis para as Vibes
+$vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
+$cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
 
 // Verifica se é a "Presença" (ID 1) 
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
@@ -132,7 +136,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                             <i class="fas fa-biohazard"></i> Biohazard
                         </button>
                         <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')">
-                            <i class="fas fa-crosshairs"></i> CS 
+                            <i class="fas fa-crosshairs"></i> CS
                         </button>
                         <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')">
                             <i class="fas fa-bell-slash"></i> Mudo
@@ -140,6 +144,17 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     </div>
                 </div>
             </div>
+            <div class="customizacao-post">
+                <select name="pref_vibe_comentario" class="input-fenda">
+                    <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
+                    <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
+                    <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
+                    <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
+                </select>
+
+                <input type="color" name="pref_cor_borda" value="<?php echo $cor_default; ?>">
+            </div>
+            
             <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
                 <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
                 <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">

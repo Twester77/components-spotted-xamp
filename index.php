@@ -13,14 +13,13 @@ include 'includes/header.php';
     <?php if(!isset($_SESSION['usuario_id'])): ?>
         <?php include 'includes/login.php'; ?>
     <?php else: ?>
-        <div style="background: rgba(255, 255, 255, 0.07); 
+        <div style="background:transparent; 
                     backdrop-filter: blur(10px); 
                     padding: 30px; 
                     border-radius: 20px; 
                     text-align: center; 
                     margin-bottom: 40px; 
-                    border: 1px solid rgba(255, 188, 0, 0.3); 
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                    ">
             
             <div style="font-size: 40px; margin-bottom: 10px;">🎓</div>
             
