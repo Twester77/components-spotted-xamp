@@ -25,8 +25,8 @@
             ⚠️ 
             <?php 
                 if ($_GET['erro'] == 'senha') echo "Senha incorreta, patrão! Tenta de novo.";
-                if ($_GET['erro'] == 'usuario') echo "Usuário não encontrado no radar.";
-                if ($_GET['erro'] == 'pendente') echo "Opa! Ativa esse e-mail primeiro.";
+                if ($_GET['erro'] == 'usuario') echo "Usuário não encontrado.";
+                if ($_GET['erro'] == 'pendente') echo "Eita.. Ativa esse e-mail primeiro!";
             ?>
         </div>
         <?php endif; ?>
@@ -43,12 +43,12 @@
 
         <div style="margin: 15px 0; display: flex; align-items: center; gap: 8px; justify-content: flex-start;">
             <input type="checkbox" name="terms" id="terms" required style="width: auto; margin: 0; cursor: pointer;">
-            <label for="terms" style="font-size: 14px; color: #e4ce0d33; font-weight: bold; cursor: pointer; line-height: 1;">
-                Eu aceito as <a href="diretrizes.php" style="color: #d6a70d; text-decoration: underline; display: inline;">Diretrizes de Segurança</a>
+            <label for="terms" style="font-size: 15px; color: #ffffffa2; font-weight: bold; cursor: pointer; line-height: 1;">
+                Eu aceito as <a href="diretrizes.php" style=" text-decoration: underline; display: inline;">Diretrizes de Segurança</a>
             </label>
         </div>
 
-        <button type="submit" class="login-btn" style="background: linear-gradient(135px, #08d888, #05a870); border: none; box-shadow: 0 4px 15px rgba(8, 216, 136, 0.3); width: 100%; padding: 12px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer;">
+        <button type="submit" class="login-btn" style=" border: none; box-shadow: 0 4px 15px rgba(8, 216, 136, 0.3); width: 100%; padding: 12px; border-radius: 10px; color: white; font-weight: bold; cursor: pointer;">
            ACESSAR A FENDA 
         </button>
         

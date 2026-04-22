@@ -104,6 +104,21 @@ header h1 {
 
 /* --- MENU NAVBAR (RECUPERADO) --- */
 
+.fenda-saudacao {
+    margin: 20px auto;
+    padding: 15px;
+    width: 100%;
+    justify-content: center;
+}
+
+    img {
+    max-width: 100%;
+    height: auto; /* Mantém a proporção */
+    justify-content: center;
+}
+
+
+
 main article {
     width: 100% !important;
     text-align: left !important;
@@ -114,7 +129,7 @@ main article {
 }
 
 main {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 10px auto;
     padding: 0 15px !important;
     /* Isso devolve o respiro nas laterais */
@@ -137,14 +152,14 @@ main {
     margin-bottom: 15px;
     position: relative;
     z-index: 9999;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(5, 14, 65, 0.301);
 }
 
 .menu-item a {
     color: #ffffff !important;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(1.5rem, 1.2rem + 0.5vw, 2.2rem);
+    font-size: clamp(1.5rem, 1.2rem + 0.5vw, 2.1rem);
     line-height: 1.5;
     padding: 8px 18px;
     display: block;
@@ -222,30 +237,106 @@ main {
     flex-direction: column;
 }
 
-
-
-/*---------FOTER E MODAL--------*/
-
-footer {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 20px;
-    text-align: center;
-    border-top: 1px solid rgba(255, 188, 0, 0.2);
-    margin-top: 50px;
+/* O Container que segura a onda no index */
+.fenda-container {
+    width: 100%;         
+    max-width: 1000px;   
+    margin: 0 auto;     
+    padding: 20px 5px; 
+    box-sizing: border-box;
 }
 
+/* Consertando as imagens de baixo que cortam */
+.fenda-container img {
+    max-width: 100%;    
+    height: auto;       
+}
+
+/* Ajuste específico para as duas fotos dos Campus */
+.fenda-container div[style*="flex"] {
+    gap: 15px !important;
+}
+
+
+
+
+/* Container de botões - Não afeta o resto do site */
+.fenda-acoes-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 25px;
+    width: 100%; 
+}
+
+/* Base dos botões com brilho */
+.fenda-btn-glow {
+    padding: 12px 35px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: none;
+}
+
+
+.fenda-primary {
+    background: #ffbc00;
+    color: #000;
+}
+
+
+.fenda-outline {
+    background: rgba(204, 66, 12, 0.1);
+    color: #fa593d;
+    border: 1px solid #cc420c !important;
+}
+
+
+.fenda-btn-glow:hover {
+    filter: brightness(1.1); 
+    transform: scale(1.05); 
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.fenda-primary:hover {
+    box-shadow: 0 0 15px rgba(255, 188, 0, 0.4);
+}
+
+.fenda-outline:hover {
+    background: rgba(248, 78, 11, 0.753);
+    border-color: #ff824d !important;
+    color: #dddddd;
+
+}
+
+
+/* FOTER E MODAL */
+
 footer {
+    clear: both; /* Garante que ele saia debaixo de floats */
+    width: 100%;
+    background: #1a1a1a5e; /* Ou a cor que você usa */
+    padding: 20px 20px;
+    margin-top: 30px; 
     text-align: center;
-    padding: 25px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.8rem;
-    margin-top: 50px;
+    border-top: 1px solid rgba(255, 188, 0, 0.2);
+    text-align: center;
+    color: rgba(250, 202, 44, 0.753);
+    font-size: 0.9rem;
     flex-shrink: 0;
     /* Impede o footer de ser "esmagado" */
 }
 
+   
+
 footer a {
-    color: #fff;
     text-decoration: underline;
 }
 
@@ -257,8 +348,8 @@ footer a {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.85);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -376,6 +467,12 @@ footer a {
 
 }
 
+.fa-clock small {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffffbe;
+}
+
 .card-notificacao:hover {
     background-color: #252525 !important;
     transform: scale(1.05);
@@ -421,14 +518,11 @@ footer a {
     bottom: 25px;
     right: 25px;
     background: rgba(10, 10, 10, 0.95);
-    /* Fundo escuro igual ao seu formulário */
     color: white;
     padding: 18px 25px;
     border-radius: 15px;
     border: 1px solid rgba(255, 188, 0, 0.3);
-    /* Borda dourada suave */
     border-left: 5px solid var(--dourado);
-    /* Destaque dourado na lateral */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     z-index: 10001;
     display: flex;
@@ -462,6 +556,7 @@ footer a {
     /* Título mais visível */
     margin-bottom: 3px;
 }
+
 
 
 
@@ -557,68 +652,6 @@ footer a {
 
 
 
-/* Seção de Publicar */
-.sessao-publicar {
-    padding: 30px;
-    border-radius: 20px;
-    max-width: auto;
-    align-items: center;
-    background-color: #4941411f !important;
-    /* Preto quase total */
-    margin: 40px 0;
-    border: 1px solid rgba(131, 92, 92, 0.041);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    /* Sombra para dar profundidade */
-}
-
-
-.form-publicar select,
-.form-publicar textarea {
-    width: 100%;
-    padding: 15px;
-    border-radius: 8px;
-    color: #fff;
-    border: 1px solid #444;
-    margin-bottom: 15px;
-    transition: 0.3s;
-}
-
-.form-publicar textarea {
-    min-height: 100px;
-    letter-spacing: 2px;
-    font-size: 14px;
-
-}
-
-.form-publicar select:focus,
-.form-publicar textarea:focus {
-    border-color: #ffbc00;
-    outline: none;
-    background: rgba(0, 0, 0, 0.589) !important;
-
-}
-
-
-/* O botão "Lançar" (Publicar) */
-.btn-lancar {
-    background: #00ff55ab;
-    color: #000;
-    border: none;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    cursor: pointer;
-    width: 100%;
-    transition: 0.3s;
-}
-
-.btn-lancar:hover {
-    background: #04ff58d7;
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
-}
-
 .nota-seguranca {
     background-color: #ffffcc;
     color: #000;
@@ -630,46 +663,41 @@ footer a {
 }
 
 
-.badge-alerta {
+/* Limpa os anteriores e usa só este: */
+.notificacao-wrapper {
+    position: relative;
+    display: inline-flex; /* Alinha direitinho com os outros ícones do header */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0 10px; /* Dá um respiro entre o sino e os outros botões */
+}
+
+.badge-alertas {
     position: absolute;
-    top: -8px;
-    right: -10px;
-    background-color: #ff4b2b;
+    top: -4px;
+    right: -6px;
+    background: linear-gradient(45deg, #ff4b2b, #ff416c); 
     color: white;
     font-size: 10px;
     font-weight: bold;
     min-width: 18px;
     height: 18px;
-    padding: 2px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #ffbc00;
-    z-index: 10;
+    border: 2px solid #ffffff; 
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    animation: pulsarNotif 3s infinite; /* Ativa a animação que você já criou! */
 }
 
-
+/* Sua animação que já é top */
 @keyframes pulsarNotif {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-
-.notificacao-wrapper {
-    position: relative;
-    /* Sem isso o número foge para o canto */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); shadow: 0 0 10px rgba(255, 75, 43, 0.5); }
+    100% { transform: scale(1); }
 }
 
 .alerta-login a {
@@ -689,7 +717,7 @@ footer a {
     align-items: stretch !important;
     gap: 8px !important;
     width: 100% !important;
-    max-width: 600px !important;
+    max-width: 500px !important;
     margin: 25px auto !important;
     background: transparent !important;
     border: none !important;
@@ -736,7 +764,7 @@ footer a {
 
 /* 2. Lista de Resultados  */
 .lista-resultados {
-    width: 300px !important;
+    max-width: 300px !important;
     max-width: auto !important;
     margin: 20px auto !important;
     display: flex !important;
@@ -810,12 +838,6 @@ footer a {
         margin: 0 0 20px 0 !important;
     }
 
-    /* Ajuste do formulário mobile */
-    .sessao-publicar {
-        width: 100% !important;
-        border-radius: 0 !important;
-        padding: 20px 15px !important;
-    }
 
     body {
         background-image: none !important;
@@ -850,11 +872,9 @@ footer a {
     }
 
     form {
-        width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
     }
-
 
 
     /* O estado ativo disparado pelo JS */
@@ -879,6 +899,17 @@ footer a {
             transform: translateY(0);
         }
     }
+
+    /* Container index*/
+    .fenda-container div[style*="flex"] {
+        flex-direction: column !important; 
+        align-items: center;
+    }
+    
+    .fenda-container img[style*="width: 50%"] {
+        width: 100% !important; 
+    }
+
 
     /* Ajuste pros links não ficarem gigantes em celulares menores */
     .menu-item.dropdown.active .submenu li a {
@@ -912,6 +943,7 @@ footer a {
         border-left: none !important;
         border-right: none !important;
         padding: 20px 15px !important;
+        max-width: 400px;
     }
 
     /* Os cards também aproveitam o espaço */
@@ -978,18 +1010,15 @@ footer a {
     }
 
     .comentario-item {
-        padding: 8px 10px !important;
+        padding: 8px 10px !important; 
+        font-size: 0.95rem;
+        /* Ajuste leve para telas pequenas */
     }
 
     .spotted-card {
         padding: 10px;
         width: 90%;
         scroll-margin-top: 80px;
-    }
-
-    .post-content {
-        font-size: 1.4rem;
-        max-height: 6em;
     }
 
     .category-tag {
@@ -1022,12 +1051,12 @@ footer a {
     .btn-fofocar {
         color: #ccc;
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.85rem!important;
     }
 
     .filtro-btn {
         text-decoration: none;
-        font-size: 14px !important;
+        font-size: 16px !important;
         font-weight: 800;
         padding: 8px 10px !important;
     }
@@ -1056,8 +1085,9 @@ footer a {
     .nome-publico {
         justify-content: center !important;
         flex-wrap: wrap;
-        font-size: 1.5rem !important;
+        font-size: 1.2rem !important;
         line-height: 1;
+        margin-top: 10px;
     }
 
     .capa-container {
@@ -1074,8 +1104,8 @@ footer a {
     }
 
     .insignia-atletica-bottom {
-        width: 50px;
-        height: 50px;
+        width: 50px!important;
+        height: 50px!important;
     }
 
     .bio-texto {
@@ -1102,32 +1132,48 @@ footer a {
         /* Um pequeno respiro lateral */
     }
 
-    .comentario-item {
-        font-size: 0.95rem;
-        /* Ajuste leve para telas pequenas */
+   
+
+    .container-feed article {
+        min-width: 280px !important; /* Um pouquinho mais de margem lateral */
+        flex: 1 1 100% !important; /
+        
     }
 
-    .avatar-main {
-        width: 100px !important;
-        height: 100px !important;
-        aspect-ratio: 1/1;
+    .post-content {
+        font-size: 16px !important; 
+        max-height: 5rem;
+        
     }
 
     .avatar-posicionador {
-    position: absolute;
-    bottom: -70px !important;
     /* Quanto ocupa da capa */
-    width: 150px!important;
-    height: 150px!important;
-    gap:5px
+    width: 100px!important;
+    height: 100px!important; }
 
+    .avatar-main {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+    max-width: 100px!important;
+    max-height: 100px!important;
+}
+
+.avatar-wrapper {
+    max-width: 100px!important;
+    max-height: 100px!important;
+}
+
+.avatar-p {
+    width: 55px !important;
+    height: 55px !important;
 }
 
 }
 
 /* Fecha o @Media Hover  */
-
-
 
 
 /* Ajuste para celulares deitados (Landscape) ou telas muito baixas */
@@ -1193,13 +1239,25 @@ footer a {
         grid-template-columns: none !important;
     }
 
-    .avatar-main {
-        width: 150px !important;
-        height: 150px !important;
-        aspect-ratio: 1/1;
-    }
+   
+    .avatar-posicionador {
+    position: absolute;
+    bottom: -70px !important;
+    /* Quanto ocupa da capa */
+    max-width: 160px!important;
+    max-height: 160px!important;
+    gap:5px
+}
+
+.img-avatar-perfil {
+    max-width: 160px!important;
+    max-height: 160px!important;
+    aspect-ratio: 1/1;
+    
+}
 
 }
+
 
 
 /* Ajuste para telas MUITO pequenas (tipo o SE) não esmagarem os cards */
@@ -1209,9 +1267,17 @@ footer a {
         /* Mantém 2, mas diminui o gap */
         gap: 10px !important;
     }
+    .avatar-main {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+    max-width: 120px!important;
+    max-height: 120px!important;
+}
     
 }
-
 
 
 /* 2. TABLETS, KINDLE E CELULAR DEITADO (O "Meio termo") */
@@ -1237,7 +1303,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
 
     .btn-reagir,
     .btn-fofocar {
-        font-size: 0.8rem;
+        font-size: 0.9rem !important;
         gap: 8px;
     }
 
@@ -1284,7 +1350,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
         /* Garante que role a tela se for longo */
         display: flex !important;
         flex-direction: column !important;
-        width: 95% !important;
+        width: 100% !important;
         padding: 15px !important;
         background-color: #0d0d0d !important;
     }
@@ -1294,6 +1360,8 @@ screen and (max-height: 600px) and (orientation: landscape) {
         max-height: 150px !important;
         aspect-ratio: 1/1;
     }
+
+   
 
 }
 
@@ -1306,6 +1374,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
 
     .container-feed {
         grid-template-columns: repeat(3, 1fr) !important;
+        max-width: 800px!important;
     }
 
     /* 1. Aumenta a base de tudo para não parecer pequeno no 1080p */
@@ -1370,7 +1439,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
         gap: 20px !important;
         width: 100% !important;
         /* Quase a tela toda */
-        max-width: 1400px !important;
+        max-width: 1500px !important;
         /* Limite elegante */
         margin: 30px auto !important;
         /* CENTRALIZAÇÃO REAL */
@@ -1379,7 +1448,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
 
     /* Alarga o Perfil/Formulário */
     .main-perfil-container {
-        width: 90% !important;
+        width: 95% !important;
         max-width: 1100px !important;
         margin: 50px auto !important;
         display: block !important;
@@ -1392,8 +1461,8 @@ screen and (max-height: 600px) and (orientation: landscape) {
     }
 
     .avatar-main {
-        width: 200px !important;
-        height: 200px !important;
+        max-width: 200px !important;
+        max-height: 200px !important;
         aspect-ratio: 1/1;
     }
 
@@ -1559,7 +1628,6 @@ textarea[name="bio"] {
 }
 
 
-
 /* Move o Avatar para o CENTRO e diminui um pouco o tamanho */
 
 .avatar-perfil-wrapper {
@@ -1610,10 +1678,19 @@ textarea[name="bio"] {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 4px solid var(--dourado);
     object-fit: cover;
     background: #000;
+    max-width: 300px;
+    max-height: 300px;
+    border: 2px solid #ff7011;
+    margin-bottom: 15px;
 }
+
+.img-avatar-main {
+    border: 2px solid #ff7011;
+    margin-bottom: 15px;
+}
+
 
 
 /* --- LOGIN MODO SR-71 STEALTH (TOTALMENTE INVISÍVEL) --- */
@@ -1625,7 +1702,6 @@ textarea[name="bio"] {
     border: none !important;
     box-shadow: none !important;
     width: 100% !important;
-    max-width: 500px !important;
     margin: 0 auto !important;
     padding: 20px !important;
 }
@@ -1634,7 +1710,7 @@ textarea[name="bio"] {
 form[action="confirma-login.php"] input[type="text"],
 form[action="confirma-login.php"] input[type="password"] {
     background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 188, 0, 0.4) !important;
+    border: 1px solid rgba(255, 187, 0, 0.288) !important;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
 }
 
@@ -1658,7 +1734,7 @@ form[action="confirma-login.php"] input[type="password"] {
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
-    padding: 80px 15px 40px 15px;
+    padding: 60px 15px 40px 15px;
     /* Espaço para o navbar lá no topo */
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -1679,7 +1755,7 @@ form[action="confirma-login.php"] input[type="password"] {
 /* O "BOX" CENTRALIZADO */
 .box-post-central {
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     /* Largura de rede social (Twitter/X style) */
     display: flex;
     flex-direction: column;
@@ -1717,15 +1793,14 @@ form[action="confirma-login.php"] input[type="password"] {
 /* FORMULÁRIO DE FOFOCA */
 .form-fenda {
     background: #1a1a1a;
-    padding: 20px;
     border-radius: 12px;
     border: 1px solid #333;
     padding: 20px;
+    max-width: 400px;
 }
 
 .textarea-fenda {
     
-    min-height: 100px;
     background: #111;
     color: #fff;
     border: 1px solid #444;
@@ -1734,7 +1809,11 @@ form[action="confirma-login.php"] input[type="password"] {
     font-family: inherit;
     resize: vertical;
     margin-bottom: 10px;
+    min-height: 100px; 
+    max-height: 200px; 
+    overflow-y: auto;  /* Se o texto for grande, ele cria scroll interno */
 }
+
 
 .btn-enviar-fenda {
     width: 100%;
@@ -1754,14 +1833,14 @@ form[action="confirma-login.php"] input[type="password"] {
 }
 
 
-/* COMENTÁRIOS - Versão Slim Premium */
+/* COMENTÁRIOS - Versão Slim  */
 
 .comentario-item {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.014);
     margin-top: 10px;
     margin-bottom: 12px;
     border-left-style: solid;
-    border-left-width: 6px;
+    border-left-width: 8px;
     border-radius: 10px;
     padding: 12px 15px;
     display: flex;
@@ -1772,40 +1851,19 @@ form[action="confirma-login.php"] input[type="password"] {
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
         box-shadow 0.3s ease,
         background 0.3s ease;
-    /* A BASE DO COMENTÁRIO */
 }
 
 
-/* CORES VIVAS */
-.borda-neon-azul {
-    border-left-color: #00f3ff !important;
-}
-
-.borda-neon-rosa {
-    border-left-color: #ff007f !important;
-}
-
-.borda-neon-verde {
-    border-left-color: #37ff14ea !important;
-}
-
-.borda-neon-laranja {
-    border-left-color: #ff6700 !important;
-}
-
-.borda-neon-amarelo {
-    border-left-color: #fff000 !important;
-}
 
 
 /* OS ESTILOS DE FUNDO (Vibes) */
 
 /* MODO DARK: Eigengrau  */
 .comentario-item.vibe-dark {
-    background: rgba(22, 22, 29, 0.9);
+    background: rgba(22, 22, 29, 0.911);
     /* O legítimo Eigengrau */
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     color: #eeeeee;
     border-left: 6px solid;
 }
@@ -1816,7 +1874,7 @@ form[action="confirma-login.php"] input[type="password"] {
     background: #000000 !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    border-left: 7px solid;
+    border-left: 8px solid;
     border-radius: 8px;
     margin-bottom: 15px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--cor-borda-glow);
@@ -1846,7 +1904,7 @@ form[action="confirma-login.php"] input[type="password"] {
     53%,
     57%,
     100% {
-        filter: saturate(0.5);
+        filter: saturate(0.7);
         border-left-color: var(--cor-borda-glow);
         box-shadow: 0 0 10px var(--cor-borda-glow);
     }
@@ -1866,8 +1924,8 @@ form[action="confirma-login.php"] input[type="password"] {
 /* MODO LIGHT*/
 .comentario-item.vibe-light {
     background: rgba(255, 255, 255, 0.897);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     color: #111111 !important;
 }
 
@@ -1890,16 +1948,17 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /* MODO GLASS */
 .comentario-item.vibe-glass {
-    background: rgba(255, 255, 255, 0.1);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.041)!important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #252525!important;
 }
 
 
 
 .comentario-item:hover {
 
-    transform: translateY(-8px) scale(1.01);
+    transform: translateY(-8px) scale(1.05);
     background: rgba(255, 255, 255, 0.15);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5),
         0 0 20px rgba(112, 205, 228, 0.2);
@@ -1927,7 +1986,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /*HORARIO E DATA*/
 .comentario-item span {
-    font-size: 0.95rem !important;
+    font-size: 0.9rem !important;
     line-height: 1.4;
     color: #eee;
 }
@@ -1944,9 +2003,8 @@ body.is-touch-device .vibe-light .comentario-texto {
 .btn-responder {
     background: none;
     border: none;
-    color: var(--dourado);
-    /* Usa sua variável dourada */
-    font-size: clamp(1.125rem, 0.382vw + 1.041rem, 1.5rem) !important;
+    color:  rgba(241, 103, 5, 0.9);
+    font-size: clamp(1.125rem, 0.382vw + 1.041rem, 1.7rem) !important;
     font-weight: bold;
     cursor: pointer;
     padding: 5px 0;
@@ -1982,7 +2040,6 @@ body.is-touch-device .vibe-light .comentario-texto {
     color: var(--dourado);
     padding: 3px 10px;
     border-radius: 15px;
-    font-size: 0.7rem;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -2024,21 +2081,12 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 
-/* No seu arquivo de estilo do novo-post.php */
-.main-main-novo-post {
-    display: flex;
-    align-items: center; 
-    justify-content: center;
-    min-height: calc(100vh - 100px)!important; /* Desconta o header/footer */
-    max-width: 400px !important;
-
-}
 
 .card-novo-post {
-    height: auto ; /* Mata o esticamento infinito */
+    width: auto;
     background: #1a1a1a;
     border-radius: 15px;
-    padding: 25px;
+    padding: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
@@ -2081,6 +2129,7 @@ body.is-touch-device .vibe-light .comentario-texto {
     text-decoration: none;
     font-size: 1.1rem;
     margin-bottom: 10px;
+    height:auto; 
     transition: 0.3s;
 }
 
@@ -2091,11 +2140,11 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /* PULSAR DA BORDA */
 .card-focado {
-    border: 2px solid var(--dourado) !important;
+    border: 1px solid var(--dourado) !important;
     position: relative;
     /* Faz o brilho pulsar devagar */
     animation: glowPulsar 3s infinite alternate;
-    transform: scale(1.05);
+    transform: scale(1.02);
     /* Leve aumento para mostrar quem manda */
     margin-bottom: 40px !important;
     /* Espaço para não encavalar nos comentários */
@@ -2118,7 +2167,7 @@ body.is-touch-device .vibe-light .comentario-texto {
     border: 2px solid rgba(255, 215, 0, 0.5);
     padding: 20px;
     margin-bottom: 40px;
-    transform: scale(1.02);
+    transform: scale(1.05);
 }
 
 /* Comentário Comum */
@@ -2132,14 +2181,11 @@ body.is-touch-device .vibe-light .comentario-texto {
 .comentario-item.comentario-filho {
     width: 90% !important;
     margin-left: auto !important;
-    border-left: 3px solid rgba(221, 200, 14, 0.4);
-    background: rgba(255, 255, 255, 0.05);
     align-self: flex-end;
     /* Joga pra direita */
-    background: rgba(255, 255, 255, 0.04);
-    border-left-color: rgba(112, 205, 228, 0.5);
     font-size: 0.95rem;
     animation: slideInFilho 0.5s ease forwards;
+    color: var(--cor-borda-glow);
 }
 
 @keyframes slideInFilho {
@@ -2159,3 +2205,62 @@ body.is-touch-device .vibe-light .comentario-texto {
     opacity: 0.6;
     font-size: 0.8rem;
 }
+
+
+/* Legenda das fotos do campus */
+.legenda-campus {
+    margin-top: 15px;
+    opacity: 0.8;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Card de boas-vindas para não ficar colado */
+.card-boas-vindas-fenda {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Garantir que a fenda-container segure tudo no centro */
+.fenda-container {
+    width: 100%;
+    margin: 0 auto;
+    font-size: 16px;
+}
+
+/* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
+.titulo-home { font-size: 2.0rem; margin-bottom: 20px; margin-top: 30px; text-align: center; }
+.img-home-capa { width: 100%; height: auto; border-radius: 15px; margin: 35px 0; }
+.conteudo-principal { font-size: 16px; line-height: 1.6; text-align: left; color: #e0e0e0; }
+.aviso-legal { font-style: italic; opacity: 0.8; margin-bottom: 20px; color: #c1f700; }
+.citacao-anarquica { border-left: 5px solid #00ff00c7 ; padding: 15px; margin: 25px 0; font-style: italic; background: rgba(255, 255, 255, 0.014); }
+.bloco-conselhos { padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 15px; }
+.lista-conselhos { font-weight: bold; text-align: left; margin: 30px 0; padding-left: 20px; color: #ff9900c5; list-style-type: ' * '; }
+.campus-flex { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
+.img-campus { width: clamp(280px, 45%, 500px) !important; border-radius: 8px; }
+
+/* TRAVA DE SEGURANÇA  */
+body.hacker-mode main.hacker-mode {
+    max-width: 1000px !important;
+    margin: 0 auto !important;
+    display: block !important;
+    float: none !important;
+}
+
+/* AJUSTE DO TEXTO QUE CORTA */
+body.hacker-mode .fenda-saudacao,
+body.hacker-mode .card-boas-vindas-fenda p {
+    display: block !important; 
+    white-space: normal !important; 
+    overflow: visible !important; 
+    width: 100% !important;
+    max-width: 100%;
+
+}
+
+/* Garante que o span do nome não escape do container */
+body.hacker-mode .card-boas-vindas-fenda span {
+    word-wrap: break-word;
+    word-break: break-all; 
+}
+

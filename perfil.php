@@ -121,7 +121,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Música de Fundo</span>
                     <div class="audio-choices-container">
                         <button type="button" id="btn-som-chuva" class="btn-audio-choice" onclick="mudarSomAmbiente('chuva')">Chuva</button>
-                        <button type="button" id="btn-som-ondas" class="btn-audio-choice" onclick="mudarSomAmbiente('ondas')">Ondas</button>
+                        <button type="button" id="btn-som-ondas" class="btn-audio-choice" onclick="mudarSomAmbiente('ondas')">Oceano</button>
                         <button type="button" id="btn-som-off" class="btn-audio-choice" onclick="mudarSomAmbiente('off')">Mudo</button>
                     </div>
 
@@ -144,22 +144,23 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     </div>
                 </div>
             </div>
-            <div class="customizacao-post">
-                <select name="pref_vibe_comentario" class="input-fenda">
-                    <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
-                    <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
-                    <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
-                    <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
-                </select>
 
-                <input type="color" name="pref_cor_borda" value="<?php echo $cor_default; ?>">
-            </div>
-            
-            <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
-                <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
-                    VER PERFIL PÚBLICO</a>
-            </div>
+            <div class="campo-grupo">
+                <label>Cor da sua Aura (Borda)</label>
+            <select name="pref_vibe_padrao" class="input-fenda">
+                <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
+                <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
+                <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
+                <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
+                <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>"style="width: 100%; height: 40px; border: none; background: none; cursor: pointer;">
+            </select>
+        </div>
+
+        <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
+            <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
+            <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
+                VER PERFIL PÚBLICO</a>
+        </div>
 
         </div>
     </form>

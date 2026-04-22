@@ -1,11 +1,12 @@
 
 <?php
-/*-----------------------------------------------------------------------------------
+/*--------------------------------------------------------------------------------------------------------------
 PROJETO: A FENDA - SPOTTED UNIFEV DESENVOLVEDOR: Leonardo (O Idealizador)
 AGRADECIMENTOS: Meu Coordenador de ADS Fernando Menechelli, meu Professor de HTML Eric
 e meu "Padrinho Digital" Gemini
-pela paciência com os headers , if sem end e os includes fora de ordem de PHP!
-------------------------------------------------------------------------------------*/
+pela paciência com os headers , divs sem fechar ( ou antes da hora) , if sem end e os includes fora de ordem
+---------------------------------------------------------------------------------------------------------------*/
+session_start(); 
 
 ob_start();
 $host = "localhost";
@@ -13,10 +14,16 @@ $usuario = "root";
 $senha = "";         
 $banco = "spotted_db"; 
 
-$conn = mysqli_connect($host, $usuario, $senha, $banco);
+// Primeiro tenta a porta de casa
+$conn = mysqli_connect($host, $usuario, $senha, $banco, 3307);
+
+// Se não conectou na 3307, tenta a padrão 3306
+if (!$conn) {
+    $conn = mysqli_connect($host, $user, $pass, $db, 3306);
+}
 
 if (!$conn) {
-    die("Uga! Conexão falhou: " . mysqli_connect_error());
+    die("Erro de conexão: " . mysqli_connect_error());
 }
 
 //  Ajusta para aceitar acentos do Brasil

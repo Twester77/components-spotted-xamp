@@ -2,9 +2,9 @@
    Mantendo a estrutura original e corrigindo os bugs */
 
 :root {
-    --cor-principal: #004a8d; 
-    --cor-hover: #126fc0;
-    --laranja-fenda: rgba(241, 103, 5, 0.9);
+    --cor-principal: #024685c2; 
+    --cor-hover: #263197a1;
+    --laranja-fenda: linear-gradient(165deg, #ff520d, #8e4facaf);
     --dourado: #ffbc00;
 
 }
@@ -15,8 +15,8 @@
 html, body {
     min-height: 100vh; 
     background-color: var(--cor-principal); 
-    color: #ffffff;
-    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fffffff8;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Verdana, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;   
     font-size: 16px;
@@ -34,13 +34,11 @@ main {
     flex: 1 0 auto; 
 }
 
-footer {
-    flex-shrink: 0;
-}
 
 html {
     scroll-behavior: smooth;
 }
+
 
 /* Só permite o efeito se NÃO for dispositivo touch */
 body:not(.is-touch-device) .comentario-item:hover {
@@ -89,3 +87,4 @@ body.is-touch-device .comentario-item:active {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
     letter-spacing: 1px;
 }
+

@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <audio id="som-oceano" loop preload="auto"></audio>
+    <audio id="som-oceano" loop preload="auto">
     <source src="imagensfoto/chuva.mp3" type="audio/mpeg">
     </audio>
 
@@ -254,7 +254,7 @@ function mostrarPopup(mensagem) {
 
 // RADAR
 setInterval(function() {
-    fetch('/spotted-unifev/includes/checar-notificacoes.php')
+    fetch('includes/checar-notificacoes.php')
         .then(res => res.json())
         .then(data => {
             if (data.tem) {
@@ -264,6 +264,50 @@ setInterval(function() {
         })
         .catch(err => console.error("Radar offline:", err));
 }, 5000);
+
+function confirmarExclusao(idPost) {
+            // Usando o confirm padrão por enquanto 
+            if (confirm("🚨 ATENÇÃO: Deseja mesmo apagar esse registro da Fenda? Essa ação não pode ser desfeita!")) {
+                // Redireciona para o arquivo de lógica 
+                window.location.href = 'includes/excluir.php?id=' + idPost;
+            }
+        }
+
+        // 2. FUNÇÃO PARA DENÚNCIA (Só para não dar erro se clicarem)
+        function abrirDenuncia(idPost) {
+            alert("Denúncia do post #" + idPost + " enviada para os administradores da Fenda.");
+            // Aqui futuramente pode abrir um modal de denúncia
+        }
+
+
+        function toggleHackerMode() {
+    const body = document.body;
+    const btn = document.getElementById('hacker-toggle');
+    
+    body.classList.toggle('hacker-mode');
+    
+    if (body.classList.contains('hacker-mode')) {
+        localStorage.setItem('fenda_hacker', 'active');
+        btn.innerHTML = '[ DESLIGAR_TERMINAL ]';
+        console.log("SISTEMA: Acesso root concedido.");
+        console.clear();
+        console.log("%c[ SISTEMA INVADIDO ]", "color: #0f0; font-size: 20px; font-weight: bold;");
+        console.log("%cIniciando protocolo de interceptação de fofocas na UNIFEV...", "color: #0f0;");
+        
+    } else {
+        localStorage.setItem('fenda_hacker', 'inactive');
+        btn.innerHTML = '[ ACESSAR_TERMINAL ]';
+    }
+}
+
+// Verifica se estava ativo ao carregar a página
+window.onload = function() {
+    if (localStorage.getItem('fenda_hacker') === 'active') {
+        document.body.classList.add('hacker-mode');
+        document.getElementById('hacker-toggle').innerHTML = '[ DESLIGAR_TERMINAL ]';
+    }
+};
+
     </script>
 </footer>
 </body>

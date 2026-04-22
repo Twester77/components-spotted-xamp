@@ -1,50 +1,65 @@
+<?php 
+include 'includes/header.php'; 
+include 'includes/navbar.php'; 
+include 'includes/bolhas.php';
+?>
 
-<?php include 'includes/header.php'; ?>
-<?php include 'includes/navbar.php'; ?>
-
-<main style="max-width: 500px; margin: 40px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
-    
-    <h2 style="text-align: center; color: #f8c946ec; margin-bottom: 20px;"> Criar sua conta na Fenda</h2>
-    
-    <form action="processa-cadastro.php" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+<main class="main-form-cadastro">
+    <div class="container-cadastro-fenda">
         
-        <div class="input-group">
-            <label style="color: #eee;"> Nome ou apelido</label>
-            <input type="text" name="nome" placeholder="Ex: Fulano de Tal, Furlas" required style="width: 100%; padding: 10px; border-radius: 5px; border: none; margin-top: 5px;">
+        <div class="cadastro-header">
+            <h2>Criar sua conta na Fenda</h2>
+            <p>Junte-se à comunidade oficial da Fenda</p>
         </div>
+        
+        <form action="processa-cadastro.php" method="POST" class="form-fenda-estilizado">
+            <div class="campo-grupo-fenda">
+                <label for="nome">Nome ou Apelido</label>
+                <div class="fenda-reg-box">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Fulano, Furlas..." maxlength="30" required>
+                </div>
+            </div>
+            
+            <div class="campo-grupo-fenda">
+                <label for="email">E-mail Institucional (RA)</label>
+                <div class="fenda-reg-box">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" 
+                           id="email"
+                           name="email" 
+                           placeholder="ex: 1234@unifev.edu.br" 
+                           pattern=".+@unifev\.edu\.br" 
+                           title="Use seu e-mail @unifev.edu.br"
+                           required>
+                </div>
+            </div>
 
-        <div class="input-group">
-    <label style="color: #eee;"> E-mail Institucional (RA)</label>
-    <input type="email" 
-           name="email" 
-           placeholder="ex: 1234@unifev.edu.br" 
-           pattern=".+@unifev\.edu\.br" 
-           title="Por favor, use seu e-mail da UNIFEV (@unifev.edu.br)"
-           required 
-           style="width: 100%; padding: 10px; border-radius: 5px; border: none; margin-top: 5px;">
-</div>
+            <div class="campo-grupo-fenda">
+                <label for="senha">Crie uma Senha</label>
+                <div class="fenda-reg-box">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="senha" name="senha" placeholder="8 a 20 caracteres" maxlength="20" minlength="8" required>
+                </div>
+            </div>
 
+            <div class="termos-wrapper">
+                <label class="checkbox-custom">
+                    <input type="checkbox" name="termos" required>
+                    <span class="checkmark"></span>
+                    Reafirmo que eu li e concordo com as <a href="diretrizes.php"> Diretrizes da Comunidade</a>.
+                </label>
+            </div>
 
-        <div class="input-group">
-            <label style="color: #eee;"> Crie uma Senha</label>
-            <input type="password" name="senha" placeholder="Mínimo 8 caracteres" required minlength="8" style="width: 100%; padding: 10px; border-radius: 5px; border: none; margin-top: 5px;">
-        </div>
+            <button type="submit" class="btn-finalizar-fenda">
+                FINALIZAR CADASTRO <i class="fas fa-rocket"></i>
+            </button>
 
-        <div style="margin: 10px 0; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="termos" id="termos" required>
-            <label for="termos" style="font-size: 13px; color: #ccc;">
-                Concordo com as <a href="diretrizes.php" style="color: #ffbc00;">Diretrizes da Comunidade</a>.
-            </label>
-        </div>
-
-        <button type="submit" style="background: #cc420c; color: white; border: none; padding: 12px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s;">
-            Finalizar Cadastro 
-        </button>
-
-        <p style="text-align: center; font-size: 14px; color: #eee;">
-            Já tem conta? <a href="index.php" style="color: #08d888ab; font-weight: bold;">Faça Login</a>
-        </p>
-    </form>
+            <div class="form-footer">
+                Já tem conta? <a href="index.php">Faça Login</a>
+            </div>
+        </form>
+    </div>
 </main>
 
 <?php include 'includes/footer.php'; ?>

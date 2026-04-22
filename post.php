@@ -21,7 +21,7 @@ $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 $cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
 
 if (!$post) {
-    die("<main> <style> body { font-size:2.3rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
+    die("<main> <style> body { font-size:2.2rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
 }
 ?>
 
@@ -52,14 +52,14 @@ if (!$post) {
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span style="font-size: 0.8rem; color: #ccc;">Vibe do Card:</span>
                         <select name="pref_vibe_comentario" class="input-fenda" style="padding: 5px; font-size: 0.8rem;">
-                            <option value="vibe-glass">Padrão (Vidro)</option>
-                            <option value="vibe-neon">Neon (Preto Profundo)</option>
-                            <option value="vibe-dark">Dark (Eigengrau)</option>
-                            <option value="vibe-light">Light (Solar)</option>
+                            <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
+                            <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
+                            <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
+                            <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar - Não Usar no Modo Terminal)</option>
                         </select>
 
                         <span style="font-size: 0.8rem; color: #ccc; margin-left: 10px;">Cor da Borda:</span>
-                        <input type="color" name="pref_cor_borda" value="#70cde4" style="border: none; width: 30px; height: 30px; cursor: pointer; background: none;">
+                        <input type="color" name="pref_cor_borda" value="<?php echo $cor_default; ?>" style="border: none; width: 30px; height: 30px; cursor: pointer; background: none;">
                     </div>
                 </div>
 
@@ -116,15 +116,14 @@ if (!$post) {
                             <strong class="comentario-autor" style="color: <?php echo $cor_borda; ?>;">
                                 <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
                             </strong>
-                            <span class="comentario-data">🕒 <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?></span>
+                            <span class="comentario-data"> <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?></span>
                         </div>
 
                         <p class="comentario-texto"><?php echo formatarMencoesGeral($c['comentario']); ?></p>
 
                         <?php if (empty($c['parent_id'])): ?>
                             <div style="text-align: right; width: 100%;">
-                                <button onclick="prepararResposta(<?php echo $c['id']; ?>, '<?php echo $c['usuario_nome']; ?>')"
-                                    class="btn-responder-fenda">
+                                <button onclick="prepararResposta('<?php echo $c['id']; ?>', '<?php echo $c['usuario_nome']; ?>')" class="btn-responder-fenda">
                                     <i class="fas fa-reply"></i> Responder
                                 </button>
                             </div>
@@ -140,41 +139,51 @@ if (!$post) {
 </main>
 
 <script>
-    // Função para preencher o ID do pai e focar no campo de texto
+    // Função Global - Garante que o botão sempre a encontre
     function prepararResposta(id, autor) {
-        document.getElementById('input_parent_id').value = id;
-        const campo = document.querySelector('.textarea-fenda');
-        const nomeAutor = autor ? "@" + autor : "Anônimo";
-        campo.placeholder = "Respondendo a " + nomeAutor + "...";
-        campo.focus();
+        console.log("Chamando resposta para ID:", id, "Autor:", autor);
 
-        // Scroll suave até o formulário para facilitar a vida no celular
-        document.getElementById('fofocar').scrollIntoView({
-            behavior: 'smooth'
-        });
+        // 1. Preenche o ID do pai
+        const inputParent = document.getElementById('input_parent_id');
+        if(inputParent) {
+            inputParent.value = id;
+        }
+
+        // 2. Localiza a textarea
+        const campo = document.querySelector('.textarea-fenda');
+        
+        if (campo) {
+            // Limpa o nome (tira espaços)
+            const nomeLimpo = autor ? autor.replace(/\s+/g, '') : "Anonimo";
+            
+            // 3. Insere o @ e foca
+            campo.value = "@" + nomeLimpo + " " + campo.value;
+            campo.placeholder = "Respondendo a @" + nomeLimpo + "...";
+            campo.focus();
+
+            // 4. Scroll suave
+            const formSetor = document.getElementById('fofocar');
+            if(formSetor) {
+                formSetor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } else {
+            console.error("Erro: .textarea-fenda não encontrada!");
+        }
     }
 
-    window.onload = function() {
-        if (window.location.search.includes('comentario=sucesso') || document.referrer.includes('enviar-comentario')) {
-            document.querySelector('.lista-comentarios-social').scrollIntoView({
-                behavior: 'smooth'
-            });
-        }
-    };
+        const textarea = document.querySelector('.textarea-fenda');
+        const count = document.getElementById('char-count');
 
-    const textarea = document.querySelector('.textarea-fenda');
-    const count = document.getElementById('char-count');
+        textarea.addEventListener('input', function() {
+            const restantes = 600 - this.value.length;
+            count.textContent = restantes + " caracteres restantes";
 
-    textarea.addEventListener('input', function() {
-        const restantes = 600 - this.value.length;
-        count.textContent = restantes + " caracteres restantes";
-
-        if (restantes < 50) {
-            count.style.color = "#ff4444"; // Fica vermelho quando tá acabando
-        } else {
-            count.style.color = "var(--dourado)";
-        }
-    });
+            if (restantes < 50) {
+                count.style.color = "#ff4444"; // Fica vermelho quando tá acabando
+            } else {
+                count.style.color = "var(--dourado)";
+            }
+        });
 </script>
 
 <?php include 'includes/footer.php'; ?>

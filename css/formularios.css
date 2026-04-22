@@ -11,9 +11,10 @@
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
 select, option {
     background-color: #1a1a1afd !important; 
-    color: #ffffff !important;          
-    appearance: none;                   
+    color: #ffffff !important;  
     -webkit-appearance: none;
+    appearance: none;                  
+    
 }
 
 select:focus {
@@ -24,8 +25,8 @@ select:focus {
 
 form {
     margin: 20px auto !important;
-    height: auto !important;
 }
+
 
 
 /* ESTRUTURA DA PÁGINA DE POSTAGEM / EDIÇÃO */
@@ -35,21 +36,43 @@ form {
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    max-width: 400px !important;
     margin: 30px auto !important;
     padding: 20px !important;
     background: #0a0a0a38 !important;
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
     border-radius: 20px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
 
+}
+/* --- AJUSTE EXCLUSIVO PARA A PÁGINA DE NOVO POST --- */
+.main-novo-post .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px!important;
+}
+
+.main-novo-post form {
+    width: 100%!important;
+    max-height: 450px !important; 
+    margin: 0 auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Ajuste para o select e textarea não ficarem colados na borda */
+.main-novo-post textarea, 
+.main-novo-post select {
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* Ajuste dos títulos dentro desse formulário */
 .main-novo-post h2 {
-    color: var(--dourado);
+    color: #bb7000;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -57,11 +80,11 @@ form {
 /* Fazendo os campos ocuparem 100% do quadradinho */
 .main-novo-post input,
 .main-novo-post textarea {
-    width: 100% !important;
+    width: 100%;
     background: rgba(255, 255, 255, 0) !important;
     border: 1px solid var(--dourado) !important;
     border-radius: 10px !important;
-    padding: 15px !important;
+    padding: 20px !important;
     color: white !important;
     margin-bottom: 15px !important;
 }
@@ -72,7 +95,6 @@ form {
     /* Permite que o usuário estique se quiser, mas só pra baixo */
 }
 
-
 .main-novo-post input {
     min-height: 45px !important;
 }
@@ -80,9 +102,7 @@ form {
 
 
 
-
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
-
 
 .main-perfil-container .perfil-gold {
         display: flex !important;
@@ -147,15 +167,15 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    height: clamp(200px, 35vw, 800px) !important;
+    height: clamp(200px, 35vw, 500px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
     background: #0a0a0a;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    border: 2px solid #98529e9c;
-    border-radius: 20px;
+    border: 4px solid #98529ea9;
+    border-radius: 12px;
 }
 
 .capa-img {
@@ -163,7 +183,7 @@ form[action="confirma-login.php"] {
     height: 100%;
     object-fit: cover;
     object-position: center 20%;
-     aspect-ratio: 16/9!important;
+    aspect-ratio: 16/9!important;
     
 }
 
@@ -191,6 +211,7 @@ form[action="confirma-login.php"] {
     text-align: left;
 }
 
+
 .campo-grupo label {
     display: block;
     color: #bbb;
@@ -204,6 +225,15 @@ form[action="confirma-login.php"] {
     resize: vertical;
     min-height: 150px;
     max-height: 100%;
+}
+
+
+.pref_vibe_padrao select {
+color: #bbb;  
+font-size: 14px;
+margin-bottom: 15px;
+margin-top: 15px;
+
 }
 
 /* Estilo geral para Inputs e Textarea */
@@ -271,11 +301,12 @@ textarea {
 .input-username-wrapper input {
     border: none !important;
     background: transparent !important;
+    appearance: none;
 }
 
 /* Quando foca no campo de username, destaca o wrapper inteiro */
 .input-username-wrapper:focus-within {
-    border-color: var(--dourado);
+    border-color: #ffb11fe7;
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
 
@@ -321,27 +352,211 @@ textarea {
     transform: scale(1.05);
 }
 
+
+
+/* CONTAINER PRINCIPAL - CADASTRO */
+
+.main-form-cadastro {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 90vh !important; 
+    padding: 20px !important;
+}
+
+
+/* --- BLOCO ISOLADO DE REGISTRO --- */
+.fenda-reg-box {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-bottom: 5px !important;
+}
+
+/* O Segredo: Padding-left alto para o texto não bater no ícone */
+.fenda-reg-box input {
+    width: 100% !important;
+    padding-left: 55px !important; 
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    padding-right: 15px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 10px !important;
+    color: white !important;
+    font-size: 1rem !important;
+    outline: none !important;
+    box-sizing: border-box !important; /* Essencial para o padding não esticar o input */
+    display: block !important;
+}
+
+/* Ícones dentro da box de registro */
+.fenda-reg-box i {
+    position: absolute !important;
+    left: 20px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #f8c946ec !important;
+    font-size: 1.1rem !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+}
+
+/* Efeito de foco específico */
+.fenda-reg-box input:focus {
+    border-color: #f8c946ec !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 0 10px rgba(248, 201, 70, 0.15) !important;
+}
+
+/* A caixinha do formulário */
+.container-cadastro-fenda {
+    background: rgba(89, 53, 187, 0.226) !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); padding: 35px !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    height: auto !important; 
+}
+
+.cadastro-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cadastro-header h2 {
+    color: #f8c946ce;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.cadastro-header p {
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* GRUPOS DE INPUT */
+.campo-grupo-fenda {
+    margin-bottom: 20px;
+}
+
+.campo-grupo-fenda label {
+    display: block;
+    color: #eee;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+
+
+/* BOTÃO E LINKS */
+.btn-finalizar-fenda {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #cc420c 0%, #ff5e1a 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-finalizar-fenda:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(204, 66, 12, 0.4);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #eee;
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #08d888ab;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.termos-wrapper {
+    margin: 15px 0;
+    color: #ccc;
+    font-size: 0.85rem;
+}
+
+.termos-wrapper a {
+    color: #ffbb00d5;
+}
+
 /* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
 
+
+/* O container que envolve o formulário de postagem  */
 .sessao-publicar {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 188, 0, 0.2);
-    border-radius: 15px;
-    padding: 20px;
-    margin: 30px auto;
-    max-width: 90%; 
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.45) !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 20px !important;
+    padding: 25px !important;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    max-width: 500px; 
+    align-items: center;
+    background-color: #4941411f !important;
+
 
 }
 
+
+.sessao-publicar h3,
 .titulo-publicar {
     font-family: 'Bebas Neue', sans-serif;
-    color: var(--dourado);
-    font-size: 1.5rem;
+    color: var(--dourado) !important;
+    margin-bottom: 20px;
     text-align: center;
-    margin-bottom: 15px;
+    font-size: 1.5rem;
+
 }
+
+.form-publicar select,
+.form-publicar textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    color: #fff;
+    border: 1px solid #444;
+    margin-bottom: 15px;
+    transition: 0.3s;
+}
+
+.form-publicar textarea {
+    min-height: 100px;
+    letter-spacing: 2px;
+    font-size: 14px;
+
+}
+
+.form-publicar select:focus,
+.form-publicar textarea:focus {
+    border-color: #ffbc00;
+    outline: none;
+    background: rgba(0, 0, 0, 0.589) !important;
+
+}
+
+
 
 .nota-seguranca {
     background: rgba(252, 144, 12, 0.1);
@@ -383,7 +598,7 @@ textarea {
 /* O Botão de Publicar */
 .btn-lancar {
     width: 100%;
-    background: var(--dourado);
+    background: #7cd632e8;
     color: black;
     border: none;
     padding: 15px;
@@ -395,7 +610,7 @@ textarea {
 }
 
 .btn-lancar:hover {
-    background: #ffae00;
+    background: #c8ff00d3;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
@@ -429,14 +644,6 @@ textarea {
     transform: scale(1.1);
 }
 
-.avatar-perfil {
-    max-width: 300px;
-    max-height: 300px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #ff7011;
-    margin-bottom: 15px;
-}
 
 
 /* 1. Botão da Câmera (Capa) */
@@ -505,6 +712,7 @@ textarea {
     object-fit: cover !important; 
     object-position: center 25% !important; /* Foca um pouco acima do meio */
     display: block !important;
+    aspect-ratio: 16/8!important;
 }
 
 .category-tag {
@@ -531,8 +739,8 @@ textarea {
     bottom: 5px;
     background: var(--dourado);
     color: #000;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -546,7 +754,7 @@ textarea {
 
 .btn-mudar-avatar:hover {
     background: #fff;
-    transform: rotate(-15deg) scale(1.3);
+    transform: rotate(-15deg) scale(1.2);
     /* Efeito de inclinação no lápis */
 }
 
@@ -742,9 +950,10 @@ input[type="checkbox"]:focus {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 4px solid var(--dourado);
     object-fit: cover;
     background: #000;
+    border: 2px solid #eb792d93;
+
 }
 
 
@@ -787,20 +996,25 @@ input[type="checkbox"]:focus {
 
 .perfil-gold .img-avatar-perfil {
     border-color: var(--dourado) !important;
-    box-shadow: 0 0 15px rgba(255, 187, 0, 0.637);
+    box-shadow: 0 0 15px rgba(255, 187, 0, 0.822);
 }
 
+.perfil-gold .capa-container {
+    width: 100%;
+    border: none; }
+
 .perfil-gold .img-capa-preview {
-    border: 3px solid var(--dourado);
-    border-radius: 12px;
+    border: 2px solid var(--dourado)!important;
+    border-radius: 20px;
 }
+
 
 
 .badge-presenca {
     display: block;
     width: fit-content;
     margin: 25px 40px 0 auto;
-    background: linear-gradient(45deg, var(--dourado), #fff000);
+    background: linear-gradient(45deg, var(--dourado), #ffee00e0);
     color: #000;
     padding: 4px 12px;
     border-radius: 4px;

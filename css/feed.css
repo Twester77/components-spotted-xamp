@@ -53,7 +53,6 @@
     display: block !important;
     flex: 1 1 350px !important;
     max-width: 500px !important;
-    min-width: 300px !important;
     margin: 0 !important;
 }
 
@@ -63,7 +62,7 @@
     display: block !important;
     overflow: hidden;
     position: relative;
-    max-height: 7.5rem;
+    max-height: 7rem;
     line-height: 1.5;
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
@@ -108,9 +107,9 @@
 
 .spotted-card {
     position: relative;
-    background: rgba(10, 10, 10, 0.178);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(15px);
+    background: rgba(10, 10, 10, 0.247);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 2px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 12px;
@@ -129,16 +128,16 @@
 }
     
 
-@supports (backdrop-filter: blur(15px)) {
+@supports (backdrop-filter: blur(8px)) {
     .spotted-card {
-        background: rgba(10, 10, 10, 0.3);
-        backdrop-filter: blur(15px);
+        background: rgba(10, 10, 10, 0.315);
+        backdrop-filter: blur(8px);
     }
 }
 
 
 .spotted-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-12px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.3);
@@ -146,32 +145,77 @@
 }
 
 
+/* Carregar Mais Resultados */
+.container-load-more {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.btn-fenda-padrao {
+    padding: 12px 30px;
+    background: var(--dourado); 
+    color: #000;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+body.hacker-mode #btn-load-more {
+    text-transform: uppercase; /* Garante que tudo fique em caixa alta */
+    font-family: 'Courier New', monospace !important;
+}
+
+/* Adiciona os colchetes automáticos só no modo hacker */
+body.hacker-mode #btn-load-more::before {
+    content: "[ ";
+}
+
+body.hacker-mode #btn-load-more::after {
+    content: " ]";
+}
+
+/* Se você quiser que o texto mude SÓ no modo hacker */
+/* Exemplo: Mudar "FIM DAS POSTAGENS" para "EOF_REACHED" */
+body.hacker-mode #btn-load-more[disabled] {
+    font-size: 0; 
+}
+
+body.hacker-mode #btn-load-more[disabled]::after {
+    content: "[ EOF_REACHED ]"; /* Mostra o texto hacker */
+    font-size: 14px; 
+}
+
+
 
 /* Cores das Categorias */
 .spotted-card.ranco {
-    border-left: 18px solid #ce0f0f !important;
+    border-left: 12px solid #ce0f0f !important;
     box-shadow: -5px 0 15px rgba(206, 15, 15, 0.2);
 }
 
 .spotted-card.comunidade {
-    border-left: 18px solid #bf0fd67e !important;
+    border-left: 12px solid #bf0fd67e !important;
     box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
 }
 
 .spotted-card.acaba-pelo-amor-de-deus {
-    border-left: 18px solid #f78605 !important;
+    border-left: 12px solid #f78605 !important;
     box-shadow: -5px 0 15px rgba(206, 117, 15, 0.253);
 }
 
 .spotted-card.perdidos {
-    border-left: 18px solid #ddda0d !important;
+    border-left: 12px solid #ddda0d !important;
     box-shadow: -5px 0 15px rgba(206, 203, 15, 0.253);
 }
 
 
 /*  ELOGIOS - Correio Elegante */
 .spotted-card.elogio {
-    border-left: 18px solid #e05586 !important;
+    border-left: 12px solid #e05586 !important;
     background: linear-gradient(145deg, rgba(228, 83, 134, 0.514), rgba(10, 10, 10, 0.247)) !important;
     position: relative;
 }
@@ -184,7 +228,7 @@
     right: 30px;
     top: 40px;
     font-size: 1.8rem;
-    color: #e7427c;
+    color: #e7427cd7;
     opacity: 0.6;
     padding: 10px;
     gap: 8px;
@@ -192,7 +236,7 @@
 
 /*  ESPORTES  */
 .spotted-card.esportes {
-    border-left: 18px solid #0fc44bee !important;
+    border-left: 12px solid #0fc44bd0 !important;
     background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.219)) !important;
     position: relative;
 }
@@ -213,8 +257,8 @@
 
 /*  GAMES - Vibe Neon */
 .spotted-card.games {
-    border-left: 15px solid #01e6e6 !important;
-    background: linear-gradient(145deg, rgba(13, 154, 179, 0.5), rgba(14, 145, 185, 0.13)) !important;
+    border-left: 12px solid #01e6e6 !important;
+    background: linear-gradient(145deg, rgba(13, 154, 179, 0.76), rgba(8, 135, 173, 0.11)) !important;
 }
 
 .spotted-card.games::before {
@@ -233,7 +277,7 @@
 
 /* CARONAS */
 .spotted-card.caronas {
-    border-left: 15px solid #263e4dee !important;
+    border-left: 12px solid #263e4dee !important;
     background: linear-gradient(145deg, rgba(38, 62, 77, 0.3), rgba(10, 10, 10, 0.664)) !important;
 }
 
@@ -253,7 +297,7 @@
 
 /*  ESTUDOS */
 .spotted-card.academico {
-    border-left: 15px solid #4B0082 !important;
+    border-left: 12px solid #4B0082 !important;
     background: linear-gradient(145deg, rgba(133, 17, 179, 0.2), rgba(0, 0, 0, 0.363)) !important;
 }
 
@@ -265,7 +309,7 @@
     right: 30px;
     top: 60px;
     font-size: 1.8rem;
-    color: #9914ce;
+    color: #ac18e7d0;
     opacity: 0.5;
     padding: 10px;
     gap: 8px;
@@ -296,7 +340,8 @@
 }
 
 
-/* --- APROVEITANDO SUAS BADGES --- */
+
+ /* BOTÃO FILTRO PERDIDOS */
 
 .btn-filtro {
     padding: 8px 15px;
@@ -307,6 +352,7 @@
     text-decoration: none;
     font-weight: bold;
     transition: all 0.3s ease;
+    height: auto;
 }
 
 .btn-filtro:hover {
@@ -320,6 +366,7 @@
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
 }
 
+/* APROVEITANDO AS BADGES */
 
 .badge-perdido {
     background-color: #ff4b2b !important;
@@ -336,7 +383,7 @@
 }
 
 .badge-achado {
-    background-color: #2ecc71 !important;
+    background-color: #37ce76 !important;
     color: white;
     padding: 3px 12px;
     border-radius: 20px;
@@ -356,32 +403,11 @@
 }
 
 
-/* O container que envolve o formulário de postagem/comentário */
-.sessao-publicar {
-    background: rgba(0, 0, 0, 0.45) !important;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 20px !important;
-    padding: 25px !important;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
-
-
-.sessao-publicar h3,
-.titulo-publicar {
-    color: var(--dourado) !important;
-    margin-bottom: 20px;
-    font-size: 1.4rem;
-    text-align: center;
-}
 
 .link-fofoca {
-    color: #ffc400d7 !important;
+    color: #ffc400c2 !important;
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -393,34 +419,6 @@
     color: #fff !important;
     transform: translateX(5px);
     /* Efeito de setinha andando */
-}
-
-
-/* Container do ícone do sino */
-
-.badge-alertas {
-    position: absolute;
-    top: -5px;
-    right: -8px;
-    background-color: #ff4757;
-    color: white;
-    font-size: 10px;
-    font-weight: bold;
-    min-width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid var(--laranja-fenda);
-    z-index: 10;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.notificacao-wrapper {
-    position: relative;
-    /* Isso faz o badge ficar preso ao sino */
-    display: inline-block;
 }
 
 
@@ -641,7 +639,7 @@
 
 
 .insignia-atletica-bottom:hover {
-    transform: scale(1.15) rotate(5deg) !important;
+    transform: scale(1.2) rotate(5deg) !important;
     filter: drop-shadow(0 0 12px var(--dourado)) !important;
 }
 
@@ -691,8 +689,8 @@
 .avatar-p {
     border: 1px solid var(--dourado);
     gap: 15px;
-    width: 60px;
-    height: 60px;
+    width:60px;
+    height:60px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -785,17 +783,7 @@
 }
 
 
-/* --- EASTER EGG: A PRESENÇA (ID 1) --- */
 
-.perfil-gold .img-avatar-perfil {
-    border-color: var(--dourado) !important;
-    box-shadow: 0 0 15px rgba(255, 187, 0, 0.637);
-}
-
-.perfil-gold .img-capa-preview {
-    border: 2px solid var(--dourado) !important;
-    border-radius: 12px;
-}
 
 .perfil-gold .capa-img {
     border: 2px solid var(--dourado) !important;
