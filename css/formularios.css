@@ -3,6 +3,7 @@
     box-sizing: border-box;
 }
 
+
 .input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #00000086 inset !important;
     -webkit-text-fill-color: #fff !important;
@@ -20,13 +21,12 @@ select, option {
 select:focus {
     background-color: #00000071 !important;
     color: var(--dourado) !important;
-}
+}       
 
 
 form {
     margin: 20px auto !important;
 }
-
 
 
 /* ESTRUTURA DA PÁGINA DE POSTAGEM / EDIÇÃO */
@@ -35,15 +35,15 @@ form {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    width: 95% !important;
-    margin: 30px auto !important;
-    padding: 20px !important;
+    margin: 20px auto !important;
     background: #0a0a0a38 !important;
     border: 1px solid rgba(255, 187, 0, 0.212) !important;
     border-radius: 20px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    max-width: clamp(320px, 30vw, 600px) !important;
+
 
 }
 /* --- AJUSTE EXCLUSIVO PARA A PÁGINA DE NOVO POST --- */
@@ -51,12 +51,13 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 500px!important;
+    padding: 15px !important;
+    max-height: auto;
 }
 
 .main-novo-post form {
     width: 100%!important;
-    max-height: 450px !important; 
+    max-height: 600px !important; 
     margin: 0 auto !important;
     display: flex;
     flex-direction: column;
@@ -84,7 +85,7 @@ form {
     background: rgba(255, 255, 255, 0) !important;
     border: 1px solid var(--dourado) !important;
     border-radius: 10px !important;
-    padding: 20px !important;
+    padding: 10px !important;
     color: white !important;
     margin-bottom: 15px !important;
 }
@@ -167,7 +168,7 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    height: clamp(200px, 35vw, 500px) !important;
+    height: clamp(250px, 35vw, 500px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
@@ -329,7 +330,7 @@ textarea {
 .painel-sessao p {
     color: #fff;
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 500;
     line-height: 1.2;
 }
@@ -339,10 +340,10 @@ textarea {
     color: #fff;
     border: none;
     padding: 10px 25px;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
     transition: 0.3s ease;
     display: inline-block;
 }
@@ -350,6 +351,7 @@ textarea {
 .btn-sair-fenda:hover {
     background: #ff4d00;
     transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 
@@ -502,19 +504,19 @@ textarea {
 
 
 /* O container que envolve o formulário de postagem  */
-.sessao-publicar {
-    background: rgba(0, 0, 0, 0.45) !important;
+section.sessao-publicar {
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.007) !important;
     padding: 25px !important;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-bottom: 30px;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    max-width: 500px; 
+    max-width: 600px; 
     align-items: center;
-    background-color: #4941411f !important;
+    background-color: #49414121 !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+    border-radius: 20px !important;
 
 
 }
@@ -696,7 +698,7 @@ textarea {
     width: 100% !important;
     max-width: 100% !important;
     /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
-    aspect-ratio: 16 / 6 !important; 
+    aspect-ratio: 16 / 8 !important; 
     overflow: hidden !important;
     border-radius: 15px 15px 0 0 !important;
     background: #1a1a1a; 
@@ -713,12 +715,6 @@ textarea {
     object-position: center 25% !important; /* Foca um pouco acima do meio */
     display: block !important;
     aspect-ratio: 16/8!important;
-}
-
-.category-tag {
-    font-size: 1.1rem;
-    color: var(--dourado);
-    font-weight: bold;
 }
 
 
@@ -952,7 +948,7 @@ input[type="checkbox"]:focus {
     border-radius: 50%;
     object-fit: cover;
     background: #000;
-    border: 2px solid #eb792d93;
+    border: 2px solid #fa7116b2;
 
 }
 
@@ -1096,14 +1092,14 @@ form[action="confirma-login.php"] a {
 
 
 
-/* A VINGANÇA CONTRA O IPHONE 4 E O CAPIROTO DA ESQUERDA */
+/* A VINGANÇA CONTRA O IPHONE 4 E O CAPIROTO DA MARGEM ESQUERDA */
 
 /* 1. Reset de Centralização do Container Principal */
 .main-perfil-container {
     display: block !important;
     width: 95% !important;
-    max-width: 800px !important; 
-    margin: 40px auto !important;
+    max-width: 850px !important; 
+    margin: 30px auto !important;
     float: none !important;
     padding: 20px !important;
     border-radius: 20px !important;
@@ -1150,7 +1146,7 @@ textarea {
 .perfil-controles {
     width: 100% !important;
     justify-content: center !important;
-    margin-top: 30px !important;
+    margin-top: 20px !important;
 }
 
 /* 7. Mata qualquer margem fantasma no body/html que empurre pra esquerda */

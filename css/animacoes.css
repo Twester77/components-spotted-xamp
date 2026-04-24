@@ -224,7 +224,7 @@ body.hacker-mode .navbar a:hover,
 body.hacker-mode .menu li a:hover, 
 body.hacker-mode .btn-header:hover,
 body.hacker-mode .submenu li a:hover {
-    background: rgba(0, 255, 0, 0.048) !important;
+    background: rgba(1, 59, 1, 0.205) !important;
     color: #00ff00 !important;
     box-shadow: inset 0 0 10px #00ff00 !important;
     animation: flicker 0.1s infinite !important;
@@ -232,7 +232,7 @@ body.hacker-mode .submenu li a:hover {
 
 /* 6. CONTEÚDO E IMAGENS */
 body.hacker-mode main {
-    animation: bootSystem 5s steps(10) forwards, flicker 0.15s infinite;
+    animation: bootSystem 8s steps(10) forwards, flicker 0.3s infinite;
 }
 
 body.hacker-mode h1, body.hacker-mode h2, body.hacker-mode p, 
@@ -242,6 +242,14 @@ body.hacker-mode li, body.hacker-mode blockquote, body.hacker-mode span {
     text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
     word-wrap: break-word;
 }
+
+body.hacker-mode .lista-conselhos {
+    color: #00ff00!important;
+    font-size: 16px!important;
+    word-wrap: break-word;
+
+}
+
 
 /* Typing apenas para o corpo do texto principal */
  body.hacker-mode main li {
@@ -255,9 +263,34 @@ body.hacker-mode li, body.hacker-mode blockquote, body.hacker-mode span {
     to { clip-path: inset(0 0 0 0); }
 }
 
+/* Faz o typing rodar assim que a página carrega, não só no hover */
+body.hacker-mode main li, 
+body.hacker-mode .spotted-card::before {
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block;
+    width: 0;
+    animation: typing-mobile 5s steps(30, end) forwards;
+}
+
+/* Nova animação baseada em largura (mais estável para celular) */
+@keyframes typing-mobile {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Faz a setinha aparecer no TOUCH (celular)  */
+body.hacker-mode .btn:active::before,
+body.hacker-mode .btn:focus::before,
+body.hacker-mode .menu li a:active::before {
+    opacity: 1;
+    left: 5px;
+    animation: blink-cursor 0.5s infinite;
+}
+
 
 body.hacker-mode img:hover {
-    filter: grayscale(0.2) brightness(1.2); /* No hover a cor volta mais */
+    filter: grayscale(0.1) brightness(1.05); /* No hover a cor volta mais */
 }
 
 /* 7. SAUDAÇÃO SEM CORTES (PARA CELULAR/KINDLE) */
@@ -270,7 +303,7 @@ body.hacker-mode .fenda-saudacao {
     overflow: visible !important;
     text-align: center !important;
     clip-path: none !important;
-    animation: fadeInHacker 1.5s ease-in forwards !important;
+    animation: fadeInHacker 3s ease-in forwards !important;
 }
 
 @keyframes fadeInHacker {
@@ -287,7 +320,7 @@ body.hacker-mode .fenda-saudacao {
 }
 
 @keyframes bootSystem {
-    0% { opacity: 0; filter: blur(40px) brightness(10) grayscale(1); }
+    0% { opacity: 0; filter: blur(30px) brightness(10) grayscale(1); }
     5% { opacity: 0.1; filter: blur(20px); }
     50% { opacity: 0.3; filter: blur(10px); } 
     100% { opacity: 1; filter: blur(0) brightness(1); }
@@ -302,13 +335,13 @@ body.hacker-mode * { outline: none !important; }
    ========================================================== */
 
 /* 1. Base do Botão (Transparente e Verde) */
-body.hacker-mode .fenda-btn-glow {
+body.hacker-mode .fenda-btn-glow , body.hacker-mode .fenda-primary  {
     background: #000000 !important;
     color: #00ff00 !important;
     border: 1px solid #00ff00 !important; 
     font-family: 'Courier New', monospace !important;
     position: relative;
-    padding: 12px 25px !important;
+    padding: 12px 20px !important;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 2px;
@@ -353,6 +386,15 @@ body.hacker-mode button:hover {
     /* Aplica o seu novo cursor de mira */
     cursor: url('imagensfoto/crosshair.cur'), crosshair !important;
 }
+
+body.hacker-mode a, 
+body.hacker-mode button, 
+body.hacker-mode input[type="submit"],
+body.hacker-mode .btn-header,
+body.hacker-mode .nav-link {
+    cursor: url('imagensfoto/crosshair.cur'), crosshair !important;
+}
+
 
 /* Cursor padrão em modo hacker o tempo todo) */
 body.hacker-mode {
@@ -400,7 +442,7 @@ body.hacker-mode .textarea-fenda {
     border: 8px solid #0f0 !important;
     color: #0f0 !important;
     caret-color: #0f0; /* O cursor piscando verde */
-    animation: blink-cursor 0.8s step-end infinite;
+    animation: blink-cursor 0.8s step-end infinite !important;
 
 }
 
@@ -477,48 +519,63 @@ body.hacker-mode .textarea-fenda:focus {
     background-image: 
         linear-gradient(to bottom, #0f0 60%, transparent 40%), /* Lado Esquerdo */
         linear-gradient(to bottom, #0f0 60%, transparent 40%); /* Lado Direito */
-    background-position: 0 0, 100% 0;
-    background-size: 2px 12px; /* 2px de largura, 12px de altura (o espaço vem aqui) */
+    background-image: 
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='20'><text x='0' y='15' fill='%230f0' font-family='Courier New' font-size='14'>|</text></svg>"), /* Lado Esquerdo */
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='20'><text x='0' y='15' fill='%230f0' font-family='Courier New' font-size='14'>|</text></svg>"); /* Lado Direito */
+    background-position: 2px 0, calc(100% - 2px) 0;
     background-repeat: repeat-y;
-    padding: 10px !important;
+    background-size: 10px 20px;
+    padding: 20px !important;
     margin: 20px auto !important; 
-    transition: transform 0.2s ease, z-index 0s; /* Transição suave */
+    transition: transform 0.3s ease;
     z-index: 1;
-
+    border-radius: 0 !important;
 }
 
 
-/* Moldura Superior Customizada */
+
+/* Moldura Superior Inteligente (Autocompletável) */
 body.hacker-mode .spotted-card::before {
-    content: "+--[ DATA_LOG: INTERCEPTADO ]------------------+";
-    position: absolute;
-    top: -15px;
-    left: -2px;
-    width: calc(100% + 4px);
-    background: #000;
-    color: #0f0;
-    font-size: 13px;
-    font-family: 'Courier New', monospace !important;
+    /* Em vez de um texto fixo, usamos o Flexbox para esticar */
+    overflow: hidden; 
     white-space: nowrap;
-    overflow: hidden;
-    z-index: 2;
+    text-overflow: clip; /* Mantém para um corte seco e limpo */
+    pointer-events: none; /* Evita que o mouse "pegue" na linha ao tentar clicar no post */
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: -10px; /* Alinhado com o pipe lateral */
+    left: 0;
+    width: 100%;
+    background: #0a0a0a;
+    color: #0f0;
+    font-family: 'Courier New', monospace !important;
+    font-size: 14px;
+    z-index: 5;
+    padding: 0 2px;
+    /* Linha infinita que estica até o final */
+    content: "+--[ " attr(data-label) " ]------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+"; 
+    overflow: hidden; 
+    white-space: nowrap;
 }
+
 
 /* Moldura Inferior Customizada */
-body.hacker-mode .spotted-card::after {
-    content: "+--------------------------------------------+";
+    body.hacker-mode .spotted-card::after {
+    content: "+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+";
     position: absolute;
-    bottom: -15px;
-    left: -2px;
-    width: calc(100% + 4px);
-    background: #000;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    background: #0a0a0a;
     color: #0f0;
-    font-size: 13px;
-    font-family: 'Courier New', monospace !important;
-    white-space: nowrap;
+    font-size: 14px;
     overflow: hidden;
-    z-index: 2;
+    white-space: nowrap;
+    z-index: 5;
+    padding: 0 2px;
 }
+
 
 /* Cabeçalho do Card (Onde fica a categoria) */
 body.hacker-mode .card-header {
@@ -528,14 +585,148 @@ body.hacker-mode .card-header {
     padding-bottom: 5px;
 }
 
-/* Ajuste Mobile para não quebrar a moldura */
-@media (max-width: 600px) {
-    body.hacker-mode .spotted-card::before {
-        content: "+--[ DATA_LOG ]-----------+"; /* Versão curta para celular */
-    }
-    body.hacker-mode .spotted-card::after {
-        content: "+-------------------------+";
-    }
+
+
+/* Customização de Categorias no Modo Hacker */
+
+/* Ícone Dinâmico no canto do Card */
+body.hacker-mode .card-header::after {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 30px;
+    top: 70px;
+    font-size: 1.2rem;
+    opacity: 0.4;
+    animation: flicker 3s infinite;
+}
+
+/* Ícones específicos por categoria */
+body.hacker-mode .spotted-card.ranco .card-header::after { content: "\f071"; } 
+body.hacker-mode .spotted-card.elogio .card-header::after { content: "\f004"; } 
+body.hacker-mode .spotted-card.games .card-header::after { content: "\f11b"; } 
+body.hacker-mode .spotted-card.academico .card-header::after { content: "\f518"; } 
+body.hacker-mode .spotted-card.carona .card-header::after { content: "\f071"; } 
+body.hacker-mode .spotted-card.perdidos .card-header::after { content: "\f002"; } 
+body.hacker-mode .spotted-card.esportes .card-header::after { content: "\f45f"; }
+body.hacker-mode .spotted-card.desapego .card-header::after { content: "\f02b"; }
+body.hacker-mode .spotted-card.anonimo .card-header::after { content: "\f45f"; }
+
+
+
+/* ANÔNIMO */
+body.hacker-mode .spotted-card.anonimo::before {
+    content: "+--[ USER_NOT_FOUND ]---------------------------+";
+    color: #ffffff !important;
+    border-radius: 0!important;
+
+}
+
+/* PERDIDOS */
+body.hacker-mode .spotted-card.perdidos::before {
+    content: "+--[ PROTOCOLO: GET_$ITEM ]---------------------+";
+    color: #fcf809da !important;
+    border-radius: 0!important;
+}
+
+/* RANÇO */
+body.hacker-mode .spotted-card.ranco::before {
+    content: "+--[ RuntimeError: High_Stress ]----------------+";
+    color: #f33232 !important; 
+    border-radius: 0!important;
+}
+
+/* ELOGIO */
+body.hacker-mode .spotted-card.elogio::before {
+    content: "+--[ PROTOCOLO: CORREIO_ELEGANTE <3 ]----------+";
+    color: #f85caa !important;
+    border-radius: 0!important;
+}
+
+/* GAMES */
+body.hacker-mode .spotted-card.games::before {
+    content: "+--[ INPUT: MODO_GAMER_DETECTADO ]-------------+";
+    color: #00ffff !important;
+    border-radius: 0!important;
+}
+
+/* ACADÊMICO */
+body.hacker-mode .spotted-card.academico::before {
+    content: "+--[ DATABASE: ARQUIVO_CIENTÍFICO ]------------+";
+    color: #b00bda !important;
+    border-radius: 0!important;
+
+}
+
+/* CARONAS */
+body.hacker-mode .spotted-card.caronas::before {
+    content: "+--[SELECT * FROM unifev WHERE loc='houseofcaralho']--+";
+    color: #969dc469 !important;
+    border-radius: 0!important;
+}
+
+/* ESPORTES */
+body.hacker-mode .spotted-card.esportes::before {
+    content: "+--[  JOIN_FOR_WHERE ]-----------------------+";
+    color: #138a0e !important;
+    border-radius: 0!important;
+
+}
+
+/* ELOGIO */
+body.hacker-mode .spotted-card.elogio {
+    box-shadow: inset 0 0 15px rgba(255, 105, 180, 0.1) !important;
+    border-left: 4px solid #ff69b4 !important;
+    border-radius: 0!important;
+}
+
+/* RANÇO */
+body.hacker-mode .spotted-card.ranco {
+    box-shadow: inset 0 0 15px rgba(255, 68, 68, 0.1) !important;
+    border-left: 4px solid #ff4444 !important;
+    border-radius: 0!important;
+}
+
+/* GAMES */
+body.hacker-mode .spotted-card.games {
+    box-shadow: inset 0 0 15px rgba(105, 255, 248, 0.137) !important;
+    border-left: 4px solid #00ffff !important;
+    border-radius: 0!important;
+}
+
+/* ACADEMICO */
+body.hacker-mode .spotted-card.academico {
+    box-shadow: inset 0 0 15px rgba(183, 105, 255, 0.1) !important;
+    border-left: 4px solid #8e24d49d !important;
+    border-radius: 0!important;
+}
+
+/* COMUNIDADE */
+body.hacker-mode .spotted-card.comunidade {
+    box-shadow: inset 0 0 15px rgba(183, 105, 255, 0.1) !important;
+    border-left: 4px solid #ffffffe7 !important;
+    border-radius: 0!important;
+}
+
+/* ESPORTES */
+body.hacker-mode .spotted-card.esportes {
+    box-shadow: inset 0 0 15px rgba(74, 204, 35, 0.1) !important;
+    border-left: 4px solid #349716b2 !important;
+    border-radius: 0!important;
+}
+
+/* SOCORRO DEUS */
+body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus {
+    box-shadow: inset 0 0 15px rgba(233, 173, 83, 0.158) !important;
+    border-left: 4px solid #ec8209 !important;
+    border-radius: 0!important;
+}
+
+/* PERDIDOS */
+  body.hacker-mode .spotted-card.perdidos {
+    box-shadow: inset 0 0 15px rgba(233, 173, 83, 0.158) !important;
+    border-left: 4px solid #ece809f5 !important;
+    border-radius: 0!important;
 }
 
 
@@ -593,13 +784,16 @@ body.hacker-mode .comentario-texto {
 }
 
 body.hacker-mode {
+    -webkit-user-select:none ;
     user-select: none; /* Evita que o usuário selecione o texto como se fosse um site normal */
 }
 
 /* Permite selecionar apenas o texto necessário se precisar */
 body.hacker-mode p, 
 body.hacker-mode .comentario-texto {
+    -webkit-user-select:text ;
     user-select: text; 
+    
 }
 
 
@@ -723,6 +917,8 @@ body.hacker-mode .rounded-circle {
 /* 2. Deixar TODOS os botões quadrados e no estilo terminal */
 body.hacker-mode button,
 body.hacker-mode .btn,
+body.hacker-mode .btn-filtro,
+body.hacker-mode .btn-filtro.ativo,
 body.hacker-mode .btn-reagir,
 body.hacker-mode .btn-fofocar,
 body.hacker-mode .tag-categoria,
@@ -734,6 +930,9 @@ body.hacker-mode .btn-responder-fenda {
     text-transform: uppercase;
     font-family: 'Courier New', monospace !important;
     transition: all 0.2s ease;
+    max-width: 100%!important;
+    align-items: center;
+
 }
 
 /* 3. Efeito de Hover nos botões menores do feed */
@@ -785,7 +984,12 @@ body.hacker-mode .btn-responder-fenda,
 body.hacker-mode .btn-reagir,
 body.hacker-mode .btn-fofocar,
 body.hacker-mode .btn-editar-atalho,
-body.hacker-mode .btn-seguir-fenda {
+body.hacker-mode #btn-load-more, /* O carregar mais do feed */
+body.hacker-mode .input-fenda-select,
+body.hacker-mode .btn-mudar-capa,
+body.hacker-mode .btn-mudar-avatar,
+body.hacker-mode .btn-seguir-fenda,
+body.hacker-mode .link-fofoca {
     background: #000 !important;
     color: #0f0 !important;
     border: 1px solid #0f0 !important;
@@ -794,6 +998,83 @@ body.hacker-mode .btn-seguir-fenda {
     text-decoration: none !important;
     padding: 10px 15px !important;
     transition: 0.2s;
+    border-radius: 0!important;
+}
+
+
+/* ==========================================================
+   CURSOR ASCII (SETINHA) NOS BOTÕES E NAV
+   ========================================================== */
+
+/* Alvo: Botões, Links da Nav e Itens de Menu */
+body.hacker-mode .fenda-btn-glow,
+body.hacker-mode .btn,
+body.hacker-mode .menu li a,
+body.hacker-mode .btn-enviar-fenda,
+body.hacker-mode .btn-editar-atalho,
+body.hacker-mode .btn-responder-fenda,
+body.hacker-mode .btn-voltar-fenda,
+body.hacker-mode .btn-responder-fenda,
+body.hacker-mode .btn-reagir,
+body.hacker-mode .btn-fofocar,
+body.hacker-mode #btn-load-more, /* O carregar mais do feed */
+body.hacker-mode .input-fenda-select,
+body.hacker-mode .btn-seguir-fenda,
+body.hacker-mode .link-fofoca  {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+/* Criando a setinha invisível à esquerda */
+body.hacker-mode .fenda-btn-glow::before,
+body.hacker-mode .btn::before,
+body.hacker-mode .menu li a::before
+body.hacker-mode .btn-enviar-fenda::before,
+body.hacker-mode .btn-voltar-fenda::before,
+body.hacker-mode .btn-responder-fenda::before,
+body.hacker-mode .btn-fofocar::before,
+body.hacker-mode #btn-load-more::before, /* O carregar mais do feed */
+body.hacker-mode .input-fenda-select::before,
+body.hacker-mode .btn-seguir-fenda::before,
+body.hacker-mode .link-fofoca::before  {
+    content: ">"; 
+    position: absolute;
+    left: -20px;
+    opacity: 0;
+    color: #0f0;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+/* Fazendo a setinha aparecer e "pular" para perto no Hover */
+body.hacker-mode .fenda-btn-glow:hover::before,
+body.hacker-mode .btn:hover::before,
+body.hacker-mode .menu li a:hover::before,
+body.hacker-mode .btn-enviar-fenda:hover::before
+body.hacker-mode .btn-voltar-fenda::before,
+body.hacker-mode .btn-responder-fenda::before,
+body.hacker-mode .btn-fofocar::before,
+body.hacker-mode #btn-load-more::before, /* O carregar mais do feed */
+body.hacker-mode .input-fenda-select::before,
+body.hacker-mode .btn-seguir-fenda::before,
+body.hacker-mode .link-fofoca::before  {
+    opacity: 1;
+    left: 5px; 
+    animation: blink-cursor 0.5s infinite; 
+}
+
+/* Ajuste de Padding para o texto não ficar em cima da seta */
+body.hacker-mode .fenda-btn-glow:hover,
+body.hacker-mode .btn:hover,
+body.hacker-mode .menu li a:hover {
+    padding-left: 25px !important; 
+}
+
+
+body.hacker-mode #btn-load-more:hover {
+    background: #0f0 !important;
+    color: #000 !important;
+    box-shadow: 0 0 15px #0f0 !important;
 }
 
 body.hacker-mode .btn-enviar-fenda:hover, 
@@ -909,3 +1190,43 @@ body.hacker-mode #btn-load-more:hover {
     transform: translateY(-5px);
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
 }
+
+.hacker-boot-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    color: #0f0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+}
+
+.boot-text p {
+    margin: 5px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: .15em solid #0f0;
+    animation: typing 0.5s steps(30, end) infinite;
+}
+
+.bios-bar {
+    width: 300px;
+    height: 20px;
+    border: 1px solid #0f0;
+    margin-top: 20px;
+}
+
+.loading {
+    height: 100%;
+    background: #0f0;
+    width: 0;
+    animation: load-bar 1.5s forwards;
+}
+
+@keyframes load-bar {
+    to { width: 100%; }
+}
+
+

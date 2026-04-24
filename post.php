@@ -1,5 +1,14 @@
 <?php
 include 'conexao.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
@@ -21,7 +30,7 @@ $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 $cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
 
 if (!$post) {
-    die("<main> <style> body { font-size:2.2rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
+    die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
 }
 ?>
 

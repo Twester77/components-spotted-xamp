@@ -65,7 +65,8 @@ include 'includes/bolhas.php';
     <?php include 'includes/filtros.php'; ?>
 </div>
 
-<main class="container-feed">
+<main class="main-fenda-total">
+<div class="container-feed">
     <?php if (mysqli_num_rows($resultado) > 0): ?>
         <?php while ($linha = mysqli_fetch_assoc($resultado)):
             $post_id_atual = $linha['id'];
@@ -151,11 +152,11 @@ include 'includes/bolhas.php';
     <?php else: ?>
         <p style="text-align: center; padding: 50px; opacity:0.7; font-size: 1.3rem;">Nenhum spotted encontrado nesta categoria ainda . </p>
     <?php endif; ?>
-
+</div>
 </main>
 <div class="container-load-more">
     <button id="btn-load-more" class="btn-fenda-padrao">
-        CARREGAR MAIS FOFOCAS
+        Exibir Mais Resultados
     </button>
 </div>
 
@@ -197,7 +198,7 @@ if (btnLoad) {
             .then(response => response.text())
             .then(data => {
                 if (data.trim() === "FIM_DADOS") {
-                    btnLoad.innerText = "[ FIM DO ARQUIVO ]";
+                    btnLoad.innerText = "FIM DO FEED ";
                     btnLoad.disabled = true;
                     btnLoad.style.opacity = "0.5";
                 } else {
@@ -215,6 +216,7 @@ if (btnLoad) {
             });
     });
 }
+
 
 </script>
 

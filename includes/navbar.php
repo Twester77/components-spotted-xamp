@@ -24,7 +24,7 @@
         <li class="menu-item"><a href="quem-somos.php">Quem Nós Somos</a></li>
         <li class="menu-item"><a href="diretrizes.php">Regras da Casa</a></li>
         <li class="menu-item">
-    <a href="javascript:void(0)" onclick="toggleHackerMode()" id="hacker-toggle" style="color: #00ff00; font-family: monospace; font-weight: bold; border: 1px solid #00ff00; padding: 2px 8px; border-radius: 4px;">
+    <a href="javascript:void(0)" onclick="toggleHackerMode()" id="hacker-toggle" style="color: #00ff00; font-family: monospace; font-weight: bold; padding: 2px 8px; border-radius: 4px;">
         [ ACESSAR_TERMINAL ]
     </a>
 </li>

@@ -1,7 +1,13 @@
 <?php
 include 'conexao.php';
 
-$hora = " date_default_timezone_set('America/Sao_Paulo')";
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+date_default_timezone_set('America/Sao_Paulo');
+$hora = (int)date('H'); // O (int) garante que seja um número para comparar no IF 
 $tema_classe = "";
 $classe_saudacao = "";
 
@@ -74,7 +80,7 @@ include 'includes/bolhas.php';
                     </span>
                 </p>
                 <div class="fenda-acoes-container">
-                    <a href="feed.php" class="fenda-btn-glow fenda-primary"> 🔻Ir para o Feed</a>
+                    <a href="feed.php" class="fenda-btn-glow fenda-primary"> Ir para o Feed</a>
                     <button onclick="deslogar()" class="fenda-btn-glow fenda-outline">🔒 Sair da Conta</button>
                 </div>
             </div>
@@ -118,6 +124,17 @@ include 'includes/bolhas.php';
             </div>
             <figcaption class="legenda-campus">Nossos QGs: Câmpus Centro e Cidade Universitária</figcaption>
         </article>
+
+           <div id="bios-boot" class="hacker-boot-screen">
+   <div id="bios-boot" class="hacker-boot-screen">
+    <div class="boot-text">
+        <p>> LOAD FENDA_OS_V2.0...</p>
+        <p>> STATUS: <?php echo strtoupper($nome_exibicao); ?>_ROOT CONNECTED</p>
+        <p>> SEARCHING FILES: ATLETICA_<?php echo isset($user_data['atletica_nome']) ? strtoupper($user_data['atletica_nome']) : 'NONE'; ?>.DB</p>
+        <p>> ACCESS GRANTED: ENCRYPTED_SESSION_ACTIVE</p>
+        <div class="bios-bar"><div class="loading"></div></div>
+    </div>
+</div>
 
     </div> </main>
 

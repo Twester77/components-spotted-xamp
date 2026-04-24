@@ -30,7 +30,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perdidos" style="width: 100% !important; max-width: 1000px; margin: 50px auto; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
+<main class="main-perdidos" style="width: 100% !important; max-width: 1200px; margin: 40px auto; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
         <div class="sessao-login-top" style="margin-bottom: 40px;">
             <?php include 'includes/login.php'; ?>
         </div>
@@ -44,7 +44,7 @@ include 'includes/bolhas.php';
     <?php endif; ?>
 
     <article class="conteudo-principal">
-        <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 10px; margin-top: 30px;">
+        <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 2rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 10px; margin-top: 30px;">
             Achados & Perdidos
         </h2>
 
@@ -59,7 +59,7 @@ include 'includes/bolhas.php';
         </div>
     </article>
 
-<section class="sessao-publicar" style="width: 100% !important; margin: 20px 0 !important; border-radius: 0 !important;">
+<section class="sessao-publicar" style="width: 100% !important; margin: 20px 0 !important;">
             <h3 class="titulo-publicar">Perdeu ou Achou algo?</h3>
 
         <div class="nota-seguranca">
@@ -112,7 +112,7 @@ include 'includes/bolhas.php';
                                 <small>@<?php echo !empty($linha['username']) ? $linha['username'] : "Anônimo"; ?></small>
                             </span>
 
-                            <span class="data-post" style="float: right; opacity: 0.6; font-size: 14px;">
+                            <span class="data-post">
                                 <?php echo date('d/m', strtotime($linha['data_post'])); ?>
                             </span>
 

@@ -111,9 +111,10 @@ header h1 {
     justify-content: center;
 }
 
-    img {
+img {
     max-width: 100%;
-    height: auto; /* Mantém a proporção */
+    height: auto;
+    /* Mantém a proporção */
     justify-content: center;
 }
 
@@ -239,17 +240,17 @@ main {
 
 /* O Container que segura a onda no index */
 .fenda-container {
-    width: 100%;         
-    max-width: 1000px;   
-    margin: 0 auto;     
-    padding: 20px 5px; 
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 5px;
     box-sizing: border-box;
 }
 
 /* Consertando as imagens de baixo que cortam */
 .fenda-container img {
-    max-width: 100%;    
-    height: auto;       
+    max-width: 100%;
+    height: auto;
 }
 
 /* Ajuste específico para as duas fotos dos Campus */
@@ -267,7 +268,7 @@ main {
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 25px;
-    width: 100%; 
+    width: 100%;
 }
 
 /* Base dos botões com brilho */
@@ -300,8 +301,8 @@ main {
 
 
 .fenda-btn-glow:hover {
-    filter: brightness(1.1); 
-    transform: scale(1.05); 
+    filter: brightness(1.1);
+    transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -320,21 +321,22 @@ main {
 /* FOTER E MODAL */
 
 footer {
-    clear: both; /* Garante que ele saia debaixo de floats */
+    clear: both;
+    /* Garante que ele saia debaixo de floats */
     width: 100%;
-    background: #1a1a1a5e; /* Ou a cor que você usa */
+    background: #1a1a1a7e;
     padding: 20px 20px;
-    margin-top: 30px; 
+    margin-top: 30px;
     text-align: center;
     border-top: 1px solid rgba(255, 188, 0, 0.2);
     text-align: center;
-    color: rgba(250, 202, 44, 0.753);
+    color: rgba(250, 202, 44, 0.808);
     font-size: 0.9rem;
     flex-shrink: 0;
     /* Impede o footer de ser "esmagado" */
 }
 
-   
+
 
 footer a {
     text-decoration: underline;
@@ -458,7 +460,7 @@ footer a {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-left: 4px solid #ffbc00;
-    padding: 15px;
+    padding: 20px;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
@@ -468,9 +470,9 @@ footer a {
 }
 
 .fa-clock small {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
-    color: #ffffffbe;
+    color: #ffffffe0;
 }
 
 .card-notificacao:hover {
@@ -502,7 +504,7 @@ footer a {
 .seta-notificacao {
     color: #ffbc00;
     opacity: 0.5;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 /* Estilo para notificações que ainda não foram abertas */
@@ -528,7 +530,7 @@ footer a {
     display: flex;
     align-items: center;
     gap: 20px;
-    min-width: 350px;
+    min-width: 250px;
     cursor: pointer;
     animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transition: all 0.3s ease;
@@ -666,18 +668,20 @@ footer a {
 /* Limpa os anteriores e usa só este: */
 .notificacao-wrapper {
     position: relative;
-    display: inline-flex; /* Alinha direitinho com os outros ícones do header */
+    display: inline-flex;
+    /* Alinha direitinho com os outros ícones do header */
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    margin: 0 10px; /* Dá um respiro entre o sino e os outros botões */
+    margin: 0 10px;
+    /* Dá um respiro entre o sino e os outros botões */
 }
 
 .badge-alertas {
     position: absolute;
     top: -4px;
     right: -6px;
-    background: linear-gradient(45deg, #ff4b2b, #ff416c); 
+    background: linear-gradient(45deg, #ff4b2b, #ff416c);
     color: white;
     font-size: 10px;
     font-weight: bold;
@@ -687,17 +691,27 @@ footer a {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #ffffff; 
+    border: 2px solid #ffffff;
     z-index: 100;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    animation: pulsarNotif 3s infinite; /* Ativa a animação que você já criou! */
+    animation: pulsarNotif 3s infinite;
+    /* Ativa a animação que você já criou! */
 }
 
 /* Sua animação que já é top */
 @keyframes pulsarNotif {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); shadow: 0 0 10px rgba(255, 75, 43, 0.5); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+        shadow: 0 0 10px rgba(255, 75, 43, 0.5);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .alerta-login a {
@@ -815,9 +829,168 @@ footer a {
 
 
 
+/* --- LOGIN MODO SR-71 STEALTH (TOTALMENTE INVISÍVEL) --- */
+
+.fenda-glass-container {
+    background: transparent !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
+}
+
+/* Mantendo os inputs visíveis no escuro */
+form[action="confirma-login.php"] input[type="text"],
+form[action="confirma-login.php"] input[type="password"] {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 187, 0, 0.288) !important;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Centralizando os avatares no modo stealth */
+.imgcontainer {
+    text-align: center;
+    margin-bottom: 20px;
+
+}
+
+/*  O "Fundo" do Modal de Comentários*/
+.container-post-foco {
+    width: 100%;
+    min-height: 100vh;
+    background: transparent;
+    -webkit-backdrop-filter: blur(5px);
+    /* Para funcionar no Safari/iPhone */
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    padding: 40px 15px 40px 15px;
+    /* Espaço para o navbar lá no topo */
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* O "BOX" CENTRALIZADO */
+.box-post-central {
+    width: 100%;
+    max-width: 800px;
+    /* Largura de rede social (Twitter/X style) */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: auto;
+
+    /* Animação: Começa menor e cresce até o tamanho real */
+    animation: postSurge 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes postSurge {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* ESTILO DO CARD FOCADO */
+
+.post-content-focado {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #fff;
+    /* Essa sombra cria um contorno invisível que protege a leitura contra o fundo claro */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* FORMULÁRIO DE FOFOCA */
+.form-fenda {
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #333;
+    padding: 20px;
+    max-width: 400px;
+}
+
+.textarea-fenda {
+
+    background: #111;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px !important;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 10px;
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+    /* Se o texto for grande, ele cria scroll interno */
+}
+
+
+.btn-enviar-fenda {
+    width: 100%;
+    padding: 15px;
+    background: var(--dourado);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-enviar-fenda:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+}
+
+
+/* COMENTÁRIOS - Versão Slim  */
+
+.comentario-item {
+    background: rgba(255, 255, 255, 0.014);
+    margin-top: 10px;
+    margin-bottom: 12px;
+    border-left-style: solid;
+    border-left-width: 8px;
+    border-radius: 10px;
+    padding: 12px 15px;
+    display: flex;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex-direction: column;
+    gap: 5px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+}
+
+
 /* ============================================================
    SISTEMA DE RESPONSIVIDADE "A FENDA" - ESCALÁVEL
    ============================================================ */
+
 
 /* 1. BASE: CELULAR EM PÉ (Telas pequenas) */
 
@@ -835,7 +1008,7 @@ footer a {
     .spotted-card {
         width: 100% !important;
         max-width: 100% !important;
-        margin: 0 0 20px 0 !important;
+        margin: 0 0 10px 0 !important;
     }
 
 
@@ -902,12 +1075,12 @@ footer a {
 
     /* Container index*/
     .fenda-container div[style*="flex"] {
-        flex-direction: column !important; 
+        flex-direction: column !important;
         align-items: center;
     }
-    
+
     .fenda-container img[style*="width: 50%"] {
-        width: 100% !important; 
+        width: 100% !important;
     }
 
 
@@ -943,7 +1116,7 @@ footer a {
         border-left: none !important;
         border-right: none !important;
         padding: 20px 15px !important;
-        max-width: 400px;
+        max-width: 500px !important;
     }
 
     /* Os cards também aproveitam o espaço */
@@ -1010,19 +1183,19 @@ footer a {
     }
 
     .comentario-item {
-        padding: 8px 10px !important; 
+        padding: 8px 10px !important;
         font-size: 0.95rem;
         /* Ajuste leve para telas pequenas */
     }
 
     .spotted-card {
         padding: 10px;
-        width: 90%;
+        width: 95%;
         scroll-margin-top: 80px;
     }
 
-    .category-tag {
-        font-size: 0.9rem !important;
+    span.category-tag {
+        font-size: 1rem !important;
         display: inline-block !important;
         max-width: 150px !important;
         white-space: nowrap !important;
@@ -1051,7 +1224,7 @@ footer a {
     .btn-fofocar {
         color: #ccc;
         text-decoration: none;
-        font-size: 0.85rem!important;
+        font-size: 0.85rem !important;
     }
 
     .filtro-btn {
@@ -1104,8 +1277,8 @@ footer a {
     }
 
     .insignia-atletica-bottom {
-        width: 50px!important;
-        height: 50px!important;
+        width: 50px !important;
+        height: 50px !important;
     }
 
     .bio-texto {
@@ -1132,44 +1305,45 @@ footer a {
         /* Um pequeno respiro lateral */
     }
 
-   
+
 
     .container-feed article {
-        min-width: 280px !important; /* Um pouquinho mais de margem lateral */
-        flex: 1 1 100% !important; /
-        
+        min-width: 300px !important;
+        /* Um pouquinho mais de margem lateral */
+        flex: 1 1 100% !important;/
     }
 
     .post-content {
-        font-size: 16px !important; 
+        font-size: 16px !important;
         max-height: 5rem;
-        
+
     }
 
     .avatar-posicionador {
-    /* Quanto ocupa da capa */
-    width: 100px!important;
-    height: 100px!important; }
+        /* Quanto ocupa da capa */
+        width: 100px !important;
+        height: 100px !important;
+    }
 
     .avatar-main {
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
-    max-width: 100px!important;
-    max-height: 100px!important;
-}
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transition: 0.3s;
+        max-width: 100px !important;
+        max-height: 100px !important;
+    }
 
-.avatar-wrapper {
-    max-width: 100px!important;
-    max-height: 100px!important;
-}
+    .avatar-wrapper {
+        max-width: 100px !important;
+        max-height: 100px !important;
+    }
 
-.avatar-p {
-    width: 55px !important;
-    height: 55px !important;
-}
+    .avatar-p {
+        width: 55px !important;
+        height: 55px !important;
+    }
 
 }
 
@@ -1177,7 +1351,7 @@ footer a {
 
 
 /* Ajuste para celulares deitados (Landscape) ou telas muito baixas */
-@media screen and (max-height: 450px) {
+@media screen and (max-height: 500px) {
 
     /* 1. RESET DE SEGURANÇA */
     html,
@@ -1239,22 +1413,22 @@ footer a {
         grid-template-columns: none !important;
     }
 
-   
-    .avatar-posicionador {
-    position: absolute;
-    bottom: -70px !important;
-    /* Quanto ocupa da capa */
-    max-width: 160px!important;
-    max-height: 160px!important;
-    gap:5px
-}
 
-.img-avatar-perfil {
-    max-width: 160px!important;
-    max-height: 160px!important;
-    aspect-ratio: 1/1;
-    
-}
+    .avatar-posicionador {
+        position: absolute;
+        bottom: -70px !important;
+        /* Quanto ocupa da capa */
+        max-width: 160px !important;
+        max-height: 160px !important;
+        gap: 5px
+    }
+
+    .img-avatar-perfil {
+        max-width: 160px !important;
+        max-height: 160px !important;
+        aspect-ratio: 1/1;
+
+    }
 
 }
 
@@ -1267,16 +1441,17 @@ footer a {
         /* Mantém 2, mas diminui o gap */
         gap: 10px !important;
     }
+
     .avatar-main {
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
-    max-width: 120px!important;
-    max-height: 120px!important;
-}
-    
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transition: 0.3s;
+        max-width: 120px !important;
+        max-height: 120px !important;
+    }
+
 }
 
 
@@ -1303,7 +1478,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
 
     .btn-reagir,
     .btn-fofocar {
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
         gap: 8px;
     }
 
@@ -1355,17 +1530,14 @@ screen and (max-height: 600px) and (orientation: landscape) {
         background-color: #0d0d0d !important;
     }
 
-     .avatar-main {
+    .avatar-main {
         max-width: 150px !important;
         max-height: 150px !important;
         aspect-ratio: 1/1;
     }
 
-   
 
 }
-
-
 
 
 /* 3. DESKTOP / TELAS GRANDES */
@@ -1373,20 +1545,32 @@ screen and (max-height: 600px) and (orientation: landscape) {
 
 
     .container-feed {
-        grid-template-columns: repeat(3, 1fr) !important;
-        max-width: 800px!important;
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        /* 4 colunas padrão desktop */
+        gap: 20px !important;
+        width: 100% !important;
+        max-width: 1800px !important;
+        /* Agora o container tem espaço pra respirar */
+        margin-left: 20px !important;
+        /* Joga pra esquerda em vez de centralizar */
+        margin-right: auto !important;
+        padding: 0 !important;
     }
+
 
     /* 1. Aumenta a base de tudo para não parecer pequeno no 1080p */
     body {
         font-size: 18px;
+        max-width: 100% !important;
+        overflow-x: hidden;
     }
 
     /* 2. Limita a largura do container e centraliza */
     .main-perfil-container,
     .feed-container {
-        margin: 0 auto;
-        padding: 30px 20px;
+        margin: 0 !important;
+        padding: 25px 20px;
     }
 
     /* 3. Dá aquele "respiro" nos comentários que você queria */
@@ -1432,19 +1616,6 @@ screen and (max-height: 600px) and (orientation: landscape) {
     }
 
 
-    /* Alarga o Feed */
-    .container-feed {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 20px !important;
-        width: 100% !important;
-        /* Quase a tela toda */
-        max-width: 1500px !important;
-        /* Limite elegante */
-        margin: 30px auto !important;
-        /* CENTRALIZAÇÃO REAL */
-        padding: 0 !important;
-    }
 
     /* Alarga o Perfil/Formulário */
     .main-perfil-container {
@@ -1484,377 +1655,22 @@ screen and (max-height: 600px) and (orientation: landscape) {
 
 
 /* MONITORES ULTRA WIDE*/
-@media screen and (min-width: 1400px) {
+@media screen and (min-width: 1600px) {
     .container-feed {
-        grid-template-columns: repeat(4, 1fr) !important;
+        grid-template-columns: repeat(5, 1fr) !important;
         /* Aqui o monitorzão brilha */
-        max-width: 1600px !important;
-        /* Alarga o limite pra caber as 4 */
-    }
-}
-
-
-/* --- AJUSTE CORRIGIDO PARA O FORMULÁRIO MOBILE --- */
-
-.main-perfil-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin: 15px auto !important;
-    padding: 15px !important;
-}
-
-.form-perfil-corpo {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 15px !important;
-    width: 100% !important;
-    padding: 20px !important;
-    box-sizing: border-box !important;
-    margin: 10px !important;
-
-}
-
-/* OS CAMPOS (Organização vertical) */
-.campo-grupo {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-    flex-direction: column !important;
-    margin-bottom: 15px !important;
-    display: block !important;
-    box-sizing: border-box !important;
-
-}
-
-.campo-grupo label {
-    text-align: left !important;
-    width: 100% !important;
-    margin-bottom: 5px !important;
-    color: #bbb;
-}
-
-/* Nome, Username e Bio unificados */
-.campo-grupo input[type="text"],
-.campo-grupo select,
-.campo-grupo textarea,
-.input-username-wrapper {
-    width: 100% !important;
-    max-width: auto !important;
-    box-sizing: border-box !important;
-    /* ISSO AQUI resolve o vazamento da Bio */
-    margin: 0 auto !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid #333 !important;
-    border-radius: 8px !important;
-    color: #fff !important;
-}
-
-/* Correção do campo @Username */
-.input-username-wrapper {
-    display: flex !important;
-    height: 45px !important;
-    align-items: center !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    overflow: hidden !important;
-}
-
-
-.input-username-wrapper span {
-    background: rgba(255, 255, 255, 0.1) !important;
-    padding: 0 12px !important;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    color: var(--dourado);
-}
-
-.input-username-wrapper input {
-    flex: 1 !important;
-    border: none !important;
-    background: transparent !important;
-    height: 100% !important;
-    margin: 0 !important;
-    white-space: nowrap;
-    /* Impede que o @ pule pra baixo */
-    flex-shrink: 0;
-    /* Não deixa o @ espremer */
-}
-
-/* Bio Ajustada */
-.campo-grupo textarea {
-    min-height: 120px !important;
-    resize: none !important;
-    padding: 12px !important;
-}
-
-textarea[name="bio"] {
-    min-height: 120px !important;
-    resize: none !important;
-    word-wrap: break-word !important;
-    /* O que você sugeriu */
-    overflow-wrap: break-word !important;
-}
-
-
-/* OS BOTÕES: Menores e um embaixo do outro se precisar */
-.capa-wrapper.viewer {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    background-color: #000;
-    border-radius: 12px 12px 0 0;
-}
-
-.perfil-controles {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    width: 100% !important;
-    justify-content: center;
-}
-
-
-/*  AJUSTE DA CAPA E AVATAR  */
-.capa-wrapper {
-    width: 100%;
-    height: auto !important;
-    position: relative;
-    overflow: hidden;
-    min-height: 180px;
-}
-
-
-/* Move o Avatar para o CENTRO e diminui um pouco o tamanho */
-
-.avatar-perfil-wrapper {
-    transform: translateX(-50%);
-    bottom: -40px !important;
-}
-
-
-/*  CAPA - PERFIL PÚBLICO  */
-.capa-wrapper.viewer {
-    width: 100% !important;
-    position: relative !important;
-    order: 1 !important;
-    overflow: hidden !important;
-}
-
-
-/*  AVATAR (CAPIVARA) */
-
-.perfil-header-container,
-.perfil-viewer-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-}
-
-/*  O Wrapper do Avatar: para de voar e desce pra Terra */
-
-.avatar-wrapper.viewer {
-    float: none !important;
-    position: relative !important;
-    display: flex !important;
-    justify-content: center !important;
-    margin: -70px auto 10px auto !important;
-    max-width: 300px !important;
-    max-height: 300px !important;
-    aspect-ratio: 1/1;
-    left: unset !important;
-    top: unset !important;
-}
-
-/* A Imagem em si: redonda e centrada */
-.img-avatar-perfil {
-    top: 30px !important;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    background: #000;
-    max-width: 300px;
-    max-height: 300px;
-    border: 2px solid #ff7011;
-    margin-bottom: 15px;
-}
-
-.img-avatar-main {
-    border: 2px solid #ff7011;
-    margin-bottom: 15px;
-}
-
-
-
-/* --- LOGIN MODO SR-71 STEALTH (TOTALMENTE INVISÍVEL) --- */
-
-.fenda-glass-container {
-    background: transparent !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    padding: 20px !important;
-}
-
-/* Mantendo os inputs visíveis no escuro */
-form[action="confirma-login.php"] input[type="text"],
-form[action="confirma-login.php"] input[type="password"] {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 187, 0, 0.288) !important;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Centralizando os avatares no modo stealth */
-.imgcontainer {
-    text-align: center;
-    margin-bottom: 20px;
-
-}
-
-
-
-
-/*  O "Fundo" do Modal de Comentários*/
-.container-post-foco {
-    width: 100%;
-    min-height: 100vh;
-    background: transparent;
-    -webkit-backdrop-filter: blur(8px);
-    /* Para funcionar no Safari/iPhone */
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    padding: 60px 15px 40px 15px;
-    /* Espaço para o navbar lá no topo */
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+        max-width: 95vw !important;
+        /* Usa 95% da largura da tela visível */
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    /* Ajuste do container principal para não centralizar forçado */
+    .main-perfil-container {
+        width: 98% !important;
+        max-width: 1200px !important;
+        margin-left: 40px !important; 
+        margin-right: auto !important;
     }
 }
-
-
-/* O "BOX" CENTRALIZADO */
-.box-post-central {
-    width: 100%;
-    max-width: 800px;
-    /* Largura de rede social (Twitter/X style) */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    height: auto;
-
-    /* Animação: Começa menor e cresce até o tamanho real */
-    animation: postSurge 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes postSurge {
-    from {
-        opacity: 0;
-        transform: scale(0.9) translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
-
-/* ESTILO DO CARD FOCADO */
-
-
-.post-content-focado {
-    font-size: 1.4rem;
-    line-height: 1.6;
-    color: #fff;
-    /* Essa sombra cria um contorno invisível que protege a leitura contra o fundo claro */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-}
-
-/* FORMULÁRIO DE FOFOCA */
-.form-fenda {
-    background: #1a1a1a;
-    border-radius: 12px;
-    border: 1px solid #333;
-    padding: 20px;
-    max-width: 400px;
-}
-
-.textarea-fenda {
-    
-    background: #111;
-    color: #fff;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 15px!important;
-    font-family: inherit;
-    resize: vertical;
-    margin-bottom: 10px;
-    min-height: 100px; 
-    max-height: 200px; 
-    overflow-y: auto;  /* Se o texto for grande, ele cria scroll interno */
-}
-
-
-.btn-enviar-fenda {
-    width: 100%;
-    padding: 15px;
-    background: var(--dourado);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-enviar-fenda:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.2);
-}
-
-
-/* COMENTÁRIOS - Versão Slim  */
-
-.comentario-item {
-    background: rgba(255, 255, 255, 0.014);
-    margin-top: 10px;
-    margin-bottom: 12px;
-    border-left-style: solid;
-    border-left-width: 8px;
-    border-radius: 10px;
-    padding: 12px 15px;
-    display: flex;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    flex-direction: column;
-    gap: 5px;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 0.3s ease,
-        background 0.3s ease;
-}
-
-
-
 
 /* OS ESTILOS DE FUNDO (Vibes) */
 
@@ -1942,16 +1758,17 @@ form[action="confirma-login.php"] input[type="password"] {
 body.is-touch-device .vibe-light {
     color: #000 !important;
 }
+
 body.is-touch-device .vibe-light .comentario-texto {
     color: #000 !important;
 }
 
 /* MODO GLASS */
 .comentario-item.vibe-glass {
-    background: rgba(255, 255, 255, 0.041)!important;
+    background: rgba(255, 255, 255, 0.041) !important;
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    color: #252525!important;
+    color: #252525 !important;
 }
 
 
@@ -2003,7 +1820,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 .btn-responder {
     background: none;
     border: none;
-    color:  rgba(241, 103, 5, 0.9);
+    color: rgba(241, 103, 5, 0.9);
     font-size: clamp(1.125rem, 0.382vw + 1.041rem, 1.7rem) !important;
     font-weight: bold;
     cursor: pointer;
@@ -2087,11 +1904,11 @@ body.is-touch-device .vibe-light .comentario-texto {
     background: #1a1a1a;
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .area-comentario-form {
-    max-width: 600px; 
+    max-width: 600px;
     margin: 20px auto;
     background: rgba(0, 0, 0, 0.3);
     padding: 15px;
@@ -2099,7 +1916,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 .area-comentario-form textarea {
-    height: 80px; 
+    height: 80px;
     resize: none;
 }
 
@@ -2129,7 +1946,7 @@ body.is-touch-device .vibe-light .comentario-texto {
     text-decoration: none;
     font-size: 1.1rem;
     margin-bottom: 10px;
-    height:auto; 
+    height: auto;
     transition: 0.3s;
 }
 
@@ -2229,19 +2046,73 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
-.titulo-home { font-size: 2.0rem; margin-bottom: 20px; margin-top: 30px; text-align: center; }
-.img-home-capa { width: 100%; height: auto; border-radius: 15px; margin: 35px 0; }
-.conteudo-principal { font-size: 16px; line-height: 1.6; text-align: left; color: #e0e0e0; }
-.aviso-legal { font-style: italic; opacity: 0.8; margin-bottom: 20px; color: #c1f700; }
-.citacao-anarquica { border-left: 5px solid #00ff00c7 ; padding: 15px; margin: 25px 0; font-style: italic; background: rgba(255, 255, 255, 0.014); }
-.bloco-conselhos { padding: 15px; background: rgba(0, 0, 0, 0.2); border-radius: 15px; }
-.lista-conselhos { font-weight: bold; text-align: left; margin: 30px 0; padding-left: 20px; color: #ff9900c5; list-style-type: ' * '; }
-.campus-flex { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
-.img-campus { width: clamp(280px, 45%, 500px) !important; border-radius: 8px; }
+.titulo-home {
+    font-size: 2.0rem;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.img-home-capa {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    margin: 35px 0;
+}
+
+.conteudo-principal {
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: left;
+    color: #e0e0e0;
+}
+
+.aviso-legal {
+    font-style: italic;
+    opacity: 0.8;
+    margin-bottom: 20px;
+    color: #b4e4ffe8;
+}
+
+.citacao-anarquica {
+    border-left: 5px solid #00ff00c7;
+    padding: 15px;
+    margin: 25px 0;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.096);
+}
+
+.bloco-conselhos {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.082);
+    border-radius: 15px;
+}
+
+.lista-conselhos {
+    font-weight: bold;
+    text-align: left;
+    margin: 30px 0;
+    padding-left: 20px;
+    color: #ff9900da;
+    list-style-type: ' * ';
+}
+
+.campus-flex {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.img-campus {
+    width: clamp(320px, 45%, 600px) !important;
+    border-radius: 8px;
+}
 
 /* TRAVA DE SEGURANÇA  */
 body.hacker-mode main.hacker-mode {
-    max-width: 1000px !important;
+    max-width: 1200px !important;
     margin: 0 auto !important;
     display: block !important;
     float: none !important;
@@ -2250,9 +2121,9 @@ body.hacker-mode main.hacker-mode {
 /* AJUSTE DO TEXTO QUE CORTA */
 body.hacker-mode .fenda-saudacao,
 body.hacker-mode .card-boas-vindas-fenda p {
-    display: block !important; 
-    white-space: normal !important; 
-    overflow: visible !important; 
+    display: block !important;
+    white-space: normal !important;
+    overflow: visible !important;
     width: 100% !important;
     max-width: 100%;
 
@@ -2261,6 +2132,351 @@ body.hacker-mode .card-boas-vindas-fenda p {
 /* Garante que o span do nome não escape do container */
 body.hacker-mode .card-boas-vindas-fenda span {
     word-wrap: break-word;
-    word-break: break-all; 
+    word-break: break-all;
 }
 
+/* --- AJUSTE CORRIGIDO PARA O FORMULÁRIO MOBILE --- */
+
+.main-perfil-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 15px auto !important;
+    padding: 15px !important;
+    display: flex !important;
+    width: 95% !important;
+    max-width: 800px !important; 
+    float: none !important;
+    padding: 20px !important;
+    border-radius: 20px !important;
+    background-color: #0d0d0d !important;
+}
+
+.form-perfil-corpo {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    margin: 10px !important;
+    gap: 20px !important;
+    margin: 0 !important;
+
+}
+
+/* OS CAMPOS (Organização vertical) */
+.campo-grupo {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    flex-direction: column !important;
+    margin-bottom: 15px !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-column: span 1 !important; 
+
+}
+
+.campo-grupo label {
+    text-align: left !important;
+    width: 100% !important;
+    margin-bottom: 5px !important;
+    color: #bbb;
+}
+
+/* 4. Estilo dos Inputs para não vazarem */
+input[type="text"], 
+input[type="password"], 
+select, 
+textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 12px !important;
+}
+
+
+/* Nome, Username e Bio unificados */
+.campo-grupo input[type="text"],
+.campo-grupo select,
+.campo-grupo textarea,
+.input-username-wrapper {
+    width: 100% !important;
+    max-width: auto !important;
+    box-sizing: border-box !important;
+    /* ISSO AQUI resolve o vazamento da Bio */
+    margin: 0 auto !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+}
+
+/* Correção do campo @Username */
+.input-username-wrapper {
+    display: flex !important;
+    height: 45px !important;
+    align-items: center !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    overflow: hidden !important;
+}
+
+
+.input-username-wrapper span {
+    background: rgba(255, 255, 255, 0.1) !important;
+    padding: 0 12px !important;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    color: var(--dourado);
+}
+
+.input-username-wrapper input {
+    flex: 1 !important;
+    border: none !important;
+    background: transparent !important;
+    height: 100% !important;
+    margin: 0 !important;
+    white-space: nowrap;
+    /* Impede que o @ pule pra baixo */
+    flex-shrink: 0;
+    /* Não deixa o @ espremer */
+}
+
+/* Bio Ajustada */
+.campo-grupo textarea {
+    min-height: 120px !important;
+    resize: none !important;
+    padding: 12px !important;
+}
+
+textarea[name="bio"] {
+    min-height: 120px !important;
+    resize: none !important;
+    word-wrap: break-word !important;
+    /* O que você sugeriu */
+    overflow-wrap: break-word !important;
+}
+
+
+/* OS BOTÕES: Menores e um embaixo do outro se precisar */
+.capa-wrapper.viewer {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+    border-radius: 12px 12px 0 0;
+}
+
+.perfil-controles {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    justify-content: center;
+    margin-top: 30px !important;
+}
+
+
+/*  AJUSTE DA CAPA E AVATAR  */
+.capa-wrapper {
+    width: 100%;
+    height: auto !important;
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+}
+
+
+/* Move o Avatar para o CENTRO e diminui um pouco o tamanho */
+
+.avatar-perfil-wrapper {
+    transform: translateX(-50%);
+    bottom: -40px !important;
+}
+
+
+/*  CAPA - PERFIL PÚBLICO  */
+.capa-wrapper.viewer {
+    width: 100% !important;
+    position: relative !important;
+    order: 1 !important;
+    overflow: hidden !important;
+}
+
+
+/*  AVATAR (CAPIVARA) */
+
+.perfil-header-container,
+.perfil-viewer-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/*  O Wrapper do Avatar: para de voar e desce pra Terra */
+
+.avatar-wrapper.viewer {
+    float: none !important;
+    position: relative !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin: -70px auto 10px auto !important;
+    max-width: 300px !important;
+    max-height: 300px !important;
+    aspect-ratio: 1/1;
+    left: unset !important;
+    top: unset !important;
+}
+
+/* A Imagem em si: redonda e centrada */
+.img-avatar-perfil {
+    top: 30px !important;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #000;
+    max-width: 300px;
+    max-height: 300px;
+    border: 2px solid #ff7011;
+}
+
+.img-avatar-main {
+    border: 2px solid #ff7011;
+}
+
+ /* OPERÁRIO DO TEMPO: COMPATIBILIDADE IPHONE 4 / LUMIA / ANTIGOS
+   (Para telas de até 320px - Onde o Cão az morada) */
+
+@media screen and (max-width: 320px) {
+    
+    /* 1. RESET DE SEGURANÇA */
+    html, body {
+        width: 100% !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 14px !important; /* Diminui a base da fonte pro texto não vazar */
+    }
+
+    /* 2. CONTAINER PRINCIPAL (Colado nas bordas pra ganhar espaço) */
+    .main-perfil-container, 
+    .perfil-header-container, 
+    .perfil-viewer-container,
+    .main-fenda-total {
+        width: 100% !important;
+        margin: 5px 0 !important;
+        padding: 8px !important;
+        display: block !important; /* Block neles! */
+        box-sizing: border-box !important;
+    }
+
+    /* 3. AVATAR (A CAPIVARA PRECISA CABER) */
+    .avatar-wrapper.viewer {
+        max-width: 120px !important; /* Diminuído para não explodir a tela */
+        max-height: 120px !important;
+        margin: -60px auto 10px auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        position: relative !important;
+        display: block !important;
+        aspect-ratio: 16/6;
+    }
+
+    .img-avatar-perfil {
+        width: 90px !important;
+        height: 90px !important;
+        border-width: 2px !important;
+        aspect-ratio: 1/1;
+    }
+
+    /* 4. FONTES E TÍTULOS (DIETA BRAVA) */
+    h1, .nome-publico {
+        font-size: 1.4rem !important;
+        letter-spacing: 0px !important;
+    }
+
+    .bio-texto, .bio-box {
+        font-size: 0.9rem !important;
+        padding: 10px !important;
+    }
+
+    /* 5. FORMULÁRIOS (O terror do iPhone 4) */
+    .form-perfil-corpo {
+        padding: 10px !important;
+        gap: 10px !important;
+    }
+
+    .campo-grupo label {
+        font-size: 0.8rem !important;
+    }
+
+    input[type="text"], 
+    input[type="password"], 
+    select, 
+    textarea,
+    .input-username-wrapper {
+        font-size: 14px !important; /* Evita o zoom automático do iOS em inputs */
+        padding: 8px !important;
+        height: auto !important;
+    }
+
+    .input-username-wrapper span {
+        padding: 0 8px !important;
+        font-size: 14px !important;
+    }
+
+    /* 6. GRID DO FEED (2 COLUNAS NO LANDSCAPE / 1 NO PORTRAIT) */
+    .container-feed {
+        grid-template-columns: 1fr !important; /* No iPhone 4 em pé, 1 coluna é lei */
+        gap: 10px !important;
+        padding: 5px !important;
+        float:none!important;
+    }
+
+    /* 7. O PULO DO GATO: CENTRALIZAÇÃO 'OLD SCHOOL' */
+    .perfil-controles {
+        display: block !important;
+        text-align: center !important;
+    }
+
+    .btn-editar-atalho, .btn-seguir-fenda {
+        width: 100% !important;
+        margin: 5px 0 !important;
+        font-size: 0.8rem !important;
+        padding: 10px !important;
+    }
+
+    /* Ajuste para o Header não vazar */
+    header h1 {
+        font-size: 1.4rem !important;
+    }
+    
+    header {
+        gap: 10px !important;
+        padding: 10px !important;
+    }
+}
+
+/* 8. AJUSTE PARA O LANDSCAPE DO IPHONE 4 (480px de largura) */
+@media screen and (max-width: 480px) and (orientation: landscape) {
+    .container-feed {
+        grid-template-columns: 1fr 1fr !important; /* Garante as 2 colunas que a gente brigou pra ter */
+    }
+    
+    .avatar-wrapper.viewer {
+        max-width: 120px !important;
+        max-height: 120px !important;
+        margin: -40px auto 5px auto !important;
+        aspect-ratio: 16/6;
+
+    }
+}

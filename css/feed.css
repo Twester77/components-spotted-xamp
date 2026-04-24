@@ -15,6 +15,7 @@
     font-size: 18px;
     font-weight: 800;
     padding: 8px 16px;
+    width: fit-content;
     border-radius: 20px;
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
@@ -28,31 +29,44 @@
     background: var(--dourado);
     color: #000;
     border-color: var(--dourado);
-    transform: translateY(-3px);
+    transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(255, 188, 0, 0.2);
 }
 
 
 /*  O CONTAINER  */
 
+.main-fenda-total {
+    max-width: 100% !important;
+    padding: 0 !important; /* Zera o padding que estava empurrando o feed */
+    margin: 0 auto !important;
+}
+
+.main-fenda-total article {
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
 .container-feed {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))!important;
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
-    gap: 20px !important;
-    max-width: auto !important;
-    margin: 20px auto !important;
-    padding: 20px !important;
+    gap: 15px !important;
+    max-width: 1300px !important; /* Limita a largura total do feed no PC */   
+     margin: 0 auto !important;
+    padding: 15px !important;
     column-count: auto !important;
    
 }
 
-/* O CARD */
+/* O CARD -nvai respeitar o espaço */
 .container-feed article {
-    display: block !important;
-    flex: 1 1 350px !important;
-    max-width: 500px !important;
+    display: flex !important; 
+    flex-direction: column;
+    width: 100% !important;
+    max-width: 100% !important; /* Deixa o Grid controlar a largura */
     margin: 0 !important;
 }
 
@@ -137,7 +151,7 @@
 
 
 .spotted-card:hover {
-    transform: translateY(-12px);
+    transform: translateY(-10px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.3);
@@ -208,7 +222,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 .spotted-card.perdidos {
-    border-left: 12px solid #ddda0d !important;
+    border-left: 12px solid #ece80fe8 !important;
     box-shadow: -5px 0 15px rgba(206, 203, 15, 0.253);
 }
 
@@ -226,7 +240,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
     font-weight: 900;
     position: absolute;
     right: 30px;
-    top: 40px;
+    top: 60px;
     font-size: 1.8rem;
     color: #e7427cd7;
     opacity: 0.6;
@@ -247,7 +261,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
     font-weight: 900;
     position: absolute;
     right: 30px;
-    top: 40px;
+    top: 60px;
     font-size: 1.8rem;
     color: #0db344;
     opacity: 0.5;
@@ -267,7 +281,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
     font-weight: 900;
     position: absolute;
     right: 30px;
-    top: 40px;
+    top: 60px;
     font-size: 1.8rem;
     color: #0daac5;
     opacity: 0.6;
@@ -287,7 +301,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
     font-weight: 900;
     position: absolute;
     right: 30px;
-    top: 40px;
+    top: 60px;
     font-size: 1.8rem;
     color: #cccccca8;
     opacity: 0.7;
@@ -297,7 +311,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 
 /*  ESTUDOS */
 .spotted-card.academico {
-    border-left: 12px solid #4B0082 !important;
+    border-left: 12px solid #4c0082b7 !important;
     background: linear-gradient(145deg, rgba(133, 17, 179, 0.2), rgba(0, 0, 0, 0.363)) !important;
 }
 
@@ -309,10 +323,81 @@ body.hacker-mode #btn-load-more[disabled]::after {
     right: 30px;
     top: 60px;
     font-size: 1.8rem;
-    color: #ac18e7d0;
+    color: #ac18e7a4;
     opacity: 0.5;
     padding: 10px;
     gap: 8px;
+}
+
+/* COMUNIDADE - Vibe União */
+.spotted-card.comunidade::before {
+    content: '\f0c0'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 30px;
+    top: 60px;
+    font-size: 1.8rem;
+    color: #a139af;
+    opacity: 0.6;
+}
+
+/* ACABA PELO AMOR DE DEUS - Vibe Desespero (Ampulheta) */
+.spotted-card.acaba-pelo-amor-de-deus::before {
+    content: '\f253'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 30px;
+    top: 60px;
+    font-size: 1.8rem;
+    color: #f78605;
+    opacity: 0.6;
+}
+
+/* PERDIDOS - Vibe Busca (Lupa) */
+.spotted-card.perdidos::before {
+    content: '\f002'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 30px;
+    top: 60px;
+    font-size: 1.8rem;
+    color: #ece909;
+    opacity: 0.6;
+}
+
+/* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
+.spotted-card.desapego {
+    border-left: 12px solid #00bfff !important;
+    background: linear-gradient(145deg, rgba(0, 191, 255, 0.2), rgba(10, 10, 10, 0.3)) !important;
+    position: relative;
+}
+
+.spotted-card.desapego::before {
+    content: '\f02b'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 30px;
+    top: 60px;
+    font-size: 1.8rem;
+    color: #00bfff;
+    opacity: 0.6;
+}
+
+/* ANÔNIMO - Vibe Secret */
+.spotted-card.anonimo::before {
+    content: '\f21b'; 
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 30px;
+    top: 60px;
+    font-size: 1.8rem;
+    color: #ffffff;
+    opacity: 0.3;
 }
 
 
@@ -336,7 +421,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 .spotted-card:first-child {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 
@@ -353,6 +438,9 @@ body.hacker-mode #btn-load-more[disabled]::after {
     font-weight: bold;
     transition: all 0.3s ease;
     height: auto;
+    width: 100%!important;
+    max-width: fit-content;
+
 }
 
 .btn-filtro:hover {
@@ -402,16 +490,27 @@ body.hacker-mode #btn-load-more[disabled]::after {
     border-left-style: solid !important;
 }
 
-
+.perdidos-item .link-fofoca {
+        display: block !important;
+        width: 100%;
+        text-align: center;
+        background: var(--dourado) !important;
+        color: #000 !important;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
 
 .link-fofoca {
     color: #ffc400c2 !important;
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: bold;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     transition: 0.3s;
 }
 
@@ -421,11 +520,16 @@ body.hacker-mode #btn-load-more[disabled]::after {
     /* Efeito de setinha andando */
 }
 
+span.data-post {
+    font-size: 16px;
+    font-weight: bold;
+    order: 2;
+}
 
 /* --- COMPONENTES DO CARD/PERFIL --- */
 
 
-.category-tag {
+ span.category-tag {
     font-size: 1.1rem;
     color: var(--dourado);
     font-weight: bold;
@@ -437,6 +541,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
     gap: 8px;
     min-height: 60px;
     margin-right: 6px;
+    margin-top: 10px;
     display: inline-block !important;
     max-width: 150px !important;
     /* Limita a largura da tag */
@@ -447,19 +552,12 @@ body.hacker-mode #btn-load-more[disabled]::after {
     text-overflow: ellipsis !important;
     /* Coloca os "..." se o nome for gigante */
     vertical-align: middle;
-
-}
-
-.category-tag {
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
-    opacity: 0.7;
-    color: #fff;
-    vertical-align: middle;
+     opacity: 0.7;
 
 }
+
 
 .post-time {
     font-size: 1.1rem;
@@ -495,7 +593,6 @@ body.hacker-mode #btn-load-more[disabled]::after {
     /* Começa um pouco abaixo e centralizado no eixo X */
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: absolute;
-    bottom: 40px;
     /* Sobe a popup para ficar acima da palavra */
     left: 40%;
     /*  Move o canto esquerdo da popup para o meio do "Reagir" */
@@ -721,7 +818,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 .btn-fofocar {
     color: #ccc;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
@@ -814,7 +911,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
-    padding: 20px;
+    padding: 15px;
     max-width: auto;
     margin: 0 auto;
 }
@@ -923,7 +1020,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 .perfil-controles {
-    margin-top: 35px;
+    margin-top: 30px;
     display: flex;
     justify-content: center;
     width: 100%;

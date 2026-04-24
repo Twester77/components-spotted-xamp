@@ -1,6 +1,6 @@
 <footer>
     <p><strong>Aviso:</strong> "A Fenda" é uma plataforma independente e colaborativa. Não possuímos vínculo administrativo ou oficial com a UNIFEV. O conteúdo é de responsabilidade exclusiva de seus autores.</p>
-    <strong>Entre em contato com a gente: 0800 7070 6969 ou mande um email para floorspotted.fev@outlook.com</strong>
+    <strong>Entre em contato: 0800 7070 6969 ou  um email para floorspotted.fev@outlook.com</strong>
     <p>&copy; <?php echo date('Y'); ?> Desenvolvido por Leonardo - Todos os Direitos Reservados</p>
 
     <div id="modal-sair-fenda" class="fenda-modal-overlay" style="display:none;">
@@ -124,7 +124,7 @@ dropdownLinks.forEach(link => {
 
                 pai.classList.add('active');
             } 
-            // Se já está aberto, ele segue o link normalmente (segundo clique)
+            // Se já está aberto, ele segue o link normalmente ( o segundo clique)
         }
     });
 });
@@ -135,7 +135,7 @@ dropdownLinks.forEach(link => {
     const isLandscape = window.matchMedia("(orientation: landscape)").matches;
 
     if (isTouch) {
-        // Se for touch, a gente pode adicionar uma classe no body pra desativar os hovers no CSS
+        // Se for touch, adiciona uma classe no body pra desativar os hovers no CSS
         document.body.classList.add('is-touch-device');
         console.log("Modo Touch Detectado: Desativando efeitos de hover para evitar bugs.");
     } else {
@@ -267,7 +267,7 @@ setInterval(function() {
 
 function confirmarExclusao(idPost) {
             // Usando o confirm padrão por enquanto 
-            if (confirm("🚨 ATENÇÃO: Deseja mesmo apagar esse registro da Fenda? Essa ação não pode ser desfeita!")) {
+            if (confirm(" ATENÇÃO: Deseja mesmo apagar esse registro da Fenda? Essa ação não pode ser desfeita!")) {
                 // Redireciona para o arquivo de lógica 
                 window.location.href = 'includes/excluir.php?id=' + idPost;
             }
@@ -307,6 +307,34 @@ window.onload = function() {
         document.getElementById('hacker-toggle').innerHTML = '[ DESLIGAR_TERMINAL ]';
     }
 };
+
+const typeSound = new Audio('https://www.soundjay.com/communication/typewriter-key-1.mp3');
+
+document.querySelectorAll('.textarea-fenda, input').forEach(element => {
+    element.addEventListener('keypress', () => {
+        // Toca o som, mas reseta o tempo para permitir disparos rápidos
+        typeSound.currentTime = 0;
+        typeSound.play();
+    });
+});
+
+window.addEventListener('load', () => {
+    const bootScreen = document.getElementById('bios-boot');
+    
+    // Verifica se o usuário já passou pelo boot nesta sessão
+    if (sessionStorage.getItem('boot_concluido')) {
+        bootScreen.style.display = 'none';
+    } else {
+        // Se não viu, mostra e depois de 2.5s esconde e marca como visto
+        setTimeout(() => {
+            bootScreen.style.opacity = '0';
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                sessionStorage.setItem('boot_concluido', 'true');
+            }, 500); // tempo de fade-out
+        }, 2500);
+    }
+});
 
     </script>
 </footer>

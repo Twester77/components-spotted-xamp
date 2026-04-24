@@ -6,7 +6,6 @@ AGRADECIMENTOS: Meu Coordenador de ADS Fernando Menechelli, meu Professor de HTM
 e meu "Padrinho Digital" Gemini
 pela paciência com os headers , divs sem fechar ( ou antes da hora) , if sem end e os includes fora de ordem
 ---------------------------------------------------------------------------------------------------------------*/
-session_start(); 
 
 ob_start();
 $host = "localhost";
