@@ -42,7 +42,7 @@ form {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    max-width: clamp(320px, 30vw, 600px) !important;
+    max-width: clamp(300px, 30vw, 600px) !important;
 
 
 }
@@ -216,7 +216,7 @@ form[action="confirma-login.php"] {
 .campo-grupo label {
     display: block;
     color: #bbb;
-    font-size: 14px;
+    font-size: 15px;
     margin-bottom: 10px;
     font-weight: bold;
 }
@@ -224,7 +224,7 @@ form[action="confirma-login.php"] {
 /* Textarea (Bio) */
 .campo-grupo textarea {
     resize: vertical;
-    min-height: 150px;
+    min-height: 160px;
     max-height: 100%;
 }
 

@@ -1,22 +1,24 @@
 <?php
-include 'conexao.php';
+include_once 'conexao.php'; // Mantendo a segurança com include_once
 
+// Ajuste do fuso para SP
+date_default_timezone_set('America/Sao_Paulo');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-date_default_timezone_set('America/Sao_Paulo');
-$hora = (int)date('H'); // O (int) garante que seja um número para comparar no IF 
+$hora = (int)date('H');
 $tema_classe = "";
 $classe_saudacao = "";
 
 $nome_exibicao = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : "A Presença";
 
+// Lógica de tempo e tema (Hacker/Normal)
 if (($hora >= 0 && $hora < 5) && isset($_SESSION['usuario_id'])) {
-    $saudacao = "Acordado ainda criatura... VIROU MORCEGO?!";
-    $extra = "[SISTEMA]: ALERTA! Scan de curioso ativo...";
-    $cor_extra = "#00ff00; font-family: 'Courier New', monospace;";
+    $saudacao = "Acordado a essa hora criatura... Virou muguerço por acaso?!";
+    $extra = "[SISTEMA]: ALERTA! Scan de desocupado ativo...";
+    $cor_extra = "#00ff00; font-weight:bold; font-family: 'Courier New', monospace;";
     $tema_classe = "tema-hacker";
     $classe_saudacao = "fenda-saudacao";
 } elseif ($hora >= 5 && $hora < 12) {
@@ -29,18 +31,12 @@ if (($hora >= 0 && $hora < 5) && isset($_SESSION['usuario_id'])) {
     $cor_extra = "#08d888ab;";
 } else {
     $saudacao = "Boa noite, ";
-    $extra = "Hora do decanso do guerreiro: Netflix e cama ou rolezar? ";
+    $extra = "Momento de glória do guerreiro: Netflix e cama ou rolezar? ";
     $cor_extra = "#fc492a;";
 }
 
+// O Header agora vai usar a variável $tema_classe definida acima
 include 'includes/header.php';
-?>
-
-<script>
-    document.body.className = "<?php echo $tema_classe; ?>";
-</script>
-
-<?php
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
@@ -52,11 +48,13 @@ include 'includes/bolhas.php';
     <script>
         document.addEventListener('click', () => {
             const audio = document.getElementById('hackerAudio');
-            if(audio) {
-                audio.volume = 0.2;
+            if (audio) {
+                audio.volume = 0.05;
                 audio.play();
             }
-        }, { once: true });
+        }, {
+            once: true
+        });
     </script>
 <?php endif; ?>
 
@@ -67,15 +65,17 @@ include 'includes/bolhas.php';
             <?php include 'includes/login.php'; ?>
         <?php else: ?>
             <div class="card-boas-vindas-fenda">
-                <div style="font-size: 38px; margin-bottom: 10px;">🎓</div>
-                <p style="color: #fff; margin-bottom: 25px; font-size: 1.4rem; font-family: 'Segoe UI', sans-serif;">
+                <div style="font-size: 38px; margin-bottom: 15px;">🎓</div>
+                <p style="color: #fff; margin-bottom: 25px; font-size: 1.4rem; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
                     <span class="<?php echo $classe_saudacao; ?>">
                         <?php echo $saudacao; ?>
                         <span style="color: #ffbc00; font-weight: bold;">
-                            seja bem vindo, <?php echo htmlspecialchars($nome_exibicao); ?>
-                        </span>!
-                    </span> <br>
-                    <span style="font-size: 18px; opacity: 0.9; color: <?php echo $cor_extra; ?>">
+                            Seja bem vindo novamente, <?php echo htmlspecialchars($nome_exibicao); ?>
+                        </span> ! 
+                    </span> 
+                </p>
+                <p> 
+                    <span style="font-size: 20px; opacity: 0.9; color: <?php echo $cor_extra; ?>">
                         <?php echo $extra; ?>
                     </span>
                 </p>
@@ -92,9 +92,9 @@ include 'includes/bolhas.php';
         </article>
 
         <article class="conteudo-principal">
-            <p>Aqui nós falamos de música, ciência, artes, paquera, fofocas (muitas inclusive), cinema, séries, hobbys diversos, cultura pop e por que não, a cultura underground também?!</p>
-            <p>Falar mal do: coleguinha / fulano / beltrano / herculano / vida acadêmica / perrengues cotidianos / presidente / do papa / influencers / MEC / obsolecência programada / aquecimento global / segunda guerra mundial / apocalipse zumbi / político / ex BBB e subcelebridades em geral / porteiro enfim QUASE tudo..</p>
-            <p>Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, talvez um churras com piscina (Votuporanga né, só por deus) no final de semana...</p>
+            <p>Aqui nós falamos de música, ciência, artes, paquera, fofocas (muitas inclusive), cinema, séries, hobbys diversos, cultura pop e por que não, a cultura underground também ?!</p>
+            <p>Falar mal do: coleguinha / fulano / beltrano / herculano / vida acadêmica / perrengues cotidianos / presidente / do papa / obsolescência programada / aquecimento global / segunda guerra mundial / apocalipse zumbi / político / ex BBB e subcelebridades em geral / guardinha / enfim QUASE tudo... Mãe não pode. </p>
+            <p>Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, barzinho de qualidade e procedência completamente duvidosa, talvez um churras com piscina (Votuporanga né, só por deus) no final de semana...</p>
             <p>E por que não, marcar um date e achar o amor da sua vida (ou um trauma e 6 meses de terapia, alô pessoal da Psico!).</p>
             <p class="aviso-legal"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros.</p>
 
@@ -103,13 +103,13 @@ include 'includes/bolhas.php';
             </blockquote>
 
             <article class="bloco-conselhos">
+                <span class="conselho-header"> E por último, porém não menos importante:</span>
                 <ul class="lista-conselhos">
-                    <span class="conselho-header">E por último, porém não menos importante:</span>
                     <li> Usem camisinha;</li>
                     <li> Não construam casa no terreno da sogra;</li>
-                    <li> O barato às vezes sai caro;</li>
+                    <li> O barato às vezes sai muito caro;</li>
                     <li> O diploma é o papel: o aprendizado, o trauma;</li>
-                    <li> Faculdade é igual o Titanic: se for pra afundar, que seja de primeira classe e com a música tocando;</li>
+                    <li> Faculdade é igual o Titanic: se for pra afundar, que seja de primeira classe e com música tocando;</li>
                     <li> Invistam em Bitcoin;</li>
                     <li> NÃO é NÃO;</li>
                     <li> Bebam água e, é claro... DIVIRTAM-SE!</li>
@@ -125,17 +125,18 @@ include 'includes/bolhas.php';
             <figcaption class="legenda-campus">Nossos QGs: Câmpus Centro e Cidade Universitária</figcaption>
         </article>
 
-           <div id="bios-boot" class="hacker-boot-screen">
-   <div id="bios-boot" class="hacker-boot-screen">
-    <div class="boot-text">
-        <p>> LOAD FENDA_OS_V2.0...</p>
-        <p>> STATUS: <?php echo strtoupper($nome_exibicao); ?>_ROOT CONNECTED</p>
-        <p>> SEARCHING FILES: ATLETICA_<?php echo isset($user_data['atletica_nome']) ? strtoupper($user_data['atletica_nome']) : 'NONE'; ?>.DB</p>
-        <p>> ACCESS GRANTED: ENCRYPTED_SESSION_ACTIVE</p>
-        <div class="bios-bar"><div class="loading"></div></div>
+        <div id="bios-boot" class="hacker-boot-screen">
+            <div class="boot-text">
+                <p>> LOAD FENDA_OS_V2.0...</p>
+                <p>> STATUS: <?php echo strtoupper(htmlspecialchars($nome_exibicao)); ?>_ROOT CONNECTED</p>
+                <p>> SEARCHING FILES: ATLETICA_SYSTEM.DB</p>
+                <p>> ACCESS GRANTED: ENCRYPTED_SESSION_ACTIVE</p>
+                <div class="bios-bar">
+                    <div class="loading"></div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
-    </div> </main>
+</main>
 
 <?php include 'includes/footer.php'; ?>

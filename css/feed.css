@@ -15,7 +15,7 @@
     font-size: 18px;
     font-weight: 800;
     padding: 8px 16px;
-    width: fit-content;
+    max-width: fit-content;
     border-radius: 20px;
     color: #fff;
     background: rgba(255, 255, 255, 0.05);
@@ -55,7 +55,7 @@
     /* Mantém cada card no seu tamanho real */
     gap: 15px !important;
     max-width: 1300px !important; /* Limita a largura total do feed no PC */   
-     margin: 0 auto !important;
+    margin: 0 auto !important;
     padding: 15px !important;
     column-count: auto !important;
    
@@ -76,7 +76,7 @@
     display: block !important;
     overflow: hidden;
     position: relative;
-    max-height: 7rem;
+    max-height: 5rem;
     line-height: 1.5;
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
@@ -84,8 +84,8 @@
     white-space: pre-wrap;
     color: #fff;
     transition: max-height 0.4s ease-in-out;
-    margin-bottom: 15px;
-    font-size: 18px !important;
+    margin:20px 0;
+    font-size: 16px !important;
 }
 
 
@@ -128,25 +128,62 @@
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 12px;
     transition: transform 0.3s ease;
-    padding: 10px !important;
+    padding: 15px !important;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
     margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex !important; 
     overflow: visible !important;   /* Deixa o card crescer com o texto */    
     flex-direction: column;       
     width: 100%;                   
-    max-width: 900px;              
+    max-width: 600px;              
     height: auto !important;       
-    min-height: min-content !important;
+    min-height: 120px !important;
 }
     
 
-@supports (backdrop-filter: blur(8px)) {
+@supports (backdrop-filter: blur(4px)) {
     .spotted-card {
-        background: rgba(10, 10, 10, 0.315);
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(4px);
+        background: rgba(10, 10, 10, 0.4); /* Um pouco mais escuro para o texto ler melhor no blur */
     }
+}
+
+
+/* --- OTIMIZAÇÃO PARA DISPOSITIVOS SIMPLES OU SENSIBILIDADE --- */
+@media (prefers-reduced-motion: reduce) {
+    /* Para as animações de scanlines e glitch que podem tontear ou pesar */
+    body.hacker-mode::before, 
+    body.hacker-mode::after,
+    .glitch-effect {
+        animation: none !important;
+        display: none !important; /* Remove o peso do processamento */
+    }
+
+    /* Para a setinha ">" que fica pulando no hover */
+    body.hacker-mode *:hover::before {
+        animation: none !important;
+        left: 10px !important; /* Ela apenas aparece, sem deslizar ou piscar */
+    }
+
+    /* Remove transições suaves de cores que exigem GPU */
+    * {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+
+    .bubbles-container, .background-animado, .glitch-effect {
+        animation: none !important;
+        display: none !important; /* Se forem apenas decorativas, melhor sumir com elas */
+    }
+    
+    /* Mantém o visual hacker, mas estático e nítido */
+    body.hacker-mode {
+        background-attachment: scroll !important; /* Evita o efeito parallax pesado */
+    }
+
 }
 
 
@@ -159,12 +196,16 @@
 }
 
 
-/* Carregar Mais Resultados */
+/* Ajuste no Carregar Mais Resultados */
 .container-load-more {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 40px 0;
+    padding: 25px 0;
+}
+
+#btn-load-more {
+    transition: transform 0.2s ease, background 0.3s ease !important;
 }
 
 .btn-fenda-padrao {
@@ -198,6 +239,12 @@ body.hacker-mode #btn-load-more[disabled] {
     font-size: 0; 
 }
 
+#btn-load-more:not([disabled]):hover {
+    transform: scale(1.05); 
+    background: #ffcc00; 
+}
+
+
 body.hacker-mode #btn-load-more[disabled]::after {
     content: "[ EOF_REACHED ]"; /* Mostra o texto hacker */
     font-size: 14px; 
@@ -207,198 +254,94 @@ body.hacker-mode #btn-load-more[disabled]::after {
 
 /* Cores das Categorias */
 .spotted-card.ranco {
-    border-left: 12px solid #ce0f0f !important;
+    border-left: 8px solid #ce0f0f !important;
     box-shadow: -5px 0 15px rgba(206, 15, 15, 0.2);
 }
 
 .spotted-card.comunidade {
-    border-left: 12px solid #bf0fd67e !important;
+    border-left:8px solid #ffffffbe !important;
     box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
 }
 
 .spotted-card.acaba-pelo-amor-de-deus {
-    border-left: 12px solid #f78605 !important;
-    box-shadow: -5px 0 15px rgba(206, 117, 15, 0.253);
+    border-left: 8px solid #f78605 !important;
+    box-shadow: -5px 0 15px rgba(223, 125, 14, 0.342);
 }
 
 .spotted-card.perdidos {
-    border-left: 12px solid #ece80fe8 !important;
+    border-left: 8px solid #ece80ffa !important;
     box-shadow: -5px 0 15px rgba(206, 203, 15, 0.253);
 }
 
 
 /*  ELOGIOS - Correio Elegante */
 .spotted-card.elogio {
-    border-left: 12px solid #e05586 !important;
+    border-left: 8px solid #e05586 !important;
     background: linear-gradient(145deg, rgba(228, 83, 134, 0.514), rgba(10, 10, 10, 0.247)) !important;
     position: relative;
 }
 
-.spotted-card.elogio::before {
-    content: '\f004';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #e7427cd7;
-    opacity: 0.6;
-    padding: 10px;
-    gap: 8px;
-}
-
 /*  ESPORTES  */
 .spotted-card.esportes {
-    border-left: 12px solid #0fc44bd0 !important;
+    border-left: 8px solid #0fc44bd0 !important;
     background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.219)) !important;
     position: relative;
 }
 
-.spotted-card.esportes::before {
-    content: '\f1e3';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #0db344;
-    opacity: 0.5;
-    padding: 10px;
-    gap: 8px;
-}
 
 /*  GAMES - Vibe Neon */
 .spotted-card.games {
-    border-left: 12px solid #01e6e6 !important;
+    border-left: 8px solid #01e6e6 !important;
     background: linear-gradient(145deg, rgba(13, 154, 179, 0.76), rgba(8, 135, 173, 0.11)) !important;
 }
 
-.spotted-card.games::before {
-    content: '\f11b';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #0daac5;
-    opacity: 0.6;
-    padding: 10px;
-    gap: 8px;
-}
 
 /* CARONAS */
 .spotted-card.caronas {
-    border-left: 12px solid #263e4dee !important;
+    border-left: 8px solid #263e4dee !important;
     background: linear-gradient(145deg, rgba(38, 62, 77, 0.3), rgba(10, 10, 10, 0.664)) !important;
 }
 
-.spotted-card.caronas::before {
-    content: '\f1b9';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #cccccca8;
-    opacity: 0.7;
-    padding: 10px;
-    gap: 8px;
-}
 
 /*  ESTUDOS */
 .spotted-card.academico {
-    border-left: 12px solid #4c0082b7 !important;
+    border-left: 8px solid #799c5db7 !important;
     background: linear-gradient(145deg, rgba(133, 17, 179, 0.2), rgba(0, 0, 0, 0.363)) !important;
 }
 
-.spotted-card.academico::before {
-    content: '\f518';
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #ac18e7a4;
-    opacity: 0.5;
-    padding: 10px;
-    gap: 8px;
-}
 
-/* COMUNIDADE - Vibe União */
-.spotted-card.comunidade::before {
-    content: '\f0c0'; 
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #a139af;
-    opacity: 0.6;
-}
-
-/* ACABA PELO AMOR DE DEUS - Vibe Desespero (Ampulheta) */
-.spotted-card.acaba-pelo-amor-de-deus::before {
-    content: '\f253'; 
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #f78605;
-    opacity: 0.6;
-}
-
-/* PERDIDOS - Vibe Busca (Lupa) */
-.spotted-card.perdidos::before {
-    content: '\f002'; 
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #ece909;
-    opacity: 0.6;
-}
 
 /* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
 .spotted-card.desapego {
-    border-left: 12px solid #00bfff !important;
+    border-left: 8px solid #00bfff !important;
     background: linear-gradient(145deg, rgba(0, 191, 255, 0.2), rgba(10, 10, 10, 0.3)) !important;
     position: relative;
 }
 
-.spotted-card.desapego::before {
-    content: '\f02b'; 
-    font-family: 'Font Awesome 6 Free';
+
+/* Ícones no canto do Card */
+ .spotted-card .card-header::after {
+    font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
     right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #00bfff;
-    opacity: 0.6;
+    top: 50px;
+    font-size: 1.3rem;
+    opacity: 0.7;
 }
 
-/* ANÔNIMO - Vibe Secret */
-.spotted-card.anonimo::before {
-    content: '\f21b'; 
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.8rem;
-    color: #ffffff;
-    opacity: 0.3;
-}
+/* Ícones específicos por categoria */
+
+.spotted-card.comunidade .card-header::after { content: '\f0c0'; color: #ffffffa4; }
+.spotted-card.ranco .card-header::after { content: "\f071"; } 
+.spotted-card.elogio .card-header::after { content: "\f004"; color: #e7427cd7; }
+.spotted-card.games .card-header::after { content: "\f11b";  color: #0daac5; } 
+.spotted-card.academico .card-header::after { content: "\f518"; color: #b822f3b7; } 
+.spotted-card.caronas .card-header::after { content: "\f1b9"; color: #cccccca8; } 
+.spotted-card.perdidos .card-header::after { content: "\f002";  color: #f3ef07ee; } 
+.spotted-card.esportes .card-header::after { content: "\f45f";  color: #0db344; }
+.spotted-card.acaba-pelo-amor-de-deus .card-header::after { content: "\f253"; color: #f78605; }
+.spotted-card.desapego .card-header::after { content: "\f02b"; color: #00bfff; }
 
 
 .card-header {
@@ -408,7 +351,10 @@ body.hacker-mode #btn-load-more[disabled]::after {
     gap: 10px;
     width: 100%;
     flex-wrap: wrap;
-    max-width: 600px;
+    max-width: 500px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 0;
+    margin-bottom: 5px;
 }
 
 .card-body p {
@@ -421,7 +367,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 .spotted-card:first-child {
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
 
@@ -471,7 +417,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 .badge-achado {
-    background-color: #37ce76 !important;
+    background-color: #10e268a8 !important;
     color: white;
     padding: 3px 12px;
     border-radius: 20px;
@@ -530,7 +476,7 @@ span.data-post {
 
 
  span.category-tag {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--dourado);
     font-weight: bold;
     white-space: nowrap;
@@ -538,11 +484,11 @@ span.data-post {
     flex: 1;
     min-width: 0;
     align-items: center;
-    gap: 8px;
-    min-height: 60px;
+    gap: 5px;
+    min-height: 30px;
     margin-right: 6px;
-    margin-top: 10px;
     display: inline-block !important;
+    border: none;
     max-width: 150px !important;
     /* Limita a largura da tag */
     white-space: nowrap !important;
@@ -558,22 +504,28 @@ span.data-post {
 
 }
 
+ .fa-ellipsis-v {
+font-size: 16px;
+font-weight: bold;
+gap: 5px;
+order: 3;
+ }
 
 .post-time {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     flex-shrink: 0;
-    opacity: 0.6;
-    margin-left: auto;
+    opacity: 0.7;
+    margin-right: auto;
+    margin-bottom: 8px;
+    order: 2;
+
 }
 
 .status-resolvido {
     border-left: 3px solid #29d16f !important;
     background: rgba(46, 204, 113, 0.05);
 }
-
-
-
 
 
 /* Estilizando os links das reações */
@@ -594,7 +546,7 @@ span.data-post {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: absolute;
     /* Sobe a popup para ficar acima da palavra */
-    left: 40%;
+    left: 50%;
     /*  Move o canto esquerdo da popup para o meio do "Reagir" */
     background: #252542;
     padding: 8px 12px;
@@ -621,17 +573,31 @@ span.data-post {
 }
 
 .reacao-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px; /* Garante que a pílula não mude de largura com números pequenos */
+    height: 28px;
     background: rgba(255, 255, 255, 0.08);
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 15px;
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
+    transition: transform 0.2s ease, background 0.2s ease; /* Transição suave para o scale */
+    cursor: default;
 }
+
+/* Efeito de aumentar ao passar o mouse nas pílulas */
+.reacao-item:hover {
+    transform: scale(1.15);
+    background: rgba(255, 255, 255, 0.15);
+}
+
 
 .reacoes-popup a {
     text-decoration: none;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     display: inline-block;
     transition: transform 0.2s ease;
 }
@@ -652,7 +618,7 @@ span.data-post {
 
 .footer-links {
     display: flex !important;
-    gap: 15px !important;
+    gap: 10px !important;
     padding: 10px !important;
     justify-content: space-between;
     align-items: center;
@@ -669,6 +635,14 @@ span.data-post {
     font-size: 0.95rem;
 }
 
+/* Quando o usuário já reagiu, a pílula ganha destaque */
+.reacao-item.voted {
+    transform: scale(1.1);
+    background: rgba(255, 188, 0, 0.2) !important; /* Amarelo Fenda transparente */
+    border: 1px solid #ffbc00 !important; /* Borda amarela sólida */
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
+    font-weight: bold;
+}
 
 
 /*  TEXTOS (NOME E USERNAME) */
@@ -694,7 +668,7 @@ span.data-post {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     margin: 20px 0 20px 0 !important;
     /* Margem apenas embaixo para afastar do username/bio */
     justify-content: center !important;
@@ -754,8 +728,8 @@ span.data-post {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: 160px !important;
-    height: 160px !important;
+    width: 140px !important;
+    height: 140px !important;
     margin: 0 auto !important;
     overflow: visible !important;
     /* Mude para visible para o brilho não cortar */
@@ -770,8 +744,8 @@ span.data-post {
 
 /* A logo */
 .insignia-atletica-link {
-    max-width: 90% !important;
-    max-height: 90% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
     object-fit: contain !important;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
@@ -797,7 +771,7 @@ span.data-post {
 
 .user-info-post {
     display: flex;
-    gap: 10px;
+    gap: 5px;
     font-size: 16px;
 }
 
@@ -809,7 +783,8 @@ span.data-post {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
+    max-width: 180px;
+    align-content: center;
     /* Ajuste esse valor conforme o espaço que você tem */
 
 }
@@ -818,12 +793,12 @@ span.data-post {
 .btn-fofocar {
     color: #ccc;
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 0.95rem;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
     display: flex;
-    gap: 15px;
+    gap: 10px;
 }
 
 .btn-fofocar:hover {

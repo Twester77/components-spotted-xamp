@@ -1,6 +1,5 @@
 <?php
-include 'conexao.php';
-
+include_once 'conexao.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -9,23 +8,22 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
+
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 
-// 1. Pegamos o ID da URL de forma segura
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id == 0) {
     header("Location: feed.php");
     exit();
 }
 
-// 2. Buscamos o post específico
 $stmt = $conn->prepare("SELECT * FROM mensagens WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
-// Variáveis para as Vibes
+
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 $cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
 
@@ -59,12 +57,12 @@ if (!$post) {
 
                 <div class="customizacao-post" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <span style="font-size: 0.8rem; color: #ccc;">Vibe do Card:</span>
+                        <span style="font-size: 0.85rem; color: #ccc;">Vibe do Card:</span>
                         <select name="pref_vibe_comentario" class="input-fenda" style="padding: 5px; font-size: 0.8rem;">
                             <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
                             <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
                             <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
-                            <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar - Não Usar no Modo Terminal)</option>
+                            <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
                         </select>
 
                         <span style="font-size: 0.8rem; color: #ccc; margin-left: 10px;">Cor da Borda:</span>
@@ -72,12 +70,8 @@ if (!$post) {
                     </div>
                 </div>
 
-                <textarea name="comentario"
-                    class="textarea-fenda"
-                    placeholder="Conte a fofoca aqui..."
-                    maxlength="600"
-                    required> </textarea>
-                <small id="char-count" style="color: var(--dourado); opacity: 0.6; float: right;">600 caracteres restantes</small>
+                <textarea name="comentario" class="textarea-fenda" placeholder="Conte a fofoca aqui..." maxlength="600" required></textarea>
+                <small id="char-count" style="color: var(--dourado); opacity: 0.7; float: right;">600 caracteres restantes</small>
 
                 <?php
                 $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
@@ -91,21 +85,6 @@ if (!$post) {
 
         <div class="lista-comentarios-social">
             <?php
-
-            if (isset($_SESSION['usuario'])) {
-                $sql_u = "SELECT pref_vibe_padrao, pref_cor_padrao FROM usuarios WHERE username = ?";
-                $stmt_u = $conn->prepare($sql_u);
-                $stmt_u->bind_param("s", $_SESSION['usuario']);
-                $stmt_u->execute();
-                $user_prefs = $stmt_u->get_result()->fetch_assoc();
-
-                if ($user_prefs) {
-                    $vibe_default = $user_prefs['pref_vibe_padrao'] ?? 'vibe-glass';
-                    $cor_default = $user_prefs['pref_cor_padrao'] ?? '#70cde4';
-                }
-            }
-
-            //  LISTAR OS COMENTÁRIOS DA MENSAGEM 
             $sql_c = "SELECT c.* FROM comentarios c WHERE c.id_mensagem = ? ORDER BY c.id ASC";
             $stmt_c = $conn->prepare($sql_c);
             $stmt_c->bind_param("i", $id);
@@ -114,7 +93,6 @@ if (!$post) {
 
             if ($res_c->num_rows > 0):
                 while ($c = $res_c->fetch_assoc()):
-                    // Pega a vibe e a cor salvas no COMENTÁRIO (Vibe do Momento)
                     $vibe = !empty($c['pref_vibe_comentario']) ? $c['pref_vibe_comentario'] : 'vibe-glass';
                     $cor_borda = !empty($c['pref_cor_borda']) ? $c['pref_cor_borda'] : '#70cde4';
                     $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
@@ -128,7 +106,7 @@ if (!$post) {
                             <span class="comentario-data"> <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?></span>
                         </div>
 
-                        <p class="comentario-texto"><?php echo formatarMencoesGeral($c['comentario']); ?></p>
+                        <p class="comentario-texto"><?php echo formatarMencoes($c['comentario']); ?></p>
 
                         <?php if (empty($c['parent_id'])): ?>
                             <div style="text-align: right; width: 100%;">
@@ -138,7 +116,7 @@ if (!$post) {
                             </div>
                         <?php endif; ?>
                     </div>
-                <?php
+            <?php
                 endwhile;
             else: ?>
                 <p class="sem-comentarios">Ninguém fofocou nada ainda...</p>
@@ -148,51 +126,67 @@ if (!$post) {
 </main>
 
 <script>
-    // Função Global - Garante que o botão sempre a encontre
     function prepararResposta(id, autor) {
-        console.log("Chamando resposta para ID:", id, "Autor:", autor);
-
-        // 1. Preenche o ID do pai
         const inputParent = document.getElementById('input_parent_id');
-        if(inputParent) {
-            inputParent.value = id;
-        }
-
-        // 2. Localiza a textarea
+        if(inputParent) inputParent.value = id;
         const campo = document.querySelector('.textarea-fenda');
-        
         if (campo) {
-            // Limpa o nome (tira espaços)
             const nomeLimpo = autor ? autor.replace(/\s+/g, '') : "Anonimo";
-            
-            // 3. Insere o @ e foca
             campo.value = "@" + nomeLimpo + " " + campo.value;
             campo.placeholder = "Respondendo a @" + nomeLimpo + "...";
             campo.focus();
-
-            // 4. Scroll suave
-            const formSetor = document.getElementById('fofocar');
-            if(formSetor) {
-                formSetor.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        } else {
-            console.error("Erro: .textarea-fenda não encontrada!");
+            document.getElementById('fofocar').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
 
-        const textarea = document.querySelector('.textarea-fenda');
-        const count = document.getElementById('char-count');
+    const textarea = document.querySelector('.textarea-fenda');
+    const count = document.getElementById('char-count');
+    textarea.addEventListener('input', function() {
+        const restantes = 600 - this.value.length;
+        count.textContent = restantes + " caracteres restantes";
+        count.style.color = (restantes < 50) ? "#ff4444" : "var(--dourado)";
+    });
 
-        textarea.addEventListener('input', function() {
-            const restantes = 600 - this.value.length;
-            count.textContent = restantes + " caracteres restantes";
 
-            if (restantes < 50) {
-                count.style.color = "#ff4444"; // Fica vermelho quando tá acabando
-            } else {
-                count.style.color = "var(--dourado)";
+   /*--- FUNÇÃO BETA: SWIPE PARA RESPONDER (COM FORÇA TOTAL) ---*/
+const swipeAtivado = <?php echo ($dados['pref_swipe'] ?? 0); ?>;
+
+if (swipeAtivado == 1) {
+    let touchstartX = 0;
+    let touchX = 0;
+
+    document.querySelectorAll('.comentario-item').forEach(item => {
+        item.addEventListener('touchstart', e => {
+            touchstartX = e.touches[0].clientX;
+            item.style.transition = "none";
+        }, {passive: true});
+
+        item.addEventListener('touchmove', e => {
+            touchX = e.touches[0].clientX;
+            let deslocamento = touchX - touchstartX;
+
+            // Só deixa arrastar para a direita
+            if (deslocamento > 0 && deslocamento < 100) {
+                // AQUI ENTRA O IMPORTANT:
+                item.style.setProperty('transform', `translateX(${deslocamento}px)`, 'important');
             }
+        }, {passive: true});
+
+        item.addEventListener('touchend', e => {
+            let deslocamentoFinal = touchX - touchstartX;
+            item.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+            
+            if (deslocamentoFinal > 70) {
+                const btn = item.querySelector('.btn-responder-fenda');
+                if (btn) btn.click();
+            }
+            
+            // AQUI TAMBÉM NO RESET:
+            item.style.setProperty('transform', 'translateX(0)', 'important');
         });
+    });
+}
+
 </script>
 
 <?php include 'includes/footer.php'; ?>

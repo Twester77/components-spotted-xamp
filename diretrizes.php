@@ -29,7 +29,7 @@ include 'includes/bolhas.php';
   <div style="display: flex; gap: 8px; justify-content:center;">
    <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.8; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
-  <article style="color: #dacd1cee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
+  <article style="color: #ebdc0fee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.
@@ -57,7 +57,7 @@ include 'includes/bolhas.php';
    Ofensas proferidas por usuários (sujeitas a exclusão e banimento após denúncia).
    O sigilo das mensagens anônimas será preservado perante a comunidade, porém, os dados de conexão serão fornecidos às autoridades competentes mediante ordem judicial, conforme o Marco Civil da Internet.
    <h3> 7. Aceite dos Termos</h3>
-   Ao clicar em "Entrar" ou realizar um post, você confirma que leu, entendeu e concorda com todos os pontos acima, ciente de que o descumprimento resultará no banimento imediato da conta e exclusão do conteúdo.
+   Ao clicar em "Entrar" ou realizar um post, você confirma que leu, entendeu e concorda com todos os pontos acima, ciente de que o descumprimento resultará no banimento da conta e exclusão do conteúdo, a critério da plataforma.
     </article>
 
   <article style="background-color: rgba(204, 66, 12, 0.1); padding: 20px; margin: 30px 0; padding-left: 25px; line-height: 1.6;">

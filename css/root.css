@@ -40,18 +40,6 @@ html {
 }
 
 
-/* Só permite o efeito se NÃO for dispositivo touch */
-body:not(.is-touch-device) .comentario-item:hover {
-    transform: scale(1.02);
-    filter: brightness(1.2);
-    transition: 0.3s;
-}
-
-/* No touch, a gente usa o :active pra dar aquele feedback rápido de clique */
-body.is-touch-device .comentario-item:active {
-    background: rgba(255,255,255,0.2);
-}
-
 .capa-default-fenda {
     width: 100%;
     height: 300px; 
@@ -88,3 +76,26 @@ body.is-touch-device .comentario-item:active {
     letter-spacing: 1px;
 }
 
+
+/* --- LÓGICA DINÂMICA: HOVER vs SWIPE --- */
+
+/* Se o Swipe estiver DESLIGADO, permitimos as animações de Hover */
+body.allow-hover .comentario-item:hover, 
+body.allow-hover .spotted-card:hover,
+body.allow-hover .filtro-btn:hover {
+    transform: translateY(-5px) scale(1.02) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    filter: brightness(1.2);
+}
+
+/* Se o Swipe estiver LIGADO, matamos qualquer transform que brigue com o dedo */
+body.allow-swipe .comentario-item:hover,
+body.allow-swipe .spotted-card:hover {
+    transform: none !important;
+    transition: none !important; /* Essencial para o Swipe não dar lag */
+}
+
+/* Feedback visual de toque (mais leve que o hover) para modo Swipe */
+body.allow-swipe .comentario-item:active {
+    background: rgba(255, 255, 255, 0.15) !important;
+}

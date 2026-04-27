@@ -1,22 +1,24 @@
 <?php
-include 'conexao.php';
+include_once 'conexao.php'; // Segurança contra o erro de "Redeclare"
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit();
 }
 
-
+// O header.php agora faz a própria consulta de preferência de Swipe para o <body>
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 
 $id_meu = $_SESSION['usuario_id'];
 
-// BUSCA DE DADOS - Agora incluindo as vibes e mantendo o resto
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao FROM usuarios WHERE id = '$id_meu'";
+// BUSCA DE DADOS - Incluindo Vibes e Swipe
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
@@ -28,7 +30,7 @@ $capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfot
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 $cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
 
-// Verifica se é a "Presença" (ID 1) 
+// Diferenciação para a conta "Presença"
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 ?>
 
@@ -40,14 +42,16 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
         </div>
 
         <script>
-            // Faz o popup sumir suavemente após 4 segundos
             setTimeout(() => {
                 const toast = document.getElementById('toast-sucesso');
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 500); // Remove do HTML após o fade
+                if (toast) {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 500);
+                }
             }, 4000);
         </script>
     <?php endif; ?>
+
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
             <div class="capa-wrapper">
@@ -64,7 +68,6 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="file" name="capa" style="display:none;">
                 </label>
             </div>
-
         </div>
 
         <div class="avatar-wrapper">
@@ -80,7 +83,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo">
                 <label>Nome</label>
-                <input type="text" name="nome" maxlength="30" value="<?php echo htmlspecialchars($dados['nome']); ?>" required>
+                <input type="text" name="nome" maxlength="25" value="<?php echo htmlspecialchars($dados['nome']); ?>" required>
             </div>
 
             <div class="campo-grupo">
@@ -90,6 +93,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="text" name="username" maxlength="20" value="<?php echo htmlspecialchars($dados['username']); ?>">
                 </div>
             </div>
+
             <div class="campo-grupo">
                 <label>Sua Atlética</label>
                 <select name="atletica_id" class="input-fenda-select">
@@ -102,9 +106,9 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="ed-fisica" <?php echo ($dados['atletica_id'] == 'ed-fisica') ? 'selected' : ''; ?>>Educação Física (Demolidores)</option>
                     <option value="enfermagem" <?php echo ($dados['atletica_id'] == 'enfermagem') ? 'selected' : ''; ?>>Enfermagem (Ferma)</option>
                     <option value="eng-comp" <?php echo ($dados['atletica_id'] == 'eng-comp') ? 'selected' : ''; ?>>Engenharia de Computação (Octabit)</option>
-                    <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica </option>
+                    <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica (MEC)</option>
                     <option value="farmacia" <?php echo ($dados['atletica_id'] == 'farmacia') ? 'selected' : ''; ?>>Farmácia (Narcótica)</option>
-                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia (Fisio) </option>
+                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia (Fisio)</option>
                     <option value="medicina" <?php echo ($dados['atletica_id'] == 'medicina') ? 'selected' : ''; ?>>Medicina (Javalaria)</option>
                     <option value="nutricao" <?php echo ($dados['atletica_id'] == 'nutricao') ? 'selected' : ''; ?>>Nutrição (Devoradores)</option>
                     <option value="pedagogia" <?php echo ($dados['atletica_id'] == 'pedagogia') ? 'selected' : ''; ?>>Pedagogia (Mediadores)</option>
@@ -118,11 +122,11 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <label>Sua Bio</label>
                 <textarea name="bio" maxlength="400" rows="3"><?php echo htmlspecialchars($dados['bio']); ?></textarea>
             </div>
-            <div class="campo-grupo" style="margin-top: 15px;">
-                <label>Configurações de Áudio</label>
-                <div class="audio-settings-card">
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Música de Fundo</span>
+            <div class="campo-grupo" style="margin-top: 15px;">
+                <label>Configurações de Som</label>
+                <div class="audio-settings-card">
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Som Ambiente</span>
                     <div class="audio-choices-container">
                         <button type="button" id="btn-som-chuva" class="btn-audio-choice" onclick="mudarSomAmbiente('chuva')">Chuva</button>
                         <button type="button" id="btn-som-ondas" class="btn-audio-choice" onclick="mudarSomAmbiente('ondas')">Oceano</button>
@@ -131,24 +135,17 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
                     <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Alertas</span>
                     <div class="audio-choices-container">
-                        <button type="button" id="btn-notif-padrao" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')">
-                            <i class="fas fa-dot-circle"></i> Padrão
-                        </button>
-                        <button type="button" id="btn-notif-resident" class="btn-audio-choice" onclick="mudarTemaNotif('resident')">
-                            <i class="fas fa-biohazard"></i> Biohazard
-                        </button>
-                        <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')">
-                            <i class="fas fa-crosshairs"></i> CS
-                        </button>
-                        <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')">
-                            <i class="fas fa-bell-slash"></i> Mudo
-                        </button>
+                        <button type="button" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle"></i> Padrão</button>
+                        <button type="button" class="btn-audio-choice" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard"></i> Biohazard</button>
+                        <button type="button" class="btn-audio-choice" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs"></i> CS</button>
                     </div>
                 </div>
             </div>
 
+            <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
+            
             <div class="campo-grupo">
                 <label>Vibe da Aura</label>
                 <select name="pref_vibe_padrao" class="input-fenda">
@@ -159,17 +156,28 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 </select>
             </div>
 
+            <div class="config-item" style="margin: 15px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Modo Swipe (Beta)</span>
+                    <label class="switch">
+                        <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <small style="color: #888; display: block; margin-top: 5px;">Arraste para o lado para interagir (Experimental)</small>
+            </div>
+
             <div class="campo-grupo">
                 <label>Cor da Aura</label>
                 <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style="width: 100%; height: 40px; border: none; background: none; cursor: pointer;">
             </div>
 
-            <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
+            <div class="perfil-controles" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
                 <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
-                    VER PERFIL PÚBLICO</a>
+                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho" style="text-align: center; text-decoration: none;">
+                    VER PERFIL PÚBLICO
+                </a>
             </div>
-
         </div>
     </form>
 </main>
