@@ -5,7 +5,7 @@ include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php'; 
 
-// 2. FILTRO (O SQL que te dei)
+// 2. FILTRO (O SQL)
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: feed.php");
     exit();

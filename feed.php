@@ -1,6 +1,6 @@
 <?php
 // 1. LÓGICA DE SEGURANÇA E CONFIGURAÇÃO
-include_once 'conexao.php'; // include_once é essencial para não repetir a função de menções
+include_once 'conexao.php'; 
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -11,7 +11,7 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// 2. DADOS DO USUÁRIO LOGADO
+// 2. DADOS DO USUÁRIO LOGADO (Mantendo seus nomes originais)
 $usuario_id = $_SESSION['usuario_id'];
 $query_user = "SELECT nome, foto, username FROM usuarios WHERE id = '$usuario_id'";
 $res_user = mysqli_query($conn, $query_user);
@@ -29,27 +29,27 @@ if (!empty($categoria_selecionada)) {
 }
 
 $sql .= " ORDER BY m.id DESC LIMIT 30";
-$resultado = mysqli_query($conn, $sql);
 
-// Carrega os componentes visuais
+// AQUI ESTÁ O TRUQUE: Use um nome único para o resultado do feed
+$resultado_feed = mysqli_query($conn, $sql); 
+
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
 <div style="margin-top: 30px;">
-    <?php include 'includes/filtros.php'; ?>
+    <?php include 'includes/filtros.php'; // O filtros.php usa $res_cats, não vai mais bater com $resultado_feed ?>
 </div>
 
 <main class="main-fenda-total">
     <div class="container-feed">
         <?php 
-        // A variável correta é $resultado, que veio da query dos posts (linha 35)
-        if ($resultado && mysqli_num_rows($resultado) > 0): 
-        ?>
-            <?php while ($linha = mysqli_fetch_assoc($resultado)):
+        // Use a variável nova aqui também para evitar o erro de array
+        if ($resultado_feed && mysqli_num_rows($resultado_feed) > 0): 
+            while ($linha = mysqli_fetch_assoc($resultado_feed)):
                 $post_id_atual = $linha['id'];
-            ?>
+        ?>
                 <article id="post-<?php echo $post_id_atual; ?>" class="spotted-card <?php echo $linha['categoria']; ?>" style="position: relative;">
 
                     <div class="options-container" style="position: absolute; right: 15px; top: 15px; z-index: 10;">

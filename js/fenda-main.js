@@ -4,30 +4,53 @@
 // 1. FUNÇÕES GLOBAIS DE CONTROLE
 // ============================================================
 
-window.setBolhas = function(ligar) {
-    const container = document.querySelector('.bubbles-container');
-    const status = ligar ? 'active' : 'inactive';
-    localStorage.setItem('fenda_bolhas', status);
-    if (container) container.style.display = (ligar) ? 'block' : 'none';
-    atualizarInterfaceBolhas();
-};
+window.setBolhasLocal = function (valor) {
+    // 1. Atualiza o input hidden para que o PHP saiba o que salvar no banco
+    const inputHidden = document.getElementById('input_pref_bolhas');
+    if (inputHidden) {
+        inputHidden.value = valor;
+    }
 
-window.atualizarInterfaceBolhas = function() {
-    const status = localStorage.getItem('fenda_bolhas') || 'active';
-    const container = document.querySelector('.bubbles-container');
-    if (container) container.style.display = (status === 'active') ? 'block' : 'none';
+    // 2. Gerencia as classes 'active' para o visual mudar na hora
     const btnOn = document.getElementById('btn-bolhas-on');
     const btnOff = document.getElementById('btn-bolhas-off');
-    if (btnOn) btnOn.style.backgroundColor = (status === 'active') ? '#00a896' : 'transparent';
-    if (btnOff) btnOff.style.backgroundColor = (status === 'inactive') ? '#ff4444' : 'transparent';
+
+    if (valor === 1) {
+        btnOn.classList.add('active');
+        btnOff.classList.remove('active');
+    } else {
+        btnOff.classList.add('active');
+        btnOn.classList.remove('active');
+    }
+
+    // 3. (Opcional) Se você quiser que as bolhas sumam ou apareçam sem dar F5:
+    const containerBolhas = document.querySelector('.bubbles-container');
+    if (containerBolhas) {
+        containerBolhas.style.display = (valor === 1) ? 'block' : 'none';
+    }
 };
 
-window.deslogar = function() {
+window.atualizarInterfaceBolhas = function (ligar) {
+    const btnOn = document.getElementById('btn-bolhas-on');
+    const btnOff = document.getElementById('btn-bolhas-off');
+
+    if (btnOn && btnOff) {
+        if (ligar) {
+            btnOn.style.backgroundColor = '#00a896';
+            btnOff.style.backgroundColor = 'transparent';
+        } else {
+            btnOn.style.backgroundColor = 'transparent';
+            btnOff.style.backgroundColor = '#ff4444';
+        }
+    }
+};
+
+window.deslogar = function () {
     const modal = document.getElementById('modal-sair-fenda');
     if (modal) modal.style.display = 'flex';
 };
 
-window.fecharModalSair = function() {
+window.fecharModalSair = function () {
     const modal = document.getElementById('modal-sair-fenda');
     if (modal) modal.style.display = 'none';
 };
@@ -42,73 +65,73 @@ function abrirDenuncia(idPost) {
     alert("Denúncia do post #" + idPost + " enviada aos ADMs.");
 }
 
-window.toggleHackerMode = function() {
+window.toggleHackerMode = function () {
     const body = document.body;
     const btn = document.getElementById('hacker-toggle');
     body.classList.toggle('hacker-mode');
     const isHacker = body.classList.contains('hacker-mode');
     localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
-    if(btn) btn.innerHTML = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
+    if (btn) btn.innerHTML = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
 };
 
-window.toggleMenu = function(menuId) {
+window.toggleMenu = function (menuId) {
     document.querySelectorAll('.options-menu-popup').forEach(menu => {
         if (menu.id !== menuId) menu.style.display = 'none';
     });
     const menu = document.getElementById(menuId);
-    if(menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    if (menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 };
 
 // ============================================================
 // 2. INICIALIZAÇÃO E EVENTOS
 // ============================================================
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     atualizarInterfaceBolhas();
 
     let somAmbiente = localStorage.getItem('fenda_tipo_som') || 'off';
     let temaNotif = localStorage.getItem('fenda_tema_notif') || 'padrao';
 
-    window.atualizarInterfaceAudio = function() {
+    window.atualizarInterfaceAudio = function () {
         document.querySelectorAll('[id^="btn-som-"]').forEach(btn => btn.classList.remove('active'));
         const btnM = document.getElementById('btn-som-' + somAmbiente);
-        if(btnM) btnM.classList.add('active');
+        if (btnM) btnM.classList.add('active');
         document.querySelectorAll('[id^="btn-notif-"]').forEach(btn => btn.classList.remove('active'));
         const btnN = document.getElementById('btn-notif-' + temaNotif);
-        if(btnN) btnN.classList.add('active');
+        if (btnN) btnN.classList.add('active');
     };
     atualizarInterfaceAudio();
 
-    window.mudarSomAmbiente = function(tipo) {
+    window.mudarSomAmbiente = function (tipo) {
         somAmbiente = tipo;
         localStorage.setItem('fenda_tipo_som', tipo);
         let audio = document.getElementById('som-oceano');
         if (audio) {
-            if (tipo === 'off') { audio.pause(); } 
+            if (tipo === 'off') { audio.pause(); }
             else {
-                audio.src = (tipo === 'chuva') ? 'imagensfoto/chuva.mp3' : 'imagensfoto/ondas.mp3';
-                audio.volume = 0.06;
-                audio.play().catch(() => {});
+                audio.src = (tipo === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
+                audio.volume = 0.02;
+                audio.play().catch(() => { });
             }
         }
         atualizarInterfaceAudio();
     };
 
-    window.mudarTemaNotif = function(tema) {
+    window.mudarTemaNotif = function (tema) {
         temaNotif = tema;
         localStorage.setItem('fenda_tema_notif', tema);
         atualizarInterfaceAudio();
     };
 
-    document.addEventListener('click', function() {
+    document.addEventListener('click', function () {
         var audio = document.getElementById('som-oceano');
         if (!audio || somAmbiente === 'off') return;
         if (audio.paused) {
-            audio.src = (somAmbiente === 'chuva') ? 'imagensfoto/chuva.mp3' : 'imagensfoto/ondas.mp3';
+            audio.src = (somAmbiente === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
             audio.volume = 0;
-            audio.play().catch(() => {});
-            var fadeIn = setInterval(function() {
-                if (audio.volume < 0.02) { audio.volume += 0.005; } 
+            audio.play().catch(() => { });
+            var fadeIn = setInterval(function () {
+                if (audio.volume < 0.03) { audio.volume += 0.005; }
                 else { clearInterval(fadeIn); }
             }, 200);
         }
@@ -117,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Navbar Dropdown
     const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
     dropdownLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
             if (isTouch || window.innerWidth <= 1024) {
                 const pai = this.parentElement;
@@ -127,89 +150,185 @@ document.addEventListener("DOMContentLoaded", function() {
                         if (item !== pai) item.classList.remove('active');
                     });
                     pai.classList.add('active');
-                } 
+                }
             }
         });
     });
 
-    // Radar de Alertas
-    window.atualizarContadorAlertas = function() {
-        fetch('includes/contar_alertas.php').then(res => res.json()).then(data => {
-            const badge = document.getElementById('badge-alertas');
-            if (badge) {
-                badge.innerText = data.total;
-                badge.style.display = data.total > 0 ? 'block' : 'none';
-            }
-        }).catch(() => {});
-    };
-    setInterval(atualizarContadorAlertas, 10000);
-    atualizarContadorAlertas();
 
-    // Rodar configuração inicial
-    configurarPosts(); 
+// ============================================================
+// RADAR DE ALERTAS (Versão Blindada com Memória de Sessão)
+// ============================================================
+
+window.atualizarContadorAlertas = function() {
+    fetch('includes/contar_alertas.php')
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('badge-alertas');
+            
+            if (badge) {
+                // Buscamos o último número que o usuário "ouviu" nesta aba
+                // Se não existir (primeira vez), o padrão é o que está no badge agora
+                let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
+                
+                // Se for a primeira execução da página, inicializamos com o valor atual do banco
+                // Isso evita que o som toque só porque você deu F5
+                if (isNaN(ultimoAviso)) {
+                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                    ultimoAviso = data.total;
+                }
+
+                // SÓ dispara o som e o banner se o total do banco for MAIOR que o último avisado
+                if (data.total > ultimoAviso) {
+                    mostrarPopup("Nova interação na Fenda!");
+                    // Atualiza a memória de sessão imediatamente para evitar disparos duplicados
+                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                }
+
+                // Se o usuário leu as notificações, o número diminui. 
+                // Atualizamos a memória para que o próximo "aumento" dispare o som corretamente.
+                if (data.total < ultimoAviso) {
+                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                }
+
+                // Atualiza o visual do badge (círculo vermelho)
+                badge.innerText = data.total;
+                badge.style.display = data.total > 0 ? 'flex' : 'none';
+            }
+        })
+        .catch(err => console.log("Radar: Aguardando estabilidade da conexão..."));
+};
+
+// 1. Inicia o radar (executa a função a cada 10 segundos)
+setInterval(atualizarContadorAlertas, 10000);
+
+// 2. Chama uma vez logo que a página carrega (para não ter que esperar os primeiros 10s)
+atualizarContadorAlertas();
+
+// 3. Rodar configuração inicial dos posts 
+configurarPosts();
+
+// Fecha o DOMContentLoaded 
 });
+
 
 // ============================================================
 // 3. SISTEMAS EXTERNOS E AJAX
 // ============================================================
 
-window.configurarPosts = function() {
+window.configurarPosts = function () {
     document.querySelectorAll('.post-content').forEach(post => {
         if (post.scrollHeight > post.offsetHeight && !post.dataset.ouvinte) {
             post.style.cursor = "pointer";
-            post.dataset.ouvinte = "true"; 
-            post.onclick = function() { this.classList.toggle('expandido'); };
+            post.dataset.ouvinte = "true";
+            post.onclick = function () { this.classList.toggle('expandido'); };
         }
     });
     console.log("Fenda: Posts reconfigurados.");
 };
 
+
 function mostrarPopup(mensagem) {
     let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
+    let tempoExibicao = 5000;
+
     if (temaSalvo !== 'off') {
-        let sons = { 'padrao': 'notificacao.mp3', 'resident': 'resident.mp3', 'cs': 'cs.mp3' };
-        let bip = new Audio('imagensfoto/' + sons[temaSalvo]);
-        bip.volume = 0.3;
-        bip.play().catch(() => {});
-    }
-    const popup = document.createElement('div');
-    popup.className = 'notificacao-popup';
-    popup.innerHTML = `<div style="font-size: 20px;">🔔</div><div style="flex-grow: 1;"><strong style="display: block; font-size: 13px; color: #ddc80e;">Nova Interação!</strong><span>${mensagem}</span></div>`;
-    document.body.appendChild(popup);
-    setTimeout(() => { popup.style.opacity = '0'; setTimeout(() => popup.remove(), 500); }, 5000);
+        let configuracaoSons = {
+            'padrao': { arquivo: 'padrao.mp3', volume: 1.1 },
+            'resident': { arquivo: 'resident.mp3', volume: 0.7 },
+            'cs': { arquivo: 'cs.mp3', volume: 0.7 },
+            'starwars': { arquivo: 'imperial-march.mp3', volume: 0.4 },
+            'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
+            'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.9 },
+            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.4 },
+            'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
+            'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
+            'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 }
+        };
+
+        if (temaSalvo === 'digimon') tempoExibicao = 11000;
+        else if (temaSalvo === 'starwars') tempoExibicao = 9000;
+
+        if (configuracaoSons[temaSalvo]) {
+            let somEscolhido = configuracaoSons[temaSalvo];
+            let bip = new Audio('sons/' + somEscolhido.arquivo);
+            bip.volume = somEscolhido.volume;
+
+            console.log("Tentando tocar:", 'sons/' + somEscolhido.arquivo);
+            bip.play().catch(e => console.log("Áudio bloqueado:", e));
+
+            bip.onloadedmetadata = function () {
+                if (bip.duration > 3) {
+                    setTimeout(() => {
+                        let intervaloFade = setInterval(() => {
+                            if (bip.volume > 0.05) bip.volume -= 0.05;
+                            else {
+                                bip.volume = 0;
+                                bip.pause();
+                                clearInterval(intervaloFade);
+                            }
+                        }, 50);
+                    }, tempoExibicao - 1500);
+                }
+            };
+        } // FECHA if (configuracaoSons[temaSalvo])
+    } // FECHA if (temaSalvo !== 'off')
+
+
+
+// --- PARTE VISUAL ---
+const popup = document.createElement('div');
+popup.className = 'notificacao-popup';
+popup.innerHTML = `
+        <div style="font-size: 20px;">🔔</div>
+        <div style="flex-grow: 1;">
+            <strong style="display: block; font-size: 13px; color: #ddc80e;">Nova Interação!</strong>
+            <span>${mensagem}</span>
+        </div>
+    `;
+
+document.body.appendChild(popup);
+
+setTimeout(() => {
+    popup.style.opacity = '0';
+    setTimeout(() => popup.remove(), 500);
+}, tempoExibicao);
+
 }
+
+
 
 // --- BLOCO DE REAÇÕES ATUALIZADO ---
 function enviarReacao(postId, tipo) {
     fetch(`includes/reagir.php?id=${postId}&tipo=${tipo}`)
         .then(res => res.json())
-        .then(data => { 
-            if(data.status === 'success') {
+        .then(data => {
+            if (data.status === 'success') {
                 // Aqui está o segredo: usar o nome exato que o PHP envia
-                atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes); 
-            } 
+                atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
+            }
         })
         .catch(err => console.error("Erro na requisição:", err));
 }
 
-window.atualizarInterfaceReacao = function(postId, contagens, minhas = []) {
+window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     const container = document.getElementById(`reacoes-post-${postId}`);
     if (!container) return;
 
     const tradutor = {
-        'amei': '💖', 'perplecto': '😲', 'haha': '😂', 
+        'amei': '💖', 'perplecto': '😲', 'haha': '😂',
         'ranco': '🙄', 'forca': '🫂', 'triste': '😢', 'tendi-nada': '🤔'
     };
 
-    container.innerHTML = ''; 
+    container.innerHTML = '';
 
     Object.keys(contagens).forEach(tipo => {
         const emoji = tradutor[tipo] || '👍';
         const total = contagens[tipo];
-        
+
         // Verifica se este emoji específico está na lista de reações do usuário
         const classeVoted = (minhas && minhas.includes(tipo)) ? 'voted' : '';
-        
+
         const span = document.createElement('span');
         span.className = `reacao-item ${classeVoted}`;
         span.innerHTML = `${emoji} ${total}`;
@@ -217,7 +336,7 @@ window.atualizarInterfaceReacao = function(postId, contagens, minhas = []) {
     });
 };
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     const modalSair = document.getElementById('modal-sair-fenda');
     if (event.target == modalSair) fecharModalSair();
     if (!event.target.closest('.dropdown') && !event.target.closest('.reacao-wrapper') && !event.target.closest('.btn-reagir')) {
@@ -233,7 +352,7 @@ window.addEventListener('load', () => {
     if (localStorage.getItem('fenda_hacker') === 'active') {
         document.body.classList.add('hacker-mode');
         const hBtn = document.getElementById('hacker-toggle');
-        if(hBtn) hBtn.innerHTML = '[ DESLIGAR_TERMINAL ]';
+        if (hBtn) hBtn.innerHTML = '[ DESLIGAR_TERMINAL ]';
     }
     const bootScreen = document.getElementById('bios-boot');
     if (bootScreen && !sessionStorage.getItem('boot_concluido')) {

@@ -1,5 +1,5 @@
 <?php
-include_once 'conexao.php'; // Segurança contra o erro de "Redeclare"
+include_once 'conexao.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -10,27 +10,25 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// O header.php agora faz a própria consulta de preferência de Swipe para o <body>
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 
 $id_meu = $_SESSION['usuario_id'];
 
-// BUSCA DE DADOS - Incluindo Vibes e Swipe
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$id_meu'";
+// 1. AJUSTE NA QUERY: Adicionei pref_bolhas para que o banco reconheça a escolha do usuário
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
-// Configuração dos caminhos
 $foto_atual = !empty($dados['foto']) ? "uploads/" . $dados['foto'] : "imagensfoto/default.jpg";
 $capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfoto/capa_padrao.jpg";
 
-// Variáveis para as Vibes
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 $cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
+// Recupera o estado das bolhas (padrão 1 = ligado)
+$bolhas_default = $dados['pref_bolhas'] ?? 1;
 
-// Diferenciação para a conta "Presença"
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 ?>
 
@@ -106,9 +104,9 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="ed-fisica" <?php echo ($dados['atletica_id'] == 'ed-fisica') ? 'selected' : ''; ?>>Educação Física (Demolidores)</option>
                     <option value="enfermagem" <?php echo ($dados['atletica_id'] == 'enfermagem') ? 'selected' : ''; ?>>Enfermagem (Ferma)</option>
                     <option value="eng-comp" <?php echo ($dados['atletica_id'] == 'eng-comp') ? 'selected' : ''; ?>>Engenharia de Computação (Octabit)</option>
-                    <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica (MEC)</option>
+                    <option value="eng-mecanica" <?php echo ($dados['atletica_id'] == 'eng-mecanica') ? 'selected' : ''; ?>>Engenharia Mecânica (MEC) </option>
                     <option value="farmacia" <?php echo ($dados['atletica_id'] == 'farmacia') ? 'selected' : ''; ?>>Farmácia (Narcótica)</option>
-                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia (Fisio)</option>
+                    <option value="fisioterapia" <?php echo ($dados['atletica_id'] == 'fisioterapia') ? 'selected' : ''; ?>>Fisioterapia (Fisio) </option>
                     <option value="medicina" <?php echo ($dados['atletica_id'] == 'medicina') ? 'selected' : ''; ?>>Medicina (Javalaria)</option>
                     <option value="nutricao" <?php echo ($dados['atletica_id'] == 'nutricao') ? 'selected' : ''; ?>>Nutrição (Devoradores)</option>
                     <option value="pedagogia" <?php echo ($dados['atletica_id'] == 'pedagogia') ? 'selected' : ''; ?>>Pedagogia (Mediadores)</option>
@@ -124,62 +122,108 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
             </div>
 
             <div class="campo-grupo" style="margin-top: 15px;">
-                <label>Configurações de Som</label>
+                <label>Configurações de Áudio</label>
                 <div class="audio-settings-card">
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Som Ambiente</span>
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Música de Fundo</span>
                     <div class="audio-choices-container">
-                        <button type="button" id="btn-som-chuva" class="btn-audio-choice" onclick="mudarSomAmbiente('chuva')">Chuva</button>
-                        <button type="button" id="btn-som-ondas" class="btn-audio-choice" onclick="mudarSomAmbiente('ondas')">Oceano</button>
-                        <button type="button" id="btn-som-off" class="btn-audio-choice" onclick="mudarSomAmbiente('off')">Mudo</button>
+                        <button type="button" id="btn-som-chuva" class="btn-audio-choice <?php echo (isset($_SESSION['som']) && $_SESSION['som'] == 'chuva') ? 'active' : ''; ?>" onclick="mudarSomAmbiente('chuva')">Chuva</button>
+                        <button type="button" id="btn-som-ondas" class="btn-audio-choice <?php echo (isset($_SESSION['som']) && $_SESSION['som'] == 'ondas') ? 'active' : ''; ?>" onclick="mudarSomAmbiente('ondas')">Oceano</button>
+                        <button type="button" id="btn-som-off" class="btn-audio-choice <?php echo (!isset($_SESSION['som']) || $_SESSION['som'] == 'off') ? 'active' : ''; ?>" onclick="mudarSomAmbiente('off')">Mudo</button>
                     </div>
 
                     <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Alertas</span>
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
                     <div class="audio-choices-container">
-                        <button type="button" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle"></i> Padrão</button>
-                        <button type="button" class="btn-audio-choice" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard"></i> Biohazard</button>
-                        <button type="button" class="btn-audio-choice" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs"></i> CS</button>
+                        <button type="button" id="btn-notif-padrao" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle"></i> Padrão</button>
+                        <button type="button" id="btn-notif-resident" class="btn-audio-choice" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard"></i> Biohazard</button>
+                        <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs"></i> CS</button>
+                        <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')"><i class="fas fa-bell-slash"></i> Mudo</button>
+
+                        <button type="button" id="btn-notif-starwars" class="btn-audio-choice" onclick="mudarTemaNotif('starwars')"><i class="fas fa-jedi"></i> Star Wars</button>
+                        <button type="button" id="btn-notif-mario" class="btn-audio-choice" onclick="mudarTemaNotif('mario')">
+                            <img src="imagensfoto/mushroom.png" width="18" style="vertical-align: middle; margin-right: 5px;"> Mario
+                        </button>
+
+                        <button type="button" id="btn-notif-pokemon" class="btn-audio-choice" onclick="mudarTemaNotif('pokemon')">
+                            <img src="imagensfoto/pokebola.png" width="18" style="vertical-align: middle; margin-right: 5px;"> Pokémon
+                        </button>
+
+                        <button type="button" id="btn-notif-digimon" class="btn-audio-choice" onclick="mudarTemaNotif('digimon')">
+                            <img src="imagensfoto/digivice.png" width="24" style="vertical-align: middle; margin-right: 5px;"> Digimon
+                        </button>
+
+                        <button type="button" id="btn-notif-dbz" class="btn-audio-choice" onclick="mudarTemaNotif('dbz')">
+                            <img src="imagensfoto/esferas-nuvem.png" width="22" style="vertical-align: middle; margin-right: 5px;"> DBZ
+                        </button>
+
+                        <button type="button" id="btn-notif-naruto" class="btn-audio-choice" onclick="mudarTemaNotif('naruto')">
+                            <img src="imagensfoto/kunai.png" width="20" style="vertical-align: middle; margin-right: 5px;"> Naruto
+                        </button>
+                        <button type="button" id="btn-notif-sf" class="btn-audio-choice" onclick="mudarTemaNotif('streetfighter')">
+                            <i class="fa-solid fa-hand-fist"></i> Street Fighter
+                        </button>
+                    </div>
+
+                    <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
+
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">(De)feitos Visuais</span>
+                    <div class="audio-choices-container">
+                        <input type="hidden" name="pref_bolhas" id="input_pref_bolhas" value="<?php echo $bolhas_default; ?>">
+                        <button type="button" id="btn-bolhas-on" class="btn-audio-choice <?php echo ($bolhas_default == 1) ? 'active' : ''; ?>" onclick="setBolhasLocal(1)">
+                            <i class="fas fa-soap"></i> Bolhas On
+                        </button>
+                        <button type="button" id="btn-bolhas-off" class="btn-audio-choice <?php echo ($bolhas_default == 0) ? 'active' : ''; ?>" onclick="setBolhasLocal(0)">
+                            <i class="fas fa-times"></i> Desligar
+                        </button>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Vibe da Aura</label>
+                        <select name="pref_vibe_padrao" class="input-fenda">
+                            <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
+                            <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
+                            <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
+                            <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
+                        </select>
+                    </div>
+
+                    <div class="config-item">
+                        <span>Modo Swipe (Beta):</span>
+                        <label class="switch">
+                            <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
+                            <span class="slider round"></span>
+                        </label>
+                        <small>Arraste para o lado para responder (Experimental)</small>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Cor da Aura</label>
+                        <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style="width: 100%; height: 40px; border: none; background: none; cursor: pointer;">
+                    </div>
+
+                    <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">
+                        <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
+                        <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
+                            VER PERFIL PÚBLICO
+                        </a>
                     </div>
                 </div>
-            </div>
-
-            <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
-            
-            <div class="campo-grupo">
-                <label>Vibe da Aura</label>
-                <select name="pref_vibe_padrao" class="input-fenda">
-                    <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
-                    <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
-                    <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
-                    <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
-                </select>
-            </div>
-
-            <div class="config-item" style="margin: 15px 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>Modo Swipe (Beta)</span>
-                    <label class="switch">
-                        <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <small style="color: #888; display: block; margin-top: 5px;">Arraste para o lado para interagir (Experimental)</small>
-            </div>
-
-            <div class="campo-grupo">
-                <label>Cor da Aura</label>
-                <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style="width: 100%; height: 40px; border: none; background: none; cursor: pointer;">
-            </div>
-
-            <div class="perfil-controles" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-                <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho" style="text-align: center; text-decoration: none;">
-                    VER PERFIL PÚBLICO
-                </a>
-            </div>
-        </div>
     </form>
 </main>
+
+<script>
+    // Função simples para gerenciar os botões de bolha sem complicar o código
+    function setBolhasLocal(valor) {
+        document.getElementById('input_pref_bolhas').value = valor;
+        document.getElementById('btn-bolhas-on').classList.toggle('active', valor === 1);
+        document.getElementById('btn-bolhas-off').classList.toggle('active', valor === 0);
+
+        // Se você tiver a função setBolhas global que muda em tempo real, chama ela aqui
+        if (typeof setBolhas === "function") {
+            setBolhas(valor === 1);
+        }
+    }
+</script>
 
 <?php include 'includes/footer.php'; ?>

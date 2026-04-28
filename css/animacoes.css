@@ -1,24 +1,17 @@
-/* BOLHAS DA FENDA REFORMULADAS */
 
+/* BOLHAS DA FENDA REFORMULADAS */
 .bolha {
     position: absolute;
-    bottom: -10vh;
+    bottom: -100px; /* Começa abaixo da tela */
     background: radial-gradient(circle at 30% 30%,
             rgba(255, 255, 255, 0.4) 0%,
             rgba(255, 255, 255, 0.1) 40%,
             rgba(255, 255, 255, 0.2) 60%,
             rgba(255, 255, 255, 0.05) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 55%;
+    border-radius: 45%;
     animation: subirEBalancar 8s infinite ease-in;
     pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    
 }
 
 .bubbles-container {
@@ -27,9 +20,10 @@
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    z-index: -1; /* Joga para trás de tudo para não bugar os cliques */
+    z-index: 5000; /* Fica a frente do conteúdo porém atrás dos menus e notificações */
     pointer-events: none;
-    overflow: hidden; }
+    overflow: hidden; 
+}
 
 
 
@@ -322,7 +316,7 @@ body.hacker-mode .submenu li a:hover {
 
 /* 6. CONTEÚDO E IMAGENS */
 body.hacker-mode main {
-    animation: bootSystem 7s steps(10) forwards, flicker 0.3s infinite;
+    animation: bootSystem 2s steps(10) forwards, flicker 0.3s infinite;
 }
 
 body.hacker-mode h1, body.hacker-mode h2, body.hacker-mode p, 
@@ -457,7 +451,7 @@ body.hacker-mode .menu li a:active::before {
 
 
 body.hacker-mode img:hover {
-    filter: grayscale(0.1) brightness(1.1); /* No hover a cor volta mais */
+    filter: grayscale(0.2) brightness(1.15); /* No hover a cor volta mais */
 }
 
 /* 7. SAUDAÇÃO SEM CORTES (PARA CELULAR/KINDLE) */

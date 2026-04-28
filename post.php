@@ -1,13 +1,20 @@
 <?php
 include_once 'conexao.php';
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit();
 }
 
+// Puxar dados do usuário logado para as preferências de estilo
+$usuario_logado_id = $_SESSION['usuario_id'];
+$query_prefs = "SELECT pref_vibe_padrao, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$usuario_logado_id'";
+$res_prefs = mysqli_query($conn, $query_prefs);
+$dados_user = mysqli_fetch_assoc($res_prefs);
 
 include 'includes/header.php';
 include 'includes/navbar.php';
@@ -24,8 +31,9 @@ $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
 
-$vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
-$cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
+// Usando as preferências que buscamos acima ou valores padrão
+$vibe_default = $dados_user['pref_vibe_padrao'] ?? 'vibe-glass';
+$cor_default = $dados_user['pref_cor_padrao'] ?? '#70cde4';
 
 if (!$post) {
     die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
@@ -110,7 +118,7 @@ if (!$post) {
 
                         <?php if (empty($c['parent_id'])): ?>
                             <div style="text-align: right; width: 100%;">
-                                <button onclick="prepararResposta('<?php echo $c['id']; ?>', '<?php echo $c['usuario_nome']; ?>')" class="btn-responder-fenda">
+                                <button onclick="prepararResposta('<?php echo $c['id']; ?>', '<?php echo htmlspecialchars($c['usuario_nome'] ?? 'Anonimo'); ?>')" class="btn-responder-fenda">
                                     <i class="fas fa-reply"></i> Responder
                                 </button>
                             </div>
@@ -141,52 +149,42 @@ if (!$post) {
 
     const textarea = document.querySelector('.textarea-fenda');
     const count = document.getElementById('char-count');
-    textarea.addEventListener('input', function() {
-        const restantes = 600 - this.value.length;
-        count.textContent = restantes + " caracteres restantes";
-        count.style.color = (restantes < 50) ? "#ff4444" : "var(--dourado)";
-    });
-
-
-   /*--- FUNÇÃO BETA: SWIPE PARA RESPONDER (COM FORÇA TOTAL) ---*/
-const swipeAtivado = <?php echo ($dados['pref_swipe'] ?? 0); ?>;
-
-if (swipeAtivado == 1) {
-    let touchstartX = 0;
-    let touchX = 0;
-
-    document.querySelectorAll('.comentario-item').forEach(item => {
-        item.addEventListener('touchstart', e => {
-            touchstartX = e.touches[0].clientX;
-            item.style.transition = "none";
-        }, {passive: true});
-
-        item.addEventListener('touchmove', e => {
-            touchX = e.touches[0].clientX;
-            let deslocamento = touchX - touchstartX;
-
-            // Só deixa arrastar para a direita
-            if (deslocamento > 0 && deslocamento < 100) {
-                // AQUI ENTRA O IMPORTANT:
-                item.style.setProperty('transform', `translateX(${deslocamento}px)`, 'important');
-            }
-        }, {passive: true});
-
-        item.addEventListener('touchend', e => {
-            let deslocamentoFinal = touchX - touchstartX;
-            item.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
-            
-            if (deslocamentoFinal > 70) {
-                const btn = item.querySelector('.btn-responder-fenda');
-                if (btn) btn.click();
-            }
-            
-            // AQUI TAMBÉM NO RESET:
-            item.style.setProperty('transform', 'translateX(0)', 'important');
+    if(textarea && count) {
+        textarea.addEventListener('input', function() {
+            const restantes = 600 - this.value.length;
+            count.textContent = restantes + " caracteres restantes";
+            count.style.color = (restantes < 50) ? "#ff4444" : "var(--dourado)";
         });
-    });
-}
+    }
 
+   /*--- FUNÇÃO BETA: SWIPE PARA RESPONDER ---*/
+   const swipeAtivado = <?php echo ($dados_user['pref_swipe'] ?? 0); ?>;
+   if (swipeAtivado == 1) {
+        let touchstartX = 0;
+        let touchX = 0;
+        document.querySelectorAll('.comentario-item').forEach(item => {
+            item.addEventListener('touchstart', e => {
+                touchstartX = e.touches[0].clientX;
+                item.style.transition = "none";
+            }, {passive: true});
+            item.addEventListener('touchmove', e => {
+                touchX = e.touches[0].clientX;
+                let deslocamento = touchX - touchstartX;
+                if (deslocamento > 0 && deslocamento < 100) {
+                    item.style.setProperty('transform', `translateX(${deslocamento}px)`, 'important');
+                }
+            }, {passive: true});
+            item.addEventListener('touchend', e => {
+                let deslocamentoFinal = touchX - touchstartX;
+                item.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
+                if (deslocamentoFinal > 70) {
+                    const btn = item.querySelector('.btn-responder-fenda');
+                    if (btn) btn.click();
+                }
+                item.style.setProperty('transform', 'translateX(0)', 'important');
+            });
+        });
+   }
 </script>
 
 <?php include 'includes/footer.php'; ?>

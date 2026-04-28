@@ -166,6 +166,7 @@ main {
     display: block;
     transition: 0.3s;
     border-radius: 5px;
+    
 }
 
 .menu-item:hover>a {
@@ -593,7 +594,7 @@ footer a {
     padding: 10px 15px;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
     flex: 1;
@@ -679,39 +680,39 @@ footer a {
 
 .badge-alertas {
     position: absolute;
-    top: -4px;
-    right: -6px;
+    top: -6px; 
+    right: -8px; 
     background: linear-gradient(45deg, #ff4b2b, #ff416c);
     color: white;
     font-size: 10px;
-    font-weight: bold;
-    min-width: 18px;
+    font-weight: 800; 
+    width: 18px; 
     height: 18px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid #ffffff;
+    border: 1.5px solid #1a1a1a; 
     z-index: 100;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     animation: pulsarNotif 3s infinite;
-    /* Ativa a animação que você já criou! */
+    
+    /* ISSO AQUI É O SEGREDO: */
+    line-height: 1; 
+    padding: 0; 
+    /* Centralização garantida */
+    text-indent: 0;
+    box-sizing: border-box; /* Garante que o border não aumente o círculo */
 }
 
 /* Sua animação que já é top */
 @keyframes pulsarNotif {
-    0% {
-        transform: scale(1);
+    0% { transform: scale(1); }
+    50% { 
+        transform: scale(1.2); 
+        box-shadow: 0 0 12px rgba(255, 75, 43, 0.7); /* Brilho neon ao pulsar */
     }
-
-    50% {
-        transform: scale(1.15);
-        shadow: 0 0 10px rgba(255, 75, 43, 0.5);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+    100% { transform: scale(1); }
 }
 
 .alerta-login a {
@@ -1308,8 +1309,8 @@ form[action="confirma-login.php"] input[type="password"] {
     }
 
     .insignia-atletica-bottom {
-        width: 50px !important;
-        height: 50px !important;
+        width: 60px !important;
+        height: 60px !important;
     }
 
     .bio-texto {
@@ -2147,7 +2148,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 .conteudo-principal {
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1.6;
     text-align: left;
     color: #e0e0e0;
@@ -2155,9 +2156,9 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 .aviso-legal {
     font-style: italic;
-    opacity: 0.8;
+    opacity: 0.75;
     margin-bottom: 20px;
-    color: #b4e4ffe8;
+    color: #a6d4eeee;
 }
 
 .citacao-anarquica {
@@ -2585,4 +2586,38 @@ textarea[name="bio"] {
         aspect-ratio: 16/6;
 
     }
+}
+
+/* --- OTIMIZAÇÃO PARA DISPOSITIVOS SIMPLES OU SENSIBILIDADE --- */
+@media (prefers-reduced-motion: reduce) {
+    /* Para as animações de scanlines e glitch que podem tontear ou pesar */
+    body.hacker-mode::before, 
+    body.hacker-mode::after,
+    .glitch-effect {
+        animation: none !important;
+        display: none !important; /* Remove o peso do processamento */
+    }
+
+    /* Para a setinha ">" que fica pulando no hover */
+    body.hacker-mode *:hover::before {
+        animation: none !important;
+        left: 10px !important; /* Ela apenas aparece, sem deslizar ou piscar */
+    }
+
+    /* Remove transições suaves de cores que exigem GPU */
+    * {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+
+    .bubbles-container, .background-animado, .glitch-effect {
+        animation: none !important;
+        display: none !important; /* Se forem apenas decorativas, melhor sumir com elas */
+    }
+    
+    /* Mantém o visual hacker, mas estático e nítido */
+    body.hacker-mode {
+        background-attachment: scroll !important; /* Evita o efeito parallax pesado */
+    }
+
 }

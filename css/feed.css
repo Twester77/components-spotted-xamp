@@ -131,7 +131,7 @@
     padding: 15px !important;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     margin-left: auto;
     margin-right: auto;
     display: flex !important; 
@@ -141,6 +141,7 @@
     max-width: 600px;              
     height: auto !important;       
     min-height: 120px !important;
+    
 }
     
 
@@ -152,39 +153,7 @@
 }
 
 
-/* --- OTIMIZAÇÃO PARA DISPOSITIVOS SIMPLES OU SENSIBILIDADE --- */
-@media (prefers-reduced-motion: reduce) {
-    /* Para as animações de scanlines e glitch que podem tontear ou pesar */
-    body.hacker-mode::before, 
-    body.hacker-mode::after,
-    .glitch-effect {
-        animation: none !important;
-        display: none !important; /* Remove o peso do processamento */
-    }
 
-    /* Para a setinha ">" que fica pulando no hover */
-    body.hacker-mode *:hover::before {
-        animation: none !important;
-        left: 10px !important; /* Ela apenas aparece, sem deslizar ou piscar */
-    }
-
-    /* Remove transições suaves de cores que exigem GPU */
-    * {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-    }
-
-    .bubbles-container, .background-animado, .glitch-effect {
-        animation: none !important;
-        display: none !important; /* Se forem apenas decorativas, melhor sumir com elas */
-    }
-    
-    /* Mantém o visual hacker, mas estático e nítido */
-    body.hacker-mode {
-        background-attachment: scroll !important; /* Evita o efeito parallax pesado */
-    }
-
-}
 
 
 .spotted-card:hover {

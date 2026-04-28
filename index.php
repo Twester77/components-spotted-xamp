@@ -1,6 +1,6 @@
 <?php
 include_once 'conexao.php'; // Mantendo a segurança com include_once
-
+$hora = '3';
 // Ajuste do fuso para SP
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -43,13 +43,13 @@ include 'includes/bolhas.php';
 
 <?php if ($tema_classe === "tema-hacker"): ?>
     <audio id="hackerAudio" loop>
-        <source src="imagensfoto/hacker_theme.mp3" type="audio/mpeg">
+        <source src="sons/hacker_theme.mp3" type="audio/mpeg">
     </audio>
     <script>
         document.addEventListener('click', () => {
             const audio = document.getElementById('hackerAudio');
             if (audio) {
-                audio.volume = 0.05;
+                audio.volume = 0.02;
                 audio.play();
             }
         }, {
@@ -96,7 +96,7 @@ include 'includes/bolhas.php';
             <p>Falar mal do: coleguinha / fulano / beltrano / herculano / vida acadêmica / perrengues cotidianos / presidente / do papa / obsolescência programada / aquecimento global / segunda guerra mundial / apocalipse zumbi / político / ex BBB e subcelebridades em geral / guardinha / enfim QUASE tudo... Mãe não pode. </p>
             <p>Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, barzinho de qualidade e procedência completamente duvidosa, talvez um churras com piscina (Votuporanga né, só por deus) no final de semana...</p>
             <p>E por que não, marcar um date e achar o amor da sua vida (ou um trauma e 6 meses de terapia, alô pessoal da Psico!).</p>
-            <p class="aviso-legal"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido político, somos somente mensageiros.</p>
+            <p class="aviso-legal"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido, somos somente mensageiros.</p>
 
             <blockquote class="citacao-anarquica">
                 "Tratem todos: (Sim, isso inclui todos, desde animais, pessoas, bactérias, terraplanistas e até ET's) com educação. Ser doido e um tanto quanto anárquico não é desculpa para ser mal-educado, respeito é via de mão dupla."

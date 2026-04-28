@@ -16,7 +16,7 @@
     </div>
 
     <audio id="som-oceano" loop preload="auto">
-        <source src="imagensfoto/chuva.mp3" type="audio/mpeg">
+        <source src="sons/oceano.mp3" type="audio/mpeg">
     </audio>
 
 <script src="js/fenda-main.js"></script>

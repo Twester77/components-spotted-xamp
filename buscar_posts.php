@@ -2,7 +2,7 @@
 include_once 'conexao.php';
 session_start();
 
-// 1. REMOVIDA A FUNÇÃO formatarMencoes DAQUI (Ela já vem do conexao.php ou feed.php)
+// 1. REMOVIDA A FUNÇÃO formatarMencoes DAQUI . Ela já vem do conexao.php 
 
 $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
 $categoria = isset($_GET['categoria']) ? mysqli_real_escape_string($conn, $_GET['categoria']) : '';
