@@ -185,6 +185,85 @@ if (!$post) {
             });
         });
    }
+
+
+   // ============================================================
+// SISTEMA DE COMENTÁRIOS VIA AJAX (SEM REFRESH) - CORRIGIDO
+// ============================================================
+document.querySelector('.form-fenda').addEventListener('submit', function(e) {
+    e.preventDefault(); 
+
+    const formData = new FormData(this);
+    const btn = this.querySelector('.btn-enviar-fenda');
+    const originalText = btn.innerText;
+
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
+
+    fetch('enviar-comentario.php', {
+        method: 'POST',
+        body: formData,
+        // --- A LINHA QUE SALVA O PROJETO ESTÁ ABAIXO ---
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Erro na rede');
+        return res.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            const container = document.querySelector('.lista-comentarios-social');
+            const novoComentario = document.createElement('div');
+            
+            const vibe = formData.get('pref_vibe_comentario');
+            const cor = formData.get('pref_cor_borda');
+            const texto = formData.get('comentario');
+            
+            const nomeSessao = "<?php echo $_SESSION['usuario_nome'] ?? ''; ?>";
+            const autor = nomeSessao ? `@${nomeSessao}` : "👤 Anônimo";
+
+            novoComentario.className = `comentario-item ${vibe}`;
+            novoComentario.style.cssText = `--cor-borda-glow: ${cor}; border-left-color: ${cor} !important; opacity: 0; transform: translateY(-20px); transition: all 0.5s ease;`;
+            
+            novoComentario.innerHTML = `
+                <div class="comentario-meta">
+                    <strong class="comentario-autor" style="color: ${cor};">${autor}</strong>
+                    <span class="comentario-data">Agora mesmo</span>
+                </div>
+                <p class="comentario-texto">${texto}</p>
+            `;
+
+            const semComentarios = container.querySelector('.sem-comentarios');
+            if (semComentarios) semComentarios.remove();
+            
+            container.prepend(novoComentario);
+            
+            setTimeout(() => {
+                novoComentario.style.opacity = '1';
+                novoComentario.style.transform = 'translateY(0)';
+            }, 10);
+
+            this.reset();
+            document.getElementById('input_parent_id').value = "";
+            document.getElementById('char-count').textContent = "600 caracteres restantes";
+            btn.innerText = originalText;
+            btn.disabled = false;
+            
+        } else {
+            alert("Erro: " + data.message);
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+    })
+    .catch(err => {
+        console.error("Erro no AJAX:", err);
+        alert("Erro ao conectar com o servidor. Verifique o console.");
+        btn.innerText = originalText;
+        btn.disabled = false;
+    });
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>

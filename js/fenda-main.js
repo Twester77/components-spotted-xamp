@@ -156,59 +156,59 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-// ============================================================
-// RADAR DE ALERTAS (Versão Blindada com Memória de Sessão)
-// ============================================================
+    // ============================================================
+    // RADAR DE ALERTAS (Versão Blindada com Memória de Sessão)
+    // ============================================================
 
-window.atualizarContadorAlertas = function() {
-    fetch('includes/contar_alertas.php')
-        .then(res => res.json())
-        .then(data => {
-            const badge = document.getElementById('badge-alertas');
-            
-            if (badge) {
-                // Buscamos o último número que o usuário "ouviu" nesta aba
-                // Se não existir (primeira vez), o padrão é o que está no badge agora
-                let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
-                
-                // Se for a primeira execução da página, inicializamos com o valor atual do banco
-                // Isso evita que o som toque só porque você deu F5
-                if (isNaN(ultimoAviso)) {
-                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                    ultimoAviso = data.total;
+    window.atualizarContadorAlertas = function () {
+        fetch('includes/contar_alertas.php')
+            .then(res => res.json())
+            .then(data => {
+                const badge = document.getElementById('badge-alertas');
+
+                if (badge) {
+                    // Buscamos o último número que o usuário "ouviu" nesta aba
+                    // Se não existir (primeira vez), o padrão é o que está no badge agora
+                    let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
+
+                    // Se for a primeira execução da página, inicializamos com o valor atual do banco
+                    // Isso evita que o som toque só porque você deu F5
+                    if (isNaN(ultimoAviso)) {
+                        sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                        ultimoAviso = data.total;
+                    }
+
+                    // SÓ dispara o som e o banner se o total do banco for MAIOR que o último avisado
+                    if (data.total > ultimoAviso) {
+                        mostrarPopup("Nova interação na Fenda!");
+                        // Atualiza a memória de sessão imediatamente para evitar disparos duplicados
+                        sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                    }
+
+                    // Se o usuário leu as notificações, o número diminui. 
+                    // Atualizamos a memória para que o próximo "aumento" dispare o som corretamente.
+                    if (data.total < ultimoAviso) {
+                        sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                    }
+
+                    // Atualiza o visual do badge (círculo vermelho)
+                    badge.innerText = data.total;
+                    badge.style.display = data.total > 0 ? 'flex' : 'none';
                 }
+            })
+            .catch(err => console.log("Radar: Aguardando estabilidade da conexão..."));
+    };
 
-                // SÓ dispara o som e o banner se o total do banco for MAIOR que o último avisado
-                if (data.total > ultimoAviso) {
-                    mostrarPopup("Nova interação na Fenda!");
-                    // Atualiza a memória de sessão imediatamente para evitar disparos duplicados
-                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                }
+    // 1. Inicia o radar (executa a função a cada 8 segundos)
+    setInterval(atualizarContadorAlertas, 8000);
 
-                // Se o usuário leu as notificações, o número diminui. 
-                // Atualizamos a memória para que o próximo "aumento" dispare o som corretamente.
-                if (data.total < ultimoAviso) {
-                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                }
+    // 2. Chama uma vez logo que a página carrega (para não ter que esperar os primeiros 10s)
+    atualizarContadorAlertas();
 
-                // Atualiza o visual do badge (círculo vermelho)
-                badge.innerText = data.total;
-                badge.style.display = data.total > 0 ? 'flex' : 'none';
-            }
-        })
-        .catch(err => console.log("Radar: Aguardando estabilidade da conexão..."));
-};
+    // 3. Rodar configuração inicial dos posts 
+    configurarPosts();
 
-// 1. Inicia o radar (executa a função a cada 10 segundos)
-setInterval(atualizarContadorAlertas, 10000);
-
-// 2. Chama uma vez logo que a página carrega (para não ter que esperar os primeiros 10s)
-atualizarContadorAlertas();
-
-// 3. Rodar configuração inicial dos posts 
-configurarPosts();
-
-// Fecha o DOMContentLoaded 
+    // Fecha o DOMContentLoaded 
 });
 
 
@@ -243,7 +243,9 @@ function mostrarPopup(mensagem) {
             'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.4 },
             'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
             'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
-            'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 }
+            'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
+            'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3' },
+            'desgraca2': { arquivo: 'eu-quero-dormir.mp3' }
         };
 
         if (temaSalvo === 'digimon') tempoExibicao = 11000;
@@ -276,10 +278,10 @@ function mostrarPopup(mensagem) {
 
 
 
-// --- PARTE VISUAL ---
-const popup = document.createElement('div');
-popup.className = 'notificacao-popup';
-popup.innerHTML = `
+    // --- PARTE VISUAL ---
+    const popup = document.createElement('div');
+    popup.className = 'notificacao-popup';
+    popup.innerHTML = `
         <div style="font-size: 20px;">🔔</div>
         <div style="flex-grow: 1;">
             <strong style="display: block; font-size: 13px; color: #ddc80e;">Nova Interação!</strong>
@@ -287,12 +289,12 @@ popup.innerHTML = `
         </div>
     `;
 
-document.body.appendChild(popup);
+    document.body.appendChild(popup);
 
-setTimeout(() => {
-    popup.style.opacity = '0';
-    setTimeout(() => popup.remove(), 500);
-}, tempoExibicao);
+    setTimeout(() => {
+        popup.style.opacity = '0';
+        setTimeout(() => popup.remove(), 500);
+    }, tempoExibicao);
 
 }
 

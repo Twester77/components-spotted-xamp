@@ -27,7 +27,7 @@ include 'includes/bolhas.php';
    TERMOS E DIRETRIZES DE SEGURANÇA
 </h2>
   <div style="display: flex; gap: 8px; justify-content:center;">
-   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.8; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.8; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
   <article style="color: #ebdc0fee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>

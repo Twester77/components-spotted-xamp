@@ -136,8 +136,8 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
                     <div class="audio-choices-container">
                         <button type="button" id="btn-notif-padrao" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle"></i> Padrão</button>
-                        <button type="button" id="btn-notif-resident" class="btn-audio-choice" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard"></i> Biohazard</button>
                         <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs"></i> CS</button>
+                        <button type="button" id="btn-notif-resident" class="btn-audio-choice" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard"></i> RE</button>
                         <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')"><i class="fas fa-bell-slash"></i> Mudo</button>
 
                         <button type="button" id="btn-notif-starwars" class="btn-audio-choice" onclick="mudarTemaNotif('starwars')"><i class="fas fa-jedi"></i> Star Wars</button>
@@ -150,18 +150,25 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                         </button>
 
                         <button type="button" id="btn-notif-digimon" class="btn-audio-choice" onclick="mudarTemaNotif('digimon')">
-                            <img src="imagensfoto/digivice.png" width="24" style="vertical-align: middle; margin-right: 5px;"> Digimon
+                            <img src="imagensfoto/digivice.png" width="22" style="vertical-align: middle; margin-right: 5px;"> Digimon
                         </button>
 
                         <button type="button" id="btn-notif-dbz" class="btn-audio-choice" onclick="mudarTemaNotif('dbz')">
-                            <img src="imagensfoto/esferas-nuvem.png" width="22" style="vertical-align: middle; margin-right: 5px;"> DBZ
+                            <img src="imagensfoto/esferas-nuvem.png" width="20" style="vertical-align: middle; margin-right: 5px;"> DBZ
                         </button>
 
                         <button type="button" id="btn-notif-naruto" class="btn-audio-choice" onclick="mudarTemaNotif('naruto')">
                             <img src="imagensfoto/kunai.png" width="20" style="vertical-align: middle; margin-right: 5px;"> Naruto
                         </button>
-                        <button type="button" id="btn-notif-sf" class="btn-audio-choice" onclick="mudarTemaNotif('streetfighter')">
+                        <button type="button" id="btn-notif-streetfighter" class="btn-audio-choice" onclick="mudarTemaNotif('streetfighter')">
                             <i class="fa-solid fa-hand-fist"></i> Street Fighter
+                        </button>
+                        <button type="button" id="btn-notif-desgraca1" class="btn-audio-choice" onclick="mudarTemaNotif('desgraca1')">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Desgraça 
+                        </button>
+
+                        <button type="button" id="btn-notif-desgraca2" class="btn-audio-choice" onclick="mudarTemaNotif('desgraca2')">
+                            <i class="fa-solid fa-skull"></i> Quero dormir
                         </button>
                     </div>
 

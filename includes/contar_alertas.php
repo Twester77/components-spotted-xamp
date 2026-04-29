@@ -1,4 +1,6 @@
+
 <?php
+/** @var mysqli $conn */
 include '../conexao.php';
 session_start();
 

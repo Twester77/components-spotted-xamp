@@ -581,7 +581,7 @@ footer a {
 /* Container dos botões de Chuva/Onda/Mudo */
 .audio-choices-container {
     display: flex;
-    gap: 10px;
+    gap:8px;
     flex-wrap: wrap;
     margin-top: 5px;
 }
@@ -591,14 +591,15 @@ footer a {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #999;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border-radius: 12px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
     flex: 1;
-    min-width: 90px;
+    min-width: 80px;
+    max-width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2148,7 +2149,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 .conteudo-principal {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.6;
     text-align: left;
     color: #e0e0e0;

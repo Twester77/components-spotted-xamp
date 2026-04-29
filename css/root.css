@@ -2,8 +2,8 @@
    Mantendo a estrutura original e corrigindo os bugs */
 
 :root {
-    --cor-principal: #024685c2; 
-    --cor-hover: #263197a1;
+    --cor-principal: #024685a2; 
+    --cor-hover: #434c97a1;
     --laranja-fenda: linear-gradient(165deg, #ff520d, #8e4facaf);
     --dourado: #ffbc00;
 
