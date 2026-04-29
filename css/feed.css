@@ -853,8 +853,8 @@ order: 3;
 
 .grid-habitantes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
     padding: 15px;
     max-width: auto;
     margin: 0 auto;
@@ -870,6 +870,7 @@ order: 3;
     gap: 15px;
     transition: 0.3s;
     text-decoration: none;
+    max-width: 300px;
 }
 
 .card-habitante:hover {
@@ -879,8 +880,8 @@ order: 3;
 }
 
 .avatar-lista {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
@@ -926,7 +927,7 @@ order: 3;
 
 .form-busca-fenda input[type="text"] {
     padding: 12px 15px !important;
-    font-size: 1.1rem !important;
+    font-size: 1rem !important;
 }
 
 .form-busca-fenda button {

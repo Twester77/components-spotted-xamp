@@ -5,22 +5,47 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (!isset($_SESSION['usuario_id'])) {
+// --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Buscamos a categoria antes de validar a sessão
+$is_perdidos = false;
+if ($id > 0) {
+    $stmt_check = $conn->prepare("SELECT categoria FROM mensagens WHERE id = ?");
+    $stmt_check->bind_param("i", $id);
+    $stmt_check->execute();
+    $check_post = $stmt_check->get_result()->fetch_assoc();
+    if ($check_post && $check_post['categoria'] === 'perdidos') {
+        $is_perdidos = true;
+    }
+}
+
+// Só redireciona se NÃO estiver logado E NÃO for categoria perdidos
+if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
     header("Location: index.php");
     exit();
 }
 
-// Puxar dados do usuário logado para as preferências de estilo
-$usuario_logado_id = $_SESSION['usuario_id'];
-$query_prefs = "SELECT pref_vibe_padrao, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$usuario_logado_id'";
-$res_prefs = mysqli_query($conn, $query_prefs);
-$dados_user = mysqli_fetch_assoc($res_prefs);
+// Puxar dados do usuário logado (apenas se houver um)
+$vibe_default = 'vibe-glass';
+$cor_default = '#70cde4';
+$swipeAtivado = 0;
+
+if (isset($_SESSION['usuario_id'])) {
+    $usuario_logado_id = $_SESSION['usuario_id'];
+    $query_prefs = "SELECT pref_vibe_padrao, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$usuario_logado_id'";
+    $res_prefs = mysqli_query($conn, $query_prefs);
+    if ($dados_user = mysqli_fetch_assoc($res_prefs)) {
+        $vibe_default = $dados_user['pref_vibe_padrao'] ?? 'vibe-glass';
+        $cor_default = $dados_user['pref_cor_padrao'] ?? '#70cde4';
+        $swipeAtivado = $dados_user['pref_swipe'] ?? 0;
+    }
+}
 
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id == 0) {
     header("Location: feed.php");
     exit();
@@ -30,10 +55,6 @@ $stmt = $conn->prepare("SELECT * FROM mensagens WHERE id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
-
-// Usando as preferências que buscamos acima ou valores padrão
-$vibe_default = $dados_user['pref_vibe_padrao'] ?? 'vibe-glass';
-$cor_default = $dados_user['pref_cor_padrao'] ?? '#70cde4';
 
 if (!$post) {
     die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
@@ -86,7 +107,7 @@ if (!$post) {
                 if ($exibir_nome): ?>
                     <button type="submit" class="btn-enviar-fenda">Mandar mensagem como @<?php echo htmlspecialchars($exibir_nome); ?> </button>
                 <?php else: ?>
-                    <button type="submit" class="btn-enviar-fenda anonimo">Mensagem Anônima</button>
+                    <button type="submit" class="btn-enviar-fenda anonimo">Responder como Visitante</button>
                 <?php endif; ?>
             </form>
         </section>
@@ -157,8 +178,7 @@ if (!$post) {
         });
     }
 
-   /*--- FUNÇÃO BETA: SWIPE PARA RESPONDER ---*/
-   const swipeAtivado = <?php echo ($dados_user['pref_swipe'] ?? 0); ?>;
+   const swipeAtivado = <?php echo $swipeAtivado; ?>;
    if (swipeAtivado == 1) {
         let touchstartX = 0;
         let touchX = 0;
@@ -186,10 +206,6 @@ if (!$post) {
         });
    }
 
-
-   // ============================================================
-// SISTEMA DE COMENTÁRIOS VIA AJAX (SEM REFRESH) - CORRIGIDO
-// ============================================================
 document.querySelector('.form-fenda').addEventListener('submit', function(e) {
     e.preventDefault(); 
 
@@ -203,7 +219,6 @@ document.querySelector('.form-fenda').addEventListener('submit', function(e) {
     fetch('enviar-comentario.php', {
         method: 'POST',
         body: formData,
-        // --- A LINHA QUE SALVA O PROJETO ESTÁ ABAIXO ---
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         }
@@ -222,7 +237,7 @@ document.querySelector('.form-fenda').addEventListener('submit', function(e) {
             const texto = formData.get('comentario');
             
             const nomeSessao = "<?php echo $_SESSION['usuario_nome'] ?? ''; ?>";
-            const autor = nomeSessao ? `@${nomeSessao}` : "👤 Anônimo";
+            const autor = nomeSessao ? `@${nomeSessao}` : "👤 Visitante";
 
             novoComentario.className = `comentario-item ${vibe}`;
             novoComentario.style.cssText = `--cor-borda-glow: ${cor}; border-left-color: ${cor} !important; opacity: 0; transform: translateY(-20px); transition: all 0.5s ease;`;
@@ -259,7 +274,7 @@ document.querySelector('.form-fenda').addEventListener('submit', function(e) {
     })
     .catch(err => {
         console.error("Erro no AJAX:", err);
-        alert("Erro ao conectar com o servidor. Verifique o console.");
+        alert("Erro ao conectar com o servidor.");
         btn.innerText = originalText;
         btn.disabled = false;
     });

@@ -23,11 +23,11 @@ include 'includes/bolhas.php';
 
   <main style="max-width: 1000px; margin: auto;">
     <article>
-<h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 15px; margin-top: 25px;">
+<h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 15px; margin-top: 25px;">
    TERMOS E DIRETRIZES DE SEGURANÇA
 </h2>
   <div style="display: flex; gap: 8px; justify-content:center;">
-   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.8; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+   <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
   <article style="color: #ebdc0fee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
@@ -60,7 +60,7 @@ include 'includes/bolhas.php';
    Ao clicar em "Entrar" ou realizar um post, você confirma que leu, entendeu e concorda com todos os pontos acima, ciente de que o descumprimento resultará no banimento da conta e exclusão do conteúdo, a critério da plataforma.
     </article>
 
-  <article style="background-color: rgba(204, 66, 12, 0.1); padding: 20px; margin: 30px 0; padding-left: 25px; line-height: 1.6;">
+  <article style="background-color: rgba(105, 61, 10, 0.22); border-radius: 20px; padding: 20px; margin: 30px 0; padding-left: 25px; line-height: 1.6;">
     <h2> * Extra: Dicas de Segurança para Encontros Reais </h2>
     <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
@@ -72,7 +72,9 @@ include 'includes/bolhas.php';
     </ul>
 
     <div style="display: flex; justify-content: center; margin-top: 15px;">
-        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.8; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.6; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+-webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);
+mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);">
     </div>
     </article>
   <br>

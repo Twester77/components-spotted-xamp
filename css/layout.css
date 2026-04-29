@@ -57,7 +57,7 @@ header h1 {
 /* --- ESTILO BASE DOS ÍCONES --- */
 .header-icons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
 
 }
@@ -166,7 +166,7 @@ main {
     display: block;
     transition: 0.3s;
     border-radius: 5px;
-    
+
 }
 
 .menu-item:hover>a {
@@ -274,7 +274,7 @@ main {
 
 /* Base dos botões com brilho */
 .fenda-btn-glow {
-    padding: 12px 35px;
+    padding: 12px 25px;
     border-radius: 12px;
     font-weight: bold;
     font-size: 16px;
@@ -516,6 +516,7 @@ footer a {
 
 
 /* ESTILO DO CARD DE NOTIFICAÇÃO (TOAST) */
+/* ESTILO DO CARD DE NOTIFICAÇÃO (TOAST) */
 .notificacao-popup {
     position: fixed;
     bottom: 25px;
@@ -527,31 +528,36 @@ footer a {
     border: 1px solid rgba(255, 188, 0, 0.3);
     border-left: 5px solid var(--dourado);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    z-index: 10001;
+    z-index: 10001; /* Está bem alto, então não é problema de sobreposição */
     display: flex;
     align-items: center;
     gap: 20px;
     min-width: 250px;
     cursor: pointer;
-    animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     transition: all 0.3s ease;
+    
+    /* GARANTIA ANTI-BUG: */
+    pointer-events: all !important; 
+    user-select: none; /* Evita que o usuário selecione o texto sem querer ao clicar */
 }
 
-/* Animação de entrada (surgindo da direita) */
+/* Animação Corrigida */
 @keyframes entrarNotif {
     from {
-        transform: translateX(100%) opacity 0;
+        transform: translateX(100%);
+        opacity: 0;
     }
-
     to {
-        transform: translateX(0) opacity 1;
+        transform: translateX(0);
+        opacity: 1;
     }
 }
 
 .notificacao-popup:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) !important; /* Adicionei o !important para não brigar com o transform do keyframe */
     border-color: var(--dourado);
-    box-shadow: 0 15px 35px rgba(255, 188, 0, 0.2);
+    box-shadow: 0 15px 35px rgba(255, 188, 0, 0.4);
 }
 
 .notificacao-popup strong {
@@ -581,7 +587,7 @@ footer a {
 /* Container dos botões de Chuva/Onda/Mudo */
 .audio-choices-container {
     display: flex;
-    gap:8px;
+    gap: 8px;
     flex-wrap: wrap;
     margin-top: 5px;
 }
@@ -681,39 +687,47 @@ footer a {
 
 .badge-alertas {
     position: absolute;
-    top: -6px; 
-    right: -8px; 
+    top: -6px;
+    right: -8px;
     background: linear-gradient(45deg, #ff4b2b, #ff416c);
     color: white;
     font-size: 10px;
-    font-weight: 800; 
-    width: 18px; 
+    font-weight: 800;
+    width: 18px;
     height: 18px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1.5px solid #1a1a1a; 
+    border: 1.5px solid #1a1a1a;
     z-index: 100;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     animation: pulsarNotif 3s infinite;
-    
+
     /* ISSO AQUI É O SEGREDO: */
-    line-height: 1; 
-    padding: 0; 
+    line-height: 1;
+    padding: 0;
     /* Centralização garantida */
     text-indent: 0;
-    box-sizing: border-box; /* Garante que o border não aumente o círculo */
+    box-sizing: border-box;
+    /* Garante que o border não aumente o círculo */
 }
 
 /* Sua animação que já é top */
 @keyframes pulsarNotif {
-    0% { transform: scale(1); }
-    50% { 
-        transform: scale(1.2); 
-        box-shadow: 0 0 12px rgba(255, 75, 43, 0.7); /* Brilho neon ao pulsar */
+    0% {
+        transform: scale(1);
     }
-    100% { transform: scale(1); }
+
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 12px rgba(255, 75, 43, 0.7);
+        /* Brilho neon ao pulsar */
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 .alerta-login a {
@@ -951,7 +965,8 @@ form[action="confirma-login.php"] input[type="password"] {
     /* Se o texto for grande, ele cria scroll interno */
     border: 1px solid #ccc;
     border-radius: 5px;
-    resize: vertical; /* Permite redimensionar apenas na vertical */
+    resize: vertical;
+    /* Permite redimensionar apenas na vertical */
 }
 
 
@@ -983,21 +998,22 @@ form[action="confirma-login.php"] input[type="password"] {
     border-radius: 10px;
     padding: 12px 15px;
     display: flex;
-    flex-direction: column; /* Mantém um embaixo do outro */
+    flex-direction: column;
+    /* Mantém um embaixo do outro */
     gap: 5px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     /*  efeito original de bounce */
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.3s ease,
-                background 0.3s ease;
+        box-shadow 0.3s ease,
+        background 0.3s ease;
     width: 100%;
     box-sizing: border-box;
 }
 
 /* Mantém o hover com o bounce que você definiu */
 .comentario-item:hover {
-    transform: translateY(-5px) scale(1.02); 
+    transform: translateY(-5px) scale(1.02);
     background: rgba(255, 255, 255, 0.08);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
@@ -1025,8 +1041,10 @@ form[action="confirma-login.php"] input[type="password"] {
         max-width: 100% !important;
         margin: 0 0 10px 0 !important;
         -webkit-backdrop-filter: blur(4px) !important;
-        backdrop-filter: blur(4px) !important; /* Blur menor = Celular mais rápido */
-        will-change: transform, backdrop-filter; /* Hack de hardware*/
+        backdrop-filter: blur(4px) !important;
+        /* Blur menor = Celular mais rápido */
+        will-change: transform, backdrop-filter;
+        /* Hack de hardware*/
     }
 
 
@@ -1047,23 +1065,23 @@ form[action="confirma-login.php"] input[type="password"] {
 
 
     header h1 {
-        font-size: 1.5rem !important;
-        max-width: 50% !important;
+        font-size: 1.6rem !important;
+        max-width: 55% !important;
         margin-bottom: 0 !important;
         text-align: left !important;
     }
 
-    .header-icons  {
+    .header-icons {
         position: static !important;
         display: flex !important;
-        gap: 10px !important;
+        gap: 8px !important;
         right: auto !important;
         transform: none !important;
     }
 
     .header-icons i {
-    font-size: 1.5rem;
-}
+        font-size: 1.7rem;
+    }
 
     form {
         margin: 0 !important;
@@ -1208,10 +1226,12 @@ form[action="confirma-login.php"] input[type="password"] {
     }
 
     .comentario-item.comentario-filho {
-        width: 90% !important; /* Dá um pouco mais de espaço em telas minúsculas */
+        width: 90% !important;
+        /* Dá um pouco mais de espaço em telas minúsculas */
         display: flex !important;
         flex-direction: column !important;
-        align-items: flex-start !important; /* Impedir que o texto centralize e vire tripa */
+        align-items: flex-start !important;
+        /* Impedir que o texto centralize e vire tripa */
     }
 
     .comentario-item.comentario-filho .comentario-texto {
@@ -1219,7 +1239,7 @@ form[action="confirma-login.php"] input[type="password"] {
         display: block !important;
         text-align: left !important;
         /* Força a quebra de palavra mas mantém o fluxo */
-        word-break: break-word !important; 
+        word-break: break-word !important;
         white-space: pre-wrap !important;
     }
 
@@ -1316,7 +1336,7 @@ form[action="confirma-login.php"] input[type="password"] {
 
     .bio-texto {
         width: 100% !important;
-        margin: 10px 10px  !important;
+        margin: 10px 10px !important;
         text-align: center;
         font-size: 0.95rem !important;
         word-wrap: break-word !important;
@@ -1383,9 +1403,11 @@ form[action="confirma-login.php"] input[type="password"] {
 
 
 @media screen and (max-width: 380px) {
+
     /* Ajuste para o Bob Filho não virar tripa */
     .comentario-filho {
-        margin-left: 15px !important; /* Diminuímos o recuo em telas pequenas */
+        margin-left: 15px !important;
+        /* Diminuímos o recuo em telas pequenas */
         width: calc(100% - 15px) !important;
         padding: 10px !important;
     }
@@ -1716,7 +1738,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
     .main-perfil-container {
         width: 98% !important;
         max-width: 1200px !important;
-        margin-left: 40px !important; 
+        margin-left: 40px !important;
         margin-right: auto !important;
     }
 }
@@ -1815,9 +1837,10 @@ body.is-touch-device .vibe-light .comentario-texto {
 /* MODO GLASS */
 .comentario-item.vibe-glass {
     background: rgba(255, 255, 255, 0.05) !important;
-    -webkit-backdrop-filter: blur(8px) ;
+    -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    color: #fff !important; /* Corrigi para branco pra ler no fundo escuro */
+    color: #fff !important;
+    /* Corrigi para branco pra ler no fundo escuro */
 }
 
 
@@ -1920,9 +1943,11 @@ body.is-touch-device .vibe-light .comentario-texto {
 /* META DADOS (Nome e Data) */
 .comentario-meta {
     display: flex;
-    justify-content: space-between; /* Autor na esquerda, Data na direita */
+    justify-content: space-between;
+    /* Autor na esquerda, Data na direita */
     align-items: center;
-    margin-bottom: 8px; /* Espaço para o texto não grudar */
+    margin-bottom: 8px;
+    /* Espaço para o texto não grudar */
     width: 100%;
 }
 
@@ -1945,7 +1970,8 @@ body.is-touch-device .vibe-light .comentario-texto {
     word-wrap: break-word;
     overflow-wrap: break-word !important;
     word-break: break-word !important;
-    white-space: pre-wrap; /* Mantém as quebras de linha que o user digitar */
+    white-space: pre-wrap;
+    /* Mantém as quebras de linha que o user digitar */
     max-width: 100%;
     width: 100%;
     margin: 0;
@@ -1955,8 +1981,9 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /* Garante que os links de menção não quebrem o alinhamento */
 .comentario-texto a {
-    display: inline-block; /* Ajuda no clique e no alinhamento */
-    word-break: break-all; 
+    display: inline-block;
+    /* Ajuda no clique e no alinhamento */
+    word-break: break-all;
 }
 
 
@@ -2056,9 +2083,11 @@ body.is-touch-device .vibe-light .comentario-texto {
 .comentario-item.comentario-filho {
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-start !important; /* Força o alinhamento à esquerda dentro do card */
+    align-items: flex-start !important;
+    /* Força o alinhamento à esquerda dentro do card */
     width: 85% !important;
-    margin-left: auto !important; /* Joga o card para a direita */
+    margin-left: auto !important;
+    /* Joga o card para a direita */
     margin-right: 0 !important;
     align-self: flex-end !important;
     font-size: 0.95rem !important;
@@ -2104,7 +2133,8 @@ body.is-touch-device .vibe-light .comentario-texto {
 .comentario-item.comentario-filho::before {
     content: '↳';
     position: absolute;
-    left: -15px; /* Ajustei um pouco para dentro */
+    left: -15px;
+    /* Ajustei um pouco para dentro */
     top: 5px;
     color: var(--cor-borda-glow);
     font-size: 1.2rem;
@@ -2135,17 +2165,20 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
-.titulo-home {
-    font-size: 2.0rem;
+h2.titulo-home {
+    font-size: 1.8rem;
     text-align: center;
-    margin-top: 0px!important;
+    margin-top: 40px !important;
+    margin-bottom: 20px;
 }
 
 .img-home-capa {
     width: 100%;
     height: auto;
-    border-radius: 15px;
-    margin:25px 0;
+    border-radius: 20px;
+    margin: 10px 0;
+    -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
+    mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
 }
 
 .conteudo-principal {
@@ -2186,17 +2219,19 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 .lista-conselhos li {
-    transition: all 0.3s ease; /* Transição suave para o efeito não ser seco */
+    transition: all 0.3s ease;
+    /* Transição suave para o efeito não ser seco */
     cursor: pointer;
     margin-bottom: 10px;
-    display: block; /* Garante que o item ocupe a largura disponível */
+    display: block;
+    /* Garante que o item ocupe a largura disponível */
 }
 
 /* O "Pulo do Gato": Hover individual */
 .lista-conselhos li:hover {
-    transform: translateX(10px) scale(1.02); 
-    color: #ffcc00; 
-    filter: drop-shadow(0 0 8px rgba(255, 153, 0, 0.6)); 
+    transform: translateX(10px) scale(1.02);
+    color: #ffcc00;
+    filter: drop-shadow(0 0 8px rgba(255, 153, 0, 0.6));
 }
 
 
@@ -2248,7 +2283,7 @@ body.hacker-mode .card-boas-vindas-fenda span {
     padding: 15px !important;
     display: flex !important;
     width: 95% !important;
-    max-width: 800px !important; 
+    max-width: 800px !important;
     float: none !important;
     padding: 20px !important;
     border-radius: 20px !important;
@@ -2278,7 +2313,7 @@ body.hacker-mode .card-boas-vindas-fenda span {
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
-    grid-column: span 1 !important; 
+    grid-column: span 1 !important;
 
 }
 
@@ -2290,9 +2325,9 @@ body.hacker-mode .card-boas-vindas-fenda span {
 }
 
 /* 4. Estilo dos Inputs para não vazarem */
-input[type="text"], 
-input[type="password"], 
-select, 
+input[type="text"],
+input[type="password"],
+select,
 textarea {
     width: 100% !important;
     max-width: 100% !important;
@@ -2456,36 +2491,40 @@ textarea[name="bio"] {
     border: 2px solid #ff7011;
 }
 
- /* OPERÁRIO DO TEMPO: COMPATIBILIDADE IPHONE 4 / LUMIA / ANTIGOS
+/* OPERÁRIO DO TEMPO: COMPATIBILIDADE IPHONE 4 / LUMIA / ANTIGOS
    (Para telas de até 320px - Onde o Cão az morada) */
 
 @media screen and (max-width: 320px) {
-    
+
     /* 1. RESET DE SEGURANÇA */
-    html, body {
+    html,
+    body {
         width: 100% !important;
         overflow-x: hidden !important;
         margin: 0 !important;
         padding: 0 !important;
-        font-size: 14px !important; /* Diminui a base da fonte pro texto não vazar */
-        box-sizing: border-box!important; 
+        font-size: 14px !important;
+        /* Diminui a base da fonte pro texto não vazar */
+        box-sizing: border-box !important;
     }
 
     /* 2. CONTAINER PRINCIPAL (Colado nas bordas pra ganhar espaço) */
-    .main-perfil-container, 
-    .perfil-header-container, 
+    .main-perfil-container,
+    .perfil-header-container,
     .perfil-viewer-container,
     .main-fenda-total {
         width: 100% !important;
         margin: 5px 0 !important;
         padding: 8px !important;
-        display: block !important; /* Block neles! */
+        display: block !important;
+        /* Block neles! */
         box-sizing: border-box !important;
     }
 
     /* 3. AVATAR (A CAPIVARA PRECISA CABER) */
     .avatar-wrapper.viewer {
-        max-width: 120px !important; /* Diminuído para não explodir a tela */
+        max-width: 120px !important;
+        /* Diminuído para não explodir a tela */
         max-height: 120px !important;
         margin: -60px auto 10px auto !important;
         left: 0 !important;
@@ -2503,12 +2542,14 @@ textarea[name="bio"] {
     }
 
     /* 4. FONTES E TÍTULOS (DIETA BRAVA) */
-    h1, .nome-publico {
+    h1,
+    .nome-publico {
         font-size: 1.4rem !important;
         letter-spacing: 0px !important;
     }
 
-    .bio-texto, .bio-box {
+    .bio-texto,
+    .bio-box {
         font-size: 0.95rem !important;
         padding: 10px !important;
     }
@@ -2523,12 +2564,13 @@ textarea[name="bio"] {
         font-size: 0.8rem !important;
     }
 
-    input[type="text"], 
-    input[type="password"], 
-    select, 
+    input[type="text"],
+    input[type="password"],
+    select,
     textarea,
     .input-username-wrapper {
-        font-size: 14px !important; /* Evita o zoom automático do iOS em inputs */
+        font-size: 14px !important;
+        /* Evita o zoom automático do iOS em inputs */
         padding: 8px !important;
         height: auto !important;
     }
@@ -2540,13 +2582,14 @@ textarea[name="bio"] {
 
     /* 6. GRID DO FEED (2 COLUNAS NO LANDSCAPE / 1 NO PORTRAIT) */
     .container-feed {
-        grid-template-columns: minmax(300px, 1fr) !important; /* No iPhone 4 em pé, 1 coluna é lei */
+        grid-template-columns: minmax(300px, 1fr) !important;
+        /* No iPhone 4 em pé, 1 coluna é lei */
         gap: 10px !important;
         padding: 5px !important;
-        float:none!important;
+        float: none !important;
         left: 50%;
         right: 50%;
-        box-sizing: border-box!important; 
+        box-sizing: border-box !important;
     }
 
 
@@ -2556,7 +2599,8 @@ textarea[name="bio"] {
         text-align: center !important;
     }
 
-    .btn-editar-atalho, .btn-seguir-fenda {
+    .btn-editar-atalho,
+    .btn-seguir-fenda {
         width: 100% !important;
         margin: 5px 0 !important;
         font-size: 0.8rem !important;
@@ -2567,7 +2611,7 @@ textarea[name="bio"] {
     header h1 {
         font-size: 1.4rem !important;
     }
-    
+
     header {
         gap: 10px !important;
         padding: 10px !important;
@@ -2577,9 +2621,10 @@ textarea[name="bio"] {
 /* 8. AJUSTE PARA O LANDSCAPE DO IPHONE 4 (480px de largura) */
 @media screen and (max-width: 480px) and (orientation: landscape) {
     .container-feed {
-        grid-template-columns: 1fr 1fr !important; /* Garante as 2 colunas que a gente brigou pra ter */
+        grid-template-columns: 1fr 1fr !important;
+        /* Garante as 2 colunas que a gente brigou pra ter */
     }
-    
+
     .avatar-wrapper.viewer {
         max-width: 120px !important;
         max-height: 120px !important;
@@ -2591,18 +2636,21 @@ textarea[name="bio"] {
 
 /* --- OTIMIZAÇÃO PARA DISPOSITIVOS SIMPLES OU SENSIBILIDADE --- */
 @media (prefers-reduced-motion: reduce) {
+
     /* Para as animações de scanlines e glitch que podem tontear ou pesar */
-    body.hacker-mode::before, 
+    body.hacker-mode::before,
     body.hacker-mode::after,
     .glitch-effect {
         animation: none !important;
-        display: none !important; /* Remove o peso do processamento */
+        display: none !important;
+        /* Remove o peso do processamento */
     }
 
     /* Para a setinha ">" que fica pulando no hover */
     body.hacker-mode *:hover::before {
         animation: none !important;
-        left: 10px !important; /* Ela apenas aparece, sem deslizar ou piscar */
+        left: 10px !important;
+        /* Ela apenas aparece, sem deslizar ou piscar */
     }
 
     /* Remove transições suaves de cores que exigem GPU */
@@ -2611,14 +2659,18 @@ textarea[name="bio"] {
         animation-duration: 0.01ms !important;
     }
 
-    .bubbles-container, .background-animado, .glitch-effect {
+    .bubbles-container,
+    .background-animado,
+    .glitch-effect {
         animation: none !important;
-        display: none !important; /* Se forem apenas decorativas, melhor sumir com elas */
+        display: none !important;
+        /* Se forem apenas decorativas, melhor sumir com elas */
     }
-    
+
     /* Mantém o visual hacker, mas estático e nítido */
     body.hacker-mode {
-        background-attachment: scroll !important; /* Evita o efeito parallax pesado */
+        background-attachment: scroll !important;
+        /* Evita o efeito parallax pesado */
     }
 
 }

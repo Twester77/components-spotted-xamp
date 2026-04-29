@@ -239,13 +239,13 @@ function mostrarPopup(mensagem) {
             'cs': { arquivo: 'cs.mp3', volume: 0.7 },
             'starwars': { arquivo: 'imperial-march.mp3', volume: 0.4 },
             'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
-            'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.9 },
-            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.4 },
+            'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
+            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.3 },
             'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
             'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
             'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
-            'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3' },
-            'desgraca2': { arquivo: 'eu-quero-dormir.mp3' }
+            'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3', volume: 0.4 },
+            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.3 }
         };
 
         if (temaSalvo === 'digimon') tempoExibicao = 11000;
@@ -255,15 +255,13 @@ function mostrarPopup(mensagem) {
             let somEscolhido = configuracaoSons[temaSalvo];
             let bip = new Audio('sons/' + somEscolhido.arquivo);
             bip.volume = somEscolhido.volume;
-
-            console.log("Tentando tocar:", 'sons/' + somEscolhido.arquivo);
             bip.play().catch(e => console.log("Áudio bloqueado:", e));
 
             bip.onloadedmetadata = function () {
                 if (bip.duration > 3) {
                     setTimeout(() => {
                         let intervaloFade = setInterval(() => {
-                            if (bip.volume > 0.05) bip.volume -= 0.05;
+                            if (bip.volume > 0.03) bip.volume -= 0.03;
                             else {
                                 bip.volume = 0;
                                 bip.pause();
@@ -273,14 +271,16 @@ function mostrarPopup(mensagem) {
                     }, tempoExibicao - 1500);
                 }
             };
-        } // FECHA if (configuracaoSons[temaSalvo])
-    } // FECHA if (temaSalvo !== 'off')
+        }
+    }
 
-
-
-    // --- PARTE VISUAL ---
+    // --- PARTE VISUAL COM O "CLIQUE DA FENDA" ---
     const popup = document.createElement('div');
     popup.className = 'notificacao-popup';
+    
+    // Deixa o cursor com a mãozinha pra mostrar que é link
+    popup.style.cursor = 'pointer'; 
+
     popup.innerHTML = `
         <div style="font-size: 20px;">🔔</div>
         <div style="flex-grow: 1;">
@@ -289,13 +289,17 @@ function mostrarPopup(mensagem) {
         </div>
     `;
 
+    // A MÁGICA: Ao clicar em qualquer lugar do banner, vai para notificações
+    popup.onclick = function() {
+        window.location.href = 'notificacoes.php';
+    };
+
     document.body.appendChild(popup);
 
     setTimeout(() => {
         popup.style.opacity = '0';
         setTimeout(() => popup.remove(), 500);
     }, tempoExibicao);
-
 }
 
 

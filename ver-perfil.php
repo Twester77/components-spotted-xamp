@@ -49,7 +49,7 @@ $is_presenca = ($id_visto == 1);
     <?php endif; ?>
 </style>
 
-<main class="main-perfil-container <?php echo $is_presenca ? 'perfil-gold' : ''; ?>
+<main class="main-perfil-container <?php echo $is_presenca ? 'perfil-gold' : ''; ?>">
 
     <div class=" perfil-header-container">
 

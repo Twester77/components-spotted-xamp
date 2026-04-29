@@ -65,7 +65,7 @@ include 'includes/bolhas.php';
             <?php include 'includes/login.php'; ?>
         <?php else: ?>
             <div class="card-boas-vindas-fenda">
-                <div style="font-size: 38px; margin-bottom: 15px;">🎓</div>
+                <div style="font-size: 36px; margin-bottom: 15px;">🎓</div>
                 <p style="color: #fff; margin-bottom: 25px; font-size: 1.4rem; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
                     <span class="<?php echo $classe_saudacao; ?>">
                         <?php echo $saudacao; ?>
@@ -127,7 +127,7 @@ include 'includes/bolhas.php';
 
         <div id="bios-boot" class="hacker-boot-screen">
             <div class="boot-text">
-                <p>> LOAD FENDA_OS_V2.0...</p>
+                <p>> LOAD FENDA_OS_V1.0...</p>
                 <p>> STATUS: <?php echo strtoupper(htmlspecialchars($nome_exibicao)); ?>_ROOT CONNECTED</p>
                 <p>> SEARCHING FILES: ATLETICA_SYSTEM.DB</p>
                 <p>> ACCESS GRANTED: ENCRYPTED_SESSION_ACTIVE</p>

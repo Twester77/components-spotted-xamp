@@ -6,7 +6,7 @@
 
 .input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #00000086 inset !important;
-    -webkit-text-fill-color: #fff !important;
+    -webkit-text-fill-color: #ffffff !important;
 }
 
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
@@ -73,7 +73,7 @@ form {
 
 /* Ajuste dos títulos dentro desse formulário */
 .main-novo-post h2 {
-    color: #bb7000;
+    color: #c07607;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -85,7 +85,7 @@ form {
     background: rgba(255, 255, 255, 0) !important;
     border: 1px solid var(--dourado) !important;
     border-radius: 10px !important;
-    padding: 10px !important;
+    padding: 12px !important;
     color: white !important;
     margin-bottom: 15px !important;
 }
@@ -786,19 +786,12 @@ section.sessao-publicar {
 }
 
 
-.btn-feed-home:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.4);
-    filter: brightness(1.2);
-}
-
-
 .login-btn {
     background: linear-gradient(135deg, #ff7011, #ffbc00) !important;
     color: #fff !important;
     border: none;
     width: 100%;
-    padding: 14px 20px !important;
+    padding: 12px 20px !important;
     border-radius: 10px;
     font-weight: bold;
     text-transform: uppercase;
@@ -1042,8 +1035,8 @@ form[action="confirma-login.php"] .container {
 
 /* 2. Os Labels (E-mail e Senha - Texto em cima) */
 form[action="confirma-login.php"] label b {
-    color: #ddc80e !important;
-    font-size: 0.9rem !important;
+    color: #dd7c0e !important;
+    font-size: 0.95rem !important;
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
 }
@@ -1074,13 +1067,13 @@ form[action="confirma-login.php"] input[type="password"] {
 /* 4. Efeito de Foco */
 form[action="confirma-login.php"] input:focus {
     border-color: #ddc80e !important;
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.027) !important;
     box-shadow: 0 0 12px rgba(221, 200, 14, 0.3) !important;
 }
 
 /* 5. Checkbox e Links Inferiores */
 #terms {
-    accent-color: #ddc80e !important; 
+    accent-color: #22af05b7 !important; 
 }
 
 /* Garante que o texto de "Cadastre-se" não suma no fundo escuro */
@@ -1097,7 +1090,7 @@ form[action="confirma-login.php"] a {
 /* 1. Reset de Centralização do Container Principal */
 .main-perfil-container {
     display: block !important;
-    width: 95% !important;
+    width: 93% !important;
     max-width: 850px !important; 
     margin: 30px auto !important;
     float: none !important;
@@ -1134,13 +1127,6 @@ textarea {
     padding: 12px !important;
 }
 
-/* 5. Seletor de Áudio (Ajuste do aspecto) */
-.audio-selector-container {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
-    gap: 10px !important;
-    width: 100% !important;
-}
 
 /* 6. Botões de Ação (Respeitando seu inline, mas garantindo o centro) */
 .perfil-controles {
