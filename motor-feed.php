@@ -4,8 +4,9 @@
     Funciona para: Feed Geral, Feed Pessoal e Ver Perfil
 */
 include_once 'conexao.php'; // Puxa a conexão e a função de menções
-session_start();
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // 1. CAPTURA DE PARÂMETROS VIA GET
 $offset    = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
 $categoria = isset($_GET['categoria']) ? mysqli_real_escape_string($conn, $_GET['categoria']) : '';

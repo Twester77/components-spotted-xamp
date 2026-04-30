@@ -664,17 +664,16 @@ order: 3;
 
 
 /* INSÍGNIA DA ATLÉTICA  */
-
 .insignia-atletica-bottom {
-    width: clamp(60px, 25vw + 8px, 100px)!important;
-    height: clamp(60px, 25vw + 8px, 100px)!important;
+    /* Mínimo de 35px para não sumir, escala com 8% da tela, e trava em 70px no máximo */
+    width: clamp(60px, 8vw, 100px) !important;
+    height: clamp(60px, 8vw, 100px) !important;
     object-fit: contain !important;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
     margin-left: 10px;
-    flex-wrap: wrap;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Impede que a imagem seja espremida se o nome for grande */
 }
 
 
