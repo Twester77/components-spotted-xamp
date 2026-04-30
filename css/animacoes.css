@@ -172,7 +172,7 @@ body.hacker-mode::after {
     position: fixed;
     top: 0; left: 0; bottom: 0; right: 0;
     background: rgba(0, 255, 0, 0.03);
-    z-index: 9998;
+    z-index: 9999;
     pointer-events: none;
    
 }

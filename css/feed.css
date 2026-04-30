@@ -36,6 +36,11 @@
 
 /*  O CONTAINER  */
 
+.container-feed > div { /* Alvo nos cards gerados pelo motor-feed */
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
 .main-fenda-total {
     max-width: 100% !important;
     padding: 0 !important; /* Zera o padding que estava empurrando o feed */
@@ -151,9 +156,6 @@
         background: rgba(10, 10, 10, 0.4); /* Um pouco mais escuro para o texto ler melhor no blur */
     }
 }
-
-
-
 
 
 .spotted-card:hover {
@@ -294,16 +296,16 @@ body.hacker-mode #btn-load-more[disabled]::after {
     font-weight: 900;
     position: absolute;
     right: 30px;
-    top: 50px;
+    top: 60px;
     font-size: 1.3rem;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 /* Ícones específicos por categoria */
 
-.spotted-card.comunidade .card-header::after { content: '\f0c0'; color: #ffffffa4; }
-.spotted-card.ranco .card-header::after { content: "\f071"; } 
-.spotted-card.elogio .card-header::after { content: "\f004"; color: #e7427cd7; }
+.spotted-card.comunidade .card-header::after { content: '\f0c0'; color: #ffffffb6; }
+.spotted-card.ranco .card-header::after { content: "\f071"; color: #da3232;} 
+.spotted-card.elogio .card-header::after { content: "\f004"; color: #ee2b6fd7; }
 .spotted-card.games .card-header::after { content: "\f11b";  color: #0daac5; } 
 .spotted-card.academico .card-header::after { content: "\f518"; color: #b822f3b7; } 
 .spotted-card.caronas .card-header::after { content: "\f1b9"; color: #cccccca8; } 
@@ -317,13 +319,11 @@ body.hacker-mode #btn-load-more[disabled]::after {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
     width: 100%;
     flex-wrap: wrap;
-    max-width: 500px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 6px 0;
-    margin-bottom: 5px;
+    padding: 8px 0;
+    gap: 6px;
 }
 
 .card-body p {
@@ -458,7 +458,7 @@ span.data-post {
     margin-right: 6px;
     display: inline-block !important;
     border: none;
-    max-width: 150px !important;
+    max-width: 150px;
     /* Limita a largura da tag */
     white-space: nowrap !important;
     /* Impede que ela quebre em duas linhas */
@@ -474,20 +474,20 @@ span.data-post {
 }
 
  .fa-ellipsis-v {
-font-size: 16px;
+font-size: 18px;
 font-weight: bold;
-gap: 5px;
+gap: 8px;
 order: 3;
  }
 
 .post-time {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
-    margin-right: auto;
-    margin-bottom: 8px;
+    margin-right: 20px;
     order: 2;
+    padding: 8px;
 
 }
 
@@ -637,7 +637,7 @@ order: 3;
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 1.6rem;
+    font-size: clamp(1.4rem, 1.2rem + 0.5vw, 2rem);
     margin: 20px 0 20px 0 !important;
     /* Margem apenas embaixo para afastar do username/bio */
     justify-content: center !important;
@@ -666,13 +666,13 @@ order: 3;
 /* INSÍGNIA DA ATLÉTICA  */
 
 .insignia-atletica-bottom {
-    width: 70px;
-    height: 70px;
+    width: clamp(60px, 25vw + 8px, 100px)!important;
+    height: clamp(60px, 25vw + 8px, 100px)!important;
     object-fit: contain !important;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
-    margin: 0 !important;
+    margin-left: 10px;
     flex-wrap: wrap;
     flex-shrink: 0;
 }
@@ -697,8 +697,8 @@ order: 3;
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: 140px !important;
-    height: 140px !important;
+    width: 150px !important;
+    height: 150px !important;
     margin: 0 auto !important;
     overflow: visible !important;
     /* Mude para visible para o brilho não cortar */
@@ -741,10 +741,11 @@ order: 3;
 .user-info-post {
     display: flex;
     gap: 5px;
-    font-size: 16px;
+    font-size: 15px;
+    margin-top: 8px;
 }
 
-.user-mention {
+.anonimo, .user-mention {
     color: var(--dourado);
     text-decoration: none;
     font-weight: bold;
@@ -752,7 +753,7 @@ order: 3;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 180px;
+    max-width: 160px;
     align-content: center;
     /* Ajuste esse valor conforme o espaço que você tem */
 
@@ -779,29 +780,10 @@ order: 3;
 
 /*  AJUSTES DO PERFIL (HABITANTE)*/
 
-.avatar-posicionador {
-    position: absolute;
-    bottom: -80px !important;
-    /* Quanto ocupa da capa */
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 200px;
-    max-height: 200px;
-    z-index: 10;
-    gap: 10px;
-}
 
 
-.avatar-main {
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transition: 0.3s;
-    max-width: 200px;
-    max-height: 200px;
-    aspect-ratio: 1/1;
-}
+
+
 
 
 /* Badge da Coroa (Presença) */
@@ -844,8 +826,8 @@ order: 3;
 }
 
 .img-comunidade-grande {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     object-fit: contain;
     margin-bottom: 15px;
     filter: drop-shadow(0 0 10px rgba(255, 188, 0, 0.3));
@@ -901,12 +883,35 @@ order: 3;
 
 
 
+
 .bio-box {
     width: 100% !important;
-    margin: 20px auto 30px auto !important;
+    max-width: auto;
+    margin: 20px 0 !important;
     text-align: center;
-    font-size: 1.2rem !important;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: block !important;
+    /* Garante que não vire flex e quebre */
+    line-height: 1.5;
+    font-style: italic;
 }
+
+.bio-texto {
+    /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
+    font-size: clamp(0.95rem, 0.2vw + 0.9rem, 1.6rem) !important;
+    width: 100% !important;
+    margin: 20px 0 !important;
+    text-align: center;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    -webkit-hyphens: auto; /*Safari/Chrome*/
+    -ms-hyphens: auto; /*IE/Edge */
+    hyphens: auto;
+    line-height: 1.4; /* Melhora a leitura quando a fonte cresce */
+    color: rgba(255, 255, 255, 0.8); /* Sugestão para manter o estilo Fenda */
+}
+
 
 /* STATS (Seguidores) */
 .stats-perfil {

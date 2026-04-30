@@ -34,6 +34,7 @@ header {
     align-items: center;
     z-index: 1000;
     gap: 30px;
+    
 }
 
 header h1 {
@@ -102,6 +103,7 @@ header h1 {
 
 
 
+
 /* --- MENU NAVBAR (RECUPERADO) --- */
 
 .fenda-saudacao {
@@ -130,15 +132,147 @@ main article {
 }
 
 main {
-    max-width: 1000px;
+    max-width: 95vw; /* Ocupa 95% da largura da janela visual */
     margin: 10px auto;
     padding: 0 15px !important;
     /* Isso devolve o respiro nas laterais */
     width: 100%;
     box-sizing: border-box;
+    display: block; /* Garante o comportamento de bloco */
 }
 
-/* --- MENU NAVBAR (VERSÃO FINAL UNIFICADA) --- */
+nav {
+    width: 100%;
+    position: relative; /* Ela sobe com o scroll */
+    transition: all 0.3s ease;
+}
+
+/* Container da Toolbar */
+#fenda-toolbar {
+    position: fixed;
+    right: -250px; /* Escondida para fora da tela */
+    top: 75%;
+    transform: translateY(-50%);
+    width: 250px;
+    background: rgba(0, 20, 20, 0.85); 
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px); 
+    border: 1px solid #00ff00;
+    border-radius: 15px 0 0 15px;
+    transition: 0.5s ease-in-out;
+    z-index: 9999;
+    padding: 20px;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+}
+
+/* Quando estiver aberta */
+#fenda-toolbar.toolbar-aberta {
+    right: 0;
+}
+
+/* O Gatilho (Bússola) */
+.toolbar-trigger {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    background: #001a1a;
+    border: 1px solid #00ff00;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 10px 0 0 10px;
+    font-size: 24px;
+    box-shadow: -5px 0 10px rgba(0,0,0,0.5);
+    background: #004d40;
+    color: #00ffcc;
+    
+}
+
+/* Container dos controles */
+.setup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 0;
+}
+
+/* Estilização dos mini botões de som */
+.btns-mini {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+    justify-content: center;
+}
+
+.btns-mini button {
+    background: rgba(0, 77, 64, 0.3);
+    border: 1px solid #00a896;
+    color: #00ffcc;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+    flex: 1; /* Faz os botões dividirem o espaço igualmente */
+}
+
+.btns-mini button:hover {
+    background: #00ffcc;
+    color: #000;
+}
+
+/* Botão de Perfil e Modo Terminal mais destacados */
+.btn-perfil-toolbar, #hacker-toggle-lateral {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+/* Estilo da lista de amigos */
+.status-user 
+.status-section {
+    margin-top: 15px;
+}
+
+.status-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 5px;
+    border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+    font-size: 0.9rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dot-online { background-color: #00ffcc; box-shadow: 0 0 5px #00ffcc; }
+.dot-offline { background-color: #555; }
+
+
+.menu-item a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+
 .menu {
     display: flex;
     flex-wrap: wrap;
@@ -152,8 +286,8 @@ main {
     justify-content: center;
     margin-bottom: 15px;
     position: relative;
-    z-index: 9999;
-    background: rgba(5, 14, 65, 0.301);
+    z-index: 100;
+    background: rgba(5, 14, 65, 0.397);
 }
 
 .menu-item a {
@@ -195,21 +329,19 @@ main {
     position: absolute;
     top: 100%;
     left: 0;
-    background: #04458f;
+    background-color: #185085ad;
     min-width: 100px;
     padding: 5px 0;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
     border-radius: 8px;
     list-style: none;
     z-index: 10000;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
 }
 
 
 .submenu li a {
     padding: 10px 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.021);
     font-size: 1.3rem !important;
     font-weight: normal !important;
     text-align: left;
@@ -274,7 +406,7 @@ main {
 
 /* Base dos botões com brilho */
 .fenda-btn-glow {
-    padding: 12px 25px;
+    padding: 10px 20px;
     border-radius: 12px;
     font-weight: bold;
     font-size: 16px;
@@ -325,12 +457,11 @@ footer {
     clear: both;
     /* Garante que ele saia debaixo de floats */
     width: 100%;
-    background: #1a1a1a7e;
+    margin-top: 20px;
+    background: #1a1a1aad;
     padding: 20px 20px;
-    margin-top: 30px;
     text-align: center;
     border-top: 1px solid rgba(255, 188, 0, 0.2);
-    text-align: center;
     color: rgba(250, 202, 44, 0.808);
     font-size: 0.9rem;
     flex-shrink: 0;
@@ -391,7 +522,7 @@ footer a {
 
 .fenda-modal-content h2 {
     color: var(--dourado);
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .fenda-modal-content p {
@@ -516,7 +647,6 @@ footer a {
 
 
 /* ESTILO DO CARD DE NOTIFICAÇÃO (TOAST) */
-/* ESTILO DO CARD DE NOTIFICAÇÃO (TOAST) */
 .notificacao-popup {
     position: fixed;
     bottom: 25px;
@@ -528,10 +658,10 @@ footer a {
     border: 1px solid rgba(255, 188, 0, 0.3);
     border-left: 5px solid var(--dourado);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    z-index: 10001; /* Está bem alto, então não é problema de sobreposição */
+    z-index: 10000001; /* Está bem alto, então não é problema de sobreposição */
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     min-width: 250px;
     cursor: pointer;
     animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -539,6 +669,7 @@ footer a {
     
     /* GARANTIA ANTI-BUG: */
     pointer-events: all !important; 
+    -webkit-user-select: none;
     user-select: none; /* Evita que o usuário selecione o texto sem querer ao clicar */
 }
 
@@ -575,7 +706,7 @@ footer a {
 /* Card que envolve as opções */
 .audio-settings-card {
     background: rgba(255, 255, 255, 0.03);
-    padding: 18px;
+    padding: 20px;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
@@ -600,7 +731,7 @@ footer a {
     padding: 10px 20px;
     border-radius: 12px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     transition: all 0.3s ease;
     flex: 1;
@@ -610,6 +741,7 @@ footer a {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    padding: 15px;
 }
 
 .btn-audio-choice i {
@@ -931,7 +1063,7 @@ form[action="confirma-login.php"] input[type="password"] {
 /* ESTILO DO CARD FOCADO */
 
 .post-content-focado {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     line-height: 1.6;
     color: #fff;
     /* Essa sombra cria um contorno invisível que protege a leitura contra o fundo claro */
@@ -1003,6 +1135,9 @@ form[action="confirma-login.php"] input[type="password"] {
     gap: 5px;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    -webkit-hyphens: auto; /*Safari/Chrome*/
+    -ms-hyphens: auto; /*IE/Edge */
+    hyphens: auto;
     /*  efeito original de bounce */
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
         box-shadow 0.3s ease,
@@ -1018,793 +1153,7 @@ form[action="confirma-login.php"] input[type="password"] {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* ============================================================
-   SISTEMA DE RESPONSIVIDADE "A FENDA" - ESCALÁVEL
-   ============================================================ */
 
-
-/* 1. BASE: CELULAR EM PÉ (Telas pequenas) */
-
-@media (max-width: 600px) {
-
-    * {
-        box-sizing: border-box;
-    }
-
-    .container-feed {
-        grid-template-columns: 1fr !important;
-        padding: 10px !important;
-    }
-
-    .spotted-card {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 0 10px 0 !important;
-        -webkit-backdrop-filter: blur(4px) !important;
-        backdrop-filter: blur(4px) !important;
-        /* Blur menor = Celular mais rápido */
-        will-change: transform, backdrop-filter;
-        /* Hack de hardware*/
-    }
-
-
-    body {
-        background-image: none !important;
-        font-size: 16px;
-    }
-
-
-    header {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 15px 10px !important;
-        /* Reduzi os 30px das laterais */
-        width: 100% !important;
-    }
-
-
-    header h1 {
-        font-size: 1.6rem !important;
-        max-width: 55% !important;
-        margin-bottom: 0 !important;
-        text-align: left !important;
-    }
-
-    .header-icons {
-        position: static !important;
-        display: flex !important;
-        gap: 8px !important;
-        right: auto !important;
-        transform: none !important;
-    }
-
-    .header-icons i {
-        font-size: 1.7rem;
-    }
-
-    form {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-
-    /* O estado ativo disparado pelo JS */
-    .menu-item.dropdown.active .submenu {
-        display: flex !important;
-        flex-direction: column;
-        position: static;
-        width: 100%;
-        border-radius: 8px;
-        margin-top: 5px;
-        animation: deslizarMenu 0.3s ease-out;
-    }
-
-    @keyframes deslizarMenu {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Container index*/
-    .fenda-container div[style*="flex"] {
-        flex-direction: column !important;
-        align-items: center;
-    }
-
-    .fenda-container img[style*="width: 50%"] {
-        width: 100% !important;
-    }
-
-
-    /* Ajuste pros links não ficarem gigantes em celulares menores */
-    .menu-item.dropdown.active .submenu li a {
-        padding: 12px 20px !important;
-        font-size: 1.2rem !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .notificacao-popup {
-        width: 94%;
-        left: 3%;
-        right: 3%;
-        padding: 15px 20px;
-    }
-
-    /*Som para telas menores */
-    .audio-choices-container {
-        flex-direction: column;
-    }
-
-    .btn-audio-choice {
-        width: 100%;
-    }
-
-
-    /* O formulário agora vai de ponta a ponta */
-    .sessao-publicar {
-        width: 100% !important;
-        margin: 20px 0 !important;
-        border-radius: 0 !important;
-        border-left: none !important;
-        border-right: none !important;
-        padding: 20px 15px !important;
-        max-width: 500px !important;
-    }
-
-    /* Os cards também aproveitam o espaço */
-    .perdidos-item {
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        border-radius: 8px !important;
-    }
-
-    .titulo-publicar {
-        font-size: 1.3rem;
-    }
-
-    .perdidos-item {
-        width: 100% !important;
-        padding: 22px !important;
-        margin: 0 auto 25px auto !important;
-        border-radius: 18px !important;
-        background: rgba(10, 10, 10, 0.6) !important;
-        border: 2px solid rgba(255, 255, 255, 0.1) !important;
-    }
-
-    /* As Badges  (#ACHADO / #PERDIDO) */
-    .badge-achado,
-    .badge-perdido {
-        font-size: 15px !important;
-        padding: 8px 15px !important;
-        letter-spacing: 1px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    /* O texto da mensagem */
-    .perdidos-item .card-body p {
-        font-size: 1.05rem !important;
-        line-height: 1.5;
-        margin: 20px 0 !important;
-        font-weight: 500;
-    }
-
-    /* O link de rodapé vira um botão de verdade */
-    .perdidos-item .link-fofoca {
-        display: block !important;
-        width: 100%;
-        text-align: center;
-        background: var(--dourado) !important;
-        color: #000 !important;
-        padding: 14px !important;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: 800;
-        text-transform: uppercase;
-    }
-
-    /* O usuário que está comentando */
-    .comentario-item strong {
-        color: #ebc415;
-        font-size: 0.85rem;
-    }
-
-    .comentario-item span {
-        font-size: 0.8rem;
-    }
-
-    .comentario-item {
-        font-size: 0.95rem;
-        /* Ajuste leve para telas pequenas */
-    }
-
-    .comentario-item.comentario-filho {
-        width: 90% !important;
-        /* Dá um pouco mais de espaço em telas minúsculas */
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: flex-start !important;
-        /* Impedir que o texto centralize e vire tripa */
-    }
-
-    .comentario-item.comentario-filho .comentario-texto {
-        width: 100% !important;
-        display: block !important;
-        text-align: left !important;
-        /* Força a quebra de palavra mas mantém o fluxo */
-        word-break: break-word !important;
-        white-space: pre-wrap !important;
-    }
-
-    .spotted-card {
-        padding: 10px;
-        width: 100%;
-        scroll-margin-top: 80px;
-    }
-
-    span.category-tag {
-        font-size: 0.9rem !important;
-        display: inline-block !important;
-        max-width: 150px !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        vertical-align: middle;
-    }
-
-    .post-time {
-        font-size: 0.85rem !important;
-    }
-
-    .reacoes-popup {
-        left: 45%;
-        display: none;
-        gap: 6px;
-        white-space: nowrap;
-        bottom: 20px;
-        padding: 5px 10px;
-
-    }
-
-    .btn-reagir,
-    .btn-fofocar {
-        color: #ccc;
-        text-decoration: none;
-        font-size: 0.9rem !important;
-    }
-
-    .filtro-btn {
-        text-decoration: none;
-        font-size: 16px !important;
-        font-weight: 800;
-        padding: 8px 12px !important;
-    }
-
-
-
-    .form-perfil-corpo {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 15px !important;
-        width: 100% !important;
-    }
-
-
-
-    /* As informações (Nome, @usuario): Garante que apareçam embaixo */
-    .perfil-info-publica {
-        margin-top: 50px !important;
-        padding: 0 15px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
-    }
-
-    .nome-publico {
-        justify-content: center !important;
-        flex-wrap: wrap;
-        font-size: 1.2rem !important;
-        line-height: 1;
-        margin-top: 10px;
-    }
-
-    .capa-container {
-        margin-bottom: 20px !important;
-    }
-
-    .nome-linha {
-        margin-top: 0 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px !important;
-        margin-top: 5px !important;
-    }
-
-    .insignia-atletica-bottom {
-        width: 60px !important;
-        height: 60px !important;
-    }
-
-    .bio-texto {
-        width: 100% !important;
-        margin: 10px 10px !important;
-        text-align: center;
-        font-size: 0.95rem !important;
-        word-wrap: break-word !important;
-        overflow-wrap: break-word !important;
-    }
-
-    .container-post-foco {
-        padding-top: 70px;
-    }
-
-    .post-content-focado {
-        font-size: 1.2rem;
-    }
-
-
-    .box-post-central {
-        padding: 0 10px;
-        max-width: 100%;
-        /* Um pequeno respiro lateral */
-    }
-
-
-
-    .container-feed article {
-        min-width: 280px !important;
-        /* Um pouquinho mais de margem lateral */
-        flex: 1 1 100% !important;/
-    }
-
-    .post-content {
-        max-height: 4rem;
-
-    }
-
-    .avatar-posicionador {
-        /* Quanto ocupa da capa */
-        width: 100px !important;
-        height: 100px !important;
-    }
-
-    .avatar-main {
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #fff;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        transition: 0.3s;
-        max-width: 100px !important;
-        max-height: 100px !important;
-    }
-
-    .avatar-wrapper {
-        max-width: 100px !important;
-        max-height: 100px !important;
-    }
-
-    .avatar-p {
-        width: 45px !important;
-        height: 45px !important;
-    }
-
-}
-
-/* Fecha o @Media Hover  */
-
-
-@media screen and (max-width: 380px) {
-
-    /* Ajuste para o Bob Filho não virar tripa */
-    .comentario-filho {
-        margin-left: 15px !important;
-        /* Diminuímos o recuo em telas pequenas */
-        width: calc(100% - 15px) !important;
-        padding: 10px !important;
-    }
-
-    /* Garante que o texto do comentário use todo o espaço */
-    .comentario-texto {
-        font-size: 0.9rem !important;
-        line-height: 1.4 !important;
-        word-break: break-word !important;
-    }
-}
-
-
-/* Ajuste para celulares deitados (Landscape) ou telas muito baixas */
-@media screen and (max-height: 500px) {
-
-    /* 1. RESET DE SEGURANÇA */
-    html,
-    body {
-        overflow-x: hidden !important;
-        width: 100% !important;
-        height: auto !important;
-        /* Permite que o corpo estique com os cards */
-        position: relative !important;
-    }
-
-    /* Usando 'main.container-feed' para ganhar de qualquer outro estilo */
-    /* 2. O CONTAINER - Trazendo as 2 colunas de volta com segurança */
-    main.container-feed {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 20px !important;
-        width: 100vw !important;
-        max-width: 100% !important;
-        padding: 80px 15px 50px 15px !important;
-        height: auto !important;
-        min-height: 100vh !important;
-        justify-content: center !important;
-        justify-items: center !important;
-        /* Centraliza o conteúdo nas colunas */
-        align-items: start !important;
-
-
-
-    }
-
-    /* 3. OS CARDS - Ajustando para o modo 2 colunas */
-    article.spotted-card {
-        display: block !important;
-        width: 100% !important;
-        /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 500px !important;
-        min-height: 180px !important;
-        flex-shrink: 0 !important;
-        position: relative !important;
-        margin: 0 auto !important;
-        top: auto !important;
-        left: auto !important;
-    }
-
-    /* 4. AJUSTES DE TEXTO E HEADER */
-    .post-content-focado {
-        font-size: 1.1rem;
-    }
-
-    header,
-    .navbar {
-        max-width: 100vw !important;
-    }
-
-    /* Mata qualquer resquício de Grid que o Atanás deixou */
-    * {
-        box-sizing: border-box !important;
-        grid-template-columns: none !important;
-    }
-
-
-    .avatar-posicionador {
-        position: absolute;
-        bottom: -70px !important;
-        /* Quanto ocupa da capa */
-        max-width: 160px !important;
-        max-height: 160px !important;
-        gap: 5px
-    }
-
-    .img-avatar-perfil {
-        max-width: 160px !important;
-        max-height: 160px !important;
-        aspect-ratio: 1/1;
-
-    }
-
-}
-
-
-
-/* Ajuste para telas MUITO pequenas (tipo o SE) não esmagarem os cards */
-@media screen and (max-width: 600px) and (max-height: 450px) {
-    main.container-feed {
-        grid-template-columns: 1fr 1fr !important;
-        /* Mantém 2, mas diminui o gap */
-        gap: 10px !important;
-    }
-
-    .avatar-main {
-        border-radius: 50%;
-        object-fit: cover;
-        border: 4px solid #fff;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        transition: 0.3s;
-        max-width: 120px !important;
-        max-height: 120px !important;
-    }
-
-}
-
-
-/* 2. TABLETS, KINDLE E CELULAR DEITADO (O "Meio termo") */
-
-@media screen and (min-width: 601px) and (max-width: 1024px),
-screen and (max-height: 600px) and (orientation: landscape) {
-
-    .post-content {
-        font-size: 1.3rem !important;
-        /* Texto um pouco maior para leitura no tablet */
-    }
-
-    .container-feed {
-        grid-template-columns: 1fr 1fr !important;
-        /* DUAS COLUNAS */
-        gap: 15px !important;
-        max-width: 100% !important;
-    }
-
-    .spotted-card {
-        max-width: 100% !important;
-    }
-
-    .btn-reagir,
-    .btn-fofocar {
-        font-size: 0.95rem !important;
-        gap: 8px;
-    }
-
-    /* Ajuste do Perfil para não sumir com as coisas no Kindle */
-    .form-perfil-corpo {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 15px !important;
-        padding: 20px !important;
-    }
-
-    /* Impede a Bio de explodir para os lados */
-    .bio-texto,
-    .post-content,
-    .perfil-info-publica p {
-        word-wrap: break-word !important;
-        overflow-wrap: anywhere !important;
-        white-space: pre-wrap !important;
-        max-width: 100% !important;
-        /* Não deixa passar do pai */
-    }
-
-    /* Ajuste para o formulário de EDITAR no tablet/deitado */
-    .form-perfil-corpo {
-        display: flex !important;
-        /* Flex é mais seguro que Grid aqui */
-        flex-direction: column !important;
-        gap: 15px !important;
-        padding: 20px !important;
-    }
-
-    /* Garante que os inputs não fiquem gigantes e sumam da tela */
-    .campo-grupo input,
-    .campo-grupo textarea,
-    .input-username-wrapper {
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* Ajuste do container principal do perfil no deitado */
-    .main-perfil-container {
-        width: 100% !important;
-        margin: 10px 5px !important;
-        max-height: auto !important;
-        /* Garante que role a tela se for longo */
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        padding: 15px !important;
-        background-color: #0d0d0d !important;
-    }
-
-    .avatar-main {
-        max-width: 150px !important;
-        max-height: 150px !important;
-        aspect-ratio: 1/1;
-    }
-
-
-}
-
-
-/* 3. DESKTOP / TELAS GRANDES */
-@media screen and (min-width: 1025px) {
-
-
-    .container-feed {
-        display: grid !important;
-        grid-template-columns: repeat(4, 1fr) !important;
-        /* 4 colunas padrão desktop */
-        gap: 20px !important;
-        width: 100% !important;
-        max-width: 1800px !important;
-        /* Agora o container tem espaço pra respirar */
-        margin-left: 20px !important;
-        /* Joga pra esquerda em vez de centralizar */
-        margin-right: auto !important;
-        padding: 0 !important;
-    }
-
-
-    /* 1. Aumenta a base de tudo para não parecer pequeno no 1080p */
-    body {
-        font-size: 18px;
-        max-width: 100% !important;
-        overflow-x: hidden;
-    }
-
-    /* 2. Limita a largura do container e centraliza */
-    .main-perfil-container,
-    .feed-container {
-        margin: 0 !important;
-        padding: 25px 20px;
-    }
-
-    /* 3. Dá aquele "respiro" nos comentários que você queria */
-    .comentario-item {
-        padding: 20px;
-        margin-bottom: 0;
-        border-radius: 12px;
-    }
-
-    /* 4. Melhora o espaçamento do texto da fofoca */
-    .comentario-texto {
-        line-height: 1.5;
-        letter-spacing: 0.3px;
-    }
-
-    .form-perfil-corpo {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 15px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        align-content: start !important;
-        /* Empilha no topo e cresce para baixo */
-        height: auto !important;
-    }
-
-    /* Aqui você agrupa o que ocupa as duas colunas */
-    .campo-grupo:has(textarea),
-    .campo-grupo:has(.audio-settings-card),
-    .campo-grupo.bio-grupo,
-    .campo-grupo.full-width {
-        grid-column: span 2 !important;
-    }
-
-    .bio-texto,
-    .post-content,
-    .perfil-info-publica p {
-        word-wrap: break-word !important;
-        overflow-wrap: anywhere !important;
-        white-space: pre-wrap !important;
-        max-width: 100% !important;
-        /* Não deixa passar do pai */
-    }
-
-
-
-    /* Alarga o Perfil/Formulário */
-    .main-perfil-container {
-        width: 95% !important;
-        max-width: 1100px !important;
-        margin: 50px auto !important;
-        display: block !important;
-        float: none !important;
-        height: auto !important;
-        min-height: fit-content;
-        background-color: #0d0d0d !important;
-        padding: 20px;
-
-    }
-
-    .avatar-main {
-        max-width: 200px !important;
-        max-height: 200px !important;
-        aspect-ratio: 1/1;
-    }
-
-
-    /* Ajuste do Form em 1 coluna para não ter erro */
-    .form-perfil-corpo {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        gap: 20px !important;
-    }
-
-    /* Campos que devem ocupar a linha inteira no formulário */
-    .campo-grupo.full-width,
-    .campo-grupo:has(textarea) {
-        grid-column: span 2 !important;
-    }
-}
-
-
-/* MONITORES ULTRA WIDE*/
-@media screen and (min-width: 1600px) {
-    .container-feed {
-        grid-template-columns: repeat(5, 1fr) !important;
-        /* Aqui o monitorzão brilha */
-        max-width: 98vw !important;
-        /* Usa 95% da largura da tela visível */
-    }
-
-    /* Ajuste do container principal para não centralizar forçado */
-    .main-perfil-container {
-        width: 98% !important;
-        max-width: 1200px !important;
-        margin-left: 40px !important;
-        margin-right: auto !important;
-    }
-}
-
-/* OS ESTILOS DE FUNDO (Vibes) */
-
-/* MODO DARK: Eigengrau  */
-.comentario-item.vibe-dark {
-    background: rgba(22, 22, 29, 0.911);
-    /* O legítimo Eigengrau */
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    color: #eeeeee;
-    border-left: 6px solid;
-}
-
-
-/* MODO NEON: O "Cyberpunk" da Fenda */
-.comentario-item.vibe-neon {
-    background: #000000 !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    border-left: 8px solid;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--cor-borda-glow);
-    position: relative;
-    overflow: hidden;
-    animation: neon-ultra 5s infinite alternate ease-in-out;
-}
-
-
-/* Deixa a hora colorida no Neon */
-.comentario-item.vibe-neon .comentario-data,
-.comentario-item.vibe-neon .comentario-autor {
-    color: var(--cor-borda-glow);
-    font-weight: bold;
-    text-shadow: 0 0 5px var(--cor-borda-glow);
-    opacity: 0.9;
-}
-
-
-/* Animação de lâmpada neon falhando */
-@keyframes neon-ultra {
-
-    0%,
-    18%,
-    22%,
-    25%,
-    53%,
-    57%,
-    100% {
-        filter: saturate(0.7);
-        border-left-color: var(--cor-borda-glow);
-        box-shadow: 0 0 10px var(--cor-borda-glow);
-    }
-
-    20%,
-    24%,
-    55% {
-        border-left-color: rgba(0, 0, 0, 0.5);
-        /* Quase apaga */
-        box-shadow: 0 0 25px var(--cor-borda-glow);
-
-    }
-}
 
 
 
@@ -2072,7 +1421,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /* O Post Principal - BOB PAI */
 .post-principal-focado {
-    border: 2px solid rgba(255, 215, 0, 0.5);
+    border: 2px solid rgba(255, 145, 0, 0.5);
     padding: 20px;
     margin-bottom: 40px;
     transform: scale(1.05);
@@ -2105,6 +1454,10 @@ body.is-touch-device .vibe-light .comentario-texto {
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     white-space: pre-wrap !important;
+    hyphens: auto;
+    -webkit-hyphens: auto; /*Safari/Chrome*/
+    -ms-hyphens: auto; /*IE/Edge */
+    hyphens: auto;
 }
 
 
@@ -2275,20 +1628,84 @@ body.hacker-mode .card-boas-vindas-fenda span {
 
 /* --- AJUSTE CORRIGIDO PARA O FORMULÁRIO MOBILE --- */
 
-.main-perfil-container {
+.main-perfil-container-config {
     flex-direction: column !important;
     align-items: center !important;
-    width: 100% !important;
+    width: 98% !important;
     margin: 15px auto !important;
     padding: 15px !important;
     display: flex !important;
-    width: 95% !important;
-    max-width: 800px !important;
     float: none !important;
-    padding: 20px !important;
     border-radius: 20px !important;
-    background-color: #0d0d0d !important;
+    background-color: #0c0b0bdc !important;
+    max-width: 1100px;
 }
+
+
+.main-perfil-container-publico {
+    display: block !important;
+    width: 100% !important;
+    max-width: 4000px;
+    margin: 0 !important;
+    padding: 30px !important;
+    border: none !important;
+    position: relative;
+    overflow: visible;
+    
+    /* 1. FUNDO GATES/JOBS: Escuro, sólido e profundo */
+    background: #0a0a0a !important;
+    
+    /* 2. A MÁSCARA ZUCKERBERG: Esmaecimento suave nas bordas para fundir com o main */
+
+
+    -webkit-mask-image: linear-gradient(to bottom, 
+        transparent 0%, 
+        black 5%, 
+        black 95%, 
+        transparent 100%
+    );
+    
+    mask-image: linear-gradient(to bottom, 
+        transparent 0%, 
+        black 5%, 
+        black 95%, 
+        transparent 100%
+    );
+    
+
+    /* 3. A VIBE ROCKSTARS: Um "Lens Flare" ou brilho de palco no fundo */
+    /* variável --aura-user para o brilho da guitarra */
+    background-image: 
+        radial-gradient(circle at 0% 0%, var(--aura-user) 0%, transparent 20%),
+        radial-gradient(circle at 100% 100%, var(--aura-user) 0%, transparent 20%) !important;
+    
+    /* 4. O TOQUE STEVE JOBS: Uma borda de vidro sutil no topo */
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    
+    transition: all 0.5s ease;
+}
+
+/* Se quiser que o feed lá embaixo também herde algo da cor */
+.feed-usuario-fenda h3 {
+    border-bottom: 2px solid var(--aura-user);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+
+/* Se a vibe for Neon */
+.main-perfil-container-publico.vibe-neon {
+    background: radial-gradient(circle at top right, var(--aura-user) 0%, #000 70%) !important;
+}
+
+/* Se a vibe for Glass (Transparente) */
+.main-perfil-container-publico.vibe-glass {
+    background: rgba(255, 255, 255, 0.03) !important;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
 
 .form-perfil-corpo {
     display: flex !important;
@@ -2426,7 +1843,6 @@ textarea[name="bio"] {
     height: auto !important;
     position: relative;
     overflow: hidden;
-    min-height: 180px;
 }
 
 
@@ -2474,21 +1890,217 @@ textarea[name="bio"] {
     top: unset !important;
 }
 
-/* A Imagem em si: redonda e centrada */
-.img-avatar-perfil {
-    top: 30px !important;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+
+.avatar-posicionador {
+    position: absolute;
+    bottom: -70px !important;
+    /* Quanto ocupa da capa */
+    transform: translateX(-50%);
+    width: clamp(100px, 15vw + 12px, 350px);
+    height: clamp(100px, 15vw + 12px, 350px);
+    z-index: 15;
+    gap: 10px;
     object-fit: cover;
-    background: #000;
-    max-width: 300px;
-    max-height: 300px;
-    border: 2px solid #ff7011;
+    aspect-ratio: 1/1;
+    left: 50%!important;
+
 }
 
-.img-avatar-main {
-    border: 2px solid #ff7011;
+
+
+/* Tooglezinho de Notificção */
+
+    .notificacao-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;           /* Alinha com a direita do sino */
+    top: 40px;          /* Joga um pouco para baixo do sino */
+    width: 280px;
+    background: rgba(10, 25, 41, 0.98); /* Fundo bem sólido para não vazar o que está atrás */
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    /* A MÁGICA AQUI: */
+    z-index: 99999 !important; /* Valor absurdamente alto para ganhar da navbar */
+    overflow: hidden;
+}
+
+.item-notif-rapida {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    text-decoration: none;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.3s;
+}
+
+.item-notif-rapida:hover { background: rgba(255,255,255,0.05); }
+
+.notif-nova { border-left: 3px solid var(--dourado); background: rgba(221, 200, 14, 0.05); }
+
+.notif-avatar {
+    width: 35px;
+    height: 35px;
+    background: var(--azul-fenda);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 0.8rem;
+}
+
+.notif-txt { display: flex; flex-direction: column; }
+.notif-txt strong { font-size: 0.85rem; color: var(--dourado); }
+.notif-txt span { font-size: 0.8rem; opacity: 0.9; }
+.notif-txt small { font-size: 0.7rem; opacity: 0.5; margin-top: 2px; }
+
+.ver-todas-notif {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    font-size: 0.8rem;
+    color: var(--dourado);
+    text-decoration: none;
+    background: rgba(0,0,0,0.2);
+}
+
+
+/* Efeito especial para o post do Leonardo */
+.post-admin-gold {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.post-admin-gold::after {
+    content: 'ADM';
+    position: absolute;
+    top: 5px;
+    right: 40px; /* Ajuste conforme o menu de opções */
+    font-size: 0.6rem;
+    font-weight: bold;
+    color: #FFD700;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+
+
+
+
+@media screen and (max-width: 380px) {
+
+    /* Ajuste para o Bob Filho não virar tripa */
+    .comentario-filho {
+        margin-left: 15px !important;
+        /* Diminuímos o recuo em telas pequenas */
+        width: calc(100% - 15px) !important;
+        padding: 10px !important;
+    }
+
+    /* Garante que o texto do comentário use todo o espaço */
+    .comentario-texto {
+        font-size: 0.9rem !important;
+        line-height: 1.4 !important;
+        word-break: break-word !important;
+    }
+}
+
+
+/* Ajuste para celulares deitados (Landscape) ou telas muito baixas */
+@media screen and (max-height: 500px) {
+
+    /* 1. RESET DE SEGURANÇA */
+    html,
+    body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        height: auto !important;
+        /* Permite que o corpo estique com os cards */
+        position: relative !important;
+    }
+
+    /* Usando 'main.container-feed' para ganhar de qualquer outro estilo */
+    /* 2. O CONTAINER - Trazendo as 2 colunas de volta com segurança */
+    main.container-feed {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px !important;
+        width: 100vw !important;
+        max-width: 100% !important;
+        padding: 80px 15px 50px 15px !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        justify-content: center !important;
+        justify-items: center !important;
+        /* Centraliza o conteúdo nas colunas */
+        align-items: start !important;
+
+
+
+    }
+
+    /* 3. OS CARDS - Ajustando para o modo 2 colunas */
+    article.spotted-card {
+        display: block !important;
+        width: 100% !important;
+        /* Ele vai ocupar o espaço da coluna do grid */
+        max-width: 500px !important;
+        min-height: 180px !important;
+        flex-shrink: 0 !important;
+        position: relative !important;
+        margin: 0 auto !important;
+        top: auto !important;
+        left: auto !important;
+    }
+
+    /* 4. AJUSTES DE TEXTO E HEADER */
+    .post-content-focado {
+        font-size: 1.1rem;
+    }
+
+    header,
+    .navbar {
+        max-width: 100vw !important;
+    }
+
+    /* Mata qualquer resquício de Grid que o Atanás deixou */
+    * {
+        box-sizing: border-box !important;
+        grid-template-columns: none !important;
+    }
+
+
+    .avatar-posicionador {
+        position: absolute;
+        bottom: -70px !important;
+        /* Quanto ocupa da capa */
+        max-width: 120px !important;
+        max-height: 120px !important;
+        gap: 5px;
+        border-radius:50%;
+    }
+
+
+
+}
+
+
+
+/* Ajuste para telas MUITO pequenas (tipo o SE) não esmagarem os cards */
+@media screen and (max-width: 600px) and (max-height: 450px) {
+    main.container-feed {
+        grid-template-columns: 1fr 1fr !important;
+        /* Mantém 2, mas diminui o gap */
+        gap: 10px !important;
+    }
+
+
 }
 
 /* OPERÁRIO DO TEMPO: COMPATIBILIDADE IPHONE 4 / LUMIA / ANTIGOS
@@ -2514,7 +2126,7 @@ textarea[name="bio"] {
     .perfil-viewer-container,
     .main-fenda-total {
         width: 100% !important;
-        margin: 5px 0 !important;
+        margin: 20px 0 !important;
         padding: 8px !important;
         display: block !important;
         /* Block neles! */
@@ -2522,37 +2134,31 @@ textarea[name="bio"] {
     }
 
     /* 3. AVATAR (A CAPIVARA PRECISA CABER) */
-    .avatar-wrapper.viewer {
-        max-width: 120px !important;
-        /* Diminuído para não explodir a tela */
-        max-height: 120px !important;
-        margin: -60px auto 10px auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        position: relative !important;
-        display: block !important;
-        aspect-ratio: 16/6;
-    }
+    
 
-    .img-avatar-perfil {
-        width: 90px !important;
-        height: 90px !important;
-        border-width: 2px !important;
-        aspect-ratio: 1/1;
-    }
+   .img-avatar-perfil {
+    /* Mínimo: 60px | Ideal: 15% da largura da tela | Máximo: 300px */
+    width: clamp(80px, 15vw + 12px, 350px);
+    height: clamp(80px, 15vw + 12px, 350px);
+    left: 50%;
+    aspect-ratio: 1/1;
+    object-fit: cover; /* Essencial para a foto não esticar */
+    border-width: 2px !important;
+    border-radius: 50%; /* Se for circular */
+    transform: translateX(-50%);
+    z-index: 10;
+    gap: 10px;
+
+}
+
+
 
     /* 4. FONTES E TÍTULOS (DIETA BRAVA) */
-    h1,
-    .nome-publico {
+    h1 {
         font-size: 1.4rem !important;
         letter-spacing: 0px !important;
     }
 
-    .bio-texto,
-    .bio-box {
-        font-size: 0.95rem !important;
-        padding: 10px !important;
-    }
 
     /* 5. FORMULÁRIOS (O terror do iPhone 4) */
     .form-perfil-corpo {
@@ -2582,7 +2188,7 @@ textarea[name="bio"] {
 
     /* 6. GRID DO FEED (2 COLUNAS NO LANDSCAPE / 1 NO PORTRAIT) */
     .container-feed {
-        grid-template-columns: minmax(300px, 1fr) !important;
+        grid-template-columns: minmax(280px, 1fr) !important;
         /* No iPhone 4 em pé, 1 coluna é lei */
         gap: 10px !important;
         padding: 5px !important;
@@ -2626,10 +2232,7 @@ textarea[name="bio"] {
     }
 
     .avatar-wrapper.viewer {
-        max-width: 120px !important;
-        max-height: 120px !important;
-        margin: -40px auto 5px auto !important;
-        aspect-ratio: 16/6;
+        margin: -40px auto 0 auto !important;
 
     }
 }
@@ -2674,3 +2277,603 @@ textarea[name="bio"] {
     }
 
 }
+
+
+
+/* ============================================================
+   SISTEMA DE RESPONSIVIDADE "A FENDA" - ESCALÁVEL
+   ============================================================ */
+
+
+/* 1. BASE: CELULAR EM PÉ (Telas pequenas) */
+
+@media (max-width: 600px) {
+
+
+   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    .container-feed {
+        grid-template-columns: 1fr !important;
+        padding: 10px !important;
+    }
+
+    .spotted-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 10px 0 !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        backdrop-filter: blur(4px) !important;
+        /* Blur menor = Celular mais rápido */
+        will-change: transform, backdrop-filter;
+        /* Hack de hardware*/
+    }
+
+
+    body {
+        background-image: none !important;
+        font-size: 16px;
+    }
+
+
+    header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 15px 10px !important;
+        /* Reduzi os 30px das laterais */
+        width: 100% !important;
+    }
+
+
+    header h1 {
+        font-size: 1.6rem !important;
+        max-width: 55% !important;
+        margin-bottom: 0 !important;
+        text-align: left !important;
+    }
+
+    .header-icons {
+        position: static !important;
+        display: flex !important;
+        gap: 8px !important;
+        right: auto !important;
+        transform: none !important;
+    }
+
+    .header-icons i {
+        font-size: 1.6rem;
+    }
+
+    form {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+
+    /* O estado ativo disparado pelo JS */
+    .menu-item.dropdown.active .submenu {
+        display: flex !important;
+        flex-direction: column;
+        position: static;
+        width: 100%;
+        border-radius: 8px;
+        margin-top: 5px;
+        animation: deslizarMenu 0.3s ease-out;
+    }
+
+    @keyframes deslizarMenu {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Container index*/
+    .fenda-container div[style*="flex"] {
+        flex-direction: column !important;
+        align-items: center;
+    }
+
+    .fenda-container img[style*="width: 50%"] {
+        width: 100% !important;
+    }
+
+
+    /* Ajuste pros links não ficarem gigantes em celulares menores */
+    .menu-item.dropdown.active .submenu li a {
+        padding: 12px 20px !important;
+        font-size: 1.2rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .notificacao-popup {
+        width: 94%;
+        left: 3%;
+        right: 3%;
+        padding: 15px 20px;
+    }
+
+    /*Som para telas menores */
+    .audio-choices-container {
+        flex-direction: column;
+    }
+
+    .btn-audio-choice {
+        width: 100%;
+    }
+
+
+    /* O formulário agora vai de ponta a ponta */
+    .sessao-publicar {
+        width: 100% !important;
+        margin: 20px 0 !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+        padding: 20px 15px !important;
+        max-width: 500px !important;
+    }
+
+    /* Os cards também aproveitam o espaço */
+    .perdidos-item {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .titulo-publicar {
+        font-size: 1.3rem;
+    }
+
+    .perdidos-item {
+        width: 100% !important;
+        padding: 22px !important;
+        margin: 0 auto 25px auto !important;
+        border-radius: 18px !important;
+        background: rgba(10, 10, 10, 0.6) !important;
+        border: 2px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* As Badges  (#ACHADO / #PERDIDO) */
+    .badge-achado,
+    .badge-perdido {
+        font-size: 15px !important;
+        padding: 8px 15px !important;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* O texto da mensagem */
+    .perdidos-item .card-body p {
+        font-size: 1.05rem !important;
+        line-height: 1.5;
+        margin: 20px 0 !important;
+        font-weight: 500;
+    }
+
+    /* O link de rodapé vira um botão de verdade */
+    .perdidos-item .link-fofoca {
+        display: block !important;
+        width: 100%;
+        text-align: center;
+        background: var(--dourado) !important;
+        color: #000 !important;
+        padding: 14px !important;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    /* O usuário que está comentando */
+    .comentario-item strong {
+        color: #ebc415;
+        font-size: 0.85rem;
+    }
+
+    .comentario-item span {
+        font-size: 0.8rem;
+    }
+
+    .comentario-item {
+        font-size: 0.95rem;
+        /* Ajuste leve para telas pequenas */
+    }
+
+    .comentario-item.comentario-filho {
+        width: 90% !important;
+        /* Dá um pouco mais de espaço em telas minúsculas */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        /* Impedir que o texto centralize e vire tripa */
+    }
+
+    .comentario-item.comentario-filho .comentario-texto {
+        width: 100% !important;
+        display: block !important;
+        text-align: left !important;
+        /* Força a quebra de palavra mas mantém o fluxo */
+        word-break: break-word !important;
+        white-space: pre-wrap !important;
+    }
+
+    .spotted-card {
+        padding: 10px;
+        width: 100%;
+        scroll-margin-top: 80px;
+    }
+
+    span.category-tag {
+        font-size: 0.9rem !important;
+        display: inline-block !important;
+        max-width: 140px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        vertical-align: middle;
+    }
+
+    .post-time {
+        font-size: 0.9rem !important;
+    }
+
+    .reacoes-popup {
+        left: 45%;
+        display: none;
+        gap: 6px;
+        white-space: nowrap;
+        bottom: 20px;
+        padding: 5px 10px;
+
+    }
+
+    .btn-reagir,
+    .btn-fofocar {
+        color: #ccc;
+        text-decoration: none;
+        font-size: 0.9rem !important;
+    }
+
+    .filtro-btn {
+        text-decoration: none;
+        font-size: 16px !important;
+        font-weight: 800;
+        padding: 8px 12px !important;
+    }
+
+
+
+    .form-perfil-corpo {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 15px !important;
+        width: 100% !important;
+    }
+
+
+    /* As informações (Nome, @usuario): Garante que apareçam embaixo */
+    .perfil-info-publica {
+        margin-top: 50px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+
+    .capa-container {
+        margin-bottom: 20px !important;
+    }
+
+    .nome-linha {
+        margin-top: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px !important;
+        margin-top: 5px !important;
+    }
+
+
+    .container-post-foco {
+        padding-top: 70px;
+    }
+
+    .post-content-focado {
+        font-size: 1.3rem;
+    }
+
+
+    .box-post-central {
+        padding: 0 10px;
+        max-width: 100%;
+        /* Um pequeno respiro lateral */
+    }
+
+
+
+    .container-feed article {
+        min-width: 280px !important;
+        /* Um pouquinho mais de margem lateral */
+        flex: 1 1 100% !important;/
+    }
+
+    .post-content {
+        max-height: 4rem;
+
+    }
+
+
+    .avatar-main {
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        transition: 0.3s;
+    }
+
+
+    .avatar-p {
+        width: 45px !important;
+        height: 45px !important;
+    }
+
+}
+
+/* Fecha o @Media Hover  */
+
+
+
+/* 2. TABLETS, KINDLE E CELULAR DEITADO (O "Meio termo") */
+
+@media screen and (min-width: 601px) and (max-width: 1024px),
+screen and (max-height: 600px) and (orientation: landscape) {
+
+    .post-content {
+        font-size: 1.3rem !important;
+        /* Texto um pouco maior para leitura no tablet */
+    }
+
+    .container-feed {
+        grid-template-columns: 1fr 1fr !important;
+        /* DUAS COLUNAS */
+        gap: 15px !important;
+        max-width: 100% !important;
+    }
+
+    .spotted-card {
+        max-width: 100% !important;
+    }
+
+    .btn-reagir,
+    .btn-fofocar {
+        font-size: 0.95rem !important;
+        gap: 8px;
+    }
+
+    /* Ajuste do Perfil para não sumir com as coisas no Kindle */
+    .form-perfil-corpo {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+        padding: 20px !important;
+    }
+
+
+    /* Ajuste para o formulário de EDITAR no tablet/deitado */
+    .form-perfil-corpo {
+        display: flex !important;
+        /* Flex é mais seguro que Grid aqui */
+        flex-direction: column !important;
+        gap: 15px !important;
+        padding: 20px !important;
+    }
+
+    /* Garante que os inputs não fiquem gigantes e sumam da tela */
+    .campo-grupo input,
+    .campo-grupo textarea,
+    .input-username-wrapper {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Ajuste do container principal do perfil no deitado */
+    .main-perfil-container {
+        width: 100% !important;
+        margin: 10px 5px !important;
+        max-height: auto !important;
+        /* Garante que role a tela se for longo */
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 10px !important;
+    }
+
+   
+
+} /* Fecha o @Media Hover  */
+
+
+
+
+/* 3. DESKTOP / TELAS GRANDES */
+@media screen and (min-width: 1025px) {
+
+
+    .container-feed {
+        display: grid !important;
+        grid-template-columns: repeat(4, 1fr) !important;
+        /* 4 colunas padrão desktop */
+        gap: 20px !important;
+        width: 100% !important;
+        max-width: 1900px !important;
+        /* Agora o container tem espaço pra respirar */
+        margin-left: 20px !important;
+        /* Joga pra esquerda em vez de centralizar */
+        margin-right: auto !important;
+        padding: 0 !important;
+    }
+
+
+    /* 1. Aumenta a base de tudo para não parecer pequeno no 1080p */
+    body {
+        font-size: 18px;
+        max-width: 100% !important;
+        overflow-x: hidden;
+    }
+
+    /* 2. Limita a largura do container e centraliza */
+    .main-perfil-container,
+    .feed-container {
+        margin: 0 !important;
+        padding: 25px 20px;
+    }
+
+    /* 3. Dá aquele "respiro" nos comentários que você queria */
+    .comentario-item {
+        padding: 20px;
+        margin-bottom: 0;
+        border-radius: 12px;
+    }
+
+    /* 4. Melhora o espaçamento do texto da fofoca */
+    .comentario-texto {
+        line-height: 1.5;
+        letter-spacing: 0.3px;
+    }
+
+    .form-perfil-corpo {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        align-content: start !important;
+        /* Empilha no topo e cresce para baixo */
+        height: auto !important;
+    }
+
+    /* Aqui você agrupa o que ocupa as duas colunas */
+    .campo-grupo:has(textarea),
+    .campo-grupo:has(.audio-settings-card),
+    .campo-grupo.bio-grupo,
+    .campo-grupo.full-width {
+        grid-column: span 2 !important;
+    }
+
+
+    /* Alarga o Perfil/Formulário */
+    .main-perfil-container {
+        width: 98% !important;
+        margin: 20px auto !important;
+        display: block !important;
+        float: none !important;
+        height: auto !important;
+        min-height: fit-content;
+
+    }
+
+
+
+    /* Ajuste do Form em 1 coluna para não ter erro */
+    .form-perfil-corpo {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 20px !important;
+    }
+
+    /* Campos que devem ocupar a linha inteira no formulário */
+    .campo-grupo.full-width,
+    .campo-grupo:has(textarea) {
+        grid-column: span 2 !important;
+    }
+
+} /* Fecha o @Media Hover  */
+
+
+
+/* MONITORES ULTRA WIDE*/
+@media screen and (min-width: 1600px) {
+    .container-feed {
+        grid-template-columns: repeat(5, 1fr) !important;
+        /* Aqui o monitorzão brilha */
+        max-width: 98vw !important;
+    }
+
+    /* Ajuste do container principal para não centralizar forçado */
+    .main-perfil-container {
+        width: 98% !important;
+    }
+}
+
+/* OS ESTILOS DE FUNDO (Vibes) */
+
+/* MODO DARK: Eigengrau  */
+.comentario-item.vibe-dark {
+    background: rgba(22, 22, 29, 0.911);
+    /* O legítimo Eigengrau */
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: #eeeeee;
+    border-left: 6px solid;
+}
+
+
+/* MODO NEON: O "Cyberpunk" da Fenda */
+.comentario-item.vibe-neon {
+    background: #000000 !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border-left: 8px solid;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--cor-borda-glow);
+    position: relative;
+    overflow: hidden;
+    animation: neon-ultra 5s infinite alternate ease-in-out;
+}
+
+
+/* Deixa a hora colorida no Neon */
+.comentario-item.vibe-neon .comentario-data,
+.comentario-item.vibe-neon .comentario-autor {
+    color: var(--cor-borda-glow);
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--cor-borda-glow);
+    opacity: 0.9;
+}
+
+
+/* Animação de lâmpada neon falhando */
+@keyframes neon-ultra {
+
+    0%,
+    18%,
+    22%,
+    25%,
+    53%,
+    57%,
+    100% {
+        filter: saturate(0.7);
+        border-left-color: var(--cor-borda-glow);
+        box-shadow: 0 0 10px var(--cor-borda-glow);
+    }
+
+    20%,
+    24%,
+    55% {
+        border-left-color: rgba(0, 0, 0, 0.5);
+        /* Quase apaga */
+        box-shadow: 0 0 25px var(--cor-borda-glow);
+
+    }
+
+} 
+
+

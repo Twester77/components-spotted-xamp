@@ -3,12 +3,12 @@
 
 :root {
     --cor-principal: #024685a2; 
-    --cor-hover: #434c97a1;
     --laranja-fenda: linear-gradient(165deg, #ff520d, #8e4facaf);
     --dourado: #ffbc00;
+    --background-dark: #0d0d0d;
+    --glass-bg: rgba(255, 255, 255, 0.05);
 
 }
-
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,8 +20,8 @@ html, body {
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;   
     font-size: 16px;
-
 }
+
 
 body {
     display: flex;
@@ -29,6 +29,7 @@ body {
     min-height: 100vh;
   
 }
+
 
 main {
     flex: 1 0 auto; 

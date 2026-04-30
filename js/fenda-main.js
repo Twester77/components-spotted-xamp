@@ -45,6 +45,40 @@ window.atualizarInterfaceBolhas = function (ligar) {
     }
 };
 
+// --- CONTROLE DA TOOLBAR (BÚSSOLA) ---
+window.toggleToolbar = function() {
+    const toolbar = document.getElementById('fenda-toolbar');
+    const icon = document.getElementById('trigger-icon');
+    if (!toolbar) return;
+
+    toolbar.classList.toggle('toolbar-aberta');
+    
+    if(toolbar.classList.contains('toolbar-aberta')) {
+        icon.innerText = '❌'; 
+    } else {
+        icon.innerText = '🧭'; 
+    }
+};
+
+window.toggleHackerMode = function () {
+    const body = document.body;
+    // Pega todos os botões possíveis
+    const btnNav = document.getElementById('hacker-toggle');
+    const btnToolbar = document.getElementById('hacker-toggle-lateral');
+    
+    body.classList.toggle('hacker-mode');
+    const isHacker = body.classList.contains('hacker-mode');
+    
+    localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
+    
+    const texto = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
+    
+    if (btnNav) btnNav.innerHTML = texto;
+    if (btnToolbar) btnToolbar.innerHTML = isHacker ? 'MODO_NORMAL' : 'MODO_TERMINAL';
+};
+
+
+/*------MODAL DE LOGOUT------*/
 window.deslogar = function () {
     const modal = document.getElementById('modal-sair-fenda');
     if (modal) modal.style.display = 'flex';
@@ -65,14 +99,6 @@ function abrirDenuncia(idPost) {
     alert("Denúncia do post #" + idPost + " enviada aos ADMs.");
 }
 
-window.toggleHackerMode = function () {
-    const body = document.body;
-    const btn = document.getElementById('hacker-toggle');
-    body.classList.toggle('hacker-mode');
-    const isHacker = body.classList.contains('hacker-mode');
-    localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
-    if (btn) btn.innerHTML = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
-};
 
 window.toggleMenu = function (menuId) {
     document.querySelectorAll('.options-menu-popup').forEach(menu => {
@@ -153,7 +179,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+
     });
+
+    
 
 
     // ============================================================
@@ -211,17 +240,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fecha o DOMContentLoaded 
 });
 
-
 // ============================================================
 // 3. SISTEMAS EXTERNOS E AJAX
 // ============================================================
 
 window.configurarPosts = function () {
     document.querySelectorAll('.post-content').forEach(post => {
+        // Verifica se o texto é maior que o limite de 5rem (aprox 80px)
         if (post.scrollHeight > post.offsetHeight && !post.dataset.ouvinte) {
+            post.classList.add('tem-mais'); // Adiciona a classe para mostrar o "... ler mais"
             post.style.cursor = "pointer";
             post.dataset.ouvinte = "true";
-            post.onclick = function () { this.classList.toggle('expandido'); };
+            post.onclick = function () { 
+                this.classList.toggle('expandido'); 
+            };
         }
     });
     console.log("Fenda: Posts reconfigurados.");
@@ -302,7 +334,34 @@ function mostrarPopup(mensagem) {
     }, tempoExibicao);
 }
 
+// 1. Função para carregar as notificações na janelinha (sem sair da página)
+window.toggleJanelaNotificacoes = function() {
+    const box = document.getElementById('dropdown-notificacoes');
+    
+    // Se a janela estiver fechada, vamos carregar os dados antes de abrir
+    if (box.style.display === 'none' || box.style.display === '') {
+        fetch('notificacoes-rapidas.php') // Um arquivo novo, versão leve do notificacoes.php
+            .then(res => res.text())
+            .then(html => {
+                box.innerHTML = html;
+                box.style.display = 'block';
+                
+                // Limpa o badge visual já que o usuário abriu a lista
+                const badge = document.getElementById('badge-alertas');
+                if (badge) badge.style.display = 'none';
+            });
+    } else {
+        box.style.display = 'none';
+    }
+};
 
+// 2. Fechar a janelinha se clicar fora (igual você fez com os outros menus)[cite: 26]
+window.addEventListener('click', function(e) {
+    const box = document.getElementById('dropdown-notificacoes');
+    if (box && !e.target.closest('.notificacao-wrapper')) {
+        box.style.display = 'none';
+    }
+});
 
 // --- BLOCO DE REAÇÕES ATUALIZADO ---
 function enviarReacao(postId, tipo) {
@@ -354,10 +413,11 @@ window.onclick = function (event) {
     }
 };
 
+// Verificação de Boot e Modo Hacker salvo
 window.addEventListener('load', () => {
     if (localStorage.getItem('fenda_hacker') === 'active') {
         document.body.classList.add('hacker-mode');
-        const hBtn = document.getElementById('hacker-toggle');
+        const hBtn = document.getElementById('hacker-toggle-lateral') || document.getElementById('hacker-toggle');
         if (hBtn) hBtn.innerHTML = '[ DESLIGAR_TERMINAL ]';
     }
     const bootScreen = document.getElementById('bios-boot');

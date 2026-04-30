@@ -3,6 +3,8 @@
     <strong>Entre em contato: 0800 7070 6969 ou um email para floorspotted.fev@outlook.com</strong>
     <p>&copy; <?php echo date('Y'); ?> Desenvolvido por Leonardo - Todos os Direitos Reservados</p>
 
+    <?php include_once 'toolbar.php'; ?>
+
     <div id="modal-sair-fenda" class="fenda-modal-overlay" style="display:none;">
         <div class="fenda-modal-content">
             <div class="fenda-modal-icon">⚓</div>

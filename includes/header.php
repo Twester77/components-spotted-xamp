@@ -24,6 +24,7 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,30 +49,40 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
         if ($pagina_atual !== 'index.php'):
         ?>
             <div class="header-icons">
-                <a href="buscar-usuario.php" class="btn-header">
-                    <i class="fas fa-search"></i>
-                </a>
+    <a href="buscar-usuario.php" class="btn-header">
+        <i class="fas fa-search"></i>
+    </a>
 
-                <div class="notificacao-wrapper" onclick="window.location.href='notificacoes.php'">
-                    <i class="fa-solid fa-bell"></i>
-                    <?php
-                    if ($u_id > 0 && isset($conn)) {
-                        // 2. Busca contagem de notificações (Nome de variável blindado)
-                        $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
-                        $stmt_count_header->bind_param("i", $u_id);
-                        $stmt_count_header->execute();
-                        $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
-                        $total_n = $res_header_notif['total'] ?? 0;
+    <!-- Função JS para abrir as notificações -->
+    <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()">
+        <i class="fa-solid fa-bell"></i>
+        
+        <?php
+        $total_n = 0;
+        if ($u_id > 0 && isset($conn)) {
+            $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
+            $stmt_count_header->bind_param("i", $u_id);
+            $stmt_count_header->execute();
+            $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
+            $total_n = $res_header_notif['total'] ?? 0;
+        }
+        ?>
 
-                        if ($total_n > 0): ?>
-                            <span id="badge-alertas" class="badge-alertas"><?php echo $total_n; ?></span>
-                        <?php endif;
-                    }
-                    ?>
-                </div>
-                <a href="perfil.php" class="btn-config">
-                    <i class="fas fa-cog"></i>
-                </a>
-            </div>
+        <!-- Apenas UM badge: se for 0, fica escondido; se for > 0, já aparece com o número -->
+        <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
+            <?php echo $total_n; ?>
+        </span>
+
+        <!-- Janelinha de notificações -->
+        <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
+            <p style="padding:10px; color:#999;">Carregando ondas...</p>
+        </div>
+    </div>
+
+    <a href="perfil.php" class="btn-config">
+        <i class="fas fa-cog"></i>
+    </a>
+</div>
+
         <?php endif; ?>
     </header>

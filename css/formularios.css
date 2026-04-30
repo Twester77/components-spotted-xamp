@@ -1,5 +1,6 @@
-
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: border-box;
 }
 
@@ -10,18 +11,19 @@
 }
 
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
-select, option {
-    background-color: #1a1a1afd !important; 
-    color: #ffffff !important;  
+select,
+option {
+    background-color: #1a1a1afd !important;
+    color: #ffffff !important;
     -webkit-appearance: none;
-    appearance: none;                  
-    
+    appearance: none;
+
 }
 
 select:focus {
     background-color: #00000071 !important;
     color: var(--dourado) !important;
-}       
+}
 
 
 form {
@@ -42,22 +44,27 @@ form {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    max-width: clamp(300px, 30vw, 600px) !important;
+    /* Escalonamento Suave: Mínimo 320px, Ideal 90% da largura (até chegar no limite), Máximo 650px */
+    max-width: clamp(230px, 90%, 400px) !important;
+    width: 100% !important;
+    /* Garante que ele tente ocupar o espaço do clamp */
 
 
 }
+
 /* --- AJUSTE EXCLUSIVO PARA A PÁGINA DE NOVO POST --- */
 .main-novo-post .form-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15px !important;
+    width: 100% !important; /* Força o container interno a respeitar o clamp do pai */
+    padding: clamp(10px, 4vw, 25px) !important; /* Padding que cresce conforme a tela */
     max-height: auto;
+
 }
 
 .main-novo-post form {
-    width: 100%!important;
-    max-height: 600px !important; 
+    width: 100% !important;
     margin: 0 auto !important;
     display: flex;
     flex-direction: column;
@@ -65,7 +72,7 @@ form {
 }
 
 /* Ajuste para o select e textarea não ficarem colados na borda */
-.main-novo-post textarea, 
+.main-novo-post textarea,
 .main-novo-post select {
     width: 100% !important;
     box-sizing: border-box !important;
@@ -76,6 +83,7 @@ form {
     color: #c07607;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 1.4rem!important;
 }
 
 /* Fazendo os campos ocuparem 100% do quadradinho */
@@ -91,7 +99,7 @@ form {
 }
 
 .main-novo-post textarea {
-    min-height: 150px !important;
+    min-height: 100px !important;
     resize: vertical;
     /* Permite que o usuário estique se quiser, mas só pra baixo */
 }
@@ -106,27 +114,29 @@ form {
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
 
 .main-perfil-container .perfil-gold {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        margin: 20px auto !important;
-        padding: 15px !important;
-        border-radius: 20px !important;
-        background-color: #0d0d0d !important;
-        width: auto;
-    }
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    margin: 10px auto !important;
+    padding: 20px !important;
+    border-radius: 30px !important;
+}
 
 
 
 
 /* Bio: Centralizada e com limite de largura */
-.campo-grupo textarea#bio, 
+.campo-grupo textarea#bio,
 textarea[name="bio"] {
-    width: 100% !important; /* Ocupa a largura disponível... */
-    max-width: 100% !important; /* ...mas não passa disso no Tablet/PC */
-    margin: 0 auto !important; /* CENTRALIZA no meio do formulário */
+    width: 100% !important;
+    /* Ocupa a largura disponível... */
+    max-width: 100% !important;
+    /* ...mas não passa disso no Tablet/PC */
+    margin: 0 auto !important;
+    /* CENTRALIZA no meio do formulário */
     display: block !important;
-    box-sizing: border-box !important; /* Garante que o padding não estique a caixa */
+    box-sizing: border-box !important;
+    /* Garante que o padding não estique a caixa */
     padding: 15px !important;
     background: rgba(255, 255, 255, 0.05) !important;
     color: #fff !important;
@@ -145,54 +155,52 @@ textarea[name="bio"] {
 }
 
 
-.bio-box {
-    width: 100%;
-    max-width: auto;
-    margin: 10px auto;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    display: block !important;
-    /* Garante que não vire flex e quebre */
-    line-height: 1.5;
-    font-style: italic;
-}
-
 .container,
 .login-form,
 form[action="confirma-login.php"] {
     max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     width: 100% !important;
 }
 
 .capa-container {
     width: 100%;
-    height: clamp(250px, 35vw, 500px) !important;
+    max-width: 1300px;
+    height: clamp(250px, 35vw, 800px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
     background: #0a0a0a;
     margin-bottom: 40px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    border: 4px solid #98529ea9;
-    border-radius: 12px;
+    border: 4px solid #9f49a7c0;
+    border-radius: 10px;
 }
 
 .capa-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 20%;
-    aspect-ratio: 16/9!important;
-    
+    object-position: center 25%;
+    aspect-ratio: 16/9 !important;
+
 }
 
-.bio-texto, .post-content, .card-body p, .comentario-item span {
+.bio-texto,
+.post-content,
+.card-body p,
+.perfil-info-publica p,
+.comentario-item span {
     word-wrap: break-word !important;
     overflow-wrap: anywhere !important;
     white-space: pre-wrap !important;
     max-width: 100% !important;
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
+    hyphens: auto;
+
 }
 
 
@@ -230,10 +238,10 @@ form[action="confirma-login.php"] {
 
 
 .pref_vibe_padrao select {
-color: #bbb;  
-font-size: 14px;
-margin-bottom: 15px;
-margin-top: 15px;
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 15px;
+    margin-top: 15px;
 
 }
 
@@ -250,7 +258,7 @@ textarea {
     margin-bottom: 15px;
     display: block;
     font-family: 'Inter', sans-serif;
-    
+
 }
 
 
@@ -362,7 +370,7 @@ textarea {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    min-height: 90vh !important; 
+    min-height: 90vh !important;
     padding: 20px !important;
 }
 
@@ -379,7 +387,7 @@ textarea {
 /* O Segredo: Padding-left alto para o texto não bater no ícone */
 .fenda-reg-box input {
     width: 100% !important;
-    padding-left: 55px !important; 
+    padding-left: 55px !important;
     padding-top: 12px !important;
     padding-bottom: 12px !important;
     padding-right: 15px !important;
@@ -389,7 +397,8 @@ textarea {
     color: white !important;
     font-size: 1rem !important;
     outline: none !important;
-    box-sizing: border-box !important; /* Essencial para o padding não esticar o input */
+    box-sizing: border-box !important;
+    /* Essencial para o padding não esticar o input */
     display: block !important;
 }
 
@@ -416,16 +425,17 @@ textarea {
 .container-cadastro-fenda {
     background: rgba(89, 53, 187, 0.226) !important;
     -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px); 
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     width: 100%;
     max-width: 450px;
     padding: 40px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5); padding: 35px !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    padding: 35px !important;
     width: 100% !important;
     max-width: 500px !important;
-    height: auto !important; 
+    height: auto !important;
 }
 
 .cadastro-header {
@@ -511,8 +521,13 @@ section.sessao-publicar {
     padding: 25px !important;
     margin-top: 20px;
     margin-bottom: 30px;
+    margin-left: auto !important;
+    margin-right: auto !important;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    max-width: 600px; 
+    width: 100% !important;
+    max-width: clamp(320px, 95%, 600px) !important;
+    display: flex !important; /* Para garantir o alinhamento interno */
+    flex-direction: column !important;
     align-items: center;
     background-color: #49414121 !important;
     background: rgba(0, 0, 0, 0.45) !important;
@@ -623,8 +638,8 @@ section.sessao-publicar {
 
 
 .avatar {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 50%;
     border: none !important;
@@ -649,24 +664,6 @@ section.sessao-publicar {
 
 
 /* 1. Botão da Câmera (Capa) */
-.perfil-header-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-}
-
-
-/* Posicionando o Avatar */
-.avatar-perfil-wrapper {
-    position: absolute;
-    bottom: -50px;
-    z-index: 5;
-}
-
 
 .btn-mudar-capa {
     position: absolute;
@@ -674,8 +671,12 @@ section.sessao-publicar {
     bottom: 20px;
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
-    width: 40px;
-    height: 40px;
+    width: clamp(32px, 4vw + 8px, 48px);
+    height: clamp(32px, 4vw + 8px, 48px);
+    right: clamp(10px, 2vw, 25px);
+    /* Margem lateral fluida */
+    bottom: clamp(10px, 2vw, 25px);
+    /* Margem inferior fluida */
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -698,10 +699,10 @@ section.sessao-publicar {
     width: 100% !important;
     max-width: 100% !important;
     /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
-    aspect-ratio: 16 / 8 !important; 
+    aspect-ratio: 16 / 8 !important;
     overflow: hidden !important;
     border-radius: 15px 15px 0 0 !important;
-    background: #1a1a1a; 
+    background: #1a1a1a;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -711,23 +712,29 @@ section.sessao-publicar {
 .img-capa-preview {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; 
-    object-position: center 25% !important; /* Foca um pouco acima do meio */
+    object-fit: cover !important;
+    object-position: center 25% !important;
+    /* Foca um pouco acima do meio */
     display: block !important;
-    aspect-ratio: 16/8!important;
+    aspect-ratio: 16/8 !important;
 }
 
+/* O container do Avatar - Foto de perfil */
+.avatar-wrapper {
+    position: relative;
+    width: clamp(100px, 15vw + 12px, 350px);
+    height: clamp(100px, 15vw + 12px, 350px);
+    max-width: 350px;
+    max-height: 350px;
+    aspect-ratio: 1/1;
+    left: 50%;
+    margin: -40px 0 10px 0 !important;
+    z-index: 10;
+    align-content: center;
+}
 
 /* 2. Botão do Lápis (Trocar Avatar) */
 
-.avatar-wrapper {
-    position: relative;
-    max-width: 200px;
-    max-height: 200px;
-    aspect-ratio: 1/1;
-    margin: -60px auto 0 auto!important;
-    z-index: 10;
-}
 
 .btn-mudar-avatar {
     position: absolute;
@@ -735,8 +742,8 @@ section.sessao-publicar {
     bottom: 5px;
     background: var(--dourado);
     color: #000;
-    width: 35px;
-    height: 35px;
+    width: clamp(25px, 5vw, 45px);
+    height: clamp(25px, 5vw, 45px);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -748,42 +755,17 @@ section.sessao-publicar {
     z-index: 15;
 }
 
+.btn-mudar-avatar i {
+    font-size: clamp(12px, 2vw, 18px);
+}
+
 .btn-mudar-avatar:hover {
     background: #fff;
     transform: rotate(-15deg) scale(1.2);
     /* Efeito de inclinação no lápis */
 }
 
-/* Ajuste do ícone dentro dos botões */
-.btn-mudar-capa i,
-.btn-mudar-avatar i {
-    font-size: 14px;
-}
 
-
-.btn-visualizar {
-    display: inline-block;
-    width: 100%;
-    margin-top: 15px;
-    padding: 12px;
-    text-align: center;
-    background: transparent;
-    color: var(--dourado);
-    border: 1px solid var(--dourado);
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-}
-
-.btn-visualizar:hover {
-    background: rgba(255, 188, 0, 0.1);
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.2);
-    transform: translateY(-2px);
-    color: #fff;
-}
 
 
 .login-btn {
@@ -808,7 +790,7 @@ section.sessao-publicar {
 }
 
 
-.login-btn:focus, 
+.login-btn:focus,
 .container input:focus {
     outline: none !important;
 }
@@ -847,7 +829,7 @@ input[type="checkbox"]:focus {
     align-items: center;
     justify-content: auto;
     width: auto !important;
-    min-width: 150px; 
+    min-width: 150px;
     padding: 10px 25px !important;
     white-space: nowrap !important;
     font-weight: 800;
@@ -935,13 +917,22 @@ input[type="checkbox"]:focus {
 
 /*  AVATAR E A PRESENÇA */
 
+/* A Imagem em si: redonda e centrada */
+
 .img-avatar-perfil {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+    /* Mínimo: 60px | Ideal: 15% da largura da tela | Máximo: 300px */
+    width: clamp(80px, 15vw + 12px, 350px);
+    height: clamp(80px, 15vw + 12px, 350px);
+    left: 50% !important;
+    aspect-ratio: 1/1;
     object-fit: cover;
-    background: #000;
+    /* Essencial para a foto não esticar */
     border: 2px solid #fa7116b2;
+    background: #000;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    gap: 10px;
 
 }
 
@@ -955,7 +946,8 @@ input[type="checkbox"]:focus {
 
 .stats-perfil {
     display: flex;
-    justify-content: flex-start; /* vai para a esquerda */
+    justify-content: flex-start;
+    /* vai para a esquerda */
     gap: 35px;
     padding: 20px 0;
     margin: 20px 30px;
@@ -990,10 +982,16 @@ input[type="checkbox"]:focus {
 
 .perfil-gold .capa-container {
     width: 100%;
-    border: none; }
+    border: none;
+}
 
 .perfil-gold .img-capa-preview {
-    border: 2px solid var(--dourado)!important;
+    border: 2px solid var(--dourado) !important;
+    border-radius: 20px;
+}
+
+.perfil-gold .img-capa-viewer {
+    border: 2px solid var(--dourado) !important;
     border-radius: 20px;
 }
 
@@ -1023,7 +1021,7 @@ input[type="checkbox"]:focus {
 
 /* 1. O Container Principal (Onde ficam as fotos e os campos) */
 form[action="confirma-login.php"] .container {
-    background: rgba(0, 0, 0, 0.4) !important; 
+    background: rgba(0, 0, 0, 0.4) !important;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-radius: 15px !important;
@@ -1052,9 +1050,9 @@ form[action="confirma-login.php"] .input-group {
 form[action="confirma-login.php"] input[type="text"],
 form[action="confirma-login.php"] input[type="password"] {
     width: 100% !important;
-    background: rgba(255, 255, 255, 0.08) !important; 
+    background: rgba(255, 255, 255, 0.08) !important;
     color: white !important;
-    border: 2px solid rgba(255, 188, 0, 0.5) !important; 
+    border: 2px solid rgba(255, 188, 0, 0.5) !important;
     border-radius: 10px !important;
     padding: 12px 15px !important;
     font-size: 1rem !important;
@@ -1073,7 +1071,7 @@ form[action="confirma-login.php"] input:focus {
 
 /* 5. Checkbox e Links Inferiores */
 #terms {
-    accent-color: #22af05b7 !important; 
+    accent-color: #22af05b7 !important;
 }
 
 /* Garante que o texto de "Cadastre-se" não suma no fundo escuro */
@@ -1090,19 +1088,31 @@ form[action="confirma-login.php"] a {
 /* 1. Reset de Centralização do Container Principal */
 .main-perfil-container {
     display: block !important;
-    width: 93% !important;
-    max-width: 850px !important; 
-    margin: 30px auto !important;
+    width: 99% !important;
+    max-width: 100% !important;
+    margin: 20px auto !important;
     float: none !important;
+    margin-left: 0;
+    margin-right: 0;
     padding: 20px !important;
     border-radius: 20px !important;
-    background-color: #0d0d0d !important;
+    background-color: #0d0d0d5d !important;
+}
+
+.perfil-header-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
 }
 
 /* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
 .form-perfil-corpo {
     display: flex !important;
-    flex-direction: column !important; 
+    flex-direction: column !important;
     gap: 20px !important;
     width: 100% !important;
     margin: 0 !important;
@@ -1113,13 +1123,13 @@ form[action="confirma-login.php"] a {
     width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
-    grid-column: span 1 !important; /
+    grid-column: span 1 !important;/
 }
 
 /* 4. Estilo dos Inputs para não vazarem */
-input[type="text"], 
-input[type="password"], 
-select, 
+input[type="text"],
+input[type="password"],
+select,
 textarea {
     width: 100% !important;
     max-width: 100% !important;
@@ -1136,12 +1146,13 @@ textarea {
 }
 
 /* 7. Mata qualquer margem fantasma no body/html que empurre pra esquerda */
-html, body {
+html,
+body {
     width: 100% !important;
     max-width: 100vw !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow-x: hidden !important; /* Mata o scroll lateral e a margem fantasma */
+    overflow-x: hidden !important;
+    /* Mata o scroll lateral e a margem fantasma */
     position: relative;
 }
-

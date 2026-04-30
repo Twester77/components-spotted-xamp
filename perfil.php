@@ -32,7 +32,7 @@ $bolhas_default = $dados['pref_bolhas'] ?? 1;
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 ?>
 
-<main class="main-perfil-container <?php echo $classe_presenca; ?>">
+<main class="main-perfil-container-config <?php echo $classe_presenca; ?>">
     <?php if (isset($_GET['sucesso'])): ?>
         <div id="toast-sucesso" class="toast-fenda">
             <i class="fa-solid fa-circle-check"></i>
