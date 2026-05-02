@@ -2050,7 +2050,7 @@ textarea[name="bio"] {
         display: block !important;
         width: 100% !important;
         /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 500px !important;
+        max-width: 600px !important;
         min-height: 180px !important;
         flex-shrink: 0 !important;
         position: relative !important;

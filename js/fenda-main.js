@@ -364,17 +364,17 @@ window.addEventListener('click', function(e) {
 });
 
 // --- BLOCO DE REAÇÕES ATUALIZADO ---
-function enviarReacao(postId, tipo) {
+window.enviarReacao = function (postId, tipo) {
     fetch(`includes/reagir.php?id=${postId}&tipo=${tipo}`)
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                // Aqui está o segredo: usar o nome exato que o PHP envia
-                atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
+                // Usa a função global que já está declarada no arquivo
+                window.atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
             }
         })
         .catch(err => console.error("Erro na requisição:", err));
-}
+};
 
 window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     const container = document.getElementById(`reacoes-post-${postId}`);
@@ -390,8 +390,6 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     Object.keys(contagens).forEach(tipo => {
         const emoji = tradutor[tipo] || '👍';
         const total = contagens[tipo];
-
-        // Verifica se este emoji específico está na lista de reações do usuário
         const classeVoted = (minhas && minhas.includes(tipo)) ? 'voted' : '';
 
         const span = document.createElement('span');
@@ -401,9 +399,14 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     });
 };
 
-window.onclick = function (event) {
+// --- CONTROLE UNIFICADO DE CLIQUES GLOBAIS ---
+window.addEventListener('click', function (event) {
     const modalSair = document.getElementById('modal-sair-fenda');
-    if (event.target == modalSair) fecharModalSair();
+    if (event.target === modalSair) {
+        window.fecharModalSair();
+    }
+
+    // Fecha o dropdown e o popup de reações se clicar fora
     if (!event.target.closest('.dropdown') && !event.target.closest('.reacao-wrapper') && !event.target.closest('.btn-reagir')) {
         document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
         document.querySelectorAll('.reacoes-popup').forEach(p => {
@@ -411,7 +414,12 @@ window.onclick = function (event) {
             p.style.opacity = '0';
         });
     }
-};
+
+    const box = document.getElementById('dropdown-notificacoes');
+    if (box && !event.target.closest('.notificacao-wrapper')) {
+        box.style.display = 'none';
+    }
+});
 
 // Verificação de Boot e Modo Hacker salvo
 window.addEventListener('load', () => {
