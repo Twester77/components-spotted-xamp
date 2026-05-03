@@ -2068,10 +2068,10 @@ textarea[name="bio"] {
     main.container-feed {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
-        gap: 20px !important;
+        gap: 15px !important;
         width: 100vw !important;
         max-width: 100% !important;
-        padding: 80px 15px 50px 15px !important;
+        padding: 70px 15px 50px 15px !important;
         height: auto !important;
         min-height: 100vh !important;
         justify-content: center !important;
@@ -2845,7 +2845,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
 /* MONITORES ULTRA WIDE*/
 @media screen and (min-width: 1600px) {
     .container-feed {
-        grid-template-columns: repeat(5, 1fr) !important;
+        grid-template-columns: repeat(6, 1fr) !important;
         /* Aqui o monitorzão brilha */
         max-width: 98vw !important;
     }

@@ -511,24 +511,48 @@ textarea {
 
 /* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
 
+/* Container Principal */
+.main-perdidos {
+    /* Largura flutua entre 320px e 1200px dependendo da tela */
+    width: clamp(320px, 95%, 900px);
+    margin: clamp(20px, 5vh, 60px) auto;
+    padding: clamp(10px, 3vw, 30px);
+}
+
+/* O Form de busca/filtro (aquele treco estranho kk) */
+.form-perdidos {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: clamp(15px, 4vw, 40px);
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Os Cards de Itens Perdidos */
+.card-perdido {
+    margin-bottom: 20px;
+    padding: clamp(15px, 2vw, 25px);
+    border-radius: 12px;
+    /* Fonte da mensagem flutuando entre 14px e 18px */
+    font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+}
 
 /* O container que envolve o formulário de postagem  */
 section.sessao-publicar {
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.007) !important;
-    padding: 20px !important;
-    margin: 20px auto !important;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.007);
+    padding: 20px;
+    margin: 20px auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    width: 100% !important;
-    max-width: clamp(320px, 95%, 700px) !important;
+    width: 100% ;
+    max-width: clamp(320px, 95%, 600px) ;
     display: flex !important; /* Para garantir o alinhamento interno */
     flex-direction: column !important;
     align-items: center;
-    background-color: #49414121 !important;
-    background: rgba(0, 0, 0, 0.45) !important;
+    background-color: #49414121;
+    background: rgba(0, 0, 0, 0.45);
     border-radius: 20px !important;
-
 
 }
 
@@ -536,30 +560,43 @@ section.sessao-publicar {
 .sessao-publicar h3,
 .titulo-publicar {
     font-family: 'Bebas Neue', sans-serif;
-    color: var(--dourado) !important;
+    color: var(--dourado);
     margin-bottom: 20px;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
 
 }
 
+/* Forçando o formulário a ser um bloco de largura total */
+.form-publicar {
+    width: 100% !important;
+    display: block !important; /* Mudando de flex para block se necessário */
+    margin-top: 15px;
+}
+
+/* O segredo para os inputs pararem de teimar */
 .form-publicar select,
-.form-publicar textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    color: #fff;
-    border: 1px solid #444;
-    margin-bottom: 15px;
-    transition: 0.3s;
+.form-publicar textarea,
+.form-publicar .fenda-input {
+    display: block !important;
+    width: 100% !important; 
+    max-width: 100% !important; 
+    min-width: 100% !important;
+    /* Espaçamento interno mais robusto */
+    padding: clamp(12px, 2vw, 20px) !important;
+    margin-bottom: 15px !important;
+    /* Reset de bordas e box-sizing */
+    box-sizing: border-box !important; 
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
 }
 
+/* Deixando a caixa de texto maior */
 .form-publicar textarea {
-    min-height: 100px;
-    letter-spacing: 2px;
-    font-size: 14px;
-    width: 100%;
-
+    min-height: 120px !important;
+    line-height: 1.5;
 }
 
 .form-publicar select:focus,
