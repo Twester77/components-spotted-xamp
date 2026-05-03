@@ -1,8 +1,7 @@
 /* A FENDA - ENGINE CENTRAL (JavaScript Geral) */
 
-// ============================================================
 // 1. FUNÇÕES GLOBAIS DE CONTROLE
-// ============================================================
+window.audioLiberado = false; // só pra não bugar
 
 window.setBolhasLocal = function (valor) {
     // 1. Atualiza o input hidden para que o PHP saiba o que salvar no banco
@@ -46,17 +45,17 @@ window.atualizarInterfaceBolhas = function (ligar) {
 };
 
 // --- CONTROLE DA TOOLBAR (BÚSSOLA) ---
-window.toggleToolbar = function() {
+window.toggleToolbar = function () {
     const toolbar = document.getElementById('fenda-toolbar');
     const icon = document.getElementById('trigger-icon');
     if (!toolbar) return;
 
     toolbar.classList.toggle('toolbar-aberta');
-    
-    if(toolbar.classList.contains('toolbar-aberta')) {
-        icon.innerText = '❌'; 
+
+    if (toolbar.classList.contains('toolbar-aberta')) {
+        icon.innerText = '❌';
     } else {
-        icon.innerText = '🧭'; 
+        icon.innerText = '🧭';
     }
 };
 
@@ -65,14 +64,14 @@ window.toggleHackerMode = function () {
     // Pega todos os botões possíveis
     const btnNav = document.getElementById('hacker-toggle');
     const btnToolbar = document.getElementById('hacker-toggle-lateral');
-    
+
     body.classList.toggle('hacker-mode');
     const isHacker = body.classList.contains('hacker-mode');
-    
+
     localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
-    
+
     const texto = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
-    
+
     if (btnNav) btnNav.innerHTML = texto;
     if (btnToolbar) btnToolbar.innerHTML = isHacker ? 'MODO_NORMAL' : 'MODO_TERMINAL';
 };
@@ -108,15 +107,40 @@ window.toggleMenu = function (menuId) {
     if (menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 };
 
-// ============================================================
 // 2. INICIALIZAÇÃO E EVENTOS
-// ============================================================
+
+// Gatilho simples para liberar o áudio
+const destravarAudio = () => {
+    window.audioLiberado = true;
+    console.log("Áudio autorizado pelo usuário.");
+    document.removeEventListener('click', destravarAudio);
+    document.removeEventListener('touchstart', destravarAudio);
+};
+document.addEventListener('click', destravarAudio);
+document.addEventListener('touchstart', destravarAudio);
 
 document.addEventListener("DOMContentLoaded", function () {
-    // 1. Inicializa Bolhas (se a função existir)
-    if(typeof atualizarInterfaceBolhas === 'function') {
-        atualizarInterfaceBolhas();
-    }
+    if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
+    // Libera o áudio pro Chrome no primeiro clique
+
+
+    // --- ---
+    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            if (window.innerWidth <= 1024) {
+                const pai = this.parentElement;
+                const estaAberto = pai.classList.contains('active');
+                if (!estaAberto) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
+                    pai.classList.add('active');
+                }
+            }
+        });
+    });
+    // --- FIM DO BLOCO ---
 
     let somAmbiente = localStorage.getItem('fenda_tipo_som') || 'off';
     let temaNotif = localStorage.getItem('fenda_tema_notif') || 'padrao';
@@ -152,48 +176,44 @@ document.addEventListener("DOMContentLoaded", function () {
         atualizarInterfaceAudio();
     };
 
-    // RADAR DE ALERTAS - AQUI É ONDE O NÚMERO APARECE
+
+    // Roda uma vez ao carregar e depois a cada 8 segundos
     window.atualizarContadorAlertas = function () {
-        fetch('includes/contar_alertas.php')
-            .then(res => res.text()) 
+        fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
+            .then(res => res.text())
             .then(texto => {
-                try {
-                    // Limpa qualquer texto extra que o PHP tenha enviado por engano
-                    const inicioJson = texto.indexOf('{');
-                    const fimJson = texto.lastIndexOf('}') + 1;
-                    if (inicioJson === -1) return;
-                    
-                    const jsonLimpo = texto.substring(inicioJson, fimJson);
-                    const data = JSON.parse(jsonLimpo);
-                    
-                    const badge = document.getElementById('badge-alertas');
-                    if (badge && data.total !== undefined) {
-                        let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
-                        if (isNaN(ultimoAviso)) {
-                            sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                            ultimoAviso = data.total;
-                        }
-                        if (data.total > ultimoAviso) {
-                            if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
-                            sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                        }
-                        badge.innerText = data.total;
-                        badge.style.display = data.total > 0 ? 'flex' : 'none';
+                // Filtra o JSON para ignorar erros de PHP ou espaços em branco
+                const match = texto.match(/\{.*\}/);
+                if (!match) return;
+
+                const data = JSON.parse(match[0]);
+                const badge = document.getElementById('badge-alertas');
+
+                if (badge && data.total !== undefined) {
+                    let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
+
+                    if (data.total > ultimoAviso) {
+                        if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
                     }
-                } catch(e) { 
-                    console.warn("Radar: Aguardando resposta limpa do servidor..."); 
+
+                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                    badge.innerText = data.total;
+                    badge.style.display = data.total > 0 ? 'flex' : 'none';
                 }
-            });
+            })
+            .catch(err => console.warn("Radar: Aguardando sinal limpo..."));
     };
 
-    // Inicia o radar
-    setInterval(window.atualizarContadorAlertas, 8000);
-    window.atualizarContadorAlertas();
-    
-    // Configura os posts (Ler mais)
-    if(typeof configurarPosts === 'function') {
-        configurarPosts();
-    }
+    // Inicia o radar com um pequeno delay para estabilidade
+    setTimeout(() => {
+        window.atualizarContadorAlertas();
+        setInterval(window.atualizarContadorAlertas, 8000);
+    }, 1000);
+
+    // Configura os posts (Ler mais) com delay para o CSS carregar
+    setTimeout(() => {
+        if (typeof configurarPosts === 'function') configurarPosts();
+    }, 500);
 }); // FIM DO DOMCONTENTLOADED - APENAS UMA CHAVE AQUI!
 
 
@@ -204,13 +224,13 @@ window.configurarPosts = function () {
         // Verifica se o conteúdo transborda a altura máxima definida no CSS
         // Adicionamos uma margem para evitar falsos positivos em textos no limite
         const precisaExpandir = post.scrollHeight > post.offsetHeight + 10;
-        
+
         if (precisaExpandir && !post.dataset.ouvinte) {
             post.classList.add('tem-mais');
             post.dataset.ouvinte = "true";
             post.style.cursor = "pointer";
-            
-            post.addEventListener('click', function(e) {
+
+            post.addEventListener('click', function (e) {
                 this.classList.toggle('expandido');
             });
         }
@@ -224,8 +244,8 @@ function mostrarPopup(mensagem) {
 
     if (temaSalvo !== 'off') {
         let configuracaoSons = {
-            'padrao': { arquivo: 'padrao.mp3', volume: 1.1 },
-            'resident': { arquivo: 'resident.mp3', volume: 0.7 },
+            'padrao': { arquivo: 'padrao.mp3', volume: 1.2 },
+            'resident': { arquivo: 'resident.mp3', volume: 0.6 },
             'cs': { arquivo: 'cs.mp3', volume: 0.7 },
             'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },
             'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
@@ -243,34 +263,46 @@ function mostrarPopup(mensagem) {
 
         if (configuracaoSons[temaSalvo]) {
             let somEscolhido = configuracaoSons[temaSalvo];
-            let bip = new Audio('sons/' + somEscolhido.arquivo);
-            bip.volume = somEscolhido.volume;
-            bip.play().catch(e => console.log("Áudio bloqueado:", e));
+            
+            const dispararSom = () => {
+                let somUrl = 'sons/' + somEscolhido.arquivo + '?v=' + Date.now();
+                let bip = new Audio(somUrl);
+                bip.volume = somEscolhido.volume;
 
-            bip.onloadedmetadata = function () {
-                if (bip.duration > 3) {
-                    setTimeout(() => {
-                        let intervaloFade = setInterval(() => {
-                            if (bip.volume > 0.03) bip.volume -= 0.03;
-                            else {
-                                bip.volume = 0;
-                                bip.pause();
-                                clearInterval(intervaloFade);
-                            }
-                        }, 50);
-                    }, tempoExibicao - 1500);
-                }
+                bip.play().then(() => {
+                    // Lógica de Fade-out para sons longos
+                    bip.onloadedmetadata = function () {
+                        if (bip.duration > 3) {
+                            setTimeout(() => {
+                                let intervaloFade = setInterval(() => {
+                                    if (bip.volume > 0.03) bip.volume -= 0.03;
+                                    else {
+                                        bip.volume = 0;
+                                        bip.pause();
+                                        clearInterval(intervaloFade);
+                                    }
+                                }, 50);
+                            }, tempoExibicao - 1500);
+                        }
+                    };
+                }).catch(err => console.warn("Áudio aguardando clique."));
             };
+
+            if (window.audioLiberado) {
+                dispararSom();
+            } else {
+                document.addEventListener('click', () => {
+                    window.audioLiberado = true;
+                    dispararSom();
+                }, { once: true });
+            }
         }
     }
 
-    // --- PARTE VISUAL COM O "CLIQUE DA FENDA" ---
+    // --- PARTE VISUAL ---
     const popup = document.createElement('div');
     popup.className = 'notificacao-popup';
-    
-    // Deixa o cursor com a mãozinha pra mostrar que é link
-    popup.style.cursor = 'pointer'; 
-
+    popup.style.cursor = 'pointer';
     popup.innerHTML = `
         <div style="font-size: 20px;">🔔</div>
         <div style="flex-grow: 1;">
@@ -278,12 +310,7 @@ function mostrarPopup(mensagem) {
             <span>${mensagem}</span>
         </div>
     `;
-
-    // A MÁGICA: Ao clicar em qualquer lugar do banner, vai para notificações
-    popup.onclick = function() {
-        window.location.href = 'notificacoes.php';
-    };
-
+    popup.onclick = () => window.location.href = 'notificacoes.php';
     document.body.appendChild(popup);
 
     setTimeout(() => {
@@ -293,9 +320,9 @@ function mostrarPopup(mensagem) {
 }
 
 // 1. Função para carregar as notificações na janelinha (sem sair da página)
-window.toggleJanelaNotificacoes = function() {
+window.toggleJanelaNotificacoes = function () {
     const box = document.getElementById('dropdown-notificacoes');
-    
+
     // Se a janela estiver fechada, vamos carregar os dados antes de abrir
     if (box.style.display === 'none' || box.style.display === '') {
         fetch('notificacoes-rapidas.php') // Um arquivo novo, versão leve do notificacoes.php
@@ -303,7 +330,7 @@ window.toggleJanelaNotificacoes = function() {
             .then(html => {
                 box.innerHTML = html;
                 box.style.display = 'block';
-                
+
                 // Limpa o badge visual já que o usuário abriu a lista
                 const badge = document.getElementById('badge-alertas');
                 if (badge) badge.style.display = 'none';
@@ -314,7 +341,7 @@ window.toggleJanelaNotificacoes = function() {
 };
 
 // 2. Fechar a janelinha se clicar fora (igual você fez com os outros menus)[cite: 26]
-window.addEventListener('click', function(e) {
+window.addEventListener('click', function (e) {
     const box = document.getElementById('dropdown-notificacoes');
     if (box && !e.target.closest('.notificacao-wrapper')) {
         box.style.display = 'none';

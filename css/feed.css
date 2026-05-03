@@ -709,8 +709,8 @@ order: 3;
     display: flex !important;
     align-items: center;
     justify-content: center;
-    width: 150px !important;
-    height: 150px !important;
+    width: 140px !important;
+    height: 140px !important;
     margin: 0 auto !important;
     overflow: visible !important;
     /* Mude para visible para o brilho não cortar */
