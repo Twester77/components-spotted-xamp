@@ -126,7 +126,7 @@ main article {
     width: 100% !important;
     text-align: left !important;
     margin: 10px auto;
-    padding: 0 15px;
+    padding: 0 10px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -342,13 +342,13 @@ nav {
 .submenu li a {
     padding: 10px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.021);
-    font-size: 1.3rem !important;
+    font-size: 1.4rem !important;
     font-weight: normal !important;
     text-align: left;
 }
 
 .submenu li {
-    padding: 8px 15px !important;
+    padding: 8px 12px !important;
     line-height: 1.2;
 }
 
@@ -374,7 +374,7 @@ nav {
 /* O Container que segura a onda no index */
 .fenda-container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px 5px;
     box-sizing: border-box;
@@ -406,14 +406,14 @@ nav {
 
 /* Base dos botões com brilho */
 .fenda-btn-glow {
-    padding: 10px 20px;
     border-radius: 12px;
     font-weight: bold;
     font-size: 16px;
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    margin-bottom: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     border: none;
@@ -423,6 +423,7 @@ nav {
 .fenda-primary {
     background: #ffbc00;
     color: #000;
+    padding: 12px 25px;
 }
 
 
@@ -430,6 +431,7 @@ nav {
     background: rgba(204, 66, 12, 0.1);
     color: #fa593d;
     border: 1px solid #cc420c !important;
+     padding: 10px 22px;
 }
 
 
@@ -541,7 +543,7 @@ footer a {
     background: var(--dourado);
     color: #000;
     border: none;
-    padding: 12px;
+    padding: 15px;
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
@@ -797,7 +799,7 @@ footer a {
 .nota-seguranca {
     background-color: #ffffcc;
     color: #000;
-    padding: 12px;
+    padding: 15px;
     font-size: 0.85em;
     border-left: 5px solid #ffcc00;
     margin: 15px 0;
@@ -1011,11 +1013,10 @@ form[action="confirma-login.php"] input[type="password"] {
     min-height: 100vh;
     background: transparent;
     -webkit-backdrop-filter: blur(5px);
-    /* Para funcionar no Safari/iPhone */
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
-    padding: 40px 15px 40px 15px;
+    padding: 30px 15px 30px 15px;
     /* Espaço para o navbar lá no topo */
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -1063,11 +1064,14 @@ form[action="confirma-login.php"] input[type="password"] {
 /* ESTILO DO CARD FOCADO */
 
 .post-content-focado {
-    font-size: 1.2rem;
-    line-height: 1.6;
+    font-size: 1.3rem;
+    line-height: 1.5;
     color: #fff;
     /* Essa sombra cria um contorno invisível que protege a leitura contra o fundo claro */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    display: 1;
+    display: flex;
+    margin-top: 10px;
 }
 
 /* FORMULÁRIO DE FOFOCA */
@@ -1075,8 +1079,15 @@ form[action="confirma-login.php"] input[type="password"] {
     background: #1a1a1a;
     border-radius: 12px;
     border: 1px solid #333;
-    padding: 20px;
-    max-width: 400px;
+    padding: 15px;
+    max-width: 450px;
+    max-height: auto;
+    
+}
+
+.titulo-fofoca { font-size: clamp(1.3rem, 2.5vw, 1.8rem); color: var(--laranja-fenda); font-weight: bold; 
+    margin-top: 30px;
+
 }
 
 .textarea-fenda {
@@ -1085,18 +1096,21 @@ form[action="confirma-login.php"] input[type="password"] {
     color: #fff;
     border: 1px solid #444;
     border-radius: 8px;
-    padding: 15px !important;
     font-family: inherit;
-    resize: vertical;
     align-items: center;
-    margin: 10px 10px;
     max-width: 100%;
-    min-height: 80px;
-    max-height: 200px;
+    width: 100%;
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+    padding: 15px!important;
+    background: rgba(255,255,255,0.05);
+    align-items: center; 
+    flex-wrap: wrap;
+    margin: 20px important;
     overflow-y: auto;
     /* Se o texto for grande, ele cria scroll interno */
     border: 1px solid #ccc;
-    border-radius: 5px;
     resize: vertical;
     /* Permite redimensionar apenas na vertical */
 }
@@ -1250,7 +1264,7 @@ body.is-touch-device .vibe-light .comentario-texto {
     display: inline-flex;
     align-items: right;
     gap: 5px;
-    opacity: 0.7;
+    opacity: 0.8;
     transition: 0.3s;
 }
 
@@ -1267,6 +1281,7 @@ body.is-touch-device .vibe-light .comentario-texto {
     /* Código do ícone reply do FontAwesome */
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
+    padding: 8px;
 }
 
 .btn-responder-fenda {
@@ -1292,12 +1307,19 @@ body.is-touch-device .vibe-light .comentario-texto {
 /* META DADOS (Nome e Data) */
 .comentario-meta {
     display: flex;
-    justify-content: space-between;
+    justify-content:space-between;
     /* Autor na esquerda, Data na direita */
-    align-items: center;
     margin-bottom: 8px;
     /* Espaço para o texto não grudar */
-    width: 100%;
+     word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
+    hyphens: auto;
 }
 
 .comentario-autor {
@@ -1305,12 +1327,31 @@ body.is-touch-device .vibe-light .comentario-texto {
     font-size: 0.9rem;
     font-weight: bold;
     /* Removemos o float: left se tiver */
+    align-content: flex-start;
+       max-width: 220px;
+    /* Limita a largura da tag */
+    white-space: nowrap !important;
+    /* Impede que ela quebre em duas linhas */
+    overflow: hidden !important;
+    /* Esconde o que sobrar */
+    text-overflow: ellipsis !important;
+    /* Coloca os "..." se o nome for gigante */
+    vertical-align: middle;
+    overflow: hidden;
 }
 
 .comentario-data {
-    font-size: 0.8rem;
-    opacity: 0.6;
-    text-align: right;
+    font-size: clamp(0.75rem, 0.382vw + 0.625rem, 1rem);
+    opacity: 0.8;
+    white-space: nowrap;
+    flex-shrink: 0;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    right: 10px;
+
 }
 
 .comentario-texto {
@@ -1336,13 +1377,11 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 
-
-
 .card-novo-post {
     width: auto;
     background: #1a1a1a;
     border-radius: 15px;
-    padding: 20px;
+    padding: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -1355,8 +1394,9 @@ body.is-touch-device .vibe-light .comentario-texto {
 }
 
 .area-comentario-form textarea {
-    height: 80px;
-    resize: none;
+    min-height: 100px;
+    resize: vertical;
+    min-height: 200px;
 }
 
 /* Deixar o campo de texto mais 'rede social' */
@@ -1422,7 +1462,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 /* O Post Principal - BOB PAI */
 .post-principal-focado {
     border: 2px solid rgba(255, 145, 0, 0.5);
-    padding: 20px;
+    padding: 15px;
     margin-bottom: 40px;
     transform: scale(1.05);
 
@@ -1432,9 +1472,8 @@ body.is-touch-device .vibe-light .comentario-texto {
 .comentario-item.comentario-filho {
     display: flex !important;
     flex-direction: column !important;
-    align-items: flex-start !important;
     /* Força o alinhamento à esquerda dentro do card */
-    width: 85% !important;
+    width: 88% !important;
     margin-left: auto !important;
     /* Joga o card para a direita */
     margin-right: 0 !important;
@@ -1450,7 +1489,6 @@ body.is-touch-device .vibe-light .comentario-texto {
     width: 100% !important;
     max-width: 100% !important;
     display: block !important;
-    text-align: left !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     white-space: pre-wrap !important;
@@ -1491,7 +1529,7 @@ body.is-touch-device .vibe-light .comentario-texto {
     top: 5px;
     color: var(--cor-borda-glow);
     font-size: 1.2rem;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 
@@ -1566,9 +1604,7 @@ h2.titulo-home {
     font-weight: bold;
     text-align: left;
     margin: 30px 0;
-    padding-left: 20px;
     color: #ff9900da;
-    list-style-type: ' * ';
 }
 
 .lista-conselhos li {
@@ -1647,7 +1683,7 @@ body.hacker-mode .card-boas-vindas-fenda span {
     width: 100% !important;
     max-width: 4000px;
     margin: 0 !important;
-    padding: 30px !important;
+    padding: 0 !important;
     border: none !important;
     position: relative;
     overflow: visible;
@@ -1690,6 +1726,8 @@ body.hacker-mode .card-boas-vindas-fenda span {
     border-bottom: 2px solid var(--aura-user);
     display: inline-block;
     padding-bottom: 5px;
+    font-size: clamp(1.2rem, 2vw + 0.5rem, 2.1rem);
+    margin-left: 15px;
 }
 
 
@@ -1893,11 +1931,11 @@ textarea[name="bio"] {
 
 .avatar-posicionador {
     position: absolute;
-    bottom: -70px !important;
+    bottom: -80px !important;
     /* Quanto ocupa da capa */
     transform: translateX(-50%);
-    width: clamp(100px, 15vw + 12px, 350px);
-    height: clamp(100px, 15vw + 12px, 350px);
+    width: clamp(100px, 15vw + 12px, 300px);
+    height: clamp(100px, 15vw + 12px, 300px);
     z-index: 15;
     gap: 10px;
     object-fit: cover;
@@ -1917,8 +1955,8 @@ textarea[name="bio"] {
     top: 40px;          /* Joga um pouco para baixo do sino */
     width: 280px;
     background: rgba(10, 25, 41, 0.98); /* Fundo bem sólido para não vazar o que está atrás */
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.8);
@@ -1980,8 +2018,8 @@ textarea[name="bio"] {
 .post-admin-gold::after {
     content: 'ADM';
     position: absolute;
-    top: 5px;
-    right: 40px; /* Ajuste conforme o menu de opções */
+    top: 8px;
+    right: 50px; /* Ajuste conforme o menu de opções */
     font-size: 0.6rem;
     font-weight: bold;
     color: #FFD700;
@@ -2005,8 +2043,8 @@ textarea[name="bio"] {
 
     /* Garante que o texto do comentário use todo o espaço */
     .comentario-texto {
-        font-size: 0.9rem !important;
-        line-height: 1.4 !important;
+        font-size: 0.85rem !important;
+        line-height: 1.3 !important;
         word-break: break-word !important;
     }
 }
@@ -2050,8 +2088,8 @@ textarea[name="bio"] {
         display: block !important;
         width: 100% !important;
         /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 600px !important;
-        min-height: 180px !important;
+        max-width: 450px !important;
+        min-height: 100px !important;
         flex-shrink: 0 !important;
         position: relative !important;
         margin: 0 auto !important;
@@ -2069,7 +2107,7 @@ textarea[name="bio"] {
         max-width: 100vw !important;
     }
 
-    /* Mata qualquer resquício de Grid que o Atanás deixou */
+    /* Mata qualquer resquício de Grid que o coiso ruim deixou */
     * {
         box-sizing: border-box !important;
         grid-template-columns: none !important;
@@ -2104,9 +2142,9 @@ textarea[name="bio"] {
 }
 
 /* OPERÁRIO DO TEMPO: COMPATIBILIDADE IPHONE 4 / LUMIA / ANTIGOS
-   (Para telas de até 320px - Onde o Cão az morada) */
+   (Para telas de até 340px - Onde o Cão faz sua irritante morada) */
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 340px) {
 
     /* 1. RESET DE SEGURANÇA */
     html,
@@ -2120,6 +2158,30 @@ textarea[name="bio"] {
         box-sizing: border-box !important;
     }
 
+    main article {
+    width: 100% !important;
+    text-align: left !important;
+    margin: 10px auto!important;
+    padding: 0 15px !important;
+    
+}
+
+
+main {
+    max-width: 95vw; /* Ocupa 95% da largura da janela visual */
+    margin: 5px auto !important;
+    padding: 0 10px !important;
+    
+}
+
+    .conteudo-principal {
+    font-size: 14px!important;
+    line-height: 1.4;
+    text-align: left;
+    color: #e0e0e0;
+}
+
+
     /* 2. CONTAINER PRINCIPAL (Colado nas bordas pra ganhar espaço) */
     .main-perfil-container,
     .perfil-header-container,
@@ -2127,7 +2189,7 @@ textarea[name="bio"] {
     .main-fenda-total {
         width: 100% !important;
         margin: 20px 0 !important;
-        padding: 8px !important;
+        padding: 6px !important;
         display: block !important;
         /* Block neles! */
         box-sizing: border-box !important;
@@ -2138,8 +2200,8 @@ textarea[name="bio"] {
 
    .img-avatar-perfil {
     /* Mínimo: 60px | Ideal: 15% da largura da tela | Máximo: 300px */
-    width: clamp(80px, 15vw + 12px, 350px);
-    height: clamp(80px, 15vw + 12px, 350px);
+    width: clamp(80px, 15vw + 12px, 300px);
+    height: clamp(80px, 15vw + 12px, 300px);
     left: 50%;
     aspect-ratio: 1/1;
     object-fit: cover; /* Essencial para a foto não esticar */
@@ -2152,11 +2214,17 @@ textarea[name="bio"] {
 }
 
 
-
     /* 4. FONTES E TÍTULOS (DIETA BRAVA) */
     h1 {
-        font-size: 1.4rem !important;
+        font-size: 1.3rem !important;
         letter-spacing: 0px !important;
+        max-width: 50%;
+    }
+
+    
+    .header-icons{
+        gap: 4px;
+        font-size: 1.1rem!important;
     }
 
 
@@ -2188,13 +2256,12 @@ textarea[name="bio"] {
 
     /* 6. GRID DO FEED (2 COLUNAS NO LANDSCAPE / 1 NO PORTRAIT) */
     .container-feed {
-        grid-template-columns: minmax(280px, 1fr) !important;
+      grid-template-columns: minmax(300px, 1fr)!important;
         /* No iPhone 4 em pé, 1 coluna é lei */
         gap: 10px !important;
-        padding: 5px !important;
-        float: none !important;
         left: 50%;
         right: 50%;
+        display: grid !important;
         box-sizing: border-box !important;
     }
 
@@ -2213,22 +2280,14 @@ textarea[name="bio"] {
         padding: 10px !important;
     }
 
-    /* Ajuste para o Header não vazar */
-    header h1 {
-        font-size: 1.4rem !important;
-    }
-
-    header {
-        gap: 10px !important;
-        padding: 10px !important;
-    }
+    
 }
 
 /* 8. AJUSTE PARA O LANDSCAPE DO IPHONE 4 (480px de largura) */
 @media screen and (max-width: 480px) and (orientation: landscape) {
     .container-feed {
-        grid-template-columns: 1fr 1fr !important;
-        /* Garante as 2 colunas que a gente brigou pra ter */
+        grid-template-columns: 1fr !important;
+        /* Nme se me arrisco a ter duas colunas*/
     }
 
     .avatar-wrapper.viewer {
@@ -2306,6 +2365,9 @@ textarea[name="bio"] {
         /* Blur menor = Celular mais rápido */
         will-change: transform, backdrop-filter;
         /* Hack de hardware*/
+        padding: 12px;
+        scroll-margin-top: 80px;
+    
     }
 
 
@@ -2386,9 +2448,10 @@ textarea[name="bio"] {
 
     /* Ajuste pros links não ficarem gigantes em celulares menores */
     .menu-item.dropdown.active .submenu li a {
-        padding: 12px 20px !important;
+        padding: 6px 12px !important;
         font-size: 1.2rem !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: bold;
     }
 
     .notificacao-popup {
@@ -2433,7 +2496,7 @@ textarea[name="bio"] {
 
     .perdidos-item {
         width: 100% !important;
-        padding: 22px !important;
+        padding: 20px !important;
         margin: 0 auto 25px auto !important;
         border-radius: 18px !important;
         background: rgba(10, 10, 10, 0.6) !important;
@@ -2444,7 +2507,7 @@ textarea[name="bio"] {
     .badge-achado,
     .badge-perdido {
         font-size: 15px !important;
-        padding: 8px 15px !important;
+        padding: 8px 12px !important;
         letter-spacing: 1px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
@@ -2482,7 +2545,7 @@ textarea[name="bio"] {
     }
 
     .comentario-item {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         /* Ajuste leve para telas pequenas */
     }
 
@@ -2504,11 +2567,6 @@ textarea[name="bio"] {
         white-space: pre-wrap !important;
     }
 
-    .spotted-card {
-        padding: 10px;
-        width: 100%;
-        scroll-margin-top: 80px;
-    }
 
     span.category-tag {
         font-size: 0.9rem !important;
@@ -2600,9 +2658,9 @@ textarea[name="bio"] {
 
 
     .container-feed article {
-        min-width: 280px !important;
+        min-width: 270px !important;
         /* Um pouquinho mais de margem lateral */
-        flex: 1 1 100% !important;/
+        flex: 1 1 100% !important;
     }
 
     .post-content {
@@ -2621,8 +2679,8 @@ textarea[name="bio"] {
 
 
     .avatar-p {
-        width: 45px !important;
-        height: 45px !important;
+        width: 50px !important;
+        height: 50px !important;
     }
 
 }
@@ -2633,7 +2691,7 @@ textarea[name="bio"] {
 
 /* 2. TABLETS, KINDLE E CELULAR DEITADO (O "Meio termo") */
 
-@media screen and (min-width: 601px) and (max-width: 1024px),
+@media screen and (min-width: 601px) and (max-width: 1025px),
 screen and (max-height: 600px) and (orientation: landscape) {
 
     .post-content {
@@ -2658,12 +2716,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
         gap: 8px;
     }
 
-    /* Ajuste do Perfil para não sumir com as coisas no Kindle */
-    .form-perfil-corpo {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 15px !important;
-        padding: 20px !important;
-    }
+   
 
 
     /* Ajuste para o formulário de EDITAR no tablet/deitado */
@@ -2747,16 +2800,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
         letter-spacing: 0.3px;
     }
 
-    .form-perfil-corpo {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 15px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        align-content: start !important;
-        /* Empilha no topo e cresce para baixo */
-        height: auto !important;
-    }
+
 
     /* Aqui você agrupa o que ocupa as duas colunas */
     .campo-grupo:has(textarea),

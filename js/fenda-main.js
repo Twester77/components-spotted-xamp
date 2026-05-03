@@ -113,7 +113,10 @@ window.toggleMenu = function (menuId) {
 // ============================================================
 
 document.addEventListener("DOMContentLoaded", function () {
-    atualizarInterfaceBolhas();
+    // 1. Inicializa Bolhas (se a função existir)
+    if(typeof atualizarInterfaceBolhas === 'function') {
+        atualizarInterfaceBolhas();
+    }
 
     let somAmbiente = localStorage.getItem('fenda_tipo_som') || 'off';
     let temaNotif = localStorage.getItem('fenda_tema_notif') || 'padrao';
@@ -149,104 +152,50 @@ document.addEventListener("DOMContentLoaded", function () {
         atualizarInterfaceAudio();
     };
 
-    document.addEventListener('click', function () {
-        var audio = document.getElementById('som-oceano');
-        if (!audio || somAmbiente === 'off') return;
-        if (audio.paused) {
-            audio.src = (somAmbiente === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
-            audio.volume = 0;
-            audio.play().catch(() => { });
-            var fadeIn = setInterval(function () {
-                if (audio.volume < 0.03) { audio.volume += 0.005; }
-                else { clearInterval(fadeIn); }
-            }, 200);
-        }
-    }, { once: true });
-
-    // Navbar Dropdown
-    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
-    dropdownLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-            if (isTouch || window.innerWidth <= 1024) {
-                const pai = this.parentElement;
-                if (!pai.classList.contains('active')) {
-                    e.preventDefault();
-                    document.querySelectorAll('.menu-item.dropdown').forEach(item => {
-                        if (item !== pai) item.classList.remove('active');
-                    });
-                    pai.classList.add('active');
-                }
-            }
-        });
-
-    });
-
-    
-
-
-    // ============================================================
-    // RADAR DE ALERTAS (Versão Blindada com Memória de Sessão)
-    // ============================================================
-
+    // RADAR DE ALERTAS - AQUI É ONDE O NÚMERO APARECE
     window.atualizarContadorAlertas = function () {
+        console.log("Radar: Verificando novas interações..."); // Isso vai aparecer no F12
         fetch('includes/contar_alertas.php')
             .then(res => res.json())
             .then(data => {
                 const badge = document.getElementById('badge-alertas');
-
                 if (badge) {
-                    // Buscamos o último número que o usuário "ouviu" nesta aba
-                    // Se não existir (primeira vez), o padrão é o que está no badge agora
                     let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
-
-                    // Se for a primeira execução da página, inicializamos com o valor atual do banco
-                    // Isso evita que o som toque só porque você deu F5
                     if (isNaN(ultimoAviso)) {
                         sessionStorage.setItem('fenda_ultimo_aviso', data.total);
                         ultimoAviso = data.total;
                     }
 
-                    // SÓ dispara o som e o banner se o total do banco for MAIOR que o último avisado
                     if (data.total > ultimoAviso) {
-                        mostrarPopup("Nova interação na Fenda!");
-                        // Atualiza a memória de sessão imediatamente para evitar disparos duplicados
+                        console.log("Radar: Nova interação detectada! Total: " + data.total);
+                        if(typeof mostrarPopup === 'function') {
+                            mostrarPopup("Nova interação na Fenda!");
+                        }
                         sessionStorage.setItem('fenda_ultimo_aviso', data.total);
                     }
 
-                    // Se o usuário leu as notificações, o número diminui. 
-                    // Atualizamos a memória para que o próximo "aumento" dispare o som corretamente.
-                    if (data.total < ultimoAviso) {
-                        sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                    }
-
-                    // Atualiza o visual do badge (círculo vermelho)
                     badge.innerText = data.total;
                     badge.style.display = data.total > 0 ? 'flex' : 'none';
                 }
             })
-            .catch(err => console.log("Radar: Aguardando estabilidade da conexão..."));
+            .catch(err => console.error("Erro no Radar:", err));
     };
 
-    // 1. Inicia o radar (executa a função a cada 8 segundos)
-    setInterval(atualizarContadorAlertas, 8000);
+    // Inicia o radar
+    setInterval(window.atualizarContadorAlertas, 8000);
+    window.atualizarContadorAlertas();
+    
+    // Configura os posts (Ler mais)
+    if(typeof configurarPosts === 'function') {
+        configurarPosts();
+    }
+}); // FIM DO DOMCONTENTLOADED - APENAS UMA CHAVE AQUI!
 
-    // 2. Chama uma vez logo que a página carrega (para não ter que esperar os primeiros 10s)
-    atualizarContadorAlertas();
 
-    // 3. Rodar configuração inicial dos posts 
-    configurarPosts();
-
-    // Fecha o DOMContentLoaded 
-});
-
-// ============================================================
 // 3. SISTEMAS EXTERNOS E AJAX
-// ============================================================
-
 window.configurarPosts = function () {
     document.querySelectorAll('.post-content').forEach(post => {
-        // Verifica se o texto é maior que o limite de 5rem (aprox 80px)
+        // Verifica se o texto é maior que o limite de linhas (3 linhas) e se ainda não tem o ouvinte configurado
         if (post.scrollHeight > post.offsetHeight && !post.dataset.ouvinte) {
             post.classList.add('tem-mais'); // Adiciona a classe para mostrar o "... ler mais"
             post.style.cursor = "pointer";
@@ -272,7 +221,7 @@ function mostrarPopup(mensagem) {
             'starwars': { arquivo: 'imperial-march.mp3', volume: 0.4 },
             'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
             'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
-            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.3 },
+            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.2 },
             'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
             'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
             'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
@@ -316,7 +265,7 @@ function mostrarPopup(mensagem) {
     popup.innerHTML = `
         <div style="font-size: 20px;">🔔</div>
         <div style="flex-grow: 1;">
-            <strong style="display: block; font-size: 13px; color: #ddc80e;">Nova Interação!</strong>
+            <strong style="display: block; font-size: 14px; color: #ddc80e;">Nova Interação!</strong>
             <span>${mensagem}</span>
         </div>
     `;

@@ -84,7 +84,7 @@ if (!$post) {
                 <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
                 <input type="hidden" name="parent_id" id="input_parent_id" value="">
 
-                <div class="customizacao-post" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                <div class="customizacao-post" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; padding: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span style="font-size: 0.85rem; color: #ccc;">Vibe do Card:</span>
                         <select name="pref_vibe_comentario" class="input-fenda" style="padding: 5px; font-size: 0.8rem;">

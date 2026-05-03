@@ -42,7 +42,7 @@
         <hr style="border: 0.5px solid #004d40; margin: 15px 0;">
 
         <div class="status-section">
-            <label>Tripulação Seguida:</label>
+            <label> Seguindo: </label>
             <div id="lista-amigos-toolbar">
                 <?php 
                 if (mysqli_num_rows($res_toolbar) > 0):

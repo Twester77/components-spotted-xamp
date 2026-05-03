@@ -55,11 +55,11 @@
 
 .container-feed {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))!important;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
     gap: 15px !important;
-    max-width: 1300px !important; /* Limita a largura total do feed no PC */   
+    max-width: 1700px !important; /* Limita a largura total do feed no PC */   
     margin: 0 auto !important;
     padding: 15px !important;
     column-count: auto !important;
@@ -81,7 +81,7 @@
     display: block !important;
     overflow: hidden;
     position: relative;
-    max-height: 5rem;
+    max-height: 4.8rem;
     line-height: 1.5;
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
@@ -133,7 +133,7 @@
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 12px;
     transition: transform 0.3s ease;
-    padding: 15px !important;
+    padding: 12px !important;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
     margin-bottom: 40px;
@@ -142,8 +142,8 @@
     display: flex !important; 
     overflow: visible !important;   /* Deixa o card crescer com o texto */    
     flex-direction: column;       
-    width: 100%;                   
-    max-width: 600px;              
+    width: 100%;
+    max-width: 800px !important; /* Limita a largura máxima do card */           
     height: auto !important;       
     min-height: 120px !important;
     
@@ -165,6 +165,19 @@
     border-color: rgba(255, 255, 255, 0.3);
     transition: 0.3s ease;
 }
+
+ article.spotted-card {
+        display: block !important;
+        width: 100% !important;
+        /* Ele vai ocupar o espaço da coluna do grid */
+        max-width: 700px ;
+        min-height: 100px ;
+        flex-shrink: 0 !important;
+        position: relative !important;
+        margin: 0 auto !important;
+        top: auto !important;
+        left: auto !important;
+    }
 
 
 /* Ajuste no Carregar Mais Resultados */
@@ -226,7 +239,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 /* Cores das Categorias */
 .spotted-card.ranco {
     border-left: 8px solid #ce0f0f !important;
-    box-shadow: -5px 0 15px rgba(206, 15, 15, 0.2);
+    box-shadow: -5px 0 15px rgba(206, 15, 15, 0.233);
 }
 
 .spotted-card.comunidade {
@@ -277,7 +290,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 /*  ESTUDOS */
 .spotted-card.academico {
     border-left: 8px solid #799c5db7 !important;
-    background: linear-gradient(145deg, rgba(133, 17, 179, 0.2), rgba(0, 0, 0, 0.363)) !important;
+    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(0, 0, 0, 0.363)) !important;
 }
 
 
@@ -285,34 +298,36 @@ body.hacker-mode #btn-load-more[disabled]::after {
 /* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
 .spotted-card.desapego {
     border-left: 8px solid #00bfff !important;
-    background: linear-gradient(145deg, rgba(0, 191, 255, 0.2), rgba(10, 10, 10, 0.3)) !important;
+    background: linear-gradient(145deg, rgba(0, 191, 255, 0.247), rgba(10, 10, 10, 0.3)) !important;
     position: relative;
 }
 
 
 /* Ícones no canto do Card */
- .spotted-card .card-header::after {
+ .spotted-card .user-info-post::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
-    right: 30px;
-    top: 60px;
-    font-size: 1.3rem;
-    opacity: 0.8;
+    right: 10px;  
+    font-size: clamp(18px, 1.5vw, 24px) !important;
+    opacity: 0.6;
+    position: absolute;
+    padding: 5px;
+    display: flex;
 }
 
 /* Ícones específicos por categoria */
 
-.spotted-card.comunidade .card-header::after { content: '\f0c0'; color: #ffffffb6; }
-.spotted-card.ranco .card-header::after { content: "\f071"; color: #da3232;} 
-.spotted-card.elogio .card-header::after { content: "\f004"; color: #ee2b6fd7; }
-.spotted-card.games .card-header::after { content: "\f11b";  color: #0daac5; } 
-.spotted-card.academico .card-header::after { content: "\f518"; color: #b822f3b7; } 
-.spotted-card.caronas .card-header::after { content: "\f1b9"; color: #cccccca8; } 
-.spotted-card.perdidos .card-header::after { content: "\f002";  color: #f3ef07ee; } 
-.spotted-card.esportes .card-header::after { content: "\f45f";  color: #0db344; }
-.spotted-card.acaba-pelo-amor-de-deus .card-header::after { content: "\f253"; color: #f78605; }
-.spotted-card.desapego .card-header::after { content: "\f02b"; color: #00bfff; }
+.spotted-card.comunidade .user-info-post::after { content: '\f0c0'; color: #ffffffb6; }
+.spotted-card.ranco .user-info-post::after { content: "\f071"; color: #da3232;} 
+.spotted-card.elogio .user-info-post::after { content: "\f004"; color: #ee2b6fd7; }
+.spotted-card.games .user-info-post::after { content: "\f11b";  color: #0daac5; } 
+.spotted-card.academico .user-info-post::after { content: "\f518"; color: #b822f3b7; } 
+.spotted-card.caronas .user-info-post::after { content: "\f1b9"; color: #cccccca8; } 
+.spotted-card.perdidos .user-info-post::after { content: "\f002";  color: #f3ef07ee; } 
+.spotted-card.esportes .user-info-post::after { content: "\f45f";  color: #0db344; }
+.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after { content: "\f253"; color: #f78605; }
+.spotted-card.desapego .user-info-post::after { content: "\f02b"; color: #00bfff; }
 
 
 .card-header {
@@ -323,7 +338,6 @@ body.hacker-mode #btn-load-more[disabled]::after {
     flex-wrap: wrap;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 8px 0;
-    gap: 6px;
 }
 
 .card-body p {
@@ -421,7 +435,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 .link-fofoca {
     color: #ffc400c2 !important;
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -436,7 +450,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 span.data-post {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     order: 2;
 }
@@ -446,14 +460,12 @@ span.data-post {
 
  span.category-tag {
     font-size: 1rem;
-    color: var(--dourado);
+    color: #ff9f0f;
     font-weight: bold;
-    white-space: nowrap;
     flex-shrink: 0;
     flex: 1;
     min-width: 0;
     align-items: center;
-    gap: 5px;
     min-height: 30px;
     margin-right: 6px;
     display: inline-block !important;
@@ -468,24 +480,23 @@ span.data-post {
     /* Coloca os "..." se o nome for gigante */
     vertical-align: middle;
     overflow: hidden;
-    text-overflow: ellipsis;
-     opacity: 0.7;
+    opacity: 0.7;
 
 }
 
  .fa-ellipsis-v {
 font-size: 18px;
 font-weight: bold;
-gap: 8px;
+gap: 5px;
 order: 3;
  }
 
 .post-time {
-    font-size: 0.95rem;
+    font-size: clamp(0.75rem, 0.2vw + 0.6rem, 1rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
-    margin-right: 20px;
+    margin-right: 10px;
     order: 2;
     padding: 8px;
 
@@ -528,7 +539,7 @@ order: 3;
     white-space: nowrap;
     /* Garante que os emojis não quebrem a linha */
     bottom: 30px;
-    padding: 10px 15px;
+    
 
 }
 
@@ -559,14 +570,14 @@ order: 3;
 
 /* Efeito de aumentar ao passar o mouse nas pílulas */
 .reacao-item:hover {
-    transform: scale(1.15);
+    transform: scale(1.15)!important;
     background: rgba(255, 255, 255, 0.15);
 }
 
 
 .reacoes-popup a {
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     display: inline-block;
     transition: transform 0.2s ease;
 }
@@ -582,7 +593,7 @@ order: 3;
 }
 
 .reacoes-popup a:hover {
-    transform: scale(1.5) translateY(-5px);
+    transform: scale(1.3) translateY(-5px);
 }
 
 .footer-links {
@@ -606,11 +617,13 @@ order: 3;
 
 /* Quando o usuário já reagiu, a pílula ganha destaque */
 .reacao-item.voted {
-    transform: scale(1.1);
     background: rgba(255, 188, 0, 0.2) !important; /* Amarelo Fenda transparente */
     border: 1px solid #ffbc00 !important; /* Borda amarela sólida */
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
     font-weight: bold;
+}
+.reacao-item.voted a:hover {
+     transform: scale(1.3) translateY(-5px)!important;
 }
 
 
@@ -637,7 +650,7 @@ order: 3;
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: clamp(1.4rem, 1.2rem + 0.5vw, 2rem);
+    font-size: clamp(1.4rem, 1.2rem + 0.5vw, 2.5rem);
     margin: 20px 0 20px 0 !important;
     /* Margem apenas embaixo para afastar do username/bio */
     justify-content: center !important;
@@ -657,7 +670,7 @@ order: 3;
 .info-usuario-section .btn-editar-atalho {
     width: auto !important;
     /* Não deixa ele ocupar a tela toda */
-    padding: 10px 30px !important;
+    padding: 10px 20px !important;
     /* Respiro interno */
 }
 
@@ -672,7 +685,7 @@ order: 3;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
-    margin-left: 10px;
+    margin-left: 5px;
     flex-shrink: 0; /* Impede que a imagem seja espremida se o nome for grande */
 }
 
@@ -720,16 +733,13 @@ order: 3;
 
 
 
-
-
-
 /*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
 
 .avatar-p {
-    border: 1px solid var(--dourado);
+    border: 0.5px solid var(--dourado);
     gap: 15px;
-    width:60px;
-    height:60px;
+    width:clamp(40px, 5vw, 70px) !important;
+    height:clamp(40px, 5vw, 70px) !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -739,22 +749,23 @@ order: 3;
 
 .user-info-post {
     display: flex;
-    gap: 5px;
-    font-size: 15px;
-    margin-top: 8px;
+    font-size: 14px;
+    margin: 8px 0 8px 0;
+    align-items: center!important;
 }
 
 .anonimo, .user-mention {
     color: var(--dourado);
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 160px;
     align-content: center;
-    /* Ajuste esse valor conforme o espaço que você tem */
+    max-width: 140px;
+    margin-left: 8px;
+    width: auto;
 
 }
 
@@ -767,7 +778,7 @@ order: 3;
     cursor: pointer;
     transition: 0.3s;
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .btn-fofocar:hover {
@@ -917,10 +928,11 @@ order: 3;
     justify-content: center !important;
     margin: 15px 0 !important;
     gap: 20px !important;
+    font-weight: 800;
 }
 
 .stats-perfil span {
-    font-size: 1.1rem !important;
+    font-size: clamp(1.2rem, 0.2vw + 0.8rem, 1.6rem) !important;
     letter-spacing: 1px;
 }
 
@@ -953,14 +965,13 @@ order: 3;
 
 /* --- SEÇÃO DE INFORMAÇÕES E BOTÃO --- */
 .info-usuario-section {
-    margin-top: 70px;
+    margin-top: 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     width: 100%;
-    padding: 0 20px 60px 20px;
-    gap: 10px;
+    padding: 0 20px 0 20px;
 }
 
 .info-usuario-section h1.nome-publico {

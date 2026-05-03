@@ -110,7 +110,6 @@ form {
 
 
 
-
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
 
 .main-perfil-container .perfil-gold {
@@ -118,10 +117,9 @@ form {
     flex-direction: column !important;
     align-items: center !important;
     margin: 10px auto !important;
-    padding: 20px !important;
+    padding: 15px !important;
     border-radius: 30px !important;
 }
-
 
 
 
@@ -164,14 +162,15 @@ form[action="confirma-login.php"] {
 }
 
 .capa-container {
-    width: 100%;
+    width: 98%;
     max-width: 1300px;
     height: clamp(250px, 35vw, 800px) !important;
     position: relative;
     overflow: visible;
     /* Vital para o avatar aparecer */
     background: #0a0a0a;
-    margin-bottom: 40px;
+    
+    margin: 40px auto 20px auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     border: 4px solid #9f49a7c0;
     border-radius: 10px;
@@ -518,14 +517,11 @@ section.sessao-publicar {
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.007) !important;
-    padding: 25px !important;
-    margin-top: 20px;
-    margin-bottom: 30px;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    padding: 20px !important;
+    margin: 20px auto !important;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     width: 100% !important;
-    max-width: clamp(320px, 95%, 600px) !important;
+    max-width: clamp(320px, 95%, 700px) !important;
     display: flex !important; /* Para garantir o alinhamento interno */
     flex-direction: column !important;
     align-items: center;
@@ -550,7 +546,7 @@ section.sessao-publicar {
 .form-publicar select,
 .form-publicar textarea {
     width: 100%;
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
     color: #fff;
     border: 1px solid #444;
@@ -562,6 +558,7 @@ section.sessao-publicar {
     min-height: 100px;
     letter-spacing: 2px;
     font-size: 14px;
+    width: 100%;
 
 }
 
@@ -572,7 +569,6 @@ section.sessao-publicar {
     background: rgba(0, 0, 0, 0.589) !important;
 
 }
-
 
 
 .nota-seguranca {
@@ -595,7 +591,7 @@ section.sessao-publicar {
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 12px;
+    padding: 15px;
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
@@ -607,10 +603,7 @@ section.sessao-publicar {
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
 
-.fenda-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
+
 
 /* O Botão de Publicar */
 .btn-lancar {
@@ -722,10 +715,10 @@ section.sessao-publicar {
 /* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
-    width: clamp(100px, 15vw + 12px, 350px);
-    height: clamp(100px, 15vw + 12px, 350px);
-    max-width: 350px;
-    max-height: 350px;
+    width: clamp(100px, 15vw + 12px, 300px);
+    height: clamp(100px, 15vw + 12px, 300px);
+    max-width: 300px;
+    max-height: 300px;
     aspect-ratio: 1/1;
     left: 50%;
     margin: -40px 0 10px 0 !important;
@@ -830,7 +823,7 @@ input[type="checkbox"]:focus {
     justify-content: auto;
     width: auto !important;
     min-width: 150px;
-    padding: 10px 25px !important;
+    padding: 10px 20px !important;
     white-space: nowrap !important;
     font-weight: 800;
     text-transform: uppercase;
@@ -921,8 +914,8 @@ input[type="checkbox"]:focus {
 
 .img-avatar-perfil {
     /* Mínimo: 60px | Ideal: 15% da largura da tela | Máximo: 300px */
-    width: clamp(80px, 15vw + 12px, 350px);
-    height: clamp(80px, 15vw + 12px, 350px);
+    width: clamp(70px, 15vw + 12px, 300px);
+    height: clamp(70px, 15vw + 12px, 300px);
     left: 50% !important;
     aspect-ratio: 1/1;
     object-fit: cover;
@@ -957,12 +950,6 @@ input[type="checkbox"]:focus {
     width: auto;
 }
 
-.stats-perfil strong {
-    color: var(--dourado);
-    display: block;
-    font-size: 1.2rem;
-    font-weight: 800;
-}
 
 .stats-perfil span {
     color: #888;
@@ -1094,7 +1081,7 @@ form[action="confirma-login.php"] a {
     float: none !important;
     margin-left: 0;
     margin-right: 0;
-    padding: 20px !important;
+    padding: 15px !important;
     border-radius: 20px !important;
     background-color: #0d0d0d5d !important;
 }

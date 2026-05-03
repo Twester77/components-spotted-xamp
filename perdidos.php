@@ -30,7 +30,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perdidos" style="width: 100% !important; max-width: 1200px; margin: 40px auto; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
+<main class="main-perdidos" style="width: 100% !important; margin: 40px auto; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
         <div class="sessao-login-top" style="margin-bottom: 40px;">
             <?php include 'includes/login.php'; ?>
         </div>

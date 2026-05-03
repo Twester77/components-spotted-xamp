@@ -502,7 +502,7 @@ body.hacker-mode .fenda-btn-glow , body.hacker-mode .fenda-primary  {
     border: 1px solid #00ff00 !important; 
     font-family: 'Courier New', monospace !important;
     position: relative;
-    padding: 12px 20px !important;
+    padding: 8px 16px !important;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 2px;
@@ -686,10 +686,10 @@ body.hacker-mode .textarea-fenda:focus {
     background-position: 2px 0, calc(100% - 2px) 0;
     background-repeat: repeat-y;
     background-size: 10px 20px;
-    padding: 20px !important;
+    padding: 10px !important;
     margin: 20px auto !important; 
     transition: transform 0.3s ease;
-    z-index: 1;
+    z-index: 2;
     border-radius: 0 !important;
 }
 
@@ -751,7 +751,7 @@ body.hacker-mode .card-header {
 /* Customização de Categorias no Modo Hacker */
 
 /* Ícone Dinâmico no canto do Card */
-body.hacker-mode .card-header::after {
+body.hacker-mode .user-info-post::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
@@ -760,19 +760,10 @@ body.hacker-mode .card-header::after {
     font-size: 1.3rem;
     opacity: 0.7;
     animation: flicker 3s infinite;
-    gap: 8px;
+    gap: 5px;
 }
 
-/* Ícones específicos por categoria */
-body.hacker-mode .spotted-card.ranco .card-header::after { content: "\f071"; } 
-body.hacker-mode .spotted-card.elogio .card-header::after { content: "\f004"; } 
-body.hacker-mode .spotted-card.games .card-header::after { content: "\f11b"; } 
-body.hacker-mode .spotted-card.academico .card-header::after { content: "\f518"; } 
-body.hacker-mode .spotted-card.carona .card-header::after { content: "\f071"; } 
-body.hacker-mode .spotted-card.perdidos .card-header::after { content: "\f002"; } 
-body.hacker-mode .spotted-card.esportes .card-header::after { content: "\f45f"; }
-body.hacker-mode .spotted-card.desapego .card-header::after { content: "\f02b"; }
-body.hacker-mode .spotted-card.anonimo .card-header::after { content: "\f45f"; }
+
 
 
 
@@ -1145,7 +1136,6 @@ body.hacker-mode .link-fofoca {
 }
 
 /* 2. A SETINHA ">" (ESTADO INVISÍVEL) */
-body.hacker-mode .fenda-btn-glow::before,
 body.hacker-mode .btn::before,
 body.hacker-mode .menu li a::before,
 body.hacker-mode .btn-enviar-fenda::before,
@@ -1158,8 +1148,6 @@ body.hacker-mode .btn-seguir-fenda::before,
 body.hacker-mode .link-fofoca::before {
     content: ">"; 
     position: absolute;
-    left: -20px;
-    margin-right: auto;
     opacity: 0;
     color: #0f0;
     font-weight: bold;
@@ -1327,11 +1315,13 @@ body.hacker-mode #btn-load-more:hover {
 }
 
 .bios-bar {
-    width: 300px;
+    width: 250px;
     height: 20px;
     border: 1px solid #0f0;
     margin-top: 20px;
 }
+
+
 
 .loading {
     height: 100%;
@@ -1352,8 +1342,7 @@ body.hacker-mode .comentario-item {
     background: #000 !important;
     border: none !important; /* Mata a borda bonitinha do navegador */
     position: relative;
-    padding: 20px !important;
-    margin: 25px 0 !important;
+    margin: 15px 0 !important;
     color: #0f0 !important;
 }
 
