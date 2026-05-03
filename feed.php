@@ -18,8 +18,6 @@ include 'includes/bolhas.php';
 
 <main class="main-fenda-total">
     <!-- O container começa vazio e o Motor preenche -->
-     <!-- O CARD DE POSTAGEM ENTRA AQUI -->
-    <?php include 'includes/card-postar.php'; ?>
     <div class="container-feed"></div>
 </main>
 

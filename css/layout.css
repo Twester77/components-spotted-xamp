@@ -147,6 +147,87 @@ nav {
     transition: all 0.3s ease;
 }
 
+/* PAINEL DE CONTROLE, SIDEBAR E TOOLBAR */
+.painel-controle-container {
+    display: flex;
+    min-height: 100vh;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Sidebar no PC */
+.sidebar-fenda {
+    width: 250px;
+    background: rgba(10, 10, 10, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid #222;
+    border-radius: 20px;
+    padding: 20px;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+/* Estilo dos itens do menu na gaveta */
+.menu-gaveta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.item-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: #ccc;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+.item-menu:hover, .item-menu.active {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.item-menu i {
+    width: 20px;
+    text-align: center;
+}
+
+.avatar-gaveta {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.perfil-resumo-gaveta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Ajuste específico para o título do conteúdo pessoal */
+.titulo-sessao-pessoal {
+    color: #ffbc00;
+    text-align: left;
+    margin-bottom: 25px;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+
 /* Container da Toolbar */
 #fenda-toolbar {
     position: fixed;
@@ -453,7 +534,7 @@ nav {
 }
 
 
-/* FOTER E MODAL */
+/* FOOTER E MODAL */
 
 footer {
     clear: both;
@@ -477,12 +558,43 @@ footer a {
 }
 
 
+/* --- BOTÃO FLUTUANTE (FAB) --- */
+
+.fab-postar {
+    position: fixed;
+    bottom: 85px; 
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background: #e0e0e0; /* Branco acinzentado */
+    color: #000; /* Ícone preto para alto contraste */
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    cursor: pointer;
+    z-index: 998;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.fab-postar:hover {
+    transform: scale(1.1) rotate(90deg);
+    background: #fff; 
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+body.modal-aberto .fab-postar {
+    display: none;
+}
+
+/* --- ESTRUTURA BASE DOS MODAIS (Mantenha o seu original do Zarpar) --- */
 .fenda-modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.85);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
@@ -490,90 +602,51 @@ footer a {
     justify-content: center;
     align-items: center;
     z-index: 10000;
-    /* Garante que fica na frente de tudo */
 }
 
 .fenda-modal-content {
-    background: #151515;
-    border: 2px solid var(--dourado);
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    max-width: 600px;
-    width: 90%;
     box-shadow: 0 0 30px rgba(255, 188, 0, 0.2);
     animation: surgimentoModal 0.3s ease-out;
 }
 
+/* --- AJUSTE NO MODAL PARA FICAR MAIS SÓBRIO --- */
+#modal-postar-fenda .fenda-modal-content {
+    background: #121212;
+    border: 1px solid #333; /* Borda cinza escura, bem discreta */
+    border-radius: 25px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+}
+
+/* Título em Branco Neve em vez de Dourado */
+.modal-body-ajuste .main-novo-post h2 {
+    color: #f0f0f0; 
+    border-bottom: 1px solid #333;
+}
+
+/* Inputs com bordas cinzas que acendem em branco no foco */
+.modal-body-ajuste .main-novo-post textarea,
+.modal-body-ajuste .main-novo-post select {
+    border: 1px solid #444 !important;
+}
+
+.modal-body-ajuste .main-novo-post textarea:focus {
+    border-color: #fff !important;
+}
+
 @keyframes surgimentoModal {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
-.fenda-modal-icon {
-    font-size: 50px;
-    margin-bottom: 15px;
-}
-
-.fenda-modal-content h2 {
-    color: var(--dourado);
-    margin-bottom: 20px;
-}
-
-.fenda-modal-content p {
-    color: #ccc;
-    margin-bottom: 25px;
-}
-
-.fenda-modal-buttons {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.btn-ficar-terra {
-    flex: 1;
-    background: var(--dourado);
-    color: #000;
-    border: none;
-    padding: 15px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-zarpar {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    border: 1px solid #444;
-    padding: 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-ficar-terra:hover {
-    background: #eab100;
-    transform: translateY(-2px);
-}
-
-.btn-zarpar:hover {
-    background: rgba(255, 99, 71, 0.2);
-    border-color: #ff6347;
-}
+/*  CLASSES AUXILIARES  (ZARPAR)  */
+.fenda-modal-icon { font-size: 50px; margin-bottom: 15px; }
+.fenda-modal-content h2 { color: var(--dourado); margin-bottom: 20px; }
+.fenda-modal-content p { color: #ccc; margin-bottom: 25px; }
+.fenda-modal-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+.btn-ficar-terra { flex: 1; background: var(--dourado); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+.btn-zarpar { flex: 1; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid #444; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: bold; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+.btn-ficar-terra:hover { background: #eab100; transform: translateY(-2px); }
+.btn-zarpar:hover { background: rgba(255, 99, 71, 0.2); border-color: #ff6347; }
 
 
 
@@ -2367,9 +2440,7 @@ main {
         /* Hack de hardware*/
         padding: 12px;
         scroll-margin-top: 80px;
-    
     }
-
 
     body {
         background-image: none !important;
@@ -2452,6 +2523,22 @@ main {
         font-size: 1.2rem !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         font-weight: bold;
+    }
+
+    .painel-controle-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+    
+    
+    .sidebar-fenda {
+        display: none; /* Começa fechada no mobile para não ocupar tela */
+        width: 100%;
+        background: #1a1a1a;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        border: 1px solid var(--aura-user, #333);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
 
     .notificacao-popup {

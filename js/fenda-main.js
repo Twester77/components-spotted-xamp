@@ -98,6 +98,63 @@ function abrirDenuncia(idPost) {
     alert("Denúncia do post #" + idPost + " enviada aos ADMs.");
 }
 
+// Abrir o Modal de Postagem
+function abrirModalPost() {
+    const modal = document.getElementById('modal-postar-fenda');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-aberto'); // Isso esconde o FAB (via CSS que você já tem)
+        document.body.style.overflow = 'hidden'; // Trava o scroll da página ao fundo
+    }
+}
+
+// Fechar o Modal de Postagem
+function fecharModalPost() {
+    const modal = document.getElementById('modal-postar-fenda');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-aberto'); // Mostra o FAB de volta
+        document.body.style.overflow = 'auto'; // Destrava o scroll
+    }
+}
+
+// Fechar ao clicar fora da caixa preta
+window.addEventListener('click', function(event) {
+    const modalPost = document.getElementById('modal-postar-fenda');
+    if (event.target === modalPost) {
+        fecharModalPost();
+    }
+});
+
+// ... (outras funções acima)
+
+// Fechar o Modal de Postagem
+function fecharModalPost() {
+    const modal = document.getElementById('modal-postar-fenda');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-aberto'); 
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// === NOVA FUNÇÃO: GAVETA DE CONTROLE (MOBILE) ===
+window.abrirGavetaControle = function() {
+    const gaveta = document.getElementById('gaveta-pessoal');
+    if (gaveta) {
+        // Verifica o estado atual computado para alternar
+        const displayAtual = window.getComputedStyle(gaveta).display;
+        
+        if (displayAtual === 'none') {
+            gaveta.style.display = 'block';
+            // Scroll suave no celular para o usuário não se perder
+            gaveta.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            gaveta.style.display = 'none';
+        }
+    }
+};
+
 
 window.toggleMenu = function (menuId) {
     document.querySelectorAll('.options-menu-popup').forEach(menu => {

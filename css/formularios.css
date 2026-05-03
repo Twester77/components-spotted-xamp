@@ -6,23 +6,23 @@
 
 
 .input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px #00000086 inset !important;
-    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0 30px #00000086 inset;
+    -webkit-text-fill-color: #ffffff;
 }
 
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
 select,
 option {
-    background-color: #1a1a1afd !important;
-    color: #ffffff !important;
+    background-color: #1a1a1afd ;
+    color: #ffffff ;
     -webkit-appearance: none;
     appearance: none;
 
 }
 
 select:focus {
-    background-color: #00000071 !important;
-    color: var(--dourado) !important;
+    background-color: #00000071 ;
+    color: var(--laranja-fenda) ;
 }
 
 
@@ -31,87 +31,86 @@ form {
 }
 
 
-/* ESTRUTURA DA PÁGINA DE POSTAGEM / EDIÇÃO */
+/* --- AJUSTE PARA O MODAL VIRAR UM POP-UP COMPACTO (ESTILO AÇO) --- */
 
-.main-novo-post {
+/* 1. Ajuste do Container do Modal (o pai) */
+#modal-postar-fenda .fenda-modal-content {
+    text-align: left;
+    width: clamp(280px, 93%, 480px) !important;
+    max-height: clamp(300px, 90vh, 550px) !important;
+    /* Padding dinâmico: menor em telas pequenas */
+    padding: clamp(10px, 5vw, 25px) !important;
+    border-radius: 20px;
+    background: #121212;
+    border: 1px solid #333;
+    position: relative; /* Garante que o 'X' de fechar se posicione certo */
+    /* Garante que se o texto for gigante, apareça um scroll interno só no modal */
+    overflow-y: auto; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* 2. Limpando o card de postagem para ele "fundir" com o modal */
+.modal-body-ajuste .main-novo-post {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    margin: 20px auto !important;
-    background: #0a0a0a38 !important;
-    border: 1px solid rgba(255, 187, 0, 0.212) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    /* Escalonamento Suave: Mínimo 320px, Ideal 90% da largura (até chegar no limite), Máximo 650px */
-    max-width: clamp(230px, 90%, 400px) !important;
-    width: 100% !important;
-    /* Garante que ele tente ocupar o espaço do clamp */
-
-
-}
-
-/* --- AJUSTE EXCLUSIVO PARA A PÁGINA DE NOVO POST --- */
-.main-novo-post .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100% !important; /* Força o container interno a respeitar o clamp do pai */
-    padding: clamp(10px, 4vw, 25px) !important; /* Padding que cresce conforme a tela */
-    max-height: auto;
-
-}
-
-.main-novo-post form {
-    width: 100% !important;
     margin: 0 auto !important;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-/* Ajuste para o select e textarea não ficarem colados na borda */
-.main-novo-post textarea,
-.main-novo-post select {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    max-width: 100% !important;
     width: 100% !important;
-    box-sizing: border-box !important;
 }
 
-/* Ajuste dos títulos dentro desse formulário */
-.main-novo-post h2 {
-    color: #c07607;
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 1.4rem!important;
+/* 3. Ajuste do formulário interno */
+.modal-body-ajuste .main-novo-post .form-container {
+    width: 100% !important;
+    padding: 15px 0 !important;
 }
 
-/* Fazendo os campos ocuparem 100% do quadradinho */
-.main-novo-post input,
-.main-novo-post textarea {
-    width: 100%;
-    background: rgba(255, 255, 255, 0) !important;
-    border: 1px solid var(--dourado) !important;
-    border-radius: 10px !important;
+/* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
+.modal-body-ajuste .main-novo-post h2 {
+    color: #f5f5f5; 
+    font-size: clamp(1.1rem, 4vw, 1.5rem) !important;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 5. Estilização dos Inputs (Bordas cinzas em vez de douradas) */
+.modal-body-ajuste .main-novo-post textarea,
+.modal-body-ajuste .main-novo-post select {
+    width: 100% !important;
+    background: rgba(0, 0, 0, 0.4) ;
+    border: 1px solid #444 ; /* Cinza escuro */
+    border-radius: 12px ;
     padding: 12px !important;
-    color: white !important;
-    margin-bottom: 15px !important;
+    color: #fff ;
+    margin-bottom: 15px ;
+    margin-top: 10px ;
+    transition: 0.3s;
+}
+.modal-body-ajuste .btn-lancar{
+    padding: 8px 17px !important;
 }
 
-.main-novo-post textarea {
-    min-height: 100px !important;
-    resize: vertical;
-    /* Permite que o usuário estique se quiser, mas só pra baixo */
+/* Foco do input acende em Branco/Prata */
+.modal-body-ajuste .main-novo-post textarea:focus {
+    border-color: #888 ; 
+    outline: none;
+    background: rgba(0, 0, 0, 0.6) ;
 }
 
-.main-novo-post input {
-    min-height: 45px !important;
+.modal-body-ajuste .main-novo-post textarea {
+    min-height: 90px !important;
 }
 
 
 
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
-
 .main-perfil-container .perfil-gold {
     display: flex !important;
     flex-direction: column !important;
