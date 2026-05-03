@@ -154,31 +154,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // RADAR DE ALERTAS - AQUI É ONDE O NÚMERO APARECE
     window.atualizarContadorAlertas = function () {
-        console.log("Radar: Verificando novas interações..."); // Isso vai aparecer no F12
         fetch('includes/contar_alertas.php')
-            .then(res => res.json())
-            .then(data => {
-                const badge = document.getElementById('badge-alertas');
-                if (badge) {
-                    let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
-                    if (isNaN(ultimoAviso)) {
-                        sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                        ultimoAviso = data.total;
-                    }
-
-                    if (data.total > ultimoAviso) {
-                        console.log("Radar: Nova interação detectada! Total: " + data.total);
-                        if(typeof mostrarPopup === 'function') {
-                            mostrarPopup("Nova interação na Fenda!");
+            .then(res => res.text()) 
+            .then(texto => {
+                try {
+                    // Limpa qualquer texto extra que o PHP tenha enviado por engano
+                    const inicioJson = texto.indexOf('{');
+                    const fimJson = texto.lastIndexOf('}') + 1;
+                    if (inicioJson === -1) return;
+                    
+                    const jsonLimpo = texto.substring(inicioJson, fimJson);
+                    const data = JSON.parse(jsonLimpo);
+                    
+                    const badge = document.getElementById('badge-alertas');
+                    if (badge && data.total !== undefined) {
+                        let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso'));
+                        if (isNaN(ultimoAviso)) {
+                            sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                            ultimoAviso = data.total;
                         }
-                        sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                        if (data.total > ultimoAviso) {
+                            if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
+                            sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                        }
+                        badge.innerText = data.total;
+                        badge.style.display = data.total > 0 ? 'flex' : 'none';
                     }
-
-                    badge.innerText = data.total;
-                    badge.style.display = data.total > 0 ? 'flex' : 'none';
+                } catch(e) { 
+                    console.warn("Radar: Aguardando resposta limpa do servidor..."); 
                 }
-            })
-            .catch(err => console.error("Erro no Radar:", err));
+            });
     };
 
     // Inicia o radar
@@ -194,18 +199,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // 3. SISTEMAS EXTERNOS E AJAX
 window.configurarPosts = function () {
-    document.querySelectorAll('.post-content').forEach(post => {
-        // Verifica se o texto é maior que o limite de linhas (3 linhas) e se ainda não tem o ouvinte configurado
-        if (post.scrollHeight > post.offsetHeight && !post.dataset.ouvinte) {
-            post.classList.add('tem-mais'); // Adiciona a classe para mostrar o "... ler mais"
-            post.style.cursor = "pointer";
+    const posts = document.querySelectorAll('.post-content');
+    posts.forEach(post => {
+        // Verifica se o conteúdo transborda a altura máxima definida no CSS
+        // Adicionamos uma margem para evitar falsos positivos em textos no limite
+        const precisaExpandir = post.scrollHeight > post.offsetHeight + 10;
+        
+        if (precisaExpandir && !post.dataset.ouvinte) {
+            post.classList.add('tem-mais');
             post.dataset.ouvinte = "true";
-            post.onclick = function () { 
-                this.classList.toggle('expandido'); 
-            };
+            post.style.cursor = "pointer";
+            
+            post.addEventListener('click', function(e) {
+                this.classList.toggle('expandido');
+            });
         }
     });
-    console.log("Fenda: Posts reconfigurados.");
 };
 
 
@@ -218,7 +227,7 @@ function mostrarPopup(mensagem) {
             'padrao': { arquivo: 'padrao.mp3', volume: 1.1 },
             'resident': { arquivo: 'resident.mp3', volume: 0.7 },
             'cs': { arquivo: 'cs.mp3', volume: 0.7 },
-            'starwars': { arquivo: 'imperial-march.mp3', volume: 0.4 },
+            'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },
             'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
             'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
             'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.2 },
@@ -226,7 +235,7 @@ function mostrarPopup(mensagem) {
             'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
             'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
             'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3', volume: 0.4 },
-            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.3 }
+            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.4 }
         };
 
         if (temaSalvo === 'digimon') tempoExibicao = 11000;
@@ -348,15 +357,20 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     });
 };
 
-// --- CONTROLE UNIFICADO DE CLIQUES GLOBAIS ---
+// --- CONTROLE UNIFICADO DE CLIQUES GLOBAIS (Versão Final Corrigida) ---
 window.addEventListener('click', function (event) {
+    // 1. Modal Sair
     const modalSair = document.getElementById('modal-sair-fenda');
-    if (event.target === modalSair) {
-        window.fecharModalSair();
-    }
+    if (event.target === modalSair) window.fecharModalSair();
 
-    // Fecha o dropdown e o popup de reações se clicar fora
-    if (!event.target.closest('.dropdown') && !event.target.closest('.reacao-wrapper') && !event.target.closest('.btn-reagir')) {
+    // 2. Elementos que NÃO devem fechar os menus ao serem clicados
+    const clicouNoMenu = event.target.closest('.dropdown');
+    const clicouNaReacao = event.target.closest('.reacao-wrapper') || event.target.closest('.btn-reagir');
+    const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
+    const clicouNoPost = event.target.closest('.post-content');
+
+    // Se o clique for fora do post e fora do menu, fecha os dropdowns
+    if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
         document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
         document.querySelectorAll('.reacoes-popup').forEach(p => {
             p.style.visibility = 'hidden';
@@ -364,9 +378,10 @@ window.addEventListener('click', function (event) {
         });
     }
 
-    const box = document.getElementById('dropdown-notificacoes');
-    if (box && !event.target.closest('.notificacao-wrapper')) {
-        box.style.display = 'none';
+    // Fecha a janela de notificações se clicar fora dela
+    if (!clicouNaNotif) {
+        const box = document.getElementById('dropdown-notificacoes');
+        if (box) box.style.display = 'none';
     }
 });
 

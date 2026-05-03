@@ -759,8 +759,9 @@ body.hacker-mode .user-info-post::after {
     align-self:  auto;
     font-size: 1.3rem;
     opacity: 0.7;
-    animation: flicker 3s infinite;
+    animation: flicker 3s infinite!important;
     gap: 5px;
+    color: #00ff00!important;
 }
 
 

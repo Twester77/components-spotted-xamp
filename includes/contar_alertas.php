@@ -1,7 +1,4 @@
-
-<?php
-/** @var mysqli $conn */
-include '../conexao.php';
+<?php include '../conexao.php';
 session_start();
 
 // Verifica se o usuário está logado
