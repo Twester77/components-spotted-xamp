@@ -714,7 +714,7 @@ body.hacker-mode .spotted-card {
     background: #000 !important;
     /* Margem para respirar e não encavalar as bordas ASCII */
     margin: 40px 0 !important; 
-    padding: 20px !important;
+    padding: 15px !important;
     max-width: 500px !important;
     position: relative;
     border-radius: 0 !important;
