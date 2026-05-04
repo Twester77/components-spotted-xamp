@@ -33,7 +33,9 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/feed.css">
     <link rel="stylesheet" href="css/formularios.css">
+    <link rel="stylesheet" href="css/skin-hacker.css">
     <link rel="stylesheet" href="css/animacoes.css">
+    <link rel="stylesheet" href="css/skin-hacker.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">

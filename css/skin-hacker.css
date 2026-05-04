@@ -1,5 +1,11 @@
 
-/* TRAVA DE SEGURANÇA  */
+/* 
+   ==========================================================
+   1. ESTRUTURA GLOBAL E EFEITOS CRT
+   ========================================================== 
+*/
+
+/* TRAVA DE SEGURANÇA: Garante que o layout não flutue e centralize */
 body.hacker-mode main.hacker-mode {
     max-width: 1200px !important;
     margin: 0 auto !important;
@@ -7,46 +13,28 @@ body.hacker-mode main.hacker-mode {
     float: none !important;
 }
 
-/* AJUSTE DO TEXTO QUE CORTA */
-body.hacker-mode .fenda-saudacao,
-body.hacker-mode .card-boas-vindas-fenda p {
-    display: block !important;
-    white-space: normal !important;
-    overflow: visible !important;
-    width: 100% !important;
-    max-width: 100%;
-
-}
-
-/* Garante que o span do nome não escape do container */
-body.hacker-mode .card-boas-vindas-fenda span {
-    word-wrap: break-word;
-    word-break: break-all;
-}
-
-/* DOMINAÇÃO TOTAL - MODO HACKER (VERSÃO FINAL CONSOLIDADA) */
-
-body.hacker-mode::-webkit-scrollbar { width: 8px; }
-body.hacker-mode::-webkit-scrollbar-track { background: #000; }
-body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00; border-radius: 10px; }
-
-/* 1. FUNDO GLOBAL E TELA CHEIA */
+/* FUNDO E SCROLLBAR: Estilo Terminal */
 body.hacker-mode {
     background-color: #0a0a0a !important;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none; /* Bloqueia seleção acidental */
+    cursor: url('imagensfoto/crosshair.cur'), auto !important;
 }
 
-body.hacker-mode .fenda-container {
-    max-width: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 20px 10px !important;
-    box-sizing: border-box !important;
+/* Liberação de seleção apenas para textos úteis */
+body.hacker-mode p, body.hacker-mode .comentario-texto, 
+body.hacker-mode input, body.hacker-mode textarea {
+    user-select: text;
 }
 
-/* 2. EFEITOS CRT (SCANLINES E BRILHO) */
+body.hacker-mode::-webkit-scrollbar { width: 8px; }
+body.hacker-mode::-webkit-scrollbar-track { background: #000; }
+body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00; border-radius: 10px; }
+
+/* EFEITOS CRT (Scanlines e Flicker) */
 body.hacker-mode::before {
     content: " ";
     display: block;
@@ -56,7 +44,7 @@ body.hacker-mode::before {
                 linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
     z-index: 9999; 
     background-size: 100% 4px, 2px 100%;
-    pointer-events: none; /* Deixa você clicar nas coisas por baixo */
+    pointer-events: none;
 }
 
 body.hacker-mode::after {
@@ -64,49 +52,61 @@ body.hacker-mode::after {
     position: fixed;
     top: 0; left: 0; bottom: 0; right: 0;
     background: rgba(0, 255, 0, 0.03);
-    z-index: 9999;
+    z-index: 9998;
     pointer-events: none;
-   
 }
 
-/* 3. EXTERMINANDO AS BOLHAS */
+/* EXTERMINANDO AS BOLHAS (Modo sério, sem frufru) */
 body.hacker-mode .bubbles-container,
 body.hacker-mode .bolha {
     display: none !important;
 }
 
-/* 4. NAVBAR, HEADER, FOOTER E SUBMENUS (UNIFICADO) */
+
+
+/* 
+   ==========================================================
+   2. NAVBAR, HEADER E SUBMENUS
+   ========================================================== 
+*/
+
 body.hacker-mode .navbar, 
 body.hacker-mode .menu, 
 body.hacker-mode header, 
-body.hacker-mode .header-icons, 
-body.hacker-mode .btn-header,
-body.hacker-mode .submenu,
-body.hacker-mode .dropdown-menu,
 body.hacker-mode footer {
-    background-color: rgba(0, 0, 0, 0.048);
-    background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.445) 50%) !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
     background-size: 100% 4px !important;
     border-bottom: 2px solid #00ff00 !important;
-    border-top: 1px solid #00ff0033;
+    font-family: 'Courier New', monospace !important;
 }
 
-/* Força o verde neon nos links da nav que teimarem em ficar brancos */
+/* Links da Nav - Verde Neon Obrigatório */
 body.hacker-mode .menu li a, 
 body.hacker-mode .navbar-nav .nav-link,
-body.hacker-mode .nav-item a {
+body.hacker-mode .nav-item a,
+body.hacker-mode .header-title {
     color: #00ff00 !important;
     text-shadow: 0 0 10px #00ff00 !important;
+    text-transform: uppercase;
+    transition: all 0.1s steps(2);
 }
 
+/* Dropdowns/Submenus */
+body.hacker-mode .dropdown-menu, 
+body.hacker-mode .submenu {
+    border: 2px solid #00ff00 !important;
+    background: #000 !important;
+    border-radius: 0 !important;
+}
 
-/* MÓDULO NAVBAR HACKER (ESTILO SELEÇÃO BIOS)  */
-/* Ajuste na base dos itens para a transição */
-body.hacker-mode .menu li, 
-body.hacker-mode .nav-item {
-    transition: all 0.1s steps(2);
-    display: inline-block; 
-    margin: 0 5px;
+/* Ícones (FontAwesome) - Glow Verde */
+body.hacker-mode i, 
+body.hacker-mode .fa-solid, 
+body.hacker-mode [class*="fa-"] {
+    color: #00ff00 !important;
+    text-shadow: 0 0 8px #00ff00 !important;
+    opacity: 1 !important;
 }
 
 /* ==========================================================
@@ -114,80 +114,93 @@ body.hacker-mode .nav-item {
    ========================================================== */
 
 /* Alvo: TODOS os elementos interativos do site no Modo Hacker */
-body.hacker-mode .btn:hover,
-body.hacker-mode .fenda-btn-glow:hover,
-body.hacker-mode .fenda-primary:hover,
-body.hacker-mode .btn-enviar-fenda:hover,
-body.hacker-mode .btn-voltar-fenda:hover,
-body.hacker-mode .btn-fenda-padrao:hover,
-body.hacker-mode #btn-load-more:hover,
-body.hacker-mode .btn-responder-fenda:hover,
-body.hacker-mode .btn-reagir:hover,
-body.hacker-mode .btn-fofocar:hover,
-body.hacker-mode .btn-mudar-capa:hover,
-body.hacker-mode .btn-mudar-avatar:hover,
-body.hacker-mode .btn-seguir-fenda:hover,
-body.hacker-mode .menu li a:hover,
-body.hacker-mode .navbar-nav .nav-link:hover,
-body.hacker-mode .dropdown-item:hover,
-body.hacker-mode .lista-resultados a:hover .user-card, /* <--- O da busca! */
-body.hacker-mode .reacoes-popup a:hover,
-body.hacker-mode .pagination a:hover {
-    
-    background-color: #00ff00 !important; 
-    color: #000000 !important;           
-    text-shadow: none !important;        
-    box-shadow: 0 0 20px #00ff00 !important;
-    
-    /* A textura de scanline discreta que você curtiu */
-    background-image: linear-gradient(
-        rgba(0, 0, 0, 0.15) 50%, 
-        transparent 50%
-    ) !important;
-    background-size: 100% 2px !important;
-    
-    /* O cursor de mira */
+/* 
+   ==========================================================
+   3. BOTÕES, INTERAÇÃO E HOVER (INVERSÃO TOTAL)
+   ========================================================== 
+*/
+
+/* 1. BASE DOS BOTÕES (ASCII/TERMINAL) */
+body.hacker-mode .fenda-btn-glow,
+body.hacker-mode .btn,
+body.hacker-mode .btn-fenda-padrao,
+body.hacker-mode .btn-responder-fenda,
+body.hacker-mode .btn-enviar-fenda,
+body.hacker-mode #btn-load-more {
+    background: #000 !important;
+    color: #00ff00 !important;
+    border: 1px solid #00ff00 !important;
+    border-radius: 0 !important; /* Quadrado raiz */
+    font-family: 'Courier New', monospace !important;
+    text-transform: uppercase;
+    position: relative !important;
+    padding: 8px 16px !important;
+    transition: none !important; /* Inversão tem que ser instantânea */
     cursor: url('imagensfoto/crosshair.cur'), crosshair !important;
-    
-    /* Garante que o texto e ícones dentro deles fiquem pretos */
 }
 
-/* Força os textos internos e ícones a ficarem pretos no hover do PAI */
-body.hacker-mode .btn:hover *,
-body.hacker-mode a:hover *,
-body.hacker-mode .user-card:hover strong,
-body.hacker-mode .user-card:hover span {
+/* 2. A SETINHA ">" (OCULTA POR PADRÃO) */
+body.hacker-mode .btn::before,
+body.hacker-mode .menu li a::before,
+body.hacker-mode .fenda-btn-glow::before,
+body.hacker-mode #btn-load-more::before {
+    content: ">";
+    position: absolute;
+    left: -10px;
+    opacity: 0;
+    color: #00ff00;
+    font-weight: bold;
+}
+
+/* 3. O HOVER MESTRE: INVERSÃO DE PIXELS */
+body.hacker-mode .btn:hover,
+body.hacker-mode .fenda-btn-glow:hover,
+body.hacker-mode .menu li a:hover,
+body.hacker-mode .dropdown-item:hover,
+body.hacker-mode #btn-load-more:hover,
+body.hacker-mode .tag-categoria:hover {
+    background-color: #00ff00 !important; /* Pixel Aceso */
+    color: #000000 !important;           /* Texto Apagado */
+    box-shadow: 0 0 15px #00ff00 !important;
+    padding-left: 25px !important;       /* Abre espaço para a seta */
+}
+
+/* 4. SETINHA APARECENDO NO HOVER (DENTRO DO BOTÃO) */
+body.hacker-mode *:hover::before {
+    opacity: 1 !important;
+    left: 8px !important;
+    color: #000 !important; /* Seta fica preta porque o fundo agora é verde */
+    animation: blink-cursor 0.5s infinite;
+}
+
+/* 5. GARANTE QUE TEXTO INTERNO (SPAN/I) SIGA A INVERSÃO */
+body.hacker-mode a:hover *, 
+body.hacker-mode button:hover * {
     color: #000 !important;
     text-shadow: none !important;
 }
 
-/* Ajuste para Submenus */
-body.hacker-mode .dropdown-menu {
-    border: 2px solid #00ff00 !important;
+/* 6. INPUTS E TEXTAREAS (PROMPT DE COMANDO) */
+body.hacker-mode .textarea-fenda,
+body.hacker-mode input[type="text"],
+body.hacker-mode select {
     background: #000 !important;
-
-}
-
-body.hacker-mode .dropdown-item:hover {
-    background-color: #00ff00 !important;
-    color: #000 !important;
-}
-
-
-
-body.hacker-mode .navbar a,
-body.hacker-mode .header-title,
-body.hacker-mode footer p,
-body.hacker-mode footer strong,
-body.hacker-mode .footer-content *,
-body.hacker-mode figcaption,
-body.hacker-mode header h1 {
+    border: 1px solid #00ff00 !important;
     color: #00ff00 !important;
-    font-family: 'Courier New', monospace !important;
-    text-shadow: 0 0 5px #00ff00;
+    border-radius: 0 !important;
+    caret-color: #00ff00; /* Cursor de digitação verde */
 }
 
-/* 5. SUBMENU E HOVER (O RESGATE DO CLIQUE) */
+/* 7. BADGES E TAGS (STATUS DO SISTEMA) */
+body.hacker-mode .badge,
+body.hacker-mode .tag-categoria {
+    background: #000 !important;
+    border: 1px solid #00ff00 !important;
+    color: #00ff00 !important;
+    border-radius: 0 !important;
+}
+
+/* SUBMENU E HOVER (O RESGATE DO CLIQUE) */
 body.hacker-mode .submenu li a {
     clip-path: none !important; /* Sem typing no menu */
     animation: none !important;
@@ -206,7 +219,7 @@ body.hacker-mode .submenu li a:hover {
     animation: flicker 0.1s infinite !important;
 }
 
-/* 6. CONTEÚDO E IMAGENS */
+/*  CONTEÚDO E IMAGENS */
 body.hacker-mode main {
     animation: bootSystem 2s steps(10) forwards, flicker 0.3s infinite;
 }
@@ -670,16 +683,6 @@ body.hacker-mode .spotted-card::before {
 }
 
 
-/* Cabeçalho do Card (Onde fica a categoria) */
-body.hacker-mode .card-header {
-    border-bottom: 1px dashed #0f0 !important;
-    background: rgba(0, 255, 0, 0.05) !important;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
-}
-
-
-
 /* Customização de Categorias no Modo Hacker */
 
 /* Ícone Dinâmico no canto do Card */
@@ -700,6 +703,74 @@ body.hacker-mode .user-info-post::after {
 
 
 
+
+
+
+/* 
+   ==========================================================
+   4. ESTRUTURA DE CARDS (SISTEMA) E AVATARES (HARDWARE)
+   ========================================================== 
+*/
+
+/* 1. TRATAMENTO DOS AVATARES E CAPAS */
+body.hacker-mode .foto-perfil, 
+body.hacker-mode .comentario-avatar,
+body.hacker-mode .avatar-usuario,
+body.hacker-mode .img-perfil-feed,
+body.hacker-mode .img-capa-preview,
+body.hacker-mode .rounded-circle {
+    border-radius: 0 !important; /* Mata o arredondado */
+    border: 1px solid #0f0 !important;
+    image-rendering: pixelated; 
+    /* Estado Base: Grade de monitor e cores lavadas */
+    filter: grayscale(0.4) contrast(1.2) brightness(0.9) sepia(0.2) !important;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
+    background-size: 100% 3px !important;
+    transition: all 0.3s ease !important;
+}
+
+/* HOVER DAS IMAGENS: "Ligar a luz do painel" */
+body.hacker-mode .foto-perfil:hover, 
+body.hacker-mode .avatar-usuario:hover,
+body.hacker-mode .img-perfil-feed:hover {
+    filter: grayscale(0) contrast(1.1) brightness(1.2) sepia(0.1) !important;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5) !important;
+    cursor: url('imagensfoto/crosshair.cur'), crosshair !important;
+}
+
+/* 2. ESTRUTURA DOS SPOTTED CARDS (MOLDURA ASCII) */
+body.hacker-mode .spotted-card {
+    background: #000 !important;
+    border: none !important;
+    position: relative;
+    margin: 25px 0 !important;
+    padding: 15px !important;
+    /* Laterais via gradiente (Pipe vertical) */
+    background-image: 
+        linear-gradient(to bottom, #0f0 15%, rgba(0,0,0,0) 0%), 
+        linear-gradient(to bottom, #0f0 15%, rgba(0,0,0,0) 0%);
+    background-position: left, right;
+    background-size: 2px 15px;
+    background-repeat: repeat-y;
+}
+
+/* Moldura Superior e Inferior (Linha de Comando) */
+body.hacker-mode .spotted-card::before,
+body.hacker-mode .spotted-card::after {
+    content: "++================================================================++";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    color: #0f0;
+    font-family: 'Courier New', monospace !important;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+body.hacker-mode .spotted-card::before { top: -12px; }
+body.hacker-mode .spotted-card::after { bottom: -12px; }
+
+/* 3. CORES DINÂMICAS POR CATEGORIA (BORDA ESQUERDA ACESA) */
 /* ANÔNIMO */
 body.hacker-mode .spotted-card.anonimo::before {
     content: "+--[ USER_NOT_FOUND ]---------------------------+";
@@ -746,7 +817,7 @@ body.hacker-mode .spotted-card.academico::before {
 
 /* CARONAS */
 body.hacker-mode .spotted-card.caronas::before {
-    content: "+--[SELECT * FROM unifev WHERE loc='houseofcaralho']--+";
+    content: "[SELECT * FROM unifev WHERE loc='houseofcaralho']";
     color: #969dc469 !important;
     border-radius: 0!important;
 }
@@ -815,45 +886,13 @@ body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus {
     border-radius: 0!important;
 }
 
-
-/* ==========================================================
-   AVATARES E CAPAS - HARDWARE RETRÔ
-   ========================================================== */
-
-/* Seletor unificado para pegar tudo que for foto */
-body.hacker-mode .foto-perfil, 
-body.hacker-mode .comentario-avatar,
-body.hacker-mode .avatar-usuario, 
-body.hacker-mode .avatar-p,
-body.hacker-mode .img-avatar-perfil,
-body.hacker-mode .img-capa-preview {
-    border-radius: 0 !important; 
-    border: 1px solid #0f0 !important;
-    object-fit: cover;
-    /* Cores mais vivas: Grayscale baixo, contraste alto */
-    filter: grayscale(0.4) contrast(1.2) brightness(1.1) sepia(0.2) hue-rotate(10deg) !important;
-    /* A "Grade" de Monitor CRT */
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.1) 50%), 
-                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.02));
-    background-size: 100% 3px, 3px 100%;
-    image-rendering: pixelated; 
-    transition: all 0.3s ease;
-}
-
-body.hacker-mode .foto-perfil:hover, 
-body.hacker-mode .avatar-p:hover {
-    filter: grayscale(0) contrast(1.1) !important; /* Volta a cor total no hover */
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-}
-
-/* ==========================================================
-   TEXTOS E CONTEÚDO
-   ========================================================== */
-body.hacker-mode .post-content-focado,
-body.hacker-mode .comentario-texto {
+/* 4. CABEÇALHO DO CARD (ID DO SISTEMA) */
+body.hacker-mode .card-header {
+    border-bottom: 1px dashed #0f0 !important;
+    background: transparent !important;
     color: #0f0 !important;
-    font-family: 'Courier New', monospace !important;
-    line-height: 1.4;
+    text-transform: uppercase;
+    font-size: 0.85rem;
 }
 
 
@@ -1074,6 +1113,86 @@ body.hacker-mode #btn-load-more[disabled]::after {
 }
 
 
+
+/* 
+   ==========================================================
+   5. TIPOGRAFIA, LOGS E ESTÁTICA (MODO CONSOLE)
+   ========================================================== 
+*/
+
+/* 1. RESET DE ANIMAÇÃO PARA BORDAS E MENUS */
+body.hacker-mode .spotted-card::before,
+body.hacker-mode .spotted-card::after,
+body.hacker-mode .menu li a,
+body.hacker-mode .navbar-brand,
+body.hacker-mode .card-header {
+    animation: none !important; /* Remove qualquer typing das bordinhas ASCII */
+    white-space: nowrap;
+    overflow: visible;
+}
+
+/* 2. O CORPO DO TEXTO (O "LOG") */
+body.hacker-mode .spotted-texto,
+body.hacker-mode .comentario-texto,
+body.hacker-mode .post-content {
+    font-family: 'Courier New', monospace !important;
+    color: #00ff00 !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+    /* O typing fica restrito a este conteúdo se você usar a classe .typing */
+}
+
+/* 3. TÍTULOS E SUBTÍTULOS (DIRETÓRIOS) */
+body.hacker-mode h1, 
+body.hacker-mode h2, 
+body.hacker-mode h3 {
+    font-family: 'Courier New', monospace !important;
+    color: #00ff00 !important;
+    text-transform: uppercase;
+    border-bottom: 1px solid #00ff00;
+    display: inline-block;
+    padding-right: 20px;
+    margin-bottom: 20px;
+}
+
+body.hacker-mode h1::before { content: "root@fenda:~# "; opacity: 0.7; }
+body.hacker-mode h2::before { content: "./"; opacity: 0.7; }
+
+/* 4. ANIMAÇÃO DE CURSOR PISCANTE NO FINAL DOS TEXTOS */
+body.hacker-mode .typing::after {
+    content: "_";
+    animation: blink-cursor 0.8s infinite;
+    margin-left: 5px;
+}
+
+@keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* 5. LINKS DENTRO DE TEXTOS (SEM UNDERLINE, SÓ BRILHO) */
+body.hacker-mode .spotted-texto a {
+    color: #00ff00 !important;
+    text-decoration: none !important;
+    border-bottom: 1px dashed #00ff00;
+}
+
+body.hacker-mode .spotted-texto a:hover {
+    background: #00ff00 !important;
+    color: #000 !important;
+}
+
+/* 6. DATA E HORA (TIMESTAMPS DE SISTEMA) */
+body.hacker-mode .card-date, 
+body.hacker-mode .text-muted {
+    color: rgba(0, 255, 0, 0.5) !important; /* Verde apagado para metadados */
+    font-size: 0.75rem !important;
+    font-family: 'Courier New', monospace !important;
+}
+
+
+
 /* ==========================================================
    INTERAÇÃO HACKER CONSOLIDADA (SETINHA + HOVER + CORES)
    ========================================================== */
@@ -1283,7 +1402,6 @@ body.hacker-mode #btn-load-more:hover {
 }
 
 
-
 .loading {
     height: 100%;
     background: #0f0;
@@ -1297,73 +1415,4 @@ body.hacker-mode #btn-load-more:hover {
 
 
 /* --- MOLDURA ASCII BRUTALISTA (FEITA À MÃO) --- */
-
-body.hacker-mode .spotted-card,
-body.hacker-mode .comentario-item {
-    background: #000 !important;
-    border: none !important; /* Mata a borda bonitinha do navegador */
-    position: relative;
-    margin: 15px 0 !important;
-    color: #0f0 !important;
-}
-
-/* 1. TOPO DA CAIXA */
-body.hacker-mode .spotted-card::before,
-body.hacker-mode .comentario-item::before {
-    content: "++==========================================++" !important;
-    position: absolute;
-    top: -15px;
-    left: 0;
-    width: 100%;
-    color: #0f0;
-    font-family: 'Courier New', monospace !important;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-/* 2. BASE DA CAIXA */
-body.hacker-mode .spotted-card::after,
-body.hacker-mode .comentario-item::after {
-    content: "++==========================================++" !important;
-    position: absolute;
-    bottom: -15px;
-    left: 0;
-    width: 100%;
-    color: #0f0;
-    font-family: 'Courier New', monospace !important;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-/* 3. AS LATERAIS (O "Pipe" Duplo) */
-/* Vamos usar um gradiente repetindo o caractere para fazer a lateral */
-body.hacker-mode .spotted-card {
-    background-image: 
-        linear-gradient(to bottom, #0f0 10%, rgba(0,0,0,0) 0%) , /* Esquerda */
-        linear-gradient(to bottom, #0f0 10%, rgba(0,0,0,0) 0%); /* Direita */
-    background-position: left, right;
-    background-size: 2px 15px; /* Cria o efeito de tracejado vertical */
-    background-repeat: repeat-y;
-}
-
-/* 4. ADICIONANDO DETALHES NOS CANTOS (O charme do erro) */
-body.hacker-mode .spotted-card .card-header::before {
-    content: "[ SISTEMA_FENDA_V1.0 ]" !important;
-    position: absolute;
-    top: -22px;
-    left: 20px;
-    background: #000;
-    padding: 0 5px;
-    font-size: 0.8rem;
-    z-index: 5;
-}
-
-/* 5. CATEGORIAS ESTILO LOG */
-body.hacker-mode .category-tag {
-    background: transparent !important;
-    border: 1px solid #0f0 !important;
-    color: #0f0 !important;
-    padding: 2px 10px !important;
-}
-
 
