@@ -60,16 +60,18 @@ include 'includes/bolhas.php';
    Ao clicar em "Entrar" ou realizar um post, você confirma que leu, entendeu e concorda com todos os pontos acima, ciente de que o descumprimento resultará no banimento da conta e exclusão do conteúdo, a critério da plataforma.
     </article>
 
-  <article style="background-color: rgba(105, 61, 10, 0.22); border-radius: 20px; padding: 20px; margin: 30px 0; padding-left: 25px; line-height: 1.6;">
+  <article class="secao-seguranca">
     <h2> * Extra: Dicas de Segurança para Encontros Reais </h2>
     <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
-    <ul style="line-height: 1.6; margin: 30px 0; padding-left: 25px;">
+    <div class="box-diretrizes">
+    <ul style="padding-left: 35px;">
         <li><strong>Locais Públicos:</strong> Sempre marque o primeiro encontro em locais movimentados (como a própria praça de alimentação da UNIFEV ou cafeterias/lanchonetes/praças no centro).</li>
         <li><strong>Informe um Amigo:</strong> Avise alguém de sua confiança sobre onde você está indo e com quem, que hora você vai chegar, etc. Sempre é bom relembrar, se por ventura você não é maior de idade, NÃO SAIA sem autorização prévia dos seus pais e/ou responsáveis.</li>
         <li><strong>Transporte Próprio:</strong> Se possível, utilize seu próprio meio de transporte ou aplicativos de mobilidade conhecidos.</li>
         <li><strong>Confirmação de Identidade:</strong> Antes de encontrar alguém anonimamente, tente validar a identidade da pessoa através de redes sociais oficiais ou quaisquer amigos em comum na faculdade.</li>
     </ul>
+    </div>
 
     <div style="display: flex; justify-content: center; margin-top: 15px;">
         <img src="imagensfoto/seguranca-universitaria.jpg" alt="Dicas de Segurança" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.6; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);

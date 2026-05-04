@@ -1,36 +1,44 @@
 <?php
-/* 
-    MOTOR UNIVERSAL DA FENDA 
+/* MOTOR UNIVERSAL DA FENDA 
     Funciona para: Feed Geral, Feed Pessoal e Ver Perfil
 */
-include_once 'conexao.php'; // Puxa a conexão e a função de menções
+include_once 'conexao.php'; 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// 1. CAPTURA DE PARÂMETROS VIA GET
-$offset    = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
-$categoria = isset($_GET['categoria']) ? mysqli_real_escape_string($conn, $_GET['categoria']) : '';
-$tipo_feed = isset($_GET['tipo']) ? $_GET['tipo'] : 'geral';
-$user_alvo = isset($_GET['user']) ? mysqli_real_escape_string($conn, $_GET['user']) : '';
 
-// 2. CONSTRUÇÃO DA QUERY BASE (Agora com JOIN para pegar a Aura do usuário)
+// 1. CAPTURA DE PARÂMETROS VIA GET (Mantendo seus nomes originais)
+$offset    = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+$tipo_feed = isset($_GET['tipo']) ? $_GET['tipo'] : 'geral';
+$user_alvo = isset($_GET['user']) ? $_GET['user'] : '';
+
+// 2. CONSTRUÇÃO DA QUERY BASE
 $sql = "SELECT m.*, u.username, u.foto, u.pref_vibe_padrao, u.pref_cor_padrao 
         FROM mensagens m 
         INNER JOIN usuarios u ON m.usuario_id = u.id";
 
 $filtros = [];
+$tipos = "";
+$params = [];
 
 // Filtro por Categoria
 if (!empty($categoria)) {
-    $filtros[] = "m.categoria = '$categoria'";
+    $filtros[] = "m.categoria = ?";
+    $tipos .= "s";
+    $params[] = $categoria;
 }
 
-// LÓGICA DE TIPO DE FEED
+// LÓGICA DE TIPO DE FEED (Mantendo suas variáveis)
 if ($tipo_feed === 'perfil' && !empty($user_alvo)) {
-    $filtros[] = "u.username = '$user_alvo'";
+    $filtros[] = "u.username = ?";
+    $tipos .= "s";
+    $params[] = $user_alvo;
 } elseif ($tipo_feed === 'pessoal' && isset($_SESSION['usuario_id'])) {
     $meu_id = $_SESSION['usuario_id'];
-    $filtros[] = "m.usuario_id = '$meu_id'";
+    $filtros[] = "m.usuario_id = ?";
+    $tipos .= "i";
+    $params[] = $meu_id;
 }
 
 // Aplica os filtros na Query
@@ -38,29 +46,33 @@ if (count($filtros) > 0) {
     $sql .= " WHERE " . implode(' AND ', $filtros);
 }
 
-$sql .= " ORDER BY m.id DESC LIMIT 30 OFFSET $offset";
-$resultado = mysqli_query($conn, $sql);
+// Finaliza a Query com Order e Limit (Offset vira ?)
+$sql .= " ORDER BY m.id DESC LIMIT 30 OFFSET ?";
+$tipos .= "i";
+$params[] = $offset;
 
-// 3. RENDERIZAÇÃO DO HTML[cite: 18]
+// --- EXECUÇÃO COM PREPARED STATEMENT ---
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, $tipos, ...$params);
+mysqli_stmt_execute($stmt);
+$resultado = mysqli_stmt_get_result($stmt);
+
+// 3. RENDERIZAÇÃO DO HTML (Absolutamente nada mudou aqui embaixo nas variáveis)
 if (mysqli_num_rows($resultado) > 0) {
     while ($linha = mysqli_fetch_assoc($resultado)) {
         $post_id_atual = $linha['id'];
         $categoria_atual = $linha['categoria'];
 
-        // --- LÓGICA DA AURA E DESTAQUE GOLD ---
-        $sou_eu = ($linha['usuario_id'] == 1); // Verifica se é o 01
+        $sou_eu = ($linha['usuario_id'] == 1); 
         
-        // Se for você, a borda é Dourada. Se não, usa a cor do perfil do usuário.
         $cor_post = $sou_eu ? '#FFD700' : ($linha['pref_cor_padrao'] ?? '#70cde4'); 
         $vibe_post = $linha['pref_vibe_padrao'] ?? 'vibe-glass';
         $classe_admin = $sou_eu ? 'post-admin-gold' : '';
 ?>
-        <!-- O card agora aplica a Vibe e a Cor dinamicamente -->
         <article id="post-<?php echo $post_id_atual; ?>"
             class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>"
             style="position: relative; border: 2px solid <?php echo $cor_post; ?> !important;">
 
-            <!-- Menu de Opções (Excluir/Denunciar) -->
             <div class="options-container" style="position: absolute; right: 15px; top: 15px; z-index: 10;">
                 <button class="btn-options" onclick="toggleMenu('menu-<?= $post_id_atual ?>')" style="background: none; border: none; color: #fff; cursor: pointer; opacity: 0.6;">
                     <i class="fas fa-ellipsis-v"></i>
@@ -97,20 +109,26 @@ if (mysqli_num_rows($resultado) > 0) {
             <div class="card-body">
                 <p class="post-content"><?php echo formatarMencoes($linha['mensagem']); ?></p>
 
-                <!-- Área de Reações -->
                 <div id="reacoes-post-<?= $post_id_atual ?>" class="reacoes-gravadas">
                     <?php
-                    $sql_contas = "SELECT tipo_reacao, COUNT(*) as total FROM curtidas WHERE mensagem_id = '$post_id_atual' GROUP BY tipo_reacao";
-                    $res_contas = mysqli_query($conn, $sql_contas);
+                    // Query de reações (Simplificada para não estender o código, mas mantendo a lógica)
+                    $sql_contas = "SELECT tipo_reacao, COUNT(*) as total FROM curtidas WHERE mensagem_id = ? GROUP BY tipo_reacao";
+                    $st_c = mysqli_prepare($conn, $sql_contas);
+                    mysqli_stmt_bind_param($st_c, "i", $post_id_atual);
+                    mysqli_stmt_execute($st_c);
+                    $res_contas = mysqli_stmt_get_result($st_c);
+                    
                     $minhas_reacoes = [];
                     if (isset($_SESSION['usuario_id'])) {
                         $meu_id = $_SESSION['usuario_id'];
-                        $sql_meu = "SELECT tipo_reacao FROM curtidas WHERE mensagem_id = '$post_id_atual' AND usuario_id = '$meu_id'";
-                        $res_meu = mysqli_query($conn, $sql_meu);
-                        while ($m = mysqli_fetch_assoc($res_meu)) {
-                            $minhas_reacoes[] = $m['tipo_reacao'];
-                        }
+                        $sql_meu = "SELECT tipo_reacao FROM curtidas WHERE mensagem_id = ? AND usuario_id = ?";
+                        $st_m = mysqli_prepare($conn, $sql_meu);
+                        mysqli_stmt_bind_param($st_m, "ii", $post_id_atual, $meu_id);
+                        mysqli_stmt_execute($st_m);
+                        $res_meu = mysqli_stmt_get_result($st_m);
+                        while ($m = mysqli_fetch_assoc($res_meu)) { $minhas_reacoes[] = $m['tipo_reacao']; }
                     }
+
                     $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
                     while ($rc = mysqli_fetch_assoc($res_contas)) {
                         $tipo = $rc['tipo_reacao'];
@@ -134,7 +152,6 @@ if (mysqli_num_rows($resultado) > 0) {
                 </div>
             </div>
         </article>
-
 <?php
     }
 } else {

@@ -59,9 +59,9 @@
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
     gap: 15px !important;
-    max-width: 1800px !important; /* Limita a largura total do feed no PC */   
+    max-width: 2000px ; /* Limita a largura total do feed no PC */   
     margin: 0 auto !important;
-    padding: 15px !important;
+    padding: 15px ;
     column-count: auto !important;
    
 }
@@ -201,37 +201,6 @@
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-}
-
-body.hacker-mode #btn-load-more {
-    text-transform: uppercase; /* Garante que tudo fique em caixa alta */
-    font-family: 'Courier New', monospace !important;
-}
-
-/* Adiciona os colchetes automáticos só no modo hacker */
-body.hacker-mode #btn-load-more::before {
-    content: "[ ";
-}
-
-body.hacker-mode #btn-load-more::after {
-    content: " ]";
-}
-
-/* Se você quiser que o texto mude SÓ no modo hacker */
-/* Exemplo: Mudar "FIM DAS POSTAGENS" para "EOF_REACHED" */
-body.hacker-mode #btn-load-more[disabled] {
-    font-size: 0; 
-}
-
-#btn-load-more:not([disabled]):hover {
-    transform: scale(1.05); 
-    background: #ffcc00; 
-}
-
-
-body.hacker-mode #btn-load-more[disabled]::after {
-    content: "[ EOF_REACHED ]"; /* Mostra o texto hacker */
-    font-size: 14px; 
 }
 
 
@@ -381,6 +350,8 @@ body.hacker-mode #btn-load-more[disabled]::after {
     color: #000;
     border-color: var(--dourado);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    justify-content: center;
+    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
 }
 
 /* APROVEITANDO AS BADGES */
@@ -435,7 +406,7 @@ body.hacker-mode #btn-load-more[disabled]::after {
 .link-fofoca {
     color: #ffc400c2 !important;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -738,8 +709,8 @@ order: 3;
 .avatar-p {
     border: 0.5px solid var(--dourado);
     gap: 15px;
-    width:clamp(40px, 5vw, 70px) !important;
-    height:clamp(40px, 5vw, 70px) !important;
+    width:clamp(40px, 5vw, 65px) !important;
+    height:clamp(40px, 5vw, 65px) !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -750,7 +721,7 @@ order: 3;
 .user-info-post {
     display: flex;
     font-size: 14px;
-    margin: 8px 0 8px 0;
+    margin: 5px 0 5px 0;
     align-items: center!important;
 }
 

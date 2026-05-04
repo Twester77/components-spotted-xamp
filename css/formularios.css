@@ -37,7 +37,7 @@ form {
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
     width: clamp(280px, 93%, 480px) !important;
-    max-height: clamp(300px, 90vh, 550px) !important;
+    max-height: clamp(300px, 90vh, 500px) !important;
     /* Padding dinâmico: menor em telas pequenas */
     padding: clamp(10px, 5vw, 25px) !important;
     border-radius: 20px;
@@ -94,7 +94,7 @@ form {
     transition: 0.3s;
 }
 .modal-body-ajuste .btn-lancar{
-    padding: 8px 17px !important;
+    padding: 8px 16px !important;
 }
 
 /* Foco do input acende em Branco/Prata */
@@ -176,7 +176,7 @@ form[action="confirma-login.php"] {
 }
 
 .capa-img {
-    width: 100%;
+    width: 98%;
     height: 100%;
     object-fit: cover;
     object-position: center 25%;
@@ -513,9 +513,9 @@ textarea {
 /* Container Principal */
 .main-perdidos {
     /* Largura flutua entre 320px e 1200px dependendo da tela */
-    width: clamp(320px, 95%, 900px);
-    margin: clamp(20px, 5vh, 60px) auto;
+    width: clamp(320px, 100%, 900px);
     padding: clamp(10px, 3vw, 30px);
+    margin: 0 auto;
 }
 
 /* O Form de busca/filtro (aquele treco estranho kk) */
@@ -545,7 +545,7 @@ section.sessao-publicar {
     margin: 20px auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     width: 100% ;
-    max-width: clamp(320px, 95%, 600px) ;
+    max-width: clamp(320px, 95%, 500px) ;
     display: flex !important; /* Para garantir o alinhamento interno */
     flex-direction: column !important;
     align-items: center;
@@ -1004,7 +1004,7 @@ input[type="checkbox"]:focus {
 }
 
 .perfil-gold .capa-container {
-    width: 100%;
+    width: 97%;
     border: none;
 }
 

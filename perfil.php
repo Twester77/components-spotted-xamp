@@ -25,8 +25,16 @@ $foto_atual = !empty($dados['foto']) ? "uploads/" . $dados['foto'] : "imagensfot
 $capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfoto/capa_padrao.jpg";
 
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
-$cor_default = $dados['pref_cor_padrao'] ?? '#70cde4';
-// Recupera o estado das bolhas (padrão 1 = ligado)
+// Pega do banco ou usa o padrão
+$cor_banco = $dados['pref_cor_padrao'] ?? '#70cde4';
+// Garante que tenha a # para o HTML entender
+if (substr($cor_banco, 0, 1) !== '#') {
+    $cor_banco = '#' . $cor_banco;
+}
+
+$cor_default = $cor_banco; 
+// REMOVI A LINHA REPETIDA QUE ESTAVA LOGO ABAIXO
+
 $bolhas_default = $dados['pref_bolhas'] ?? 1;
 
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
