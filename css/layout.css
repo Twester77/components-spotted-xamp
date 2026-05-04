@@ -2784,7 +2784,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
     .container-feed {
         grid-template-columns: 1fr 1fr !important;
         /* DUAS COLUNAS */
-        gap: 15px !important;
+        gap: 10px !important;
         max-width: 100% !important;
     }
 
@@ -2989,7 +2989,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
     .main-fenda-total {
         width: 100% !important;
         margin: 20px 0 !important;
-        padding: 6px !important;
+        padding: 5px !important;
         display: block !important;
         /* Block neles! */
         box-sizing: border-box !important;
