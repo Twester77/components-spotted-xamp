@@ -1136,7 +1136,7 @@ form[action="confirma-login.php"] a {
     flex-direction: column !important;
     gap: 20px !important;
     width: 100% !important;
-    margin: 0 !important;
+    margin: 10px auto !important;
 }
 
 /* 3. Garantir que cada campo ocupe 100% da largura disponível */

@@ -122,6 +122,7 @@ body.hacker-mode .container-principal,
 body.hacker-mode .card-post,
 body.hacker-mode .card-focado,
 body.hacker-mode .formulario-caixa,
+body.hacker-mode .form-perfil-corpo,
 body.hacker-mode .comentario-item,
 body.hacker-mode .sessao-publicar,
 body.hacker-mode .painel-sessao,
@@ -131,13 +132,12 @@ body.hacker-mode .perfil-info-publica,
 body.hacker-mode .main-perfil-container,
 body.hacker-mode .fenda-modal-content,
 body.hacker-mode .form-container,
-body.hacker-mode .main-novo-post,
 body.hacker-mode .audio-settings-card,
 body.hacker-mode .perfil-gold {
     position: relative !important;
     background: #0a0a0a !important;
     border: none !important;
-    margin: 25px 0 !important; /* só pra dar respiro, não mexe no layout geral */
+    margin: 25px auto !important; /* só pra dar respiro, não mexe no layout geral */
 }
 
 /* Linha superior */
@@ -193,9 +193,7 @@ body.hacker-mode .card-post,
 body.hacker-mode .form-fenda,
 body.hacker-mode .comentario-item,
 body.hacker-mode .sessao-publicar,
-body.hacker-mode .user-card,
-body.hacker-mode .form-container,
-body.hacker-mode .main-novo-post {
+body.hacker-mode .user-card {
     border-left: 2px solid #0f0 !important;
     border-right: 2px solid #0f0 !important;
     box-shadow: none !important;
@@ -214,6 +212,7 @@ body.hacker-mode .spotted-card.caronas,
 body.hacker-mode .spotted-card.comunidade,
 body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus,
 body.hacker-mode .spotted-card.desapego {
+    content: "=================================================================================================+" !important;
     border-left: 2px solid #00ff00 !important;
     border-right: 2px solid #00ff00 !important;
     border-top: 2px solid #00ff00 !important;
@@ -630,11 +629,14 @@ body.hacker-mode .lista-conselhos li:hover {
     color: #000 !important;
     transform: translateX(5px) !important;
 }
-body.hacker-mode .box-diretrizes li::before {
-    content: "root@fenda_v1.0:~$ " !important;
-    font-size: 0.8rem !important;
-    opacity: 0.7 !important;
+
+body.hacker-mode .box-diretrizes li:hover {
+    background: #0f0 !important;
+    color: #000 !important;
+    transform: translateX(5px) !important;
+    transform: scale(1.02) !important;
 }
+
 
 /* ---------------------------------------------------------------
    19. MENSAGENS DE SISTEMA E RODAPÉ
@@ -667,11 +669,14 @@ body.hacker-mode .reacao-item {
     padding: 2px 8px !important;
     font-family: monospace !important;
 }
+
 body.hacker-mode .reacao-item.voted {
     background: rgba(0,255,0,0.2) !important;
     border-color: #0f0 !important;
     box-shadow: 0 0 10px #0f0 !important;
+    transform: none!important;
 }
+
 body.hacker-mode .reacoes-popup {
     background: #000 !important;
     border: 1px solid #0f0 !important;
@@ -758,12 +763,13 @@ body.hacker-mode .comentario-texto,
 body.hacker-mode .spotted-texto,
 body.hacker-mode .bio-texto,
 body.hacker-mode .card-body p,
-body.hacker-mode article p {
+body.hacker-mode .article p,
+body.hacker-mode span {
     overflow: hidden !important;
     white-space: normal !important;
     display: block !important;
     width: auto !important;
-    animation: typing-global 4s steps(40, end) forwards !important;
+    animation: typing-global 15s steps(40, end) forwards !important;
 }
 
 @keyframes typing-global {

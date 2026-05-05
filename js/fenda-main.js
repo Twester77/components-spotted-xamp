@@ -502,6 +502,9 @@ window.addEventListener('load', () => {
         document.body.classList.add('hacker-mode');
         const hBtn = document.getElementById('hacker-toggle-lateral') || document.getElementById('hacker-toggle');
         if (hBtn) hBtn.innerHTML = '[ DESLIGAR_TERMINAL ]';
+        
+        // Remove as bordas inline ao carregar a página com modo hacker ativo
+        window.removerBordasInlineHacker();
     }
     const bootScreen = document.getElementById('bios-boot');
     if (bootScreen && !sessionStorage.getItem('boot_concluido')) {
