@@ -865,7 +865,7 @@ input[type="checkbox"]:focus {
     background: var(--dourado) !important;
     color: #000 !important;
     border-radius: 50px !important;
-    border: none !important;
+    border: none ;
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
@@ -997,7 +997,7 @@ input[type="checkbox"]:focus {
 /* --- EASTER EGG: A PRESENÇA (ID 1) --- */
 
 .perfil-gold .img-avatar-perfil {
-    border-color: var(--dourado) !important;
+    border-color: var(--dourado) ;
     box-shadow: 0 0 15px rgba(255, 187, 0, 0.822);
 }
 
@@ -1007,12 +1007,12 @@ input[type="checkbox"]:focus {
 }
 
 .perfil-gold .img-capa-preview {
-    border: 2px solid var(--dourado) !important;
+    border: 2px solid var(--dourado) ;
     border-radius: 20px;
 }
 
 .perfil-gold .img-capa-viewer {
-    border: 2px solid var(--dourado) !important;
+    border: 2px solid var(--dourado) ;
     border-radius: 20px;
 }
 

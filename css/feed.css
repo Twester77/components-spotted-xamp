@@ -60,7 +60,7 @@
     /* Mantém cada card no seu tamanho real */
     gap: 15px !important;
     max-width: 2000px ; /* Limita a largura total do feed no PC */   
-    margin: 0 auto !important;
+    margin: 40px auto !important;
     padding: 15px ;
     column-count: auto !important;
    
@@ -90,7 +90,7 @@
     color: #fff;
     transition: max-height 0.4s ease-in-out;
     margin:20px 0;
-    font-size: 16px !important;
+    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.3rem);
 }
 
 
@@ -129,7 +129,7 @@
     background: rgba(10, 10, 10, 0.247);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1)!important;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 12px;
     transition: transform 0.3s ease;
@@ -143,7 +143,7 @@
     overflow: visible !important;   /* Deixa o card crescer com o texto */    
     flex-direction: column;       
     width: 100%;
-    max-width: 800px !important; /* Limita a largura máxima do card */           
+    max-width: 600px !important; /* Limita a largura máxima do card */           
     height: auto !important;       
     min-height: 120px !important;
     
@@ -170,11 +170,11 @@
         display: block !important;
         width: 100% !important;
         /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 700px ;
+        max-width: 600px ;
         min-height: 100px ;
         flex-shrink: 0 !important;
         position: relative !important;
-        margin: 0 auto !important;
+        margin: 20px auto !important;
         top: auto !important;
         left: auto !important;
     }
@@ -589,7 +589,7 @@ order: 3;
 /* Quando o usuário já reagiu, a pílula ganha destaque */
 .reacao-item.voted {
     background: rgba(255, 188, 0, 0.2) !important; /* Amarelo Fenda transparente */
-    border: 1px solid #ffbc00 !important; /* Borda amarela sólida */
+    border: 1px solid #ffbb00d5 !important; /* Borda amarela sólida */
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
     font-weight: bold;
 }
@@ -707,7 +707,7 @@ order: 3;
 /*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
 
 .avatar-p {
-    border: 0.5px solid var(--dourado);
+    border: 1px solid var(--dourado);
     gap: 15px;
     width:clamp(40px, 5vw, 65px) !important;
     height:clamp(40px, 5vw, 65px) !important;
@@ -790,7 +790,7 @@ order: 3;
 
 
 .perfil-gold .capa-img {
-    border: 2px solid var(--dourado) !important;
+    border: 2px solid var(--dourado) ;
     border-radius: 12px;
 }
 

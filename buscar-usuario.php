@@ -1,6 +1,5 @@
 <?php
-include 'conexao.php';
-session_start();
+include_once 'conexao.php';
 
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");

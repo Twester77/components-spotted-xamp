@@ -227,12 +227,17 @@ nav {
 /* Ajuste específico para o título do conteúdo pessoal */
 .titulo-sessao-pessoal {
     color: #fa800e;
-    text-align: left;
+    text-align: center;
+    display: flex!important;
+    flex-wrap: nowrap!important;
+    word-break: break-word!important;
+    display: 1!important;
     margin-bottom: 25px;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
+
 .sessao-pessoal {
     display: flex;
     flex-direction: column;
@@ -1123,8 +1128,11 @@ body.modal-aberto .fab-postar {
     border-radius: 50% !important;
     object-fit: cover !important;
     margin-right: 15px !important;
-    border: 2px solid var(--dourado) !important;
+    border: 2px solid #e48c29;
     flex-shrink: 0 !important;
+}
+.avatar-busca .perfil-gold{
+    border-color: var(--dourado) !important;
 }
 
 /* 5. Textos dentro do Card */
@@ -1285,6 +1293,8 @@ main.container-post-foco {
     resize: vertical;
     /* Permite redimensionar apenas na vertical */
     padding: 15px !important;
+    min-height: 80px;
+     /* Altura mínima para evitar que fique muito pequeno */
 }
 
 
@@ -1609,8 +1619,8 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 
 /* PULSAR DA BORDA */
-.card-focado {
-    border: 1px solid var(--dourado) !important;
+.card-focado .perfil-gold {
+    border: 1px solid var(--dourado) ;
     position: relative;
     /* Faz o brilho pulsar devagar */
     animation: glowPulsar 3s infinite alternate;
@@ -1635,7 +1645,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /* O Post Principal - BOB PAI */
 .post-principal-focado {
-    border: 2px solid rgba(255, 145, 0, 0.5);
+    border: 1px solid rgba(255, 145, 0, 0.5);
     padding: 10px;
     margin-bottom: 40px;
     transform: scale(1.05);
@@ -2335,7 +2345,7 @@ textarea[name="bio"] {
         gap: 15px !important;
         width: 100vw !important;
         max-width: 100% !important;
-        padding: 70px 15px 50px 15px !important;
+        padding: 70px 15px 50px 15px ;
         height: auto !important;
         min-height: 100vh !important;
         justify-content: center !important;
@@ -2356,7 +2366,7 @@ textarea[name="bio"] {
         min-height: 100px !important;
         flex-shrink: 0 !important;
         position: relative !important;
-        margin: 0 auto !important;
+        margin: 10px auto !important;
         top: auto !important;
         left: auto !important;
     }
@@ -2773,13 +2783,9 @@ textarea[name="bio"] {
 
 /* 2. TABLETS, KINDLE E CELULAR DEITADO (O "Meio termo") */
 
-@media screen and (min-width: 601px) and (max-width: 1025px),
-screen and (max-height: 600px) and (orientation: landscape) {
+@media screen and (min-width: 601px) and (max-width: 1368px),
+screen and (max-height: 900px) and (orientation: landscape) {
 
-    .post-content {
-        font-size: 1.3rem !important;
-        /* Texto um pouco maior para leitura no tablet */
-    }
 
     .container-feed {
         grid-template-columns: 1fr 1fr !important;
@@ -2928,9 +2934,9 @@ screen and (max-height: 600px) and (orientation: landscape) {
 /* MONITORES ULTRA WIDE*/
 @media screen and (min-width: 1600px) {
     .container-feed {
-        grid-template-columns: repeat(6, 1fr) !important;
+        grid-template-columns: repeat(5, 1fr) !important;
         /* Aqui o monitorzão brilha */
-        max-width: 98vw !important;
+        max-width: 95vw !important;
     }
 
     /* Ajuste do container principal para não centralizar forçado */
@@ -3088,7 +3094,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
 }
 
 /* 8. AJUSTE PARA O LANDSCAPE DO IPHONE 4 (480px de largura) */
-@media screen and (max-width: 550px) and (orientation: landscape) {
+@media screen and (max-width: 700px) and (orientation: landscape) {
 
     .container-feed,
     .container-feed>div {
@@ -3101,7 +3107,7 @@ screen and (max-height: 600px) and (orientation: landscape) {
         /* Mata qualquer resquício de grid */
         padding: 0 !important;
         margin: 10px 0 !important;
-        max-width: 95% !important;
+        max-width: 97% !important;
         margin-left: auto !important;
         /* Garante centralização */
         margin-right: auto !important;

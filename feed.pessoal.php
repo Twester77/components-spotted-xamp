@@ -14,7 +14,7 @@ $meu_id_sessao = $_SESSION['usuario_id'];
 $query_user = mysqli_query($conn, "SELECT username, foto, pref_cor_padrao FROM usuarios WHERE id = '$meu_id_sessao'");
 $dados_user = mysqli_fetch_assoc($query_user);
 $foto_perfil = !empty($dados_user['foto']) ? "uploads/".$dados_user['foto'] : "img/default-avatar.png";
-$cor_aura = $dados_user['pref_cor_padrao'] ?? '#ffbc00';
+$cor_aura = $dados_user['pref_cor_padrao'] ?? '#a1a1a1';
 ?>
 
 <div class="painel-controle-container">
@@ -55,18 +55,24 @@ $cor_aura = $dados_user['pref_cor_padrao'] ?? '#ffbc00';
     const feedContainer = document.querySelector('.container-feed');
 
     function carregarMeuFeed() {
-        fetch(`motor-feed.php?offset=${offset}&tipo=pessoal`)
-            .then(response => response.text())
-            .then(data => {
-                if (data.trim() === "FIM_DADOS") {
-                    if(offset === 0) feedContainer.innerHTML += "<p style='text-align:center; padding: 20px;'>A Fenda ainda não recebeu ecos seus...</p>";
-                    btnLoad.style.display = "none";
-                } else {
-                    feedContainer.insertAdjacentHTML('beforeend', data);
-                    offset += 30;
+    fetch(`motor-feed.php?offset=${offset}&tipo=pessoal`)
+        .then(response => response.text())
+        .then(data => {
+            if (data.trim() === "FIM_DADOS") {
+                if(offset === 0) feedContainer.innerHTML += "<p style='text-align:center; padding: 20px;'>A Fenda ainda não recebeu ecos seus...</p>";
+                btnLoad.style.display = "none";
+            } else {
+                feedContainer.insertAdjacentHTML('beforeend', data);
+                
+                // *** NOVO: Remove bordas inline dos novos cards carregados ***
+                if (document.body.classList.contains('hacker-mode')) {
+                    window.removerBordasInlineHacker();
                 }
-            });
-    }
+                
+                offset += 30;
+            }
+        });
+}
 
     carregarMeuFeed();
     btnLoad.addEventListener('click', carregarMeuFeed);

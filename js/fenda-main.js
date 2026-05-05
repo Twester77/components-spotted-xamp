@@ -61,7 +61,6 @@ window.toggleToolbar = function () {
 
 window.toggleHackerMode = function () {
     const body = document.body;
-    // Pega todos os botões possíveis
     const btnNav = document.getElementById('hacker-toggle');
     const btnToolbar = document.getElementById('hacker-toggle-lateral');
 
@@ -74,6 +73,34 @@ window.toggleHackerMode = function () {
 
     if (btnNav) btnNav.innerHTML = texto;
     if (btnToolbar) btnToolbar.innerHTML = isHacker ? 'MODO_NORMAL' : 'MODO_TERMINAL';
+    
+    // *** NOVO: Remove as bordas inline ao ativar/desativar o modo hacker ***
+    window.removerBordasInlineHacker();
+};
+
+
+// --- FUNÇÃO PARA REMOVER BORDAS INLINE NO MODO HACKER ---
+window.removerBordasInlineHacker = function() {
+    // Só executa se o modo hacker estiver ativo
+    if (!document.body.classList.contains('hacker-mode')) return;
+    
+    // Remove os estilos inline de border-left e border-right de todos os cards
+    document.querySelectorAll('.spotted-card').forEach(card => {
+        // Limpa os estilos inline que causam conflito
+        card.style.borderLeft = '';
+        card.style.borderRight = '';
+        card.style.borderLeftColor = '';
+        card.style.borderRightColor = '';
+        card.style.border = '';
+    });
+    
+    // Também limpa os comentários, se necessário
+    document.querySelectorAll('.comentario-item').forEach(comentario => {
+        comentario.style.borderLeft = '';
+        comentario.style.borderRight = '';
+        comentario.style.borderLeftColor = '';
+        comentario.style.borderRightColor = '';
+    });
 };
 
 
