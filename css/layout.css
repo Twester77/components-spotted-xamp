@@ -2420,7 +2420,7 @@ textarea[name="bio"] {
         gap: 15px !important;
         width: 100vw !important;
         max-width: 100% !important;
-        padding: 70px 15px 50px 15px ;
+        padding: 70px 10px 50px 10px ;
         height: auto !important;
         min-height: 100vh !important;
         justify-content: center !important;
@@ -2488,13 +2488,8 @@ textarea[name="bio"] {
 
 
 /* ============================================================
-   SISTEMA DE RESPONSIVIDADE "A FENDA" - ESCALÁVEL
-   ============================================================ */
-
-
-/* ============================================================
    SISTEMA DE RESPONSIVIDADE "A FENDA" - VERSÃO COMPLETA
-   CORRIGIDO PARA IPAD AIR LANDSCAPE E TODOS OS DISPOSITIVOS
+   CORRIGIDO: IPHONE 4 LANDSCAPE 1 COLUNA 
    ============================================================ */
 
 /* 0. RESET GLOBAL DE SEGURANÇA */
@@ -2518,6 +2513,8 @@ html, body {
         padding: 10px !important;
         gap: 15px !important;
         margin: 10px auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .spotted-card {
@@ -2528,6 +2525,15 @@ html, body {
         will-change: transform, backdrop-filter;
         padding: 12px !important;
         scroll-margin-top: 80px;
+    }
+
+    /* PERFIL PÚBLICO - 100% LARGURA */
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
+        display: block !important;
     }
 
     body {
@@ -2740,11 +2746,20 @@ html, body {
         gap: 15px !important;
         padding: 12px !important;
         margin: 15px auto !important;
+        width: 98% !important;
+        max-width: 100% !important;
     }
 
     .spotted-card {
         max-width: 100% !important;
         margin: 0 auto 15px auto !important;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
     }
 
     .btn-reagir, .btn-fofocar {
@@ -2794,11 +2809,20 @@ html, body {
         gap: 18px !important;
         padding: 15px !important;
         margin: 20px auto !important;
+        width: 98% !important;
+        max-width: 98% !important;
     }
 
     .spotted-card {
         max-width: 100% !important;
         margin: 0 auto 20px auto !important;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
     }
 
     .post-content {
@@ -2819,14 +2843,22 @@ html, body {
     .container-feed {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 20px !important;
-        padding: 10px !important;
+        padding: 15px !important;
         margin: 20px auto !important;
-        max-width: 98% !important;
+        max-width: 95% !important;
+        width: 95% !important;
     }
 
     .spotted-card {
         max-width: 100% !important;
         margin: 0 auto 20px auto !important;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
     }
 
     .post-content {
@@ -2837,7 +2869,6 @@ html, body {
         font-size: 0.85rem !important;
     }
 
-    /* Garante que o header não estoure */
     header {
         padding: 12px 20px !important;
     }
@@ -2852,20 +2883,28 @@ html, body {
     }
 }
 
-/* 5. LANDSCAPE DEDICADO PARA IPAD AIR (faixa específica 1180px) */
+/* 5. LANDSCAPE DEDICADO PARA IPAD AIR (faixa específica 1100-1200px) */
 @media screen and (min-width: 1100px) and (max-width: 1200px) and (orientation: landscape) {
     .container-feed {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 15px !important;
         padding: 12px !important;
         margin: 15px auto !important;
-        max-width: 98% !important;
+        max-width: 97% !important;
+        width: 97% !important;
     }
 
     .spotted-card {
         max-width: 100% !important;
         min-width: 280px !important;
         margin: 0 auto 15px auto !important;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
     }
 
     .post-content {
@@ -2897,23 +2936,29 @@ html, body {
         max-width: 100px !important;
     }
 
-    /* Garante que o footer não sobreponha conteúdo */
     footer {
         margin-top: 20px;
         padding: 15px !important;
     }
 }
 
-/* 6. DESKTOP PADRÃO (1025px a 1600px) */
+/* 6. DESKTOP PADRÃO E TABLETS LANDSCAPE (acima de 1025px) */
 @media screen and (min-width: 1025px) {
     .container-feed {
         display: grid !important;
         grid-template-columns: repeat(4, 1fr) !important;
         gap: 20px !important;
-        width: 100% !important;
+        width: 98% !important;
         max-width: 1800px !important;
         padding: 15px !important;
         margin: 20px auto !important;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
     }
 
     body {
@@ -2922,48 +2967,41 @@ html, body {
         overflow-x: hidden;
     }
 
-    .main-perfil-container,
-    .feed-container {
-        margin: 0 auto !important;
-        padding: 20px;
+    /* ... resto das regras ... */
+}
+
+/* 6.1 CORREÇÃO ESPECÍFICA PARA IPAD AIR LANDSCAPE (1025px a 1200px) */
+@media screen and (min-width: 1025px) and (max-width: 1200px) and (orientation: landscape) {
+    .container-feed {
+        grid-template-columns: repeat(3, 1fr) !important; /* 3 colunas em vez de 4 */
+        gap: 15px !important;
+        padding: 10px !important;   /* menos padding para ganhar espaço */
+        width: 98% !important;
+        margin: 15px auto !important;
     }
 
-    .comentario-item {
-        padding: 18px;
-        margin-bottom: 0;
+    .spotted-card {
+        max-width: 100% !important;
+        min-width: 0 !important;    /* permite que o card encolha se necessário */
     }
 
-    .comentario-texto {
-        line-height: 1.5;
-        letter-spacing: 0.3px;
-    }
-
-    .campo-grupo:has(textarea),
-    .campo-grupo:has(.audio-settings-card),
-    .campo-grupo.bio-grupo,
-    .campo-grupo.full-width {
-        grid-column: span 2 !important;
-    }
-
-    .main-perfil-container {
-        width: 95% !important;
-        margin: 20px auto !important;
-        display: block !important;
-        float: none !important;
-        height: auto !important;
-        min-height: fit-content;
-    }
-
-    .form-perfil-corpo {
-        display: flex !important;
-        flex-direction: column !important;
+    /* Garante que o perfil público ocupe toda a largura */
+    .main-perfil-container-publico {
         width: 100% !important;
-        gap: 20px !important;
+        max-width: 100% !important;
+        padding: 8px !important;
     }
 
-    .campo-grupo.full-width,
-    .campo-grupo:has(textarea) {
-        grid-column: span 2 !important;
+    /* Ajuste fino para os cards não ficarem muito altos */
+    .post-content {
+        font-size: 0.9rem !important;
+        max-height: 4rem !important;
+    }
+
+    /* Botões de reação um pouco menores */
+    .btn-reagir, .btn-fofocar {
+        font-size: 0.8rem !important;
+        gap: 4px;
     }
 }
 
@@ -2975,20 +3013,25 @@ html, body {
         gap: 25px !important;
     }
 
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
     .main-perfil-container {
         width: 90% !important;
         max-width: 1800px;
     }
 }
 
-/* 8. IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (até 340px) */
+/* 8. IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (até 340px) - PORTRAIT  - ONDE O CÃO FAZ SUA MORADA */
 @media screen and (max-width: 340px) {
     html, body {
         width: 100% !important;
         overflow-x: hidden !important;
         margin: 0 !important;
         padding: 0 !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         box-sizing: border-box !important;
     }
 
@@ -3008,6 +3051,13 @@ html, body {
     .conteudo-principal {
         font-size: 13px !important;
         line-height: 1.4;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 5px !important;
     }
 
     .main-perfil-container,
@@ -3074,6 +3124,13 @@ html, body {
         display: flex !important;
         flex-direction: column !important;
         box-sizing: border-box !important;
+        width: 98% !important;
+    }
+
+    .spotted-card {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 0 auto 15px auto !important;
     }
 
     .main-perdidos {
@@ -3096,14 +3153,94 @@ html, body {
     }
 }
 
-/* 9. LANDSCAPE GERAL PARA CELULARES (até 900px de largura em landscape) */
-@media screen and (max-width: 900px) and (orientation: landscape) {
+/* 9. LANDSCAPE PARA IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (máx 600px landscape) */
+@media screen and (max-width: 600px) and (orientation: landscape) {
     .container-feed {
-        display: grid !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 15px !important;
+        padding: 10px !important;
+        margin: 10px 0 !important;
+        width: 100% !important;
+        float: none !important;
+        left: auto !important;  
+        right: auto !important;
+    }
+
+    /* CARDS OCUPAM 90% DA LARGURA E CENTRALIZADOS */
+    .spotted-card {
+        width: 98% !important;
+        max-width: 400px !important;
+        min-width: 280px !important;
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    .main-perfil-container-publico {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px !important;
+    }
+
+    .avatar-wrapper.viewer {
+        margin: -30px auto 5px auto !important;
+    }
+
+    header h1 {
+        font-size: 1.2rem !important;
+    }
+
+    .post-content {
+        font-size: 0.85rem !important;
+        max-height: 3.5rem !important;
+    }
+
+    .btn-reagir, .btn-fofocar {
+        font-size: 0.75rem !important;
+    }
+
+    .card-header {
+        flex-wrap: wrap !important;
+        gap: 5px;
+    }
+
+    .user-info-post {
+        font-size: 0.8rem !important;
+    }
+
+    .avatar-p {
+        width: 38px !important;
+        height: 38px !important;
+    }
+}
+
+/* EXTRA: iPhone 4 / Lumia 520 (largura máxima 480px) em landscape */
+@media screen and (max-width: 550px) and (max-height: 400px) and (orientation: landscape) {
+    .spotted-card {
+        width: 95% !important;
+        max-width: 350px !important;
+    }
+    
+    .post-content {
+        font-size: 0.8rem !important;
+    }
+    
+    .btn-reagir, .btn-fofocar {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* 10. LANDSCAPE GERAL PARA CELULARES MAIORES (até 900px) */
+@media screen and (min-width: 341px) and (max-width: 900px) and (orientation: landscape) {
+    .container-feed {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 12px !important;
         padding: 10px !important;
         margin: 10px auto !important;
+        width: 98% !important;
     }
 
     .spotted-card {
@@ -3130,7 +3267,7 @@ html, body {
     }
 }
 
-/* 10. FIX SAFE ZONE PARA IPAD PRO (1366px a 1400px) */
+/* 11. FIX SAFE ZONE PARA IPAD PRO (1366px a 1400px) */
 @media screen and (min-width: 1366px) and (max-width: 1400px) {
     .container-feed {
         grid-template-columns: repeat(4, 1fr) !important;
@@ -3144,7 +3281,24 @@ html, body {
     }
 }
 
-/* 11. MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO */
+/* 12. GARANTIA PARA .MAIN-PERFIL-CONTAINER-PUBLICO (REGRAS PADRÃO) */
+.main-perfil-container-publico {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    display: block !important;
+    box-sizing: border-box !important;
+}
+
+/* 13. GARANTIA PARA O CONTAINER DO FEED NO MODO PADRÃO */
+.container-feed {
+    width: 98% !important;
+    max-width: 98% !important;
+    margin: 0 auto !important;
+}
+
+/* 14. MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO */
 @media (prefers-reduced-motion: reduce) {
     body.hacker-mode::before,
     body.hacker-mode::after,
