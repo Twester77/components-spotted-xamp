@@ -31,9 +31,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         VALUES ('$nome', '$email', '$senha', '$token', 0, '$atletica_id', '$pref_cor_padrao', '$pref_vibe_padrao')";
 
     if (mysqli_query($conn, $sql)) {
-        // AQUI vai entrar a configuração do RESEND que o Eric recomendou
-        // Vou te mandar o código do Resend assim que você confirmar que as colunas
-        // atletica_id e pref_cor_padrao existem na sua tabela 'usuarios'.
+        // --- DISPARO DE E-MAIL DE BOAS-VINDAS (CADASTRO) ---
+        // Use a chave que você me passou: re_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8
+
+        $apiKey = 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8';
+
+        $email_payload = [
+            'from' => 'Fenda <onboarding@resend.dev>', // No futuro, troque pelo seu domínio
+            'to' => [$email], // Variável $email que vem do seu formulário
+            'subject' => 'Sua jornada na Fenda começou!',
+            'html' => "
+        <div style='font-family: sans-serif; background: #0a0a0a; color: #fff; padding: 30px; border-radius: 15px; border: 1px solid #70cde4;'>
+            <h2 style='color: #70cde4; text-align: center;'>Bem-vindo à Fenda!</h2>
+            <p>Fala, <strong>$nome</strong>!</p>
+            <p>Seu cadastro foi realizado com sucesso. Agora você faz parte do ecossistema mais secreto da UNIFEV.</p>
+            <p>Prepare sua aura, ajuste sua vibe e comece a fofocar agora mesmo.</p>
+            <div style='text-align: center; margin-top: 30px;'>
+                <a href='http://localhost/spotted-unifev/index.php' 
+                   style='background: #70cde4; color: #000; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 0 15px #70cde4;'>
+                   ENTRAR NA FENDA
+                </a>
+            </div>
+            <p style='margin-top: 40px; font-size: 0.8rem; color: #555; text-align: center;'>
+                Se você não solicitou este cadastro, ignore este e-mail.
+            </p>
+        </div>
+    "
+        ];
+
+        $ch = curl_init('https://api.resend.com/emails');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . $apiKey,
+            'Content-Type: application/json'
+        ]);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($email_payload));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Executa o envio "silencioso" (não trava o usuário se o e-mail demorar)
+        curl_exec($ch);
+        curl_close($ch);
+        // --- FIM DO DISPARO ---
 
         header("Location: sucesso.php?email=" . $email);
         exit();

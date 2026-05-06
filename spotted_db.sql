@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Tempo de geração: 06/05/2026 às 21:51
+-- Tempo de geração: 06/05/2026 às 23:15
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -157,8 +157,7 @@ CREATE TABLE `curtidas` (
 
 INSERT INTO `curtidas` (`id`, `mensagem_id`, `usuario_id`, `tipo_reacao`, `data_reacao`) VALUES
 (690, 31, 16, 'perplecto', '2026-05-05 19:10:37'),
-(692, 88, 16, 'amei', '2026-05-05 19:39:15'),
-(730, 88, 1, 'amei', '2026-05-06 17:45:58');
+(692, 88, 16, 'amei', '2026-05-05 19:39:15');
 
 -- --------------------------------------------------------
 
@@ -349,8 +348,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `username`, `email`, `senha`, `foto`, `bio`, `capa`, `atletica_id`, `data_cadastro`, `token`, `ativo`, `pref_vibe_comentario`, `pref_cor_borda`, `pref_vibe_padrao`, `pref_cor_padrao`, `pref_swipe`, `pref_bolhas`, `ultima_atividade`) VALUES
-(1, 'Leonardo Florindo Alves R', 'apresenca_fevaaaaaaa', '87826@unifev.edu.br', '$2y$10$zg7pxV31ML6NyIUBxZ4AX.c8mlgRoarhdnFnKqNtMZfTGvOUCG7P6', 'user_1_1777855196.jpg', 'Criador e é também idealizador do Projeto \" A Fenda \"', 'capa_1.jpg', 'direito', '2026-04-01 03:14:47', 'Leo_Idealizador', 1, 'padrao', '#70cde4', 'vibe-dark', '#ea3939', 0, 1, '2026-05-06 19:51:33'),
-(16, 'test123', 'test123', '15505@unifev.edu.br', '$2y$10$bctURxSC7BgFjw9WeaTBNug53yW5muOotty8H.ZX1YaDY0jhB75Ly', 'user_16_1776620960.jpg', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'capa_16.jpg', 'eng-mecanica', '2026-04-03 03:42:31', NULL, 1, 'padrao', '#70cde4', 'vibe-dark', '#d79119', 1, 1, '2026-05-06 19:51:40');
+(1, 'Leonardo Florindo Alves R', 'apresenca_fevaaaaaaa', '87826@unifev.edu.br', '$2y$10$zg7pxV31ML6NyIUBxZ4AX.c8mlgRoarhdnFnKqNtMZfTGvOUCG7P6', 'user_1_1777855196.jpg', 'Criador e é também idealizador do Projeto \" A Fenda \"', 'capa_1.jpg', 'eng-mecanica', '2026-04-01 03:14:47', 'Leo_Idealizador', 1, 'padrao', '#70cde4', 'vibe-dark', '#ea3939', 0, 1, '2026-05-06 21:13:32'),
+(16, 'test123', 'test123', '15505@unifev.edu.br', '$2y$10$bctURxSC7BgFjw9WeaTBNug53yW5muOotty8H.ZX1YaDY0jhB75Ly', 'user_16_1776620960.jpg', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'capa_16.jpg', 'eng-mecanica', '2026-04-03 03:42:31', NULL, 1, 'padrao', '#70cde4', 'vibe-dark', '#d79119', 1, 1, '2026-05-06 21:08:14');
 
 --
 -- Índices para tabelas despejadas
