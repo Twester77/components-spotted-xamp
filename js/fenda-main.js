@@ -145,25 +145,36 @@ function fecharModalPost() {
     }
 }
 
-// Fechar ao clicar fora da caixa preta
-window.addEventListener('click', function(event) {
-    const modalPost = document.getElementById('modal-postar-fenda');
-    if (event.target === modalPost) {
-        fecharModalPost();
-    }
-});
+// --- SISTEMA DE RESPOSTA HÍBRIDO (TROCA DE ALVO e ANTI DUPLICIDADE) ---
+window.prepararResposta = function(id, username) {
+    const inputParent = document.getElementById('input_parent_id');
+    const campo = document.querySelector('.textarea-fenda');
+    
+    if (inputParent && campo) {
+        inputParent.value = id;
 
-// ... (outras funções acima)
+        const novaMencao = "@" + username.trim() + " ";
+        
+        // REGEX BEM NINJA: Localiza QUALQUER menção que esteja no início da frase
+        // Isso pega @leo, @admin... qualquer um.
+        const regexMencaoQualquer = /^@[a-zA-Z0-9._-]+\s/;
 
-// Fechar o Modal de Postagem
-function fecharModalPost() {
-    const modal = document.getElementById('modal-postar-fenda');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.classList.remove('modal-aberto'); 
-        document.body.style.overflow = 'auto';
+        if (regexMencaoQualquer.test(campo.value)) {
+            // Se já existir QUALQUER menção no início, ele SUBSTITUI pela nova
+            campo.value = campo.value.replace(regexMencaoQualquer, novaMencao);
+        } else {
+            // Se não tiver nada, ele adiciona no começo
+            campo.value = novaMencao + campo.value;
+        }
+
+        campo.placeholder = "Respondendo a " + username.trim() + "...";
+        campo.focus();
+        
+        const areaFofocar = document.getElementById('fofocar');
+        if (areaFofocar) areaFofocar.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-}
+};
+
 
 // === NOVA FUNÇÃO: GAVETA DE CONTROLE (MOBILE) ===
 window.abrirGavetaControle = function() {
@@ -247,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (tipo === 'off') { audio.pause(); }
             else {
                 audio.src = (tipo === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
-                audio.volume = 0.02;
+                audio.volume = 0.03;
                 audio.play().catch(() => { });
             }
         }

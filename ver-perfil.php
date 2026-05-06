@@ -16,7 +16,7 @@ $res = mysqli_query($conn, $sql);
 $dados = mysqli_fetch_assoc($res);
 
 if (!$dados) {
-    echo "<main class='erro-fenda'><h2>Habitante não localizado!</h2></main>";
+    echo "<main class= 'erro-fenda'><h2>Habitante não localizado, tente outro nome por favor! </h2></main>";
     include 'includes/footer.php';
     exit();
 }

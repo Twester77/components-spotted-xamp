@@ -125,6 +125,10 @@ if (!$post) {
                     $vibe = !empty($c['pref_vibe_comentario']) ? $c['pref_vibe_comentario'] : 'vibe-glass';
                     $cor_borda = !empty($c['pref_cor_borda']) ? $c['pref_cor_borda'] : '#70cde4';
                     $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
+                    $id_vincular = !empty($c['parent_id']) ? $c['parent_id'] : $c['id'];
+                    
+                    // Aqui forçamos o uso do username único do banco para a menção ser limpa. Tenta pegar o username (que não tem espaço), se não tiver, vai o nome mesmo
+                    $user_alvo = !empty($c['username']) ? $c['username'] : (!empty($c['usuario_nome']) ? $c['usuario_nome'] : 'Anonimo');
             ?>
                     <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho; ?>"
                         style="--cor-borda-glow: <?php echo $cor_borda; ?>; border-left-color: <?php echo $cor_borda; ?> !important;">
@@ -137,40 +141,27 @@ if (!$post) {
 
                         <p class="comentario-texto"><?php echo formatarMencoes($c['comentario']); ?></p>
 
-                        <?php if (empty($c['parent_id'])): ?>
-                            <div style="text-align: right; width: 100%;">
-                                <button onclick="prepararResposta('<?php echo $c['id']; ?>', '<?php echo htmlspecialchars($c['usuario_nome'] ?? 'Anonimo'); ?>')" class="btn-responder-fenda">
-                                    <i class="fas fa-reply"></i> Responder
-                                </button>
-                            </div>
-                        <?php endif; ?>
+                        <div style="text-align: right; width: 100%;">
+                            <!-- Removemos o IF que bloqueia a resposta dos comentarios filhos e permitir respostas em qualqueer nível -->
+                            <button onclick="prepararResposta('<?php echo $id_vincular; ?>', '<?php echo htmlspecialchars($user_alvo); ?>')" class="btn-responder-fenda">
+                                <i class="fas fa-reply"></i> Responder
+                            </button>
+                        </div>
                     </div>
-            <?php
+
+                <?php
                 endwhile;
             else: ?>
                 <p class="sem-comentarios">Ninguém fofocou nada ainda...</p>
             <?php endif; ?>
+
         </div>
-    </div>
 </main>
 
 <script>
-    function prepararResposta(id, autor) {
-        const inputParent = document.getElementById('input_parent_id');
-        if(inputParent) inputParent.value = id;
-        const campo = document.querySelector('.textarea-fenda');
-        if (campo) {
-            const nomeLimpo = autor ? autor.replace(/\s+/g, '') : "Anonimo";
-            campo.value = "@" + nomeLimpo + " " + campo.value;
-            campo.placeholder = "Respondendo a @" + nomeLimpo + "...";
-            campo.focus();
-            document.getElementById('fofocar').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-
     const textarea = document.querySelector('.textarea-fenda');
     const count = document.getElementById('char-count');
-    if(textarea && count) {
+    if (textarea && count) {
         textarea.addEventListener('input', function() {
             const restantes = 600 - this.value.length;
             count.textContent = restantes + " caracteres restantes";
@@ -178,22 +169,26 @@ if (!$post) {
         });
     }
 
-   const swipeAtivado = <?php echo $swipeAtivado; ?>;
-   if (swipeAtivado == 1) {
+    const swipeAtivado = <?php echo $swipeAtivado; ?>;
+    if (swipeAtivado == 1) {
         let touchstartX = 0;
         let touchX = 0;
         document.querySelectorAll('.comentario-item').forEach(item => {
             item.addEventListener('touchstart', e => {
                 touchstartX = e.touches[0].clientX;
                 item.style.transition = "none";
-            }, {passive: true});
+            }, {
+                passive: true
+            });
             item.addEventListener('touchmove', e => {
                 touchX = e.touches[0].clientX;
                 let deslocamento = touchX - touchstartX;
                 if (deslocamento > 0 && deslocamento < 100) {
                     item.style.setProperty('transform', `translateX(${deslocamento}px)`, 'important');
                 }
-            }, {passive: true});
+            }, {
+                passive: true
+            });
             item.addEventListener('touchend', e => {
                 let deslocamentoFinal = touchX - touchstartX;
                 item.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
@@ -204,45 +199,45 @@ if (!$post) {
                 item.style.setProperty('transform', 'translateX(0)', 'important');
             });
         });
-   }
+    }
 
-document.querySelector('.form-fenda').addEventListener('submit', function(e) {
-    e.preventDefault(); 
+    document.querySelector('.form-fenda').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-    const formData = new FormData(this);
-    const btn = this.querySelector('.btn-enviar-fenda');
-    const originalText = btn.innerText;
+        const formData = new FormData(this);
+        const btn = this.querySelector('.btn-enviar-fenda');
+        const originalText = btn.innerText;
 
-    btn.innerText = "Enviando...";
-    btn.disabled = true;
+        btn.innerText = "Enviando...";
+        btn.disabled = true;
 
-    fetch('enviar-comentario.php', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('Erro na rede');
-        return res.json();
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            const container = document.querySelector('.lista-comentarios-social');
-            const novoComentario = document.createElement('div');
-            
-            const vibe = formData.get('pref_vibe_comentario');
-            const cor = formData.get('pref_cor_borda');
-            const texto = formData.get('comentario');
-            
-            const nomeSessao = "<?php echo $_SESSION['usuario_nome'] ?? ''; ?>";
-            const autor = nomeSessao ? `@${nomeSessao}` : "👤 Visitante";
+        fetch('enviar-comentario.php', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Erro na rede');
+                return res.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    const container = document.querySelector('.lista-comentarios-social');
+                    const novoComentario = document.createElement('div');
 
-            novoComentario.className = `comentario-item ${vibe}`;
-            novoComentario.style.cssText = `--cor-borda-glow: ${cor}; border-left-color: ${cor} !important; opacity: 0; transform: translateY(-20px); transition: all 0.5s ease;`;
-            
-            novoComentario.innerHTML = `
+                    const vibe = formData.get('pref_vibe_comentario');
+                    const cor = formData.get('pref_cor_borda');
+                    const texto = formData.get('comentario');
+
+                    const nomeSessao = "<?php echo $_SESSION['usuario_nome'] ?? ''; ?>";
+                    const autor = nomeSessao ? `@${nomeSessao}` : "👤 Visitante";
+
+                    novoComentario.className = `comentario-item ${vibe}`;
+                    novoComentario.style.cssText = `--cor-borda-glow: ${cor}; border-left-color: ${cor} !important; opacity: 0; transform: translateY(-20px); transition: all 0.5s ease;`;
+
+                    novoComentario.innerHTML = `
                 <div class="comentario-meta">
                     <strong class="comentario-autor" style="color: ${cor};">${autor}</strong>
                     <span class="comentario-data">Agora mesmo</span>
@@ -250,35 +245,35 @@ document.querySelector('.form-fenda').addEventListener('submit', function(e) {
                 <p class="comentario-texto">${texto}</p>
             `;
 
-            const semComentarios = container.querySelector('.sem-comentarios');
-            if (semComentarios) semComentarios.remove();
-            
-            container.prepend(novoComentario);
-            
-            setTimeout(() => {
-                novoComentario.style.opacity = '1';
-                novoComentario.style.transform = 'translateY(0)';
-            }, 10);
+                    const semComentarios = container.querySelector('.sem-comentarios');
+                    if (semComentarios) semComentarios.remove();
 
-            this.reset();
-            document.getElementById('input_parent_id').value = "";
-            document.getElementById('char-count').textContent = "600 caracteres restantes";
-            btn.innerText = originalText;
-            btn.disabled = false;
-            
-        } else {
-            alert("Erro: " + data.message);
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
-    })
-    .catch(err => {
-        console.error("Erro no AJAX:", err);
-        alert("Erro ao conectar com o servidor.");
-        btn.innerText = originalText;
-        btn.disabled = false;
+                    container.prepend(novoComentario);
+
+                    setTimeout(() => {
+                        novoComentario.style.opacity = '1';
+                        novoComentario.style.transform = 'translateY(0)';
+                    }, 10);
+
+                    this.reset();
+                    document.getElementById('input_parent_id').value = "";
+                    document.getElementById('char-count').textContent = "600 caracteres restantes";
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+
+                } else {
+                    alert("Erro: " + data.message);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            })
+            .catch(err => {
+                console.error("Erro no AJAX:", err);
+                alert("Erro ao conectar com o servidor.");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            });
     });
-});
 </script>
 
 <?php include 'includes/footer.php'; ?>

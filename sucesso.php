@@ -1,5 +1,4 @@
 <?php include 'includes/header.php'; ?>
-
 <?php include 'includes/bolhas.php'; ?>
 
 <main style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
@@ -10,7 +9,7 @@
         <h1 style="color: #ffbc00; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Quase lá!</h1>
         
         <p style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px;">
-            O cadastro foi um sucesso! Enviamos um link de ativação para o seu e-mail institucional.
+            Cadastrado com sucesso! Enviamos um link de ativação para o seu e-mail institucional.
         </p>
 
         <a href="index.php" class="btn-lancar" style="text-decoration: none; display: inline-block;">
