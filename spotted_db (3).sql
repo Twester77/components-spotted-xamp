@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Tempo de geração: 06/05/2026 às 23:15
+-- Tempo de geração: 07/05/2026 às 23:34
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -135,7 +135,10 @@ INSERT INTO `comentarios` (`id`, `id_mensagem`, `comentario`, `data_comentario`,
 (236, 89, 'iu', '2026-05-06 18:43:58', 'Leonardo Florindo Alves R', NULL, 'vibe-light', '#ea3939'),
 (237, 89, 'oi', '2026-05-06 18:44:05', 'Leonardo Florindo Alves R', NULL, 'vibe-neon', '#ea3939'),
 (238, 89, 'oi', '2026-05-06 18:44:27', 'Leonardo Florindo Alves R', NULL, 'vibe-glass', '#ea3939'),
-(239, 90, 'oi', '2026-05-06 19:01:02', 'Leonardo Florindo Alves R', NULL, 'vibe-light', '#d61f1f');
+(239, 90, 'oi', '2026-05-06 19:01:02', 'Leonardo Florindo Alves R', NULL, 'vibe-light', '#d61f1f'),
+(240, 94, '@Leonardo Florindo Alves R oi', '2026-05-06 21:17:25', 'test123', 230, 'vibe-dark', '#d79119'),
+(241, 87, '@A Presença  - Official aaaaaaa ', '2026-05-07 16:44:49', 'Leonardo Florindo Alves R', 164, 'vibe-dark', '#ea3939'),
+(242, 87, '@A Presença  - Official aaaaaaa ', '2026-05-07 16:45:00', 'Leonardo Florindo Alves R', 164, 'vibe-dark', '#ea3939');
 
 -- --------------------------------------------------------
 
@@ -157,7 +160,9 @@ CREATE TABLE `curtidas` (
 
 INSERT INTO `curtidas` (`id`, `mensagem_id`, `usuario_id`, `tipo_reacao`, `data_reacao`) VALUES
 (690, 31, 16, 'perplecto', '2026-05-05 19:10:37'),
-(692, 88, 16, 'amei', '2026-05-05 19:39:15');
+(692, 88, 16, 'amei', '2026-05-05 19:39:15'),
+(737, 88, 1, 'perplecto', '2026-05-07 18:12:23'),
+(738, 94, 1, 'amei', '2026-05-07 18:14:39');
 
 -- --------------------------------------------------------
 
@@ -293,7 +298,8 @@ INSERT INTO `notificacoes` (`id`, `usuario_id`, `post_id`, `mensagem`, `lida`, `
 (65, 16, 90, '@Leonardo Florindo Alves R mencionou você em um comentário!', 1, '2026-05-02 14:20:49'),
 (66, 16, 89, '@Leonardo Florindo Alves R mencionou você em um comentário!', 1, '2026-05-02 23:52:11'),
 (67, 1, 89, '@test123 comentou no seu post!', 1, '2026-05-03 01:13:05'),
-(68, 1, 89, '@test123 comentou no seu post!', 1, '2026-05-03 01:13:35');
+(68, 1, 89, '@test123 comentou no seu post!', 1, '2026-05-03 01:13:35'),
+(69, 1, 94, '@test123 comentou no seu post!', 1, '2026-05-06 21:17:25');
 
 -- --------------------------------------------------------
 
@@ -348,8 +354,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `username`, `email`, `senha`, `foto`, `bio`, `capa`, `atletica_id`, `data_cadastro`, `token`, `ativo`, `pref_vibe_comentario`, `pref_cor_borda`, `pref_vibe_padrao`, `pref_cor_padrao`, `pref_swipe`, `pref_bolhas`, `ultima_atividade`) VALUES
-(1, 'Leonardo Florindo Alves R', 'apresenca_fevaaaaaaa', '87826@unifev.edu.br', '$2y$10$zg7pxV31ML6NyIUBxZ4AX.c8mlgRoarhdnFnKqNtMZfTGvOUCG7P6', 'user_1_1777855196.jpg', 'Criador e é também idealizador do Projeto \" A Fenda \"', 'capa_1.jpg', 'eng-mecanica', '2026-04-01 03:14:47', 'Leo_Idealizador', 1, 'padrao', '#70cde4', 'vibe-dark', '#ea3939', 0, 1, '2026-05-06 21:13:32'),
-(16, 'test123', 'test123', '15505@unifev.edu.br', '$2y$10$bctURxSC7BgFjw9WeaTBNug53yW5muOotty8H.ZX1YaDY0jhB75Ly', 'user_16_1776620960.jpg', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'capa_16.jpg', 'eng-mecanica', '2026-04-03 03:42:31', NULL, 1, 'padrao', '#70cde4', 'vibe-dark', '#d79119', 1, 1, '2026-05-06 21:08:14');
+(1, 'Leonardo Florindo Alves R', 'aaaasasdasdadada', '87826@unifev.edu.br', '$2y$10$zg7pxV31ML6NyIUBxZ4AX.c8mlgRoarhdnFnKqNtMZfTGvOUCG7P6', 'user_1_1777855196.jpg', 'Criador e é também idealizador do Projeto \" A Fenda \"', 'capa_1.jpg', 'eng-mecanica', '2026-04-01 03:14:47', 'Leo_Idealizador', 1, 'padrao', '#70cde4', 'vibe-dark', '#ea3939', 0, 1, '2026-05-07 21:30:47'),
+(16, 'test123', 'test123', '15505@unifev.edu.br', '$2y$10$bctURxSC7BgFjw9WeaTBNug53yW5muOotty8H.ZX1YaDY0jhB75Ly', 'user_16_1776620960.jpg', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'capa_16.jpg', 'eng-mecanica', '2026-04-03 03:42:31', NULL, 1, 'padrao', '#70cde4', 'vibe-dark', '#d79119', 1, 1, '2026-05-06 21:17:35');
 
 --
 -- Índices para tabelas despejadas
@@ -407,13 +413,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `comentarios`
 --
 ALTER TABLE `comentarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=243;
 
 --
 -- AUTO_INCREMENT de tabela `curtidas`
 --
 ALTER TABLE `curtidas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=735;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=739;
 
 --
 -- AUTO_INCREMENT de tabela `mensagens`
@@ -425,13 +431,13 @@ ALTER TABLE `mensagens`
 -- AUTO_INCREMENT de tabela `notificacoes`
 --
 ALTER TABLE `notificacoes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de tabela `seguidores`
 --
 ALTER TABLE `seguidores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
