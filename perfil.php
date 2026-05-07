@@ -16,7 +16,7 @@ include 'includes/bolhas.php';
 
 $id_meu = $_SESSION['usuario_id'];
 
-// 1. AJUSTE NA QUERY: Adicionei pref_bolhas para que o banco reconheça a escolha do usuário
+// 1. QUERY: Adicionei pref_bolhas para que o banco reconheça a escolha do usuário
 $query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
@@ -32,8 +32,7 @@ if (substr($cor_banco, 0, 1) !== '#') {
     $cor_banco = '#' . $cor_banco;
 }
 
-$cor_default = $cor_banco; 
-// REMOVI A LINHA REPETIDA QUE ESTAVA LOGO ABAIXO
+$cor_default = $cor_banco;
 
 $bolhas_default = $dados['pref_bolhas'] ?? 1;
 
@@ -96,7 +95,14 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <label>Username</label>
                 <div class="input-username-wrapper">
                     <span>@</span>
-                    <input type="text" name="username" maxlength="20" value="<?php echo htmlspecialchars($dados['username']); ?>">
+                    <input type="text"
+                        name="username"
+                        maxlength="20"
+                        value="<?php echo htmlspecialchars($dados['username']); ?>"
+                        pattern="[a-zA-Z0-9\_]+"
+                        title="Apenas letras, números e underline. Sem espaços!"
+                        oninput="this.value = this.value.replace(/\s/g, '')"
+                        required>
                 </div>
             </div>
 
@@ -172,7 +178,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                             <i class="fa-solid fa-hand-fist"></i> Street Fighter
                         </button>
                         <button type="button" id="btn-notif-desgraca1" class="btn-audio-choice" onclick="mudarTemaNotif('desgraca1')">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Desgraça 
+                            <i class="fa-solid fa-triangle-exclamation"></i> Desgraça
                         </button>
 
                         <button type="button" id="btn-notif-desgraca2" class="btn-audio-choice" onclick="mudarTemaNotif('desgraca2')">
@@ -234,7 +240,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
         document.getElementById('btn-bolhas-on').classList.toggle('active', valor === 1);
         document.getElementById('btn-bolhas-off').classList.toggle('active', valor === 0);
 
-        // Se você tiver a função setBolhas global que muda em tempo real, chama ela aqui
+        // função setBolhas global que muda em tempo real, chama ela aqui
         if (typeof setBolhas === "function") {
             setBolhas(valor === 1);
         }

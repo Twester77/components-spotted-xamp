@@ -228,10 +228,10 @@ nav {
 .titulo-sessao-pessoal {
     color: #fa800e;
     text-align: center;
-    display: flex!important;
-    flex-wrap: nowrap!important;
-    word-break: break-word!important;
-    display: 1!important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    word-break: break-word !important;
+    display: 1 !important;
     margin-bottom: 25px;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     text-transform: uppercase;
@@ -243,27 +243,42 @@ nav {
     flex-direction: column;
     gap: 20px;
     align-content: center;
-    }
+}
 
+/* ============================================================
+   MODAL OVERLAY E ESTRUTURA BASE
+   ============================================================ */
 
-/* Container da Toolbar */
+   .toolbar-content{
+    display: flex;
+    flex-direction: column;
+        /* ===== SCROLL VERTICAL ===== */
+     overflow-y: auto !important;    /* Permite rolagem vertical */
+     max-height: 80vh !important;    /* Limita a altura para evitar ultrapassar a tela */'
+   }
+
 #fenda-toolbar {
     position: fixed;
-    right: -250px;
+    right: clamp(-250px, -20vw, -350px);
     /* Escondida para fora da tela */
-    top: 75%;
+    top:70%;
     transform: translateY(-50%);
-    width: 250px;
+    width: clamp(250px, 20vw, 350px);
     background: rgba(0, 20, 20, 0.678);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     border: 1px solid #00ff00;
     border-radius: 15px 0 0 15px;
     transition: 0.5s ease-in-out;
-    z-index: 9999;
+    z-index: 99999;
     padding: 20px;
     color: #00ff00;
-    font-family: 'Courier New', monospace;
+    font-family: 'Courier New', monospace; 
+    display: flex;
+    flex-direction: column;
+     /* ===== SCROLL VERTICAL ===== */
+    max-height: 85vh !important;    /* Altura máxima de 85% da tela */
+    
 }
 
 /* Quando estiver aberta */
@@ -274,12 +289,12 @@ nav {
 /* O Gatilho (Bússola) */
 .toolbar-trigger {
     position: absolute;
-    left: -60px;
+    left: -50px;
     top: 0;
     background: #001a1a;
     border: 1px solid #00ff00;
-    width: clamp(40px, 5vw, 80px);
-    height: clamp(40px, 5vw, 80px);
+    width: clamp(45px, 5vw, 80px);
+    height: clamp(45px, 5vw, 80px);
     display: flex;
     border-radius: 5px 0 0 5px;
     cursor: pointer;
@@ -292,6 +307,8 @@ nav {
     box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
     background: #004d40;
     color: #00ffcc;
+    transform: translateY(-50%);
+
 
 }
 
@@ -342,18 +359,14 @@ nav {
     cursor: pointer;
 }
 
-/* Estilo da lista de amigos */
-.status-user .status-section {
-    margin-top: 15px;
-}
-
-.status-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 5px;
-    border-bottom: 1px solid rgba(0, 255, 204, 0.1);
-    font-size: 0.9rem;
+.status-section { margin-top: 15px; }
+.status-user { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    padding: 8px 5px; 
+    border-bottom: 1px solid rgba(0, 255, 204, 0.1); 
+    font-size: 0.9rem; 
 }
 
 .status-dot {
@@ -369,6 +382,196 @@ nav {
 
 .dot-offline {
     background-color: #555;
+}
+
+/* --- BOTÃO FLUTUANTE (FAB) --- */
+.fab-postar {
+    position: fixed;
+    bottom: 85px;
+    right: 25px;
+    width: clamp(50px, 5vw, 80px);
+    height: clamp(50px, 5vw, 80px);
+    background: #e0e0e0;
+    /* Branco acinzentado */
+    color: #000;
+    /* Ícone preto para alto contraste */
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.fa-plus::before {
+    font-size: clamp(22px, 2vw, 30px);
+    font-weight: bold;
+}
+
+.fab-postar:hover {
+    transform: scale(1.1) rotate(90deg);
+    background: #fff;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+body.modal-aberto .fab-postar {
+    display: none;
+}
+
+/* --- ESTRUTURA BASE DOS MODAIS --- */
+.fenda-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.fenda-modal-content {
+    box-shadow: 0 0 30px rgba(255, 188, 0, 0.2);
+    animation: surgimentoModal 0.3s ease-out;
+    padding: 15px;
+    max-width: 100%;
+}
+
+/* --- AJUSTE NO MODAL PARA FICAR MAIS SÓBRIO --- */
+#modal-postar-fenda .fenda-modal-content {
+    background: #121212ad;
+    border: 1px solid #333;
+    /* Borda cinza escura, bem discreta */
+    border-radius: 25px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Título em Branco Neve em vez de Dourado */
+.modal-body-ajuste .main-novo-post h2 {
+    color: #f0f0f0;
+    border-bottom: 1px solid #333;
+}
+
+/* Inputs com bordas cinzas que acendem em branco no foco */
+.modal-body-ajuste .main-novo-post textarea,
+.modal-body-ajuste .main-novo-post select {
+    border: 1px solid #444 !important;
+}
+
+.modal-body-ajuste .main-novo-post textarea:focus {
+    border-color: #fff !important;
+}
+
+@keyframes surgimentoModal {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/*  CLASSES AUXILIARES  (ZARPAR)  */
+.fenda-modal-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.fenda-modal-content h2 {
+    color: var(--dourado);
+    margin-bottom: 20px;
+}
+
+.fenda-modal-content p {
+    color: #ccc;
+    margin-bottom: 25px;
+}
+
+.fenda-modal-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-ficar-terra {
+    flex: 1;
+    background: var(--dourado);
+    color: #000;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: clamp(14px, 1.5vw, 22px);
+}
+
+.btn-zarpar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid #444;
+    padding: 6px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(14px, 1.5vw, 22px);
+}
+
+.btn-ficar-terra:hover {
+    background: #eab100;
+    transform: translateY(-2px);
+}
+
+.btn-zarpar:hover {
+    background: rgba(255, 99, 71, 0.2);
+    border-color: #ff6347;
+}
+
+/* Estilização do Botão de Ir para o Feed na Toolbar */
+.btn-feed-toolbar {
+    width: 100%;
+    padding: clamp(10px, 1.5vw, 16px);
+    margin-top: 15px;
+    background: rgba(0, 243, 255, 0.1); /* Ciano suave com transparência */
+    border: 1px solid var(--accent-cyan, #00f3ff);
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Urbanist', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+   
+}
+
+.btn-feed-toolbar:hover {
+    background: var(--laranja-fenda, #ff6347);
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 99, 71, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-feed-toolbar i {
+    font-size: clamp(16px, 1.5vw, 22px);
 }
 
 
@@ -581,164 +784,6 @@ footer a {
     text-decoration: underline;
 }
 
-/* --- BOTÃO FLUTUANTE (FAB) --- */
-.fab-postar {
-    position: fixed;
-    bottom: 85px;
-    right: 25px;
-    width: clamp(50px, 5vw, 80px);
-    height: clamp(50px, 5vw, 80px);
-    background: #e0e0e0;
-    /* Branco acinzentado */
-    color: #000;
-    /* Ícone preto para alto contraste */
-    border-radius: 50%;
-    border: none;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    z-index: 998;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.3s;
-}
-
-.fa-plus::before {
-    font-size: clamp(22px, 2vw, 30px);
-    font-weight: bold;
-}
-
-.fab-postar:hover {
-    transform: scale(1.1) rotate(90deg);
-    background: #fff;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-body.modal-aberto .fab-postar {
-    display: none;
-}
-
-/* --- ESTRUTURA BASE DOS MODAIS (Mantenha o seu original do Zarpar) --- */
-.fenda-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-}
-
-.fenda-modal-content {
-    box-shadow: 0 0 30px rgba(255, 188, 0, 0.2);
-    animation: surgimentoModal 0.3s ease-out;
-    padding: 15px;
-    max-width: 100%;
-}
-
-/* --- AJUSTE NO MODAL PARA FICAR MAIS SÓBRIO --- */
-#modal-postar-fenda .fenda-modal-content {
-    background: #121212;
-    border: 1px solid #333;
-    /* Borda cinza escura, bem discreta */
-    border-radius: 25px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-}
-
-/* Título em Branco Neve em vez de Dourado */
-.modal-body-ajuste .main-novo-post h2 {
-    color: #f0f0f0;
-    border-bottom: 1px solid #333;
-}
-
-/* Inputs com bordas cinzas que acendem em branco no foco */
-.modal-body-ajuste .main-novo-post textarea,
-.modal-body-ajuste .main-novo-post select {
-    border: 1px solid #444 !important;
-}
-
-.modal-body-ajuste .main-novo-post textarea:focus {
-    border-color: #fff !important;
-}
-
-@keyframes surgimentoModal {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/*  CLASSES AUXILIARES  (ZARPAR)  */
-.fenda-modal-icon {
-    font-size: 50px;
-    margin-bottom: 15px;
-}
-
-.fenda-modal-content h2 {
-    color: var(--dourado);
-    margin-bottom: 20px;
-}
-
-.fenda-modal-content p {
-    color: #ccc;
-    margin-bottom: 25px;
-}
-
-.fenda-modal-buttons {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
-
-.btn-ficar-terra {
-    flex: 1;
-    background: var(--dourado);
-    color: #000;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: clamp(14px, 1.5vw, 22px);
-}
-
-.btn-zarpar {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    border: 1px solid #444;
-    padding: 6px 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: clamp(14px, 1.5vw, 22px);
-}
-
-.btn-ficar-terra:hover {
-    background: #eab100;
-    transform: translateY(-2px);
-}
-
-.btn-zarpar:hover {
-    background: rgba(255, 99, 71, 0.2);
-    border-color: #ff6347;
-}
-
 
 
 
@@ -866,8 +911,6 @@ body.modal-aberto .fab-postar {
     /* Título mais visível */
     margin-bottom: 3px;
 }
-
-
 
 
 
@@ -1130,7 +1173,8 @@ body.modal-aberto .fab-postar {
     border: 2px solid #e48c29;
     flex-shrink: 0 !important;
 }
-.avatar-busca .perfil-gold{
+
+.avatar-busca .perfil-gold {
     border-color: var(--dourado) !important;
 }
 
@@ -1303,7 +1347,7 @@ main.container-post-foco {
     /* Permite redimensionar apenas na vertical */
     padding: 15px !important;
     min-height: 80px;
-     /* Altura mínima para evitar que fique muito pequeno */
+    /* Altura mínima para evitar que fique muito pequeno */
 }
 
 
@@ -1693,7 +1737,7 @@ body.is-touch-device .vibe-light .comentario-texto {
 
 /* PULSAR DA BORDA */
 .card-focado .perfil-gold {
-    border: 1px solid var(--dourado) ;
+    border: 1px solid var(--dourado);
     position: relative;
     /* Faz o brilho pulsar devagar */
     animation: glowPulsar 3s infinite alternate;
@@ -1818,12 +1862,15 @@ h2.titulo-home {
     border-radius: 20px;
     -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
     mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
-    width: 100% !important;       /* Não deixa colar nas bordas do iPhone/Lumia */
+    width: 100% !important;
+    /* Não deixa colar nas bordas do iPhone/Lumia */
     max-width: clamp(320px, 100%, 900px) !important;
     height: auto;
-    margin: 30px auto !important;   /* Reforça a centralização */
-    border-radius: 20px;     
-    display: block;    /* Mantém o estilo da Fenda */
+    margin: 30px auto !important;
+    /* Reforça a centralização */
+    border-radius: 20px;
+    display: block;
+    /* Mantém o estilo da Fenda */
 
 }
 
@@ -1899,17 +1946,21 @@ h2.titulo-home {
 
 /* ESTILO DA SEÇÃO PAI (DIRETRIZES) */
 .secao-seguranca {
-    background-color: rgba(105, 61, 10, 0.22) ; /* Cor original que você estava usando */
-    border-radius: 20px ;
-    padding: 15px; /* Valor de segurança que não entendem os clamps */
+    background-color: rgba(105, 61, 10, 0.22);
+    /* Cor original que você estava usando */
+    border-radius: 20px;
+    padding: 15px;
+    /* Valor de segurança que não entendem os clamps */
     padding: clamp(12px, 4vw, 30px) !important;
-    line-height: 1.4 ;
-    border: 1px solid rgba(252, 144, 12, 0.2); /* Uma bordinha bem sutil laranja */
+    line-height: 1.4;
+    border: 1px solid rgba(252, 144, 12, 0.2);
+    /* Uma bordinha bem sutil laranja */
     transition: all 0.3s ease;
 }
 
 .secao-seguranca h2 {
-    color: #fc900c !important; /* Laranja padrão da Fenda */
+    color: #fc900c !important;
+    /* Laranja padrão da Fenda */
     text-align: center;
     margin-bottom: 20px;
     font-family: 'Bebas Neue', sans-serif;
@@ -1924,8 +1975,10 @@ h2.titulo-home {
 }
 
 .box-diretrizes {
-    background: rgba(255, 255, 255, 0.05); /* Um fundo bem sutil */
-    border-left: 4px solid #fc900c; /* O laranja que você curtiu */
+    background: rgba(255, 255, 255, 0.05);
+    /* Um fundo bem sutil */
+    border-left: 4px solid #fc900c;
+    /* O laranja que você curtiu */
     padding: clamp(10px, 3vw, 20px) !important;
     margin: 15px 0;
     border-radius: 8px;
@@ -1937,13 +1990,15 @@ h2.titulo-home {
 
 
 .box-diretrizes ul {
-    list-style-type: none; /* Vamos tirar as bolinhas padrão */
+    list-style-type: none;
+    /* Vamos tirar as bolinhas padrão */
     padding: 0 !important;
     margin: 0;
 }
 
 .box-diretrizes li {
-    color: #e0e0e0; /* Cinza claro: aparece bem no fundo branco e no preto */
+    color: #e0e0e0;
+    /* Cinza claro: aparece bem no fundo branco e no preto */
     margin-bottom: 15px;
     line-height: 1.6;
     position: relative;
@@ -1964,7 +2019,8 @@ h2.titulo-home {
 }
 
 .box-diretrizes li strong {
-    color: #ffffff; /* Deixa o título do item bem visível */
+    color: #ffffff;
+    /* Deixa o título do item bem visível */
     text-transform: uppercase;
     font-size: 0.9rem;
 }
@@ -1986,7 +2042,7 @@ h2.titulo-home {
     max-width: 1100px;
 }
 
- .config-item {
+.config-item {
     justify-content: left !important;
     border: 2px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 10px;
@@ -2017,20 +2073,22 @@ input[type="check-box"] {
     /* 2. A MÁSCARA ZUCKERBERG: Esmaecimento suave nas bordas para fundir com o main */
 
 
-   /* AJUSTE: Máscara mais suave para não esconder os posts */
--webkit-mask-image: linear-gradient(to bottom,
-    transparent 0%,
-    black 2%,       /* Começa a mostrar o conteúdo muito mais rápido */
-    black 92%,      /* Mantém 100% de visibilidade na maior parte do corpo */
-    rgba(0, 0, 0, 0.7) 100% /* Fade final bem mais fraco (0.7 em vez de transparente) */
-);
+    /* AJUSTE: Máscara mais suave para não esconder os posts */
+    -webkit-mask-image: linear-gradient(to bottom,
+            transparent 0%,
+            black 2%,
+            /* Começa a mostrar o conteúdo muito mais rápido */
+            black 92%,
+            /* Mantém 100% de visibilidade na maior parte do corpo */
+            rgba(0, 0, 0, 0.7) 100%
+            /* Fade final bem mais fraco (0.7 em vez de transparente) */
+        );
 
-mask-image: linear-gradient(to bottom,
-    transparent 0%,
-    black 2%,
-    black 92%,
-    rgba(0, 0, 0, 0.7) 100%
-);
+    mask-image: linear-gradient(to bottom,
+            transparent 0%,
+            black 2%,
+            black 92%,
+            rgba(0, 0, 0, 0.7) 100%);
 
     /* 3. A VIBE ROCKSTARS: Um "Lens Flare" ou brilho de palco no fundo */
     /* variável --aura-user para o brilho da guitarra */
@@ -2278,7 +2336,7 @@ textarea[name="bio"] {
     /* Alinha com a direita do sino */
     top: 40px;
     /* Joga um pouco para baixo do sino */
-    width: 280px;
+    width: 270px;
     background: rgba(10, 25, 41, 0.98);
     /* Fundo bem sólido para não vazar o que está atrás */
     -webkit-backdrop-filter: blur(6px);
@@ -2420,7 +2478,7 @@ textarea[name="bio"] {
         gap: 15px !important;
         width: 100vw !important;
         max-width: 100% !important;
-        padding: 70px 10px 50px 10px ;
+        padding: 70px 10px 50px 10px;
         height: auto !important;
         min-height: 100vh !important;
         justify-content: center !important;
@@ -2499,7 +2557,8 @@ textarea[name="bio"] {
     box-sizing: border-box !important;
 }
 
-html, body {
+html,
+body {
     max-width: 100vw !important;
     overflow-x: hidden !important;
     margin: 0 !important;
@@ -2521,6 +2580,7 @@ html, body {
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 0 15px 0 !important;
+        -webkit-backdrop-filter: blur(4px) !important;
         backdrop-filter: blur(4px) !important;
         will-change: transform, backdrop-filter;
         padding: 12px !important;
@@ -2584,8 +2644,15 @@ html, body {
     }
 
     @keyframes deslizarMenu {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .fenda-container div[style*="flex"] {
@@ -2628,7 +2695,7 @@ html, body {
     }
 
     .sessao-publicar {
-        width: 100% !important;
+        width: 98% !important;
         margin: 15px 0 !important;
         border-radius: 0 !important;
         border-left: none !important;
@@ -2688,7 +2755,8 @@ html, body {
         padding: 4px 8px;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.8rem !important;
         gap: 4px;
     }
@@ -2737,6 +2805,7 @@ html, body {
     main {
         padding: 0 10px !important;
     }
+    
 }
 
 /* 2. TABLETS E CELULAR LANDSCAPE (601px a 900px) */
@@ -2762,7 +2831,8 @@ html, body {
         padding: 10px !important;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.9rem !important;
         gap: 6px;
     }
@@ -2800,6 +2870,9 @@ html, body {
     .header-icons i {
         font-size: 1.5rem !important;
     }
+
+
+      
 }
 
 /* 3. TABLETS GRANDES E IPAD AIR (901px a 1024px) */
@@ -2829,14 +2902,29 @@ html, body {
         font-size: 1rem !important;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.9rem !important;
     }
 
     header h1 {
         font-size: 1.8rem !important;
     }
+
+        #fenda-toolbar {
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        max-height: 88vh !important;
+    }
+
+    #modal-postar-fenda .fenda-modal-content {
+        max-height: 80vh !important;
+    }
 }
+
+
+
+
 
 /* 4. LANDSCAPE DEDICADO PARA TABLETS (especial iPad Air) */
 @media screen and (min-width: 1025px) and (max-width: 1366px) and (orientation: landscape) {
@@ -2845,8 +2933,8 @@ html, body {
         gap: 20px !important;
         padding: 15px !important;
         margin: 20px auto !important;
-        max-width: 95% !important;
-        width: 95% !important;
+        max-width: 98% !important;
+        width: 98% !important;
     }
 
     .spotted-card {
@@ -2865,7 +2953,8 @@ html, body {
         font-size: 0.95rem !important;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.85rem !important;
     }
 
@@ -2912,7 +3001,8 @@ html, body {
         max-height: 4rem !important;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.8rem !important;
         gap: 4px;
     }
@@ -2966,44 +3056,42 @@ html, body {
         max-width: 100% !important;
         overflow-x: hidden;
     }
-
-    /* ... resto das regras ... */
 }
 
 /* 6.1 CORREÇÃO ESPECÍFICA PARA IPAD AIR LANDSCAPE (1025px a 1200px) */
 @media screen and (min-width: 1025px) and (max-width: 1200px) and (orientation: landscape) {
     .container-feed {
-        grid-template-columns: repeat(3, 1fr) !important; /* 3 colunas em vez de 4 */
+        grid-template-columns: repeat(3, 1fr) !important;
         gap: 15px !important;
-        padding: 10px !important;   /* menos padding para ganhar espaço */
+        padding: 10px !important;
         width: 98% !important;
         margin: 15px auto !important;
     }
 
     .spotted-card {
         max-width: 100% !important;
-        min-width: 0 !important;    /* permite que o card encolha se necessário */
+        min-width: 0 !important;
     }
 
-    /* Garante que o perfil público ocupe toda a largura */
     .main-perfil-container-publico {
         width: 100% !important;
         max-width: 100% !important;
         padding: 8px !important;
     }
 
-    /* Ajuste fino para os cards não ficarem muito altos */
     .post-content {
         font-size: 0.9rem !important;
         max-height: 4rem !important;
     }
 
-    /* Botões de reação um pouco menores */
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.8rem !important;
         gap: 4px;
     }
+
 }
+
 
 /* 7. MONITORES ULTRA WIDE (acima de 1600px) */
 @media screen and (min-width: 1600px) {
@@ -3024,7 +3112,8 @@ html, body {
     }
 }
 
-/* 8. IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (até 340px) - PORTRAIT  - ONDE O CÃO FAZ SUA MORADA */
+
+/* 8. IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (até 340px) - PORTRAIT */
 @media screen and (max-width: 340px) {
     html, body {
         width: 100% !important;
@@ -3151,9 +3240,14 @@ html, body {
         font-size: 0.75rem !important;
         padding: 8px !important;
     }
+
 }
 
-/* 9. LANDSCAPE PARA IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (máx 600px landscape) */
+
+
+
+
+/* 9. LANDSCAPE PARA IPHONE 4 / LUMIA / CELULARES MUITO PEQUENOS (máx 600px landscape) - CORRIGIDO */
 @media screen and (max-width: 600px) and (orientation: landscape) {
     .container-feed {
         display: flex !important;
@@ -3165,17 +3259,25 @@ html, body {
         margin: 10px 0 !important;
         width: 100% !important;
         float: none !important;
-        left: auto !important;  
+        left: auto !important;
         right: auto !important;
     }
 
-    /* CARDS OCUPAM 90% DA LARGURA E CENTRALIZADOS */
+    /* CORREÇÃO: CARDS NÃO EXPLODEM */
     .spotted-card {
-        width: 98% !important;
-        max-width: 400px !important;
-        min-width: 280px !important;
-        margin: 0 !important;
+        width: 95% !important;
+        max-width: 350px !important;
+        min-width: 260px !important;
+        margin: 5px auto !important;
         display: block !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Garante que nenhum conteúdo interno force largura maior */
+    .spotted-card * {
+        max-width: 100% !important;
+        word-wrap: break-word !important;
+        white-space: normal !important;
     }
 
     .main-perfil-container-publico {
@@ -3198,7 +3300,8 @@ html, body {
         max-height: 3.5rem !important;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.75rem !important;
     }
 
@@ -3215,21 +3318,30 @@ html, body {
         width: 38px !important;
         height: 38px !important;
     }
+
+    /* Remove transform que pode causar overflow */
+    .spotted-card:hover {
+        transform: none !important;
+    }
+
 }
 
-/* EXTRA: iPhone 4 / Lumia 520 (largura máxima 480px) em landscape */
+
+
+/* EXTRA: Lumia 520 (largura máxima 480px) em landscape */
 @media screen and (max-width: 550px) and (max-height: 400px) and (orientation: landscape) {
     .spotted-card {
         width: 95% !important;
-        max-width: 350px !important;
+        max-width: 320px !important;
     }
-    
+
     .post-content {
-        font-size: 0.8rem !important;
+        font-size: 0.75rem !important;
     }
-    
-    .btn-reagir, .btn-fofocar {
-        font-size: 0.7rem !important;
+
+    .btn-reagir,
+    .btn-fofocar {
+        font-size: 0.65rem !important;
     }
 }
 
@@ -3262,10 +3374,12 @@ html, body {
         max-height: 3.5rem !important;
     }
 
-    .btn-reagir, .btn-fofocar {
+    .btn-reagir,
+    .btn-fofocar {
         font-size: 0.75rem !important;
     }
 }
+
 
 /* 11. FIX SAFE ZONE PARA IPAD PRO (1366px a 1400px) */
 @media screen and (min-width: 1366px) and (max-width: 1400px) {
@@ -3291,12 +3405,14 @@ html, body {
     box-sizing: border-box !important;
 }
 
+
 /* 13. GARANTIA PARA O CONTAINER DO FEED NO MODO PADRÃO */
 .container-feed {
     width: 98% !important;
     max-width: 98% !important;
     margin: 0 auto !important;
 }
+
 
 /* 14. MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO */
 @media (prefers-reduced-motion: reduce) {
@@ -3331,3 +3447,8 @@ html, body {
         background-attachment: scroll !important;
     }
 }
+
+
+
+
+

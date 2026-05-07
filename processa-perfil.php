@@ -35,16 +35,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $novo_nome     = $_POST['nome'] ?? '';
     $nova_bio      = $_POST['bio'] ?? '';
     $novo_username = $_POST['username'] ?? '';
+
+    // 1. Remove qualquer espaço que sobrou ou foi burlado no HTML
+    if (preg_match('/\s/', $novo_username)) {
+        header("Location: perfil.php?erro=espaco_proibido");
+        exit();
+    }
+
+    // 2. Limpa símbolos proibidos, deixando apenas letras, números e underline
+    $novo_username = preg_replace('/[^a-zA-Z0-9\_]/', '', $novo_username);
+
+    // 3. Verifica se o username não ficou vazio após a limpeza
+    if (empty($novo_username)) {
+        header("Location: perfil.php?erro=username_invalido");
+        exit();
+    }
+
     $nova_atletica = $_POST['atletica_id'] ?? 'agronomia';
     $nova_vibe = $_POST['pref_vibe_padrao'] ?? 'vibe-glass';
     $nova_cor = isset($_POST['pref_cor_padrao']) ? $_POST['pref_cor_padrao'] : '#70cde4';
     $novo_swipe    = isset($_POST['pref_swipe']) ? (int)$_POST['pref_swipe'] : 0;
     $nova_bolha    = isset($_POST['pref_bolhas']) ? (int)$_POST['pref_bolhas'] : 0;
 
-    // --- PREPARED STATEMENT CORRIGIDO ---
+    // --- PREPARED STATEMENT ---
     // A ordem dos tipos deve bater exatamente com a ordem das variáveis
     // nome(s), bio(s), username(s), atletica(i), vibe(s), cor(s), swipe(i), bolhas(i), id(i)
-    // TIPO: s s s i s s i i i (9 total)
+    // TIPO: s s s i s s i i i (9 total) - s para string, i para inteiros
 
     $sql = "UPDATE usuarios SET 
             nome = ?, 

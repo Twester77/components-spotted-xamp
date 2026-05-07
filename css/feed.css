@@ -3,7 +3,7 @@
 .filtros-container {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     padding: 10px 10px;
     flex-wrap: wrap;
     margin-bottom: 25px;
@@ -14,7 +14,7 @@
     text-decoration: none;
     font-size: 18px;
     font-weight: 800;
-    padding: 8px 16px;
+    padding: clamp(8px, 16px, 12px) 20px;
     max-width: fit-content;
     border-radius: 20px;
     color: #fff;
@@ -22,6 +22,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: 0.3s;
     text-transform: uppercase;
+    
 }
 
 .filtro-btn.ativo,
@@ -38,6 +39,7 @@
     justify-content: center;
     gap: 15px;
     margin: 20px 0;
+    
 }
 
 /*  O CONTAINER  */
@@ -176,8 +178,7 @@
         display: block !important;
         width: 100% !important;
         /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 600px ;
-        min-height: 200px ;
+        max-width: 600px;
         flex-shrink: 0 !important;
         position: relative !important;
         margin: 20px auto !important;
@@ -341,8 +342,9 @@
     font-weight: bold;
     transition: all 0.3s ease;
     height: auto;
-    width: 100%!important;
+    width: 98%!important;
     max-width: fit-content;
+    margin-top: 15px;
 
 }
 
@@ -357,6 +359,8 @@
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     justify-content: center;
     font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
+    padding: clamp(10px, 0.5vw + 8px, 14px) 20px;
+    align-content: center;
 }
 
 /* APROVEITANDO AS BADGES */
@@ -413,7 +417,7 @@
     text-decoration: none;
     font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
     font-weight: bold;
-    display: flex;
+    display: flex-end;
     transition: 0.3s;
 }
 
@@ -421,6 +425,13 @@
     color: #fff !important;
     transform: translateX(5px);
     /* Efeito de setinha andando */
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
 }
 
 span.data-post {
@@ -530,16 +541,17 @@ order: 3;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 45px; /* Garante que a pílula não mude de largura com números pequenos */
+    min-width: 35px; /* Garante que a pílula não mude de largura com números pequenos */
     height: 28px;
     background: rgba(255, 255, 255, 0.08);
-    padding: 4px 12px;
+    padding: clamp(4px, 0.5vw + 2px, 6px) 10px;
     border-radius: 15px;
-    font-size: 0.85rem;
+    font-size:  clamp(0.85rem, 0.2vw + 0.6rem, 1.1rem);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
-    transition: transform 0.2s ease, background 0.2s ease; /* Transição suave para o scale */
+    transition: transform 0.2s ease-in-out, background 0.2s ease-in-out; /* Transição suave para o scale */
     cursor: default;
+    margin: 0 2px;
 }
 
 /* Efeito de aumentar ao passar o mouse nas pílulas */

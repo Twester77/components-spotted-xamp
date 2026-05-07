@@ -542,14 +542,15 @@ section.sessao-publicar {
     padding: 20px;
     margin: 20px auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    width: 100% ;
-    max-width: clamp(320px, 95%, 500px) ;
+    width: 95% ;
+    max-width: clamp(300px, 95%, 500px) ;
     display: flex !important; /* Para garantir o alinhamento interno */
     flex-direction: column !important;
     align-items: center;
     background-color: #49414121;
     background: rgba(0, 0, 0, 0.45);
     border-radius: 20px !important;
+    height: auto !important;
 
 }
 
