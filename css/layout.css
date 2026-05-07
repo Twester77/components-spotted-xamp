@@ -250,10 +250,10 @@ nav {
    ============================================================ */
 
    .toolbar-content{
-    display: flex;
-    flex-direction: column;
-        /* ===== SCROLL VERTICAL ===== */
-     overflow-y: auto !important;    /* Permite rolagem vertical */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 50vh !important;
+    padding-right: 5px;
    }
 
 #fenda-toolbar {
@@ -276,7 +276,7 @@ nav {
     display: flex;
     flex-direction: column;
      /* ===== SCROLL VERTICAL ===== */
-    max-height: 85vh !important;    /* Altura máxima de 85% da tela */
+    max-height: 50vh !important;    /* Altura máxima de 50% da tela */
     
 }
 
