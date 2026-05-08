@@ -2,7 +2,7 @@
 /*--------------------------------------------------------------------------------------------------------------
 PROJETO: A FENDA - SPOTTED UNIFEV DESENVOLVEDOR: Leonardo (O Idealizador)
 AGRADECIMENTOS: Meu Coordenador de ADS Fernando Menechelli, meu Professor de HTML Eric
-e meu "Padrinho Digital" Gemini
+e meu "Padrinhos Digitais" Gemini  e Deep Seek
 ---------------------------------------------------------------------------------------------------------------*/
 
 if (ob_get_level() == 0) {
