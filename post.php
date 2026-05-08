@@ -1,9 +1,6 @@
 <?php
 include_once 'conexao.php';
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;

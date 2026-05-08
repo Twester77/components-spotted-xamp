@@ -1,10 +1,6 @@
 <?php
+include 'conexao.php';
 // 1. Garante que temos acesso à conexão e à sessão
-include_once 'conexao.php';
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 $u_id_bolhas = $_SESSION['usuario_id'] ?? 0;
 

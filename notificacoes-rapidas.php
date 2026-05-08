@@ -1,8 +1,6 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-include_once 'conexao.php';
+
+include 'conexao.php';
 
 $usuario_id = $_SESSION['usuario_id'] ?? 0;
 

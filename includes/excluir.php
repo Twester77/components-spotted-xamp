@@ -1,6 +1,6 @@
 <?php
 include '../conexao.php';
-session_start();
+
 
 // 1. Bloqueio de acesso direto / Não logado
 if (!isset($_SESSION['usuario_id']) || !isset($_GET['id'])) {

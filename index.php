@@ -1,12 +1,10 @@
 <?php
-include_once 'conexao.php'; // Mantendo a segurança com include_once
+include 'conexao.php'; // Mantendo a segurança com include_once
 $hora = '3';
 // Ajuste do fuso para SP
 date_default_timezone_set('America/Sao_Paulo');
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+
 
 $hora = (int)date('H');
 $tema_classe = "";

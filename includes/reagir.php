@@ -6,10 +6,6 @@ if (file_exists('conexao.php')) {
     include '../conexao.php';
 }
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['usuario_id'])) {

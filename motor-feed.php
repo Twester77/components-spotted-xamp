@@ -1,11 +1,8 @@
 <?php
+include 'conexao.php'; 
 /* MOTOR UNIVERSAL DA FENDA 
     Funciona para: Feed Geral, Feed Pessoal e Ver Perfil
 */
-include_once 'conexao.php'; 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
 // 1. CAPTURA DE PARÂMETROS VIA GET (Mantendo seus nomes originais)
 $offset    = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;

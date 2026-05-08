@@ -1,8 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-include_once 'conexao.php';
+include 'conexao.php';
 
 function processarUploadSeguro($campo, $prefixo, $id, $pasta, $limite)
 {

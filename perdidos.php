@@ -2,10 +2,6 @@
 // 1. INICIALIZAÇÃO E SEGURANÇA
 include 'conexao.php'; // Aqui já roda o ob_start()
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // 2. BUSCA DE DADOS (Lógica Independente)
 $filtro = isset($_GET['filtro']) ? mysqli_real_escape_string($conn, $_GET['filtro']) : 'todos';
 

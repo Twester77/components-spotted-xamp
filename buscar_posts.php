@@ -1,6 +1,5 @@
 <?php
-include_once 'conexao.php';
-session_start();
+include 'conexao.php';
 
 // 1. REMOVIDA A FUNÇÃO formatarMencoes DAQUI . Ela já vem do conexao.php 
 

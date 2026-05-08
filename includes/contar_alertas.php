@@ -4,7 +4,7 @@ error_reporting(0);
 ini_set('display_errors', 0);
 
 include '../conexao.php';
-session_start();
+
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
