@@ -512,7 +512,7 @@ order: 3;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: absolute;
     /* Sobe a popup para ficar acima da palavra */
-    left: 50%;
+    left: 40%;
     /*  Move o canto esquerdo da popup para o meio do "Reagir" */
     background: #252542;
     padding: 8px 12px;
