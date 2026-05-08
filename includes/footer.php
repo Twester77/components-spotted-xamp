@@ -1,6 +1,6 @@
 <footer>
     <p><strong>Aviso:</strong> "A Fenda" é uma plataforma independente e colaborativa. Não possuímos vínculo administrativo ou oficial com a UNIFEV. O conteúdo é de responsabilidade exclusiva de seus autores.</p>
-    <strong>Entre em contato: 0800 7070 6969 ou um email para floorspotted.fev@outlook.com</strong>
+    <strong>Entre em contato: (011) 1406 7070 7070 ou um email para floorspotted.fev@outlook.com</strong>
     <p>&copy; <?php echo date('Y'); ?> Desenvolvido por Leonardo - Todos os Direitos Reservados</p>
 
     <?php include_once 'toolbar.php'; ?>
