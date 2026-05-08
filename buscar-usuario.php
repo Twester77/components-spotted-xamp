@@ -35,7 +35,7 @@ include 'includes/navbar.php';
     <div class="lista-resultados"> <?php if (!empty($busca)): ?>
             <?php if (count($resultados) > 0): ?>
                 <?php foreach ($resultados as $user): 
-                    $foto = !empty($user['foto']) ? "uploads/" . $user['foto'] : "imagensfoto/img_avatar_generico.jpg";
+                    $foto = !empty($user['foto']) ? "uploads/" . $user['foto'] : "imagensfoto/default.jpg";
                 ?>
                     <a href="ver-perfil.php?user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
                         <div class="user-card">
