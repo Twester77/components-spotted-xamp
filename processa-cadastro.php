@@ -3,7 +3,7 @@ include 'conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    
+
     // Validação universal de e-mail (Aceita qualquer provedor)
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         header("Location: cad-usuario.php?erro=email_invalido");
@@ -25,15 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $senha            = password_hash($_POST['senha'], PASSWORD_DEFAULT);
     $token            = bin2hex(random_bytes(32));
 
-    $sql = "INSERT INTO usuarios (nome, email, senha, token, ativo, atletica_id, pref_cor_padrao, pref_vibe_padrao) 
-            VALUES ('$nome', '$email', '$senha', '$token', 0, '$atletica_id', '$pref_cor_padrao', '$pref_vibe_padrao')";
+    $sql = "INSERT INTO usuarios (nome, email, senha, token, ativo, atletica_id, pref_cor_padrao, pref_vibe_padrao, foto, capa) 
+        VALUES ('$nome', '$email', '$senha', '$token', 0, '$atletica_id', '$pref_cor_padrao', '$pref_vibe_padrao', 'default.jpg', 'default_capa.jpg')";
 
     if (mysqli_query($conn, $sql)) {
-        
+
         $apiKey = 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8';
-        
-        // --- CONFIGURAÇÃO DA URL (AJUSTE PARA O DOMÍNIO DA INFINITYFREE) ---
-        $url_base = "http://localhost/spotted-unifev"; 
+
+        // --- CONFIGURAÇÃO DA URL (AJUSTE PARA O DOMÍNIO DO RENDER) ---
+        $url_base = "http://localhost/spotted-unifev"; /*MUDAR URGENTEMENTE*/
 
         $email_payload = [
             'from' => 'Fenda <onboarding@resend.dev>',

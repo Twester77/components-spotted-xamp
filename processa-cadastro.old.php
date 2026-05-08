@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Use a chave que você me passou: re_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8
 
         $apiKey = 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8';
-
-        $email_payload = [
+/*MUDAR URGENTEMENTE O LOCAL HOST HREF*/
+        $email_payload = [ 
             'from' => 'Fenda <onboarding@resend.dev>', // No futuro, troque pelo seu domínio
             'to' => [$email], // Variável $email que vem do seu formulário
             'subject' => 'Sua jornada na Fenda começou!',
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>Seu cadastro foi realizado com sucesso. Agora você faz parte do ecossistema mais secreto da UNIFEV.</p>
             <p>Prepare sua aura, ajuste sua vibe e comece a fofocar agora mesmo.</p>
             <div style='text-align: center; margin-top: 30px;'>
-                <a href='http://localhost/spotted-unifev/index.php' 
+                <a href='http://localhost/spotted-unifev/index.php'  
                    style='background: #70cde4; color: #000; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 0 15px #70cde4;'>
                    ENTRAR NA FENDA
                 </a>

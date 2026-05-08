@@ -22,7 +22,7 @@ $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
 $foto_atual = !empty($dados['foto']) ? "uploads/" . $dados['foto'] : "imagensfoto/default.jpg";
-$capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfoto/capa_padrao.jpg";
+$capa_atual = !empty($dados['capa']) ? "uploads/" . $dados['capa'] : "imagensfoto/default_capa.jpg";
 
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 // Pega do banco ou usa o padrão
