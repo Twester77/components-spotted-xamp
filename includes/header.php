@@ -1,6 +1,5 @@
 <?php
-
-include 'conexao.php'; // Segurança contra o erro de "Redeclare"[cite: 2]
+include_once 'conexao.php'; // Segurança contra o erro de "Redeclare"[cite: 2]
 
 $u_id = $_SESSION['usuario_id'] ?? 0;
 $pref_swipe_real = 0; // Garante o valor padrão para não quebrar o CSS

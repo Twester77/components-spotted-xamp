@@ -1,5 +1,3 @@
-
-
 <?php 
 include 'conexao.php'; 
 include 'includes/header.php'; 
@@ -21,7 +19,7 @@ include 'includes/bolhas.php';
   }
 </style>
 
-  <main style="max-width: 1000px; margin: auto;">
+  <main style="max-width: 1200px; margin: auto;">
     <article>
 <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 15px; margin-top: 25px;">
    TERMOS E DIRETRIZES DE SEGURANÇA
