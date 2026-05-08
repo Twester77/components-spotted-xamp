@@ -1,48 +1,37 @@
 <?php
-// 1. LIMPEZA DE BUFFER (Evita erros de "headers already sent" no Render)
+/*--------------------------------------------------------------------------------------------------------------
+PROJETO: A FENDA - SPOTTED UNIFEV DESENVOLVEDOR: Leonardo (O Idealizador)
+AGRADECIMENTOS: Meu Coordenador de ADS Fernando Menechelli, meu Professor de HTML Eric
+e meu "Padrinho Digital" Gemini
+pela paciência com os headers , divs sem fechar ( ou antes da hora) , if sem end e os includes fora de ordem
+---------------------------------------------------------------------------------------------------------------*/
+// Impede que qualquer erro apareça antes do header (limpa o buffer)
 if (ob_get_level() == 0) ob_start();
 
-// 2. CONFIGURAÇÃO DE SESSÃO LONGA (Mantenha-me Conectado por 30 dias)
-$tempo_sessao = 30 * 24 * 60 * 60; // 30 dias em segundos
-ini_set('session.gc_maxlifetime', $tempo_sessao);
-session_set_cookie_params([
-    'lifetime' => $tempo_sessao,
-    'path' => '/',
-    'domain' => '',
-    'secure' => false, // Mudar para true se usar HTTPS (O Render usa!)
-    'httponly' => true,
-    'samesite' => 'Lax'
-]);
-
-// 3. INÍCIO SEGURO DA SESSÃO
-if (session_status() === PHP_SESSION_NONE) { 
-    session_start(); 
-}
-
-// 4. PARÂMETROS DE CONEXÃO (Render/Railway vs Localhost)
 $host    = getenv('DB_HOST') ?: "localhost";
 $usuario = getenv('DB_USER') ?: "root";    
 $senha   = getenv('DB_PASS') ?: "";         
 $banco   = getenv('DB_NAME') ?: "spotted_db";
 $porta   = getenv('DB_PORT') ?: 3306;
 
-// 5. TENTATIVA DE CONEXÃO
 $conn = mysqli_connect($host, $usuario, $senha, $banco, $porta);
 
 if (!$conn) {
-    // Se falhar no Render, mostra um erro mais limpo para você debugar
-    die("A Fenda está temporariamente inacessível. Erro: " . mysqli_connect_error());
+    die("Erro de conexão: " . mysqli_connect_error());
 }
 
 mysqli_set_charset($conn, "utf8mb4");
 
-// 6. ATUALIZAÇÃO DE ATIVIDADE
+// ÚNICO lugar onde a sessão deve iniciar com segurança
+if (session_status() === PHP_SESSION_NONE) { 
+    session_start(); 
+}
+
 if (isset($_SESSION['usuario_id'])) {
     $id_logado = $_SESSION['usuario_id'];
     mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
 }
 
-// 7. FUNÇÃO GLOBAL DE MENÇÕES (ÚNICA)
 if (!function_exists('formatarMencoes')) {
     function formatarMencoes($texto) {
         $texto_seguro = htmlspecialchars($texto);
