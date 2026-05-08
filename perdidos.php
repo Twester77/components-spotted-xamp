@@ -1,6 +1,6 @@
 <?php
-// 1. INICIALIZAÇÃO E SEGURANÇA
 include 'conexao.php'; // Aqui já roda o ob_start()
+// 1. INICIALIZAÇÃO E SEGURANÇA
 
 // 2. BUSCA DE DADOS (Lógica Independente)
 $filtro = isset($_GET['filtro']) ? mysqli_real_escape_string($conn, $_GET['filtro']) : 'todos';
