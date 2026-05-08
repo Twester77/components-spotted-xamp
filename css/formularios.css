@@ -36,8 +36,8 @@ form {
 /* 1. Ajuste do Container do Modal (o pai) */
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
-    width: clamp(280px, 93%, 480px) !important;
-    max-height: clamp(300px, 90vh, 500px) !important;
+    max-width: clamp(280px, 93%, 650px) !important;
+    max-height: clamp(300px, 80vh, 600px) !important;
     /* Padding dinâmico: menor em telas pequenas */
     padding: clamp(10px, 5vw, 25px) !important;
     border-radius: 20px;
@@ -48,6 +48,7 @@ form {
     overflow-y: auto; 
     display: flex;
     flex-direction: column;
+    margin: 0 auto;
 }
 
 /* 2. Limpando o card de postagem para ele "fundir" com o modal */
@@ -61,8 +62,9 @@ form {
     box-shadow: none !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    max-width: 100% !important;
-    width: 100% !important;
+    max-width: 95% !important;
+    width: 95% !important;
+    height: auto;
 }
 
 /* 3. Ajuste do formulário interno */
@@ -95,6 +97,7 @@ form {
 }
 .modal-body-ajuste .btn-lancar{
     padding: 8px 16px !important;
+    margin: 30px 0 0 0;
 }
 
 /* Foco do input acende em Branco/Prata */
@@ -652,6 +655,7 @@ section.sessao-publicar {
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.3s;
+    margin-bottom: 0;
 }
 
 .btn-lancar:hover {

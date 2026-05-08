@@ -3,25 +3,23 @@
 PROJETO: A FENDA - SPOTTED UNIFEV DESENVOLVEDOR: Leonardo (O Idealizador)
 AGRADECIMENTOS: Meu Coordenador de ADS Fernando Menechelli, meu Professor de HTML Eric
 e meu "Padrinho Digital" Gemini
+pela paciência com os headers , divs sem fechar ( ou antes da hora) , if sem end e os includes fora de ordem
 ---------------------------------------------------------------------------------------------------------------*/
 
 if (ob_get_level() == 0) {
     ob_start();
 }
 
-// --- CONFIGURAÇÃO INTELIGENTE (LOCAL vs RENDER) ---
-// Tenta pegar as variáveis de ambiente (Render), se não existirem, usa o padrão local
-$host    = getenv('DB_HOST') ?: "localhost";
-$usuario = getenv('DB_USER') ?: "root";    
-$senha   = getenv('DB_PASS') ?: "";         
-$banco   = getenv('DB_NAME') ?: "spotted_db";
-$porta   = getenv('DB_PORT') ?: (strpos($host, 'localhost') !== false ? 3307 : 3306);
+$host    = "localhost";
+$usuario = "root";    
+$senha   = "";         
+$banco   = "spotted_db"; 
 
-// Conecta ao banco de dados
-$conn = mysqli_connect($host, $usuario, $senha, $banco, $porta);
+// Tenta a porta 3307
+$conn = @mysqli_connect($host, $usuario, $senha, $banco, 3307);
 
-// Backup para porta 3306 se estiver no localhost e a 3307 falhar
-if (!$conn && strpos($host, 'localhost') !== false) {
+// Se falhar, tenta a 3306
+if (!$conn) {
     $conn = mysqli_connect($host, $usuario, $senha, $banco, 3306);
 }
 
@@ -32,12 +30,14 @@ if (!$conn) {
 mysqli_set_charset($conn, "utf8mb4");
 
 // --- LOGICA DE PRESENÇA (ONLINE/OFFLINE) ---
+// Verifica se existe uma sessão ativa e atualiza o "visto por último"[cite: 4, 6]
 if (session_status() === PHP_SESSION_NONE) { 
     session_start(); 
 }
 
 if (isset($_SESSION['usuario_id'])) {
     $id_logado = $_SESSION['usuario_id'];
+    // Atualiza o timestamp para o momento exato do acesso[cite: 4]
     mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
 }
 
@@ -45,7 +45,10 @@ if (isset($_SESSION['usuario_id'])) {
 if (!function_exists('formatarMencoes')) {
     function formatarMencoes($texto) {
         $texto_seguro = htmlspecialchars($texto);
+        
+        // Expressão regular para identificar o padrão @usuario
         $padrao = '/@([^\s]+)/';
+        
         $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>';
         return preg_replace($padrao, $substituicao, $texto_seguro);
     }

@@ -220,7 +220,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
                     <div class="campo-grupo">
                         <label>Cor da Aura</label>
-                        <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style="width: 100%; height: 40px; border: none; background: none; cursor: pointer;">
+                        <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style=" border: none; background: none; cursor: pointer;">
                     </div>
 
                     <div class="perfil-controles" style="width: 100% !important; display: flex !important; flex-wrap: wrap !important; gap: 10px; margin: 20px 0;">

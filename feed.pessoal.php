@@ -13,7 +13,7 @@ if (!isset($_SESSION['usuario_id'])) {
 $meu_id_sessao = $_SESSION['usuario_id'];
 $query_user = mysqli_query($conn, "SELECT username, foto, pref_cor_padrao FROM usuarios WHERE id = '$meu_id_sessao'");
 $dados_user = mysqli_fetch_assoc($query_user);
-$foto_perfil = !empty($dados_user['foto']) ? "uploads/".$dados_user['foto'] : "img/default-avatar.png";
+$foto_perfil = !empty($dados_user['foto']) ? "uploads/".$dados_user['foto'] : "imagensfoto/default.png";
 $cor_aura = $dados_user['pref_cor_padrao'] ?? '#a1a1a1';
 ?>
 

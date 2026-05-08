@@ -22,13 +22,15 @@ include 'includes/bolhas.php';
             </div>
 
             <div class="campo-grupo-fenda">
-                <label for="email">E-mail (Para ativação)</label>
+                <label for="email">E-mail Institucional (RA)</label>
                 <div class="fenda-reg-box">
                     <i class="fas fa-envelope"></i>
                     <input type="email"
                         id="email"
                         name="email"
-                        placeholder="seu@email.com"
+                        placeholder="ex: 1234@unifev.edu.br"
+                        pattern=".+@unifev\.edu\.br"
+                        title="Use seu e-mail @unifev.edu.br"
                         required>
                 </div>
             </div>

@@ -49,7 +49,7 @@ include 'includes/bolhas.php';
         document.addEventListener('click', () => {
             const audio = document.getElementById('hackerAudio');
             if (audio) {
-                audio.volume = 0.02;
+                audio.volume = 0.01;
                 audio.play();
             }
         }, {

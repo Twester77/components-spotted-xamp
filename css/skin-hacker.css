@@ -112,120 +112,56 @@ body.hacker-mode .bolha {
 }
 
 /* ---------------------------------------------------------------
-   6. MOLDURAS ASCII COMPLETAS (4 LADOS) PARA CARDS E CONTAINERS
-      Símbolos: + - = | [ ] { } / \ : ; < > ? 
+   6. MOLDURAS ASCII TOTAIS - LATERAIS DESENHADAS & TÍTULOS DINÂMICOS
    --------------------------------------------------------------- */
 
-/* Classe base para qualquer elemento que deva receber moldura */
+/* APLICANDO EM TUDO: Cards, Formulários, Modais e Perfis */
 body.hacker-mode .spotted-card,
 body.hacker-mode .container-principal,
-body.hacker-mode .card-post,
-body.hacker-mode .card-focado,
 body.hacker-mode .formulario-caixa,
 body.hacker-mode .form-perfil-corpo,
 body.hacker-mode .comentario-item,
 body.hacker-mode .sessao-publicar,
-body.hacker-mode .painel-sessao,
-body.hacker-mode .user-card,
-body.hacker-mode .card-perdido,
-body.hacker-mode .perfil-info-publica,
 body.hacker-mode .main-perfil-container,
 body.hacker-mode .fenda-modal-content,
-body.hacker-mode .form-container,
-body.hacker-mode .audio-settings-card,
 body.hacker-mode .perfil-gold {
     position: relative !important;
-    background: #0a0a0a !important;
-    border: none !important;
-    margin: 25px auto !important; /* só pra dar respiro, não mexe no layout geral */
+    background: #000 !important;
+    /* LATERAIS: O duplo pipe "||" que os pais vão reconhecer na hora */
+    border-left: 6px double var(--hacker-green) !important;
+    border-right: 6px double var(--hacker-green) !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
 }
 
-/* Linha superior */
+/* TOPO: Mantendo os títulos dinâmicos da Deep com cantos "+" */
 body.hacker-mode .spotted-card::before,
-body.hacker-mode .container-principal::before,
-body.hacker-mode .card-post::before,
-body.hacker-mode .form-fenda::before,
-body.hacker-mode .comentario-item::before,
-body.hacker-mode .sessao-publicar::before,
-body.hacker-mode .user-card::before,
-body.hacker-mode .form-container::before,
-body.hacker-mode .main-novo-post::before {
-    content: "+===================================================================================================+" !important;
+body.hacker-mode .formulario-caixa::before,
+body.hacker-mode .main-perfil-container::before,
+body.hacker-mode .sessao-publicar::before {
+    /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
+    content: "+================================================================================+" !important;
     position: absolute !important;
-    top: -25px !important;
-    left: -2px !important;
-    right: -2px !important;
-    color: #0f0 !important;
+    top: -20px !important;
+    left: -4px !important; /* Ajuste para alinhar com o border-left double */
+    right: -4px !important;
+    color: var(--hacker-green) !important;
     font-family: monospace !important;
     font-weight: bold !important;
     white-space: nowrap !important;
     overflow: hidden !important;
-    height: 20px !important;
     z-index: 10 !important;
-    pointer-events: none !important;
 }
 
-/* Linha inferior */
-body.hacker-mode .spotted-card::after,
-body.hacker-mode .card-post::after,
-body.hacker-mode .sessao-publicar::after,
-body.hacker-mode .form-container::after,
-body.hacker-mode .form-fenda::after {
-    content: "+===================================================================================================+" !important;
-    position: absolute !important;
-    bottom: -25px !important;
-    left: -2px !important;
-    right: -2px !important;
-    color: #0f0 !important;
-    font-family: monospace !important;
-    font-weight: bold !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    height: 20px !important;
-    z-index: 10 !important;
-    pointer-events: none !important;
-}
 
-/* Bordas laterais com "|" */
-body.hacker-mode .spotted-card,
-body.hacker-mode .container-principal,
-body.hacker-mode .card-post,
-body.hacker-mode .form-fenda,
-body.hacker-mode .comentario-item,
-body.hacker-mode .sessao-publicar,
-body.hacker-mode .user-card {
-    border-left: 2px solid #0f0 !important;
-    border-right: 2px solid #0f0 !important;
-    box-shadow: none !important;
-}
 
-/* Força remoção de todas as bordas laterais originais e inline */
-body.hacker-mode .spotted-card,
-body.hacker-mode .spotted-card.anonimo,
-body.hacker-mode .spotted-card.perdidos,
-body.hacker-mode .spotted-card.ranco,
-body.hacker-mode .spotted-card.elogio,
-body.hacker-mode .spotted-card.games,
-body.hacker-mode .spotted-card.academico,
-body.hacker-mode .spotted-card.esportes,
-body.hacker-mode .spotted-card.caronas,
-body.hacker-mode .spotted-card.comunidade,
-body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus,
-body.hacker-mode .spotted-card.desapego {
-    content: "=================================================================================================+" !important;
-    border-left: 2px solid #00ff00 !important;
-    border-right: 2px solid #00ff00 !important;
-    border-top: 2px solid #00ff00 !important;
-    border-bottom: 2px solid #00ff00 !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
 
 /* ---------------------------------------------------------------
    7. CABEÇALHOS ASCII POR CATEGORIA (MANTIDOS E CORES)
    --------------------------------------------------------------- */
 
-body.hacker-mode .spotted-card.anonimo::before { content: "+== [ USER_NOT_FOUND ] ==================================================================================================+" !important; color: #ffffff !important; }
+body.hacker-mode .spotted-card.anonimo::before { content: "+== [ USER_NOT_FOUND ] ==================================================================================================+" !important; color: #ffffff !important;  }
 body.hacker-mode .spotted-card.perdidos::before { content: "+== [ PROTOCOLO: GET_$ITEM ] ================================================================================================+" !important; color: #fcf809 !important; }
 body.hacker-mode .spotted-card.ranco::before { content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+" !important; color: #f33232 !important; }
 body.hacker-mode .spotted-card.elogio::before { content: "+== [ CORREIO_ELEGANTE <3 ] ==================================================================================================+" !important; color: #f85caa !important; }
@@ -365,7 +301,6 @@ body.hacker-mode .insignia-atletica-link {  /* Inclui links e bottoms de atléti
     font-family: monospace !important;
     text-transform: uppercase !important;
     position: relative !important;
-    padding: 8px 16px !important;
     transition: none !important;
     cursor: crosshair !important;
     overflow: visible !important;
@@ -470,6 +405,7 @@ body.hacker-mode .fa-solid,
 body.hacker-mode .fa-regular,
 body.hacker-mode [class*="fa-"],
 body.hacker-mode .fas,
+body.hacker-mode .spotted-card .user-info-post::after,
 body.hacker-mode .far,
 body.hacker-mode .fab {
     color: #00ff00 !important;
@@ -477,7 +413,7 @@ body.hacker-mode .fab {
     opacity: 1 !important;
     visibility: visible !important;
     display: inline-block !important;
-    animation: flicker 2s infinite !important;
+    animation: flicker 4s infinite !important;
 }
 
 /* No hover dos botões, ícones também invertem */
@@ -534,12 +470,10 @@ body.hacker-mode .comentario-autor {
 }
 
 body.hacker-mode .comentario-item.comentario-filho {
-    margin-left: 20px !important;
+   
     border-left-style: double !important;
 }
-body.hacker-mode .comentario-item.comentario-filho::before {
-    content: "└─> [STDOUT]: " !important;
-}
+
 
 /* ==========================================================
    ADAPTAÇÃO DAS VIBES PARA O MODO HACKER (TERMINAL) - VERSÃO CORRIGIDA
@@ -695,7 +629,6 @@ body.hacker-mode .comentario-item.vibe-neon {
 
 body.hacker-mode h1,
 body.hacker-mode h2,
-body.hacker-mode h3,
 body.hacker-mode .titulo-fofoca,
 body.hacker-mode .nome-publico,
 body.hacker-mode .conselho-header {
@@ -705,7 +638,7 @@ body.hacker-mode .conselho-header {
     border-bottom: 1px dashed #00ff00 !important;
     display: inline-block !important;
     padding-right: 15px !important;
-    margin-bottom: 15px !important;
+    margin: 15px auto !important;
 }
 
 body.hacker-mode h1::before { content: "root@fenda:~# " !important; opacity: 0.7 !important; }
@@ -800,7 +733,7 @@ body.hacker-mode .reacao-item {
     background: #000 !important;
     border: 1px solid #0f0 !important;
     color: #0f0 !important;
-    padding: 2px 8px !important;
+    padding: 2px 6px !important;
     font-family: monospace !important;
 }
 
@@ -929,7 +862,7 @@ body.hacker-mode .user-info-post,
 body.hacker-mode .post-time,
 body.hacker-mode .comentario-autor {
     clip-path: none !important;
-    animation: none !important;
+    
 }
 
 

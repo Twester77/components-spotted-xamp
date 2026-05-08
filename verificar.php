@@ -12,10 +12,10 @@ if (isset($_GET['token'])) {
         // ATIVA O CARA!
         $sql_update = "UPDATE usuarios SET ativo = 1, token = NULL WHERE token = '$token'";
         if (mysqli_query($conn, $sql_update)) {
-        header("Location: /spotted-unifev/index.php?msg=conta_ativada");
-      exit();        }
+            header("Location: index.php?msg=conta_ativada"); // Sem o /spotted-unifev/ na frente
+            exit();
+        }
     } else {
         echo "Ops! Esse link é inválido ou você já ativou sua conta.";
     }
 }
-?>

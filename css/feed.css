@@ -178,7 +178,7 @@
         display: block !important;
         width: 100% !important;
         /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 600px;
+        max-width: 600px !important;
         flex-shrink: 0 !important;
         position: relative !important;
         margin: 20px auto !important;
@@ -285,7 +285,7 @@
     font-weight: 900;
     position: absolute;
     right: 10px;  
-    font-size: clamp(18px, 1.5vw, 24px) !important;
+    font-size: clamp(16px, 1.5vw, 22px) !important;
     opacity: 0.6;
     position: absolute;
     padding: 5px;
@@ -444,7 +444,7 @@ span.data-post {
 
 
  span.category-tag {
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.1rem);
     color: #ff9f0f;
     font-weight: bold;
     flex-shrink: 0;
@@ -477,13 +477,14 @@ order: 3;
  }
 
 .post-time {
-    font-size: clamp(0.75rem, 0.2vw + 0.6rem, 1rem);
+    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
     margin-right: 10px;
     order: 2;
     padding: 8px;
+    font-weight: bold;
 
 }
 
@@ -585,7 +586,7 @@ order: 3;
 .footer-links {
     display: flex !important;
     gap: 10px !important;
-    padding: 10px !important;
+    padding: 5px !important;
     justify-content: space-between;
     align-items: center;
     position: relative;
@@ -724,8 +725,8 @@ order: 3;
 .avatar-p {
     border: 1px solid var(--dourado);
     gap: 15px;
-    width:clamp(45px, 5vw, 65px) !important;
-    height:clamp(45px, 5vw, 65px) !important;
+    width:clamp(45px, 5vw, 55px) !important;
+    height:clamp(45px, 5vw, 55px) !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -759,12 +760,12 @@ order: 3;
 .btn-fofocar {
     color: #ccc;
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: clamp(13px, 15vw, 15px);
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
     display: flex;
-    gap: 8px;
+    padding: 4px 12px;
 }
 
 .btn-fofocar:hover {

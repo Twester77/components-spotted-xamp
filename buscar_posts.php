@@ -16,7 +16,7 @@ if (!empty($categoria)) {
     $sql .= " WHERE m.categoria = '$categoria'";
 }
 
-$sql .= " ORDER BY m.id DESC LIMIT 30 OFFSET $offset";
+$sql .= " ORDER BY m.id DESC LIMIT 15 OFFSET $offset";
 $resultado = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($resultado) > 0) {
