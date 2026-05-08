@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'html' => "
                 <div style='font-family: sans-serif; background-color: #050a0f; color: #fff; padding: 20px;'>
                     <h1>Bem-vindo à Fenda, $nome!</h1>
-                    <p>Sua conta já foi ativada automaticamente para a feira de ADS.</p>
+                    <p>Sua conta já foi ativada automaticamente, pode acessar o link que vai te levar direto pra página de login.</p>
                     <p><a href='{$url_base}' style='color: #70cde4; font-weight: bold;'>Clique aqui para acessar o Feed!</a></p>
                 </div>"
         ];

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div style='font-family: sans-serif; background: #0a0a0a; color: #fff; padding: 30px; border-radius: 15px; border: 1px solid #70cde4;'>
             <h2 style='color: #70cde4; text-align: center;'>Bem-vindo à Fenda!</h2>
             <p>Fala, <strong>$nome</strong>!</p>
-            <p>Seu cadastro foi realizado com sucesso. Agora você faz parte do ecossistema mais secreto da UNIFEV.</p>
+            <p>Seu cadastro foi realizado com sucesso. Agora você faz parte do ecossistema da UNIFEV.</p>
             <p>Prepare sua aura, ajuste sua vibe e comece a fofocar agora mesmo.</p>
             <div style='text-align: center; margin-top: 30px;'>
                 <a href='http://localhost/spotted-unifev/index.php'  
