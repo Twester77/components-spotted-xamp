@@ -3,7 +3,7 @@ include 'conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    
+
     // ... (Validações de e-mail e checagem de existência continuam iguais)
 
     $nome             = mysqli_real_escape_string($conn, $_POST['nome']);
@@ -20,8 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (mysqli_query($conn, $sql)) {
         $apiKey = 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8';
 
-        // AJUSTE: Use a sua URL oficial do Render aqui!
-        $url_base = "https://components-spotted-xamp.onrender.com"; 
+        // AJUSTE: URL oficial do Render aqui!
+
+        $url_base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false)
+            ? "http://localhost/spotted-unifev"
+            : "https://components-spotted-xamp.onrender.com";
 
         $email_payload = [
             'from' => 'Fenda <onboarding@resend.dev>',
@@ -36,4 +39,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 }
-?>

@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'conexao.php';
 
 if (isset($_GET['id']) && isset($_SESSION['usuario_id'])) {

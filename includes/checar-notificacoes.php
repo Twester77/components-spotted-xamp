@@ -1,7 +1,5 @@
 <?php
-/** @var mysqli $conn */
 include '../conexao.php';
-session_start();
 
 if (!isset($_SESSION['usuario_id'])) {
     echo json_encode(['tem' => false]);

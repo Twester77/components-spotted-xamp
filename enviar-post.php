@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'conexao.php';
 
 // 1. Verificação de Segurança

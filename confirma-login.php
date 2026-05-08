@@ -1,6 +1,6 @@
 <?php
 include 'conexao.php';
-session_start();
+
 
 // 1. SÓ EXECUTA SE VIER DO FORMULÁRIO 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
