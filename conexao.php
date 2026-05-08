@@ -8,7 +8,7 @@ pela paciência com os headers , divs sem fechar ( ou antes da hora) , if sem en
 // Impede que qualquer erro apareça antes do header (limpa o buffer)
 if (ob_get_level() == 0) ob_start();
 
-$host    = getenv('DB_HOST') ?: "localhost";
+$host = getenv('DB_HOST') ?: "127.0.0.1";
 $usuario = getenv('DB_USER') ?: "root";    
 $senha   = getenv('DB_PASS') ?: "";         
 $banco   = getenv('DB_NAME') ?: "spotted_db";
