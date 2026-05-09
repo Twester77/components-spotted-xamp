@@ -4,12 +4,6 @@ include 'conexao.php';
 function processarUploadSeguro($campo, $prefixo, $id, $pasta, $limite)
 {
 
-// O "DEDO-DURO" ENTRA AQUI DENTRO:
-    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] != 0) {
-        // Se der erro 1, é o tamanho do servidor. Se der 4, ele não achou o arquivo.
-        die("Erro no Upload do campo [$campo]: Código " . $_FILES[$campo]['error']); 
-    }  
-    
     if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] == 0) {
         if ($_FILES[$campo]['size'] > $limite) return false;
 
@@ -99,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     }
 
     $_SESSION['usuario_nome'] = $novo_nome;
-    $limite_bytes = 15 * 1024 * 1024;
+    $limite_bytes = 2 * 1024 * 1024;
 
     // Foto de Perfil
     $foto_nome = processarUploadSeguro('foto', 'user', $usuario_id, './uploads', $limite_bytes);
