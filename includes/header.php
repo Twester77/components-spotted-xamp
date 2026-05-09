@@ -33,10 +33,13 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
     <link rel="stylesheet" href="css/skin-hacker.css">
     <link rel="stylesheet" href="css/animacoes.css">
     <link rel="stylesheet" href="css/skin-hacker.css">
+    <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
+    <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 </head>
 
 <body class="<?php echo $classes_finais; ?>">
@@ -48,40 +51,40 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
         if ($pagina_atual !== 'index.php'):
         ?>
             <div class="header-icons">
-    <a href="buscar-usuario.php" class="btn-header">
-        <i class="fas fa-search"></i>
-    </a>
+                <a href="buscar-usuario.php" class="btn-header">
+                    <i class="fas fa-search"></i>
+                </a>
 
-    <!-- Função JS para abrir as notificações -->
-    <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()">
-        <i class="fa-solid fa-bell"></i>
-        
-        <?php
-        $total_n = 0;
-        if ($u_id > 0 && isset($conn)) {
-            $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
-            $stmt_count_header->bind_param("i", $u_id);
-            $stmt_count_header->execute();
-            $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
-            $total_n = $res_header_notif['total'] ?? 0;
-        }
-        ?>
+                <!-- Função JS para abrir as notificações -->
+                <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()">
+                    <i class="fa-solid fa-bell"></i>
 
-        <!-- Apenas UM badge: se for 0, fica escondido; se for > 0, já aparece com o número -->
-        <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
-            <?php echo $total_n; ?>
-        </span>
+                    <?php
+                    $total_n = 0;
+                    if ($u_id > 0 && isset($conn)) {
+                        $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
+                        $stmt_count_header->bind_param("i", $u_id);
+                        $stmt_count_header->execute();
+                        $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
+                        $total_n = $res_header_notif['total'] ?? 0;
+                    }
+                    ?>
 
-        <!-- Janelinha de notificações -->
-        <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
-            <p style="padding:10px; color:#999;">Carregando ondas...</p>
-        </div>
-    </div>
+                    <!-- Apenas UM badge: se for 0, fica escondido; se for > 0, já aparece com o número -->
+                    <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
+                        <?php echo $total_n; ?>
+                    </span>
 
-    <a href="perfil.php" class="btn-config">
-        <i class="fas fa-cog"></i>
-    </a>
-</div>
+                    <!-- Janelinha de notificações -->
+                    <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
+                        <p style="padding:10px; color:#999;">Carregando ondas...</p>
+                    </div>
+                </div>
+
+                <a href="perfil.php" class="btn-config">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
 
         <?php endif; ?>
     </header>

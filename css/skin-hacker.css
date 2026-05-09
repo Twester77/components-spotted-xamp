@@ -127,11 +127,11 @@ body.hacker-mode .fenda-modal-content,
 body.hacker-mode .perfil-gold {
     position: relative !important;
     background: #000 !important;
-    /* LATERAIS: O duplo pipe "||" que os pais vão reconhecer na hora */
+    /* LATERAIS: O duplo pipe "||" */
     border-left: 6px double var(--hacker-green) !important;
     border-right: 6px double var(--hacker-green) !important;
     border-top: none !important;
-    border-bottom: none !important;
+    border-bottom: 6px double var(--hacker-green) !important;
     box-shadow: none !important;
 }
 
@@ -168,10 +168,10 @@ body.hacker-mode .spotted-card.elogio::before { content: "+== [ CORREIO_ELEGANTE
 body.hacker-mode .spotted-card.games::before { content: "+== [ MODO_GAMER_DETECTADO ] ==================================================================================================+" !important; color: #00ffff !important; }
 body.hacker-mode .spotted-card.academico::before { content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+" !important; color: #b00bda !important; }
 body.hacker-mode .spotted-card.caronas::before { content: "+= [ SELECT * FROM unifev WHERE loc='judasperdeuasbota'] ========================================================================+" !important; color: #969dc4 !important; }
-body.hacker-mode .spotted-card.esportes::before { content: "+== [ JOIN_FOR_FUN ] ==========================================================================================================+" !important; color: #138a0e !important; }
+body.hacker-mode .spotted-card.esportes::before { content: "+== [ JOIN_FOR_FUN ] ==========================================================================================================+" !important; color: #128a0ec2 !important; }
 body.hacker-mode .spotted-card.comunidade::before { content: "+== [ COMMUNITY_LINK ] ======================================================================================================+" !important; color: #ffffffbe !important; }
 body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus::before { content:"+== [ WARNING: OVERFLOW_EMOTIONAL ] ================================================================================+" !important; color: #f78605 !important; }
-body.hacker-mode .spotted-card.desapego::before { content: "+== [ MARKETPLACE_DESAPEGO ] ================================================================================================+" !important; color: #00bfff !important; }
+body.hacker-mode .spotted-card.desapego::before { content: "+== [ MARKETPLACE_DESAPEGO ] ================================================================================================+" !important; color: #09c0fd !important; }
 
 /* ---------------------------------------------------------------
    8. NAVBAR, MENUS E DROPDOWNS (ESTILO LINHA DE COMANDO)
@@ -650,7 +650,7 @@ body.hacker-mode .post-content,
 body.hacker-mode .bio-texto {
     font-family: monospace !important;
     color: #00ff00 !important;
-    line-height: 1.6 !important;
+    line-height: 1.5 !important;
     text-shadow: 0 0 5px rgba(0,255,0,0.3) !important;
 }
 
@@ -701,7 +701,7 @@ body.hacker-mode .box-diretrizes li:hover {
     background: #0f0 !important;
     color: #000 !important;
     transform: translateX(5px) !important;
-    transform: scale(1.02) !important;
+    transform: scale(1.05) !important;
 }
 
 
@@ -733,7 +733,7 @@ body.hacker-mode .reacao-item {
     background: #000 !important;
     border: 1px solid #0f0 !important;
     color: #0f0 !important;
-    padding: 2px 6px !important;
+    padding: 2px 8px !important;
     font-family: monospace !important;
 }
 
@@ -878,7 +878,7 @@ body.hacker-mode .comentario-autor {
  body.hacker-mode .article p,
  body.hacker-mode .spotted-card {
     animation: typing-global 15s steps(40, end) forwards;
-   transform: ease-in-out;}
+   transform: ease;}
 
 
  

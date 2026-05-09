@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (tipo === 'off') { audio.pause(); }
             else {
                 audio.src = (tipo === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
-                audio.volume = 0.03;
+                audio.volume = 0.04;
                 audio.play().catch(() => { });
             }
         }
@@ -350,7 +350,7 @@ function mostrarPopup(mensagem) {
             'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
             'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
             'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3', volume: 0.4 },
-            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.4 }
+            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.3 }
         };
 
         if (temaSalvo === 'digimon') tempoExibicao = 11000;

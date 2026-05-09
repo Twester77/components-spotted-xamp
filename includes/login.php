@@ -16,7 +16,7 @@
         <?php if (isset($_GET['msg']) && $_GET['msg'] == 'validar_email'): ?>
         <div style="background: rgba(255, 152, 0, 0.9); color: white; text-align: center; padding: 15px; margin: 10px 0 20px 0; border-radius: 10px; font-weight: bold; font-size: 15px; border: 1px solid #ffcc80; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);">
             <span style="display: block; font-size: 22px; margin-bottom: 5px;">📧</span>
-            QUASE LÁ! <br> <span style="font-weight: normal; font-size: 13px;">Checa seu e-mail institucional para liberar o acesso.</span>
+            QUASE LÁ! <br> <span style="font-weight: normal; font-size: 13px;">Cheque seu e-mail institucional para liberar o acesso.</span>
         </div>
         <?php endif; ?>
 
