@@ -2075,9 +2075,9 @@ input[type="check-box"] {
     -webkit-mask-image: linear-gradient(to bottom,
             transparent 0%,
             black 2%,
-            black 49%,
-            black 71%,
-            black 92%,
+            black 35%,
+            black 51%,
+            black 70%,
             /* Mantém 100% de visibilidade na maior parte do corpo */
             rgba(0, 0, 0, 0.7) 100%
             /* Fade final bem mais fraco (0.7 em vez de transparente) */
@@ -2086,9 +2086,9 @@ input[type="check-box"] {
     mask-image: linear-gradient(to bottom,
             transparent 0%,
             black 2%,
-            black 49%,
-            black 71%,
-            black 92%,
+            black 35%,
+            black 51%,
+            black 70%,
             rgba(0, 0, 0, 0.7) 100%);
 
     /* 3. A VIBE ROCKSTARS: Um "Lens Flare" ou brilho de palco no fundo */

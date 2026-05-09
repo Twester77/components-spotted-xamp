@@ -3,6 +3,13 @@ include 'conexao.php';
 
 function processarUploadSeguro($campo, $prefixo, $id, $pasta, $limite)
 {
+
+// O "DEDO-DURO" ENTRA AQUI DENTRO:
+    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] != 0) {
+        // Se der erro 1, é o tamanho do servidor. Se der 4, ele não achou o arquivo.
+        die("Erro no Upload do campo [$campo]: Código " . $_FILES[$campo]['error']); 
+    }  
+    
     if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] == 0) {
         if ($_FILES[$campo]['size'] > $limite) return false;
 
