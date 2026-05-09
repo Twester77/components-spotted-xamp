@@ -2075,7 +2075,8 @@ input[type="check-box"] {
     -webkit-mask-image: linear-gradient(to bottom,
             transparent 0%,
             black 2%,
-            /* Começa a mostrar o conteúdo muito mais rápido */
+            black 49%,
+            black 71%,
             black 92%,
             /* Mantém 100% de visibilidade na maior parte do corpo */
             rgba(0, 0, 0, 0.7) 100%
@@ -2085,14 +2086,16 @@ input[type="check-box"] {
     mask-image: linear-gradient(to bottom,
             transparent 0%,
             black 2%,
+            black 49%,
+            black 71%,
             black 92%,
             rgba(0, 0, 0, 0.7) 100%);
 
     /* 3. A VIBE ROCKSTARS: Um "Lens Flare" ou brilho de palco no fundo */
     /* variável --aura-user para o brilho da guitarra */
     background-image:
-        radial-gradient(circle at 0% 0%, var(--aura-user) 0%, transparent 20%),
-        radial-gradient(circle at 100% 100%, var(--aura-user) 0%, transparent 20%) !important;
+        radial-gradient(circle at 0% 0%, var(--aura-user) 0%, transparent 10%),
+        radial-gradient(circle at 100% 100%, var(--aura-user) 0%, transparent 10%) !important;
 
     /* 4. O TOQUE STEVE JOBS: Uma borda de vidro sutil no topo */
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;

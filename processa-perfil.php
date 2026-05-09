@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $limite_bytes = 15 * 1024 * 1024;
 
     // Foto de Perfil
-    $foto_nome = processarUploadSeguro('foto', 'user', $usuario_id, 'uploads', $limite_bytes);
+    $foto_nome = processarUploadSeguro('foto', 'user', $usuario_id, './uploads', $limite_bytes);
     if ($foto_nome) {
         $stmt_f = mysqli_prepare($conn, "UPDATE usuarios SET foto = ? WHERE id = ?");
         mysqli_stmt_bind_param($stmt_f, "si", $foto_nome, $usuario_id);
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     }
 
     // Foto de Capa
-    $capa_nome = processarUploadSeguro('capa', 'capa', $usuario_id, 'uploads', $limite_bytes);
+    $capa_nome = processarUploadSeguro('capa', 'capa', $usuario_id, './uploads', $limite_bytes);
     if ($capa_nome) {
         $stmt_c = mysqli_prepare($conn, "UPDATE usuarios SET capa = ? WHERE id = ?");
         mysqli_stmt_bind_param($stmt_c, "si", $capa_nome, $usuario_id);

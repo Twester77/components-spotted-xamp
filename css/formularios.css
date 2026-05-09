@@ -436,7 +436,7 @@ textarea {
 
 /* A caixinha do formulário */
 .container-cadastro-fenda {
-    background: rgb(75, 57, 122) !important;
+    background: #4b397aba !important;
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.103);
