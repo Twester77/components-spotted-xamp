@@ -1,5 +1,28 @@
 
 
+
+#Introdução: O Problema e o MVP
+"Bom dia/noite, professores. O projeto 'A Fenda' nasceu para centralizar a comunicação da UNIFEV de forma anárquica, porém organizada. Hoje, apresento o que chamamos no mercado de MVP (Produto Mínimo Viável): um sistema que já saiu do meu computador e está operando 100% na nuvem."
+
+**Arquitetura: Full Cloud (O Pulo do Gato)**
+"Diferente de um projeto local, 'A Fenda' utiliza uma arquitetura Full Cloud. O back-end está hospedado no Render, o banco de dados MySQL no Railway, e as atualizações são feitas via Deploy Contínuo (CI/CD) pelo GitHub. Se eu alterar uma linha de código agora, o site nos 4 PCs da feira se atualiza sozinho."
+
+**Diferenciais Técnicos e UX**
+"A interface utiliza Glassmorphism e Design Responsivo com Flexbox. Mas o diferencial está 'sob o capô':
+
+Modularização DRY: Uso de include para Header e Footer.
+
+Segurança: Implementação de Prepared Statements para blindar o banco contra SQL Injection.
+
+Mensageria: Integrei o sistema à API do Resend, permitindo que o portal dispare e-mails automáticos de boas-vindas."
+
+**Desafios Superados (Dica para o Menechelli/Patrícia/Eric)**
+"Um desafio real de infraestrutura que superei foi o limite de upload do servidor. Implementamos uma trava via JavaScript no front-end para validar imagens de até 2MB, garantindo que o servidor não sofra sobrecarga e a experiência do usuário não seja interrompida por erros de processamento."
+
+**Conclusão e Futuro (A Visão do Zuckerberg)**
+"O que começou como um exercício de 1º bimestre hoje é um ecossistema funcional. A fase Alpha está concluída. Os próximos passos para a Versão Beta incluem o Fenda Market (marketplace de livros) e o Mural de Repúblicas. 'A Fenda' é um laboratório vivo de ADS."
+
+
 # Projeto a Fenda
 "Professor, o projeto 'A Fenda' é um portal de interação estudantil desenvolvido em PHP e MySQL. Ele conta com um sistema de gerenciamento de estado via sessões, permitindo postagens identificadas ou anônimas, e utiliza Prepared Statements para garantir a integridade do banco de dados."
 
@@ -71,6 +94,19 @@ Este projeto foi desenvolvido de ponta a ponta por mim, unindo a precisão da pr
 
 **Pergunta 5: "Onde os dados ficam salvos de verdade?"**
 * Resposta: "Atualmente no servidor local via Apache, com MySQL gerenciado pelo phpMyAdmin. A estrutura está pronta para migrar para a nuvem (AWS ou Google Cloud) alterando apenas as constantes de conexão."
+
+**Pergunta: "Por que 2MB de limite na foto?"**
+
+* Resposta: "É uma otimização de custo e performance. Para um MVP acadêmico, fotos otimizadas garantem um carregamento fluido no 4G dos alunos, além de respeitar as diretrizes de armazenamento do nosso servidor em nuvem." *
+
+**Pergunta: "E esse e-mail de confirmação?"**
+
+* Resposta: "O motor de envio via API Resend está 100% funcional no código. No momento, operamos em ambiente 'Sandbox' por questões de verificação de domínio, mas a lógica de integração back-end com serviços externos já está validada." *
+
+**Pergunta: "Onde os dados estão salvos?"**
+
+* Resposta: "No Railway (Cloud), garantindo que os dados persistam mesmo que o servidor de aplicação (Render) seja reiniciado. É persistência real de dados." *
+
 
 **Saída de Emergência:**
 * "Essa é uma abordagem interessante e está sendo documentada para a nossa análise de requisitos da Versão 2.0. O foco atual foi a estabilidade do Core (núcleo) do sistema."
