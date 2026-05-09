@@ -407,7 +407,7 @@ textarea {
     border: none !important;
     color: white !important;
     font-size: 1rem !important;
-    padding: 12px 12px 12px 0 !important;
+    padding: 12px 12px 12px 6px !important;
     outline: none !important;
     width: 100% !important;
 }
@@ -428,17 +428,18 @@ textarea {
 .fenda-reg-box input[type="color"] {
     width: 50px !important;
     padding: 0 !important;
-    margin: 5px 0 !important;
+    margin: 5px 0 5px 5px !important;
     height: 35px !important;
     cursor: pointer;
+    border-radius: 10px;
 }
 
 /* A caixinha do formulário */
 .container-cadastro-fenda {
-    background: rgba(117, 84, 206, 0.322) !important;
+    background: rgb(75, 57, 122) !important;
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.103);
     border-radius: 20px;
     max-width: 500px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
@@ -513,7 +514,7 @@ textarea {
 .termos-wrapper {
     margin: 15px 0;
     color: #ccc;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
 }
 
 .termos-wrapper a {

@@ -443,7 +443,7 @@ body.modal-aberto .fab-postar {
     box-shadow: 0 0 30px rgba(255, 188, 0, 0.2);
     animation: surgimentoModal 0.3s ease-out;
     padding: 15px;
-    max-width: 100%;
+    max-width: 95%;
 }
 
 

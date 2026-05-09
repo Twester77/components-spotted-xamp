@@ -17,7 +17,7 @@
     --hacker-green: #00ff41;
     --hacker-bg: #000000;
     --hacker-font: 'Courier New', 'Courier', monospace;
-    --boot-duration: 2.5s; /* Ajuste para tornar o boot mais lento */
+    --boot-duration: 10s; /* Ajuste para tornar o boot mais lento */
 }
 
 body.hacker-mode {
@@ -644,7 +644,7 @@ body.hacker-mode .conselho-header {
 body.hacker-mode h1::before { content: "root@fenda:~# " !important; opacity: 0.7 !important; }
 body.hacker-mode h2::before { content: "./" !important; opacity: 0.7 !important; }
 
-body.hacker-mode .spotted-texto,
+
 body.hacker-mode .comentario-texto,
 body.hacker-mode .post-content,
 body.hacker-mode .bio-texto {
@@ -829,9 +829,9 @@ body.hacker-mode .hacker-cursor {
 /* Aplica a animação de digitação a todos os textos longos */
 body.hacker-mode .post-content,
 body.hacker-mode .comentario-texto,
-body.hacker-mode .spotted-texto,
 body.hacker-mode .bio-texto,
 body.hacker-mode .card-body p,
+body.hacker-mode p,
 body.hacker-mode .article p {
     overflow: hidden !important;
     white-space: normal !important;
@@ -878,7 +878,7 @@ body.hacker-mode .comentario-autor {
  body.hacker-mode .article p,
  body.hacker-mode .spotted-card {
     animation: typing-global 15s steps(40, end) forwards;
-   transform: ease;}
+   transform: ease-in;}
 
 
  
