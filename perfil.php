@@ -242,6 +242,20 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
             setBolhas(valor === 1);
         }
     }
+
+    // NOVA FUNÇÃO: Validação de tamanho de imagem (Máximo 2MB)
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+        input.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const tamanhoMB = this.files[0].size / 1024 / 1024;
+                if (tamanhoMB > 2) {
+                    alert("A imagem é muito grande (" + tamanhoMB.toFixed(2) + "MB). O limite do servidor é 2MB. Por favor, escolha uma foto mais leve!");
+                    this.value = ""; // Limpa o campo para o usuário não tentar enviar
+                }
+            }
+        });
+    });
+    
 </script>
 
 <?php include 'includes/footer.php'; ?>
