@@ -13,9 +13,10 @@ if ($u_id > 0 && isset($conn)) {
     $pref_swipe_real = $resultado_header_pessoal['pref_swipe'] ?? 0;
 }
 
-// Define a classe baseada na resposta do banco
-$classe_pref = ($pref_swipe_real == 1) ? 'allow-swipe' : 'allow-hover';
 $classe_tema = $tema_classe ?? '';
+// Define a classe baseada na resposta do banco para o estado INICIAL
+// Mas permite que o JS adicione 'modo-swipe-ativo' depois
+$classe_pref = ($pref_swipe_real == 1) ? 'modo-swipe-ativo' : 'allow-hover';
 $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
 ?>
 
@@ -30,9 +31,10 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/feed.css">
     <link rel="stylesheet" href="css/formularios.css">
-    <link rel="stylesheet" href="css/skin-hacker.css">
     <link rel="stylesheet" href="css/animacoes.css">
     <link rel="stylesheet" href="css/skin-hacker.css">
+    <link rel="stylesheet" href="css/swipe.css">
+    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
     <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
     <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">

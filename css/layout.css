@@ -3,7 +3,7 @@
 *:after {
     -webkit-box-sizing: border-box !important;
     /* Pro iPhone 4 e Lumia entenderem */
-    box-sizing: border-box !important;
+    box-sizing: border-box!important ;
 
 }
 
@@ -139,7 +139,7 @@ main {
     padding: 0 15px !important;
     /* Isso devolve o respiro nas laterais */
     width: 100%;
-    box-sizing: border-box;
+    box-sizing: border-box!important;
     display: block;
     /* Garante o comportamento de bloco */
 }

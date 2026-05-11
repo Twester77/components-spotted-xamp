@@ -212,7 +212,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                             <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
                             <span class="slider round"></span>
                         </label>
-                        <small>Arraste para o lado para responder (Experimental)</small>
+                        <small>Isso mudará seu feed para o modo Pilha (Estilo APP)</small>
                     </div>
 
                     <div class="campo-grupo">

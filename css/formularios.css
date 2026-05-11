@@ -1,7 +1,7 @@
 *,
 *:before,
 *:after {
-    box-sizing: border-box;
+    box-sizing: border-box!important;
 }
 
 
@@ -527,9 +527,10 @@ textarea {
 .main-perdidos {
     /* Largura flutua entre 320px e 1200px dependendo da tela */
     width: clamp(320px, 100%, 900px);
-    padding: clamp(8px, 3vw, 30px);
-    margin:20px auto !important;
-    
+    padding: clamp(6px, 3vw, 30px);
+    margin:20px auto ;
+    left: 50%!important;
+    right: 50%!important;
 }
 
 /* O Form de busca/filtro (aquele treco estranho kk) */
@@ -678,9 +679,7 @@ section.sessao-publicar {
 }
 
 
-
 /* ESTILO DOS BOTÕES DE EDIÇÃO */
-
 
 .avatar {
     width: 100px;
@@ -705,7 +704,6 @@ section.sessao-publicar {
 .avatar:hover {
     transform: scale(1.1);
 }
-
 
 
 /* 1. Botão da Câmera (Capa) */

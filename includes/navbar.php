@@ -6,6 +6,7 @@
             <a href="javascript:void(0)">Social</a>
             <ul class="submenu">
                 <li><a href="feed.php">Feed Geral</a></li>
+                <li><a href="feed.pessoal.php"> Feed Pessoal</a></li>
             </ul>
         </li>
 

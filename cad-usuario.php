@@ -28,7 +28,7 @@ include 'includes/bolhas.php';
                     <input type="email"
                         id="email"
                         name="email"
-                        placeholder="seu@email.com"
+                        placeholder="E-mail pessoal ou acadêmico"
                         required>
                 </div>
             </div>

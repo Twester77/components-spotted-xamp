@@ -55,8 +55,8 @@ include 'includes/bolhas.php';
         </div>
     </article>
 
-<section class="sessao-publicar" style="width: 100% !important; margin: 20px 0 !important;">
-            <h3 class="titulo-publicar">Perdeu ou Achou algo?</h3>
+    <section class="sessao-publicar" style="width: 100% !important; margin: 20px 0 !important;">
+        <h3 class="titulo-publicar">Perdeu ou Achou algo?</h3>
 
         <div class="nota-seguranca">
             <strong>⚠️ NOTA DE SEGURANÇA:</strong> Ao postar fotos, por favor, cubra dados sensíveis.
@@ -75,6 +75,12 @@ include 'includes/bolhas.php';
 
                 <div class="input-group">
                     <textarea name="mensagem" class="fenda-input fenda-textarea" placeholder="Descreva o objeto..." required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="imagem" style="color: #fc900c; font-size: 0.9rem; cursor: pointer;">
+                        <i class="fas fa-camera"></i> Postar foto do objeto (Opcional)
+                    </label>
+                    <input type="file" name="imagem" id="imagem" accept="image/*" class="fenda-input" style="padding: 5px;">
                 </div>
 
                 <button type="submit" class="btn-lancar">Publicar na Fenda</button>
@@ -117,6 +123,13 @@ include 'includes/bolhas.php';
 
                         <div class="card-body">
                             <p><?php echo $linha['mensagem']; ?></p>
+                            <?php if (!empty($linha['imagem_url'])): ?>
+                                <div class="container-img-post" style="margin-top: 10px;">
+                                    <img src="uploads/<?php echo $linha['imagem_url']; ?>"
+                                        class="spotted-card-img"
+                                        style="width: 100%; border-radius: 10px; max-height: 250px; object-fit: cover;">
+                                </div>
+                            <?php endif; ?>
                         </div>
 
                         <div class="card-footer" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">

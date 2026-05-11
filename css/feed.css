@@ -14,7 +14,7 @@
     text-decoration: none;
     font-size: 18px;
     font-weight: 800;
-    padding: clamp(8px, 16px, 12px) 20px;
+    padding: clamp(8px, 12px, 14px) 12px;
     max-width: fit-content;
     border-radius: 20px;
     color: #fff;
@@ -37,8 +37,8 @@
 .filtros-perdidos {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin: 20px 0;
+    gap: 10px;
+    margin: 20px auto;
     
 }
 
@@ -58,11 +58,11 @@
 .main-fenda-total article {
     width: 100% !important;
     margin: 0 !important;
-    box-sizing: border-box !important;
+    box-sizing: border-box ;
 }
 
 .container-feed {
-    display: grid !important;
+    display: grid ;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
@@ -86,7 +86,7 @@
 
 /* --- SISTEMA DE EXPANSÃO (ESTÁVEL PARA O TRABALHO) --- */
 .post-content {
-    display: block !important;
+    display: block ;
     overflow: hidden;
     position: relative;
     max-height: 4.8rem;
@@ -103,8 +103,8 @@
 
 
 .post-content.expandido {
-    max-height: 2000px !important; /*para a transição funcionar */
-    overflow: visible !important; /* Mostra tudo */
+    max-height: 2000px ; /*para a transição funcionar */
+    overflow: visible ; /* Mostra tudo */
     margin-bottom: 10px; /* Dá um respiro no final do texto */
 }
 
@@ -151,7 +151,7 @@
     overflow: visible !important;   /* Deixa o card crescer com o texto */    
     flex-direction: column;       
     width: 100%;
-    max-width: 600px !important; /* Limita a largura máxima do card */           
+    max-width: 500px !important; /* Limita a largura máxima do card */           
     height: auto !important;       
     
     
@@ -178,7 +178,7 @@
         display: block !important;
         width: 100% !important;
         /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 600px !important;
+        max-width: 500px !important;
         flex-shrink: 0 !important;
         position: relative !important;
         margin: 20px auto !important;
@@ -325,7 +325,7 @@
 }
 
 .spotted-card:first-child {
-    margin-top: 50px;
+    margin-top: 40px;
 }
 
 
@@ -377,6 +377,10 @@
     align-items: center;
     gap: 4px;
     box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
 }
 
 .badge-achado {
@@ -385,6 +389,10 @@
     padding: 3px 12px;
     border-radius: 20px;
     font-size: 14px;
+    max-width: 80px;
+     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: bold;
     text-transform: uppercase;
     display: inline-flex;
@@ -444,7 +452,7 @@ span.data-post {
 
 
  span.category-tag {
-    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.1rem);
+    font-size: clamp(0.85rem, 0.2vw + 0.5rem, 1.1rem);
     color: #ff9f0f;
     font-weight: bold;
     flex-shrink: 0;
@@ -455,13 +463,14 @@ span.data-post {
     margin-right: 6px;
     display: inline-block !important;
     border: none;
-    max-width: 150px;
+    max-width: clamp(150, 5vw, 250);
     /* Limita a largura da tag */
     white-space: nowrap !important;
     /* Impede que ela quebre em duas linhas */
     overflow: hidden !important;
     /* Esconde o que sobrar */
     text-overflow: ellipsis !important;
+    hyphens: auto;
     /* Coloca os "..." se o nome for gigante */
     vertical-align: middle;
     overflow: hidden;
@@ -584,12 +593,12 @@ order: 3;
 }
 
 .footer-links {
-    display: flex !important;
+    display: flex;
     gap: 10px !important;
-    padding: 5px !important;
+    padding: 5px ;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+    bottom: 0;
 }
 
 /* Ajuste fino footer-links */
@@ -600,6 +609,8 @@ order: 3;
     align-items: center;
     gap: 10px;
     font-size: 0.95rem;
+    margin-top: auto;
+    
 }
 
 /* Quando o usuário já reagiu, a pílula ganha destaque */

@@ -1,0 +1,214 @@
+/* ============================================================
+   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP)
+   ============================================================ */
+
+/* 1. Mata todos os conflitos de movimento dos arquivos anteriores */
+body.modo-swipe-ativo .spotted-card,
+body.modo-swipe-ativo .post-content,
+body.modo-swipe-ativo .article.spotted-card {
+    /* Remove o 'bounce' e o 'hover' do layout.css e feed.css */
+    transition: transform 0s, opacity 0s;
+    animation: none !important; /* Mata o typing do skin-hacker */
+    /* Prepara o sensor de toque para o Hammer.js */
+    touch-action: none !important; 
+    -webkit-user-select: none !important; 
+    -ms-user-select: none !important;     /* Desativa no Edge */
+    -moz-user-select: none !important;    /* Desativa no Firefox */
+    user-select: none !important;  /* Desativa o padrão */
+    -webkit-user-drag: none !important;
+    cursor: grab!important;
+    /* Melhora a performance de renderização no celular */
+    will-change: transform, opacity;
+     /* Impede que o sistema abra o menu de contexto (copiar/colar) ao segurar */
+    -webkit-touch-callout: none !important; 
+}
+
+.feed-empilhado .spotted-card {
+    content-visibility: auto; /* O navegador só renderiza o que está "perto" de aparecer */
+}
+
+
+/* 2. Ajuste do Container (Matrioska) */
+.container-feed.feed-empilhado {
+    display: grid !important;
+    place-items: center !important;
+    position: relative !important;
+    height: 75vh !important;
+    margin-top: 50px !important;
+    perspective: 1000px !important;
+}
+
+.feed-empilhado .spotted-card {
+    grid-area: 1/1 !important;
+    position: absolute !important;
+    z-index: 10;
+    width: 85% !important;
+    max-width: 500px !important;
+    /* Altura um pouco maior para parecer um card de baralho/Tinder */
+    min-height: 400px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important; /* Isso empurra o topo pra cima e o fundo pra baixo */
+    /* Garante que o conteúdo interno não quebre */
+}
+
+/* Se a classe for .footer-links ou o container dos botões */
+body.modo-swipe-ativo .footer-links, 
+body.modo-swipe-ativo .card-actions {
+    margin-top: auto !important; /* Isso garante que eles fiquem no rodapé */
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1); 
+}
+
+
+/* 3. Efeito de Empilhamento Visual (Os cards de baixo) */
+.feed-empilhado .spotted-card:nth-child(2) {
+    transform: translateY(10px) scale(0.95) translateZ(-20px) !important;
+    opacity: 0.6 !important;
+    z-index: 9 !important;
+}
+
+.feed-empilhado .spotted-card:nth-child(3) {
+    transform: translateY(20px) scale(0.9) translateZ(-40px) !important;
+    opacity: 0.3 !important;
+    z-index: 8 !important;
+}
+
+
+/* Overlay para escurecer o fundo quando um card for focado */
+body.modo-swipe-ativo::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+body.card-isolado::after {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Se o card estiver sendo arrastado, desativa qualquer clique interno */
+.spotted-card.dragging {
+    pointer-events: none !important;
+    /* Quando o Hammer detecta o toque inicial */
+    cursor: grabbing !important;
+    transform: scale(1.05) !important; /* Dá o efeito de que o card "levantou" da tela */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important;
+    z-index: 999 !important;
+}
+
+
+/* Garante que o card do topo no Modo App seja o ÚNICO a aceitar toques */
+.feed-empilhado .spotted-card:not(:first-child) {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+/* O Card em Foco */
+.spotted-card.focado-swipe {
+    z-index: 1001 !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1.05) !important;
+    width: 95% !important;
+    max-width: 500px !important;
+    max-height: 80vh;
+    overflow-y: auto !important;
+}
+
+.focado-swipe .post-content {
+    max-height: none !important; /* Mostra todo o texto */
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset!important;
+}
+
+/* Quando o Modo App estiver ligado, desaparece com o que atrapalha */
+body.modo-swipe-ativo #fenda-toolbar,
+body.modo-swipe-ativo .fab-postar {
+    display: none !important;
+}
+
+/* Ajuste no card para ele NÃO vir expandido "neida" */
+body.modo-swipe-ativo .spotted-card:not(.focado-swipe) .post-content {
+    max-height: 4.8rem !important; /* Trava o tamanho na pilha */
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    display:-moz-box !important;
+    -webkit-line-clamp: 3; /* Mostra só 3 linhas na pilha */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    
+}
+
+/* No seu swipe.css */
+body.modo-swipe-ativo .container-load-more {
+    display: none !important;
+}
+
+
+/* RESPONSIVIDADE VISUAL - ESTILO ZONA DE GATILHO */
+
+/* Camadas de cor invisíveis dentro do card */
+.spotted-card::before, .spotted-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1; 
+    transition: opacity 0.1s ease;
+    pointer-events: none;
+    border-radius: inherit;
+    /* Começam com opacidade ZERO vinda da variável */
+    opacity: 0; 
+}
+
+/* Lado Verde (Direita) - Usa a variável --opacidade-verde */
+.spotted-card::before { 
+    background: linear-gradient(to right, transparent, rgba(0, 255, 127, 0.6)); 
+    opacity: var(--opacidade-verde, 0); 
+}
+
+/* Lado Vermelho (Esquerda) - Usa a variável --opacidade-vermelha */
+.spotted-card::after { 
+    background: linear-gradient(to left, transparent, rgba(255, 68, 68, 0.6)); 
+    opacity: var(--opacidade-vermelha, 0); 
+}
+
+
+/* Área da Imagem no Card */
+.spotted-card-img {
+    width: 100%;
+    height: 200px; /* Altura fixa para não quebrar a pilha */
+    object-fit: cover; /* Faz a foto preencher sem esticar */
+    border-radius: 10px;
+    margin: 10px 0;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Garante que o texto e a imagem convivam bem */
+body.modo-swipe-ativo .post-content {
+    max-height: 5.2rem !important; /* Seu ajuste de mestre */
+    margin-bottom: 5px;
+}
+
+.container-img-post {
+    width: 100%;
+    max-height: 220px; /* Trava a altura para não explodir o card */
+    overflow: hidden;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.spotted-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Faz a foto se ajustar sem achatar */
+    object-position: center;
+    display: block;
+}

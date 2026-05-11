@@ -4,13 +4,11 @@
 window.audioLiberado = false; // só pra não bugar
 
 window.setBolhasLocal = function (valor) {
-    // 1. Atualiza o input hidden para que o PHP saiba o que salvar no banco
     const inputHidden = document.getElementById('input_pref_bolhas');
     if (inputHidden) {
         inputHidden.value = valor;
     }
 
-    // 2. Gerencia as classes 'active' para o visual mudar na hora
     const btnOn = document.getElementById('btn-bolhas-on');
     const btnOff = document.getElementById('btn-bolhas-off');
 
@@ -22,7 +20,6 @@ window.setBolhasLocal = function (valor) {
         btnOn.classList.remove('active');
     }
 
-    // 3. (Opcional) Se você quiser que as bolhas sumam ou apareçam sem dar F5:
     const containerBolhas = document.querySelector('.bubbles-container');
     if (containerBolhas) {
         containerBolhas.style.display = (valor === 1) ? 'block' : 'none';
@@ -73,28 +70,22 @@ window.toggleHackerMode = function () {
 
     if (btnNav) btnNav.innerHTML = texto;
     if (btnToolbar) btnToolbar.innerHTML = isHacker ? 'MODO_NORMAL' : 'MODO_TERMINAL';
-    
-    // *** NOVO: Remove as bordas inline ao ativar/desativar o modo hacker ***
+
     window.removerBordasInlineHacker();
 };
 
-
 // --- FUNÇÃO PARA REMOVER BORDAS INLINE NO MODO HACKER ---
-window.removerBordasInlineHacker = function() {
-    // Só executa se o modo hacker estiver ativo
+window.removerBordasInlineHacker = function () {
     if (!document.body.classList.contains('hacker-mode')) return;
-    
-    // Remove os estilos inline de border-left e border-right de todos os cards
+
     document.querySelectorAll('.spotted-card').forEach(card => {
-        // Limpa os estilos inline que causam conflito
         card.style.borderLeft = '';
         card.style.borderRight = '';
         card.style.borderLeftColor = '';
         card.style.borderRightColor = '';
         card.style.border = '';
     });
-    
-    // Também limpa os comentários, se necessário
+
     document.querySelectorAll('.comentario-item').forEach(comentario => {
         comentario.style.borderLeft = '';
         comentario.style.borderRight = '';
@@ -102,7 +93,6 @@ window.removerBordasInlineHacker = function() {
         comentario.style.borderRightColor = '';
     });
 };
-
 
 /*------MODAL DE LOGOUT------*/
 window.deslogar = function () {
@@ -130,8 +120,8 @@ function abrirModalPost() {
     const modal = document.getElementById('modal-postar-fenda');
     if (modal) {
         modal.style.display = 'flex';
-        document.body.classList.add('modal-aberto'); // Isso esconde o FAB (via CSS que você já tem)
-        document.body.style.overflow = 'hidden'; // Trava o scroll da página ao fundo
+        document.body.classList.add('modal-aberto');
+        document.body.style.overflow = 'hidden';
     }
 }
 
@@ -140,52 +130,42 @@ function fecharModalPost() {
     const modal = document.getElementById('modal-postar-fenda');
     if (modal) {
         modal.style.display = 'none';
-        document.body.classList.remove('modal-aberto'); // Mostra o FAB de volta
-        document.body.style.overflow = 'auto'; // Destrava o scroll
+        document.body.classList.remove('modal-aberto');
+        document.body.style.overflow = 'auto';
     }
 }
 
-// --- SISTEMA DE RESPOSTA HÍBRIDO (TROCA DE ALVO e ANTI DUPLICIDADE) ---
-window.prepararResposta = function(id, username) {
+// --- SISTEMA DE RESPOSTA HÍBRIDO ---
+window.prepararResposta = function (id, username) {
     const inputParent = document.getElementById('input_parent_id');
     const campo = document.querySelector('.textarea-fenda');
-    
+
     if (inputParent && campo) {
         inputParent.value = id;
-
         const novaMencao = "@" + username.trim() + " ";
-        
-        // REGEX BEM NINJA: Localiza QUALQUER menção que esteja no início da frase
-        // Isso pega @leo, @admin... qualquer um.
         const regexMencaoQualquer = /^@[a-zA-Z0-9._-]+\s/;
 
         if (regexMencaoQualquer.test(campo.value)) {
-            // Se já existir QUALQUER menção no início, ele SUBSTITUI pela nova
             campo.value = campo.value.replace(regexMencaoQualquer, novaMencao);
         } else {
-            // Se não tiver nada, ele adiciona no começo
             campo.value = novaMencao + campo.value;
         }
 
         campo.placeholder = "Respondendo a " + username.trim() + "...";
         campo.focus();
-        
+
         const areaFofocar = document.getElementById('fofocar');
         if (areaFofocar) areaFofocar.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 };
 
-
-// === NOVA FUNÇÃO: GAVETA DE CONTROLE (MOBILE) ===
-window.abrirGavetaControle = function() {
+// === GAVETA DE CONTROLE (MOBILE) ===
+window.abrirGavetaControle = function () {
     const gaveta = document.getElementById('gaveta-pessoal');
     if (gaveta) {
-        // Verifica o estado atual computado para alternar
         const displayAtual = window.getComputedStyle(gaveta).display;
-        
         if (displayAtual === 'none') {
             gaveta.style.display = 'block';
-            // Scroll suave no celular para o usuário não se perder
             gaveta.scrollIntoView({ behavior: 'smooth' });
         } else {
             gaveta.style.display = 'none';
@@ -193,6 +173,175 @@ window.abrirGavetaControle = function() {
     }
 };
 
+// ==================== SWIPE / TINDER MODE ====================
+
+// 1. Função Central que controla a aparência e o comportamento 
+window.alternarInterfaceSwipe = function (ativar) {
+    const body = document.body;
+    const container = document.querySelector('.container-feed');
+    if (!container) return;
+
+    if (ativar) {
+        body.classList.add('modo-swipe-ativo');
+        container.classList.add('feed-empilhado');
+        window.iniciarFisicaSwipe(); // Liga o Hammer.js
+        console.log("Fenda Engine: Modo Swipe Calibrado.");
+    } else {
+        body.classList.remove('modo-swipe-ativo', 'card-isolado');
+        container.classList.remove('feed-empilhado');
+        // Limpa qualquer card que tenha ficado focado (zoom)
+        document.querySelectorAll('.focado-swipe').forEach(c => c.classList.remove('focado-swipe'));
+    }
+};
+
+window.iniciarFisicaSwipe = function () {
+    const container = document.querySelector('.container-feed');
+    if (!container || !container.classList.contains('feed-empilhado')) return;
+
+    const cards = container.querySelectorAll('.spotted-card');
+    if (cards.length === 0) return;
+
+    const cardTopo = cards[0];
+    cardTopo.style.zIndex = "100";
+
+    const mc = new Hammer(cardTopo);
+    mc.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 50 }));
+
+    mc.on("pan", (ev) => {
+        if (cardTopo.classList.contains('focado-swipe')) return;
+
+        cardTopo.style.transition = 'none';
+        cardTopo.classList.add('dragging');
+
+        // Cálculo da opacidade baseado no movimento (200px é o limite do brilho total)
+        let intensidade = Math.min(Math.abs(ev.deltaX) / 200, 1);
+
+        if (ev.deltaX > 0) {
+            // Brilha Verde na direita
+            cardTopo.style.setProperty('--opacidade-verde', intensidade);
+            cardTopo.style.setProperty('--opacidade-vermelha', 0);
+        } else {
+            // Brilha Vermelho na esquerda
+            cardTopo.style.setProperty('--opacidade-vermelha', intensidade);
+            cardTopo.style.setProperty('--opacidade-verde', 0);
+        }
+
+        let rotate = ev.deltaX / 15;
+        cardTopo.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY}px) rotate(${rotate}deg)`;
+    });
+
+    mc.on("panend", (ev) => {
+        // 1. Mantemos a classe dragging por um milissegundo a mais
+        // para o navegador não resetar o estilo antes da hora
+
+        if (Math.abs(ev.deltaX) > 150 && !cardTopo.classList.contains('focado-swipe')) {
+            // Dentro do if (Math.abs(ev.deltaX) > 150...)
+            const flyX = ev.deltaX > 0 ? 1500 : -1500;
+
+            // 1. Primeiro aplica a transição suave
+            cardTopo.style.transition = 'transform 0.7s cubic-bezier(0.2, 0.5, 0.2, 1), opacity 0.4s ease-out';
+
+            // 2. Depois dá o comando de movimento (O navegador agora vai animar do ponto atual até o flyX)
+            requestAnimationFrame(() => {
+                cardTopo.style.transform = `translateX(${flyX}px) rotate(${flyX / 12}deg)`;
+                cardTopo.style.opacity = '0';
+            });
+
+            // 3. Limpa as cores IMEDIATAMENTE
+            cardTopo.style.setProperty('--opacidade-verde', 0);
+            cardTopo.style.setProperty('--opacidade-vermelha', 0);
+            setTimeout(() => {
+                cardTopo.classList.remove('dragging'); // Só remove agora
+                cardTopo.remove();
+                window.iniciarFisicaSwipe();
+            }, 600);
+        } else {
+            // Volta para o centro se o arraste foi curto
+            cardTopo.classList.remove('dragging');
+            cardTopo.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            cardTopo.style.transform = cardTopo.classList.contains('focado-swipe') ? 'translate(-50%, -50%) scale(1.05)' : 'translate(0,0)';
+
+            // Reseta as cores
+            cardTopo.style.setProperty('--opacidade-verde', 0);
+            cardTopo.style.setProperty('--opacidade-vermelha', 0);
+        }
+    });
+
+};
+
+window.focarCardSwipe = function (card) {
+    if (!document.body.classList.contains('modo-swipe-ativo') || card.classList.contains('dragging')) return;
+
+    const estaFocado = card.classList.contains('focado-swipe');
+    const imagem = card.querySelector('.spotted-card-img');
+
+    if (!estaFocado) {
+        document.body.classList.add('card-isolado');
+        card.classList.add('focado-swipe');
+        
+        // Se o card tiver foto, damos o zoom ADS
+        if (imagem) {
+            imagem.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            imagem.style.maxHeight = '350px'; // Expande a foto
+            imagem.style.transform = 'scale(1.02)';
+        }
+    } else {
+        document.body.classList.remove('card-isolado');
+        card.classList.remove('focado-swipe');
+        
+        if (imagem) {
+            imagem.style.maxHeight = '200px'; // Volta ao normal
+            imagem.style.transform = 'scale(1)';
+        }
+    }
+};
+
+window.ativarModoSwipe = function () {
+    const container = document.querySelector('.container-feed');
+    const estaAtivo = container && container.classList.contains('feed-empilhado');
+    window.alternarInterfaceSwipe(!estaAtivo);
+    const btn = document.getElementById('toggle-swipe');
+    if (btn) {
+        btn.innerHTML = !estaAtivo ? '<i class="fas fa-th"></i> VOLTAR PARA LISTA' : '<i class="fas fa-mobile-alt"></i> ATIVAR MODO APP (SWIPE)';
+    }
+};
+
+// --- FUNÇÃO CORRIGIDA: CONFIGURAR POSTS (SÓ UMA VEZ!) ---
+window.configurarPosts = function () {
+    const posts = document.querySelectorAll('.post-content');
+    posts.forEach(post => {
+        const precisaExpandir = post.scrollHeight > post.offsetHeight + 10;
+
+        if (precisaExpandir && !post.dataset.ouvinte) {
+            post.classList.add('tem-mais');
+            post.dataset.ouvinte = "true";
+            post.style.cursor = "pointer";
+
+            post.addEventListener('click', function (e) {
+                const card = this.closest('.spotted-card');
+                // Se o modo swipe estiver ON, o clique isola o card (Modo Tinder)
+                if (document.body.classList.contains('modo-swipe-ativo')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.focarCardSwipe(card);
+                } else {
+                    // Modo grid: apenas expande o texto normal
+                    this.classList.toggle('expandido');
+                }
+            });
+        }
+    });
+};
+
+// --- FECHA O MODO FOCO AO CLICAR NO FUNDO ESCURO ---
+document.addEventListener('click', (e) => {
+    if (document.body.classList.contains('card-isolado')) {
+        const focado = document.querySelector('.focado-swipe');
+        if (focado && (e.target.classList.contains('card-isolado') || !e.target.closest('.focado-swipe'))) {
+            window.focarCardSwipe(focado);
+        }
+    }
+});
 
 window.toggleMenu = function (menuId) {
     document.querySelectorAll('.options-menu-popup').forEach(menu => {
@@ -202,9 +351,7 @@ window.toggleMenu = function (menuId) {
     if (menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 };
 
-// 2. INICIALIZAÇÃO E EVENTOS
-
-// Gatilho simples para liberar o áudio
+// ==================== INICIALIZAÇÃO ====================
 const destravarAudio = () => {
     window.audioLiberado = true;
     console.log("Áudio autorizado pelo usuário.");
@@ -216,10 +363,7 @@ document.addEventListener('touchstart', destravarAudio);
 
 document.addEventListener("DOMContentLoaded", function () {
     if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
-    // Libera o áudio pro Chrome no primeiro clique
 
-
-    // --- ---
     const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
     dropdownLinks.forEach(link => {
         link.addEventListener('click', function (e) {
@@ -235,7 +379,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-    // --- FIM DO BLOCO ---
 
     let somAmbiente = localStorage.getItem('fenda_tipo_som') || 'off';
     let temaNotif = localStorage.getItem('fenda_tema_notif') || 'padrao';
@@ -271,26 +414,19 @@ document.addEventListener("DOMContentLoaded", function () {
         atualizarInterfaceAudio();
     };
 
-
-    // Roda uma vez ao carregar e depois a cada 8 segundos
     window.atualizarContadorAlertas = function () {
         fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
             .then(res => res.text())
             .then(texto => {
-                // Filtra o JSON para ignorar erros de PHP ou espaços em branco
                 const match = texto.match(/\{.*\}/);
                 if (!match) return;
-
                 const data = JSON.parse(match[0]);
                 const badge = document.getElementById('badge-alertas');
-
                 if (badge && data.total !== undefined) {
                     let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
-
                     if (data.total > ultimoAviso) {
                         if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
                     }
-
                     sessionStorage.setItem('fenda_ultimo_aviso', data.total);
                     badge.innerText = data.total;
                     badge.style.display = data.total > 0 ? 'flex' : 'none';
@@ -299,39 +435,15 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.warn("Radar: Aguardando sinal limpo..."));
     };
 
-    // Inicia o radar com um pequeno delay para estabilidade
     setTimeout(() => {
         window.atualizarContadorAlertas();
         setInterval(window.atualizarContadorAlertas, 8000);
     }, 1000);
 
-    // Configura os posts (Ler mais) com delay para o CSS carregar
     setTimeout(() => {
         if (typeof configurarPosts === 'function') configurarPosts();
     }, 500);
-}); // FIM DO DOMCONTENTLOADED - APENAS UMA CHAVE AQUI!
-
-
-// 3. SISTEMAS EXTERNOS E AJAX
-window.configurarPosts = function () {
-    const posts = document.querySelectorAll('.post-content');
-    posts.forEach(post => {
-        // Verifica se o conteúdo transborda a altura máxima definida no CSS
-        // Adicionamos uma margem para evitar falsos positivos em textos no limite
-        const precisaExpandir = post.scrollHeight > post.offsetHeight + 10;
-
-        if (precisaExpandir && !post.dataset.ouvinte) {
-            post.classList.add('tem-mais');
-            post.dataset.ouvinte = "true";
-            post.style.cursor = "pointer";
-
-            post.addEventListener('click', function (e) {
-                this.classList.toggle('expandido');
-            });
-        }
-    });
-};
-
+});
 
 function mostrarPopup(mensagem) {
     let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
@@ -358,14 +470,13 @@ function mostrarPopup(mensagem) {
 
         if (configuracaoSons[temaSalvo]) {
             let somEscolhido = configuracaoSons[temaSalvo];
-            
+
             const dispararSom = () => {
                 let somUrl = 'sons/' + somEscolhido.arquivo + '?v=' + Date.now();
                 let bip = new Audio(somUrl);
                 bip.volume = somEscolhido.volume;
 
                 bip.play().then(() => {
-                    // Lógica de Fade-out para sons longos
                     bip.onloadedmetadata = function () {
                         if (bip.duration > 3) {
                             setTimeout(() => {
@@ -394,7 +505,6 @@ function mostrarPopup(mensagem) {
         }
     }
 
-    // --- PARTE VISUAL ---
     const popup = document.createElement('div');
     popup.className = 'notificacao-popup';
     popup.style.cursor = 'pointer';
@@ -414,19 +524,14 @@ function mostrarPopup(mensagem) {
     }, tempoExibicao);
 }
 
-// 1. Função para carregar as notificações na janelinha (sem sair da página)
 window.toggleJanelaNotificacoes = function () {
     const box = document.getElementById('dropdown-notificacoes');
-
-    // Se a janela estiver fechada, vamos carregar os dados antes de abrir
     if (box.style.display === 'none' || box.style.display === '') {
-        fetch('notificacoes-rapidas.php') // Um arquivo novo, versão leve do notificacoes.php
+        fetch('notificacoes-rapidas.php')
             .then(res => res.text())
             .then(html => {
                 box.innerHTML = html;
                 box.style.display = 'block';
-
-                // Limpa o badge visual já que o usuário abriu a lista
                 const badge = document.getElementById('badge-alertas');
                 if (badge) badge.style.display = 'none';
             });
@@ -435,7 +540,6 @@ window.toggleJanelaNotificacoes = function () {
     }
 };
 
-// 2. Fechar a janelinha se clicar fora (igual você fez com os outros menus)[cite: 26]
 window.addEventListener('click', function (e) {
     const box = document.getElementById('dropdown-notificacoes');
     if (box && !e.target.closest('.notificacao-wrapper')) {
@@ -443,13 +547,12 @@ window.addEventListener('click', function (e) {
     }
 });
 
-// --- BLOCO DE REAÇÕES ATUALIZADO ---
+// --- REAÇÕES ---
 window.enviarReacao = function (postId, tipo) {
     fetch(`includes/reagir.php?id=${postId}&tipo=${tipo}`)
         .then(res => res.json())
         .then(data => {
             if (data.status === 'success') {
-                // Usa a função global que já está declarada no arquivo
                 window.atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
             }
         })
@@ -466,12 +569,10 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     };
 
     container.innerHTML = '';
-
     Object.keys(contagens).forEach(tipo => {
         const emoji = tradutor[tipo] || '👍';
         const total = contagens[tipo];
         const classeVoted = (minhas && minhas.includes(tipo)) ? 'voted' : '';
-
         const span = document.createElement('span');
         span.className = `reacao-item ${classeVoted}`;
         span.innerHTML = `${emoji} ${total}`;
@@ -479,19 +580,16 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     });
 };
 
-// --- CONTROLE UNIFICADO DE CLIQUES GLOBAIS (Versão Final Corrigida) ---
+// --- CONTROLE UNIFICADO DE CLIQUES GLOBAIS ---
 window.addEventListener('click', function (event) {
-    // 1. Modal Sair
     const modalSair = document.getElementById('modal-sair-fenda');
     if (event.target === modalSair) window.fecharModalSair();
 
-    // 2. Elementos que NÃO devem fechar os menus ao serem clicados
     const clicouNoMenu = event.target.closest('.dropdown');
     const clicouNaReacao = event.target.closest('.reacao-wrapper') || event.target.closest('.btn-reagir');
     const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
     const clicouNoPost = event.target.closest('.post-content');
 
-    // Se o clique for fora do post e fora do menu, fecha os dropdowns
     if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
         document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
         document.querySelectorAll('.reacoes-popup').forEach(p => {
@@ -500,21 +598,18 @@ window.addEventListener('click', function (event) {
         });
     }
 
-    // Fecha a janela de notificações se clicar fora dela
     if (!clicouNaNotif) {
         const box = document.getElementById('dropdown-notificacoes');
         if (box) box.style.display = 'none';
     }
 });
 
-// Verificação de Boot e Modo Hacker salvo
+// --- LOAD FINAL (Modo Hacker e Swipe Inteligente) ---
 window.addEventListener('load', () => {
     if (localStorage.getItem('fenda_hacker') === 'active') {
         document.body.classList.add('hacker-mode');
         const hBtn = document.getElementById('hacker-toggle-lateral') || document.getElementById('hacker-toggle');
         if (hBtn) hBtn.innerHTML = '[ DESLIGAR_TERMINAL ]';
-        
-        // Remove as bordas inline ao carregar a página com modo hacker ativo
         window.removerBordasInlineHacker();
     }
     const bootScreen = document.getElementById('bios-boot');
@@ -524,4 +619,16 @@ window.addEventListener('load', () => {
             setTimeout(() => { bootScreen.style.display = 'none'; sessionStorage.setItem('boot_concluido', 'true'); }, 500);
         }, 2500);
     } else if (bootScreen) { bootScreen.style.display = 'none'; }
+
+    // Ativação inteligente do modo swipe (somente se a preferência estiver ativada)
+    if (window.prefSwipeAtivada === true) {
+        const isFeedGeral = window.location.pathname.includes('feed.php');
+        if (!isFeedGeral) {
+            window.alternarInterfaceSwipe(true);
+            const btn = document.getElementById('toggle-swipe');
+            if (btn) btn.innerHTML = '<i class="fas fa-th"></i> VOLTAR PARA LISTA';
+            const toolbar = document.getElementById('fenda-toolbar');
+            if (toolbar) toolbar.classList.remove('toolbar-aberta');
+        }
+    }
 });

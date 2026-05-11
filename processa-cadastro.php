@@ -20,9 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit();
     }
 
-    // 3. MUDANÇA ESTRATÉGICA: 'ativo' = 1 (Auto-ativação para a feira)
+    // 3. A  INTRODUÇÃO DOS DADOS NO BANCO E ATIVAÇÃO
     $sql = "INSERT INTO usuarios (nome, email, senha, token, ativo, atletica_id, pref_cor_padrao, pref_vibe_padrao, foto, capa) 
-            VALUES ('$nome', '$email', '$senha', '$token', 1, '$atletica_id', '$pref_cor_padrao', '$pref_vibe_padrao', 'default.jpg', 'default_capa.jpg')";
+        VALUES ('$nome', '$email', '$senha', '$token', 0, '$atletica_id', '$pref_cor_padrao', '$pref_vibe_padrao', 'default.jpg', 'default_capa.jpg')";
 
     if (mysqli_query($conn, $sql)) {
         // API KEY do Resend
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // 4. Lógica de URL Universal (Funciona no XAMPP e no Render)
         $url_base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false)
             ? "http://localhost/spotted-unifev"
-            : "https://components-spotted-xamp.onrender.com";
+            : "https://www.fendauniversity.com.br";
 
         // 5. Payload do E-mail (Agora apenas como boas-vindas)
         $email_payload = [
@@ -39,11 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'to' => [$email],
             'subject' => 'Sua conta na Fenda está pronta!',
             'html' => "
-                <div style='font-family: sans-serif; background-color: #050a0f; color: #fff; padding: 20px;'>
-                    <h1>Bem-vindo à Fenda, $nome!</h1>
-                    <p>Sua conta já foi ativada automaticamente, pode acessar o link que vai te levar direto pra página de login.</p>
-                    <p><a href='{$url_base}' style='color: #70cde4; font-weight: bold;'>Clique aqui para acessar o Feed!</a></p>
-                </div>"
+    <div style='font-family: sans-serif; background-color: #050a0f; color: #fff; padding: 20px; border: 1px solid #70cde4;'>
+        <h1>Falta pouco, $nome!</h1>
+        <p>Para liberar seu acesso à Fenda, precisamos que você confirme seu e-mail clicando no botão abaixo:</p>
+        <div style='text-align: center; margin: 30px 0;'>
+            <a href='{$url_base}/verificar.php?token={$token}' 
+               style='background: #70cde4; color: #000; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;'>
+               ATIVAR MINHA CONTA
+            </a>
+        </div>
+        <p style='font-size: 0.8rem; color: #555;'>Se você não solicitou este cadastro, ignore este e-mail.</p>
+    </div>"
         ];
 
         // 6. Envio via cURL (Configurado para não travar o site se a internet falhar)

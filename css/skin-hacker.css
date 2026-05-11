@@ -25,8 +25,8 @@ body.hacker-mode {
     color: var(--hacker-green) !important;
     font-family: var(--hacker-font) !important;
     cursor: url('imagensfoto/crosshair.cur'), auto !important;
-    -webkit-user-select: none !important;
-    user-select: none !important;
+    -webkit-user-select: none ;
+    user-select: none ;
     transition: background 0.3s ease, color 0.3s ease !important;
 }
 
@@ -167,7 +167,7 @@ body.hacker-mode .spotted-card.ranco::before { content: "+== [ RuntimeError: Hig
 body.hacker-mode .spotted-card.elogio::before { content: "+== [ CORREIO_ELEGANTE <3 ] ==================================================================================================+" !important; color: #f85caa !important; }
 body.hacker-mode .spotted-card.games::before { content: "+== [ MODO_GAMER_DETECTADO ] ==================================================================================================+" !important; color: #00ffff !important; }
 body.hacker-mode .spotted-card.academico::before { content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+" !important; color: #b00bda !important; }
-body.hacker-mode .spotted-card.caronas::before { content: "+= [ SELECT * FROM unifev WHERE loc='judasperdeuasbota'] ========================================================================+" !important; color: #969dc4 !important; }
+body.hacker-mode .spotted-card.caronas::before { content: "+= [ SELECT * FROM unifev WHERE loc='houseofcaralho'] ========================================================================+" !important; color: #969dc4 !important; }
 body.hacker-mode .spotted-card.esportes::before { content: "+== [ JOIN_FOR_FUN ] ==========================================================================================================+" !important; color: #128a0ec2 !important; }
 body.hacker-mode .spotted-card.comunidade::before { content: "+== [ COMMUNITY_LINK ] ======================================================================================================+" !important; color: #ffffffbe !important; }
 body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus::before { content:"+== [ WARNING: OVERFLOW_EMOTIONAL ] ================================================================================+" !important; color: #f78605 !important; }
@@ -827,23 +827,21 @@ body.hacker-mode .hacker-cursor {
    --------------------------------------------------------------- */
 
 /* Aplica a animação de digitação a todos os textos longos */
-body.hacker-mode .post-content,
-body.hacker-mode .comentario-texto,
 body.hacker-mode .bio-texto,
-body.hacker-mode .card-body p,
 body.hacker-mode p,
+body.hacker-mode .lista-conselhos,
 body.hacker-mode .article p {
     overflow: hidden !important;
     white-space: normal !important;
     display: block !important;
     width: auto !important;
-    animation: typing-global 15s steps(40, end) forwards !important;
+    animation: typing-global 5s steps(40, end) forwards ;
 
 }
 
 @keyframes typing-global {
-    from { clip-path: inset(0 100% 0 0) !important; }
-    to { clip-path: inset(0 0 0 0) !important; }
+    from { clip-path: inset(0 100% 0 0) ; }
+    to { clip-path: inset(0 0 0 0) ; }
 }
 
 /* Remove typing de menus, botões, badges e cabeçalhos */
@@ -860,6 +858,8 @@ body.hacker-mode .tag-categoria,
 body.hacker-mode .card-header,
 body.hacker-mode .user-info-post,
 body.hacker-mode .post-time,
+body.hacker-mode .spotted-card,
+body.hacker-mode .post-content p,
 body.hacker-mode .comentario-autor {
     clip-path: none !important;
     
@@ -872,16 +872,6 @@ body.hacker-mode .comentario-autor {
     to { width: 100%; }
 }
 
- body.hacker-mode main li,
- body.hacker-mode .card-body,
- body.hacker-mode .card-body p, 
- body.hacker-mode .article p,
- body.hacker-mode .spotted-card {
-    animation: typing-global 15s steps(40, end) forwards;
-   transform: ease-in;}
-
-
- 
 
 /* ---------------------------------------------------------------
    26. GARANTIA DE VISIBILIDADE DOS ÍCONES (SOBRESCREVE TUDO)

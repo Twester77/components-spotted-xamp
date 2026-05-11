@@ -13,8 +13,12 @@ include 'includes/bolhas.php';
 ?>
 
 <div style="margin-top: 30px;">
+    <button id="toggle-swipe" class="btn-fenda-padrao" onclick="window.ativarModoSwipe()" style="margin-bottom: 15px;">
+        <i class="fas fa-mobile-alt"></i> ATIVAR MODO APP (SWIPE)
+    </button>
     <?php include 'includes/filtros.php'; ?>
 </div>
+   
 
 <main class="main-fenda-total">
     <!-- O container começa vazio e o Motor preenche -->
