@@ -51,21 +51,21 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
         <h1>A Fenda - Spotted Universitário</h1>
 
         <?php
-        $pagina_atual = basename($_SERVER['PHP_SELF']);
-        if ($pagina_atual !== 'index.php'):
+        // MELHORIA SUPREMA: Os ícones agora aparecem na Index e no Feed, 
+        // desde que o Habitante esteja devidamente logado no sistema!
+        if ($u_id > 0): 
         ?>
             <div class="header-icons">
-                <a href="buscar-usuario.php" class="btn-header">
+                <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes">
                     <i class="fas fa-search"></i>
                 </a>
 
-                <!-- Função JS para abrir as notificações -->
                 <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()">
                     <i class="fa-solid fa-bell"></i>
 
                     <?php
                     $total_n = 0;
-                    if ($u_id > 0 && isset($conn)) {
+                    if (isset($conn)) {
                         $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
                         $stmt_count_header->bind_param("i", $u_id);
                         $stmt_count_header->execute();
@@ -74,21 +74,18 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
                     }
                     ?>
 
-                    <!-- Apenas UM badge: se for 0, fica escondido; se for > 0, já aparece com o número -->
                     <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
                         <?php echo $total_n; ?>
                     </span>
 
-                    <!-- Janelinha de notificações -->
                     <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
-                        <p style="padding:10px; color:#999;">Carregando ondas...</p>
+                        <p style="padding:10px; color:#999;">Carregando fofocas...</p>
                     </div>
                 </div>
 
-                <a href="perfil.php" class="btn-config">
+                <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
                     <i class="fas fa-cog"></i>
                 </a>
             </div>
-
         <?php endif; ?>
     </header>
