@@ -45,8 +45,8 @@ header h1 {
     text-transform: uppercase;
     color: #fff;
     margin: 0;
-    font-family: 'Urbanist',sans-serif;
-    font-weight:bold;
+    font-family: 'Urbanist', sans-serif;
+    font-weight: bold;
 
 }
 
@@ -640,7 +640,7 @@ body.modal-aberto .fab-postar {
 .submenu li a {
     padding: 10px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.021);
-    font-size: clamp (0.85rem, 2vw , 1.4rem);
+    font-size: clamp (0.85rem, 2vw, 1.4rem);
     font-weight: normal !important;
     text-align: left;
 }
@@ -1078,10 +1078,10 @@ footer a {
 /* 1. O Formulário (Tamanho Desktop e Mobile) */
 
 .form-busca-fenda {
-    display: flex ;
+    display: flex;
     flex-direction: row !important;
     align-items: stretch !important;
-    gap: 8px ;
+    gap: 8px;
     width: 100% !important;
     max-width: 400px !important;
     margin: 25px auto !important;
@@ -1093,37 +1093,37 @@ footer a {
 .form-busca-fenda input[type="text"] {
     flex: 1 !important;
     min-width: 0 !important;
-    max-width: 600px!important;
-    background: rgba(255, 255, 255, 0.08) ;
-    color: white ;
-    border: 2px solid rgba(255, 188, 0, 0.5) ;
+    max-width: 600px !important;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    border: 2px solid rgba(255, 188, 0, 0.5);
     outline: none !important;
     box-shadow: none !important;
     -webkit-appearance: none !important;
     appearance: none;
-    border-radius: 10px ;
-    padding: 8px 16px ;
-    font-size: 1.2rem ;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 1.2rem;
     box-sizing: border-box !important;
 }
 
 /* Quando você clica para digitar */
 .form-busca-fenda input[type="text"]:focus {
     border-color: #fc900c;
-    background: rgba(255, 255, 255, 0.12) ;
+    background: rgba(255, 255, 255, 0.12);
     outline: none !important;
-    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3) ;
+    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3);
 }
 
 .form-busca-fenda button {
     flex: 0 0 auto !important;
-    min-width: 65px ;
-    background: #fc900c ;
-    color: #000 ;
+    min-width: 65px;
+    background: #fc900c;
+    color: #000;
     border: none !important;
-    border-radius: 10px ;
+    border-radius: 10px;
     font-weight: 900 !important;
-    font-size: 1rem ;
+    font-size: 1rem;
     cursor: pointer !important;
     padding: 0 20px !important;
     outline: none !important;
@@ -1175,8 +1175,8 @@ footer a {
 /* 5. Textos dentro do Card */
 .nome-user {
     display: block !important;
-    color: #ffffff ;
-    font-size: 1.1rem ;
+    color: #ffffff;
+    font-size: 1.1rem;
     font-weight: bold !important;
 }
 
@@ -1239,8 +1239,10 @@ form[action="confirma-login.php"] input[type="password"] {
     min-height: 180px;
     width: 100% !important;
     max-width: 100% !important;
-    margin-bottom: 40px ; /* Espaço pro feed começar embaixo */
-    transform: none !important; /* Evita que o scale quebre o fluxo horizontal */
+    margin-bottom: 40px;
+    /* Espaço pro feed começar embaixo */
+    transform: none !important;
+    /* Evita que o scale quebre o fluxo horizontal */
 }
 
 /* Envelopa o card principal e os comentários mantendo o mesmo eixo */
@@ -1248,7 +1250,8 @@ form[action="confirma-login.php"] input[type="password"] {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 800px; /* Alinhamento elegante e focado para leitura */
+    max-width: 700px;
+    /* Alinhamento elegante e focado para leitura */
     margin: 0 auto;
     padding: 0 10px;
     box-sizing: border-box;
@@ -1323,7 +1326,7 @@ main.container-post-foco {
     padding: 10px;
 }
 
-    .textarea-fenda {
+.textarea-fenda {
     flex: 1 !important;
     height: 45px !important;
     min-height: 45px !important;
@@ -1342,11 +1345,13 @@ main.container-post-foco {
     height: 45px;
     border-radius: 50% !important;
     padding: 0 !important;
-    font-size: 0 !important; /* Esconde o texto "Mandar mensagem..." */
+    font-size: 0 !important;
+    /* Esconde o texto "Mandar mensagem..." */
 }
 
 .btn-enviar-fenda::before {
-    content: '🚀'; /* Ícone de envio */
+    content: '🚀';
+    /* Ícone de envio */
     font-size: 1.2rem;
 }
 
@@ -1376,23 +1381,23 @@ main.container-post-foco {
 
 /* Bolha base */
 .comentario-item {
-    padding: 8px 14px;
+    padding: 8px 16px;
     gap: 8px;
     width: auto;
-    border-radius: 20px 20px 20px 5px;
+    border-radius: 15px 15px 15px 2px;
     border-left: 5px solid var(--cor-borda-glow);
-    background: rgba(255, 255, 255, 0.048);
+    background: rgba(255, 255, 255, 0.062);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
+    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     align-self: flex-start;
-    box-sizing: border-box!important;
+    box-sizing: border-box !important;
     display: flex;
     flex-direction: column;
     word-break: break-word;
     hyphens: auto;
-    margin-bottom: 20px ;
+    margin-bottom: 20px;
 }
 
 /* Bolha do próprio usuário (direita) */
@@ -1452,12 +1457,22 @@ main.container-post-foco {
 }
 
 @keyframes neon-ultra {
-    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+
+    0%,
+    18%,
+    22%,
+    25%,
+    53%,
+    57%,
+    100% {
         filter: saturate(0.7);
         border-left-color: var(--cor-borda-glow);
         box-shadow: 0 0 10px var(--cor-borda-glow);
     }
-    20%, 24%, 55% {
+
+    20%,
+    24%,
+    55% {
         border-left-color: rgba(0, 0, 0, 0.5);
         box-shadow: 0 0 25px var(--cor-borda-glow);
     }
@@ -1465,7 +1480,7 @@ main.container-post-foco {
 
 /* MODO GLASS - SEU ORIGINAL (CORRIGIDO) */
 .comentario-item.vibe-glass {
-    background: rgba(255, 255, 255, 0.062) ;
+    background: rgba(255, 255, 255, 0.062);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     color: #fff !important;
@@ -1535,19 +1550,21 @@ main.container-post-foco {
     text-align: left;
 }
 
+
 /* Comentários filhos (respostas) – regra geral */
+
 .comentario-filho {
-    margin-left: 35px;
-    max-width: 90%;
+    margin-left: 55px;
+    /* Recuo confortável para telas normais */
+    max-width: 88%;
+    position: relative;
+    /* Garante que a seta use este card como referência */
 }
 
+/* 💀 ADEUS SETA MALDITA: Deixamos o ::before completamente limpo */
 .comentario-item.comentario-filho::before {
-    content: '↳';
-    position: absolute;
-    left: -30px;
-    top: -10px;
-    color: var(--cor-borda-glow);
-    font-size: 2.3rem;
+    display: none;
+    content: none;
 }
 
 .reply-indicator {
@@ -1578,6 +1595,7 @@ main.container-post-foco {
     opacity: 0.7;
     transition: 0.2s;
 }
+
 .btn-responder-bolha:hover {
     opacity: 1;
     transform: translateX(3px);
@@ -1591,16 +1609,16 @@ main.container-post-foco {
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    width: 100% ;
-    background: rgba(10, 10, 10, 0.685) ;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.685);
     -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px) ;
+    backdrop-filter: blur(15px);
     padding: 20px 15px 20px 15px !important;
     z-index: 100000 !important;
-    border-top: 2px solid var(--dourado) ;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5) ;
+    border-top: 2px solid var(--dourado);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
     align-items: space-between !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     height: auto;
     transform: translateY(0);
 }
@@ -1608,16 +1626,17 @@ main.container-post-foco {
 
 /* Estado Encolhido */
 .sessao-fofoca-focada.encolhida {
-    height: 60px ;
-    width: 60px ;
+    height: 60px;
+    width: 60px;
     border-radius: 50%;
-    bottom: 70% ;
+    bottom: 70%;
     align-items: center;
     left: auto !important;
-    right: 20px !important; /* Vira um botão flutuante no canto */
+    right: 20px !important;
+    /* Vira um botão flutuante no canto */
     padding: 0 !important;
     overflow: hidden;
-   
+
 }
 
 /* Esconde o form quando encolhido */
@@ -1627,17 +1646,18 @@ main.container-post-foco {
 
 #toggle-chat-barra {
     position: absolute !important;
-    top: -15px !important; /* Faz ele flutuar um pouco acima da borda */
+    top: -15px !important;
+    /* Faz ele flutuar um pouco acima da borda */
     right: 20px !important;
-    width: 40px ;
-    height: 40px ;
-    border-radius: 50% ;
-    display: flex ;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 10002 !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -1648,43 +1668,45 @@ main.container-post-foco {
     transform: translate(-50%, -50%) !important;
     width: clamp (60px, 5vw, 100px);
     height: clamp (60px, 5vw, 100px);
-    font-size: 1.4rem ;
+    font-size: 1.4rem;
 }
 
 .chat-input-container {
-    max-width: 800px ;
+    max-width: 800px;
     margin: 0 auto !important;
 }
 
 .customizacao-rapida {
     display: flex;
-    gap: 10px ;
-    margin-bottom: 8px ;
+    gap: 10px;
+    margin-bottom: 8px;
     margin-top: 25px;
     /* Ajuste nos controles de Vibe para não serem "atropelados" */
-    padding-right: 30px ; /* Abre espaço para o botão X no topo */
-    justify-content: flex-start !important; /* Joga os controles pra esquerda */
+    padding-right: 30px;
+    /* Abre espaço para o botão X no topo */
+    justify-content: flex-start !important;
+    /* Joga os controles pra esquerda */
 
 }
 
- .fa-comment-dots::before {
-    justify-self: center!important;
-    font-size: 1.1rem; 
- }
+.fa-comment-dots::before {
+    justify-self: center !important;
+    font-size: 1.1rem;
+}
 
 .input-mini {
-    background: rgba(255, 255, 255, 0.08) ;
-    border: 1px solid rgba(255, 255, 255, 0.2) ;
-    border-radius: 20px ;
-    padding: 5px 10px ;
-    color: #fff ;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 5px 10px;
+    color: #fff;
     font-size: clamp (0.75rem, 5vw, 1.1rem);
     cursor: pointer !important;
 }
 
 .color-mini {
-    width: 40px ;
-    height: 35px ;
+    width: 40px;
+    height: 35px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     cursor: pointer !important;
@@ -1698,12 +1720,12 @@ main.container-post-foco {
 
 .textarea-chat {
     flex: 1 !important;
-    background: rgba(255, 255, 255, 0.08) ;
+    background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 15px !important;
     padding: 12px 18px !important;
-    color: #fff ;
-    font-size: 0.95rem ;
+    color: #fff;
+    font-size: 0.95rem;
     resize: none !important;
     min-height: 80px;
     max-height: 150px;
@@ -1717,22 +1739,22 @@ main.container-post-foco {
 }
 
 .btn-enviar-chat {
-    background: var(--laranja-fenda) ;
+    background: var(--laranja-fenda);
     border: none !important;
-    border-radius: 50% ;
-    width: 45px ;
-    height: 45px ;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
     display: flex !important;
-    align-items: center ;
-    justify-content: center ;
+    align-items: center;
+    justify-content: center;
     cursor: pointer !important;
     transition: 0.3s !important;
-    color: #000 ;
+    color: #000;
 }
 
 .btn-enviar-chat:hover {
     transform: scale(1.05) !important;
-    background: #ffcc00 ;
+    background: #ffcc00;
 }
 
 .chat-footer-info {
@@ -1743,27 +1765,27 @@ main.container-post-foco {
 }
 
 .char-counter {
-    font-size: 0.75rem ;
-    color: #888 ;
+    font-size: 0.75rem;
+    color: #888;
 }
 
 .resposta-indicador {
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
-    font-size: 0.8rem ;
+    font-size: 0.8rem;
     color: var(--dourado) !important;
     background: rgba(255, 188, 0, 0.1);
-    padding: 3px 8px ;
-    border-radius: 15px ;
+    padding: 3px 8px;
+    border-radius: 15px;
     margin-right: 40px;
-    width:auto;
+    width: auto;
 }
 
 .cancelar-resposta {
     background: none !important;
     border: none !important;
-    color: #ff4444 ;
+    color: #ff4444;
     cursor: pointer !important;
     font-size: 0.9rem;
 }
@@ -1786,8 +1808,13 @@ main.container-post-foco {
 }
 
 @keyframes glowPulsar {
-    from { box-shadow: 0 0 10px rgba(221, 200, 14, 0.1); }
-    to { box-shadow: 0 0 25px rgba(221, 200, 14, 0.4); }
+    from {
+        box-shadow: 0 0 10px rgba(221, 200, 14, 0.1);
+    }
+
+    to {
+        box-shadow: 0 0 25px rgba(221, 200, 14, 0.4);
+    }
 }
 
 .sem-comentarios {
@@ -2000,11 +2027,11 @@ h2.titulo-home {
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    margin: 15px auto ;
-    padding: 12px ;
+    margin: 15px auto;
+    padding: 12px;
     display: flex !important;
     float: none !important;
-    border-radius: 20px ;
+    border-radius: 20px;
     background-color: #0c0b0bdc;
     max-width: 1100px;
 }
@@ -2200,7 +2227,7 @@ textarea {
 
 textarea[name="bio"] {
     min-height: 120px !important;
-    resize: none ;
+    resize: none;
     word-wrap: break-word !important;
     /* O que você sugeriu */
     overflow-wrap: break-word !important;
@@ -2388,45 +2415,44 @@ textarea[name="bio"] {
 /* Container muito estreito (iPhone 4, Lumia 520) */
 @container feedComentarios (max-width: 360px) {
     .comentario-item {
-        max-width: 95%; /* Ganha 2% de tela pro texto respirar */
-        min-width: 220px;
-        padding: 8px 10px;
+        max-width: 93%;
+        /* Ganha 2% de tela pro texto respirar */
+        min-width: 210px;
+        padding: 8px 12px;
         font-size: 0.9rem;
     }
-    
+
     /* 🚨 Alívio do cinto: diminui a margem do filho para caber na tela de 320px */
     .comentario-filho {
-        margin-left: 20px; 
-        max-width: 90%;    
-    }
-    
-    /* Move a setinha proporcionalmente para acompanhar o novo recuo de 14px */
-    .comentario-item.comentario-filho::before {
-        left: -25px;      
-        font-size: 1.6rem; 
-        top: -8px;
+        margin-left: 15px;
+        max-width: 86%;
     }
 
     .comentario-autor {
         max-width: 120px;
         font-size: 0.8rem;
     }
+
     .comentario-texto {
         font-size: 0.95rem;
         line-height: 1.4;
     }
+
+    
 }
+
 
 
 /* Container pequeno (celular médio) */
 @container feedComentarios (min-width: 361px) and (max-width: 500px) {
     .comentario-item {
         max-width: 95%;
-        min-width: 250px!important;
+        min-width: 250px !important;
         padding: 10px 12px;
     }
+
     .comentario-filho {
-        margin-left: 30px;
+        margin-left: 40px;
         max-width: 88%;
     }
 }
@@ -2435,7 +2461,7 @@ textarea[name="bio"] {
 @container feedComentarios (min-width: 501px) and (max-width: 800px) {
     .comentario-item {
         max-width: 85%;
-        min-width: 320px!important;
+        min-width: 350px !important;
     }
 }
 
@@ -2443,7 +2469,7 @@ textarea[name="bio"] {
 @container feedComentarios (min-width: 801px) {
     .comentario-item {
         max-width: 80%;
-        min-width: 400px!important;
+        min-width: 400px !important;
     }
 }
 
@@ -2472,10 +2498,10 @@ textarea[name="bio"] {
         margin-bottom: 10px !important;
         padding: 8px !important;
     }
-    
+
     .container-feed {
-        padding: 10px!important;
-}
+        padding: 10px !important;
+    }
 
     .main-perdidos {
         padding: 8px !important;
@@ -2506,7 +2532,7 @@ textarea[name="bio"] {
         grid-template-columns: 1fr !important;
         padding: 10px !important;
     }
-    
+
 
 }
 
@@ -2518,12 +2544,13 @@ textarea[name="bio"] {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 15px !important;
     }
-   
+
 }
 
 
 /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
 @media (max-width: 380px) and (orientation: portrait) {
+
     /* Reseta o main-perdidos que estava deslocado */
     .main-perdidos {
         left: 0 !important;
@@ -2532,7 +2559,7 @@ textarea[name="bio"] {
         padding: 5px !important;
         width: 97% !important;
     }
-    
+
     /* Garante que o container do feed não tenha padding lateral */
     .container-feed {
         padding-left: 5px !important;
@@ -2540,7 +2567,7 @@ textarea[name="bio"] {
         margin: 0 auto !important;
         width: 100% !important;
     }
-    
+
     /* Os cards ocupam a largura total sem margem extra */
     .spotted-card,
     .perdidos-item {

@@ -12,21 +12,38 @@ $remote_addr = $_SERVER['REMOTE_ADDR'];
 $is_localhost = ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || $_SERVER['REMOTE_ADDR'] == '::1' || strpos($_SERVER['REMOTE_ADDR'], '192.168.') !== false);
 
 if ($is_localhost) {
-    // No PC, usamos 127.0.0.1 (mais rápido). 
-    // O MySQL vai aceitar a conexão do celular porque você já configurou o bind-address="0.0.0.0" no my.ini!
-    $host    = "127.0.0.1"; 
     $usuario = "root";
     $senha   = "";
     $banco   = "fenda_local";
-    $porta   = 3307; // Sua porta ativa no Ryzen
 
-    $conn = @mysqli_connect($host, $usuario, $senha, $banco, $porta);
+    // 🚨 RESOLUÇÃO SUPREMA: Desliga a exibição de erros na tela temporariamente 
+    // para o Windows não cuspir o Warning de rede enquanto testamos o Docker
+    $display_errors_antigo = ini_get('display_errors');
+    ini_set('display_errors', '0');
 
+    try {
+        // 🐳 PASSO A: Tenta o Docker de forma 100% silenciosa
+        $conn = @mysqli_connect("db", $usuario, $senha, $banco, 3306);
+    } catch (Exception $e) {
+        $conn = false;
+    } catch (mysqli_sql_exception $e) {
+        $conn = false;
+    }
+
+    // Restaura a configuração original de erros do seu XAMPP para o resto do sistema
+    ini_set('display_errors', $display_errors_antigo);
+
+    // 🐘 PASSO B: Ativa o seu Ryzen físico no XAMPP se o Docker não respondeu
     if (!$conn) {
-        // Se a 3307 falhar, tenta a padrão 3306
-        $conn = mysqli_connect($host, $usuario, $senha, $banco, 3306);
+        try {
+            $conn = @mysqli_connect("127.0.0.1", $usuario, $senha, $banco, 3307);
+        } catch (Exception $e) {
+            // Último recurso na porta padrão da máquina física
+            $conn = @mysqli_connect("127.0.0.1", $usuario, $senha, $banco, 3306);
+        }
     }
 } else {
+
     // NA NUVEM (GIT): NUNCA coloque senhas aqui. Use variáveis de ambiente.
     $host    = getenv('DB_HOST');
     $usuario = getenv('DB_USER');
