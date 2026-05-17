@@ -26,7 +26,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perdidos" style="width: 100% !important; margin: 40px auto; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
+<main class="main-perdidos" style="width: 100% !important; padding: 20px 0; overflow-x: hidden;"> <?php if (!$usuario_logado): ?>
         <div class="sessao-login-top" style="margin-bottom: 40px;">
             <?php include 'includes/login.php'; ?>
         </div>
@@ -122,7 +122,7 @@ include 'includes/bolhas.php';
                         </div>
 
                         <div class="card-body">
-                            <p><?php echo $linha['mensagem']; ?></p>
+                            <p><?php echo nl2br(htmlspecialchars($linha['mensagem'])); ?></p>
                             <?php if (!empty($linha['imagem_url'])): ?>
                                 <div class="container-img-post" style="margin-top: 10px;">
                                     <img src="uploads/<?php echo $linha['imagem_url']; ?>"

@@ -135,7 +135,7 @@ function fecharModalPost() {
     }
 }
 
-// --- SISTEMA DE RESPOSTA HÍBRIDO ---
+// --- SISTEMA DE RESPOSTA HÍBRIDO (CALIBRADO) ---
 window.prepararResposta = function (id, username) {
     const inputParent = document.getElementById('input_parent_id');
     const campo = document.querySelector('.textarea-fenda');
@@ -152,10 +152,19 @@ window.prepararResposta = function (id, username) {
         }
 
         campo.placeholder = "Respondendo a " + username.trim() + "...";
+
+        // 1. DÁ O FOCO NO CAMPO (Isso já abre o teclado no celular)
         campo.focus();
 
-        const areaFofocar = document.getElementById('fofocar');
-        if (areaFofocar) areaFofocar.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // 2. EM VEZ DO SCROLLINTOVIEW: Vamos dar um "brilho" na barra de chat
+        // Para o usuário saber que a barra de baixo reagiu ao clique lá de cima
+        const barraChat = document.querySelector('.sessao-fofoca-focada');
+        if (barraChat) {
+            barraChat.style.boxShadow = "0 -5px 30px var(--cor-accent)";
+            setTimeout(() => {
+                barraChat.style.boxShadow = "0 -5px 20px rgba(0, 0, 0, 0.5)";
+            }, 1000);
+        }
     }
 };
 
@@ -179,18 +188,30 @@ window.abrirGavetaControle = function () {
 window.alternarInterfaceSwipe = function (ativar) {
     const body = document.body;
     const container = document.querySelector('.container-feed');
+    const filtros = document.querySelector('.filtros-wrapper-retratil');
+    const btnFiltros = document.getElementById('btn-abrir-filtros');
+
     if (!container) return;
 
     if (ativar) {
         body.classList.add('modo-swipe-ativo');
         container.classList.add('feed-empilhado');
-        window.iniciarFisicaSwipe(); // Liga o Hammer.js
-        console.log("Fenda Engine: Modo Swipe Calibrado.");
+        // NÃO ESCONDE OS FILTROS - mantém eles visíveis
+        if (filtros) filtros.style.display = 'flex';
+        if (btnFiltros) btnFiltros.style.display = 'inline-flex';
+
+        window.iniciarFisicaSwipe();
+        console.log("Modo Swipe ativado com filtros visíveis");
     } else {
         body.classList.remove('modo-swipe-ativo', 'card-isolado');
         container.classList.remove('feed-empilhado');
-        // Limpa qualquer card que tenha ficado focado (zoom)
         document.querySelectorAll('.focado-swipe').forEach(c => c.classList.remove('focado-swipe'));
+
+        // Restaura os filtros ao normal
+        if (filtros) filtros.style.display = '';
+        if (btnFiltros) btnFiltros.style.display = '';
+
+        console.log("Modo Swipe desativado");
     }
 };
 
@@ -198,76 +219,165 @@ window.iniciarFisicaSwipe = function () {
     const container = document.querySelector('.container-feed');
     if (!container || !container.classList.contains('feed-empilhado')) return;
 
-    const cards = container.querySelectorAll('.spotted-card');
+    let cards = container.querySelectorAll('.spotted-card');
     if (cards.length === 0) return;
 
+    cards.forEach(card => {
+        if (card.hammerInstance) {
+            card.hammerInstance.destroy();
+            card.hammerInstance = null;
+        }
+    });
+
     const cardTopo = cards[0];
-    cardTopo.style.zIndex = "100";
+    if (!cardTopo) return;
 
-    const mc = new Hammer(cardTopo);
-    mc.add(new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 50 }));
+    // Garante posição absoluta
+    cardTopo.style.position = 'absolute';
+    cardTopo.style.left = '50%';
+    cardTopo.style.top = '45%';
+    cardTopo.style.transform = 'translate(-50%, -50%)';
+    cardTopo.style.cursor = 'grab';
+    cardTopo.style.touchAction = 'none';
 
-    mc.on("pan", (ev) => {
-        if (cardTopo.classList.contains('focado-swipe')) return;
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let currentX = 0, currentY = 0;
+    let startTransform = { x: 0, y: 0 };
+
+    const onStart = (e) => {
+        // Evita arrastar por botões ou links
+        if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') || e.target.closest('.options-container')) {
+            return;
+        }
+
+        if (e.button !== undefined && e.button !== 0) return;
+
+        e.preventDefault();
+        isDragging = true;
+
+        const clientX = e.clientX ?? e.touches[0].clientX;
+        const clientY = e.clientY ?? e.touches[0].clientY;
+        startX = clientX;
+        startY = clientY;
 
         cardTopo.style.transition = 'none';
+        cardTopo.style.cursor = 'grabbing';
         cardTopo.classList.add('dragging');
+    };
 
-        // Cálculo da opacidade baseado no movimento (200px é o limite do brilho total)
-        let intensidade = Math.min(Math.abs(ev.deltaX) / 200, 1);
+    const onMove = (e) => {
+        if (!isDragging) return;
+        if (cardTopo.classList.contains('focado-swipe')) return;
 
-        if (ev.deltaX > 0) {
-            // Brilha Verde na direita
-            cardTopo.style.setProperty('--opacidade-verde', intensidade);
-            cardTopo.style.setProperty('--opacidade-vermelha', 0);
-        } else {
-            // Brilha Vermelho na esquerda
-            cardTopo.style.setProperty('--opacidade-vermelha', intensidade);
-            cardTopo.style.setProperty('--opacidade-verde', 0);
+        e.preventDefault();
+
+        const clientX = e.clientX ?? e.touches[0].clientX;
+        const clientY = e.clientY ?? e.touches[0].clientY;
+
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+
+        // Suaviza o movimento (multiplicador 1 = livre)
+        const moveX = dx;
+        const moveY = dy;
+
+        const rotate = dx / 40;
+
+        cardTopo.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px)) rotate(${rotate}deg) scale(1.02)`;
+
+        // Feedback visual
+        const feedbackDir = document.querySelector('.feedback-direita');
+        const feedbackEsq = document.querySelector('.feedback-esquerda');
+        const feedbackCima = document.querySelector('.feedback-cima');
+
+        if (dx > 50 && feedbackDir) {
+            feedbackDir.style.opacity = Math.min(dx / 150, 1);
+        } else if (dx < -50 && feedbackEsq) {
+            feedbackEsq.style.opacity = Math.min(Math.abs(dx) / 150, 1);
+        } else if (dy < -50 && Math.abs(dx) < 50 && feedbackCima) {
+            feedbackCima.style.opacity = Math.min(Math.abs(dy) / 150, 1);
         }
+    };
 
-        let rotate = ev.deltaX / 15;
-        cardTopo.style.transform = `translate(${ev.deltaX}px, ${ev.deltaY}px) rotate(${rotate}deg)`;
-    });
+    const onEnd = (e) => {
+        if (!isDragging) return;
 
-    mc.on("panend", (ev) => {
-        // 1. Mantemos a classe dragging por um milissegundo a mais
-        // para o navegador não resetar o estilo antes da hora
+        isDragging = false;
+        cardTopo.style.cursor = 'grab';
+        cardTopo.classList.remove('dragging');
 
-        if (Math.abs(ev.deltaX) > 150 && !cardTopo.classList.contains('focado-swipe')) {
-            // Dentro do if (Math.abs(ev.deltaX) > 150...)
-            const flyX = ev.deltaX > 0 ? 1500 : -1500;
+        // Reseta feedbacks
+        document.querySelectorAll('.feedback-swipe').forEach(el => el.style.opacity = '0');
 
-            // 1. Primeiro aplica a transição suave
-            cardTopo.style.transition = 'transform 0.7s cubic-bezier(0.2, 0.5, 0.2, 1), opacity 0.4s ease-out';
+        // Calcula movimento final
+        const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
 
-            // 2. Depois dá o comando de movimento (O navegador agora vai animar do ponto atual até o flyX)
-            requestAnimationFrame(() => {
-                cardTopo.style.transform = `translateX(${flyX}px) rotate(${flyX / 12}deg)`;
-                cardTopo.style.opacity = '0';
-            });
+        const dx = clientX - startX;
+        const dy = clientY - startY;
 
-            // 3. Limpa as cores IMEDIATAMENTE
-            cardTopo.style.setProperty('--opacidade-verde', 0);
-            cardTopo.style.setProperty('--opacidade-vermelha', 0);
-            setTimeout(() => {
-                cardTopo.classList.remove('dragging'); // Só remove agora
-                cardTopo.remove();
-                window.iniciarFisicaSwipe();
-            }, 600);
+        cardTopo.style.transition = 'transform 0.3s ease-out, opacity 0.2s';
+
+        const threshold = 80;
+        const idPost = cardTopo.dataset.id;
+
+        if (dx < -threshold && Math.abs(dy) < 100) {
+            if (typeof window.enviarReacao === 'function') window.enviarReacao(idPost, 'amei');
+            animarSaidaEReciclar(cardTopo, -800, dy);
+        } else if (dx > threshold && Math.abs(dy) < 100) {
+            animarSaidaEReciclar(cardTopo, 800, dy);
+        } else if (dy < -threshold && Math.abs(dx) < 80) {
+            window.location.href = `post.php?id=${idPost}#fofocar`;
         } else {
-            // Volta para o centro se o arraste foi curto
-            cardTopo.classList.remove('dragging');
-            cardTopo.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            cardTopo.style.transform = cardTopo.classList.contains('focado-swipe') ? 'translate(-50%, -50%) scale(1.05)' : 'translate(0,0)';
-
-            // Reseta as cores
-            cardTopo.style.setProperty('--opacidade-verde', 0);
-            cardTopo.style.setProperty('--opacidade-vermelha', 0);
+            cardTopo.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
         }
-    });
+    };
 
+    const animarSaidaEReciclar = (card, x, y) => {
+        card.style.transition = 'transform 0.3s ease-out, opacity 0.2s';
+        card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${x / 30}deg) scale(0.95)`;
+        card.style.opacity = '0';
+
+        setTimeout(() => {
+            const container = document.querySelector('.container-feed');
+            const cardsRestantes = container.querySelectorAll('.spotted-card');
+            if (cardsRestantes.length <= 1) {
+                card.style.transition = '';
+                card.style.transform = '';
+                card.style.opacity = '';
+                if (typeof window.abastecerPilhaFenda === 'function') window.abastecerPilhaFenda();
+            } else {
+                card.remove();
+            }
+            window.iniciarFisicaSwipe();
+            if (typeof window.abastecerPilhaFenda === 'function') window.abastecerPilhaFenda();
+        }, 300);
+    };
+
+    // Registra eventos (mouse + toque)
+    cardTopo.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+
+    cardTopo.addEventListener('touchstart', onStart, { passive: false });
+    cardTopo.addEventListener('touchmove', onMove, { passive: false });
+    cardTopo.addEventListener('touchend', onEnd);
+
+    // Limpeza na próxima inicialização
+    const oldCleanup = cardTopo._swipeCleanup;
+    if (oldCleanup) oldCleanup();
+
+    cardTopo._swipeCleanup = () => {
+        cardTopo.removeEventListener('mousedown', onStart);
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onEnd);
+        cardTopo.removeEventListener('touchstart', onStart);
+        cardTopo.removeEventListener('touchmove', onMove);
+        cardTopo.removeEventListener('touchend', onEnd);
+    };
 };
+
 
 window.focarCardSwipe = function (card) {
     if (!document.body.classList.contains('modo-swipe-ativo') || card.classList.contains('dragging')) return;
@@ -278,7 +388,7 @@ window.focarCardSwipe = function (card) {
     if (!estaFocado) {
         document.body.classList.add('card-isolado');
         card.classList.add('focado-swipe');
-        
+
         // Se o card tiver foto, damos o zoom ADS
         if (imagem) {
             imagem.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
@@ -288,7 +398,7 @@ window.focarCardSwipe = function (card) {
     } else {
         document.body.classList.remove('card-isolado');
         card.classList.remove('focado-swipe');
-        
+
         if (imagem) {
             imagem.style.maxHeight = '200px'; // Volta ao normal
             imagem.style.transform = 'scale(1)';
@@ -606,29 +716,76 @@ window.addEventListener('click', function (event) {
 
 // --- LOAD FINAL (Modo Hacker e Swipe Inteligente) ---
 window.addEventListener('load', () => {
+    // 1. Mantém o Modo Hacker se estiver ativo
     if (localStorage.getItem('fenda_hacker') === 'active') {
         document.body.classList.add('hacker-mode');
-        const hBtn = document.getElementById('hacker-toggle-lateral') || document.getElementById('hacker-toggle');
-        if (hBtn) hBtn.innerHTML = '[ DESLIGAR_TERMINAL ]';
         window.removerBordasInlineHacker();
     }
+
+    // 2. BOOT SCREEN (BIOS)
     const bootScreen = document.getElementById('bios-boot');
     if (bootScreen && !sessionStorage.getItem('boot_concluido')) {
         setTimeout(() => {
             bootScreen.style.opacity = '0';
-            setTimeout(() => { bootScreen.style.display = 'none'; sessionStorage.setItem('boot_concluido', 'true'); }, 500);
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                sessionStorage.setItem('boot_concluido', 'true');
+            }, 500);
         }, 2500);
-    } else if (bootScreen) { bootScreen.style.display = 'none'; }
+    } else if (bootScreen) {
+        bootScreen.style.display = 'none';
+    }
 
-    // Ativação inteligente do modo swipe (somente se a preferência estiver ativada)
-    if (window.prefSwipeAtivada === true) {
-        const isFeedGeral = window.location.pathname.includes('feed.php');
-        if (!isFeedGeral) {
+    // 3. ATIVAÇÃO AUTOMÁTICA DO MODO PILHA (A MARRETA)
+    // Se o PHP injetou a classe no body, o JS força a inicialização
+    if (document.body.classList.contains('modo-swipe-ativo')) {
+        console.log("Fenda Engine: Detectado modo Swipe via PHP. Forçando Pilha...");
+
+        // Garante que a interface mude (esconde filtros, ajusta margens)
+        if (typeof window.alternarInterfaceSwipe === 'function') {
             window.alternarInterfaceSwipe(true);
-            const btn = document.getElementById('toggle-swipe');
-            if (btn) btn.innerHTML = '<i class="fas fa-th"></i> VOLTAR PARA LISTA';
-            const toolbar = document.getElementById('fenda-toolbar');
-            if (toolbar) toolbar.classList.remove('toolbar-aberta');
+        }
+
+        // Inicia a física do Hammer.js
+        if (typeof window.iniciarFisicaSwipe === 'function') {
+            window.iniciarFisicaSwipe();
         }
     }
+
+    // Variável para controlar o próximo lote de fofocas
+    let offsetSwipe = 10;
+    let carregandoSwipe = false; // "Trava" para não fazer 2 fetches ao mesmo tempo
+
+    window.abastecerPilhaFenda = function () {
+        if (carregandoSwipe) return;
+
+        const container = document.querySelector('.container-feed');
+        // Conta quantos cards ainda não foram "jogados fora"
+        const cardsRestantes = container.querySelectorAll('.spotted-card').length;
+
+        // Se tiver menos de 4 cards, a gente busca mais 10
+        if (cardsRestantes < 4) {
+            carregandoSwipe = true;
+            console.log("Fenda Engine: Estoque baixo! Buscando fofocas novas...");
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoria = urlParams.get('categoria') || '';
+
+            fetch(`motor-feed.php?offset=${offsetSwipe}&categoria=${categoria}&tipo=geral`)
+                .then(res => res.text())
+                .then(html => {
+                    if (html.trim() !== "FIM_DADOS") {
+                        // Injeta os novos cards no final do container
+                        container.insertAdjacentHTML('beforeend', html);
+                        offsetSwipe += 10;
+
+                        // RE-LIGA A FÍSICA: Importante para os novos cards ganharem o Hammer.js
+                        window.iniciarFisicaSwipe();
+                    }
+                    carregandoSwipe = false;
+                })
+                .catch(() => { carregandoSwipe = false; });
+        }
+    };
+
 });

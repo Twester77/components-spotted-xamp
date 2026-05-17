@@ -130,7 +130,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                     if(btnLoad) btnLoad.style.display = "none";
                 } else {
                     document.querySelector('.container-feed').insertAdjacentHTML('beforeend', data);
-                    offset += 30;
+                    offset += 10;
                     if(btnLoad) btnLoad.innerText = "EXIBIR MAIS";
                 }
             });

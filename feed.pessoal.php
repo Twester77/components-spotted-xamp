@@ -87,7 +87,7 @@ echo "<script>window.prefSwipeAtivada = " . ($swipe_db == 1 ? 'true' : 'false') 
                         window.iniciarFisicaSwipe();
                     }
 
-                    offset += 30;
+                    offset += 10;
                     if(btnLoad) btnLoad.innerText = "EXPLORAR MAIS REGISTROS";
                 }
             });

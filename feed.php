@@ -12,17 +12,24 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<div style="margin-top: 30px;">
-    <button id="toggle-swipe" class="btn-fenda-padrao" onclick="window.ativarModoSwipe()" style="margin-bottom: 15px;">
-        <i class="fas fa-mobile-alt"></i> ATIVAR MODO APP (SWIPE)
+<div class="controles-feed-topo">
+    <button type="button" id="btn-abrir-filtros" class="btn-fenda-padrao" onclick="toggleFiltrosMobile()">
+        <i class="fas fa-filter"></i> FILTRAR CATEGORIAS
     </button>
-    <?php include 'includes/filtros.php'; ?>
-</div>
-   
 
+    <div id="gaveta-filtros-swipe" class="filtros-wrapper-retratil">
+        <?php include 'includes/filtros.php'; ?>
+    </div>
+</div>
+
+    
 <main class="main-fenda-total">
     <!-- O container começa vazio e o Motor preenche -->
     <div class="container-feed"></div>
+    <!-- Feedback visual para o modo swipe (aparece ao arrastar) -->
+<div class="feedback-swipe feedback-direita">🩶 AMEI</div>
+<div class="feedback-swipe feedback-esquerda">🗑️ DESCARTAR</div>
+<div class="feedback-swipe feedback-cima">💬 COMENTAR</div>
 </main>
 
 <div class="container-load-more">
@@ -30,6 +37,23 @@ include 'includes/bolhas.php';
 </div>
 
 <script>
+
+    window.toggleFiltrosMobile = function() {
+    const gaveta = document.getElementById('gaveta-filtros-swipe');
+    const btn = document.getElementById('btn-abrir-filtros');
+    
+    if (gaveta) {
+        gaveta.classList.toggle('aberto');
+        
+        // Muda o ícone do botão para dar feedback
+        if (gaveta.classList.contains('aberto')) {
+            btn.innerHTML = '<i class="fas fa-times"></i> FECHAR FILTROS';
+        } else {
+            btn.innerHTML = '<i class="fas fa-filter"></i> FILTRAR CATEGORIAS';
+        }
+    }
+};
+
     let offset = 0; // Começa do zero agora
     const btnLoad = document.getElementById('btn-load-more');
     const feedContainer = document.querySelector('.container-feed');

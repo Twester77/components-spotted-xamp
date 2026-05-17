@@ -1,11 +1,10 @@
-<?php
+<?php if (ob_get_level() == 0) ob_start();
 /*--------------------------------------------------------------------------------------------------------------
 PROJETO: A FENDA - SPOTTED UNIFEV DESENVOLVEDOR: Leonardo (O Idealizador)
 AGRADECIMENTOS: Meu Coordenador de ADS Fernando Menechelli, meu Professor de HTML Eric
 e meu "Padrinho Digital" Gemini
 pela paciência com os headers , divs sem fechar ( ou antes da hora) , if sem end e os includes fora de ordem
 ---------------------------------------------------------------------------------------------------------------*/
-if (ob_get_level() == 0) ob_start();
 
 // 1. MELHORIA: Detecta se o acesso é local ou via rede (celular)
 $remote_addr = $_SERVER['REMOTE_ADDR'];
@@ -60,4 +59,8 @@ if (!function_exists('formatarMencoes')) {
         $substituicao = '<a href="ver-perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>';
         return preg_replace($padrao, $substituicao, $texto_seguro);
     }
+}
+
+if (!defined('RESEND_KEY')) {
+    define('RESEND_KEY', 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8');
 }

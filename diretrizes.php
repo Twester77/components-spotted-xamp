@@ -27,7 +27,7 @@ include 'includes/bolhas.php';
   <div style="display: flex; gap: 8px; justify-content:center;">
    <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Capa dos Termos de Segurança" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
   </div>
-  <article style="color: #ebdc0fee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.8; letter-spacing: 1px; "> 
+  <article style="color: #ebdc0fee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.6; letter-spacing: 1px; "> 
    <h3> 1. Natureza e Vínculo Institucional</h3>
    O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.
    Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.
@@ -63,7 +63,7 @@ include 'includes/bolhas.php';
     <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
     <div class="box-diretrizes">
-    <ul style="padding-left: 35px;">
+    <ul style="padding-left: 25px;">
         <li><strong>Locais Públicos:</strong> Sempre marque o primeiro encontro em locais movimentados (como a própria praça de alimentação da UNIFEV ou cafeterias/lanchonetes/praças no centro).</li>
         <li><strong>Informe um Amigo:</strong> Avise alguém de sua confiança sobre onde você está indo e com quem, que hora você vai chegar, etc. Sempre é bom relembrar, se por ventura você não é maior de idade, NÃO SAIA sem autorização prévia dos seus pais e/ou responsáveis.</li>
         <li><strong>Transporte Próprio:</strong> Se possível, utilize seu próprio meio de transporte ou aplicativos de mobilidade conhecidos.</li>

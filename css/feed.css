@@ -4,17 +4,17 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    padding: 10px 10px;
+    padding: 15px;
     flex-wrap: wrap;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 
 }
 
 .filtro-btn {
     text-decoration: none;
-    font-size: 18px;
+    font-size: clamp (13px, 5vw, 18px);
     font-weight: 800;
-    padding: clamp(8px, 12px, 14px) 12px;
+    padding: clamp(6px, 8px, 12px) 12px;
     max-width: fit-content;
     border-radius: 20px;
     color: #fff;
@@ -22,7 +22,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: 0.3s;
     text-transform: uppercase;
-    
+
 }
 
 .filtro-btn.ativo,
@@ -37,59 +37,63 @@
 .filtros-perdidos {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin: 20px auto;
-    
+    gap: 8px;
+    margin: 20px 0;
+
 }
 
 /*  O CONTAINER  */
 
-.container-feed > div { /* Alvo nos cards gerados pelo motor-feed */
+.container-feed>div {
+    /* Alvo nos cards gerados pelo motor-feed */
     width: 100% !important;
     box-sizing: border-box;
 }
 
 .main-fenda-total {
     max-width: 100% !important;
-    padding: 0 !important; /* Zera o padding que estava empurrando o feed */
-    margin: 0 auto !important;
+    padding: 0 !important;
+    /* Zera o padding que estava empurrando o feed */
+    margin: 20px auto !important;
 }
 
 .main-fenda-total article {
     width: 100% !important;
     margin: 0 !important;
-    box-sizing: border-box ;
+    box-sizing: border-box;
 }
 
 .container-feed {
-    display: grid ;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
-    gap: 15px !important;
-    max-width: 2000px ; /* Limita a largura total do feed no PC */   
+    gap: 10px !important;
+    max-width: 2000px;
+    /* Limita a largura total do feed no PC */
     margin: 30px auto !important;
-    padding: 12px !important;
+    padding: 12px;
     column-count: auto !important;
-   
+
 }
 
 /* O CARD -nvai respeitar o espaço */
 .container-feed article {
-    display: flex !important; 
+    display: flex !important;
     flex-direction: column;
     width: 100% !important;
-    max-width: 100% !important; /* Deixa o Grid controlar a largura */
+    max-width: 100% !important;
+    /* Deixa o Grid controlar a largura */
     margin: 0 !important;
 }
 
 
 /* --- SISTEMA DE EXPANSÃO (ESTÁVEL PARA O TRABALHO) --- */
 .post-content {
-    display: block ;
+    display: block;
     overflow: hidden;
     position: relative;
-    max-height: 4.8rem;
+    max-height: 5.2rem;
     line-height: 1.5;
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
@@ -97,15 +101,18 @@
     white-space: pre-wrap;
     color: #fff;
     transition: max-height 0.4s ease-in-out;
-    margin:20px 0;
+    margin: 20px 0;
     font-size: clamp(1rem, 0.2vw + 0.8rem, 1.3rem);
 }
 
 
 .post-content.expandido {
-    max-height: 2000px ; /*para a transição funcionar */
-    overflow: visible ; /* Mostra tudo */
-    margin-bottom: 10px; /* Dá um respiro no final do texto */
+    max-height: 2000px;
+    /*para a transição funcionar */
+    overflow: visible;
+    /* Mostra tudo */
+    margin-bottom: 10px;
+    /* Dá um respiro no final do texto */
 }
 
 
@@ -121,7 +128,7 @@
     bottom: 0;
     right: 0;
     background: linear-gradient(to left, rgba(10, 10, 10, 1) 70%, transparent);
-    padding-left: 40px;
+    padding-left: 30px;
     color: var(--dourado);
     font-weight: bold;
     font-size: 0.9rem;
@@ -137,7 +144,7 @@
     background: rgba(10, 10, 10, 0.247);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border: 2px solid rgba(255, 255, 255, 0.1)!important;
+    border: 2px solid rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 12px;
     transition: transform 0.3s ease;
@@ -147,44 +154,46 @@
     margin-bottom: 40px;
     margin-left: auto;
     margin-right: auto;
-    display: flex !important; 
-    overflow: visible !important;   /* Deixa o card crescer com o texto */    
-    flex-direction: column;       
+    display: flex !important;
+    overflow: visible !important;
+    /* Deixa o card crescer com o texto */
+    flex-direction: column;
     width: 100%;
-    max-width: 500px !important; /* Limita a largura máxima do card */           
-    height: auto !important;       
-    
-    
+    max-width: 600px !important;
+    /* Limita a largura máxima do card */
+    height: auto !important;
+
+
 }
-    
+
 
 @supports (backdrop-filter: blur(4px)) {
     .spotted-card {
         backdrop-filter: blur(4px);
-        background: rgba(10, 10, 10, 0.4); /* Um pouco mais escuro para o texto ler melhor no blur */
+        background: rgba(10, 10, 10, 0.4);
+        /* Um pouco mais escuro para o texto ler melhor no blur */
     }
 }
 
 
 .spotted-card:hover {
-    transform: translateY(-10px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.096);
     border-color: rgba(255, 255, 255, 0.3);
     transition: 0.3s ease;
 }
 
- article.spotted-card {
-        display: block !important;
-        width: 100% !important;
-        /* Ele vai ocupar o espaço da coluna do grid */
-        max-width: 500px !important;
-        flex-shrink: 0 !important;
-        position: relative !important;
-        margin: 20px auto !important;
-        top: auto !important;
-        left: auto !important;
-    }
+article.spotted-card {
+    display: block !important;
+    width: 100% !important;
+    /* Ele vai ocupar o espaço da coluna do grid */
+    max-width: 500px !important;
+    flex-shrink: 0 !important;
+    position: relative !important;
+    margin: 20px auto !important;
+    top: auto !important;
+    left: auto !important;
+}
 
 
 /* Ajuste no Carregar Mais Resultados */
@@ -201,7 +210,7 @@
 
 .btn-fenda-padrao {
     padding: 12px 30px;
-    background: var(--dourado); 
+    background: var(--dourado);
     color: #000;
     border: none;
     border-radius: 25px;
@@ -219,7 +228,7 @@
 }
 
 .spotted-card.comunidade {
-    border-left:5px solid #ffffffbe !important;
+    border-left: 5px solid #ffffffbe !important;
     box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
 }
 
@@ -244,7 +253,7 @@
 /*  ESPORTES  */
 .spotted-card.esportes {
     border-left: 5px solid #0fc44bd0 !important;
-    background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.219)) !important;
+    background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.082)) !important;
     position: relative;
 }
 
@@ -252,7 +261,7 @@
 /*  GAMES - Vibe Neon */
 .spotted-card.games {
     border-left: 5px solid #01e6e6 !important;
-    background: linear-gradient(145deg, rgba(13, 154, 179, 0.76), rgba(8, 135, 173, 0.11)) !important;
+    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.137)) !important;
 }
 
 
@@ -280,12 +289,12 @@
 
 
 /* Ícones no canto do Card */
- .spotted-card .user-info-post::after {
+.spotted-card .user-info-post::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     position: absolute;
-    right: 10px;  
-    font-size: clamp(16px, 1.5vw, 22px) !important;
+    right: 10px;
+    font-size: clamp(18px, 1.5vw, 24px) !important;
     opacity: 0.6;
     position: absolute;
     padding: 5px;
@@ -294,16 +303,55 @@
 
 /* Ícones específicos por categoria */
 
-.spotted-card.comunidade .user-info-post::after { content: '\f0c0'; color: #ffffffb6; }
-.spotted-card.ranco .user-info-post::after { content: "\f071"; color: #da3232;} 
-.spotted-card.elogio .user-info-post::after { content: "\f004"; color: #ee2b6fd7; }
-.spotted-card.games .user-info-post::after { content: "\f11b";  color: #0daac5; } 
-.spotted-card.academico .user-info-post::after { content: "\f518"; color: #b822f3b7; } 
-.spotted-card.caronas .user-info-post::after { content: "\f1b9"; color: #cccccca8; } 
-.spotted-card.perdidos .user-info-post::after { content: "\f002";  color: #f3ef07ee; } 
-.spotted-card.esportes .user-info-post::after { content: "\f45f";  color: #0db344; }
-.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after { content: "\f253"; color: #f78605; }
-.spotted-card.desapego .user-info-post::after { content: "\f02b"; color: #00bfff; }
+.spotted-card.comunidade .user-info-post::after {
+    content: '\f0c0';
+    color: #ffffffb6;
+}
+
+.spotted-card.ranco .user-info-post::after {
+    content: "\f071";
+    color: #da3232;
+}
+
+.spotted-card.elogio .user-info-post::after {
+    content: "\f004";
+    color: #ee2b6fd7;
+}
+
+.spotted-card.games .user-info-post::after {
+    content: "\f11b";
+    color: #0daac5;
+}
+
+.spotted-card.academico .user-info-post::after {
+    content: "\f518";
+    color: #b822f3b7;
+}
+
+.spotted-card.caronas .user-info-post::after {
+    content: "\f1b9";
+    color: #cccccca8;
+}
+
+.spotted-card.perdidos .user-info-post::after {
+    content: "\f002";
+    color: #f3ef07ee;
+}
+
+.spotted-card.esportes .user-info-post::after {
+    content: "\f45f";
+    color: #0db344;
+}
+
+.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after {
+    content: "\f253";
+    color: #f78605;
+}
+
+.spotted-card.desapego .user-info-post::after {
+    content: "\f02b";
+    color: #00bfff;
+}
 
 
 .card-header {
@@ -315,14 +363,18 @@
     padding: 8px 0;
 }
 
-.card-body p {
+.card-body {
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;
     white-space: normal;
     letter-spacing: 1px;
     font-size: 16px;
+    margin-bottom: auto!important;
 }
+
+
+
 
 .spotted-card:first-child {
     margin-top: 40px;
@@ -330,10 +382,10 @@
 
 
 
- /* BOTÃO FILTRO PERDIDOS */
+/* BOTÃO FILTRO PERDIDOS */
 
 .btn-filtro {
-    padding: 8px 15px;
+    padding: 7px 15px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
@@ -342,7 +394,7 @@
     font-weight: bold;
     transition: all 0.3s ease;
     height: auto;
-    width: 98%!important;
+    width: 95% !important;
     max-width: fit-content;
     margin-top: 15px;
 
@@ -359,7 +411,7 @@
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     justify-content: center;
     font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
-    padding: clamp(10px, 0.5vw + 8px, 14px) 20px;
+    padding: clamp(8px, 0.5vw + 2px, 14px) 16px;
     align-content: center;
 }
 
@@ -371,16 +423,16 @@
     padding: 3px 12px;
     border-radius: 20px;
     font-size: 14px;
+    margin-right: 10px;
     font-weight: bold;
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
     box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
-     white-space: nowrap;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 80px;
+    max-width: clamp(120px, 5vw, 160px) !important;
 }
 
 .badge-achado {
@@ -389,8 +441,9 @@
     padding: 3px 12px;
     border-radius: 20px;
     font-size: 14px;
-    max-width: 80px;
-     white-space: nowrap;
+    margin-right: 10px;
+    max-width: clamp(120px, 5vw, 180px) !important;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: bold;
@@ -408,17 +461,17 @@
 }
 
 .perdidos-item .link-fofoca {
-        display: block !important;
-        width: 100%;
-        text-align: center;
-        background: var(--dourado) !important;
-        color: #000 !important;
-        padding: 12px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: 800;
-        text-transform: uppercase;
-    }
+    display: block !important;
+    width: 100%;
+    text-align: center;
+    background: var(--dourado) !important;
+    color: #000 !important;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    text-transform: uppercase;
+}
 
 .link-fofoca {
     color: #ffc400c2 !important;
@@ -451,8 +504,8 @@ span.data-post {
 /* --- COMPONENTES DO CARD/PERFIL --- */
 
 
- span.category-tag {
-    font-size: clamp(0.85rem, 0.2vw + 0.5rem, 1.1rem);
+span.category-tag {
+    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.2rem);
     color: #ff9f0f;
     font-weight: bold;
     flex-shrink: 0;
@@ -463,7 +516,7 @@ span.data-post {
     margin-right: 6px;
     display: inline-block !important;
     border: none;
-    max-width: clamp(150, 5vw, 250);
+    max-width: clamp(150, 5vw, 300);
     /* Limita a largura da tag */
     white-space: nowrap !important;
     /* Impede que ela quebre em duas linhas */
@@ -478,15 +531,15 @@ span.data-post {
 
 }
 
- .fa-ellipsis-v {
-font-size: 18px;
-font-weight: bold;
-gap: 5px;
-order: 3;
- }
+.fa-ellipsis-v {
+    font-size: clamp( 18px, 1.5vw, 22px );
+    font-weight: bold;
+    gap: 5px;
+    order: 3;
+}
 
 .post-time {
-    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
+    font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.2rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
@@ -513,7 +566,8 @@ order: 3;
     position: static;
 }
 
-.reacoes-popup {
+.reacoes-popup,
+.reacoes-popup .spotted-card-anonimo {
     opacity: 0;
     visibility: hidden;
     transform: translateX(-50%) translateY(10px);
@@ -534,7 +588,7 @@ order: 3;
     white-space: nowrap;
     /* Garante que os emojis não quebrem a linha */
     bottom: 30px;
-    
+
 
 }
 
@@ -551,23 +605,26 @@ order: 3;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 35px; /* Garante que a pílula não mude de largura com números pequenos */
-    height: 28px;
+    min-width: 32px;
+    /* Garante que a pílula não mude de largura com números pequenos */
+    height: 32px;
     background: rgba(255, 255, 255, 0.08);
     padding: clamp(4px, 0.5vw + 2px, 6px) 10px;
     border-radius: 15px;
-    font-size:  clamp(0.85rem, 0.2vw + 0.6rem, 1.1rem);
+    font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.1rem);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
-    transition: transform 0.2s ease-in-out, background 0.2s ease-in-out; /* Transição suave para o scale */
+    transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
+    /* Transição suave para o scale */
     cursor: default;
     margin: 0 2px;
 }
 
 /* Efeito de aumentar ao passar o mouse nas pílulas */
 .reacao-item:hover {
-    transform: scale(1.15)!important;
+    transform: scale(1.15) !important;
     background: rgba(255, 255, 255, 0.15);
+    transition: transform 0.3s ease-in-out;
 }
 
 
@@ -588,14 +645,14 @@ order: 3;
     left: 0;
 }
 
-.reacoes-popup a:hover {
+.reacoes-post a:hover {
     transform: scale(1.3) translateY(-5px);
 }
 
 .footer-links {
     display: flex;
     gap: 10px !important;
-    padding: 5px ;
+    padding: 5px;
     justify-content: space-between;
     align-items: center;
     bottom: 0;
@@ -610,18 +667,21 @@ order: 3;
     gap: 10px;
     font-size: 0.95rem;
     margin-top: auto;
-    
+
 }
 
 /* Quando o usuário já reagiu, a pílula ganha destaque */
 .reacao-item.voted {
-    background: rgba(255, 188, 0, 0.2) !important; /* Amarelo Fenda transparente */
-    border: 1px solid #ffbb00d5 !important; /* Borda amarela sólida */
+    background: rgba(255, 188, 0, 0.2) !important;
+    /* Amarelo Fenda transparente */
+    border: 1px solid #ffbb00d5 !important;
+    /* Borda amarela sólida */
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
     font-weight: bold;
 }
+
 .reacao-item.voted a:hover {
-     transform: scale(1.2) translateY(-5px)!important;
+    transform: scale(1.2) translateY(-5px) !important;
 }
 
 
@@ -648,7 +708,7 @@ order: 3;
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: clamp(1.4rem, 1.2rem + 0.5vw, 2.5rem);
+    font-size: clamp(1.5rem, 0.9rem + 0.5vw, 2.5rem);
     margin: 20px 0 20px 0 !important;
     /* Margem apenas embaixo para afastar do username/bio */
     justify-content: center !important;
@@ -677,14 +737,15 @@ order: 3;
 /* INSÍGNIA DA ATLÉTICA  */
 .insignia-atletica-bottom {
     /* Mínimo de 35px para não sumir, escala com 8% da tela, e trava em 70px no máximo */
-    width: clamp(60px, 8vw, 100px) !important;
-    height: clamp(60px, 8vw, 100px) !important;
+    width: clamp(45px, 5vw, 90px) !important;
+    height: clamp(45px, 5vw, 90px) !important;
     object-fit: contain !important;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
-    margin-left: 5px;
-    flex-shrink: 0; /* Impede que a imagem seja espremida se o nome for grande */
+    left: auto!important;
+    flex-shrink: 0;
+    /* Impede que a imagem seja espremida se o nome for grande */
 }
 
 
@@ -697,7 +758,7 @@ order: 3;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 15px;
     width: 100%;
 }
 
@@ -736,8 +797,8 @@ order: 3;
 .avatar-p {
     border: 1px solid var(--dourado);
     gap: 15px;
-    width:clamp(45px, 5vw, 55px) !important;
-    height:clamp(45px, 5vw, 55px) !important;
+    width: clamp(45px, 5vw, 55px) !important;
+    height: clamp(45px, 5vw, 55px) !important;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -748,11 +809,12 @@ order: 3;
 .user-info-post {
     display: flex;
     font-size: 14px;
-    margin: 5px 0 5px 0;
-    align-items: center!important;
+    margin-bottom: auto;
+    align-items: flex-start !important;
 }
 
-.anonimo, .user-mention {
+.anonimo,
+.user-mention {
     color: var(--dourado);
     text-decoration: none;
     font-weight: bold;
@@ -760,7 +822,7 @@ order: 3;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    align-content: center;
+    align-self: center;
     max-width: clamp(90px, 15vw, 130px);
     margin-left: 8px;
     width: auto;
@@ -771,12 +833,12 @@ order: 3;
 .btn-fofocar {
     color: #ccc;
     text-decoration: none;
-    font-size: clamp(13px, 15vw, 15px);
+    font-size: clamp(12px, 10vw, 16px);
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.3s ease-in-out;
     display: flex;
-    padding: 4px 12px;
+    padding: 4px 10px;
 }
 
 .btn-fofocar:hover {
@@ -817,7 +879,7 @@ order: 3;
 
 
 .perfil-gold .capa-img {
-    border: 2px solid var(--dourado) ;
+    border: 2px solid var(--dourado);
     border-radius: 12px;
 }
 
@@ -843,7 +905,7 @@ order: 3;
 
 .grid-habitantes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 10px;
     padding: 15px;
     max-width: auto;
@@ -870,8 +932,8 @@ order: 3;
 }
 
 .avatar-lista {
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
@@ -913,11 +975,15 @@ order: 3;
     text-align: center;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
-    -webkit-hyphens: auto; /*Safari/Chrome*/
-    -ms-hyphens: auto; /*IE/Edge */
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
     hyphens: auto;
-    line-height: 1.4; /* Melhora a leitura quando a fonte cresce */
-    color: rgba(255, 255, 255, 0.8); /* Sugestão para manter o estilo Fenda */
+    line-height: 1.4;
+    /* Melhora a leitura quando a fonte cresce */
+    color: rgba(255, 255, 255, 0.8);
+    /* Sugestão para manter o estilo Fenda */
 }
 
 
@@ -983,5 +1049,3 @@ order: 3;
     justify-content: center;
     width: 100%;
 }
-
-

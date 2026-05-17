@@ -3,7 +3,7 @@
 *:after {
     -webkit-box-sizing: border-box !important;
     /* Pro iPhone 4 e Lumia entenderem */
-    box-sizing: border-box!important ;
+    box-sizing: border-box !important;
 
 }
 
@@ -34,17 +34,19 @@ header {
     align-items: center;
     z-index: 1000;
     gap: 30px;
-    font-size: clamp(1.2rem, 1.5vw, 2.3rem) !important;
+    font-size: clamp(1.2rem, 1.5vw, 2.1rem) !important;
 
 
 }
 
 header h1 {
-    font-size: clamp(1.3rem, 1.5vw, 2.4rem) !important;
-    letter-spacing: 2px;
+    font-size: clamp(1.3rem, 1.5vw, 2.5rem) !important;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
     margin: 0;
+    font-family: 'Urbanist',sans-serif;
+    font-weight:bold;
 
 }
 
@@ -60,7 +62,7 @@ header h1 {
 /* --- ESTILO BASE DOS ÍCONES --- */
 .header-icons {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
 
 }
@@ -75,7 +77,7 @@ header h1 {
 
 .header-icons i {
     color: var(--dourado) !important;
-    font-size: clamp(1.1rem, 5vw, 1.8rem);
+    font-size: clamp(1rem, 6vw, 1.7rem);
     transition: all 0.3s ease;
 }
 
@@ -139,7 +141,7 @@ main {
     padding: 0 15px !important;
     /* Isso devolve o respiro nas laterais */
     width: 100%;
-    box-sizing: border-box!important;
+    box-sizing: border-box !important;
     display: block;
     /* Garante o comportamento de bloco */
 }
@@ -251,35 +253,36 @@ nav {
    MODAL OVERLAY E ESTRUTURA BASE
    ============================================================ */
 
-   .toolbar-content{
+.toolbar-content {
     overflow-y: auto !important;
     overflow-x: hidden !important;
     max-height: 50vh !important;
     padding-right: 5px;
-   }
+}
 
 #fenda-toolbar {
     position: fixed;
     right: -250px;
     /* Escondida para fora da tela */
-    top:70%;
+    top: 70%;
     transform: translateY(-50%);
     width: 250px;
     background: rgba(0, 20, 20, 0.678);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 1px solid #00ff00;
     border-radius: 15px 0 0 15px;
     transition: 0.5s ease-in-out;
     z-index: 99999;
     padding: 20px;
     color: #00ff00;
-    font-family: 'Courier New', monospace; 
+    font-family: 'Courier New', monospace;
     display: flex;
     flex-direction: column;
-     /* ===== SCROLL VERTICAL ===== */
-    max-height: 50vh !important;    /* Altura máxima de 50% da tela */
-    
+    /* ===== SCROLL VERTICAL ===== */
+    max-height: 50vh !important;
+    /* Altura máxima de 50% da tela */
+
 }
 
 /* Quando estiver aberta */
@@ -290,12 +293,12 @@ nav {
 /* O Gatilho (Bússola) */
 .toolbar-trigger {
     position: absolute;
-    left: -60px;
-    top: 5%;
+    left: -50px;
+    top: 10%;
     background: #001a1a;
     border: 1px solid #00ff00;
-    width: clamp(45px, 5vw, 75px);
-    height: clamp(45px, 5vw, 75px);
+    width: clamp(40px, 5vw, 75px);
+    height: clamp(40px, 5vw, 75px);
     display: flex;
     border-radius: 5px 0 0 5px;
     cursor: pointer;
@@ -361,14 +364,17 @@ nav {
     cursor: pointer;
 }
 
-.status-section { margin-top: 15px; }
-.status-user { 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-    padding: 8px 5px; 
-    border-bottom: 1px solid rgba(0, 255, 204, 0.1); 
-    font-size: 0.9rem; 
+.status-section {
+    margin-top: 15px;
+}
+
+.status-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 5px;
+    border-bottom: 1px solid rgba(0, 255, 204, 0.1);
+    font-size: 0.9rem;
 }
 
 .status-dot {
@@ -389,14 +395,16 @@ nav {
 /* --- BOTÃO FLUTUANTE (FAB) --- */
 .fab-postar {
     position: fixed;
-    bottom: 85px;
-    right: 25px;
-    width: clamp(50px, 5vw, 80px);
-    height: clamp(50px, 5vw, 80px);
+    bottom: 200px;
+    left: 15px;
+    width: clamp(45px, 5vw, 80px);
+    height: clamp(45px, 5vw, 80px);
     background: #e0e0e0;
     /* Branco acinzentado */
     color: #000;
     /* Ícone preto para alto contraste */
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-radius: 50%;
     border: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
@@ -448,8 +456,6 @@ body.modal-aberto .fab-postar {
 
 
 
-
-
 @keyframes surgimentoModal {
     from {
         transform: scale(0.8);
@@ -489,7 +495,7 @@ body.modal-aberto .fab-postar {
     background: var(--dourado);
     color: #000;
     border: none;
-    padding: 8px 15px;
+    padding: 8px 14px;
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
@@ -526,9 +532,10 @@ body.modal-aberto .fab-postar {
 /* Estilização do Botão de Ir para o Feed na Toolbar */
 .btn-feed-toolbar {
     width: 100%;
-    padding: clamp(10px, 1.5vw, 16px);
+    padding: clamp(8px, 1vw, 12px);
     margin-top: 15px;
-    background: rgba(0, 243, 255, 0.1); /* Ciano suave com transparência */
+    background: rgba(0, 243, 255, 0.1);
+    /* Ciano suave com transparência */
     border: 1px solid var(--accent-cyan, #00f3ff);
     border-radius: 8px;
     color: #fff;
@@ -541,11 +548,11 @@ body.modal-aberto .fab-postar {
     align-items: center;
     justify-content: center;
     gap: 8px;
-   
+
 }
 
 .btn-feed-toolbar:hover {
-    background: var(--laranja-fenda, #ff6347);
+    background: var(--laranja-fenda);
     color: #000;
     box-shadow: 0 0 15px rgba(255, 99, 71, 0.5);
     transform: translateY(-2px);
@@ -575,22 +582,24 @@ body.modal-aberto .fab-postar {
     border-radius: 5px;
     width: 100%;
     justify-content: center;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     position: relative;
     z-index: 100;
     background: rgba(5, 14, 65, 0.397);
+
 }
 
 .menu-item a {
     color: #ffffff !important;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(1.4rem, 1.2rem + 0.5vw, 2rem);
+    font-size: clamp(0.9rem, 1.1rem + 0.5vw, 1.5rem);
     line-height: 1.5;
-    padding: 8px 18px;
+    padding: 8px 16px;
     display: block;
     transition: 0.3s;
     border-radius: 5px;
+
 
 }
 
@@ -614,7 +623,6 @@ body.modal-aberto .fab-postar {
     content: ' ▲';
 }
 
-
 .submenu {
     display: none;
     position: absolute;
@@ -629,11 +637,10 @@ body.modal-aberto .fab-postar {
     z-index: 10000;
 }
 
-
 .submenu li a {
     padding: 10px 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.021);
-    font-size: 1.4rem !important;
+    font-size: clamp (0.85rem, 2vw , 1.4rem);
     font-weight: normal !important;
     text-align: left;
 }
@@ -681,8 +688,6 @@ body.modal-aberto .fab-postar {
 .fenda-container div[style*="flex"] {
     gap: 15px !important;
 }
-
-
 
 
 /* Container de botões - Não afeta o resto do site */
@@ -750,8 +755,8 @@ footer {
     clear: both;
     /* Garante que ele saia debaixo de floats */
     width: 100%;
-    background: #1a1a1ac5;
-    padding: 20px 20px;
+    background: #1a1a1ae0;
+    padding: 20px 20px 30px 20px;
     text-align: center;
     border-top: 1px solid rgba(255, 188, 0, 0.2);
     color: rgba(250, 202, 44, 0.808);
@@ -899,8 +904,7 @@ footer a {
 
 /* Card que envolve as opções */
 .audio-settings-card {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 15px;
+    padding: 10px;
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
@@ -922,8 +926,8 @@ footer a {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #999;
-    padding: 8px 18px;
-    border-radius: 12px;
+    padding: 8px 14px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1.2rem);
     font-weight: 600;
@@ -969,7 +973,7 @@ footer a {
     background: rgba(255, 188, 0, 0.1);
     border: 1px solid #ddc80e;
     color: #ddc80e;
-    padding: 8px 18px;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: bold;
@@ -1074,59 +1078,62 @@ footer a {
 /* 1. O Formulário (Tamanho Desktop e Mobile) */
 
 .form-busca-fenda {
-    display: flex !important;
+    display: flex ;
     flex-direction: row !important;
     align-items: stretch !important;
-    gap: 8px !important;
+    gap: 8px ;
     width: 100% !important;
-    max-width: 500px !important;
+    max-width: 400px !important;
     margin: 25px auto !important;
     background: transparent !important;
     border: none !important;
-    min-height: 70px;
+    min-height: 50px;
 }
 
 .form-busca-fenda input[type="text"] {
     flex: 1 !important;
     min-width: 0 !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    color: white !important;
-    border: 2px solid rgba(255, 188, 0, 0.5) !important;
+    max-width: 600px!important;
+    background: rgba(255, 255, 255, 0.08) ;
+    color: white ;
+    border: 2px solid rgba(255, 188, 0, 0.5) ;
     outline: none !important;
     box-shadow: none !important;
     -webkit-appearance: none !important;
     appearance: none;
-    border-radius: 10px !important;
-    padding: 15px 20px !important;
-    font-size: 1.2rem !important;
+    border-radius: 10px ;
+    padding: 8px 16px ;
+    font-size: 1.2rem ;
     box-sizing: border-box !important;
 }
 
 /* Quando você clica para digitar */
 .form-busca-fenda input[type="text"]:focus {
-    border-color: #fc900c !important;
-    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: #fc900c;
+    background: rgba(255, 255, 255, 0.12) ;
     outline: none !important;
-    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3) !important;
+    box-shadow: 0 0 10px rgba(252, 144, 12, 0.3) ;
 }
 
 .form-busca-fenda button {
     flex: 0 0 auto !important;
-    min-width: 75px !important;
-    background: #fc900c !important;
-    color: #000 !important;
+    min-width: 65px ;
+    background: #fc900c ;
+    color: #000 ;
     border: none !important;
-    border-radius: 10px !important;
+    border-radius: 10px ;
     font-weight: 900 !important;
-    font-size: 1rem !important;
+    font-size: 1rem ;
     cursor: pointer !important;
     padding: 0 20px !important;
     outline: none !important;
 }
 
+
+
 /* 2. Lista de Resultados  */
 .lista-resultados {
-    max-width: 300px !important;
+    max-width: 300px;
     max-width: auto !important;
     margin: 20px auto !important;
     display: flex !important;
@@ -1168,8 +1175,8 @@ footer a {
 /* 5. Textos dentro do Card */
 .nome-user {
     display: block !important;
-    color: #ffffff !important;
-    font-size: 1.2rem !important;
+    color: #ffffff ;
+    font-size: 1.1rem ;
     font-weight: bold !important;
 }
 
@@ -1218,55 +1225,60 @@ form[action="confirma-login.php"] input[type="password"] {
 
 }
 
+/* ==========================================================================
+   ESTRUTURA DE SUPORTE - POST FOCO (FIX DA GRAVIDADE DA FENDA)
+   ========================================================================== */
+
+/* Ajuste sutil no card focado para não quebrar a margem com os comentários */
+
+.card-focado {
+    border: 1px solid var(--cor-borda-glow);
+    position: relative;
+    animation: glowPulsar 3s infinite alternate;
+    transform: scale(1.02);
+    min-height: 180px;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 40px ; /* Espaço pro feed começar embaixo */
+    transform: none !important; /* Evita que o scale quebre o fluxo horizontal */
+}
+
+/* Envelopa o card principal e os comentários mantendo o mesmo eixo */
+.box-post-central {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px; /* Alinhamento elegante e focado para leitura */
+    margin: 0 auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
 /*  O "Fundo" do Modal de Comentários*/
 main.container-post-foco {
-    width: 98%;
     min-height: 100vh;
     background: transparent;
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     display: flex;
     justify-content: center;
-    padding: 30px 10px 30px 10px;
+    padding: 30px 0 !important;
     /* Espaço para o navbar lá no topo */
     animation: fadeIn 0.3s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
 }
+
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-
-/* O "BOX" CENTRALIZADO */
-.box-post-central {
-    width: 100%;
-    max-width: 800px;
-    /* Largura de rede social (Twitter/X style) */
-    display: flex;
-    flex-direction: column;
-    height: auto;
-
-    /* Animação: Começa menor e cresce até o tamanho real */
-    animation: postSurge 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes postSurge {
-    from {
-        opacity: 0;
-        transform: scale(0.9) translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
     }
 }
 
@@ -1281,28 +1293,27 @@ main.container-post-foco {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     display: 1;
     display: flex;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 /* FORMULÁRIO DE FOFOCA */
+/* Deixa o formulário em linha (input + botão lado a lado) */
+
 .form-fenda {
-    background: #1a1a1a;
-    border-radius: 12px;
-    border: 2px solid #808080;
-    padding: clamp(10px, 1vw, 20px) !important;
-    max-width: clamp(280px, 50vw, 450px);
-    width: 100%;
-    max-height: auto;
-    margin: 20px auto;
+    display: flex !important;
+    flex-direction: row;
+    gap: 10px;
+    resize: vertical;
+    /* Garante que o conteúdo dentro da barra fique centralizado mas largo */
+    max-width: auto !important;
+    margin: 0 auto !important;
+    gap: 12px;
+    align-items: center;
 
 }
 
 .titulo-fofoca {
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    color: var(--laranja-fenda);
-    font-weight: bold;
-    margin-top: 30px;
-
+    display: none;
 }
 
 .customizacao-post {
@@ -1312,42 +1323,31 @@ main.container-post-foco {
     padding: 10px;
 }
 
-.textarea-fenda {
-
-    background: #111;
-    color: #fff;
-    border: 2px solid #808080;
-    border-radius: 8px;
-    font-family: inherit;
-    align-items: center;
-    max-width: clamp(250px, 50vw, 450px);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: clamp(10px, 1vw + 5px, 20px);
-    background: rgba(255, 255, 255, 0.05);
-    align-items: center;
-    flex-wrap: wrap;
-    overflow-y: auto;
-    /* Se o texto for grande, ele cria scroll interno */
-    resize: vertical;
-    /* Permite redimensionar apenas na vertical */
-    padding: 15px !important;
-    min-height: 80px;
-    /* Altura mínima para evitar que fique muito pequeno */
+    .textarea-fenda {
+    flex: 1 !important;
+    height: 45px !important;
+    min-height: 45px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 25px !important;
+    color: #fff !important;
+    padding: 10px 18px !important;
+    resize: none !important;
 }
 
 
+
 .btn-enviar-fenda {
-    width: 100%;
-    padding: 15px;
-    background: var(--dourado);
-    color: #000;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+    width: 50px;
+    height: 45px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    font-size: 0 !important; /* Esconde o texto "Mandar mensagem..." */
+}
+
+.btn-enviar-fenda::before {
+    content: '🚀'; /* Ícone de envio */
+    font-size: 1.2rem;
 }
 
 .btn-enviar-fenda:hover {
@@ -1356,51 +1356,60 @@ main.container-post-foco {
 }
 
 
-/* COMENTÁRIOS - Versão Slim com Bounce */
-.comentario-item {
-    background: rgba(255, 255, 255, 0.014);
-    margin-top: 10px;
-    margin-bottom: 12px;
-    border-left-style: solid;
-    border-left-width: 5px;
-    border-radius: 10px;
-    padding: 12px 15px;
+/* ==================================================
+   COMENTÁRIOS - VERSÃO COM CONTAINER QUERIES (FLUIDO)
+   ================================================== */
+
+.lista-comentarios-social {
+    container-name: feedComentarios;
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
-    /* Mantém um embaixo do outro */
-    gap: 5px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    /*Safari/Chrome*/
-    -ms-hyphens: auto;
-    /*IE/Edge */
-    hyphens: auto;
-    /*  efeito original de bounce */
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-        box-shadow 0.3s ease,
-        background 0.3s ease;
+    align-items: stretch;
     width: 100%;
-    box-sizing: border-box;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px 8px 150px 8px;
+    gap: 10px;
+    overflow-x: hidden;
 }
 
-/* Mantém o hover com o bounce que você definiu */
-.comentario-item:hover {
-    transform: translateY(-5px) scale(1.02);
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+/* Bolha base */
+.comentario-item {
+    padding: 8px 14px;
+    gap: 8px;
+    width: auto;
+    border-radius: 20px 20px 20px 5px;
+    border-left: 5px solid var(--cor-borda-glow);
+    background: rgba(255, 255, 255, 0.048);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1); 
+    align-self: flex-start;
+    box-sizing: border-box!important;
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+    hyphens: auto;
+    margin-bottom: 20px ;
+}
+
+/* Bolha do próprio usuário (direita) */
+.comentario-item.meu-comentario {
+    align-self: flex-end !important;
+    margin-left: auto !important;
+    border-left: none;
+    border-right: 4px solid var(--cor-borda-glow);
+    border-radius: 20px 20px 5px 20px;
 }
 
 
-
-
-
-/* MODO LIGHT*/
+/* MODO LIGHT  */
 .comentario-item.vibe-light {
     background: rgba(255, 255, 255, 0.897);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
     color: #111111 !important;
+    transition: visibility 0.3s, opacity 0.3s ease-in-out;
 }
 
 .comentario-item.vibe-light .comentario-texto,
@@ -1408,35 +1417,19 @@ main.container-post-foco {
 .comentario-item.vibe-light .comentario-autor,
 .comentario-item.vibe-light .btn-responder-fenda {
     color: #000000 !important;
-    /* Força tudo a ficar preto no fundo branco */
     font-weight: bold;
 }
 
-/* Forçar leitura no mobile touch */
-body.is-touch-device .vibe-light {
-    color: #000 !important;
-}
-
-body.is-touch-device .vibe-light .comentario-texto {
-    color: #000 !important;
-}
-
-
-
-/* OS ESTILOS DE FUNDO (Vibes) */
-
-/* MODO DARK: Eigengrau  */
+/* MODO DARK - SEU ORIGINAL */
 .comentario-item.vibe-dark {
     background: rgba(22, 22, 29, 0.911);
-    /* O legítimo Eigengrau */
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     color: #eeeeee;
     border-left: 6px solid;
 }
 
-
-/* MODO NEON: O "Cyberpunk" da Fenda */
+/* MODO NEON - SEU ORIGINAL */
 .comentario-item.vibe-neon {
     background: #000000 !important;
     -webkit-backdrop-filter: none !important;
@@ -1450,8 +1443,6 @@ body.is-touch-device .vibe-light .comentario-texto {
     animation: neon-ultra 5s infinite alternate ease-in-out;
 }
 
-
-/* Deixa a hora colorida no Neon */
 .comentario-item.vibe-neon .comentario-data,
 .comentario-item.vibe-neon .comentario-autor {
     color: var(--cor-borda-glow);
@@ -1460,172 +1451,67 @@ body.is-touch-device .vibe-light .comentario-texto {
     opacity: 0.9;
 }
 
-
-/* Animação de lâmpada neon falhando */
 @keyframes neon-ultra {
-
-    0%,
-    18%,
-    22%,
-    25%,
-    53%,
-    57%,
-    100% {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
         filter: saturate(0.7);
         border-left-color: var(--cor-borda-glow);
         box-shadow: 0 0 10px var(--cor-borda-glow);
     }
-
-    20%,
-    24%,
-    55% {
+    20%, 24%, 55% {
         border-left-color: rgba(0, 0, 0, 0.5);
-        /* Quase apaga */
         box-shadow: 0 0 25px var(--cor-borda-glow);
-
     }
-
 }
 
-/* MODO GLASS */
+/* MODO GLASS - SEU ORIGINAL (CORRIGIDO) */
 .comentario-item.vibe-glass {
-    background: rgba(255, 255, 255, 0.164) !important;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.062) ;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     color: #fff !important;
-    /* Corrigi para branco pra ler no fundo escuro */
 }
 
 .comentario-item:hover {
-
-    transform: translateY(-8px) scale(1.05);
+    transform: translateY(-5px) scale(1.02);
     background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(112, 205, 228, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
 }
 
-@keyframes slideInComentario {
-    from {
-        opacity: 0;
-        transform: translateX(-15px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-
-/* MARCAÇÃO */
+/* MARCAÇÃO - SEU ORIGINAL */
 .comentario-item strong {
     color: #ebc415;
     font-size: 1rem !important;
     font-weight: bold;
 }
 
-/*HORARIO E DATA*/
 .comentario-item span {
     font-size: 0.9rem !important;
     line-height: 1.4;
     color: #eee;
 }
 
-
-/* Ajuste para as menções não ficarem desproporcionais */
-.mencao-comentario {
-    font-size: 0.85rem !important;
-    padding: 1px 5px;
-}
-
-
-/* Botão de Resposta dentro do comentário */
-.btn-responder {
-    background: none;
-    border: none;
-    color: rgba(241, 103, 5, 0.9);
-    font-size: clamp(1.125rem, 0.382vw + 1.041rem, 1.7rem) !important;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 5px 0;
-    margin-top: 8px;
-    display: inline-flex;
-    align-items: right;
-    gap: 5px;
-    opacity: 0.8;
-    transition: 0.3s;
-}
-
-.btn-responder:hover {
-    opacity: 1;
-    text-decoration: underline;
-    transform: translateX(3px);
-    /* Um charminho pro lado */
-}
-
-/* Ícone de seta de resposta */
-.btn-responder::before {
-    content: '\f3e5';
-    /* Código do ícone reply do FontAwesome */
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    padding: 8px;
-}
-
-.btn-responder-fenda {
-    float: right;
-    /* Joga pra direita */
-    margin-top: 5px;
-    background: rgba(235, 196, 21, 0.1);
-    border: 1px solid var(--dourado);
-    color: var(--dourado);
-    padding: 3px 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-responder-fenda:hover {
-    background: var(--dourado);
-    color: #000;
-}
-
-
-
-/* META DADOS (Nome e Data) */
+/* META DADOS - SEU ORIGINAL */
 .comentario-meta {
     display: flex;
     justify-content: space-between;
-    /* Autor na esquerda, Data na direita */
     margin-bottom: 8px;
-    /* Espaço para o texto não grudar */
     word-wrap: break-word !important;
     overflow-wrap: anywhere !important;
     white-space: pre-wrap !important;
     max-width: 100% !important;
-    -webkit-hyphens: auto;
-    /*Safari/Chrome*/
-    -ms-hyphens: auto;
-    /*IE/Edge */
-    hyphens: auto;
 }
 
 .comentario-autor {
-    color: var(--dourado);
+    color: var(--cor-borda-glow);
     font-size: 0.9rem;
     font-weight: bold;
-    /* Removemos o float: left se tiver */
     align-content: flex-start;
-    max-width: clamp(120px, 30vw, 250px) !important;
-    /* Limita a largura da tag */
+    max-width: clamp(130px, 20vw, 240px);
+    margin-right: 10px;
     white-space: nowrap !important;
-    /* Impede que ela quebre em duas linhas */
     overflow: hidden !important;
-    /* Esconde o que sobrar */
     text-overflow: ellipsis !important;
-    /* Coloca os "..." se o nome for gigante */
     vertical-align: middle;
-    overflow: hidden;
 }
 
 .comentario-data {
@@ -1633,23 +1519,15 @@ body.is-touch-device .vibe-light .comentario-texto {
     opacity: 0.8;
     white-space: nowrap;
     flex-shrink: 0;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    right: 10px;
-
 }
 
 .comentario-texto {
     color: #ddd;
-    line-height: 1.4;
+    line-height: 1.5;
     word-wrap: break-word;
     overflow-wrap: break-word !important;
     word-break: break-word !important;
     white-space: pre-wrap;
-    /* Mantém as quebras de linha que o user digitar */
     max-width: 100%;
     width: 100%;
     margin: 0;
@@ -1657,56 +1535,242 @@ body.is-touch-device .vibe-light .comentario-texto {
     text-align: left;
 }
 
-/* Garante que os links de menção não quebrem o alinhamento */
-.comentario-texto a {
-    display: inline-block;
-    /* Ajuda no clique e no alinhamento */
-    word-break: break-all;
+/* Comentários filhos (respostas) – regra geral */
+.comentario-filho {
+    margin-left: 35px;
+    max-width: 90%;
 }
 
-
-.card-novo-post {
-    width: auto;
-    background: #1a1a1a;
-    border-radius: 15px;
-    padding: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+.comentario-item.comentario-filho::before {
+    content: '↳';
+    position: absolute;
+    left: -30px;
+    top: -10px;
+    color: var(--cor-borda-glow);
+    font-size: 2.3rem;
 }
 
-.area-comentario-form {
-    max-width: 600px;
-    margin: 20px auto;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 15px;
-    border-radius: 12px;
-}
-
-.area-comentario-form textarea {
-    min-height: 100px;
-    resize: vertical;
-    min-height: 200px;
-}
-
-/* Deixar o campo de texto mais 'rede social' */
-.textarea-fenda:focus {
-    outline: none;
-    border-color: var(--dourado);
-    box-shadow: 0 0 8px rgba(221, 200, 14, 0.3);
-    background: #000;
-}
-
-/* Estilo dos nomes mencionados (@) dentro dos comentários */
-.comentario-texto a {
-    color: var(--dourado);
-    text-decoration: none;
+.reply-indicator {
+    font-size: 0.8rem;
     font-weight: bold;
+    background: rgba(255, 255, 255, 0.04);
+    border-left: 3px solid var(--cor-borda-glow);
+    padding: 4px 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    opacity: 0.8;
+    color: var(--cor-borda-glow);
 }
 
-.comentario-texto a:hover {
-    text-decoration: underline;
+.btn-responder-bolha {
+    background: none;
+    border: none;
+    color: var(--dourado);
+    margin-top: 6px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 4px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+    transition: 0.2s;
+}
+.btn-responder-bolha:hover {
+    opacity: 1;
+    transform: translateX(3px);
 }
 
-/* Botão Voltar Estilizado */
+/* ==================================================
+   FORMULÁRIO FIXO WHATSAPP (ADICIONADO)
+   ================================================== */
+.sessao-fofoca-focada {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% ;
+    background: rgba(10, 10, 10, 0.685) ;
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px) ;
+    padding: 20px 15px 20px 15px !important;
+    z-index: 100000 !important;
+    border-top: 2px solid var(--dourado) ;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5) ;
+    align-items: space-between !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
+    height: auto;
+    transform: translateY(0);
+}
+
+
+/* Estado Encolhido */
+.sessao-fofoca-focada.encolhida {
+    height: 60px ;
+    width: 60px ;
+    border-radius: 50%;
+    bottom: 70% ;
+    align-items: center;
+    left: auto !important;
+    right: 20px !important; /* Vira um botão flutuante no canto */
+    padding: 0 !important;
+    overflow: hidden;
+   
+}
+
+/* Esconde o form quando encolhido */
+.sessao-fofoca-focada.encolhida .chat-input-container {
+    display: none !important;
+}
+
+#toggle-chat-barra {
+    position: absolute !important;
+    top: -15px !important; /* Faz ele flutuar um pouco acima da borda */
+    right: 20px !important;
+    width: 40px ;
+    height: 40px ;
+    border-radius: 50% ;
+    display: flex ;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10002 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Quando a barra estiver encolhida (Botão Flutuante) */
+.sessao-fofoca-focada.encolhida #toggle-chat-barra {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: clamp (60px, 5vw, 100px);
+    height: clamp (60px, 5vw, 100px);
+    font-size: 1.4rem ;
+}
+
+.chat-input-container {
+    max-width: 800px ;
+    margin: 0 auto !important;
+}
+
+.customizacao-rapida {
+    display: flex;
+    gap: 10px ;
+    margin-bottom: 8px ;
+    margin-top: 25px;
+    /* Ajuste nos controles de Vibe para não serem "atropelados" */
+    padding-right: 30px ; /* Abre espaço para o botão X no topo */
+    justify-content: flex-start !important; /* Joga os controles pra esquerda */
+
+}
+
+ .fa-comment-dots::before {
+    justify-self: center!important;
+    font-size: 1.1rem; 
+ }
+
+.input-mini {
+    background: rgba(255, 255, 255, 0.08) ;
+    border: 1px solid rgba(255, 255, 255, 0.2) ;
+    border-radius: 20px ;
+    padding: 5px 10px ;
+    color: #fff ;
+    font-size: clamp (0.75rem, 5vw, 1.1rem);
+    cursor: pointer !important;
+}
+
+.color-mini {
+    width: 40px ;
+    height: 35px ;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    cursor: pointer !important;
+}
+
+.chat-input-wrapper {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+}
+
+.textarea-chat {
+    flex: 1 !important;
+    background: rgba(255, 255, 255, 0.08) ;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px !important;
+    padding: 12px 18px !important;
+    color: #fff ;
+    font-size: 0.95rem ;
+    resize: none !important;
+    min-height: 80px;
+    max-height: 150px;
+    font-family: inherit !important;
+    resize: vertical;
+}
+
+.textarea-chat:focus {
+    outline: none !important;
+    border-color: var(--dourado);
+}
+
+.btn-enviar-chat {
+    background: var(--laranja-fenda) ;
+    border: none !important;
+    border-radius: 50% ;
+    width: 45px ;
+    height: 45px ;
+    display: flex !important;
+    align-items: center ;
+    justify-content: center ;
+    cursor: pointer !important;
+    transition: 0.3s !important;
+    color: #000 ;
+}
+
+.btn-enviar-chat:hover {
+    transform: scale(1.05) !important;
+    background: #ffcc00 ;
+}
+
+.chat-footer-info {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin-top: 5px !important;
+    padding: 0 10px !important;
+}
+
+.char-counter {
+    font-size: 0.75rem ;
+    color: #888 ;
+}
+
+.resposta-indicador {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 0.8rem ;
+    color: var(--dourado) !important;
+    background: rgba(255, 188, 0, 0.1);
+    padding: 3px 8px ;
+    border-radius: 15px ;
+    margin-right: 40px;
+    width:auto;
+}
+
+.cancelar-resposta {
+    background: none !important;
+    border: none !important;
+    color: #ff4444 ;
+    cursor: pointer !important;
+    font-size: 0.9rem;
+}
+
+/* ==============
+   BOTÃO VOLTAR 
+   ============== */
 .btn-voltar-fenda {
     display: inline-block;
     color: rgba(255, 255, 255, 0.6);
@@ -1721,116 +1785,16 @@ body.is-touch-device .vibe-light .comentario-texto {
     color: var(--dourado);
 }
 
-
-/* PULSAR DA BORDA */
-.card-focado .perfil-gold {
-    border: 1px solid var(--dourado);
-    position: relative;
-    /* Faz o brilho pulsar devagar */
-    animation: glowPulsar 3s infinite alternate;
-    transform: scale(1.05);
-    /* Leve aumento para mostrar quem manda */
-    /* Espaço para não encavalar nos comentários */
-}
-
-.card-focado {
-    border: 1px solid var(--cor-borda-glow);
-    position: relative;
-    /* Faz o brilho pulsar devagar */
-    animation: glowPulsar 3s infinite alternate;
-    transform: scale(1.05);
-    /* Leve aumento para mostrar quem manda */
-    margin: 60px auto !important;
-    /* Espaço para não encavalar nos comentários */
-    min-height: 150px;
-}
-
-
 @keyframes glowPulsar {
-    from {
-        box-shadow: 0 0 10px rgba(221, 200, 14, 0.1);
-    }
-
-    to {
-        box-shadow: 0 0 25px rgba(221, 200, 14, 0.4);
-    }
-}
-
-
-
-/* O Post Principal - BOB PAI */
-.post-principal-focado {
-    border: 1px solid rgba(255, 145, 0, 0.5);
-    padding: 10px;
-    margin-bottom: 40px;
-    transform: scale(1.05);
-
-}
-
-/* BOB FILHO - A Resposta (Versão Corrigida) */
-.comentario-item.comentario-filho {
-    display: flex !important;
-    flex-direction: column !important;
-    /* Força o alinhamento à esquerda dentro do card */
-    width: 88% !important;
-    margin-left: auto !important;
-    /* Joga o card para a direita */
-    margin-right: 0 !important;
-    align-self: flex-end !important;
-    font-size: 0.95rem !important;
-    border-left: 5px solid var(--cor-borda-glow) !important;
-    background: rgba(255, 255, 255, 0.03) !important;
-    position: relative !important;
-}
-
-/* Garante que o texto interno não vire uma tripa */
-.comentario-item.comentario-filho .comentario-texto {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-    word-wrap: break-word !important;
-    overflow-wrap: break-word !important;
-    white-space: pre-wrap !important;
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    /*Safari/Chrome*/
-    -ms-hyphens: auto;
-    /*IE/Edge */
-    hyphens: auto;
-}
-
-
-@keyframes slideInFilho {
-    from {
-        opacity: 0;
-        transform: translateX(20px);
-        /* Vem do lado oposto do pai */
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { box-shadow: 0 0 10px rgba(221, 200, 14, 0.1); }
+    to { box-shadow: 0 0 25px rgba(221, 200, 14, 0.4); }
 }
 
 .sem-comentarios {
     opacity: 0.6;
     font-size: 1rem;
-}
-
-
-/*---FUNÇÃO BETA TEST FUNÇÃO SWIPE COMENTÁRIOS---*/
-
-/* Pequeno detalhe visual para indicar que é uma resposta */
-.comentario-item.comentario-filho::before {
-    content: '↳';
-    position: absolute;
-    left: -15px;
-    /* Ajustei um pouco para dentro */
-    top: 5px;
-    color: var(--cor-borda-glow);
-    font-size: 1.2rem;
-    opacity: 0.5;
+    text-align: center;
+    padding: 20px;
 }
 
 
@@ -1949,7 +1913,7 @@ h2.titulo-home {
     border-radius: 20px;
     padding: 15px;
     /* Valor de segurança que não entendem os clamps */
-    padding: clamp(12px, 4vw, 30px) !important;
+    padding: clamp(8px, 4vw, 25px) !important;
     line-height: 1.4;
     border: 1px solid rgba(252, 144, 12, 0.2);
     /* Uma bordinha bem sutil laranja */
@@ -1963,7 +1927,7 @@ h2.titulo-home {
     margin-bottom: 20px;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 2px;
-    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+    font-size: clamp(1.1rem, 5vw, 1.8rem) !important;
 }
 
 .secao-seguranca p {
@@ -1978,10 +1942,15 @@ h2.titulo-home {
     border-left: 4px solid #fc900c;
     /* O laranja que você curtiu */
     padding: clamp(10px, 3vw, 20px) !important;
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
+    hyphens: auto;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
     margin: 15px 0;
-    border-radius: 8px;
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    border-radius: 10px;
     margin: 25px 0 !important;
     display: block !important;
 }
@@ -2000,9 +1969,9 @@ h2.titulo-home {
     margin-bottom: 15px;
     line-height: 1.6;
     position: relative;
-    padding-left: 30px;
+    padding-left: 25px;
     list-style: none;
-    font-size: clamp(13px, 2.2vw, 16px)
+    font-size: clamp(13px, 3vw, 18px)
 }
 
 
@@ -2031,12 +2000,12 @@ h2.titulo-home {
     flex-direction: column !important;
     align-items: center !important;
     width: 95% !important;
-    margin: 15px auto !important;
-    padding: 12px !important;
+    margin: 15px auto ;
+    padding: 12px ;
     display: flex !important;
     float: none !important;
-    border-radius: 20px !important;
-    background-color: #0c0b0bdc !important;
+    border-radius: 20px ;
+    background-color: #0c0b0bdc;
     max-width: 1100px;
 }
 
@@ -2131,7 +2100,7 @@ input[type="check-box"] {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
-    padding: 15px ;
+    padding: 15px;
     box-sizing: border-box !important;
     margin: 10px !important;
     gap: 20px !important;
@@ -2231,7 +2200,7 @@ textarea {
 
 textarea[name="bio"] {
     min-height: 120px !important;
-    resize: none !important;
+    resize: none ;
     word-wrap: break-word !important;
     /* O que você sugeriu */
     overflow-wrap: break-word !important;
@@ -2239,13 +2208,7 @@ textarea[name="bio"] {
 
 
 /* OS BOTÕES: Menores e um embaixo do outro se precisar */
-.capa-wrapper.viewer {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    background-color: #000;
-    border-radius: 12px 12px 0 0;
-}
+
 
 .perfil-controles {
     display: flex !important;
@@ -2266,21 +2229,16 @@ textarea[name="bio"] {
 }
 
 
-/* Move o Avatar para o CENTRO e diminui um pouco o tamanho */
-
-.avatar-perfil-wrapper {
-    transform: translateX(-50%);
-    bottom: -40px !important;
-}
-
-
 /*  CAPA - PERFIL PÚBLICO  */
 .capa-wrapper.viewer {
     width: 100% !important;
     position: relative !important;
     order: 1 !important;
     overflow: hidden !important;
+    background-color: #000;
+    border-radius: 12px 12px 0 0;
 }
+
 
 
 /*  AVATAR (CAPIVARA) */
@@ -2297,35 +2255,22 @@ textarea[name="bio"] {
 
 /*  O Wrapper do Avatar: para de voar e desce pra Terra */
 
-.avatar-wrapper.viewer {
-    float: none !important;
-    position: relative !important;
-    display: flex !important;
-    justify-content: center !important;
-    margin: -70px auto 10px auto !important;
-    max-width: 300px !important;
-    max-height: 300px !important;
-    aspect-ratio: 1/1;
-    left: unset !important;
-    top: unset !important;
-}
-
 
 .avatar-posicionador {
     position: absolute;
-    bottom: -80px !important;
+    bottom: -90px !important;
     /* Quanto ocupa da capa */
     transform: translateX(-50%);
-    width: clamp(100px, 15vw + 12px, 300px);
-    height: clamp(100px, 15vw + 12px, 300px);
+    width: clamp(100px, 15vw, 300px);
+    height: clamp(100px, 15vw, 300px);
     z-index: 15;
     gap: 10px;
     object-fit: cover;
     aspect-ratio: 1/1;
     left: 50% !important;
+    right: 50% !important;
 
 }
-
 
 
 /* Tooglezinho de Notificção */
@@ -2428,7 +2373,7 @@ textarea[name="bio"] {
     top: 8px;
     right: 50px;
     /* Ajuste conforme o menu de opções */
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: bold;
     color: #FFD700;
     letter-spacing: 1px;
@@ -2436,7 +2381,71 @@ textarea[name="bio"] {
 }
 
 
+/* ==========================================================================
+   REGRAS DE @CONTAINER - BLINDAGEM CONTRA O "ESPARTILHO" (IPHONE 4/SE)
+   ========================================================================== */
 
+/* Container muito estreito (iPhone 4, Lumia 520) */
+@container feedComentarios (max-width: 360px) {
+    .comentario-item {
+        max-width: 95%; /* Ganha 2% de tela pro texto respirar */
+        min-width: 220px;
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+    
+    /* 🚨 Alívio do cinto: diminui a margem do filho para caber na tela de 320px */
+    .comentario-filho {
+        margin-left: 20px; 
+        max-width: 90%;    
+    }
+    
+    /* Move a setinha proporcionalmente para acompanhar o novo recuo de 14px */
+    .comentario-item.comentario-filho::before {
+        left: -25px;      
+        font-size: 1.6rem; 
+        top: -8px;
+    }
+
+    .comentario-autor {
+        max-width: 120px;
+        font-size: 0.8rem;
+    }
+    .comentario-texto {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+}
+
+
+/* Container pequeno (celular médio) */
+@container feedComentarios (min-width: 361px) and (max-width: 500px) {
+    .comentario-item {
+        max-width: 95%;
+        min-width: 250px!important;
+        padding: 10px 12px;
+    }
+    .comentario-filho {
+        margin-left: 30px;
+        max-width: 88%;
+    }
+}
+
+/* Container médio (tablets pequenos) */
+@container feedComentarios (min-width: 501px) and (max-width: 800px) {
+    .comentario-item {
+        max-width: 85%;
+        min-width: 320px!important;
+    }
+}
+
+/* Container largo (PC, notebook) */
+@container feedComentarios (min-width: 801px) {
+    .comentario-item {
+        max-width: 80%;
+        min-width: 400px!important;
+    }
+}
 
 
 /* ============================================================
@@ -2445,35 +2454,50 @@ textarea[name="bio"] {
 
 /* 1. CELULARES MUITO BAIXOS (iPhone 4 deitado, S20 deitado) */
 @media screen and (orientation: landscape) and (max-height: 420px) {
-    
+
     /* Forçamos 1 coluna só. 2 colunas em 320px de altura é suicídio de layout */
     main.container-feed {
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        padding-top: 60px !important; /* Espaço para a navbar não cobrir o post */
+        padding-top: 50px !important;
+        /* Espaço para a navbar não cobrir o post */
         gap: 5px !important;
     }
 
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
-        width: 90% !important;
+        width: 95% !important;
         max-width: 500px !important;
         margin-bottom: 10px !important;
-        padding: 10px !important;
+        padding: 8px !important;
+    }
+    
+    .container-feed {
+        padding: 10px!important;
+}
+
+    .main-perdidos {
+        padding: 8px !important;
+        margin: 15px auto !important;
     }
 
     /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
-    .post-content, .post-content-focado {
-        max-height: 60px !important; /* Limita a altura do texto */
+    .post-content,
+    .post-content-focado {
+        max-height: 60px !important;
+        /* Limita a altura do texto */
         overflow: hidden;
     }
 
-
-
     /* Esconde elementos não essenciais para ganhar altura */
-    .avatar-p { width: 40px !important; height: 40px !important; }
+    .avatar-p {
+        width: 40px !important;
+        height: 40px !important;
+    }
+
 }
+
 
 /* 2. CELULARES EM PÉ (Portrait) - O padrão que já funciona */
 @media screen and (max-width: 600px) and (orientation: portrait) {
@@ -2482,7 +2506,10 @@ textarea[name="bio"] {
         grid-template-columns: 1fr !important;
         padding: 10px !important;
     }
+    
+
 }
+
 
 /* 3. TABLETS E CELULARES LARGOS (S20 Ultra Normal) */
 @media screen and (min-width: 601px) and (min-height: 421px) {
@@ -2491,9 +2518,35 @@ textarea[name="bio"] {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 15px !important;
     }
+   
 }
 
 
-
-
-
+/* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
+@media (max-width: 380px) and (orientation: portrait) {
+    /* Reseta o main-perdidos que estava deslocado */
+    .main-perdidos {
+        left: 0 !important;
+        right: 0 !important;
+        margin: 10px auto !important;
+        padding: 5px !important;
+        width: 97% !important;
+    }
+    
+    /* Garante que o container do feed não tenha padding lateral */
+    .container-feed {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+    }
+    
+    /* Os cards ocupam a largura total sem margem extra */
+    .spotted-card,
+    .perdidos-item {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+}

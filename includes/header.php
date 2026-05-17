@@ -1,10 +1,10 @@
 <?php
-include_once 'conexao.php'; // Segurança contra o erro de "Redeclare"[cite: 2]
+include_once 'conexao.php';
 
 $u_id = $_SESSION['usuario_id'] ?? 0;
-$pref_swipe_real = 0; // Garante o valor padrão para não quebrar o CSS
+$pref_swipe_real = 0; 
+$pagina_atual = basename($_SERVER['PHP_SELF']); // Identifica a página (ex: feed.php)
 
-// 1. Busca a preferência de Swipe (Nome de variável blindado)
 if ($u_id > 0 && isset($conn)) {
     $stmt_pref = $conn->prepare("SELECT pref_swipe FROM usuarios WHERE id = ?");
     $stmt_pref->bind_param("i", $u_id);
@@ -13,10 +13,12 @@ if ($u_id > 0 && isset($conn)) {
     $pref_swipe_real = $resultado_header_pessoal['pref_swipe'] ?? 0;
 }
 
+// === REGRA DE OURO DA FENDA ===
+// O Modo Swipe SÓ ativa se: 1. A preferência for 1 E 2. Estivermos no feed.php
+$ativar_modo_app = ($pref_swipe_real == 1 && $pagina_atual == 'feed.php');
+
 $classe_tema = $tema_classe ?? '';
-// Define a classe baseada na resposta do banco para o estado INICIAL
-// Mas permite que o JS adicione 'modo-swipe-ativo' depois
-$classe_pref = ($pref_swipe_real == 1) ? 'modo-swipe-ativo' : 'allow-hover';
+$classe_pref = ($ativar_modo_app) ? 'modo-swipe-ativo feed-empilhado' : 'allow-hover';
 $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
 ?>
 
@@ -34,7 +36,7 @@ $classes_finais = trim("$classe_pref $classe_tema is-touch-device");
     <link rel="stylesheet" href="css/animacoes.css">
     <link rel="stylesheet" href="css/skin-hacker.css">
     <link rel="stylesheet" href="css/swipe.css">
-    <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
     <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
     <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">

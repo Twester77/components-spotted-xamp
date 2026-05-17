@@ -119,7 +119,6 @@ body.hacker-mode .bolha {
 body.hacker-mode .spotted-card,
 body.hacker-mode .container-principal,
 body.hacker-mode .formulario-caixa,
-body.hacker-mode .form-perfil-corpo,
 body.hacker-mode .comentario-item,
 body.hacker-mode .sessao-publicar,
 body.hacker-mode .main-perfil-container,
@@ -277,6 +276,7 @@ body.hacker-mode .btn,
 body.hacker-mode .fenda-btn-glow,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-responder-fenda,
+body.hacker-mode .reply-indicator,
 body.hacker-mode .btn-enviar-fenda,
 body.hacker-mode .btn-voltar-fenda,
 body.hacker-mode .btn-sair-fenda,
@@ -293,10 +293,11 @@ body.hacker-mode .btn-ficar-terra,
 body.hacker-mode .btn-zarpar,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,
+body.hacker-mode .img-comunidade-grande,
 body.hacker-mode .insignia-atletica-link {  /* Inclui links e bottoms de atléticas */
     background: #000 !important;
     color: #00ff00 !important;
-    border: 1px solid #00ff00 !important;
+    border: 4px double var(--hacker-green) !important;
     border-radius: 0 !important;
     font-family: monospace !important;
     text-transform: uppercase !important;
@@ -312,8 +313,6 @@ body.hacker-mode .insignia-atletica-link {  /* Inclui links e bottoms de atléti
 /* Hover: fundo verde, texto preto, seta aparecendo */
 body.hacker-mode .btn:hover,
 body.hacker-mode .fenda-btn-glow:hover,
-body.hacker-mode .btn-reagir:hover,
-body.hacker-mode .btn-fofocar:hover,
 body.hacker-mode #btn-load-more:hover,
 body.hacker-mode .btn-seguir-fenda:hover,
 body.hacker-mode .filtro-btn:hover,
@@ -335,7 +334,8 @@ body.hacker-mode .insignia-atletica-link:hover {
     padding-left: 25px !important;
 }
 
-img.insignia-atletica-bottom:hover {
+body.hacker-mode .img.insignia-atletica-bottom:hover,
+body.hacker-mode .img-comunidade-grande:hover {
     background-color: #00ff00 ;
     color: #000000 !important;
     border-radius: 50% !important;
@@ -344,8 +344,7 @@ img.insignia-atletica-bottom:hover {
 
 body.hacker-mode .btn::before,
 body.hacker-mode .fenda-btn-glow::before,
-body.hacker-mode #btn-load-more::before,
-body.hacker-mode .btn-fofocar::before {
+body.hacker-mode #btn-load-more::before {
     content: ">" !important;
     position: absolute !important;
     left: -10px !important;
@@ -637,12 +636,11 @@ body.hacker-mode .conselho-header {
     text-transform: uppercase !important;
     border-bottom: 1px dashed #00ff00 !important;
     display: inline-block !important;
-    padding-right: 15px !important;
-    margin: 15px auto !important;
+    padding-right: 15px;
 }
 
-body.hacker-mode h1::before { content: "root@fenda:~# " !important; opacity: 0.7 !important; }
-body.hacker-mode h2::before { content: "./" !important; opacity: 0.7 !important; }
+body.hacker-mode h1::before { content: "root@fenda:~# " !important; opacity: 0.6 !important; }
+body.hacker-mode h2::before { content: "./" !important; opacity: 0.6 !important; }
 
 
 body.hacker-mode .comentario-texto,
@@ -658,14 +656,16 @@ body.hacker-mode .bio-texto {
    17. FILTROS E BOTÕES DE CATEGORIA
    --------------------------------------------------------------- */
 
-body.hacker-mode .filtro-btn
-nody.hacker-mode .btn-filtro {
+body.hacker-mode .filtro-btn,
+body.hacker-mode .btn-abrir-filtros,
+body.hacker-mode .btn-filtro {
     background: #000 !important;
     border: 1px solid #00ff00 !important;
     color: #00ff00 !important;
 }
 
-body.hacker-mode .filtro-btn.ativo,
+body.hacker-mode .filtro-btn.ativo:hover,
+body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .filtro-btn:hover {
     background: #00ff00 !important;
     color: #000 !important;
@@ -859,8 +859,10 @@ body.hacker-mode .card-header,
 body.hacker-mode .user-info-post,
 body.hacker-mode .post-time,
 body.hacker-mode .spotted-card,
-body.hacker-mode .post-content p,
-body.hacker-mode .comentario-autor {
+body.hacker-mode .post-content,
+body.hacker-mode .post-content-focado,
+body.hacker-mode .comentario-autor,
+body.hacker-mode .comentario-texto p  {
     clip-path: none !important;
     
 }
@@ -983,7 +985,9 @@ body.hacker-mode .pagination span {
    33. BOTÕES DE RESPOSTA EM COMENTÁRIOS
    --------------------------------------------------------------- */
 
-body.hacker-mode .btn-responder {
+body.hacker-mode .btn-responder,
+body.hacker-mode .comentario-item.comentario-filho::before
+{
     background: none !important;
     border: none !important;
     color: #0f0 !important;
@@ -1022,3 +1026,29 @@ body.hacker-mode .hacker-booting {
     }
 }
 
+
+body.hacker-mode .feed-empilhado .spotted-card {
+    transition: transform 0.3s ease-out !important; /* Devolve a animação mínima */
+    animation: none !important; /* Mas mantém as animações de 'typing' desligadas */
+}
+
+/* Trava Hacker: Prioriza performance no Swipe */
+body.hacker-mode .spotted-card {
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: double 2px solid #00ff00 !important; /* Visual Matrix total */
+    border-style: dashed;
+}
+
+body.hacker-mode .spotted-card::before,
+body.hacker-mode .spotted-card::after {
+    display: none !important; /* Remove os brilhos de amei/ranço no modo terminal */
+}
+
+
+body.hacker-mode .spotted-card.dragging {
+    transition: none !important;
+    border: 2px solid #00ff00 !important;
+    background: rgba(0, 20, 0, 0.9) !important;
+}

@@ -1,5 +1,4 @@
-<?php
-include 'conexao.php';
+<?php include 'conexao.php';
 /* MOTOR UNIVERSAL DA FENDA 
     Funciona para: Feed Geral, Feed Pessoal e Ver Perfil
 */
@@ -67,6 +66,7 @@ if (mysqli_num_rows($resultado) > 0) {
         $classe_admin = $sou_eu ? 'post-admin-gold' : '';
 ?>
         <article id="post-<?php echo $post_id_atual; ?>"
+            data-id="<?php echo $post_id_atual; ?>"
             class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>"
             style="position: relative; border: 2px solid <?php echo $cor_post; ?> !important;">
 
@@ -116,49 +116,49 @@ if (mysqli_num_rows($resultado) > 0) {
                 <?php endif; ?>
 
                 <div id="reacoes-post-<?= $post_id_atual ?>" class="reacoes-gravadas">
-                
-                <?php
-                // Query de reações (Simplificada para não estender o código, mas mantendo a lógica)
-                $sql_contas = "SELECT tipo_reacao, COUNT(*) as total FROM curtidas WHERE mensagem_id = ? GROUP BY tipo_reacao";
-                $st_c = mysqli_prepare($conn, $sql_contas);
-                mysqli_stmt_bind_param($st_c, "i", $post_id_atual);
-                mysqli_stmt_execute($st_c);
-                $res_contas = mysqli_stmt_get_result($st_c);
 
-                $minhas_reacoes = [];
-                if (isset($_SESSION['usuario_id'])) {
-                    $meu_id = $_SESSION['usuario_id'];
-                    $sql_meu = "SELECT tipo_reacao FROM curtidas WHERE mensagem_id = ? AND usuario_id = ?";
-                    $st_m = mysqli_prepare($conn, $sql_meu);
-                    mysqli_stmt_bind_param($st_m, "ii", $post_id_atual, $meu_id);
-                    mysqli_stmt_execute($st_m);
-                    $res_meu = mysqli_stmt_get_result($st_m);
-                    while ($m = mysqli_fetch_assoc($res_meu)) {
-                        $minhas_reacoes[] = $m['tipo_reacao'];
+                    <?php
+                    // Query de reações (Simplificada para não estender o código, mas mantendo a lógica)
+                    $sql_contas = "SELECT tipo_reacao, COUNT(*) as total FROM curtidas WHERE mensagem_id = ? GROUP BY tipo_reacao";
+                    $st_c = mysqli_prepare($conn, $sql_contas);
+                    mysqli_stmt_bind_param($st_c, "i", $post_id_atual);
+                    mysqli_stmt_execute($st_c);
+                    $res_contas = mysqli_stmt_get_result($st_c);
+
+                    $minhas_reacoes = [];
+                    if (isset($_SESSION['usuario_id'])) {
+                        $meu_id = $_SESSION['usuario_id'];
+                        $sql_meu = "SELECT tipo_reacao FROM curtidas WHERE mensagem_id = ? AND usuario_id = ?";
+                        $st_m = mysqli_prepare($conn, $sql_meu);
+                        mysqli_stmt_bind_param($st_m, "ii", $post_id_atual, $meu_id);
+                        mysqli_stmt_execute($st_m);
+                        $res_meu = mysqli_stmt_get_result($st_m);
+                        while ($m = mysqli_fetch_assoc($res_meu)) {
+                            $minhas_reacoes[] = $m['tipo_reacao'];
+                        }
                     }
-                }
 
-                $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
-                while ($rc = mysqli_fetch_assoc($res_contas)) {
-                    $tipo = $rc['tipo_reacao'];
-                    $emoji = $tradutor[$tipo] ?? '👍';
-                    $classe_voted = in_array($tipo, $minhas_reacoes) ? 'voted' : '';
-                    echo "<span class='reacao-item $classe_voted'>$emoji " . $rc['total'] . "</span>";
-                }
-                ?>
-            </div>
-
-            <div class="footer-links">
-                <div class="reacao-wrapper">
-                    <span class="btn-reagir">👍 Reagir</span>
-                    <div class="reacoes-popup">
-                        <?php foreach ($tradutor as $tipo => $emoji): ?>
-                            <span onclick="window.enviarReacao(<?= $post_id_atual ?>, '<?= $tipo ?>')"><?= $emoji ?></span>
-                        <?php endforeach; ?>
-                    </div>
+                    $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
+                    while ($rc = mysqli_fetch_assoc($res_contas)) {
+                        $tipo = $rc['tipo_reacao'];
+                        $emoji = $tradutor[$tipo] ?? '👍';
+                        $classe_voted = in_array($tipo, $minhas_reacoes) ? 'voted' : '';
+                        echo "<span class='reacao-item $classe_voted'>$emoji " . $rc['total'] . "</span>";
+                    }
+                    ?>
                 </div>
-                <a href="post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar"><i class="fas fa-comments"></i> FOFOCAR</a>
-            </div>
+
+                <div class="footer-links">
+                    <div class="reacao-wrapper">
+                        <span class="btn-reagir">👍 Reagir</span>
+                        <div class="reacoes-popup">
+                            <?php foreach ($tradutor as $tipo => $emoji): ?>
+                                <span onclick="window.enviarReacao(<?= $post_id_atual ?>, '<?= $tipo ?>')"><?= $emoji ?></span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <a href="post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar"><i class="fas fa-comments"></i> Fofocar </a>
+                </div>
             </div>
         </article>
 <?php

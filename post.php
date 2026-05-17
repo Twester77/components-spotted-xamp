@@ -1,7 +1,6 @@
 <?php
 include_once 'conexao.php';
 
-
 // --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -54,12 +53,13 @@ $stmt->execute();
 $post = $stmt->get_result()->fetch_assoc();
 
 if (!$post) {
-    die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p> Ops...Spotted não encontrado!</p> </main>");
+    die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
 }
 ?>
 
 <main class="container-post-foco">
     <div class="box-post-central">
+        
         <a href="feed.php" class="btn-voltar-fenda">
             <i class="fas fa-arrow-left"></i> Voltar para o Feed
         </a>
@@ -70,44 +70,9 @@ if (!$post) {
                 <span class="post-time"><?php echo date('d/m', strtotime($post['data_post'])); ?></span>
             </div>
             <div class="card-body">
-                <p class="post-content-focado"><?php echo htmlspecialchars($post['mensagem']); ?></p>
+                <p class="post-content-focado"><?php echo nl2br(htmlspecialchars($post['mensagem'])); ?></p>
             </div>
         </article>
-
-        <section class="sessao-fofoca-focada" id="fofocar">
-            <h3 class="titulo-fofoca">Opino ou prefiro não opinar?</h3>
-
-            <form action="enviar-comentario.php" method="POST" class="form-fenda">
-                <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
-                <input type="hidden" name="parent_id" id="input_parent_id" value="">
-
-                <div class="customizacao-post" style="display: flex; flex-direction: column;">
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                        <span style="font-size: 0.85rem; color: #ccc;">Vibe do Card:</span>
-                        <select name="pref_vibe_comentario" class="input-fenda" style="padding: 5px; font-size: 0.8rem;">
-                            <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Padrão (Vidro)</option>
-                            <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
-                            <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
-                            <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar) - Recomendado não usar com terminal mode</option>
-                        </select>
-
-                        <span style="font-size: 0.8rem; color: #ccc; margin-left: 10px;">Cor da Borda:</span>
-                        <input type="color" name="pref_cor_borda" value="<?php echo $cor_default; ?>" style="border: none; width: 30px; height: 30px; cursor: pointer; background: none;">
-                    </div>
-                </div>
-
-                <textarea name="comentario" class="textarea-fenda" placeholder="Conte a fofoca aqui..." maxlength="600" required></textarea>
-                <small id="char-count" style="color: var(--dourado); opacity: 0.7; float: right;">600 caracteres restantes</small>
-
-                <?php
-                $exibir_nome = $_SESSION['usuario_nome'] ?? $_SESSION['nome'] ?? null;
-                if ($exibir_nome): ?>
-                    <button type="submit" class="btn-enviar-fenda">Mandar mensagem como @<?php echo htmlspecialchars($exibir_nome); ?> </button>
-                <?php else: ?>
-                    <button type="submit" class="btn-enviar-fenda anonimo">Responder como Visitante</button>
-                <?php endif; ?>
-            </form>
-        </section>
 
         <div class="lista-comentarios-social">
             <?php
@@ -123,154 +88,193 @@ if (!$post) {
                     $cor_borda = !empty($c['pref_cor_borda']) ? $c['pref_cor_borda'] : '#70cde4';
                     $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
                     $id_vincular = !empty($c['parent_id']) ? $c['parent_id'] : $c['id'];
-                    
-                    // Aqui forçamos o uso do username único do banco para a menção ser limpa. Tenta pegar o username (que não tem espaço), se não tiver, vai o nome mesmo
-                    $user_alvo = !empty($c['username']) ? $c['username'] : (!empty($c['usuario_nome']) ? $c['usuario_nome'] : 'Anonimo');
+
+                    $id_autor_comentario = $c['id_usuario'] ?? $c['usuario_id'] ?? 0;
+                    $sou_eu = (isset($_SESSION['usuario_id']) && $id_autor_comentario == $_SESSION['usuario_id']) ? 'meu-comentario' : '';
+
+                    $user_alvo_limpo = !empty($c['username']) ? $c['username'] : (!empty($c['usuario_nome']) ? $c['usuario_nome'] : 'Habitante');
             ?>
-                    <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho; ?>"
-                        style="--cor-borda-glow: <?php echo $cor_borda; ?>; border-left-color: <?php echo $cor_borda; ?> !important;">
+                    <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>"
+                        id="comentario-<?php echo $c['id']; ?>"
+                        style="--cor-borda-glow: <?php echo $cor_borda; ?>;">
+
                         <div class="comentario-meta">
-                            <strong class="comentario-autor" style="color: <?php echo $cor_borda; ?>;">
+                            <strong class="comentario-autor" style="color: var(--cor-borda-glow);">
                                 <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
                             </strong>
-                            <span class="comentario-data"> <?php echo date('d/m H:i', strtotime($c['data_comentario'])); ?></span>
+                            <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
                         </div>
 
-                        <p class="comentario-texto"><?php echo formatarMencoes($c['comentario']); ?></p>
+                        <?php if ($classe_filho): ?>
+                            <div class="reply-indicator">
+                                <i class="fas fa-reply"></i> Respondendo a <?php echo htmlspecialchars($user_alvo_limpo); ?>
+                            </div>
+                        <?php endif; ?>
 
-                        <div style="text-align: right; width: 100%;">
-                            <!-- Removemos o IF que bloqueia a resposta dos comentarios filhos e permitir respostas em qualqueer nível -->
-                            <button onclick="prepararResposta('<?php echo $id_vincular; ?>', '<?php echo htmlspecialchars($user_alvo); ?>')" class="btn-responder-fenda">
-                                <i class="fas fa-reply"></i> Responder
+                        <p class="comentario-texto"><?php echo nl2br(formatarMencoes($c['comentario'])); ?></p>
+                        
+                        <div class="acoes-bolha" style="text-align: right;">
+                            <button onclick="prepararResposta('<?php echo $id_vincular; ?>', '<?php echo htmlspecialchars($user_alvo_limpo); ?>')" class="btn-responder-bolha">
+                                RESPONDER
                             </button>
                         </div>
-                    </div>
-
-                <?php
-                endwhile;
+                    </div> <?php
+                endwhile; // Fim do loop original
             else: ?>
-                <p class="sem-comentarios">Ninguém fofocou nada ainda...</p>
+                <p class="sem-comentarios">Ninguém fofocou nada ainda... Seja o primeiro!</p>
             <?php endif; ?>
+        </div> </div> </main>
 
+<!-- FORMULÁRIO FIXO ( porém retrátil ) ESTILO WHATSAPP (NO RODAPÉ)       -->
+
+<section class="sessao-fofoca-focada" id="fofocar">
+    <button type="button" id="toggle-chat-barra" onclick="toggleBarraFofoca()">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chat-input-container">
+        <div class="customizacao-rapida">
+            <select name="pref_vibe_comentario" id="vibe-comentario" class="input-mini">
+                <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>> Glass</option>
+                <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>> Neon</option>
+                <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark</option>
+                <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light</option>
+            </select>
+            <input type="color" name="pref_cor_borda" id="cor-borda" value="<?php echo $cor_default; ?>" class="color-mini">
         </div>
-</main>
+
+        <form action="enviar-comentario.php" method="POST" class="form-chat" id="form-comentario">
+            <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
+            <input type="hidden" name="parent_id" id="input_parent_id" value="">
+
+            <div class="chat-input-wrapper">
+                <textarea name="comentario" class="textarea-chat" placeholder="Digite sua mensagem..." maxlength="500" required></textarea>
+                <button type="submit" class="btn-enviar-chat">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="chat-footer-info">
+                <span id="char-count" class="char-counter">500</span>
+                <span class="resposta-indicador" id="resposta-indicador" style="display: none;">
+                    <i class="fas fa-reply"></i> Respondendo...
+                    <button type="button" onclick="cancelarResposta()" class="cancelar-resposta">✖</button>
+                </span>
+            </div>
+        </form>
+    </div>
+</section>
 
 <script>
-    const textarea = document.querySelector('.textarea-fenda');
-    const count = document.getElementById('char-count');
-    if (textarea && count) {
-        textarea.addEventListener('input', function() {
-            const restantes = 600 - this.value.length;
-            count.textContent = restantes + " caracteres restantes";
-            count.style.color = (restantes < 50) ? "#ff4444" : "var(--dourado)";
+    // --- ENGINE CENTRAL DE INTERAÇÃO DA FENDA ---
+
+    // Seletores Únicos (Evita erro de undefined)
+    const campoTexto = document.querySelector('.textarea-chat');
+    const contadorChar = document.getElementById('char-count');
+    const formFofoca = document.getElementById('form-comentario');
+    const barraFofoca = document.querySelector('.sessao-fofoca-focada');
+
+    // 1. CONTADOR DE CARACTERES
+    if (campoTexto && contadorChar) {
+        campoTexto.addEventListener('input', function() {
+            const restantes = 500 - this.value.length;
+            contadorChar.textContent = restantes;
+            contadorChar.style.color = (restantes < 50) ? "#ff4444" : "#888";
         });
     }
 
-    const swipeAtivado = <?php echo $swipeAtivado; ?>;
-    if (swipeAtivado == 1) {
-        let touchstartX = 0;
-        let touchX = 0;
-        document.querySelectorAll('.comentario-item').forEach(item => {
-            item.addEventListener('touchstart', e => {
-                touchstartX = e.touches[0].clientX;
-                item.style.transition = "none";
-            }, {
-                passive: true
-            });
-            item.addEventListener('touchmove', e => {
-                touchX = e.touches[0].clientX;
-                let deslocamento = touchX - touchstartX;
-                if (deslocamento > 0 && deslocamento < 100) {
-                    item.style.setProperty('transform', `translateX(${deslocamento}px)`, 'important');
-                }
-            }, {
-                passive: true
-            });
-            item.addEventListener('touchend', e => {
-                let deslocamentoFinal = touchX - touchstartX;
-                item.style.transition = "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)";
-                if (deslocamentoFinal > 70) {
-                    const btn = item.querySelector('.btn-responder-fenda');
-                    if (btn) btn.click();
-                }
-                item.style.setProperty('transform', 'translateX(0)', 'important');
-            });
+    // 2. CONTROLE DA BARRA RETRÁTIL
+    window.toggleBarraFofoca = function() {
+        const icone = document.querySelector('#toggle-chat-barra i');
+        if (!barraFofoca) return;
+
+        barraFofoca.classList.toggle('encolhida');
+        if (icone) {
+            icone.className = barraFofoca.classList.contains('encolhida') ?
+                'fas fa-comment-dots' : 'fas fa-times';
+        }
+    };
+
+    // 3. SISTEMA DE RESPOSTA E CANCELAMENTO (Unificado)
+    window.prepararResposta = function(id, username) {
+        const inputParent = document.getElementById('input_parent_id');
+        const indicador = document.getElementById('resposta-indicador');
+
+        if (barraFofoca && barraFofoca.classList.contains('encolhida')) toggleBarraFofoca();
+
+        if (inputParent) inputParent.value = id;
+        if (indicador) {
+            indicador.style.display = 'flex';
+            // Procura o span interno ou usa o próprio indicador
+            const info = indicador.querySelector('span') || indicador;
+            info.innerHTML = `<i class="fas fa-reply"></i> Respondendo a ${username}...`;
+        }
+
+        if (campoTexto) {
+            campoTexto.placeholder = "Escreva sua resposta...";
+            campoTexto.focus();
+        }
+    };
+
+    window.cancelarResposta = function() {
+        const inputParent = document.getElementById('input_parent_id');
+        const indicador = document.getElementById('resposta-indicador');
+
+        if (inputParent) inputParent.value = '';
+        if (indicador) indicador.style.display = 'none';
+        if (campoTexto) {
+            campoTexto.placeholder = "Digite sua mensagem...";
+            campoTexto.focus();
+        }
+    };
+
+    // 4. ENVIO AJAX (Blindado)
+    if (formFofoca) {
+        formFofoca.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('.btn-enviar-chat');
+            const originalIcon = btn.innerHTML;
+            const formData = new FormData(this);
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+            btn.disabled = true;
+
+            fetch('enviar-comentario.php', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const container = document.querySelector('.lista-comentarios-social');
+
+                        // 1. Pegamos o texto que o usuário digitou
+                        const textoOriginal = formData.get('comentario');
+
+                        // 2. A MARRETA: Troca o Enter (\n) por <br> na hora
+                        const textoFormatado = textoOriginal.replace(/\n/g, '<br>');
+
+                        // 3. Resetamos a interface
+                        cancelarResposta();
+                        this.reset();
+                        if (contadorChar) contadorChar.textContent = '600';
+
+                        // 4. Se você NÃO quiser dar reload, você criaria o elemento aqui:
+                        // Mas como você está usando reload, o nl2br do PHP vai brilhar.
+                        // Se preferir manter o reload por segurança:
+                        location.reload();
+
+                    } else {
+                        alert("Erro: " + data.message);
+                    }
+                })
+                .finally(() => {
+                    btn.innerHTML = originalIcon;
+                    btn.disabled = false;
+                });
         });
     }
-
-    document.querySelector('.form-fenda').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const formData = new FormData(this);
-        const btn = this.querySelector('.btn-enviar-fenda');
-        const originalText = btn.innerText;
-
-        btn.innerText = "Enviando...";
-        btn.disabled = true;
-
-        fetch('enviar-comentario.php', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Erro na rede');
-                return res.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    const container = document.querySelector('.lista-comentarios-social');
-                    const novoComentario = document.createElement('div');
-
-                    const vibe = formData.get('pref_vibe_comentario');
-                    const cor = formData.get('pref_cor_borda');
-                    const texto = formData.get('comentario');
-
-                    const nomeSessao = "<?php echo $_SESSION['usuario_nome'] ?? ''; ?>";
-                    const autor = nomeSessao ? `@${nomeSessao}` : "👤 Visitante";
-
-                    novoComentario.className = `comentario-item ${vibe}`;
-                    novoComentario.style.cssText = `--cor-borda-glow: ${cor}; border-left-color: ${cor} !important; opacity: 0; transform: translateY(-20px); transition: all 0.5s ease;`;
-
-                    novoComentario.innerHTML = `
-                <div class="comentario-meta">
-                    <strong class="comentario-autor" style="color: ${cor};">${autor}</strong>
-                    <span class="comentario-data">Agora mesmo</span>
-                </div>
-                <p class="comentario-texto">${texto}</p>
-            `;
-
-                    const semComentarios = container.querySelector('.sem-comentarios');
-                    if (semComentarios) semComentarios.remove();
-
-                    container.prepend(novoComentario);
-
-                    setTimeout(() => {
-                        novoComentario.style.opacity = '1';
-                        novoComentario.style.transform = 'translateY(0)';
-                    }, 10);
-
-                    this.reset();
-                    document.getElementById('input_parent_id').value = "";
-                    document.getElementById('char-count').textContent = "600 caracteres restantes";
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-
-                } else {
-                    alert("Erro: " + data.message);
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                }
-            })
-            .catch(err => {
-                console.error("Erro no AJAX:", err);
-                alert("Erro ao conectar com o servidor.");
-                btn.innerText = originalText;
-                btn.disabled = false;
-            });
-    });
 </script>
 
 <?php include 'includes/footer.php'; ?>

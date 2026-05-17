@@ -7,8 +7,8 @@
         </div>
 
         <?php if (isset($_GET['msg']) && $_GET['msg'] == 'conta_ativada'): ?>
-            <div style="background: rgba(0, 74, 141, 0.9); color: white; text-align: center; padding: 15px; margin: 10px 0 20px 0; border-radius: 10px; font-weight: bold; font-size: 15px; border: 1px solid #00c3ff; box-shadow: 0 4px 15px rgba(0, 195, 255, 0.2);">
-                <span style="display: block; font-size: 22px; margin-bottom: 5px;">🚀</span>
+            <div style="background:linear-gradient(170deg, #27ce27bd 15%, #2e6ba5a2 100%); color: white; text-align: center; padding: 15px; margin: 10px 0 20px 0; border-radius: 10px; font-weight: bold; font-size: 15px; border: 1px solid #00c3ff; box-shadow: 0 4px 15px rgba(0, 195, 255, 0.2);">
+                <span style="display: block; font-size: 22px; margin-bottom: 5px;">🫡</span>
                 CONTA ATIVADA! <br> <span style="font-weight: normal; font-size: 13px;">Bem-vindo à Fenda, mergulhe com tudo!</span>
             </div>
         <?php endif; ?>

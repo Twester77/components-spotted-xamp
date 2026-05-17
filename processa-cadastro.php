@@ -26,33 +26,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (mysqli_query($conn, $sql)) {
         // API KEY do Resend
-        $apiKey = 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8';
+        $apiKey = RESEND_KEY;
 
-        // 4. Lógica de URL Universal (Funciona no XAMPP e no Render)
-        $url_base = (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false)
-            ? "http://localhost/spotted-unifev"
-            : "https://www.fendauniversity.com.br";
+        // --- DISPARO DE E-MAIL COM BANNER DE BOAS VINDAS (CADADTRO) ---
+$email_payload = [
+    'from' => 'Spotted - A Fenda <hello@fendauniversity.com.br>',
+    'to' => [$email],
+    'reply_to' => 'contato-spotted.fev@outlook.com.br',
+    'subject' => 'Sua jornada na Fenda começou!',
+    'html' => "
+<div style='font-family: sans-serif; background: #0a0a0a; color: #fff; padding: 0; border-radius: 15px; overflow: hidden; border: 1px solid #70cde4; max-width: 600px; margin: auto;'>
+    
+    <div style='width: 100%; background: #000; text-align: center;'>
+        <img src='https://fendauniversity.com.br/imagensfoto/banner-email.png' alt='A Fenda' style='width: 100%; max-width: 600px; display: block;'>
+    </div>
 
-        // 5. Payload do E-mail (Agora apenas como boas-vindas)
-        $email_payload = [
-            'from' => 'Fenda <onboarding@resend.dev>',
-            'to' => [$email],
-            'subject' => 'Sua conta na Fenda está pronta!',
-            'html' => "
-    <div style='font-family: sans-serif; background-color: #050a0f; color: #fff; padding: 20px; border: 1px solid #70cde4;'>
-        <h1>Falta pouco, $nome!</h1>
-        <p>Para liberar seu acesso à Fenda, precisamos que você confirme seu e-mail clicando no botão abaixo:</p>
-        <div style='text-align: center; margin: 30px 0;'>
-            <a href='{$url_base}/verificar.php?token={$token}' 
-               style='background: #70cde4; color: #000; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;'>
-               ATIVAR MINHA CONTA
+    <div style='padding: 30px;'>
+        <h2 style='color: #70cde4; text-align: center; margin-top: 0;'>Seja bem-vindo, " . $nome . "!</h2>
+        
+        <p style='font-size: 16px; line-height: 1.6;'>Seu cadastro foi realizado com sucesso. Agora você tem acesso ao ecossistema mais exclusivo da UNIFEV.</p>
+        
+        <div style='background: rgba(112, 205, 228, 0.1); border-left: 4px solid #70cde4; padding: 15px; margin: 20px 0;'>
+            <p style='margin: 0; font-style: italic;'>\"O que acontece na Fenda, fica na Fenda... ou não.\"</p>
+        </div>
+
+        <div style='text-align: center; margin-top: 35px; margin-bottom: 20px;'>
+            <a href='https://fendauniversity.com.br/verificar.php?token=" . $token . "' 
+               style='background: #70cde4; color: #000; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 18px; box-shadow: 0 0 20px rgba(112, 205, 228, 0.4); display: inline-block;'>
+               ACESSAR MINHA AURA
             </a>
         </div>
-        <p style='font-size: 0.8rem; color: #555;'>Se você não solicitou este cadastro, ignore este e-mail.</p>
-    </div>"
-        ];
 
-        // 6. Envio via cURL (Configurado para não travar o site se a internet falhar)
+        <p style='font-size: 12px; color: #555; text-align: center; margin-top: 40px;'>
+            Este é um e-mail automático. Para suporte, acesse o site.<br>
+            &copy; 2026 Fenda University - Spotted UNIFEV
+        </p>
+    </div>
+</div>
+"
+];
+
         $ch = curl_init('https://api.resend.com/emails');
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Authorization: Bearer ' . $apiKey,
@@ -61,10 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($email_payload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // Limite de 5 segundos para não travar o site se a rede cair
 
+        // Executa o envio sem travar a navegação do usuário
         curl_exec($ch);
         curl_close($ch);
+        // --- FIM DO DISPARO ---
 
         // 7. Redirecionamento Final
         header("Location: sucesso.php?email=" . urlencode($email));

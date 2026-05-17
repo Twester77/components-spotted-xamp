@@ -9,15 +9,15 @@
             rgba(255, 255, 255, 0.2) 60%,
             rgba(255, 255, 255, 0.05) 100%);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 45%;
+    border-radius: 55%;
     animation: subirEBalancar 8s infinite ease-in;
     pointer-events: none;
+
 }
 
 .bubbles-container {
     position: fixed !important;
     top: 0 !important;
-    left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
     z-index: 5000; /* Fica a frente do conteúdo porém atrás dos menus e notificações */

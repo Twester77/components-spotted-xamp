@@ -25,10 +25,10 @@ if ($exibir == 0) {
 
 <div class="bubbles-container">
     <?php
-    for ($i = 0; $i < 15; $i++) {
+    for ($i = 0; $i < 12; $i++) {
         $left = rand(0, 100);
         $delay = rand(0, 8);
-        $size = rand(10, 40);
+        $size = rand(20, 60);
         echo "<div class='bolha' style='left: {$left}%; animation-delay: {$delay}s; width: {$size}px; height: {$size}px;'></div>";
     }
     ?>
