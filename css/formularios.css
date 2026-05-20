@@ -1,0 +1,1249 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box !important;
+}
+
+
+.input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #00000086 inset;
+    ;
+}
+
+/* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
+select,
+option {
+    background-color: #1a1a1afd;
+    color: #ffffff;
+    -webkit-appearance: none;
+    appearance: none;
+
+}
+
+select:focus {
+    background-color: #00000071;
+    color: var(--laranja-fenda);
+}
+
+
+form {
+    margin: 20px auto !important;
+}
+
+
+/* --- AJUSTE PARA O MODAL VIRAR UM POP-UP COMPACTO (ESTILO AÇO) --- */
+
+/* 1. Ajuste do Container do Modal (o pai) */
+#modal-postar-fenda .fenda-modal-content {
+    text-align: left;
+    max-width: clamp(300px, 95%, 650px) !important;
+    max-height: clamp(300px, 80vh, 500px) !important;
+    /* Padding dinâmico: menor em telas pequenas */
+    padding: clamp(10px, 5vw, 25px) !important;
+    border-radius: 15px;
+    background: #121212;
+    border: 1px solid #333;
+    position: relative;
+    /* Garante que o 'X' de fechar se posicione certo */
+    /* Garante que se o texto for gigante, apareça um scroll interno só no modal */
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none; 
+    -webkit-scrollbar: 0;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+/* 2. Limpando o card de postagem para ele "fundir" com o modal */
+.modal-body-ajuste .main-novo-post {
+    display: flex !important;
+    flex-direction: column;
+    margin: 0 auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    max-width: 95% !important;
+    width: 95% !important;
+    height: auto;
+}
+
+/* 3. Ajuste do formulário interno */
+.modal-body-ajuste .main-novo-post .form-container {
+    width: 100% !important;
+    padding: 15px 0 !important;
+}
+
+/* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
+.modal-body-ajuste .main-novo-post h2 {
+    color: #f5f5f5;
+    font-size: clamp(1.1rem, 4vw, 1.5rem) !important;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 5. Estilização dos Inputs (Bordas cinzas em vez de douradas) */
+.modal-body-ajuste .main-novo-post textarea,
+.modal-body-ajuste .main-novo-post select,
+.modal-body-ajuste .main-novo-post input {
+    width: 100% !important;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #444;
+    /* Cinza escuro */
+    border-radius: 12px;
+    padding: 12px !important;
+    color: #fff;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.modal-body-ajuste .btn-lancar {
+    padding: 8px 16px !important;
+    margin: 30px 0 0 0;
+}
+
+/* Foco do input acende em Branco/Prata */
+.modal-body-ajuste .main-novo-post textarea:focus {
+    border-color: #888;
+    outline: none;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-body-ajuste .main-novo-post textarea {
+    min-height: 90px !important;
+}
+
+
+
+/* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
+.main-perfil-container .perfil-gold {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    margin: 15x auto !important;
+    left: 50% ;
+    padding: 15px !important;
+    border-radius: 30px !important;
+}
+
+
+
+/* Bio: Centralizada e com limite de largura */
+.campo-grupo textarea#bio,
+textarea[name="bio"] {
+    width: 100% !important;
+    /* Ocupa a largura disponível... */
+    max-width: 100% !important;
+    /* ...mas não passa disso no Tablet/PC */
+    margin: 0 auto !important;
+    /* CENTRALIZA no meio do formulário */
+    display: block !important;
+    box-sizing: border-box !important;
+    /* Garante que o padding não estique a caixa */
+    padding: 15px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    line-height: 1.5 !important;
+    resize: none !important;
+}
+
+
+/* Centraliza o rótulo "Bio" também */
+.campo-grupo label[for="bio"] {
+    display: block !important;
+    text-align: center !important;
+    margin-top: 10px;
+}
+
+
+.container,
+.login-form,
+form[action="confirma-login.php"] {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100% !important;
+}
+
+.capa-container {
+    width: 98%;
+    max-width: 1400px !important;
+    height: clamp(250px, 35vw, 700px) !important;
+    position: relative;
+    overflow: visible;
+    /* Vital para o avatar aparecer */
+    background: #0a0a0a;
+    margin: 40px auto 20px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 4px solid #9f49a7c0;
+    border-radius: 10px;
+}
+
+.capa-img {
+    width: 98%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    aspect-ratio: 16/9 !important;
+
+}
+
+.bio-texto,
+.post-content,
+.card-body p,
+.perfil-info-publica p,
+.comentario-item span {
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
+    hyphens: auto;
+
+}
+
+
+/* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
+
+.titulo-pagina {
+    color: var(--dourado);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.campo-grupo {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+
+.campo-grupo label {
+    display: block;
+    color: #bbb;
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Textarea (Bio) */
+.campo-grupo textarea {
+    resize: vertical;
+    min-height: 160px;
+    max-height: 100%;
+}
+
+
+.pref_vibe_padrao select {
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+
+}
+
+/* Estilo geral para Inputs e Textarea */
+
+.container input,
+.container button,
+select,
+textarea {
+    padding: 12px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #333;
+    margin-bottom: 15px;
+    display: block;
+    font-family: 'Inter', sans-serif;
+
+}
+
+
+
+.campo-grupo input[type="text"],
+.campo-grupo textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+
+
+/* Efeito de foco (quando clica para digitar) */
+.campo-grupo input:focus,
+.campo-grupo textarea:focus {
+    outline: none;
+    border-color: var(--dourado);
+    background: #222;
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+}
+
+
+
+/* Wrapper do Username (Onde tem o @) */
+.input-username-wrapper {
+    display: flex;
+    align-items: center;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.input-username-wrapper span {
+    background: #333;
+    color: var(--dourado);
+    padding: 12px 15px;
+    font-weight: bold;
+    border-right: 1px solid #444;
+}
+
+.input-username-wrapper input {
+    border: none !important;
+    background: transparent !important;
+    appearance: none;
+}
+
+/* Quando foca no campo de username, destaca o wrapper inteiro */
+.input-username-wrapper:focus-within {
+    border-color: #ffb11fe7;
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+}
+
+/* Página perdidos */
+.painel-sessao {
+    max-width: auto;
+    min-height: 100px;
+    margin: 0 auto;
+    background: transparent;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;/
+}
+
+.painel-sessao p {
+    color: #fff;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.btn-sair-fenda {
+    background: #cc420c;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.3s ease;
+    display: inline-block;
+}
+
+.btn-sair-fenda:hover {
+    background: #ff4d00;
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+
+
+/* CONTAINER PRINCIPAL - CADASTRO */
+
+.main-form-cadastro {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 90vh !important;
+    padding: 20px !important;
+}
+
+
+/* Container do campo com ícone */
+.fenda-reg-box {
+    display: flex !important;
+    align-items: center !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+    transition: all 0.3s ease;
+    overflow: hidden !important;
+    /* Garante que nada vaze */
+}
+
+/* Ícone dentro da box - agora em fluxo normal */
+.fenda-reg-box i {
+    color: #f8c946ec !important;
+    font-size: 1.2rem !important;
+    margin-left: 15px !important;
+    margin-right: 8px !important;
+    width: 24px !important;
+    text-align: center !important;
+    flex-shrink: 0 !important;
+    /* Não encolhe */
+    pointer-events: none !important;
+}
+
+/* Inputs dentro da box - sem padding esquerdo enorme */
+.fenda-reg-box input,
+.fenda-reg-box select {
+    flex: 1 !important;
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    font-size: 1rem !important;
+    padding: 12px 12px 12px 6px !important;
+    outline: none !important;
+    width: 100% !important;
+}
+
+/* Para selects, mantém o mesmo estilo */
+.fenda-reg-box select {
+    cursor: pointer;
+}
+
+/* Efeito de foco na borda do container */
+.fenda-reg-box:focus-within {
+    border-color: #f8c946ec !important;
+    box-shadow: 0 0 8px rgba(248, 201, 70, 0.3) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ajuste específico para o input color (aura) */
+.fenda-reg-box input[type="color"] {
+    width: 50px !important;
+    padding: 0 !important;
+    margin: 5px 0 5px 5px !important;
+    height: 35px !important;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+/* A caixinha do formulário */
+.container-cadastro-fenda {
+    background: #4b397aba !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.103);
+    border-radius: 20px;
+    max-width: 500px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    padding: 25px !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 20px auto !important;
+}
+
+.cadastro-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cadastro-header h2 {
+    color: #f8c946ce;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.cadastro-header p {
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* GRUPOS DE INPUT */
+.campo-grupo-fenda {
+    margin-bottom: 20px;
+}
+
+.campo-grupo-fenda label {
+    display: block;
+    color: #eee;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+
+
+/* BOTÃO E LINKS */
+.btn-finalizar-fenda {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #cc420c 0%, #ff5e1a 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-finalizar-fenda:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(204, 66, 12, 0.4);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #eee;
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #08d888ab;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.termos-wrapper {
+    margin: 15px 0;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.termos-wrapper a {
+    color: #ffbb00d5;
+}
+
+/* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
+
+/* Container Principal */
+.main-perdidos {
+    /* Largura flutua entre 320px e 1200px dependendo da tela */
+    width: clamp(300px, 100%, 1200px);
+    padding: clamp(8px, 3vw, 25px);
+    margin: 20px auto;
+    box-sizing: border-box !important;
+    max-width: 95%;
+}
+
+/* O Form de busca/filtro (aquele treco estranho kk) */
+.form-perdidos {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: clamp(15px, 4vw, 40px);
+    margin-bottom: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Os Cards de Itens Perdidos */
+.card-perdido {
+    margin-bottom: 20px;
+    padding: clamp(15px, 2vw, 25px);
+    border-radius: 12px;
+    /* Fonte da mensagem flutuando entre 14px e 18px */
+    font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+}
+
+/* O container que envolve o formulário de postagem  */
+section.sessao-publicar {
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.007);
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    width: 95%;
+    max-width: clamp(300px, 95%, 500px);
+    display: flex !important;
+    /* Para garantir o alinhamento interno */
+    flex-direction: column !important;
+    align-items: center;
+    background-color: #49414121;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 20px !important;
+    height: auto !important;
+
+}
+
+
+.sessao-publicar h3,
+.titulo-publicar {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--dourado);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+
+}
+
+/* Forçando o formulário a ser um bloco de largura total */
+.form-publicar {
+    width: 100% !important;
+    display: block !important;
+    /* Mudando de flex para block se necessário */
+    margin-top: 15px;
+}
+
+/* O segredo para os inputs pararem de teimar */
+.form-publicar select,
+.form-publicar textarea,
+.form-publicar .fenda-input
+ {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    /* Espaçamento interno mais robusto */
+    padding: clamp(12px, 2vw, 20px) !important;
+    margin-bottom: 15px !important;
+    /* Reset de bordas e box-sizing */
+    box-sizing: border-box !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #fff !important;
+    border-radius: 10px !important;
+}
+
+ #file-upload-button {
+    box-shadow: 0 0 0 20px 0 #0000;
+    border-radius: 10px;
+    color: #0a0a0a;
+    background-color: #f0cd05e8;
+    font-style: none;
+    padding: 4px 12px;
+}
+
+/* Deixando a caixa de texto maior */
+.form-publicar textarea {
+    min-height: 120px !important;
+    line-height: 1.5;
+}
+
+.form-publicar select:focus,
+.form-publicar textarea:focus {
+    border-color: #ffbc00;
+    outline: none;
+    background: rgba(0, 0, 0, 0.589) !important;
+
+}
+
+
+.nota-seguranca {
+    background: rgba(252, 144, 12, 0.1);
+    border-left: 4px solid #fc900c;
+    padding: 10px;
+    font-size: 0.85rem;
+    color: #eee;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+/* Ajuste dos inputs dentro do formulário */
+.form-publicar .input-group {
+    margin-bottom: 15px;
+}
+
+.fenda-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+}
+
+.fenda-input:focus {
+    border-color: var(--dourado);
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+}
+
+
+
+/* O Botão de Publicar */
+.btn-lancar {
+    width: 100%;
+    background: #7cd632e8;
+    color: black;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 0;
+}
+
+.btn-lancar:hover {
+    background: #c8ff00d3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
+}
+
+
+/* ESTILO DOS BOTÕES DE EDIÇÃO */
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: none !important;
+    /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
+    -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
+    mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
+    transition: transform 0.3s ease;
+}
+
+.avatar-pequeno {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ff7011;
+}
+
+.avatar:hover {
+    transform: scale(1.1);
+}
+
+
+/* 1. Botão da Câmera (Capa) */
+
+.btn-mudar-capa {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    width: clamp(32px, 4vw + 8px, 48px);
+    height: clamp(32px, 4vw + 8px, 48px);
+    right: clamp(10px, 2vw, 25px);
+    /* Margem lateral fluida */
+    bottom: clamp(10px, 2vw, 25px);
+    /* Margem inferior fluida */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.btn-mudar-capa:hover {
+    background: var(--laranja-fenda);
+    transform: scale(1.2);
+}
+
+
+
+/* Container da Capa (O molde) */
+.capa-wrapper.viewer {
+    width: 100% !important;
+    max-width: 100% !important;
+    /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
+    aspect-ratio: 16 / 8 !important;
+    overflow: hidden !important;
+    border-radius: 15px 15px 0 0 !important;
+    background: #1a1a1a;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* A Imagem da Capa (O conteúdo) */
+.img-capa-preview {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 25% !important;
+    /* Foca um pouco acima do meio */
+    display: block !important;
+    aspect-ratio: 16/8 !important;
+}
+
+/* O container do Avatar - Foto de perfil */
+.avatar-wrapper {
+    position: relative;
+    width: clamp(70px, 15vw + 10px, 300px);
+    height: clamp(70px, 15vw + 10px, 300px);
+    max-width: 300px;
+    max-height: 300px;
+    aspect-ratio: 1/1;
+    margin: -30px auto 20px auto !important; 
+    z-index: 10;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* 2. Botão do Lápis (Trocar Avatar) */
+
+
+.btn-mudar-avatar {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    background: var(--dourado);
+    color: #000;
+    width: clamp(25px, 5vw, 45px);
+    height: clamp(25px, 5vw, 45px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
+    border: 2px solid #0a0a0a;
+    z-index: 15;
+}
+
+.btn-mudar-avatar i {
+    font-size: clamp(12px, 2vw, 18px);
+}
+
+.btn-mudar-avatar:hover {
+    background: #fff;
+    transform: rotate(-15deg) scale(1.2);
+    /* Efeito de inclinação no lápis */
+}
+
+
+
+
+.login-btn {
+    background: linear-gradient(135deg, #ff7011, #ffbc00) !important;
+    color: #fff !important;
+    border: none;
+    width: 100%;
+    padding: 12px 20px !important;
+    border-radius: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 112, 17, 0.4);
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);
+    filter: brightness(1.1);
+}
+
+
+.login-btn:focus,
+.container input:focus {
+    outline: none !important;
+}
+
+/* Tira o azul chato do Checkbox no Mobile */
+input[type="checkbox"]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.btn-salvar-perfil {
+    background: linear-gradient(135deg, #08d888, #05a870);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.btn-salvar-perfil:hover {
+    background-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
+}
+
+
+
+/* 1. REGRAS GERAIS (Ajustadas para Flex) */
+
+.btn-editar-atalho {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: auto;
+    width: auto !important;
+    min-width: 150px;
+    padding: 10px 20px !important;
+    white-space: nowrap !important;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    background: var(--dourado) !important;
+    color: #000 !important;
+    border-radius: 50px !important;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+.btn-editar-atalho:hover {
+    transform: scale(1.1) !important;
+    filter: brightness(1.1);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.4);
+}
+
+
+.btn-editar-perfil:hover,
+.btn-seguir:hover,
+.btn-editar-atalho:hover,
+.btn-seguir-fenda:hover {
+    transform: scale(1.1) !important;
+    filter: brightness(1.1);
+    box-shadow: 0 8px 20px rgba(255, 188, 0, 0.4);
+}
+
+
+
+/* 3. O CONTAINER PAI  */
+
+.perfil-controles {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    gap: 30px !important;
+    margin: 20px auto !important;
+    clear: both !important;
+    /* Empurra para baixo de qualquer coisa que tenha float */
+}
+
+
+
+/* 1. BOTÃO PADRÃO (ESTADO: SEGUIR) */
+.btn-seguir-fenda {
+    background-color: #28a745 !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 20px !important;
+    border-radius: 20px !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+/* 2. ESTADO: JÁ ESTOU SEGUINDO (Verde suave com borda) */
+.btn-seguir-fenda.seguindo {
+    background: rgba(38, 211, 110, 0.15) !important;
+    border: 2px solid #26d36e !important;
+    color: #26d36e !important;
+    box-shadow: none !important;
+}
+
+/* 3. HOVER DO SEGUIR (Feedback ao passar o mouse para seguir) */
+.btn-seguir-fenda:hover:not(.seguindo) {
+    opacity: 0.9;
+    transform: scale(1.05);
+    background-color: #218838 !important;
+}
+
+/* 4. HOVER DO SEGUINDO (Efeito "Deixar de Seguir" em Vermelho) */
+.btn-seguir-fenda.seguindo:hover {
+    background: rgba(255, 71, 87, 0.2) !important;
+    border-color: #ff4757 !important;
+    color: #ff4757 !important;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.4) !important;
+    transform: scale(1.02);
+}
+
+
+/*  AVATAR E A PRESENÇA */
+
+/* A Imagem prévia em si: redonda e centrada */
+.img-avatar-perfil {
+    width: 100% !important;  /* MUDEI: ocupa 100% do wrapper */
+    height: 100% !important; /* MUDEI: ocupa 100% do wrapper */
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border: 3px solid #fa7116b2;
+    background: #000;
+    border-radius: 50%;
+    display: block !important;
+    margin: 0 auto !important;
+    box-sizing: border-box;
+}
+
+.avatar-main {
+    /* Quanto ocupa da capa */
+    width: clamp (100px, 5vw, 300px);
+    height: clamp (100px, 5vw, 300px);
+    z-index: 16;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    
+}
+
+
+/* Stats (Seguidores/Seguindo)*/
+
+.stats-perfil {
+    display: flex;
+    justify-content: flex-start;
+    /* vai para a esquerda */
+    gap: 35px;
+    padding: 20px 0;
+    margin: 20px 30px;
+    color: #fff;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: auto;
+}
+
+
+.stats-perfil span {
+    color: #888;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+
+
+/* --- EASTER EGG: A PRESENÇA (ID 1) --- */
+
+.perfil-gold .img-avatar-perfil {
+    border-color: var(--dourado);
+    box-shadow: 0 0 15px rgba(255, 187, 0, 0.822);
+}
+
+.perfil-gold .capa-container {
+    width: 97%;
+    border: none;
+}
+
+.perfil-gold .img-capa-preview {
+    border: 2px solid var(--dourado);
+    border-radius: 20px;
+}
+
+.perfil-gold .img-capa-viewer {
+    border: 2px solid var(--dourado);
+    border-radius: 20px;
+}
+
+
+
+.badge-presenca {
+    display: block;
+    width: fit-content;
+    margin: 25px 40px 0 auto;
+    background: linear-gradient(45deg, var(--dourado), #ffee00e0);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
+    position: relative;
+    z-index: 10;
+}
+
+
+/* ============================================================
+   PADRONIZAÇÃO DEFINITIVA DO LOGIN (FENDA UNIFEV)
+   ============================================================ */
+
+/* 1. O Container Principal (Onde ficam as fotos e os campos) */
+form[action="confirma-login.php"] .container {
+    background: rgba(0, 0, 0, 0.4) !important;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-radius: 15px !important;
+    padding: 25px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    margin-top: 20px !important;
+}
+
+/* 2. Os Labels (E-mail e Senha - Texto em cima) */
+form[action="confirma-login.php"] label b {
+    color: #dd7c0e !important;
+    font-size: 0.95rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+}
+
+/* 3. Estilizando os Inputs (E-mail e Senha) */
+form[action="confirma-login.php"] .input-group {
+    border: none !important;
+    margin-bottom: 15px !important;
+    display: flex;
+    flex-direction: column;
+}
+
+form[action="confirma-login.php"] input[type="text"],
+form[action="confirma-login.php"] input[type="password"] {
+    width: 100% !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: white !important;
+    border: 2px solid rgba(255, 188, 0, 0.5) !important;
+    border-radius: 10px !important;
+    padding: 12px 15px !important;
+    font-size: 1rem !important;
+    margin-top: 5px !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+    transition: 0.3s ease;
+}
+
+/* 4. Efeito de Foco */
+form[action="confirma-login.php"] input:focus {
+    border-color: #ddc80e !important;
+    background: rgba(255, 255, 255, 0.027) !important;
+    box-shadow: 0 0 12px rgba(221, 200, 14, 0.3) !important;
+}
+
+/* 5. Checkbox e Links Inferiores */
+#terms {
+    accent-color: #22af05b7 !important;
+}
+
+/* Garante que o texto de "Cadastre-se" não suma no fundo escuro */
+form[action="confirma-login.php"] a {
+    color: #fc900c !important;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+
+/* A VINGANÇA CONTRA O IPHONE 4 E O CAPIROTO DA MARGEM ESQUERDA */
+
+/* 1. Reset de Centralização do Container Principal */
+.main-perfil-container {
+    display: block !important;
+    width: 97% !important;
+    max-width: 100% !important;
+    margin: 20px auto !important;
+    float: none !important;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 15px !important;
+    border-radius: 20px !important;
+    background-color: #0d0d0d5d !important;
+}
+
+.perfil-header-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
+.form-perfil-corpo {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    width: 100% !important;
+    margin: 10px auto !important;
+}
+
+/* 3. Garantir que cada campo ocupe 100% da largura disponível */
+.campo-grupo {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    grid-column: span 1 !important;/
+}
+
+/* 4. Estilo dos Inputs para não vazarem */
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 12px !important;
+}
+
+
+/* 6. Botões de Ação (Respeitando seu inline, mas garantindo o centro) */
+.perfil-controles {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-top: 20px !important;
+}
+
+
+
+/* 1. Base da Lista */
+.lista-mencoes-flutuante {
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 9999999 !important;
+    position: absolute;
+    display: none;
+    padding: 5px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    max-height: 150px; /* Limita a altura */
+    overflow-y: auto;  /* Habilita o scroll se passar disso */
+}
+
+/* 2. Estilo dos Itens (Padrão) */
+.lista-mencoes-flutuante div {
+    padding: 8px;
+    color: #333; /* Texto escuro no fundo branco */
+    cursor: pointer;
+}
+
+.lista-mencoes-flutuante div:hover {
+    background: #f0f0f0; /* Cinza claro no hover padrão */
+    color: #000;
+}
+
+/* 3. Modo Dark (Modal) */
+.lista-mencoes-flutuante.modal-theme {
+    background: #2a2a2a;
+    border: 1px solid var(--dourado);
+}
+
+.lista-mencoes-flutuante.modal-theme div {
+    color: #fff; /* Texto branco no fundo escuro */
+}
+
+.lista-mencoes-flutuante.modal-theme div:hover {
+    background: var(--dourado);
+    color: #000;
+}

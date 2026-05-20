@@ -1,0 +1,1040 @@
+/* --- ESTILIZAÇÃO DOS NOVOS FILTROS --- */
+
+.filtros-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+
+}
+
+.filtro-btn {
+    text-decoration: none;
+    font-size: clamp (13px, 5vw, 18px);
+    font-weight: 800;
+    padding: clamp(6px, 8px, 12px) 12px;
+    max-width: fit-content;
+    border-radius: 20px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+    text-transform: uppercase;
+
+}
+
+.filtro-btn.ativo,
+.filtro-btn:hover {
+    background: var(--dourado);
+    color: #000;
+    border-color: var(--dourado);
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(255, 188, 0, 0.2);
+}
+
+.filtros-perdidos {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0;
+
+}
+
+/*  O CONTAINER  */
+
+.container-feed>div {
+    /* Alvo nos cards gerados pelo motor-feed */
+    width: 100% !important;
+    box-sizing: border-box;
+}
+
+.main-fenda-total {
+    max-width: 100% !important;
+    padding: 0 !important;
+    /* Zera o padding que estava empurrando o feed */
+    margin: 20px auto !important;
+}
+
+.main-fenda-total article {
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+}
+
+.container-feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    align-items: flex-start !important;
+    /* Mantém cada card no seu tamanho real */
+    gap: 10px !important;
+    max-width: 3000px;
+    /* Limita a largura total do feed no PC */
+    margin: 30px auto !important;
+    padding: 12px;
+    column-count: auto !important;
+
+}
+
+/* O CARD -nvai respeitar o espaço */
+.container-feed article {
+    display: flex !important;
+    flex-direction: column;
+    width: 100% !important;
+    max-width: 500px !important;
+    /* Deixa o Grid controlar a largura */
+    margin: 0 !important;
+}
+
+
+/* --- SISTEMA DE EXPANSÃO (ESTÁVEL PARA O TRABALHO) --- */
+.post-content {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    max-height: 5rem;
+    line-height: 1.5;
+    word-break: break-word;
+    /* Evita que post enormes explodam o layout */
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    color: #fff;
+    transition: max-height 0.4s ease-in-out;
+    margin: 20px 0;
+    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.3rem);
+}
+
+
+.post-content.expandido {
+    max-height: 2000px;
+    /*para a transição funcionar */
+    overflow: visible;
+    /* Mostra tudo */
+    margin-bottom: 10px;
+    /* Dá um respiro no final do texto */
+}
+
+
+/* Quando tem a classe 'tem-mais', o ponteiro do computador vira mãozinha */
+.post-content.tem-mais {
+    cursor: pointer;
+}
+
+/* O 'Ler Mais' aparece apenas se não estiver expandido */
+.post-content.tem-mais:not(.expandido)::after {
+    content: '... ler mais';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to left, rgba(10, 10, 10, 1) 70%, transparent);
+    padding-left: 30px;
+    color: var(--dourado);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.post-content.tem-mais:not(.expandido) {
+    position: relative;
+
+}
+
+.spotted-card {
+    background: rgba(10, 10, 10, 0.247);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    padding: 12px !important;
+    break-inside: avoid;
+    /* Impede que o card quebre no meio entre colunas */
+    margin-bottom: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex !important;
+    overflow: visible !important;
+    /* Deixa o card crescer com o texto */
+    flex-direction: column;
+    width: 100%;
+    max-width: 700px !important;
+    /* Limita a largura máxima do card */
+    height: auto !important;
+
+}
+
+/* ==========================================================================
+   BLINDAGEM DO HOVER - FIM DA TREMEDEIRA SUPREMA
+   O hover SÓ vai existir se a página NÃO estiver no Modo Swipe/App!
+   ========================================================================== */
+
+.allow-hover.spotted-card:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.096);
+    border-color: rgba(255, 255, 255, 0.3);
+    transition: 0.3s ease;
+    transform: translateY(8px);
+}
+
+@supports (backdrop-filter: blur(4px)) {
+    .allow-hover.spotted-card:hover {
+        backdrop-filter: blur(4px);
+        background: rgba(10, 10, 10, 0.089);
+        transform: translateY(8px)
+        /* Um pouco mais escuro para o texto ler melhor no blur */
+    }
+}
+
+
+article.spotted-card {
+    display: block !important;
+    width: 100% !important;
+    /* Ele vai ocupar o espaço da coluna do grid */
+    max-width: 500px ;
+    flex-shrink: 0 !important;
+    position: relative ;
+    margin: 20px auto !important;
+    top: auto !important;
+    left: auto !important;
+}
+
+
+/* Ajuste no Carregar Mais Resultados */
+.container-load-more {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 25px 0;
+}
+
+#btn-load-more {
+    transition: transform 0.2s ease, background 0.3s ease !important;
+}
+
+.btn-fenda-padrao {
+    padding: 12px 30px;
+    background: var(--dourado);
+    color: #000;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+
+/* Cores das Categorias */
+.spotted-card.ranco {
+    border-left: 5px solid #ce0f0f !important;
+    box-shadow: -5px 0 15px rgba(206, 15, 15, 0.233);
+}
+
+.spotted-card.comunidade {
+    border-left: 5px solid #ffffffbe !important;
+    box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
+}
+
+.spotted-card.acaba-pelo-amor-de-deus {
+    border-left: 5px solid #f78605 !important;
+    box-shadow: -5px 0 15px rgba(223, 125, 14, 0.342);
+}
+
+.spotted-card.perdidos {
+    border-left: 5px solid #ece80ffa !important;
+    box-shadow: -5px 0 15px rgba(206, 203, 15, 0.253);
+}
+
+
+/*  ELOGIOS - Correio Elegante */
+.spotted-card.elogio {
+    border-left: 5px solid #e05586 !important;
+    background: linear-gradient(145deg, rgba(228, 83, 134, 0.514), rgba(10, 10, 10, 0.247)) !important;
+    position: relative;
+}
+
+/*  ESPORTES  */
+.spotted-card.esportes {
+    border-left: 5px solid #0fc44bd0 !important;
+    background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.082)) !important;
+    position: relative;
+}
+
+
+/*  GAMES - Vibe Neon */
+.spotted-card.games {
+    border-left: 5px solid #01e6e6 !important;
+    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.137)) !important;
+}
+
+
+/* CARONAS */
+.spotted-card.caronas {
+    border-left: 5px solid #263e4dee !important;
+    background: linear-gradient(145deg, rgba(38, 62, 77, 0.3), rgba(10, 10, 10, 0.664)) !important;
+}
+
+
+/*  ESTUDOS */
+.spotted-card.academico {
+    border-left: 5px solid #7734969c !important;
+    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(0, 0, 0, 0.363)) !important;
+}
+
+
+
+/* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
+.spotted-card.desapego {
+    border-left: 5px solid #00bfff !important;
+    background: linear-gradient(145deg, rgba(0, 191, 255, 0.247), rgba(10, 10, 10, 0.3)) !important;
+    position: relative;
+}
+
+
+/* Ícones no canto do Card */
+.spotted-card .user-info-post::after {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 10px;
+    font-size: clamp(18px, 1.5vw, 24px) !important;
+    opacity: 0.6;
+    position: absolute;
+    padding: 5px;
+    display: flex;
+}
+
+/* Ícones específicos por categoria */
+
+.spotted-card.comunidade .user-info-post::after {
+    content: '\f0c0';
+    color: #ffffffb6;
+}
+
+.spotted-card.ranco .user-info-post::after {
+    content: "\f071";
+    color: #da3232;
+}
+
+.spotted-card.elogio .user-info-post::after {
+    content: "\f004";
+    color: #ee2b6fd7;
+}
+
+.spotted-card.games .user-info-post::after {
+    content: "\f11b";
+    color: #0daac5;
+}
+
+.spotted-card.academico .user-info-post::after {
+    content: "\f518";
+    color: #b822f3b7;
+}
+
+.spotted-card.caronas .user-info-post::after {
+    content: "\f1b9";
+    color: #cccccca8;
+}
+
+.spotted-card.perdidos .user-info-post::after {
+    content: "\f002";
+    color: #f3ef07ee;
+}
+
+.spotted-card.esportes .user-info-post::after {
+    content: "\f45f";
+    color: #0db344;
+}
+
+.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after {
+    content: "\f253";
+    color: #f78605;
+}
+
+.spotted-card.desapego .user-info-post::after {
+    content: "\f02b";
+    color: #00bfff;
+}
+
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 8px 0;
+}
+
+.card-body {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+    letter-spacing: 1px;
+    font-size: 16px;
+    margin-bottom: auto!important;
+}
+
+
+
+
+.spotted-card:first-child {
+    margin-top: 40px;
+}
+
+
+
+/* BOTÃO FILTRO PERDIDOS */
+
+.btn-filtro {
+    padding: 7px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    height: auto;
+    width: 95% !important;
+    max-width: fit-content;
+    margin-top: 15px;
+
+}
+
+.btn-filtro:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-filtro.ativo {
+    background: var(--dourado);
+    color: #000;
+    border-color: var(--dourado);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    justify-content: center;
+    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
+    padding: clamp(8px, 0.5vw + 2px, 14px) 16px;
+    align-content: center;
+}
+
+/* APROVEITANDO AS BADGES */
+
+.badge-perdido {
+    background-color: #ff4b2b !important;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-right: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: clamp(120px, 5vw, 160px) !important;
+}
+
+.badge-achado {
+    background-color: #10e268a8 !important;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-right: 10px;
+    max-width: clamp(120px, 5vw, 180px) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+}
+
+.badge-perdido,
+.badge-achado {
+    background: rgba(255, 255, 255, 0.192);
+    border-left-style: solid !important;
+}
+
+.perdidos-item .link-fofoca {
+    display: block !important;
+    width: 100%;
+    text-align: center;
+    background: var(--dourado) !important;
+    color: #000 !important;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.link-fofoca {
+    color: #ffc400c2 !important;
+    text-decoration: none;
+    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
+    font-weight: bold;
+    display: flex-end;
+    transition: 0.3s;
+}
+
+.link-fofoca:hover {
+    color: #fff !important;
+    transform: translateX(5px);
+    /* Efeito de setinha andando */
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+}
+
+span.data-post {
+    font-size: 14px;
+    font-weight: bold;
+    order: 2;
+}
+
+/* --- COMPONENTES DO CARD/PERFIL --- */
+
+
+span.category-tag {
+    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.2rem);
+    color: #ff9f0f;
+    font-weight: bold;
+    flex-shrink: 0;
+    flex: 1;
+    min-width: 0;
+    align-items: center;
+    min-height: 30px;
+    margin-right: 6px;
+    display: inline-block !important;
+    border: none;
+    max-width: clamp(150, 5vw, 300);
+    /* Limita a largura da tag */
+    white-space: nowrap !important;
+    /* Impede que ela quebre em duas linhas */
+    overflow: hidden !important;
+    /* Esconde o que sobrar */
+    text-overflow: ellipsis !important;
+    hyphens: auto;
+    /* Coloca os "..." se o nome for gigante */
+    vertical-align: middle;
+    overflow: hidden;
+    opacity: 0.7;
+
+}
+
+.fa-ellipsis-v {
+    font-size: clamp( 18px, 1.5vw, 22px );
+    font-weight: bold;
+    gap: 5px;
+    order: 3;
+}
+
+.post-time {
+    font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.2rem);
+    white-space: nowrap;
+    flex-shrink: 0;
+    opacity: 0.7;
+    margin-right: 10px;
+    order: 2;
+    padding: 8px;
+    font-weight: bold;
+
+}
+
+.status-resolvido {
+    border-left: 3px solid #29d16f !important;
+    background: rgba(46, 204, 113, 0.05);
+}
+
+
+/* --- CONTAINER PRINCIPAL --- */
+.container-pilulas-reacoes {
+    display: flex;
+    gap: 8px;
+    padding: 12px 0;
+}
+
+/* --- POPUP DE REAÇÕES (O MENU) --- */
+/* o popup para fica sempre no DOM, apenas invisível */
+.reacoes-popup {
+    display: none; /* Agora é flex sempre */
+    position: absolute;
+    left: 50%;
+    bottom: 40px;
+    background: #252542;
+    padding: 8px 12px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    /* A MÁGICA: Escondemos assim */
+    opacity: 0;
+    transform: translateX(-50%) scale(1);
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+
+
+/*  Aumente a ponte para o menu não sumir */
+.reacoes-popup::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 40px; /* Dobramos a altura da ponte para dar mais margem de erro */
+    bottom: -30px;
+    left: 0;
+}
+
+/* --- ITEMS DO POPUP (EMOJIS) --- */
+.reacoes-popup span {
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: transform 0.2s ease-out;
+    display: inline-block;
+}
+
+/* --- PÍLULAS DE REAÇÃO (NO FEED) --- */
+.reacao-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: clamp(0.85rem, 0.2vw + 0.4rem, 1.1rem);
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    color: #eee;
+    cursor: pointer;
+    margin: 0 2px;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+/* Quando já votou */
+.reacao-item.voted {
+    background: rgba(255, 188, 0, 0.2) !important;
+    border: 1px solid #ffbb00d5 ;
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
+    font-weight: bold;
+}
+
+
+@media (hover: none) {
+    .reacoes-popup span:active {
+        transform: scale(1.4);
+    }
+}
+
+/* --- AJUSTE ESPECÍFICO DO ANÔNIMO --- */
+/* Se a popup estiver dentro de um card anônimo, forçamos o tamanho */
+.spotted-card-anonimo .reacoes-popup span {
+    font-size: 1.5rem !important; 
+}
+
+
+
+.footer-links {
+    display: flex;
+    gap: 10px !important;
+    padding: 5px;
+    justify-content: space-between;
+    align-items: center;
+    bottom: 0;
+}
+
+/* Ajuste fino footer-links */
+
+.footer-links .btn-trigger-reacoes,
+.footer-links .btn-comentar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    margin-top: auto;
+
+}
+
+/*  TEXTOS (NOME E USERNAME) */
+
+.perfil-info-publica {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    order: 2;
+    margin-top: 80px !important;
+    /* Aumente esse valor se precisar de mais gap */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0 20px !important;
+}
+
+.nome-publico {
+    color: #ff9100b0;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: clamp(1.5rem, 0.9rem + 0.5vw, 2.2rem);
+    text-transform: uppercase;
+    margin: 20px 0 20px 0 !important;
+    /* Margem apenas embaixo para afastar do username/bio */
+    justify-content: center !important;
+}
+
+
+/* Isso garante que os controles do viewer (ver-perfil.php) se centralizem */
+.info-usuario-section .perfil-controles {
+    display: flex !important;
+    justify-content: center !important;
+    /* Centraliza horizontalmente */
+    width: 100% !important;
+    margin-top: 20px !important;
+}
+
+/* Garante que o botão em si tenha um tamanho legal */
+.info-usuario-section .btn-editar-atalho {
+    width: auto !important;
+    /* Não deixa ele ocupar a tela toda */
+    padding: 10px 20px !important;
+    /* Respiro interno */
+}
+
+
+
+/* INSÍGNIA DA ATLÉTICA  */
+.insignia-atletica-bottom {
+    /* Mínimo de 35px para não sumir, escala com 8% da tela, e trava em 70px no máximo */
+    width: clamp(45px, 5vw, 90px) !important;
+    height: clamp(45px, 5vw, 90px) !important;
+    object-fit: contain !important;
+    transition: all 0.3s ease-in-out !important;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+    cursor: pointer;
+    left: auto!important;
+    flex-shrink: 0;
+    /* Impede que a imagem seja espremida se o nome for grande */
+}
+
+
+.insignia-atletica-bottom:hover {
+    transform: scale(1.2) rotate(5deg) !important;
+    filter: drop-shadow(0 0 12px var(--dourado)) !important;
+}
+
+.nome-linha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+}
+
+
+/* A caixa que envolve a logo no classificados */
+.atletica-item {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 140px !important;
+    height: 140px !important;
+    margin: 0 auto !important;
+    overflow: visible !important;
+    /* Mude para visible para o brilho não cortar */
+    background: none !important;
+    border: none !important;
+}
+
+.atletica-item:hover .insignia-atletica-link {
+    transform: scale(1.1) !important;
+    filter: brightness(1.2) drop-shadow(0 0 15px var(--dourado)) !important;
+}
+
+/* A logo */
+.insignia-atletica-link {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+
+
+/*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
+
+.avatar-p {
+    border: 1px solid var(--dourado);
+    gap: 15px;
+    width: clamp(45px, 5vw, 55px) !important;
+    height: clamp(45px, 5vw, 55px) !important;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.user-info-post {
+    display: flex;
+    font-size: 14px;
+    margin-bottom: auto;
+    align-items: flex-start !important;
+}
+
+.anonimo,
+.user-mention {
+    color: var(--dourado);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-self: center;
+    max-width: clamp(90px, 15vw, 130px);
+    margin-left: 8px;
+    width: auto;
+
+}
+
+/* Definição base dos botões */
+.btn-reagir,
+.btn-fofocar {
+    color: #ccc;
+    text-decoration: none;
+    font-size: clamp(12px, 10vw, 16px);
+    font-weight: bold;
+    cursor: pointer; /* MUDANÇA: Agora o navegador mostra a mãozinha */
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    padding: 4px 10px;
+    background: transparent; /* Garante que não tenha cor de fundo estranha */
+    border: none; 
+    -webkit-user-select: none;
+    user-select: none; /* Evita selecionar o texto sem querer */         
+}
+
+.btn-reagir:hover,
+.btn-fofocar:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+    color: #cc900e; 
+}
+
+
+/*  AJUSTES DO PERFIL (HABITANTE)*/
+
+
+
+
+
+
+
+/* Badge da Coroa (Presença) */
+.badge-presenca-bottom {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--dourado);
+    color: #000;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 2px solid #000;
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.6);
+    z-index: 15;
+}
+
+
+
+
+.perfil-gold .capa-img {
+    border: 2px solid var(--dourado);
+    border-radius: 12px;
+}
+
+
+/* PÁGINA DE COMUNIDADES (ATLÉTICAS) */
+
+.comunidade-topo {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 0 0 30px 30px;
+    border-bottom: 1px solid rgba(255, 188, 0, 0.2);
+    margin-bottom: 30px;
+}
+
+.img-comunidade-grande {
+    width: 250px;
+    height: 250px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(255, 188, 0, 0.3));
+}
+
+.grid-habitantes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+    padding: 15px;
+    max-width: auto;
+    margin: 0 auto;
+}
+
+.card-habitante {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: 0.3s;
+    text-decoration: none;
+    max-width: 300px;
+}
+
+.card-habitante:hover {
+    border-color: var(--dourado);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.avatar-lista {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #444;
+}
+
+.info-h h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.info-h p {
+    margin: 10px 0 0;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+
+
+
+.bio-box {
+    width: 100% !important;
+    max-width: auto;
+    margin: 20px 0 !important;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: block !important;
+    /* Garante que não vire flex e quebre */
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.bio-texto {
+    /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
+    font-size: clamp(0.95rem, 0.2vw + 0.9rem, 1.6rem) !important;
+    width: 100% !important;
+    margin: 20px 0 !important;
+    text-align: center;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
+    hyphens: auto;
+    line-height: 1.4;
+    /* Melhora a leitura quando a fonte cresce */
+    color: rgba(255, 255, 255, 0.8);
+    /* Sugestão para manter o estilo Fenda */
+}
+
+
+/* STATS (Seguidores) */
+.stats-perfil {
+    justify-content: center !important;
+    margin: 15px 0 !important;
+    gap: 20px !important;
+    font-weight: 800;
+}
+
+.stats-perfil span {
+    font-size: clamp(1.2rem, 0.2vw + 0.8rem, 1.6rem) !important;
+    letter-spacing: 1px;
+}
+
+.form-busca-fenda {
+    max-width: 95% !important;
+    gap: 5px !important;
+}
+
+.form-busca-fenda input[type="text"] {
+    padding: 12px 15px !important;
+    font-size: 1rem !important;
+}
+
+.form-busca-fenda button {
+    padding: 0 15px !important;
+    font-size: 1rem !important;
+}
+
+
+/* --- AJUSTE DA CAPA SEM ZOOM --- */
+
+.capa-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    display: block !important;
+}
+
+
+/* --- SEÇÃO DE INFORMAÇÕES E BOTÃO --- */
+.info-usuario-section {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding: 0 20px 0 20px;
+}
+
+.info-usuario-section h1.nome-publico {
+    margin: 0;
+    display: inline-block;
+}
+
+.perfil-controles {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
