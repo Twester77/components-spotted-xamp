@@ -18,7 +18,7 @@ if ($is_localhost) {
     $usuario = "root";
     $senha   = ""; 
     $banco   = "fenda_local";
-    $porta   = 3307; // Conforme confirmado no seu phpMyAdmin
+    $porta   = 3306; // Conforme confirmado no seu phpMyAdmin
 
     $conn = @mysqli_connect("127.0.0.1", $usuario, $senha, $banco, $porta);
 

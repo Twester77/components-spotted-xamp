@@ -37,9 +37,9 @@
         <source src="sons/oceano.mp3" type="audio/mpeg">
     </audio>
 
-<script src="js/fenda-main.js?v=<?php echo time(); ?>"></script>
+<script src="js/fenda-main.js"></script>
 
-<script src="js/fenda-swipe.js?v=<?php echo time(); ?>"></script>
+<script src="js/fenda-swipe.js"></script>
 
 </body>
 </html>
