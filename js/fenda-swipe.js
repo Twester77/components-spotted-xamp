@@ -1,9 +1,9 @@
 /* ============================================================
-   FENDA SWIPE ENGINE (V7 Final) – Isolado, Mutex, Zero-Lag Reset
+   FENDA SWIPE ENGINE (V7.3) – Observer Silenciável, sem Race Condition
    ============================================================ */
 (function () {
     'use strict';
-    console.log("DEBUG: Fenda Swipe Engine carregou!");
+    console.log("DEBUG: Fenda Swipe Engine carregou (V7.3)");
 
     // ========== MUTEX (Estado do Sistema) ==========
     let swipeLock = false;
@@ -16,6 +16,32 @@
     let longPressTimer = null;
     let moveDetected = false;
 
+    // ========== Observer silenciável ==========
+    let domObserver = null;
+    let observerActive = true;
+
+    // Função para silenciar o observer temporariamente
+    function silenceObserver(ms = 200) {
+        if (domObserver && observerActive) {
+            domObserver.disconnect();
+            observerActive = false;
+            console.log("DEBUG: Observer desconectado temporariamente.");
+            setTimeout(() => {
+                if (domObserver && !observerActive) {
+                    // Reconecta no mesmo container
+                    const container = document.querySelector('.container-feed');
+                    if (container) {
+                        domObserver.observe(container, { childList: true, subtree: false });
+                        observerActive = true;
+                        console.log("DEBUG: Observer reconectado.");
+                    } else {
+                        console.warn("DEBUG: Container não encontrado para reconectar observer.");
+                    }
+                }
+            }, ms);
+        }
+    }
+
     // ========== Utilitários ==========
     const easeInOutOpacity = (dist, max = 150) => {
         let t = Math.min(Math.abs(dist) / max, 1);
@@ -26,12 +52,16 @@
         document.querySelectorAll('.feedback-swipe').forEach(el => el.style.opacity = '0');
     };
 
-    // ========== Menu de Ações (Long Press) ==========
+    // ========== Menu de Ações (Long Press) – com silenciamento do observer ==========
     function showActionMenu(card) {
+        // 🛡️ SILENCIA O OBSERVER antes de qualquer modificação no DOM
+        silenceObserver(300);
+
         if (menuAtivo) {
             menuAtivo.remove();
             menuAtivo = null;
         }
+
         const postId = card.dataset.id;
         const isOwner = card.classList.contains('post-admin-gold');
 
@@ -92,6 +122,7 @@
         }, 10);
 
         swipeLock = true;
+        console.log("DEBUG: Menu injetado e swipeLock ativado. Observer silenciado por 300ms.");
     }
 
     function destroyMenuAndUnlock() {
@@ -108,6 +139,7 @@
                 activeCard.classList.remove('dragging');
             }
         }
+        console.log("DEBUG: Menu destruído, swipeLock liberado.");
     }
 
     // ========== Animação de saída do card ==========
@@ -129,7 +161,7 @@
         }, 300);
     }
 
-    // ========== Física do Movimento ==========
+    // ========== Física do Movimento (sem alterações) ==========
     function startDrag(card, e) {
         if (swipeLock) return;
         if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') ||
@@ -143,6 +175,9 @@
 
         activeCard = card;
         isDragging = true;
+        activeCard.classList.remove('com-transicao');
+
+        activeCard.style.transition = 'none'; //  pode até remover esta linha depois, pois a classe resolve
 
         activeCard.style.transition = 'none';
         activeCard.style.transform = 'translate(-50%, -50%)';
@@ -180,15 +215,14 @@
         const dx = clientX - startX;
         const dy = clientY - startY;
 
-        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-            if (longPressTimer) {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }
-            moveDetected = true;
-        }
+        const TOLERANCIA = 20;
+        if (Math.abs(dx) < TOLERANCIA && Math.abs(dy) < TOLERANCIA) return;
 
-        if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+        moveDetected = true;
 
         if (e.cancelable) e.preventDefault();
         e.stopPropagation();
@@ -248,7 +282,7 @@
         resetFeedback();
 
         const threshold = 120;
-        card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s';
+        card.classList.add('com-transicao');
 
         if (dx < -threshold) {
             console.log(`[SWIPE] Card ${idPost} → ESQUERDA`);
@@ -270,14 +304,12 @@
         startX = startY = currentX = currentY = 0;
     }
 
-    // ========== Inicialização no card do topo (CORRIGIDA) ==========
+    // ========== Inicialização no card do topo ==========
     function setupSwipeOnTopCard() {
         console.log("DEBUG: Tentando configurar o swipe...");
-
-        // Busca o container – USO ÚNICO, sem duplicação
-        const container = document.querySelector('.container-feed'); // Busca apenas pela principal
+        const container = document.querySelector('.container-feed');
         if (!container) {
-            console.warn("DEBUG: Container .container-feed.feed-empilhado NÃO encontrado!");
+            console.warn("DEBUG: Container .container-feed NÃO encontrado!");
             return;
         }
         console.log("DEBUG: Container encontrado!");
@@ -289,18 +321,15 @@
         }
         console.log("DEBUG: Card encontrado! Iniciando eventos.");
 
-        // Impede setup duplicado
         if (topCard._swipeActive) {
             console.log("DEBUG: Swipe já ativo neste card. Abortando.");
             return;
         }
 
-        // Limpeza anterior, se existir
         if (typeof topCard._swipeCleanup === 'function') {
             topCard._swipeCleanup();
         }
 
-        // Aplica estilos essenciais
         try {
             topCard.style.touchAction = 'none';
             topCard.style.userSelect = 'none';
@@ -334,17 +363,36 @@
         console.log("DEBUG: Swipe configurado com sucesso no card", topCard.dataset.id);
     }
 
+    // ========== Observer silenciável (criação) ==========
     function observeNewCards() {
         const container = document.querySelector('.container-feed');
-        if (!container) return;
-        const observer = new MutationObserver(() => {
-            console.log("DEBUG: Mutação detectada no container. Reiniciando swipe...");
+        if (!container) {
+            console.warn("DEBUG: Container não encontrado para observer.");
+            return null;
+        }
+        if (domObserver) return domObserver;
+
+        domObserver = new MutationObserver((mutations) => {
+            // Só processa se o observer estiver ativo E o swipe não estiver bloqueado
+            if (!observerActive) {
+                console.log("DEBUG: Observer silenciado, ignorando mutação.");
+                return;
+            }
+            if (isDragging || menuAtivo || swipeLock) {
+                console.log(`DEBUG: Mutação ignorada (isDragging=${isDragging}, menuAtivo=${!!menuAtivo}, swipeLock=${swipeLock})`);
+                return;
+            }
+            console.log("DEBUG: Mutação detectada. Reiniciando swipe...");
             setupSwipeOnTopCard();
         });
-        observer.observe(container, { childList: true, subtree: false });
-        return observer;
+
+        domObserver.observe(container, { childList: true, subtree: false });
+        observerActive = true;
+        console.log("DEBUG: Observer iniciado e ativo.");
+        return domObserver;
     }
 
+    // ========== API PÚBLICA ==========
     window.iniciarFisicaSwipe = function () {
         console.log("DEBUG: window.iniciarFisicaSwipe chamado.");
         setupSwipeOnTopCard();
@@ -364,7 +412,7 @@
         resetFeedback();
     };
 
-    // Auto‑inicialização (apenas se o modo swipe estiver ativo)
+    // ========== Auto-inicialização condicional ==========
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
             console.log("DEBUG: DOMContentLoaded – verificando modo swipe.");

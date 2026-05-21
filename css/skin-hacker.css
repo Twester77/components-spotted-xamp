@@ -58,7 +58,6 @@ body.hacker-mode *::after {
 
 /* Scanlines horizontais */
 body.hacker-mode::before {
-    content: " " !important;
     display: block !important;
     position: fixed !important;
     top: 0 !important;
@@ -74,7 +73,6 @@ body.hacker-mode::before {
 
 /* Flicker / brilho de tela CRT */
 body.hacker-mode::after {
-    content: " " !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -477,7 +475,7 @@ body.hacker-mode .comentario-autor {
 
 /* 1. VIBE DARK (Eigengrau) - Terminal clássico pesado */
 body.hacker-mode .comentario-item.vibe-dark {
-    background: #0a0a0a !important;
+    background: #0a0a0ace !important;
     border-left: 3px solid #00ff00 !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
@@ -1025,6 +1023,7 @@ body.hacker-mode .hacker-booting {
     body.hacker-mode::before,
     body.hacker-mode::after,
     body.hacker-mode .post-content,
+    .main-perfil-container-publico.vibe-neon,
     body.hacker-mode .comentario-texto,
     body.hacker-mode .hacker-booting {
         animation: none !important;

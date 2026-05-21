@@ -65,13 +65,13 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     <div class="perfil-header-container">
         <div class="capa-container">
             <?php if (!empty($dados['capa'])): ?>
-                <img src="uploads/<?php echo htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8'); ?>" class="capa-img">
+                <img src="uploads/<?php echo htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8'); ?>" class="capa-img" alt="Sua capa">
             <?php else: ?>
                 <div class="capa-default" style="background: linear-gradient(135deg, <?php echo $cor_user; ?>88 0%, #000 100%); width: 100%; height: 100%;"></div>
             <?php endif; ?>
 
             <div class="avatar-posicionador">
-                <img src="<?php echo $foto_user; ?>" class="avatar-main" alt="Avatar">
+                <img src="<?php echo $foto_user; ?>" class="avatar-main" alt="Sua foto de perfil">
                 <?php if ($is_presenca): ?>
                     <div class="badge-presenca-bottom"><i class="fa-solid fa-crown"></i></div>
                 <?php endif; ?>
@@ -83,7 +83,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 <h1 class="nome-publico"><?php echo htmlspecialchars($dados['nome']); ?></h1>
                 <?php if (!empty($dados['atletica_id'])): ?>
                     <a href="atleticas.php?id=<?php echo urlencode($dados['atletica_id']); ?>">
-                        <img src="badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.png" class="insignia-atletica-bottom">
+                        <img src="badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.png" class="insignia-atletica-bottom" alt="Seu bottom de atlética - link para comunidade">
                     </a>
                 <?php endif; ?>
             </div>

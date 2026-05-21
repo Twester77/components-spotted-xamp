@@ -428,3 +428,4 @@ window.addEventListener('load', () => {
         }, 2500);
     } else if (bootScreen) bootScreen.style.display = 'none';
 });
+

@@ -39,7 +39,7 @@ include 'includes/navbar.php';
                 ?>
                     <a href="ver-perfil.php?user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
                         <div class="user-card">
-                            <img src="<?php echo $foto; ?>" class="avatar-busca">
+                            <img src="<?php echo $foto; ?>" class="avatar-busca" alt="Avatar do Usuario">
                             <div>
                                 <strong class="nome-user"><?php echo $user['nome']; ?></strong>
                                 <span class="username-user">@<?php echo $user['username']; ?></span>

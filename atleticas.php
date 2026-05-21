@@ -23,7 +23,7 @@ $total_habitantes = mysqli_num_rows($res);
 
 <main>
     <section class="comunidade-topo">
-        <img src="badges/<?php echo $atletica_id; ?>.png" class="img-comunidade-grande" onerror="this.src='badges/default.png'">
+        <img src="badges/<?php echo $atletica_id; ?>.png" class="img-comunidade-grande" alt="Imagem da Atlética da Comunidade"  onerror="this.src='badges/default.png'">
         <h1 style="color: var(--dourado); text-transform: uppercase;">
             Comunidade <?php echo str_replace('-', ' ', $atletica_id); ?>
         </h1>
@@ -35,7 +35,7 @@ $total_habitantes = mysqli_num_rows($res);
             <?php while ($h = mysqli_fetch_assoc($res)): 
                 $foto_h = !empty($h['foto']) ? "uploads/".$h['foto'] : "imagensfoto/default.jpg";
             ?>
-                <a href="ver-perfil.php?user=<?php echo $h['username']; ?>" class="card-habitante">
+                <a href="ver-perfil.php?user=<?php echo $h['username']; ?>" class="card-habitante" alt="Card do usuário - link para perfil público">
                     <img src="<?php echo $foto_h; ?>" class="avatar-lista">
                     <div class="info-h">
                         <h3><?php echo htmlspecialchars($h['nome']); ?></h3>

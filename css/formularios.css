@@ -37,7 +37,7 @@ form {
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
     max-width: clamp(300px, 95%, 650px) !important;
-    max-height: clamp(300px, 80vh, 500px) !important;
+    max-height: clamp(250px, 80vh, 500px) !important;
     /* Padding dinâmico: menor em telas pequenas */
     padding: clamp(10px, 5vw, 25px) !important;
     border-radius: 15px;
@@ -54,6 +54,23 @@ form {
     flex-direction: column;
     margin: 0 auto;
 }
+
+.btn-fechar-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.btn-fechar-modal:hover {
+    color: var(--dourado); }
+    
 
 /* 2. Limpando o card de postagem para ele "fundir" com o modal */
 .modal-body-ajuste .main-novo-post {
@@ -207,6 +224,7 @@ form[action="confirma-login.php"] {
     -ms-hyphens: auto;
     /*IE/Edge */
     hyphens: auto;
+     flex-grow: 1;
 
 }
 

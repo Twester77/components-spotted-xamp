@@ -68,7 +68,7 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
-    gap: 10px !important;
+    gap: 15px !important;
     max-width: 3000px;
     /* Limita a largura total do feed no PC */
     margin: 30px auto !important;
@@ -141,11 +141,10 @@
 
 .spotted-card {
     background: rgba(10, 10, 10, 0.247);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px); 
+    backdrop-filter: blur(6px); 
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 12px;
-    transition: transform 0.3s ease;
     padding: 12px !important;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
@@ -157,11 +156,19 @@
     /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
-    max-width: 700px !important;
+    max-width: 600px !important;
     /* Limita a largura máxima do card */
+    min-height: 200px;
+    transform: none;
     height: auto !important;
+    touch-action: none; 
+    -webkit-user-select:none ;
+    user-select: none;
+    will-change: transform!important;
 
 }
+
+.com-transicao { transition: transform 0.3s ease; }
 
 /* ==========================================================================
    BLINDAGEM DO HOVER - FIM DA TREMEDEIRA SUPREMA
@@ -170,17 +177,15 @@
 
 .allow-hover.spotted-card:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.096);
+    background: rgba(255, 255, 255, 0.192);
     border-color: rgba(255, 255, 255, 0.3);
     transition: 0.3s ease;
-    transform: translateY(8px);
 }
 
-@supports (backdrop-filter: blur(4px)) {
+@supports (backdrop-filter: blur(3px)) {
     .allow-hover.spotted-card:hover {
-        backdrop-filter: blur(4px);
-        background: rgba(10, 10, 10, 0.089);
-        transform: translateY(8px)
+        backdrop-filter: blur(3px);
+        background: rgba(22, 22, 22, 0.185);
         /* Um pouco mais escuro para o texto ler melhor no blur */
     }
 }
@@ -227,7 +232,7 @@ article.spotted-card {
 /* Cores das Categorias */
 .spotted-card.ranco {
     border-left: 5px solid #ce0f0f !important;
-    box-shadow: -5px 0 15px rgba(206, 15, 15, 0.233);
+    box-shadow: -5px 0 15px rgba(104, 0, 0, 0.253);
 }
 
 .spotted-card.comunidade {
@@ -261,10 +266,10 @@ article.spotted-card {
 }
 
 
-/*  GAMES - Vibe Neon */
+/*  GAMES -  */
 .spotted-card.games {
     border-left: 5px solid #01e6e6 !important;
-    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.137)) !important;
+    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.267)) !important;
 }
 
 
@@ -277,8 +282,8 @@ article.spotted-card {
 
 /*  ESTUDOS */
 .spotted-card.academico {
-    border-left: 5px solid #7734969c !important;
-    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(0, 0, 0, 0.363)) !important;
+    border-left: 5px solid #873baa9c !important;
+    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(61, 6, 78, 0.281)) !important;
 }
 
 
@@ -313,7 +318,7 @@ article.spotted-card {
 
 .spotted-card.ranco .user-info-post::after {
     content: "\f071";
-    color: #da3232;
+    color: #ee4a22;
 }
 
 .spotted-card.elogio .user-info-post::after {
@@ -366,6 +371,10 @@ article.spotted-card {
     padding: 8px 0;
 }
 
+body.modo-swipe-ativo .user-mention, body.modo-swipe-ativo .anonimo { /* substitua pela classe real do link */
+    pointer-events: none!important;
+}
+
 .card-body {
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -377,12 +386,9 @@ article.spotted-card {
 }
 
 
-
-
 .spotted-card:first-child {
     margin-top: 40px;
 }
-
 
 
 /* BOTÃO FILTRO PERDIDOS */
@@ -414,7 +420,7 @@ article.spotted-card {
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     justify-content: center;
     font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
-    padding: clamp(8px, 0.5vw + 2px, 14px) 16px;
+    padding: clamp(8px, 0.5vw + 2px, 12px) 16px;
     align-content: center;
 }
 
@@ -464,44 +470,48 @@ article.spotted-card {
 }
 
 .perdidos-item .link-fofoca {
-    display: block !important;
     width: 100%;
+    display: block;
     text-align: center;
     background: var(--dourado) !important;
     color: #000 !important;
     padding: 12px;
     border-radius: 10px;
     text-decoration: none;
+    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
     font-weight: 800;
     text-transform: uppercase;
-}
-
-.link-fofoca {
-    color: #ffc400c2 !important;
-    text-decoration: none;
-    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
-    font-weight: bold;
-    display: flex-end;
-    transition: 0.3s;
-}
-
-.link-fofoca:hover {
-    color: #fff !important;
-    transform: translateX(5px);
-    /* Efeito de setinha andando */
+    transition: 0.3s ease-in-out;
+    bottom: auto;
+    margin-top: auto;
 }
 
 .card-footer {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 0;
+    padding-top: 10px;
+    margin-top: auto;
+}
+ 
+
+.link-fofoca:hover {
+    color: #fff !important;
+    transform: translateX(4px);
+    /* Efeito de setinha andando */
 }
 
 span.data-post {
     font-size: 14px;
     font-weight: bold;
     order: 2;
+}
+
+.category-tag small {
+  font-size: 14px;
+  color: #dfdfdf; 
+  margin-left: 8px; 
+  vertical-align: middle; 
 }
 
 /* --- COMPONENTES DO CARD/PERFIL --- */

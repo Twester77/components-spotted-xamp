@@ -6,7 +6,7 @@ include 'includes/navbar.php';
 
 <main class="main-container" style="padding: 20px; min-height: 80vh; display: flex; flex-direction: column; align-items: center;">
 
-    <section class="atleticas-section" style="text-align: center; margin-bottom: 50px;">
+    <section class="atleticas-section" style="text-align: center; margin-bottom: 40px;">
         <h2 style="color: var(--dourado); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 2px;">
             Atléticas Parceiras
         </h2>
@@ -14,114 +14,115 @@ include 'includes/navbar.php';
         <div class="atleticas-grid" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.usagro/" target="_blank" class="atletica-item">
-                    <img src="badges/agronomia.png" class="insignia-atletica-link" title="Siga a Atlética de Agronomia" >
+                <a href="https://www.instagram.com/atletica.usagro/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Agronomia no Instagram">
+                    <img src="badges/agronomia.png" class="insignia-atletica-link" title="Siga a Atlética de Agronomia" alt="Instagram da Atlética de Agronomia" >
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">AGRONOMIA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.arcana/" target="_blank" class="atletica-item">
-                    <img src="badges/arquitetura.png" class="insignia-atletica-link" title="Siga a Atlética de Arquitetura">
+                <a href="https://www.instagram.com/atletica.arcana/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Arquitetura no Instagram">
+                    <img src="badges/arquitetura.png" class="insignia-atletica-link" title="Siga a Atlética de Arquitetura" alt="Instagram da Atlética de Arquitetura">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">ARQ & URB</p>
             </div>
 
              <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.leptospirados/" target="_blank" class="atletica-item">
-                    <img src="badges/biomedicina.png" class="insignia-atletica-link" title="Siga a Atlética de Biomedicina" >
+                <a href="https://www.instagram.com/atletica.leptospirados/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Biomedicina no Instagram">
+                    <img src="badges/biomedicina.png" class="insignia-atletica-link" title="Siga a Atlética de Biomedicina" alt="Instagram da Atlética de Biomedicina">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">BIOMEDICINA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletipanda/" target="_blank" class="atletica-item">
-                    <img src="badges/contabeis.png" class="insignia-atletica-link" title="Siga a Atlética de Ciências Contábeis">
+                <a href="https://www.instagram.com/atletipanda/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Ciências Contábeis no Instagram">
+                    <img src="badges/contabeis.png" class="insignia-atletica-link" title="Siga a Atlética de Ciências Contábeis" alt="Instagram da Atlética de Ciências Contábeis"">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">C.CONTÁBEIS</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/soberana.direito/" target="_blank" class="atletica-item">
-                    <img src="badges/direito.png" class="insignia-atletica-link" title="Siga a Atlética de Direito">
+                <a href="https://www.instagram.com/soberana.direito/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Direito no Instagram">
+                    <img src="badges/direito.png" class="insignia-atletica-link" title="Siga a Atlética de Direito " alt="Instagram da Atlética de Direito">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">DIREITO</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.demolidores/" target="_blank" class="atletica-item">
-                    <img src="badges/ed-fisica.png" class="insignia-atletica-link" title="Siga a Atlética de Educação Física" >
+                <a href="https://www.instagram.com/atletica.demolidores/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Educação Física no Instagram">
+                    <img src="badges/ed-fisica.png" class="insignia-atletica-link" title="Siga a Atlética de Educação Física" alt="Instagram da Atlética de Ed.Física">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">ED.FÍSICA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atleticaenfermagemvotu/" target="_blank" class="atletica-item">
-                    <img src="badges/enfermagem.png" class="insignia-atletica-link" title="Siga a Atlética de Enfermagem" >
+                <a href="https://www.instagram.com/atleticaenfermagemvotu/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Enfermagem no Instagram">
+                    <img src="badges/enfermagem.png" class="insignia-atletica-link" title="Siga a Atlética de Enfermagem " alt="Instagram da Atlética de Agronomia" >
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">ENFERMAGEM</p>
             </div>
 
              <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.octabit/" target="_blank" class="atletica-item">
-                    <img src="badges/eng-comp.png" class="insignia-atletica-link" title="Siga a Atlética de Engenharia de Computação">
+                <a href="https://www.instagram.com/atletica.octabit/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Engenharia de Computação no Instagram">
+                    <img src="badges/eng-comp.png" class="insignia-atletica-link" title="Siga a Atlética de Engenharia de Computação" alt="Instagram da Atlética de Engenharia de Computação">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">ENG.COMPUTAÇÃO</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/narcotica_atletica.unifev/" target="_blank" class="atletica-item">
+                <a href="https://www.instagram.com/narcotica_atletica.unifev/" target="_blank" class="atletica-item" alt="Instagram da Atlética de Enfermagem" aria-label="Siga a Atlética de Farmácia no Instagram">
                     <img src="badges/farmacia.png" class="insignia-atletica-link" title="Siga a Atlética de Enfermagem">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">FARMÁCIA</p>
             </div>
 
              <div style="text-align: center;">
-                <a href="https://www.instagram.com/atleticafisiovotu/" target="_blank" class="atletica-item">
-                    <img src="badges/fisioterapia.png" class="insignia-atletica-link" title="Siga a Atlética de Fisioterapia">
+                <a href="https://www.instagram.com/atleticafisiovotu/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Fisioterapia no Instagram">
+                    <img src="badges/fisioterapia.png" class="insignia-atletica-link" title="Siga a Atlética de Fisioterapia" alt="Instagram da Atlética de Fisioterapia">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">FISIOTERAPIA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/medvotuaaamv/" target="_blank" class="atletica-item">
-                    <img src="badges/medicina.png" class="insignia-atletica-link" title="Siga a Atlética de Medicina">
+                <a href="https://www.instagram.com/medvotuaaamv/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Medicina no Instagram">
+                    <img src="badges/medicina.png" class="insignia-atletica-link" title="Siga a Atlética de Medicina" alt="Instagram da Atlética de Medicina">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">MEDICINA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atleticadevoradores_votu/" target="_blank" class="atletica-item">
-                    <img src="badges/nutricao.png" class="insignia-atletica-link" title="Siga a Atlética de Nutrição">
+                <a href="https://www.instagram.com/atleticadevoradores_votu/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Nutrição no Instagram">
+                    <img src="badges/nutricao.png" class="insignia-atletica-link" title="Siga a Atlética de Nutrição" alt="Instagram da Atlética de Nutrição">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">NUTRIÇÃO</p>
             </div>
 
              <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.mediadores/" target="_blank" class="atletica-item">
-                    <img src="badges/pedagogia.png" class="insignia-atletica-link" title="Siga a Atlética de Pedagogia">
+                <a href="https://www.instagram.com/atletica.mediadores/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Pedagogia no Instagram">
+                    <img src="badges/pedagogia.png" class="insignia-atletica-link" title="Siga a Atlética de Pedagogia" alt="Instagram da Atlética de Pedagogia">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">PEDAGOGIA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.puleiro/" target="_blank" class="atletica-item">
-                    <img src="badges/propaganda.png" class="insignia-atletica-link" title="Siga a Atlética de Propaganda">
+                <a href="https://www.instagram.com/atletica.puleiro/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Propaganda no Instagram">
+                    <img src="badges/propaganda.png" class="insignia-atletica-link" title="Siga a Atlética de Propaganda" alt="Instagram da Atlética de Publicidade & Propaganda">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">PUBLI & PROPAGANDA</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.psicose.votu/" target="_blank" class="atletica-item">
-                    <img src="badges/psicologia.png" class="insignia-atletica-link" title="Siga a Atlética de Psicologia">
+                <a href="https://www.instagram.com/atletica.psicose.votu/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Psicologia no Instagram">
+                    <img src="badges/psicologia.png" class="insignia-atletica-link" title="Siga a Atlética de Psicologia" alt="Instagram da Atlética de Psicologia">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">PSICOLOGIA</p>
             </div>
 
              <div style="text-align: center;">
-                <a href="https://www.instagram.com/atletica.veterinaria/" target="_blank" class="atletica-item">
-                    <img src="badges/veterinaria.png" class="insignia-atletica-link" title="Siga a Atlética de Medicina Veterinária">
+                <a href="https://www.instagram.com/atletica.veterinaria/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Medicina Veterinária no Instagram">
+                    <img src="badges/veterinaria.png" class="insignia-atletica-link" title="Siga a Atlética de Medicina Veterinária" alt="Instagram da Atlética de Medicina Veterinária">
                 </a>
+
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">MED.VETERINÁRIA</p>
             </div>
 
@@ -163,11 +164,12 @@ include 'includes/navbar.php';
             text-transform: uppercase;
             letter-spacing: 1px;
         ">
-            🚀 Em Desenvolvimento
+             Em Desenvolvimento
         </div>
 
         <div style="margin-top: 40px;">
-            <a href="index.php" class="btn-editar-atalho" style="text-decoration: none;">
+            <!-- Adicionado aria-label invisível para o leitor de tela detalhar o destino do botão de voltar -->
+            <a href="index.php" class="btn-editar-atalho" style="text-decoration: none;" aria-label="Voltar para a página inicial da Fenda">
                 <i class="fa-solid fa-arrow-left"></i> Voltar para o Home
             </a>
         </div>
@@ -176,3 +178,4 @@ include 'includes/navbar.php';
 </main>
 
 <?php include 'includes/footer.php'; ?>
+

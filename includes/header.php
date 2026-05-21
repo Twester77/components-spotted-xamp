@@ -55,11 +55,11 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         if ($u_id > 0): 
         ?>
             <div class="header-icons">
-                <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes">
+                <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes" aria-label="Pesquisar habitantes"></a>
                     <i class="fas fa-search"></i>
                 </a>
 
-                <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()">
+                <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()" aria-label="Suas Notificações">
                     <i class="fa-solid fa-bell"></i>
 
                     <?php
@@ -82,7 +82,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
                     </div>
                 </div>
 
-                <a href="perfil.php" class="btn-config" title="Configurações do Perfil">
+                <a href="perfil.php" class="btn-config" title="Configurações do Perfil" aria-label="Configurar seu perfil ">
                     <i class="fas fa-cog"></i>
                 </a>
             </div>

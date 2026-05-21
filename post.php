@@ -74,7 +74,7 @@ if (!$post) {
 
                 <?php if (!empty($post['imagem_url'])): ?>
                     <div class="container-img-post">
-                        <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Spotted">
+                        <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post - Seção Comentários">
                     </div>
                 <?php endif; ?>
 

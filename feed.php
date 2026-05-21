@@ -12,24 +12,28 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<div class="controles-feed-topo">
-    <button type="button" id="btn-abrir-filtros" class="btn-fenda-padrao" onclick="toggleFiltrosMobile()">
-        <i class="fas fa-filter"></i> FILTRAR CATEGORIAS
+<!-- Adicionado aria-label para indicar que este bloco é uma barra de ferramentas de controle -->
+<div class="controles-feed-topo" role="toolbar" aria-label="Controles do Feed">
+    <!-- Adicionado aria-expanded e aria-controls vinculando dinamicamente o botão à gaveta de filtros -->
+    <button type="button" id="btn-abrir-filtros" class="btn-fenda-padrao" onclick="toggleFiltrosMobile()" aria-expanded="false" aria-controls="gaveta-filtros-swipe">
+        <i class="fas fa-filter" aria-hidden="true"></i> FILTRAR CATEGORIAS
     </button>
 
-    <div id="gaveta-filtros-swipe" class="filtros-wrapper-retratil">
+    <!-- Adicionado aria-hidden e role para esconder a gaveta do leitor enquanto estiver fechada -->
+    <div id="gaveta-filtros-swipe" class="filtros-wrapper-retratil" role="region" aria-label="Painel de Filtros por Categoria" aria-hidden="true">
         <?php include 'includes/filtros.php'; ?>
     </div>
 </div>
 
-    
-<main class="main-fenda-total">
+<main class="main-fenda-total" id="conteudo-principal">
     <!-- O container começa vazio e o Motor preenche -->
-    <div class="container-feed"></div>
-    <!-- Feedback visual para o modo swipe (aparece ao arrastar) -->
-<div class="feedback-swipe feedback-direita">🩶 AMEI</div>
-<div class="feedback-swipe feedback-esquerda">🗑️ DESCARTAR</div>
-<div class="feedback-swipe feedback-cima">💬 COMENTAR</div>
+    <!-- Adicionado aria-live para anunciar novos posts injetados dinamicamente via AJAX sem interromper a navegação -->
+    <div class="container-feed" role="feed" aria-busy="false" aria-live="polite"></div>
+    
+    <!-- Feedbacks visuais ocultados do leitor de tela para não causar poluição auditiva durante o arraste -->
+    <div class="feedback-swipe feedback-direita" aria-hidden="true">🩶 AMEI</div>
+    <div class="feedback-swipe feedback-esquerda" aria-hidden="true">🗑️ DESCARTAR</div>
+    <div class="feedback-swipe feedback-cima" aria-hidden="true">💬 COMENTAR</div>
 </main>
 
 <div class="container-load-more">
@@ -37,22 +41,25 @@ include 'includes/bolhas.php';
 </div>
 
 <script>
-
     window.toggleFiltrosMobile = function() {
-    const gaveta = document.getElementById('gaveta-filtros-swipe');
-    const btn = document.getElementById('btn-abrir-filtros');
-    
-    if (gaveta) {
-        gaveta.classList.toggle('aberto');
+        const gaveta = document.getElementById('gaveta-filtros-swipe');
+        const btn = document.getElementById('btn-abrir-filtros');
         
-        // Muda o ícone do botão para dar feedback
-        if (gaveta.classList.contains('aberto')) {
-            btn.innerHTML = '<i class="fas fa-times"></i> FECHAR FILTROS';
-        } else {
-            btn.innerHTML = '<i class="fas fa-filter"></i> FILTRAR CATEGORIAS';
+        if (gaveta) {
+            gaveta.classList.toggle('aberto');
+            
+            // Muda o ícone do botão e atualiza os estados ARIA em tempo real
+            if (gaveta.classList.contains('aberto')) {
+                btn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i> FECHAR FILTROS';
+                btn.setAttribute('aria-expanded', 'true');
+                gaveta.setAttribute('aria-hidden', 'false');
+            } else {
+                btn.innerHTML = '<i class="fas fa-filter" aria-hidden="true"></i> FILTRAR CATEGORIAS';
+                btn.setAttribute('aria-expanded', 'false');
+                gaveta.setAttribute('aria-hidden', 'true');
+            }
         }
-    }
-};
+    };
 
     let offset = 0; // Começa do zero agora
     const btnLoad = document.getElementById('btn-load-more');
@@ -60,6 +67,8 @@ include 'includes/bolhas.php';
 
     function carregarFeedGeral() {
         if(btnLoad) btnLoad.innerText = "CARREGANDO...";
+        // Atualiza que o container está recebendo dados novos
+        if(feedContainer) feedContainer.setAttribute('aria-busy', 'true');
         
         const urlParams = new URLSearchParams(window.location.search);
         const categoria = urlParams.get('categoria') || '';
@@ -78,6 +87,8 @@ include 'includes/bolhas.php';
                     offset += 30;
                     if(btnLoad) btnLoad.innerText = "EXIBIR MAIS RESULTADOS";
                 }
+                // Concluiu a injeção do HTML do feed
+                if(feedContainer) feedContainer.setAttribute('aria-busy', 'false');
             });
     }
 
@@ -90,6 +101,3 @@ include 'includes/bolhas.php';
 </script>
 
 <?php include 'includes/footer.php'; ?>
-
-
-

@@ -86,7 +86,7 @@ include 'includes/bolhas.php';
 
         <article>
             <h2 class="titulo-home">Bem-vindos à "A Fenda" (e não, não é do biquíni)</h2>
-            <img src="imagensfoto/capa-entrada.jpg" alt="Capa Home do Site" class="img-home-capa">
+            <img src="imagensfoto/capa-entrada.jpg" alt="Capa de Entrada do Site" class="img-home-capa">
         </article>
 
         <article class="conteudo-principal">

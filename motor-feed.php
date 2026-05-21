@@ -77,7 +77,7 @@ if (mysqli_num_rows($resultado) > 0) {
                     <img src="imagensfoto/anonimo-default.jpg" class="avatar-p">
                     <span class="anonimo">Habitante Anônimo</span>
                 <?php else: ?>
-                    <?php $foto_post = !empty($linha['foto']) ? 'uploads/' . $linha['foto'] : 'imagensfoto/default.jpg'; ?>
+                    <?php $foto_post = !empty($linha['foto']) ? 'uploads/' . $linha['foto'] : 'imagensfoto/default.jpg';  ?>
                     <img src="<?php echo $foto_post; ?>" class="avatar-p">
                     <a href="ver-perfil.php?user=<?php echo $linha['username']; ?>" class="user-mention">@<?php echo $linha['username']; ?></a>
                 <?php endif; ?>
@@ -89,9 +89,9 @@ if (mysqli_num_rows($resultado) > 0) {
                 <?php if (!empty($linha['imagem_url'])): ?>
                     <div class="container-img-post">
                         <img src="postagens/<?php echo htmlspecialchars($linha['imagem_url']); ?>"
-                            class="spotted-card-img"
+                            class="spotted-card-img" 
                             loading="lazy"
-                            alt="Imagem do Spotted">
+                            alt="Imagem do Post">
                     </div>
                 <?php endif; ?>
 

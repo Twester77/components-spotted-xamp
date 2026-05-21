@@ -51,7 +51,7 @@ $email_payload = [
 <div style='font-family: sans-serif; background: #0a0a0a; color: #fff; padding: 0; border-radius: 15px; overflow: hidden; border: 1px solid #70cde4; max-width: 600px; margin: auto;'>
     
     <div style='width: 100%; background: #000; text-align: center;'>
-        <img src='https://fendauniversity.com.br/imagensfoto/banner-email.png' alt='A Fenda' style='width: 100%; max-width: 500px; display: block;'>
+        <img src='https://fendauniversity.com.br/imagensfoto/banner-email.png' alt='Banner do A Fenda' style='width: 100%; max-width: 500px; display: block;'>
     </div>
 
     <div style='padding: 30px;'>
