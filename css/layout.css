@@ -2167,10 +2167,83 @@ input[type="check-box"] {
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
+
 .main-perfil-container-publico.vibe-light {
-    background: radial-gradient(circle at top right, var(--aura-user) 25%, #ebe863ee 80%) !important;
+    /* Fundo em tons de Palha/Marfim, aquecido e nobre */
+    background: linear-gradient(160deg, #fffcf059 0%, #e9c572c0 100%) !important;
+        
+    /* Borda mais suave e orgânica */
+    border: 1px solid rgba(139, 128, 100, 0.2) !important;
+    border-top: 4px solid var(--aura-user) !important; 
+    border-radius: 16px !important;
+    
+    /* Sombra mais quente para combinar com o fundo */
+    box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
+    
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
 }
 
+/* Texto num tom "Terra Escura" (nada de preto puro!) */
+.main-perfil-container-publico.vibe-light h3,
+.main-perfil-container-publico.vibe-light p {
+    color: #3e382d !important; 
+    text-shadow: none !important;
+}
+
+/* Vibe ADS: Tema Overclock Dinâmico */
+.main-perfil-container-publico.vibe-ads {
+    /* 1. Fundo Dark Navy (Mantém o contraste) */
+    background-color: #020412d5 !important;
+    
+    /* 2. Grid de Circuito (Sutil) */
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 20%);
+    background-size: 40px 40px, 40px 40px, 100% 100%;
+
+    /* 3. Borda Superior da Aura */
+    border-top: 4px solid var(--aura-user) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 16px !important;
+    
+    /* 4. Sombra suave baseada na aura */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    
+    animation: overclock-pulse 8s infinite alternate ease-in-out;
+    transition: all 0.5s ease;
+}
+
+/* 5. Títulos com a cor da Aura */
+.main-perfil-container-publico.vibe-ads h3 {
+    color: var(--aura-user) !important; /* Título brilha com a cor do usuário */
+    text-shadow: 0 0 10px rgba(var(--aura-user), 0.5); /* Efeito neon */
+    border-bottom: 2px solid var(--aura-user);
+    font-family: inherit;
+}
+
+.main-perfil-container-publico.vibe-ads p {
+    color: #c0c0c0 !important; /* Mantém cinza para legibilidade */
+}
+
+/* 6. Animação de Pulsação utilizando a Aura */
+@keyframes overclock-pulse {
+    0%, 100% {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.103) 1px, transparent 1px),
+            radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 40%);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(var(--aura-user), 0.2); /* O brilho pulsa com a cor da aura */
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            radial-gradient(circle at 50% -10%, var(--aura-user) 0%, transparent 30%);
+    }
+}
 
 .form-perfil-corpo {
     display: flex !important;

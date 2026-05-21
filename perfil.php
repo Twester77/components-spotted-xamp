@@ -136,6 +136,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <label for="atletica_id">Sua Atlética</label>
                 <select name="atletica_id" id="atletica_id" class="input-fenda-select">
                     <option value="">Selecione sua Atlética...</option>
+                    <option value="ads" <?php echo ($dados['atletica_id'] == 'ads') ? 'selected' : ''; ?>>Análise e Desenvolvimento de Sistemas (Overclock)</option>
                     <option value="agronomia" <?php echo ($dados['atletica_id'] == 'agronomia') ? 'selected' : ''; ?>>Engenharia Agronômica (Usagro)</option>
                     <option value="arquitetura" <?php echo ($dados['atletica_id'] == 'arquitetura') ? 'selected' : ''; ?>>Arquitetura (Arcana)</option>
                     <option value="biomedicina" <?php echo ($dados['atletica_id'] == 'biomedicina') ? 'selected' : ''; ?>>Biomedicina (Leptospirados)</option>
@@ -239,6 +240,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon (Preto Profundo)</option>
                     <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark (Eigengrau)</option>
                     <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
+                    <option value="vibe-ads" <?php echo ($dados['pref_vibe_padrao'] == 'vibe-ads') ? 'selected' : ''; ?>>ADS (Overclock)</option>
                 </select>
             </div>
 

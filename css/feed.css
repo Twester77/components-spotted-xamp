@@ -743,9 +743,10 @@ span.category-tag {
 
 
 .insignia-atletica-bottom:hover {
-    transform: scale(1.2) rotate(5deg) !important;
+    transform: scale(1.1) rotate(5deg) !important;
     filter: drop-shadow(0 0 12px var(--dourado)) !important;
 }
+
 
 .nome-linha {
     display: flex;

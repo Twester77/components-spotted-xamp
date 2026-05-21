@@ -48,6 +48,7 @@ include 'includes/bolhas.php';
                     <i class="fas fa-shield-alt"></i>
                     <select name="atletica_id" id="atletica_id" class="input-fenda-select" required>
                         <option value="" disabled selected>Selecione sua Atlética...</option>
+                        <option value="ads">Análise e Desenvolvimento de Sistemas (Overclock)</option>
                         <option value="agronomia">Engenharia Agronômica (Usagro)</option>
                         <option value="arquitetura">Arquitetura (Arcana)</option>
                         <option value="biomedicina">Biomedicina (Leptospirados)</option>
@@ -87,6 +88,7 @@ include 'includes/bolhas.php';
                         <option value="vibe-neon">Neon (Preto Profundo)</option>
                         <option value="vibe-dark">Dark (Eigengrau)</option>
                         <option value="vibe-light">Light (Solar)</option>
+                        <option value="vibe-ads">ADS (Overclock)</option>
                     </select>
                 </div>
             </div>

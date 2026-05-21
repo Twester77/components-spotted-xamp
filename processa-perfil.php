@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
         mysqli_stmt_close($stmt_check);
     }
 
-    $nova_atletica = $_POST['atletica_id'] ?? 'agronomia';
+    $nova_atletica = $_POST['atletica_id'] ?? 'ads'; // Valor padrão para evitar null
     $nova_vibe = $_POST['pref_vibe_padrao'] ?? 'vibe-glass';
     $nova_cor = isset($_POST['pref_cor_padrao']) ? $_POST['pref_cor_padrao'] : '#70cde4';
     $novo_swipe    = isset($_POST['pref_swipe']) ? (int)$_POST['pref_swipe'] : 0;
