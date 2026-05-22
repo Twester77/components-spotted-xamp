@@ -68,7 +68,7 @@
         const menu = document.createElement('div');
         menu.className = 'action-menu-longpress';
         menu.style.cssText = `
-            position: fixed; bottom: 20px; left: 50%;
+            position: fixed; bottom: 50px; left: 50%;
             transform: translateX(-50%);
             background: #1e1e2f; border: 1px solid #ff8c00;
             border-radius: 40px; padding: 12px 24px;

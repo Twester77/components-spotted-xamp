@@ -84,7 +84,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <?php endif; ?>
 
                 <label id="label-capa" class="btn-mudar-capa">
-                    <i class="fas fa-camera" aria-hidden="true"></i> Alt. Capa
+                    <i class="fas fa-camera" aria-hidden="true"></i> 
                     <input type="file" name="capa" style="display:none;" aria-labelledby="label-capa">
                 </label>
             </div>

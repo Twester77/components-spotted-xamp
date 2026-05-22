@@ -413,10 +413,13 @@ window.addEventListener('click', function (event) {
 
 // ==================== LOAD FINAL (Apenas boot e hacker mode) ====================
 window.addEventListener('load', () => {
+    // --- Restaura Hacker Mode salvo ---
     if (localStorage.getItem('fenda_hacker') === 'active') {
         document.body.classList.add('hacker-mode');
         window.removerBordasInlineHacker();
     }
+
+    // --- Boot screen (mantido igual) ---
     const bootScreen = document.getElementById('bios-boot');
     if (bootScreen && !sessionStorage.getItem('boot_concluido')) {
         setTimeout(() => {
@@ -427,5 +430,26 @@ window.addEventListener('load', () => {
             }, 500);
         }, 2500);
     } else if (bootScreen) bootScreen.style.display = 'none';
+
+    // --- ==================== SUSPENSÃO DO HACKER MODE DURANTE O SWIPE ==================== ---
+    // Se o modo swipe estiver ativo (classes no body) e o Hacker Mode estiver ativo, suspende
+    if (document.body.classList.contains('modo-swipe-ativo')) {
+        if (document.body.classList.contains('hacker-mode')) {
+            // Guarda no sessionStorage que o Hacker Mode foi suspenso pelo swipe
+            sessionStorage.setItem('fenda_hacker_suspended_by_swipe', 'true');
+            document.body.classList.remove('hacker-mode');
+            console.log("[HACKER] Modo Hacker suspenso porque o modo swipe está ativo.");
+        }
+    } else {
+        // Se o modo swipe NÃO está ativo, mas o Hacker Mode foi suspenso anteriormente, restaura
+        if (sessionStorage.getItem('fenda_hacker_suspended_by_swipe') === 'true') {
+            if (localStorage.getItem('fenda_hacker') === 'active') {
+                document.body.classList.add('hacker-mode');
+                window.removerBordasInlineHacker();
+                console.log("[HACKER] Modo Hacker restaurado ao sair do modo swipe.");
+            }
+            sessionStorage.removeItem('fenda_hacker_suspended_by_swipe');
+        }
+    }
 });
 

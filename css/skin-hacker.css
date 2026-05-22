@@ -132,7 +132,7 @@ body.hacker-mode .perfil-gold {
 
 /* TOPO: Mantendo os títulos dinâmicos da Deep com cantos "+" */
 body.hacker-mode .spotted-card::before,
-body.hacker-mode .formulario-caixa::before,
+body.hacker-mode .fenda-glass-container::before,
 body.hacker-mode .main-perfil-container::before,
 body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
@@ -1009,9 +1009,9 @@ body.hacker-mode .hacker-booting {
 }
 
 @keyframes bootSystem {
-    0% { opacity: 0; filter: blur(30px) brightness(10) grayscale(1); }
-    5% { opacity: 0.1; filter: blur(20px); }
-    50% { opacity: 0.3; filter: blur(10px); }
+    0% { opacity: 0; filter: blur(20px) brightness(10) grayscale(1); }
+    5% { opacity: 0.1; filter: blur(15px); }
+    50% { opacity: 0.3; filter: blur(5px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
 
@@ -1042,12 +1042,6 @@ body.hacker-mode .spotted-card {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border: double 2px solid #00ff00 !important; /* Visual Matrix total */
-    border-style: dashed;
-}
-
-body.hacker-mode .spotted-card::before,
-body.hacker-mode .spotted-card::after {
-    display: none !important; /* Remove os brilhos de amei/ranço no modo terminal */
 }
 
 

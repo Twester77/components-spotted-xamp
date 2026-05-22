@@ -137,7 +137,7 @@ include 'includes/navbar.php';
         max-width: 600px;
         width: 100%;
         text-align: center;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(8px);
         box-shadow: 0 15px 35px rgba(0,0,0,0.5);
     ">
         <div class="icon-container" style="margin-bottom: 25px;">

@@ -40,7 +40,22 @@ include 'includes/bolhas.php';
     <button id="btn-load-more" class="btn-fenda-padrao">Exibir Mais Resultados</button>
 </div>
 
+<script src="js/fenda-main.js"></script>
+<script src="js/fenda-swipe.js"></script>
+
 <script>
+
+
+ // ==================== VIEWPORT DINÂMICA (MOBILE) ====================
+    // Atualiza a variável --vh com a altura real da viewport (mobile)
+    function setDynamicVh() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    setDynamicVh();
+    window.addEventListener('resize', setDynamicVh);
+    window.addEventListener('orientationchange', setDynamicVh);
+    console.log("[UI] --vh dinâmico configurado.");
     window.toggleFiltrosMobile = function() {
         const gaveta = document.getElementById('gaveta-filtros-swipe');
         const btn = document.getElementById('btn-abrir-filtros');
@@ -60,6 +75,7 @@ include 'includes/bolhas.php';
             }
         }
     };
+
 
     let offset = 0; // Começa do zero agora
     const btnLoad = document.getElementById('btn-load-more');
@@ -84,7 +100,7 @@ include 'includes/bolhas.php';
                     }
                 } else {
                     feedContainer.insertAdjacentHTML('beforeend', data);
-                    offset += 30;
+                    offset += 10;
                     if(btnLoad) btnLoad.innerText = "EXIBIR MAIS RESULTADOS";
                 }
                 // Concluiu a injeção do HTML do feed
