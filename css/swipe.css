@@ -12,7 +12,6 @@ body.modo-swipe-ativo .spotted-card,
 body.modo-swipe-ativo .post-content,
 body.modo-swipe-ativo .article.spotted-card {
     animation: none !important;
-    transition: opacity 0.3s;
     overflow: hidden !important;
     scrollbar-width: none !important;
     touch-action: none !important;
@@ -56,7 +55,7 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 /* 3. Card principal – carta de baralho (magro, altura automática) */
 .feed-empilhado .spotted-card {
     position: absolute !important;   
-    left: 50% !important;
+    left: 45% !important;
     top: 50% !important;
     transform: translate(-50%, -50%);
     margin: 0 !important;
@@ -73,7 +72,7 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     container-type: inline-size;
     container-name: card-fofoca;
     width: 70% !important;
-    max-width: 320px !important;
+    max-width: 300px !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: 85vh !important;
@@ -264,7 +263,7 @@ body.card-isolado::after {
 
 /* 11. Limitar texto na pilha */
 body.modo-swipe-ativo .spotted-card:not(.focado-swipe) .post-content {
-    max-height: 6rem;
+    max-height: 7rem;
     overflow: hidden !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 3;
@@ -304,13 +303,13 @@ body.modo-swipe-ativo .filtros-wrapper-retratil {
     pointer-events: auto;
 }
 body.modo-swipe-ativo .filtros-container {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    gap: 8px !important;
+    display: flex ;
+    flex-wrap: wrap ;
+    justify-content: center ;
+    gap: 8px ;
     width: 100% !important;
-    margin-top: 40px !important;
-    padding: 20px 10px 30px 10px !important;
+    margin-top: 40px ;
+    padding: 20px 10px 30px 10px ;
 }
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: flex !important;
@@ -451,7 +450,7 @@ body:not(.modo-swipe-ativo) .spotted-card {
 /* 16. Imagens no modo swipe */
 .container-img-post {
     width: 100%;
-    min-height: 220px;
+    min-height: 180px;
     overflow: hidden;
     border-radius: 10px;
     margin: 10px 0;
@@ -491,8 +490,8 @@ body:not(.modo-swipe-ativo) .spotted-card {
         margin-top: 20px !important;
     }
     .feed-empilhado .spotted-card {
-        max-height: 85vh !important;
-        width: 65% !important;
+        max-height: 75vh !important;
+        width: 70% !important;
         top: 50% !important;
     }
     footer { display: none !important; }
@@ -503,19 +502,38 @@ body:not(.modo-swipe-ativo) .spotted-card {
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
         display: inline-flex !important;
         position: fixed !important;
-        top: 15px !important;
-        left: 50% !important;
+        top: 15px ;
+        left: 50% ;
         transform: translateX(-50%);
         z-index: 10000 !important;
-        color: #000 !important;
-        padding: 8px 16px !important;
+        color: #000 ;
+        padding: 8px 16px ;
         font-size: 0.75rem !important;
-        border-radius: 40px !important;
-        font-weight: bold !important;
-        white-space: nowrap !important;
+        border-radius: 40px ;
+        font-weight: bold;
+        white-space: nowrap ;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     }
+
+    .chat-input-container {
+        justify-content: space-between !important;
+    }
+    .textarea-chat {
+        flex: 1; /* Ocupa o que sobrar */
+        max-width: 100% !important; /* Limita um pouco pra sobrar espaço pro botão */
+    }
+
 }
+
+
+/* Ajustes finos para não bagunçar */
+.chat-input-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100%;
+}
+
 .filtros-wrapper-retratil {
     display: none !important;
 }
@@ -552,11 +570,12 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     white-space: nowrap !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
+
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo #btn-abrir-filtros {
         top: 20px !important;
         padding: 4px 12px !important;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
 }
 body.modo-swipe-ativo .filtros-wrapper-retratil {
@@ -577,6 +596,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     max-height: 70vh !important;
     overflow-y: auto !important;
 }
+
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         top: 40px !important;
@@ -602,7 +622,18 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         justify-content: center !important;
         gap: 15px !important;
     }
+        .chat-input-container {
+        justify-content: flex-start !important; /* Alinha tudo à esquerda como o WhatsApp */
+        max-width: 1200px; 
+        gap: 20px; 
+    }
+    
+    .textarea-chat {
+        flex: 1; /* Estica o textarea até preencher o espaço disponível */
+        max-width: none !important; /* Permite que ele fique "por extenso" */
+    }
 }
+
 
 /* 21. Modo hacker */
 .modo-swipe-ativo body.hacker-mode .feed-empilhado .spotted-card {

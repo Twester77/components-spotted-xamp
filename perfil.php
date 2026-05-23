@@ -186,23 +186,23 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
                         <button type="button" id="btn-notif-starwars" class="btn-audio-choice" onclick="mudarTemaNotif('starwars')"><i class="fas fa-jedi" aria-hidden="true"></i> Star Wars</button>
                         <button type="button" id="btn-notif-mario" class="btn-audio-choice" onclick="mudarTemaNotif('mario')">
-                            <img src="imagensfoto/mushroom.png" width="18" style="vertical-align: middle; margin-right: 5px;" alt=""> Mario
+                            <img src="imagensfoto/mushroom.png" width="18" style="vertical-align: middle; margin-right: 5px;" alt="Cogumelo"> Mario
                         </button>
 
                         <button type="button" id="btn-notif-pokemon" class="btn-audio-choice" onclick="mudarTemaNotif('pokemon')">
-                            <img src="imagensfoto/pokebola.png" width="18" style="vertical-align: middle; margin-right: 5px;" alt=""> Pokémon
+                            <img src="imagensfoto/pokebola.png" width="18" style="vertical-align: middle; margin-right: 5px;" alt="Pokebola"> Pokémon
                         </button>
 
                         <button type="button" id="btn-notif-digimon" class="btn-audio-choice" onclick="mudarTemaNotif('digimon')">
-                            <img src="imagensfoto/digivice.png" width="22" style="vertical-align: middle; margin-right: 5px;" alt=""> Digimon
+                            <img src="imagensfoto/digivice.png" width="22" style="vertical-align: middle; margin-right: 5px;" alt="Digivice"> Digimon
                         </button>
 
                         <button type="button" id="btn-notif-dbz" class="btn-audio-choice" onclick="mudarTemaNotif('dbz')">
-                            <img src="imagensfoto/esferas-nuvem.png" width="20" style="vertical-align: middle; margin-right: 5px;" alt=""> DBZ
+                            <img src="imagensfoto/esferas-nuvem.png" width="20" style="vertical-align: middle; margin-right: 5px;" alt="Esferas do Dragão"> DBZ
                         </button>
 
                         <button type="button" id="btn-notif-naruto" class="btn-audio-choice" onclick="mudarTemaNotif('naruto')">
-                            <img src="imagensfoto/kunai.png" width="20" style="vertical-align: middle; margin-right: 5px;" alt=""> Naruto
+                            <img src="imagensfoto/kunai.png" width="20" style="vertical-align: middle; margin-right: 5px;" alt="Kunai"> Naruto
                         </button>
                         <button type="button" id="btn-notif-streetfighter" class="btn-audio-choice" onclick="mudarTemaNotif('streetfighter')">
                             <i class="fa-solid fa-hand-fist" aria-hidden="true"></i> Street Fighter

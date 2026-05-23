@@ -66,14 +66,14 @@
 
 .container-feed {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
-    gap: 15px !important;
+    gap: 20px !important;
     max-width: 3000px;
     /* Limita a largura total do feed no PC */
-    margin: 30px auto !important;
-    padding: 12px;
+    margin: 20px auto !important;
+    padding: 10px;
     column-count: auto !important;
 
 }
@@ -82,7 +82,7 @@
 .container-feed article {
     display: flex !important;
     flex-direction: column;
-    max-width: 400px !important;
+    max-width: 350px !important;
     /* Deixa o Grid controlar a largura */
     margin: 0 !important;
     flex-shrink: 0 !important;
@@ -145,11 +145,11 @@
 }
 
 .spotted-card {
-    background: rgba(10, 10, 10, 0.116);
+    background: rgb(10 10 10 / 34%);
     -webkit-backdrop-filter: blur(6px); 
     backdrop-filter: blur(6px); 
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 12px !important;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
@@ -161,10 +161,9 @@
     /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
-    max-width: 600px !important;
+    max-width: 550px !important;
     /* Limita a largura máxima do card */
-    min-height: 200px;
-    transform: none;
+    min-height: 180px;
     height: auto !important;
     touch-action: none; 
     -webkit-user-select:none ;
@@ -185,11 +184,12 @@
     background: rgba(255, 255, 255, 0.192);
     border-color: rgba(255, 255, 255, 0.3);
     transition: 0.3s ease;
+    transform: translateX(-5px) ;
 }
 
-@supports (backdrop-filter: blur(2px)) {
+@supports (backdrop-filter: blur(3px)) {
     .allow-hover.spotted-card:hover {
-        backdrop-filter: blur(2px);
+        backdrop-filter: blur(3px);
         background: rgba(22, 22, 22, 0.185);
         /* Um pouco mais escuro para o texto ler melhor no blur */
     }
@@ -823,12 +823,12 @@ span.category-tag {
 .btn-fofocar {
     color: #ccc;
     text-decoration: none;
-    font-size: clamp(12px, 10vw, 16px);
+    font-size: clamp(11px, 5vw, 15px);
     font-weight: bold;
     cursor: pointer; /* MUDANÇA: Agora o navegador mostra a mãozinha */
     transition: all 0.3s ease-in-out;
     display: flex;
-    padding: 4px 10px;
+    padding: 4x 12px;
     background: transparent; /* Garante que não tenha cor de fundo estranha */
     border: none; 
     -webkit-user-select: none;
@@ -837,8 +837,8 @@ span.category-tag {
 
 .btn-reagir:hover,
 .btn-fofocar:hover {
-    filter: brightness(1.2);
-    transform: scale(1.05);
+    filter: brightness(1.1);
+    transform: scale(1.02);
     color: #cc900e; 
 }
 

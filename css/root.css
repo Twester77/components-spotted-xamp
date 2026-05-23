@@ -2,12 +2,11 @@
    Mantendo a estrutura original e corrigindo os bugs */
 
 :root {
-    --cor-principal: #024685a2; 
+    --cor-principal: #0246859d; 
     --laranja-fenda: linear-gradient(165deg, #fc5f21, #9354b1d2);
     --dourado: #ffbc00;
     --background-dark: #0d0d0d;
     --glass-bg: rgba(255, 255, 255, 0.13);
-
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box!important; }

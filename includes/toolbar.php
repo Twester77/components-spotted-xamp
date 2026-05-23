@@ -12,7 +12,7 @@
     <div id="fenda-toolbar" class="toolbar-fechada" role="region" aria-label="Painel de Controle Lateral">
         <!-- Adicionado aria-expanded para indicar se o menu lateral está aberto ou fechado -->
         <div class="toolbar-trigger" onclick="toggleToolbar()" role="button" tabindex="0" aria-label="Navegação e Configurações" aria-expanded="false">
-            <span id="trigger-icon" aria-hidden="true">🧭</span>
+            <img src="imagensfoto/bussola.png" width="30" style="vertical-align: middle;" alt="Bússola"> 
         </div>
 
         <div class="toolbar-content">

@@ -139,8 +139,8 @@ body.hacker-mode .sessao-publicar::before {
     content: "+================================================================================+" !important;
     position: absolute !important;
     top: -20px !important;
-    left: -4px !important; /* Ajuste para alinhar com o border-left double */
-    right: -4px !important;
+    left: -6px !important; /* Ajuste para alinhar com o border-left double */
+    right: -6px !important;
     color: var(--hacker-green) !important;
     font-family: monospace !important;
     font-weight: bold !important;
@@ -1025,11 +1025,19 @@ body.hacker-mode .hacker-booting {
     body.hacker-mode .post-content,
     .main-perfil-container-publico.vibe-neon,
     body.hacker-mode .comentario-texto,
-    body.hacker-mode .hacker-booting {
+    body.hacker-mode .hacker-booting,
+    .modo-swipe-ativo .spotted-card {
         animation: none !important;
     }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    .feed-empilhado .spotted-card {
+        background: rgba(255, 255, 255, 0.068);
+        -webkit-backdrop-filter: blur(6px); /* Essencial para funcionar no Safari/iPhone */
+        backdrop-filter: blur(6px);
+    }
+}
 
 body.hacker-mode .feed-empilhado .spotted-card {
     transition: transform 0.3s ease-out !important; /* Devolve a animação mínima */
