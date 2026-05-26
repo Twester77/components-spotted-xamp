@@ -1,0 +1,757 @@
+/* ==========================================================================
+   ESTRUTURA DE SUPORTE - POST FOCO (FIX DA GRAVIDADE DA FENDA)
+   ========================================================================== */
+
+/* Ajuste sutil no card focado para não quebrar a margem com os comentários */
+
+.card-focado {
+    border: 1px solid var(--cor-borda-glow);
+    position: relative;
+    animation: glowPulsar 3s infinite alternate;
+    transform: scale(1.02);
+    min-height: 150px;
+    height: auto;
+    width: 100% !important;
+    max-width: 650px;
+    margin-bottom: 30px;
+    /* Espaço pro feed começar embaixo */
+    transform: none !important;
+    /* Evita que o scale quebre o fluxo horizontal */
+}
+
+/* Envelopa o card principal e os comentários mantendo o mesmo eixo */
+.box-post-central {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 700px;
+    /* Alinhamento elegante e focado para leitura */
+    margin: 0 auto;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/*  O "Fundo" do Modal de Comentários*/
+main.container-post-foco {
+    min-height: 100vh;
+    background: transparent;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    padding: 30px 0 !important;
+    /* Espaço para o navbar lá no topo */
+    animation: fadeIn 0.3s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ESTILO DO CARD FOCADO */
+
+.post-content-focado {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #fff;
+    /* Essa sombra cria um contorno invisível que protege a leitura contra o fundo claro */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    display: 1;
+    display: flex;
+    margin-top: 20px;
+}
+
+/* FORMULÁRIO DE FOFOCA */
+/* Deixa o formulário em linha (input + botão lado a lado) */
+
+.form-fenda {
+    display: flex !important;
+    flex-direction: row;
+    gap: 10px;
+    resize: vertical;
+    /* Garante que o conteúdo dentro da barra fique centralizado mas largo */
+    max-width: auto !important;
+    margin: 0 auto !important;
+    gap: 12px;
+    align-items: center;
+
+}
+
+.titulo-fofoca {
+    display: none;
+}
+
+.customizacao-post {
+    display: flex;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.textarea-fenda {
+    flex: 1 !important;
+    height: 45px;
+    min-height: 45px !important;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    color: #fff;
+    padding: 10px 18px;
+    resize: none;
+}
+
+
+
+.btn-enviar-fenda {
+    width: 50px;
+    height: 45px;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    font-size: 0 !important;
+    /* Esconde o texto "Mandar mensagem..." */
+}
+
+.btn-enviar-fenda::before {
+    content: '🚀';
+    /* Ícone de envio */
+    font-size: 1.2rem;
+}
+
+.btn-enviar-fenda:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+}
+
+
+/* ==================================================
+   COMENTÁRIOS - VERSÃO COM CONTAINER QUERIES (FLUIDO)
+   ================================================== */
+
+.lista-comentarios-social {
+    container-name: feedComentarios;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 8px 100px 8px;
+    gap: 12px;
+    /* Espacinho gostoso entre as mensagens */
+    overflow-x: hidden;
+}
+
+/* Bolha base */
+.comentario-item {
+    padding: 6px 14px;
+    gap: 8px;
+    min-height: 60px;
+    border-radius: 20px 20px 20px 3px;
+    border-right: 5px solid var(--cor-borda-glow);
+    background: rgba(255, 255, 255, 0.062);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    align-self: flex-start;
+    width: fit-content;
+    /* A bolha abraça o tamanho do texto */
+    box-sizing: border-box !important;
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+    hyphens: auto;
+    margin-bottom: 20px;
+}
+
+.comentario-item .acoes-bolha {
+    text-align: left;
+}
+
+/* Bolha do próprio usuário (direita) */
+.comentario-item.meu-comentario {
+    border-right: none;
+    border-left: 5px solid var(--cor-borda-glow);
+    border-radius: 20px 20px 3px 20px;
+    align-self: flex-end !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+.comentario-item.meu-comentario .acoes-bolha {
+    text-align: right; }
+
+
+/* MODO LIGHT ULTRA ADAPTÁVEL */
+
+.comentario-item.vibe-light {
+    /* 
+       MÁGICA DO FUNDO ATUALIZADA: 
+       Ajustada a luminosidade para 0.95 (mantém o fundo claro e confortável para leitura)
+    */
+    background: oklch(from var(--cor-borda-glow) 0.95 0.04 h) !important;
+    color: #111111 !important;
+    transition: visibility 0.3s, opacity 0.3s ease-in-out;
+    /* A bordinha externa também ganha um pouco mais de presença da cor */
+    border: 1px solid oklch(from var(--cor-borda-glow) 0.88 0.06 h);
+}
+
+/* Textos padrões em preto nítido para leitura */
+.comentario-item.vibe-light .comentario-texto,
+.comentario-item.vibe-light .comentario-data,
+.comentario-item.vibe-light .comentario-autor,
+.comentario-item.vibe-light .btn-responder-fenda {
+    color: #111111 !important;
+    font-weight: bold;
+}
+
+/* A Pílula combinando perfeitamente */
+.comentario-item.vibe-light .reply-indicator {
+    font-size: 0.95rem;
+    font-weight: bold;
+    opacity: 1;
+    /* Mantém o texto em 30% de luminosidade, mas herda o croma original  escolhido pelo usuário */
+    color: oklch(from var(--cor-borda-glow) 0.30 c h) !important;
+    border-left: 3px solid oklch(from var(--cor-borda-glow) 0.30 c h) !important;
+    /* Fundo da pílula ligeiramente ajustado para contrastar com o novo fundo mais colorido */
+    background: rgba(0, 0, 0, 0.06) !important;
+    padding: 3px 6px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+
+
+
+
+/* MODO DARK - SEU ORIGINAL */
+.comentario-item.vibe-dark {
+    background: rgba(22, 22, 29, 0.911);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    color: #eeeeee;
+}
+
+/* MODO NEON - SEU ORIGINAL */
+.comentario-item.vibe-neon {
+    background: #000000 !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--cor-borda-glow);
+    position: relative;
+    overflow: hidden;
+    animation: neon-ultra 5s infinite alternate ease-in-out;
+}
+
+.comentario-item.vibe-neon .comentario-data,
+.comentario-item.vibe-neon .comentario-autor {
+    color: var(--cor-borda-glow);
+    font-weight: bold;
+    text-shadow: 0 0 5px var(--cor-borda-glow);
+    opacity: 0.9;
+}
+
+@keyframes neon-ultra {
+
+    0%,
+    18%,
+    22%,
+    25%,
+    53%,
+    57%,
+    100% {
+        filter: saturate(0.7);
+        color: var(--cor-borda-glow);
+        box-shadow: 0 0 10px var(--cor-borda-glow);
+    }
+
+    20%,
+    24%,
+    55% {
+        color: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 25px var(--cor-borda-glow);
+    }
+}
+
+/* MODO GLASS - SEU ORIGINAL (CORRIGIDO) */
+.comentario-item.vibe-glass {
+    background: rgba(255, 255, 255, 0.048);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    color: #fff;
+}
+
+
+/* Definição do Pulsar (O "coração" do sistema) */
+@keyframes pulsar-luz {
+    0% {
+        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 25px var(--cor-borda-glow), inset 0 0 15px var(--cor-borda-glow);
+    }
+
+    100% {
+        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
+    }
+}
+
+/* MODO ADS - DIGI-NETWORK VIBE (VERSÃO BLINDADA) */
+.comentario-item.vibe-ads {
+    background-color: #161625 !important;
+    border: 2px solid var(--cor-borda-glow);
+    padding: 16px ;
+    position: relative;
+    overflow: hidden;
+    animation: pulsar-luz 3s infinite ease-in-out;
+    /* A COR DA BORDA CONTINUA DINÂMICA */
+    color: var(--cor-borda-glow);
+    /* A MÁGICA: O Grid agora é "branco fantasma" (rgba(255,255,255,0.07)) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
+    background-size: 30px 30px;
+}
+
+/* Cantos estilo "Terminal Hacker" */
+.comentario-item.vibe-ads::before,
+.comentario-item.vibe-ads::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 4px solid var(--cor-borda-glow);
+    transition: 0.3s;
+    border-radius: 8px;
+}
+
+.comentario-item.vibe-ads::before {
+    top: 5px;
+    left: 5px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.comentario-item.vibe-ads::after {
+    bottom: 5px;
+    right: 5px;
+    border-left: none;
+    border-top: none;
+}
+
+/* Texto com Neon */
+.comentario-item.vibe-ads .comentario-texto {
+    color: #fff !important;
+    text-shadow: 0 0 8px var(--cor-borda-glow);
+    font-weight: 500;
+}
+
+/* Tag ADS "Tech" */
+.comentario-item.vibe-ads .comentario-autor::after {
+    content: "[ALCATEIA]";
+    margin-left: 10px;
+    font-size: 0.65rem;
+    padding: 3px 8px;
+    color: var(--cor-borda-glow);
+    font-weight: 900;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--cor-borda-glow);
+}
+
+
+.comentario-item:hover {
+    transform: translateY(-5px) scale(1.03);
+    background: rgba(255, 255, 255, 0.096);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
+}
+
+/* MARCAÇÃO - SEU ORIGINAL */
+.comentario-item strong {
+    color: #ebc415;
+    font-size: 1rem !important;
+    font-weight: bold;
+}
+
+.comentario-item span {
+    font-size: 0.9rem !important;
+    line-height: 1.4;
+    color: #eee;
+}
+
+/* META DADOS - SEU ORIGINAL */
+.comentario-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    word-wrap: break-word !important;
+    overflow-wrap: anywhere !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+}
+
+.comentario-autor {
+    color: var(--cor-borda-glow);
+    font-size: 0.9rem;
+    font-weight: bold;
+    align-content: flex-start;
+    max-width: clamp(130px, 20vw, 230px);
+    margin-right: 10px;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    vertical-align: middle;
+}
+
+.comentario-data {
+    font-size: clamp(0.8rem, 0.382vw + 0.625rem, 1rem);
+    opacity: 0.8;
+    white-space: nowrap;
+    align-content: flex-end;
+    flex-shrink: 0;
+}
+
+.comentario-texto {
+    color: #ddd;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    white-space: pre-wrap;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+
+/* Comentários filhos (respostas) – regra geral */
+
+.comentario-filho {
+    margin-left: 40px;
+    /* Recuo confortável para telas normais */
+    max-width: 82%;
+    position: relative;
+    /* Garante que a seta use este card como referência */
+}
+
+/* 💀 ADEUS SETA MALDITA: Deixamos o ::before completamente limpo */
+.comentario-item.comentario-filho::before {
+    display: none;
+    content: none;
+}
+
+.reply-indicator {
+    font-size: 0.85rem;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.144);
+    border-left: 3px solid var(--cor-borda-glow);
+    padding: 4px 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    opacity: 0.75;
+    color: var(--cor-borda-glow);
+}
+
+
+.btn-responder-bolha {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    background: #f5de0cc4;
+    padding: 3px 8px;
+    color: #000000;
+    /* Sombra externa para dar volume (parece que ele está flutuando) */
+    box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.3), inset 0px 2px 2px rgba(255, 255, 255, 0.192);
+    margin-top: 6px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+    transition: all 0.15s ease-out;
+}
+
+.btn-responder-bolha:hover {
+    opacity: 1;
+    background: #fffb00;
+    /* Um amarelo mais aceso no hover */
+    transform: translateY(-1px);
+    box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.35), inset 0px 2px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* O "Estado Ativado" (quando clicado/ligado) */
+.btn-responder-bolha:active,
+.btn-responder-bolha.is-active {
+    transform: translateY(2px);
+    /* Ele quase encosta no plano */
+    background: #fffb00;
+    /* Remove a sombra de baixo para parecer que ele "colou" no fundo */
+    box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.4);
+    border-color: #000;
+}
+
+/* ==================================================
+   BARRA FIXA (VERSÃO RESPONSIVA: ESPAÇADA NO CELULAR, EXTENSA NO DESKTOP)
+   ================================================== */
+.sessao-fofoca-focada {
+    position: fixed ;
+    bottom: 0 !important;
+    /* Mágica para centralizar elemento fixed */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    /* 95% no celular */
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    padding: 10px;
+    z-index: 100000 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background-color: #001a1ae0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    max-height: 200px;
+    border-radius: 12px 12px 0 0;
+}
+
+
+/* Estado Encolhido */
+.sessao-fofoca-focada.encolhida {
+    height: 60px !important;
+    width: 60px !important;
+    border-radius: 50%;
+    border: 2px solid #001a1a;
+    background: #ffff;
+    align-items: center;
+    left: auto !important;
+    transform: none !important;
+    right: 20px !important;
+    /* Vira um botão flutuante no canto */
+    overflow: hidden;
+}
+
+.form-chat {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    overflow-y: auto;
+    overflow: hidden;
+
+}
+
+/* Esconde o form quando encolhido */
+.sessao-fofoca-focada.encolhida .chat-input-container {
+    display: none !important;
+}
+
+#toggle-chat-barra {
+    position: absolute !important;
+    top: -15px !important;
+    /* Faz ele flutuar um pouco acima da borda */
+    right: 15px !important;
+    background: #ffffff;
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10002 !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Quando a barra estiver encolhida (Botão Flutuante) */
+.sessao-fofoca-focada.encolhida #toggle-chat-barra {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: clamp(50px, 5vw, 100px);
+    height: clamp(50px, 5vw, 100px);
+    font-size: 1rem;
+}
+
+/* CONTAINER INTERNO */
+.chat-input-container {
+    width: 100%;
+    margin: 0 auto !important;
+    display: flex;
+    align-items: center;
+    /* Comportamento padrão de espaço */
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 8px;
+    /* Margemzinha lateral pra não grudar no dedo */
+}
+
+.customizacao-rapida {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    margin-top: 15px;
+    /* Ajuste nos controles de Vibe para não serem "atropelados" */
+    padding-right: 25px;
+    /* Abre espaço para o botão X no topo */
+    justify-content: flex-start !important;
+    /* Joga os controles pra esquerda */
+
+}
+
+.fa-comment-dots::before {
+    justify-self: center !important;
+    font-size: 1.1rem;
+}
+
+.input-mini {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    max-width: 120px;
+    padding: 4px 8px;
+    color: #fff;
+    font-size: clamp(0.75rem, 5vw, 1rem);
+    cursor: pointer !important;
+}
+
+.color-mini {
+    height: 30px;
+    width: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer !important;
+}
+
+.chat-input-wrapper {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+    width: 100%;
+    /* Ocupa o container */
+}
+
+.textarea-chat {
+    display: flex;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 12px 18px;
+    color: #fff;
+    font-size: 0.9rem;
+    max-height: 150px;
+    /* Importante para não crescer infinito e quebrar o layout */
+    overflow-y: auto;
+    /* Adiciona scroll se passar de 200px */
+    min-height: 70px;
+    font-family: inherit !important;
+    max-width: 100% !important;
+    /* Remove o limite rígido de 80% */
+}
+
+.textarea-chat:focus {
+    outline: none !important;
+    border-color: var(--dourado);
+}
+
+.btn-enviar-chat {
+    background: var(--laranja-fenda);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    color: #000;
+}
+
+.btn-enviar-chat:hover {
+    transform: scale(1.03) !important;
+    background: #ffcc00;
+}
+
+.chat-footer-info {
+    display: flex !important;
+    justify-content: space-between !important;
+    margin-top: 20px auto !important;
+    padding: 0 10px !important;
+}
+
+.char-counter {
+    font-size: 0.95rem;
+    color: #888;
+    margin-right: 10px;
+}
+
+.resposta-indicador {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 0.8rem;
+    color: var(--dourado) !important;
+    background: rgba(255, 188, 0, 0.1);
+    padding: 3px 8px;
+    border-radius: 15px;
+    margin-right: 40px;
+    width: auto;
+}
+
+.cancelar-resposta {
+    background: none !important;
+    border: none !important;
+    color: #ff4444;
+    cursor: pointer !important;
+    font-size: 0.9rem;
+}
+
+/* ==============
+   BOTÃO VOLTAR 
+   ============== */
+.btn-voltar-fenda {
+    display: inline-block;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    height: auto;
+    transition: 0.3s ease-out;
+}
+
+.btn-voltar-fenda:hover {
+    color: var(--dourado);
+}
+
+@keyframes glowPulsar {
+    from {
+        box-shadow: 0 0 10px rgba(221, 200, 14, 0.1);
+    }
+
+    to {
+        box-shadow: 0 0 25px rgba(221, 200, 14, 0.4);
+    }
+}
+
+.sem-comentarios {
+    opacity: 0.6;
+    font-size: 1rem;
+    text-align: center;
+    padding: 20px;
+}

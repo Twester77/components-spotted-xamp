@@ -17,14 +17,21 @@ include 'includes/bolhas.php';
   }
 </style>
 
-<main style="max-width: 1200px; margin: auto;" id="conteudo-principal">
+<main style="max-width: 1000px; margin: auto;" id="conteudo-principal">
   
   <section aria-labelledby="titulo-termos">
     <h2 id="titulo-termos" style="font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: center; color: #fc900c; letter-spacing: 1px; margin-bottom: 15px; margin-top: 25px;">
        TERMOS E DIRETRIZES DE SEGURANÇA
     </h2>
     <div style="display: flex; gap: 8px; justify-content:center;">
-       <img src="imagensfoto/capa-termos-de-segurança.jpg" alt="Ilustração digital representando segurança na internet com ícones de cadeados e conexões protegidas" style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+       <picture style="width: 100%;">
+          <source srcset="imagensfoto/capa-termos-de-segurança.avif" type="image/avif">
+          <source srcset="imagensfoto/capa-termos-de-segurança.webp" type="image/webp">
+          <img src="imagensfoto/capa-termos-de-segurança.jpg" 
+               alt="Ilustração digital representando segurança na internet com ícones de cadeados e conexões protegidas" 
+               style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" 
+               loading="lazy">
+       </picture>
     </div>
     
     <!-- Tag original <article> restaurada com seus estilos intactos -->
@@ -70,7 +77,7 @@ include 'includes/bolhas.php';
 
   <article class="secao-seguranca" aria-labelledby="titulo-dicas">
     <h2 id="titulo-dicas"> * Extra: Dicas de Segurança para Encontros Reais </h2>
-    <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presençaism originados na plataforma: </p>
+    <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
     <div class="box-diretrizes">
     <ul style="padding-left: 25px;">
@@ -81,11 +88,16 @@ include 'includes/bolhas.php';
     </ul>
     </div>
 
-    <div style="display: flex; justify-content: center; margin-top: 15px;">
-        <img src="imagensfoto/seguranca-universitaria.jpg" alt="" aria-hidden="true" style="width: 90%; height: auto; border-radius: 15px; opacity: 0.6; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
--webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);
-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);">
-    </div>
+    <div style="display: flex; justify-content: center; margin-top: 15px; width: 100%;">
+        <picture style="width: 90%;">
+            <source srcset="imagensfoto/seguranca-universitaria.avif" type="image/avif">
+            <source srcset="imagensfoto/seguranca-universitaria.webp" type="image/webp">
+            <img src="imagensfoto/seguranca-universitaria.jpg" 
+                 alt="" 
+                 aria-hidden="true" 
+                 style="width: 100%; height: auto; border-radius: 15px; opacity: 0.6; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5); -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%); mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);"
+                 loading="lazy">
+        </picture>
   </article>
   <br>
 </main>

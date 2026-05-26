@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// 2. Higienização básica
+// 2. Higienização básica e processamento do formulário
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mensagem = mysqli_real_escape_string($conn, $_POST['mensagem']);
     $categoria = mysqli_real_escape_string($conn, $_POST['categoria']);
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime_type = $finfo->file($arquivo_tmp);
         
-        // Mapeamento seguro: NÓS definimos a extensão correta a partir do MIME real
+        // Mapeamento seguro para validação prévia do formato
         $mapeamento_extensoes = [
             'image/jpeg' => 'jpg',
             'image/png'  => 'png',
@@ -42,22 +42,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             die("ERRO: Imagem muito pesada. Limite de 5MB.");
         }
 
-        // 3. Camada de Segurança e Nova Rota: 
-        // Pegamos a extensão limpa do NOSSO mapeamento e jogamos o arquivo na pasta 'postagens/' na raiz
-        $extensao_segura = $mapeamento_extensoes[$mime_type];
-        $novo_nome = bin2hex(random_bytes(16)) . "." . $extensao_segura;
+        // 3. NOVO MOTOR: Conversão e Compactação para WebP Nativo
+        $novo_nome = bin2hex(random_bytes(16)) . ".webp"; // Extensão agora é sempre .webp
         $destino = "postagens/" . $novo_nome;
 
-        if (move_uploaded_file($arquivo_tmp, $destino)) {
-            $imagem_url = $novo_nome;
-
-            // Validação secundária estrutural
-            if (!getimagesize($destino)) {
-                unlink($destino); // Deleta imediatamente se for um script disfarçado
-                die("ERRO: Arquivo corrompido ou malicioso.");
-            }
+        // Cria a imagem na memória do PHP dependendo do formato original enviado
+        switch ($mime_type) {
+            case 'image/jpeg':
+                $imagem_original = imagecreatefromjpeg($arquivo_tmp);
+                break;
+            case 'image/png':
+                $imagem_original = imagecreatefrompng($arquivo_tmp);
+                // Preserva a transparência do PNG caso usem fundos alphas
+                imagealphablending($imagem_original, false);
+                imagesavealpha($imagem_original, true);
+                break;
+            case 'image/webp':
+                $imagem_original = imagecreatefromwebp($arquivo_tmp);
+                break;
+            case 'image/gif':
+                $imagem_original = imagecreatefromgif($arquivo_tmp);
+                break;
+            default:
+                die("ERRO: Formato não suportado pelo motor GD.");
         }
-    }
+
+        if ($imagem_original) {
+            // Salva como WebP na pasta postagens com qualidade 75 (Lighthouse vai amar!)
+            if (imagewebp($imagem_original, $destino, 75)) {
+                $imagem_url = $novo_nome;
+            } else {
+                die("ERRO: Falha ao processar e compactar a imagem.");
+            }
+
+            // Faxina obrigatória: Deleta a imagem da memória RAM do servidor
+            imagedestroy($imagem_original);
+        } else {
+            die("ERRO: Arquivo inválido ou corrompido.");
+        }
+    } // FIM DO UPLOAD DE IMAGEM
 
     // 3. Preparação do SQL do Post
     $stmt = $conn->prepare("INSERT INTO mensagens (mensagem, categoria, subcategoria, usuario_id, imagem_url, data_post) VALUES (?, ?, ?, ?, ?, NOW())");
@@ -69,15 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $post_id_recem_criado = $conn->insert_id;
 
         // --- 🧠 CÉREBRO DE MENÇÕES (VERSÃO ANTIBUG E MINÚSCULAS) ---
-        // A Regex agora pega apenas letras, números, underlines e pontos: [a-z0-9\._]
         if (preg_match_all('/@([a-zA-Z0-9\._]+)/', $mensagem, $matches)) {
-            $mencoes = $matches[1]; // Pega só o texto capturado
+            $mencoes = $matches[1]; 
 
-            // Remove usernames duplicados no mesmo post (caso marque o mesmo user duas vezes)
+            // Remove usernames duplicados no mesmo post
             $mencoes = array_unique($mencoes);
 
             foreach ($mencoes as $nome_usuario) {
-                // Força o username capturado para minúsculo para bater com o padrão do banco
                 $nome_usuario_limpo = strtolower($nome_usuario);
 
                 // Busca EXATAMENTE pelo username que está no banco
@@ -91,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     // Verifica se não é o próprio usuário se marcando
                     if ($id_dest != $_SESSION['usuario_id']) {
-                        // Se não tiver username na sessão, define um fallback seguro
                         $quem_username = $_SESSION['usuario_username'] ?? "alguem";
                         $msg_n = "@" . $quem_username . " mencionou você em um post!";
 
@@ -110,5 +130,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         die("ERRO AO SALVAR: " . $stmt->error);
     }
-}
+} // FIM DO IF METHOD == POST
 ?>

@@ -1,8 +1,6 @@
 <?php
 include '../conexao.php';
 
-
-// 1. Bloqueio de acesso direto / Não logado
 if (!isset($_SESSION['usuario_id']) || !isset($_GET['id'])) {
     header("Location: ../feed.php");
     exit();
@@ -11,9 +9,8 @@ if (!isset($_SESSION['usuario_id']) || !isset($_GET['id'])) {
 $post_id = $_GET['id'];
 $usuario_id = $_SESSION['usuario_id'];
 
-// 2. PREPARED STATEMENT: Busca o post para conferir se o dono é o mesmo que está logado
-// Isso impede que alguém mude o ID na URL para apagar posts de terceiros
-$check = $conn->prepare("SELECT usuario_id FROM mensagens WHERE id = ?");
+// 1. Busca os dados do post e da imagem antes de alterar
+$check = $conn->prepare("SELECT usuario_id, imagem_url FROM mensagens WHERE id = ? AND status = 'ativo'");
 $check->bind_param("i", $post_id);
 $check->execute();
 $resultado = $check->get_result();
@@ -21,21 +18,32 @@ $dados_post = $resultado->fetch_assoc();
 
 if ($dados_post && $dados_post['usuario_id'] == $usuario_id) {
     
-    // 3. SEGUNDO PREPARED STATEMENT: Se ele é o dono, apaga o post
-    $delete = $conn->prepare("DELETE FROM mensagens WHERE id = ?");
-    $delete->bind_param("i", $post_id);
+    // 2. SOFT DELETE: Em vez de apagar a linha, marca como deletado para preservar o autor e os logs
+    $soft_delete = $conn->prepare("UPDATE mensagens SET status = 'deletado' WHERE id = ?");
+    $soft_delete->bind_param("i", $post_id);
     
-    if ($delete->execute()) {
-        // Sucesso: Volta para o feed com uma mensagem de confirmação
+    if ($soft_delete->execute()) {
+        
+        // 3. MOVER PARA A LIXEIRA: Se tinha imagem, tira da pasta pública e joga na privada
+        if (!empty($dados_post['imagem_url'])) {
+            $origem = "../postagens/" . $dados_post['imagem_url'];
+            $destino = "../lixeira_postagens/" . $dados_post['imagem_url'];
+            
+            if (file_exists($origem)) {
+                // rename() move o arquivo de pasta no servidor de forma instantânea
+                rename($origem, $destino); 
+            }
+        }
+
         header("Location: ../feed.php?msg=deletado");
     } else {
-        // Erro 
-        header("Location: ../feed.php?erro=db");
+        header("Location: ../feed.php?msg=erro");
     }
-
+    $soft_delete->close();
 } else {
-    // Tentativa de excluir post alheio ou post não existe
-    header("Location: ../feed.php?erro=permissao");
+    header("Location: ../feed.php");
 }
 
-exit();
+$check->close();
+$conn->close();
+?>

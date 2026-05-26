@@ -9,7 +9,7 @@ $filtro = isset($_GET['filtro']) ? mysqli_real_escape_string($conn, $_GET['filtr
 $sql_perdidos = "SELECT m.*, u.username 
                  FROM mensagens m 
                  LEFT JOIN usuarios u ON m.usuario_id = u.id 
-                 WHERE m.categoria = 'perdidos'";
+                 WHERE m.categoria = 'perdidos' AND m.status = 'ativo'"; // <-- Blindagem aqui
 
 if ($filtro === 'achei' || $filtro === 'perdi') {
     $sql_perdidos .= " AND m.subcategoria = '$filtro'";
@@ -44,10 +44,15 @@ include 'includes/bolhas.php';
             Achados & Perdidos
         </h2>
 
-        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-            <img src="imagensfoto/capa-achados-e-perdidos.jpg"
-                alt="Ilustração de um mural de achados e perdidos com chaves, óculos e objetos esquecidos"
-                style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">
+            <picture style="width: 100%;">
+                <source srcset="imagensfoto/capa-achados-e-perdidos.avif" type="image/avif">
+                <source srcset="imagensfoto/capa-achados-e-perdidos.webp" type="image/webp">
+                <img src="imagensfoto/capa-achados-e-perdidos.jpg"
+                     alt="Ilustração de um mural de achados e perdidos com chaves, óculos e objetos esquecidos"
+                     style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"
+                     loading="lazy">
+            </picture>
 
             <div style="font-size: clamp(14px, 2vw, 18px); font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 30px;">
                 <!-- Corrigido o erro de digitação de <blackquote> para <blockquote> -->

@@ -3,24 +3,38 @@ include 'conexao.php';
 
 function processarUploadSeguro($campo, $prefixo, $id, $pasta, $limite)
 {
-
     if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] == 0) {
         if ($_FILES[$campo]['size'] > $limite) return false;
 
         $info = getimagesize($_FILES[$campo]['tmp_name']);
         if ($info === false) return false;
 
-        // Definindo direto no in_array para o VS Code parar de reclamar
-        if (!in_array($info['mime'], ['image/jpeg', 'image/jpg', 'image/png'])) {
+        $mime = $info['mime'];
+        if (!in_array($mime, ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'])) {
             return false;
         }
 
-        $ext = ($info['mime'] == 'image/png') ? '.png' : '.jpg';
-        $nome_arq = $prefixo . "_" . $id . "_" . time() . $ext;
-        $destino = $pasta . "/" . $nome_arq;
+        // Criar recurso de imagem na memória
+        if ($mime == 'image/jpeg' || $mime == 'image/jpg') {
+            $img_recurso = imagecreatefromjpeg($_FILES[$campo]['tmp_name']);
+        } elseif ($mime == 'image/png') {
+            $img_recurso = imagecreatefrompng($_FILES[$campo]['tmp_name']);
+        } elseif ($mime == 'image/webp') {
+            $img_recurso = imagecreatefromwebp($_FILES[$campo]['tmp_name']);
+        }
 
-        if (move_uploaded_file($_FILES[$campo]['tmp_name'], $destino)) {
-            return $nome_arq;
+        if ($img_recurso) {
+            // Nome do arquivo padronizado salvando sempre como .webp
+            $nome_arq = $prefixo . "_" . $id . "_" . time() . ".webp";
+            $destino = $pasta . "/" . $nome_arq;
+
+            // Comprime a foto de perfil/capa para 75% de qualidade
+            $sucesso = imagewebp($img_recurso, $destino, 75);
+            imagedestroy($img_recurso);
+
+            if ($sucesso) {
+                return $nome_arq;
+            }
         }
     }
     return false;
@@ -114,24 +128,73 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $_SESSION['usuario_nome'] = $novo_nome;
     $limite_bytes = 2 * 1024 * 1024;
 
-    // Foto de Perfil
-    $foto_nome = processarUploadSeguro('foto', 'user', $usuario_id, './uploads', $limite_bytes);
-    if ($foto_nome) {
-        $stmt_f = mysqli_prepare($conn, "UPDATE usuarios SET foto = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmt_f, "si", $foto_nome, $usuario_id);
-        mysqli_stmt_execute($stmt_f);
-        mysqli_stmt_close($stmt_f);
+    // ==========================================
+    // 📸 PROCESSO DA FOTO DE PERFIL (ATUALIZADO)
+    // ==========================================
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+        
+        // 1. Busca qual é a foto antiga antes de gravar a nova
+        $stmt_busca = mysqli_prepare($conn, "SELECT foto FROM usuarios WHERE id = ?");
+        mysqli_stmt_bind_param($stmt_busca, "i", $usuario_id);
+        mysqli_stmt_execute($stmt_busca);
+        $res_busca = mysqli_stmt_get_result($stmt_busca);
+        $usuario_atual = mysqli_fetch_assoc($res_busca);
+        mysqli_stmt_close($stmt_busca);
+
+        // 2. Processa e gera a nova imagem .webp
+        $foto_nome = processarUploadSeguro('foto', 'user', $usuario_id, './uploads', $limite_bytes);
+        
+        if ($foto_nome) {
+            $stmt_f = mysqli_prepare($conn, "UPDATE usuarios SET foto = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt_f, "si", $foto_nome, $usuario_id);
+            
+            if (mysqli_stmt_execute($stmt_f)) {
+                // 3. Se atualizou com sucesso, remove o arquivo físico antigo da pasta
+                if (!empty($usuario_atual['foto'])) {
+                    $caminho_foto_antiga = "./uploads/" . $usuario_atual['foto'];
+                    if (file_exists($caminho_foto_antiga)) {
+                        unlink($caminho_foto_antiga);
+                    }
+                }
+            }
+            mysqli_stmt_close($stmt_f);
+        }
     }
 
-    // Foto de Capa
-    $capa_nome = processarUploadSeguro('capa', 'capa', $usuario_id, './uploads', $limite_bytes);
-    if ($capa_nome) {
-        $stmt_c = mysqli_prepare($conn, "UPDATE usuarios SET capa = ? WHERE id = ?");
-        mysqli_stmt_bind_param($stmt_c, "si", $capa_nome, $usuario_id);
-        mysqli_stmt_execute($stmt_c);
-        mysqli_stmt_close($stmt_c);
+    // ==========================================
+    // 🖼️ PROCESSO DA FOTO DE CAPA (ATUALIZADO)
+    // ==========================================
+    if (isset($_FILES['capa']) && $_FILES['capa']['error'] == 0) {
+        
+        // 1. Busca qual é a capa antiga
+        $stmt_busca_c = mysqli_prepare($conn, "SELECT capa FROM usuarios WHERE id = ?");
+        mysqli_stmt_bind_param($stmt_busca_c, "i", $usuario_id);
+        mysqli_stmt_execute($stmt_busca_c);
+        $res_busca_c = mysqli_stmt_get_result($stmt_busca_c);
+        $usuario_atual_c = mysqli_fetch_assoc($res_busca_c);
+        mysqli_stmt_close($stmt_busca_c);
+
+        // 2. Processa e gera a nova capa .webp
+        $capa_nome = processarUploadSeguro('capa', 'capa', $usuario_id, './uploads', $limite_bytes);
+        
+        if ($capa_nome) {
+            $stmt_c = mysqli_prepare($conn, "UPDATE usuarios SET capa = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt_c, "si", $capa_nome, $usuario_id);
+            
+            if (mysqli_stmt_execute($stmt_c)) {
+                // 3. Se atualizou com sucesso, remove a capa antiga da pasta
+                if (!empty($usuario_atual_c['capa'])) {
+                    $caminho_capa_antiga = "./uploads/" . $usuario_atual_c['capa'];
+                    if (file_exists($caminho_capa_antiga)) {
+                        unlink($caminho_capa_antiga);
+                    }
+                }
+            }
+            mysqli_stmt_close($stmt_c);
+        }
     }
 
+    // Redireciona de volta para o perfil
     header("Location: perfil.php?sucesso=1");
     exit();
 }

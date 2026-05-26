@@ -1,6 +1,5 @@
 // fenda-mencoes.js - Versão consolidada com Autocomplete + Contador
-let timerBusca;
-
+window.timerBusca = window.timerBusca || null; // Evita redeclaração
 document.addEventListener('input', (e) => {
     if (e.target.tagName.toLowerCase() === 'textarea') {
         const campo = e.target;
@@ -32,12 +31,26 @@ document.addEventListener('input', (e) => {
 // --- Funções de Suporte (As mesmas que você criou) ---
 
 function mostrarSugestoes(termo, campo) {
-    fetch(`buscar-mencoes.php?q=${termo}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.length > 0) renderizarLista(data, campo);
-            else esconderSugestoes();
-        });
+    fetch('buscar-mencoes.php?q=' + encodeURIComponent(termo))
+    .then(response => response.text())
+    .then(texto => {
+        if (!texto || texto.trim() === "") return;
+
+        try {
+            const data = JSON.parse(texto);
+            if (data.length > 0) {
+                // CORRIGIDO: Agora chama o nome real da função estruturada abaixo
+                renderizarLista(data, campo); 
+            } else {
+                esconderSugestoes();
+            }
+        } catch (e) {
+            console.warn("Resposta não é JSON válido, ignorando...");
+        }
+    })
+    .catch(error => {
+        console.error('Erro na conexão:', error);
+    });
 }
 
 function renderizarLista(usuarios, campo) {

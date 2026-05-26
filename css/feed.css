@@ -73,7 +73,7 @@
     max-width: 3000px;
     /* Limita a largura total do feed no PC */
     margin: 20px auto !important;
-    padding: 10px;
+    padding: 12px;
     column-count: auto !important;
 
 }
@@ -98,7 +98,7 @@
     display: block;
     overflow: hidden;
     position: relative;
-    max-height: 5rem;
+    max-height: 8rem;
     line-height: 1.5;
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
@@ -107,7 +107,7 @@
     color: #fff;
     transition: max-height 0.4s ease-in-out;
     margin: 20px 0;
-    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.3rem);
+    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.5rem);
 }
 
 
@@ -145,9 +145,9 @@
 }
 
 .spotted-card {
-    background: rgb(10 10 10 / 34%);
-    -webkit-backdrop-filter: blur(6px); 
-    backdrop-filter: blur(6px); 
+    background: rgba(10, 10, 10, 0.151);
+    -webkit-backdrop-filter: blur(8px); 
+    backdrop-filter: blur(8px); 
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 10px;
     padding: 12px !important;
@@ -164,11 +164,10 @@
     max-width: 550px !important;
     /* Limita a largura máxima do card */
     min-height: 180px;
-    height: auto !important;
-    touch-action: none; 
+    height: auto ;
     -webkit-user-select:none ;
     user-select: none;
-    will-change: backdrop-filter!important;
+    will-change: backdrop-filter, transform, opacity !important;
 
 }
 
@@ -690,7 +689,7 @@ span.category-tag {
 }
 
 .nome-publico {
-    color: #ff9100b0;
+    color: var(--cor-glow);
     letter-spacing: 1px;
     display: flex;
     align-items: center;
@@ -698,6 +697,10 @@ span.category-tag {
     font-size: clamp(1.5rem, 0.9rem + 0.5vw, 2.2rem);
     text-transform: uppercase;
     margin: 20px 0 20px 0 !important;
+     word-break: break-word;
+    /* Evita que post enormes explodam o layout */
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
     /* Margem apenas embaixo para afastar do username/bio */
     justify-content: center !important;
 }
@@ -724,9 +727,9 @@ span.category-tag {
 
 /* INSÍGNIA DA ATLÉTICA  */
 .insignia-atletica-bottom {
-    /* Mínimo de 35px para não sumir, escala com 8% da tela, e trava em 70px no máximo */
-    width: clamp(45px, 5vw, 90px) !important;
-    height: clamp(45px, 5vw, 90px) !important;
+    /* Mínimo de 40px para não sumir, escala com 5% da tela, e trava em 90px no máximo */
+    width: clamp(45px, 5vw, 90px) ;
+    height: clamp(45px, 5vw, 90px) ;
     object-fit: contain !important;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
@@ -846,11 +849,6 @@ span.category-tag {
 /*  AJUSTES DO PERFIL (HABITANTE)*/
 
 
-
-
-
-
-
 /* Badge da Coroa (Presença) */
 .badge-presenca-bottom {
     position: absolute;
@@ -911,13 +909,17 @@ span.category-tag {
     background: #0a0a0a;
     border: 1px solid #333;
     border-radius: 20px;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     align-items: center;
     gap: 15px;
     transition: 0.3s;
     text-decoration: none;
-    max-width: 300px;
+    word-break: break-word;
+    /* Evita que post enormes explodam o layout */
+    overflow-wrap: break-word;
+    max-width: 400px;
+    margin: 10px auto;
 }
 
 .card-habitante:hover {

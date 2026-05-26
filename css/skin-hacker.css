@@ -24,6 +24,7 @@ body.hacker-mode {
     background-color: var(--hacker-bg) !important;
     color: var(--hacker-green) !important;
     font-family: var(--hacker-font) !important;
+    -webkit-font-smoothing: antialiased;
     cursor: url('imagensfoto/crosshair.cur'), auto !important;
     -webkit-user-select: none ;
     user-select: none ;
@@ -124,9 +125,9 @@ body.hacker-mode .perfil-gold {
     position: relative !important;
     background: #000 !important;
     /* LATERAIS: O duplo pipe "||" */
-    border-left: 6px double var(--hacker-green) !important;
-    border-right: 6px double var(--hacker-green) !important;
-    border-bottom: 6px double var(--hacker-green) !important;
+    border-left: 4px double var(--hacker-green) !important;
+    border-right: 4px double var(--hacker-green) !important;
+    border-bottom: 4px double var(--hacker-green) !important;
     box-shadow: none !important;
 }
 
@@ -174,6 +175,7 @@ body.hacker-mode .spotted-card.desapego::before { content: "+== [ MARKETPLACE_DE
 
 body.hacker-mode .navbar,
 body.hacker-mode .menu,
+body.hacker-mode .sidebar-fenda,
 body.hacker-mode header,
 body.hacker-mode footer {
     background-color: rgba(0, 0, 0, 0.95) !important;
@@ -361,7 +363,7 @@ body.hacker-mode .fenda-btn-glow:hover::before {
 /* Botão "Carregar mais" com colchetes */
 body.hacker-mode #btn-load-more::before { content: "[ " !important; left: auto !important; opacity: 1 !important; position: relative !important; }
 body.hacker-mode #btn-load-more::after { content: " ]" !important; }
-body.hacker-mode #btn-load-more[disabled]::after { content: "[ EOF_REACHED ]" !important; }
+body.hacker-mode #btn-load-more[disabled]::after { content: " [ EOF_REACHED ]" !important; }
 
 /* ---------------------------------------------------------------
    11. AVATARES E IMAGENS (SEPIA + HOVER COM BRILHO)
@@ -386,9 +388,9 @@ body.hacker-mode img:hover,
 body.hacker-mode .foto-perfil:hover,
 body.hacker-mode .avatar-p:hover,
 body.hacker-mode .insignia-atletica-link:hover img {
-    filter: sepia(0) brightness(1.1) contrast(1.1) grayscale(0) !important;
+    filter: sepia(0.3) brightness(1.1) contrast(1.05) grayscale(0) !important;
     box-shadow: 0 0 10px #00ff00 !important;
-    transform: scale(1.05) !important;
+    transform: scale(1.03) !important;
 }
 
 /* ---------------------------------------------------------------
@@ -468,7 +470,6 @@ body.hacker-mode .comentario-autor {
 }
 
 
-
 /* ==========================================================
    ADAPTAÇÃO DAS VIBES PARA O MODO HACKER (TERMINAL) - VERSÃO CORRIGIDA
    ========================================================== */
@@ -493,7 +494,7 @@ body.hacker-mode .comentario-item.vibe-glass {
     -webkit-backdrop-filter: blur(4px) !important;
     backdrop-filter: blur(4px) !important;
     border-left: 3px solid #00ff00 !important;
-    color: #00ff00 !important;
+    color: #00ff00 ;
 }
 
 body.hacker-mode .comentario-item.vibe-glass .comentario-autor {
@@ -541,7 +542,7 @@ body.hacker-mode .comentario-item.vibe-neon .comentario-autor {
 
 /* 4. VIBE LIGHT - Terminal Monocromático Vintage (verde-fósforo suave) */
 body.hacker-mode .comentario-item.vibe-light {
-    background: #0a120ad5 !important;  
+    background: #0a120ad5 ;  
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border-left: 3px solid #33ff33 !important;  
@@ -550,7 +551,7 @@ body.hacker-mode .comentario-item.vibe-light {
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-autor {
-    color: #66ff66 !important;  /* Verde médio para o nome do autor */
+    color: #66ff66 ;  /* Verde médio para o nome do autor */
     text-shadow: 0 0 4px #33ff33 !important;
     font-weight: bold;
 }
@@ -588,6 +589,7 @@ body.hacker-mode .comentario-item.vibe-neon {
 body.hacker-mode .comentario-item.vibe-dark:hover,
 body.hacker-mode .comentario-item.vibe-light:hover,
 body.hacker-mode .comentario-item.vibe-glass:hover,
+body.hacker-mode .comentario-item.vibe-ads:hover,
 body.hacker-mode .comentario-item.vibe-neon:hover {
     background-color: #00ff00 !important;
     color: #000000 !important;
@@ -598,6 +600,10 @@ body.hacker-mode .comentario-item.vibe-dark:hover .comentario-data,
 body.hacker-mode .comentario-item.vibe-dark:hover .comentario-texto,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-autor,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-data,
+body.hacker-mode .comentario-item.vibe-ads:hover .comentario-data,
+body.hacker-mode .comentario-item.vibe-ads:hover .comentario-texto,
+body.hacker-mode .comentario-item.vibe-ads::after:hover,
+body.hacker-mode .comentario-item.vibe-ads::before:hover,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-texto,
 body.hacker-mode .comentario-item.vibe-glass:hover .comentario-autor,
 body.hacker-mode .comentario-item.vibe-glass:hover .comentario-data,
@@ -615,6 +621,63 @@ body.hacker-mode .comentario-item.vibe-dark,
 body.hacker-mode .comentario-item.vibe-glass,
 body.hacker-mode .comentario-item.vibe-neon {
     border-radius: 0 !important;
+}
+
+/* EXTRA : ADS MODE */
+
+/* ==================================================================
+   INTEGRAÇÃO DA VIBE ADS NO MODO HACKER TERMINAL (ALCATEIA OVERRIDE)
+   ================================================================== */
+body.hacker-mode .comentario-item.vibe-ads {
+    background-color: #000000 !important; /* Fundo breu total do terminal */
+    border: 1px solid var(--hacker-green) !important; /* Borda fina clássica */
+    border-radius: 0px !important; /* Lei Suprema Hacker: sem curvas! */
+    animation: none !important; /* Desliga o pulsar suave (estilo monitor CRT antigo) */
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
+    
+    /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1' stroke-opacity='0.15'/%3E%3C/svg%3E") !important;
+    background-size: 30px 30px !important;
+}
+
+/* Cantos estilo "Terminal Hacker" (Versão Sem Curvas) */
+body.hacker-mode .comentario-item.vibe-ads::before,
+body.hacker-mode .comentario-item.vibe-ads::after {
+    border: 2px solid var(--hacker-green) !important;
+    border-radius: 0px !important; /* Cantos retos e afiados */
+    width: 15px !important;
+    height: 15px !important;
+}
+
+body.hacker-mode .comentario-item.vibe-ads::before {
+    top: 3px !important;
+    left: 3px !important;
+    border-right: none !important;
+    border-bottom: none !important;
+}
+
+body.hacker-mode .comentario-item.vibe-ads::after {
+    bottom: 3px !important;
+    right: 3px !important;
+    border-left: none !important;
+    border-top: none !important;
+}
+
+/* Texto do comentário em matriz verde fosforescente */
+body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
+    color: var(--hacker-green) !important;
+    text-shadow: 0 0 6px var(--hacker-green) !important;
+    font-family: var(--hacker-font) !important;
+}
+
+/* Tag ADS "Tech" adaptada para o Kernel da Fenda */
+body.hacker-mode .comentario-item.vibe-ads .comentario-autor::after {
+    content: "[ALCATEIA.SYS]" !important; /* Visual mais sistema operacional */
+    background: var(--hacker-green) !important;
+    color: #000000 !important; /* Texto preto em cima do verde */
+    border-radius: 0px !important;
+    font-weight: bold !important;
+    box-shadow: 0 0 8px var(--hacker-green) !important;
 }
 
 /* ---------------------------------------------------------------

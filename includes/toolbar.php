@@ -11,23 +11,23 @@
     <!-- Adicionado role e label para identificar a barra lateral de ferramentas -->
     <div id="fenda-toolbar" class="toolbar-fechada" role="region" aria-label="Painel de Controle Lateral">
         <!-- Adicionado aria-expanded para indicar se o menu lateral está aberto ou fechado -->
-        <div class="toolbar-trigger" onclick="toggleToolbar()" role="button" tabindex="0" aria-label="Navegação e Configurações" aria-expanded="false">
-            <img src="imagensfoto/bussola.png" width="30" style="vertical-align: middle;" alt="Bússola"> 
-        </div>
+        <div class="toolbar-trigger" onclick="toggleToolbar()" role="button" aria-label="Abrir Painel de Controle">
+    <i class="fas fa-terminal icon-hacker" aria-hidden="true"></i>
+</div>
 
         <div class="toolbar-content">
-            <h3 style="color: #00ffcc; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; margin-bottom: 15px; text-align: center;">Navegação</h3>
+            <h3 style=" font-family: 'JetBrains Mono', monospace; margin-bottom: 15px; text-align: center;">Navegação</h3>
 
             <div class="control-item">
                 <button type="button" onclick="window.location.href='feed.php'" class="btn-feed-toolbar">
-                    🏠 IR PARA O FEED
+                     IR PRO FEED
                 </button>
             </div>
 
             <div class="setup-section">
                 <div class="control-item">
                     <button type="button" onclick="window.location.href='perfil.php'" class="btn-perfil-toolbar">
-                        👤 CONFIG. PERFIL
+                        CONFIG.PERFIL
                     </button>
                 </div>
 
@@ -43,7 +43,7 @@
                         <!-- aria-labels adicionados para traduzir o significado de cada emoji ao leitor de áudio -->
                         <button type="button" onclick="mudarSomAmbiente('chuva')" aria-label="Ativar som ambiente de chuva">🌧️</button>
                         <button type="button" onclick="mudarSomAmbiente('oceano')" aria-label="Ativar som ambiente de oceano">🌊</button>
-                        <button type="button" onclick="mudarSomAmbiente('off')" aria-label="Desativar sons da Fenda">🔇</button>
+                        <button type="button" onclick="mudarSomAmbiente('off')" aria-label="Desativar som ambiente">🔇</button>
                     </div>
                 </div>
             </div>

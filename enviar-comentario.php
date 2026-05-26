@@ -6,23 +6,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $parent_id = !empty($_POST['parent_id']) ? intval($_POST['parent_id']) : null;
     $id_mensagem = $_POST['id_mensagem'];
     $comentario = $_POST['comentario'];
-    
-    // Se não tiver sessão de nome (visitante), definimos como null para o banco
+
+    // CAPTURA O ID DO USUÁRIO LOGADO (Se for visitante, vira null)
+    $usuario_id = isset($_SESSION['usuario_id']) ? intval($_SESSION['usuario_id']) : null;
     $usuario_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : null;
-    
+
     $vibe = $_POST['pref_vibe_comentario'] ?? 'vibe-glass';
     $cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
 
-    $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome, parent_id, pref_vibe_comentario, pref_cor_borda) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+    // ADICIONAMOS 'usuario_id' NO INSERTO DO BANCO 
+    $sql = "INSERT INTO comentarios (id_mensagem, comentario, usuario_nome, usuario_id, parent_id, pref_vibe_comentario, pref_cor_borda) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ississ", $id_mensagem, $comentario, $usuario_nome, $parent_id, $vibe, $cor_borda);
+    // Sua sequência: id_mensagem (i), comentario (s), usuario_nome (s), usuario_id (i), parent_id (i), vibe (s), cor (s)
+    // Sequência correta: "ississi" (o 5º é integer, não string)
+
+    $stmt->bind_param("ississi", $id_mensagem, $comentario, $usuario_nome, $usuario_id, $parent_id, $vibe, $cor_borda);
 
     if ($stmt->execute()) {
-        
+        // ... o resto do seu código de notificações e menções continua igualzinho aqui para baixo ...
+
         // Ajuste para não quebrar se for visitante (identifica como "Visitante" na notificação)
         $meu_id = $_SESSION['usuario_id'] ?? 0;
-        $quem_comentou = $_SESSION['usuario_nome'] ?? "Visitante"; 
+        $quem_comentou = $_SESSION['usuario_nome'] ?? "Visitante";
 
         // --- NOTIFICAR DONO DO POST ---
         $stmt_dono = $conn->prepare("SELECT usuario_id FROM mensagens WHERE id = ?");
@@ -56,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 if ($alvo = $res->fetch_assoc()) {
                     $id_destinatario = $alvo['id'];
-                    
+
                     // Notifica o mencionado se não for o próprio autor logado
                     if ($id_destinatario != $meu_id) {
                         $msg_notificacao = "@$quem_comentou mencionou você em um comentário!";
@@ -72,18 +79,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // --- RESPOSTA PARA O AJAX (SEM REFRESH) ---
         if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-            ob_clean(); 
+            ob_clean();
             header('Content-Type: application/json');
             echo json_encode(['status' => 'success', 'message' => 'Comentário enviado!']);
-            exit(); 
+            exit();
         } else {
             // Fallback caso o JS falhe
             header("Location: post.php?id=$id_mensagem&comentario=sucesso");
             exit();
         }
-        
     } else {
         echo "Erro ao comentar: " . $conn->error;
     }
 }
-?>

@@ -1,6 +1,5 @@
 <?php
 include_once 'conexao.php';
-
 // --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
@@ -125,7 +124,7 @@ if (!$post) {
 
                         <p class="comentario-texto"><?php echo nl2br(formatarMencoes($c['comentario'])); ?></p>
 
-                        <div class="acoes-bolha" style="text-align: right;">
+                        <div class="acoes-bolha" >
                             <button onclick="prepararResposta(<?php echo intval($id_vincular); ?>, '<?php echo htmlspecialchars($nome_limpo_js); ?>')" class="btn-responder-bolha">
                                 RESPONDER
                             </button>
@@ -285,4 +284,15 @@ if (!$post) {
             });
         });
     }
+
+    // Adiciona o evento de input para o ajuste automático
+if (campoTexto) {
+    campoTexto.addEventListener('input', function() {
+        // Reseta a altura para auto para permitir que encolha se o usuário apagar texto
+        this.style.height = 'auto'; 
+        // Define a altura com base no conteúdo interno
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+}
+
 </script>

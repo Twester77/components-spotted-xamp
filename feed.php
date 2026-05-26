@@ -16,7 +16,7 @@ include 'includes/bolhas.php';
 <div class="controles-feed-topo" role="toolbar" aria-label="Controles do Feed">
     <!-- Adicionado aria-expanded e aria-controls vinculando dinamicamente o botão à gaveta de filtros -->
     <button type="button" id="btn-abrir-filtros" class="btn-fenda-padrao" onclick="toggleFiltrosMobile()" aria-expanded="false" aria-controls="gaveta-filtros-swipe">
-        <i class="fas fa-filter" aria-hidden="true"></i> FILTRAR CATEGORIAS
+        <i class="fas fa-filter" aria-hidden="true"></i> CATEGORIAS
     </button>
 
     <!-- Adicionado aria-hidden e role para esconder a gaveta do leitor enquanto estiver fechada -->
@@ -26,14 +26,16 @@ include 'includes/bolhas.php';
 </div>
 
 <main class="main-fenda-total" id="conteudo-principal">
-    <!-- O container começa vazio e o Motor preenche -->
-    <!-- Adicionado aria-live para anunciar novos posts injetados dinamicamente via AJAX sem interromper a navegação -->
-    <div class="container-feed" role="feed" aria-busy="false" aria-live="polite"></div>
-    
-    <!-- Feedbacks visuais ocultados do leitor de tela para não causar poluição auditiva durante o arraste -->
+     <!-- Feedbacks visuais ocultados do leitor de tela para não causar poluição auditiva durante o arraste -->
     <div class="feedback-swipe feedback-direita" aria-hidden="true">🩶 AMEI</div>
     <div class="feedback-swipe feedback-esquerda" aria-hidden="true">🗑️ DESCARTAR</div>
     <div class="feedback-swipe feedback-cima" aria-hidden="true">💬 COMENTAR</div>
+    <!-- O container começa vazio e o Motor preenche -->
+    <!-- Adicionado aria-live para anunciar novos posts injetados dinamicamente via AJAX sem interromper a navegação -->
+    <div class="container-feed" role="feed" aria-busy="false" aria-live="polite">    
+    </div>
+    
+   
 </main>
 
 <div class="container-load-more">

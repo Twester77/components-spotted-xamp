@@ -4,7 +4,8 @@
 
 /* Variável para altura real da viewport (mobile) */
 :root {
-    --vh: 1vh; /* fallback, será atualizado via JS */
+    --vh: 1vh;
+    /* fallback, será atualizado via JS */
 }
 
 /* 1. Configuração base do modo swipe */
@@ -15,15 +16,28 @@ body.modo-swipe-ativo .article.spotted-card {
     overflow: hidden !important;
     scrollbar-width: none !important;
     touch-action: none !important;
-    -webkit-user-select: none!important;
+    -webkit-user-select: none !important;
     -moz-user-select: none;
     user-select: none !important;
     -webkit-user-drag: none !important;
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab !important;
-    will-change: backdrop-filter ,transform, opacity;
+    will-change: backdrop-filter, transform, opacity;
     -webkit-touch-callout: none !important;
+}
+
+/* Isso só afeta o modo swipe, não toca no grid */
+body.modo-swipe-ativo .feed-empilhado .spotted-card {
+    /* Define o teto de 80% da tela pra não estourar o footer */
+    /* Define o mínimo de 300px pra não virar uma formiga */
+    height: clamp(280px, 60dvh, 80vh) ;
+    /* Mantém a largura responsiva */
+    width: min(70vw, 400px) !important;
+    /* Garante que o conteúdo interno respeite esse limite */
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 /* Remove a barra de rolagem no Chrome/Safari */
@@ -37,7 +51,7 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     transition: none !important;
 }
 
-/* 2. Container do feed – mais alto para dar liberdade */
+/* 2. Container do feed – agora com altura dinâmica e sem scroll próprio */
 .main-fenda-total {
     container-type: inline-size;
     container-name: feed-area;
@@ -47,15 +61,20 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 .container-feed.feed-empilhado {
     display: block !important;
     position: relative !important;
-    height: calc(var(--vh, 1vh) * 90); /* mais espaço vertical */
-    margin-top: 40px !important;
+    height: 100dvh !important;
+    /* altura total da viewport */
+    min-height: 100dvh !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent;
     perspective: 2000px !important;
 }
 
-/* 3. Card principal – carta de baralho (magro, altura automática) */
+/* 3. Card principal – proporção fixa 9:16 (carta de baralho) */
 .feed-empilhado .spotted-card {
-    position: absolute !important;   
-    left: 45% !important;
+    position: absolute !important;
+    left: 50% !important;
     top: 50% !important;
     transform: translate(-50%, -50%);
     margin: 0 !important;
@@ -63,37 +82,42 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    padding: 20px 16px !important;
+    padding: 16px 14px !important;
     pointer-events: auto;
-    /* 🔒 BLOQUEIA QUALQUER ROLAGEM INTERNA */
     overflow-y: hidden !important;
     overflow-x: hidden !important;
     overscroll-behavior: none;
     container-type: inline-size;
     container-name: card-fofoca;
-    width: 70% !important;
-    max-width: 300px !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: 85vh !important;
-    border-radius: 14px !important;
+    /* proporção de celular */
+    /* O "leite" está aqui: */
+    width: min(65vw, 450px);
+    height: min(dvh, calc(min(75vw, 320px) * 1.77));
+    max-width: 280px;
+    height: auto;
+    border-radius: 16px;
+    background: rgba(10, 10, 10, 0.185);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-/* 4. Responsividade – tamanhos progressivos */
+/* 4. Responsividade – tamanhos progressivos (mantendo suas larguras originais) */
 @media (max-width: 400px) {
     .feed-empilhado .spotted-card {
-        width: 80% !important;
+        width: 70% !important;
         max-width: 300px !important;
-        max-height: 80vh !important;
-        top: 50% !important;
+        height: 53dvh!important;
     }
+
     body.modo-swipe-ativo .post-content {
-        font-size: 0.85rem !important;
-        max-height: 3.5rem !important;
+        font-size: 0.95rem !important;
+        max-height: 3.8rem !important;
     }
+
     .feed-empilhado .spotted-card .avatar-p {
-        width: 30px !important;
-        height: 30px !important;
+        width: 35px !important;
+        height: 35px !important;
     }
 }
 
@@ -101,10 +125,10 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     .feed-empilhado .spotted-card {
         width: 75% !important;
         max-width: 320px !important;
-        max-height: 80vh !important;
     }
+
     body.modo-swipe-ativo .post-content {
-        font-size: 0.85rem !important;
+        font-size: 0.9rem ;
     }
 }
 
@@ -112,20 +136,20 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     .feed-empilhado .spotted-card {
         width: 65% !important;
         max-width: 360px !important;
-        max-height: 80vh !important;
     }
 }
 
 @media (min-width: 801px) and (max-width: 1200px) {
     .feed-empilhado .spotted-card {
-        width: 55% !important;
+        width: 60% !important;
         max-width: 420px !important;
-        max-height: 80vh !important;
     }
+
     body.modo-swipe-ativo .post-content {
-        font-size: 1rem !important;
+        font-size: 1.1rem !important;
         max-height: 8rem !important;
     }
+
     .feed-empilhado .spotted-card .avatar-p {
         width: 45px !important;
         height: 45px !important;
@@ -134,49 +158,35 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 
 @media (min-width: 1201px) and (max-width: 1600px) {
     .feed-empilhado .spotted-card {
-        width: 50% !important;
+        width: 65% !important;
         max-width: 480px !important;
-        max-height: 80vh !important;
+        height: 70dvh!important;
     }
+
     body.modo-swipe-ativo .post-content {
-        font-size: 1.1rem !important;
-        max-height: 9rem !important;
+        font-size: 1.3em !important;
+        max-height: 7rem !important;
     }
-    .feed-empilhado .spotted-card .avatar-p {
-        width: 50px !important;
-        height: 50px !important;
-    }
+
+   
 }
 
 @media (min-width: 1601px) {
     .feed-empilhado .spotted-card {
         width: 45% !important;
-        max-width: 550px !important;
-        max-height: 80vh !important;
+        max-width: 500px !important;
     }
+
     body.modo-swipe-ativo .post-content {
         font-size: 1.2rem !important;
-        max-height: 10rem !important;
+        max-height: 72rem !important;
     }
 }
 
-/* Altura do container – ajuste fino */
-@media (min-width: 1024px) {
-    .container-feed.feed-empilhado {
-        min-height: calc(var(--vh, 1vh) * 80) !important;
-    }
-}
-@media (max-width: 600px) {
-   .container-feed.feed-empilhado {
-        min-height: calc(var(--vh, 1vh) * 75) !important;      
-        margin-top: 30px !important;
-    }
-}
-
-/* 5. Altura do texto no modo swipe */
+/* 5. Altura do texto no modo swipe (mantido) */
 body.modo-swipe-ativo .post-content {
-    max-height: clamp(4.8rem, 15vh, 12rem) !important;
-    font-size: clamp(0.9rem, 1.2vh, 1.4rem) !important;
+    max-height: clamp(4rem, 8vh, 10rem) !important;
+    font-size: clamp(0.9rem, 1.2vh, 1.3rem) !important;
     line-height: 1.5;
     margin-bottom: 15px;
 }
@@ -187,17 +197,19 @@ body.modo-swipe-ativo .footer-links {
     padding-top: 15px;
 }
 
-/* 6. Efeito de empilhamento visual (cascata) – SEM !important no transform */
+/* 6. Efeito de empilhamento visual (cascata) – ajustado para aspect-ratio */
 .feed-empilhado .spotted-card:nth-child(2) {
     transform: translate(-54%, -42%) rotate(-2deg) scale(0.95);
     opacity: 0.7 !important;
     z-index: 9 !important;
 }
+
 .feed-empilhado .spotted-card:nth-child(3) {
     transform: translate(-58%, -39%) rotate(-4deg) scale(0.9);
     opacity: 0.4 !important;
     z-index: 8 !important;
 }
+
 .feed-empilhado .spotted-card:first-child {
     z-index: 100 !important;
 }
@@ -216,13 +228,13 @@ body.modo-swipe-ativo::after {
     pointer-events: none;
     transition: opacity 0.3s ease-in-out;
 }
+
 body.card-isolado::after {
     opacity: 1;
     pointer-events: auto;
 }
 
-/* 8. Card sendo arrastado – SEM position:fixed, transform, top, left */
-/* Força o card a esquecer qualquer transição do passado enquanto estiver sendo arrastado */
+/* 8. Card sendo arrastado */
 .container-feed.feed-empilhado .spotted-card.dragging {
     transition: none !important;
     will-change: transform, opacity;
@@ -232,14 +244,12 @@ body.card-isolado::after {
     cursor: grabbing;
 }
 
-.container-feed.feed-empilhado .spotted-card:not(.dragging) {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s !important;
-}
+
 
 /* 9. Apenas o primeiro card recebe toques */
 .feed-empilhado .spotted-card:not(:first-child) {
     pointer-events: none !important;
-    -webkit-user-select: none!important;
+    -webkit-user-select: none !important;
     user-select: none !important;
 }
 
@@ -250,12 +260,13 @@ body.card-isolado::after {
     top: 45% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) scale(1.05);
-    width: 80% !important;
+    width: 75% !important;
     max-width: 500px !important;
-    max-height: 70vh !important;
+    max-height: 70dvh !important;
     overflow-y: auto !important;
     margin: 0 !important;
 }
+
 .focado-swipe .post-content {
     max-height: none !important;
     line-clamp: unset !important;
@@ -263,7 +274,7 @@ body.card-isolado::after {
 
 /* 11. Limitar texto na pilha */
 body.modo-swipe-ativo .spotted-card:not(.focado-swipe) .post-content {
-    max-height: 7rem;
+    max-height: 6rem;
     overflow: hidden !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 3;
@@ -277,6 +288,7 @@ body.modo-swipe-ativo .fab-postar,
 body.modo-swipe-ativo #toggle-swipe {
     display: none !important;
 }
+
 body.modo-swipe-ativo .footer-links .btn-reagir,
 body.modo-swipe-ativo .footer-links .btn-fofocar,
 body.modo-swipe-ativo .reacao-wrapper,
@@ -284,7 +296,7 @@ body.modo-swipe-ativo .btn-fofocar {
     display: none !important;
 }
 
-/* 13. Filtros no modo swipe */
+/* 13. Filtros no modo swipe – mantido exatamente como você tinha */
 body.modo-swipe-ativo .controles-feed-topo {
     position: fixed;
     top: 50px;
@@ -295,30 +307,34 @@ body.modo-swipe-ativo .controles-feed-topo {
     padding: 0 !important;
     pointer-events: none;
 }
+
 body.modo-swipe-ativo .filtros-wrapper-retratil {
     display: none;
 }
+
 body.modo-swipe-ativo #btn-abrir-filtros,
 body.modo-swipe-ativo .filtros-wrapper-retratil {
     pointer-events: auto;
 }
+
 body.modo-swipe-ativo .filtros-container {
-    display: flex ;
-    flex-wrap: wrap ;
-    justify-content: center ;
-    gap: 8px ;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
     width: 100% !important;
-    margin-top: 40px ;
-    padding: 20px 10px 30px 10px ;
+    margin-top: 40px;
+    padding: 20px 10px 30px 10px;
 }
+
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: flex !important;
     flex-wrap: wrap;
     justify-content: center;
     align-content: flex-start;
     background: rgba(0, 0, 0, 0.6);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     padding: 30px 15px 20px 15px !important;
     border-radius: 0 0 25px 25px;
     border-bottom: 3px solid #ff8c00;
@@ -327,42 +343,54 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     top: 0 !important;
     left: 0;
     width: 100%;
-    max-height: 100vh;
+    max-height: 100dvh;
     overflow-y: auto;
     z-index: 9998;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
     animation: slideDown 0.3s ease-out;
 }
+
 @keyframes slideDown {
-    from { transform: translateY(-100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
+
 #btn-abrir-filtros {
     display: none;
 }
+
 #btn-abrir-filtros.btn-fenda-padrao {
-    left:35%;
+    left: 60%;
 }
 
 body.modo-swipe-ativo #btn-abrir-filtros {
     display: block !important;
-    position: fixed;
-    top: 60px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: absolute;
+    top: 40px;
+    left: 70%;
+    transform: translateX(-30%);
     z-index: 10000 !important;
-    padding: 8px 16px;
-    font-size: 0.8rem;
-    font-weight: 800;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
     text-transform: uppercase;
     color: white;
     border-radius: 50px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 body.modo-swipe-ativo #btn-abrir-filtros:active {
     transform: translateX(-50%) scale(0.9);
 }
+
 body.modo-swipe-ativo .container-load-more {
     display: none !important;
 }
@@ -370,160 +398,204 @@ body.modo-swipe-ativo .container-load-more {
 /* 14. Reset quando NÃO está no modo swipe */
 body:not(.modo-swipe-ativo) .spotted-card {
     position: relative !important;
-    transform: none !important;
     opacity: 1 !important;
-    touch-action: auto !important;
 }
 
-/* 15. Feedback visual – corrigido e visível */
+/* Feedback visual que aparece quando você começa a arrastar */
+body.modo-swipe-ativo .feedback-visual {
+    position: absolute;
+    pointer-events: none !important;
+    z-index: 1 !important;
+    opacity: 0.5;
+}
+
+/* 15. Feedback visual – agora absolute dentro do container (não invade menu) */
 .feedback-swipe {
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.75);
-    padding: 12px 20px;
+    /* não fixed */
+    background: rgba(0, 0, 0, 0.671);
+    padding: 20px;
     border-radius: 40px;
     color: white;
     font-weight: bold;
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
-    z-index: 10000;
+    z-index: 9999;
     pointer-events: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     white-space: nowrap;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
+
 .feedback-direita {
     right: 5%;
-    background-color: rgba(9, 255, 0, 0.9);
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(9, 255, 0, 0.788);
 }
+
 .feedback-esquerda {
     left: 5%;
+    top: 50%;
+    transform: translateY(-50%);
     background-color: rgba(247, 44, 44, 0.95);
 }
+
 .feedback-cima {
-    top: 15%;
+    top:20%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #00a896;
 }
 
-@media (max-width: 480px) {
-    .feedback-cima, .feedback-direita, .feedback-esquerda {
-        padding: 10px 16px;
-        font-size: 0.85rem;
-        border-radius: 30px;
-    }
-}
-@media (min-width: 481px) and (max-width: 800px) {
-    .feedback-direita, .feedback-esquerda {
-        padding: 14px 20px;
-        font-size: 1rem;
-    }
-}
-@media (min-width: 801px) {
-    .feedback-direita, .feedback-esquerda {
-        padding: 18px 28px;
-        font-size: 1.2rem;
-    }
-}
-@media (orientation: landscape) and (max-height: 500px) {
-    .feedback-cima {
-        top: 10% !important;
-    }
-}
-
-/* Feedback CIMA – não invade o menu */
-.feedback-cima {
-    top: 80px !important; /* abaixo do header em desktop */
-}
+/* Ajustes de responsividade para feedbacks */
 @media (max-width: 600px) {
-    .feedback-cima {
-        top: 60px !important;
-    }
-}
-@media (orientation: landscape) and (max-height: 500px) {
-    .feedback-cima {
-        top: 40px !important;
+
+    .feedback-cima,
+    .feedback-direita,
+    .feedback-esquerda {
+        padding: 8px 16px;
+        font-size: 0.95rem;
     }
 }
 
-/* 16. Imagens no modo swipe */
+@media (orientation: landscape) and (max-height: 500px) {
+    .feedback-cima {
+        top: 20px;
+    }
+}
+
+/* 16. Imagens no modo swipe – mantido */
 .container-img-post {
     width: 100%;
-    min-height: 180px;
-    overflow: hidden;
+    height: auto;
     border-radius: 10px;
     margin: 10px 0;
     transition: all 0.5s ease;
 }
+
 .spotted-card-img {
     width: 100%;
-    height: 100%;
+    max-height: 300px;
     border: 2px solid #ee9529;
     object-fit: cover;
-    object-position: center!important;
+    object-position: center !important;
     border-radius: 10px;
 }
 
 @container card-fofoca (min-width: 400px) {
-    .container-img-post { max-height: 600px !important; }
-    .spotted-card-img { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); }
+    .container-img-post {
+        max-height: 350px !important;
+    }
+
+    .spotted-card-img {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
 }
+
 @container card-fofoca (min-width: 600px) {
     .spotted-card {
         display: flex !important;
         flex-direction: row !important;
         align-items: center !important;
     }
+
     .container-img-post {
-        width: 50% !important;
+        width: 45% !important;
         max-height: 100% !important;
         margin-right: 20px !important;
     }
-    .spotted-card-img { object-fit: contain !important; }
+
+    .spotted-card-img {
+        object-fit: contain !important;
+    }
 }
 
 /* 17. Landscape */
 @media (orientation: landscape) and (max-height: 500px) {
     .container-feed.feed-empilhado {
-        height: calc(var(--vh, 1vh) * 100) !important;
-        margin-top: 20px !important;
+        height: 100dvh !important;
+        margin-top: 0 !important;
     }
+
     .feed-empilhado .spotted-card {
-        max-height: 75vh !important;
+        aspect-ratio: 16 / 9 !important;
+        /* mais baixo em landscape */
         width: 70% !important;
-        top: 50% !important;
+        max-width: 450px !important;
     }
-    footer { display: none !important; }
+
+    footer {
+        display: none !important;
+    }
 }
 
-/* 18. Botões de filtro no modo normal (telas pequenas) */
+/* 18. Botões de filtro no modo normal (telas pequenas) – mantido */
 @media (max-width: 768px) {
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
         display: inline-flex !important;
         position: fixed !important;
-        top: 15px ;
-        left: 50% ;
+        top: 15px;
+        left: 50%;
         transform: translateX(-50%);
         z-index: 10000 !important;
-        color: #000 ;
-        padding: 8px 16px ;
-        font-size: 0.75rem !important;
-        border-radius: 40px ;
+        color: #000;
+        padding: 8px 16px;
+        font-size: 0.8rem !important;
+        border-radius: 40px;
         font-weight: bold;
-        white-space: nowrap ;
+        white-space: nowrap;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     }
 
     .chat-input-container {
         justify-content: space-between !important;
     }
+
     .textarea-chat {
-        flex: 1; /* Ocupa o que sobrar */
-        max-width: 100% !important; /* Limita um pouco pra sobrar espaço pro botão */
+        display: flex;
+        flex: 1;
+        max-width: 100% !important;
     }
 
+    #form-comentario {
+        /* Garante que o teclado não cubra o campo de entrada */
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .sidebar-fenda {
+        display: block !important;
+        /* Garante que a sidebar exista no layout */
+        visibility: visible !important;
+        /* Garante que ela esteja visível */
+        width: 230px !important;
+        /* Garante uma largura mínima */
+        height: auto !important;
+        /* Garante altura total */
+        position: fixed !important;
+        top: 0;
+        left: 0;
+    }
+
+    .sidebar-fenda .menu {
+        display: flex !important;
+        /* Força a lista a aparecer */
+        flex-direction: column !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    /* Quando a classe 'ativa' for adicionada pelo JS, ele aparece */
+    .menu.ativa {
+        display: flex;
+    }
+
+    /* O botão hambúrguer aparece apenas no mobile */
+    #btn-menu-hamburguer {
+        display: block;
+    }
 }
+
 
 
 /* Ajustes finos para não bagunçar */
@@ -537,6 +609,7 @@ body:not(.modo-swipe-ativo) .spotted-card {
 .filtros-wrapper-retratil {
     display: none !important;
 }
+
 .filtros-wrapper-retratil.aberto {
     display: block !important;
     position: fixed !important;
@@ -550,21 +623,21 @@ body:not(.modo-swipe-ativo) .spotted-card {
     border-bottom: 5px solid #ff8c00;
     padding: 15px;
     z-index: 9999 !important;
-    max-height: 70vh !important;
+    max-height: 70dvh !important;
     overflow-y: auto !important;
 }
 
-/* 19. Modo swipe: botão de filtro sempre visível */
+/* 19. Modo swipe: botão de filtro sempre visível – mantido */
 body.modo-swipe-ativo #btn-abrir-filtros {
     display: inline-flex !important;
     position: fixed !important;
-    top: 30px ;
-    left: 30% ;
+    top: 6%;
+    left: 65%;
     z-index: 10001 !important;
     background: linear-gradient(145deg, #fffc30, rgba(214, 252, 0, 0.301));
     color: #000000d0;
-    padding: 8px 16px;
-    font-size: 0.9rem;
+    padding: clamp(6px, 0.5vw + 2px, 10px) 12px;
+    font-size: 0.95rem;
     border-radius: 40px;
     font-weight: bold !important;
     white-space: nowrap !important;
@@ -578,9 +651,11 @@ body.modo-swipe-ativo #btn-abrir-filtros {
         font-size: 0.8rem;
     }
 }
+
 body.modo-swipe-ativo .filtros-wrapper-retratil {
     display: none !important;
 }
+
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: block !important;
     position: fixed !important;
@@ -593,65 +668,58 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     border-radius: 20px !important;
     padding: 15px !important;
     z-index: 10000 !important;
-    max-height: 70vh !important;
+    max-height: 70dvh !important;
     overflow-y: auto !important;
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         top: 40px !important;
-        max-height: 55vh !important;
+        max-height: 55dvh !important;
     }
 }
 
-/* 20. Telas grandes no modo normal: filtros sempre visíveis */
+/* 20. Telas grandes no modo normal: filtros sempre visíveis – mantido */
 @media (min-width: 769px) {
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil {
         display: block !important;
         position: relative !important;
         background: transparent !important;
-        -webkit-backdrop-filter: none!important;
+        -webkit-backdrop-filter: none !important;
         backdrop-filter: none !important;
         padding: 0 !important;
         margin: 20px 0 !important;
         box-shadow: none !important;
     }
+
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
         display: flex !important;
         flex-wrap: wrap !important;
         justify-content: center !important;
         gap: 15px !important;
     }
-        .chat-input-container {
-        justify-content: flex-start !important; /* Alinha tudo à esquerda como o WhatsApp */
-        max-width: 1200px; 
-        gap: 20px; 
+
+    .chat-input-container {
+        justify-content: flex-start !important;
+        max-width: 100%;
+        gap: 20px;
     }
-    
+
     .textarea-chat {
-        flex: 1; /* Estica o textarea até preencher o espaço disponível */
-        max-width: none !important; /* Permite que ele fique "por extenso" */
+        flex: 1;
+        max-width: none !important;
+    }
+
+    #btn-menu-hamburguer {
+        display: none;
+    }
+
+    .menu {
+        display: flex !important;
+        /* Sempre visível no PC */
     }
 }
 
-
-/* 21. Modo hacker */
-.modo-swipe-ativo body.hacker-mode .feed-empilhado .spotted-card {
-    transition: none !important;
-    animation: none !important;
-}
-.modo-swipe-ativo body.hacker-mode .spotted-card {
-    box-shadow: none !important;
-    -webkit-backdrop-filter: none!important;
-    backdrop-filter: none !important;
-    border: double 2px solid #00ff00 !important;
-    border-style: dashed;
-}
-.modo-swipe-ativo body.hacker-mode .spotted-card.dragging {
-    transition: none !important;
-    border: 2px solid #00ff00 !important;
-    background: rgba(0, 20, 0, 0.9) !important;
-}
 
 /* GARANTIA EXTRA - O CARD RECEBE O MOUSEDOWN */
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child {
@@ -659,14 +727,22 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     position: absolute !important;
     z-index: 9999 !important;
 }
+
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child * {
-    pointer-events: auto !important;  
+    pointer-events: auto !important;
 }
 
 .feed-empilhado .spotted-card {
     content-visibility: auto;
-    touch-action: none; /* Previne scroll da página durante swipe */
+    touch-action: none;
     -webkit-user-select: none !important;
     user-select: none !important;
     touch-callout: none !important;
+}
+
+.feed-empilhado .spotted-card .user-info-post {
+    touch-action: none;
+    transform: none;
+    -webkit-user-select: none !important;
+    user-select: none !important;
 }

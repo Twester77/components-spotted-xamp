@@ -63,16 +63,16 @@ include 'includes/bolhas.php';
             <?php include 'includes/login.php'; ?>
         <?php else: ?>
             <div class="card-boas-vindas-fenda">
-                <div style="font-size: 36px; margin-bottom: 15px;">🎓</div>
+                <div style="font-size: 32px; margin-bottom: 15px;">🎓</div>
                 <p style="color: #fff; margin-bottom: 25px; font-size: 1.4rem; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
                     <span class="<?php echo $classe_saudacao; ?>">
                         <?php echo $saudacao; ?>
                         <span style="color: #ffbc00; font-weight: bold;">
                             Seja bem vindo novamente, <?php echo htmlspecialchars($nome_exibicao); ?>
-                        </span> ! 
-                    </span> 
+                        </span> !
+                    </span>
                 </p>
-                <p> 
+                <p>
                     <span style="font-size: 20px; opacity: 0.9; color: <?php echo $cor_extra; ?>">
                         <?php echo $extra; ?>
                     </span>
@@ -113,14 +113,6 @@ include 'includes/bolhas.php';
                     <li> Bebam água e, é claro... DIVIRTAM-SE!</li>
                 </ul>
             </article>
-        </article>
-
-        <article class="campus-container">
-            <div class="campus-flex">
-                <img src="imagensfoto/campus-centro.jpg" alt="UNIFEV - Câmpus Centro" class="img-campus">
-                <img src="imagensfoto/cidade-universitaria.jpg" alt="Cidade Universitária" class="img-campus">
-            </div>
-            <figcaption class="legenda-campus">Nossos QGs: Câmpus Centro e Cidade Universitária</figcaption>
         </article>
 
         <div id="bios-boot" class="hacker-boot-screen">

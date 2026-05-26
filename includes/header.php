@@ -2,7 +2,7 @@
 include_once 'conexao.php';
 
 $u_id = $_SESSION['usuario_id'] ?? 0;
-$pref_swipe_real = 0; 
+$pref_swipe_real = 0;
 $pagina_atual = basename($_SERVER['PHP_SELF']); // Identifica a página (ex: feed.php)
 
 if ($u_id > 0 && isset($conn)) {
@@ -20,7 +20,7 @@ $ativar_modo_app = ($pref_swipe_real == 1 && $pagina_atual == 'feed.php');
 $classe_tema = $tema_classe ?? '';
 $classe_pref = ($ativar_modo_app) ? 'modo-swipe-ativo feed-empilhado' : 'allow-hover';
 // Se o modo swipe estiver ativo, o body fica limpo para o JS rodar a física livre!
-$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema is-touch-device");?>
+$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema is-touch-device"); ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -31,11 +31,16 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <title>A Fenda - Spotted Universitário (Votuporanga)</title>
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/feed.css">
     <link rel="stylesheet" href="css/formularios.css">
     <link rel="stylesheet" href="css/animacoes.css">
+    <link rel="stylesheet" href="css/feed.css">
     <link rel="stylesheet" href="css/skin-hacker.css">
+    <?php if ($pagina_atual == 'post.php'): ?>
+        <link rel="stylesheet" href="css/comentarios.css">
+    <?php endif; ?>
+    <?php if ($pagina_atual == 'feed.php'): ?>
     <link rel="stylesheet" href="css/swipe.css?v=<?php echo time(); ?>">
+    <?php endif; ?>
     <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
     <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,10 +57,10 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         <?php
         // MELHORIA SUPREMA: Os ícones agora aparecem na Index e no Feed, 
         // desde que o Habitante esteja devidamente logado no sistema!
-        if ($u_id > 0): 
+        if ($u_id > 0):
         ?>
             <div class="header-icons">
-                <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes" aria-label="Pesquisar habitantes"></a>
+                <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes" aria-label="Pesquisar habitantes">
                     <i class="fas fa-search"></i>
                 </a>
 

@@ -1,12 +1,14 @@
 <?php
+error_reporting(0); 
+ini_set('display_errors', 0);
 // buscar-mencoes.php
 include_once 'conexao.php';
 
-// Pega o termo digitado após o @
 $termo = isset($_GET['q']) ? mysqli_real_escape_string($conn, $_GET['q']) : '';
+$resultados = []; // Inicializamos vazio
 
+// Só faz a query se tiver algo digitado
 if (strlen($termo) >= 1) {
-    // Busca os usuários que começam com o que o habitante digitou
     $sql = "SELECT username FROM usuarios WHERE username LIKE ? LIMIT 5";
     $stmt = $conn->prepare($sql);
     $busca = $termo . '%';
@@ -14,13 +16,13 @@ if (strlen($termo) >= 1) {
     $stmt->execute();
     $res = $stmt->get_result();
 
-    $resultados = [];
     while ($row = $res->fetch_assoc()) {
         $resultados[] = $row['username'];
     }
-
-    // Retorna em JSON para o JavaScript ler
-    header('Content-Type: application/json');
-    echo json_encode($resultados);
+    $stmt->close();
 }
+
+// Sempre retorna um JSON (ou [], ou ["usuario1", ...])
+header('Content-Type: application/json');
+echo json_encode($resultados);
 ?>
