@@ -26,7 +26,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perdidos" style="width: 100% !important; padding: 20px 0; overflow-x: hidden;" id="conteudo-principal"> 
+<main class="main-perdidos" style=" padding: 20px 0; overflow-x: hidden;" id="conteudo-principal"> 
     <?php if (!$usuario_logado): ?>
         <div class="sessao-login-top" style="margin-bottom: 40px;">
             <?php include 'includes/login.php'; ?>
@@ -34,7 +34,7 @@ include 'includes/bolhas.php';
     <?php else: ?>
         <div class="painel-sessao" role="region" aria-label="Informações da Sessão">
             <p>Logado como: <strong><?php echo $_SESSION['usuario_nome']; ?></strong> <span aria-hidden="true">🎓</span></p>
-            <button type="button" onclick="deslogar()" class="btn-sair-fenda">Sair</button>
+            <button type="button" onclick="deslogar()" class="btn-sair-fenda">Sair da Conta</button>
         </div>
     <?php endif; ?>
 

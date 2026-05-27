@@ -224,6 +224,8 @@
         }
         moveDetected = true;
 
+        document.body.classList.add('fenda-arrastando');
+
         if (e.cancelable) e.preventDefault();
         e.stopPropagation();
 
@@ -255,6 +257,8 @@
     }
 
     function onEnd(e) {
+        //Garante a limpeza logo no primeiro milissegundo que o dedo solta a tela
+    document.body.classList.remove('fenda-arrastando');
         if (!isDragging || !activeCard) {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             isDragging = false;

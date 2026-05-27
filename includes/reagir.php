@@ -1,5 +1,26 @@
 <?php
-// Tenta incluir a conexão verificando se está dentro de 'includes' ou na raiz
+// Inicia a sessão antes de qualquer checagem para evitar o erro de "Login necessário"
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// ==================== ESCUDO ANTI-GROSOPE (RATE LIMITER) ====================
+$tempo_minimo = 0.4; // 400ms: impede scripts maliciosos de inundarem o banco
+if (isset($_SESSION['ultimo_click_reacao'])) {
+    $tempo_decorrido = microtime(true) - $_SESSION['ultimo_click_reacao'];
+    if ($tempo_decorrido < $tempo_minimo) {
+        http_response_code(429);
+        header('Content-Type: application/json');
+        echo json_encode([
+            "status" => "error", 
+            "message" => "Calma lá! Vai cutucar um ninho de marimbondo com tanto clique."
+        ]);
+        exit();
+    }
+}
+$_SESSION['ultimo_click_reacao'] = microtime(true);
+// ============================================================================
+
 if (file_exists('conexao.php')) {
     include 'conexao.php';
 } else {

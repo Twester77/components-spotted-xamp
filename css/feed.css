@@ -82,7 +82,7 @@
 .container-feed article {
     display: flex !important;
     flex-direction: column;
-    max-width: 350px !important;
+    max-width: 350px ;
     /* Deixa o Grid controlar a largura */
     margin: 0 !important;
     flex-shrink: 0 !important;
@@ -161,9 +161,9 @@
     /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
-    max-width: 550px !important;
+    max-width: 500px !important;
     /* Limita a largura máxima do card */
-    min-height: 180px;
+    min-height: 160px;
     height: auto ;
     -webkit-user-select:none ;
     user-select: none;
@@ -171,7 +171,6 @@
 
 }
 
-.com-transicao { transition: transform 0.3s ease; }
 
 /* ==========================================================================
    BLINDAGEM DO HOVER - FIM DA TREMEDEIRA SUPREMA
@@ -186,9 +185,9 @@
     transform: translateX(-5px) ;
 }
 
-@supports (backdrop-filter: blur(3px)) {
+@supports (backdrop-filter: blur(4px)) {
     .allow-hover.spotted-card:hover {
-        backdrop-filter: blur(3px);
+        backdrop-filter: blur(4px);
         background: rgba(22, 22, 22, 0.185);
         /* Um pouco mais escuro para o texto ler melhor no blur */
     }
@@ -365,9 +364,6 @@
     padding: 8px 0;
 }
 
-body.modo-swipe-ativo .user-mention, body.modo-swipe-ativo .anonimo { /* substitua pela classe real do link */
-    pointer-events: none!important;
-}
 
 .card-body {
     overflow-wrap: break-word;
@@ -445,7 +441,7 @@ body.modo-swipe-ativo .user-mention, body.modo-swipe-ativo .anonimo { /* substit
     border-radius: 20px;
     font-size: 14px;
     margin-right: 10px;
-    max-width: clamp(120px, 5vw, 180px) !important;
+    max-width: clamp(120px, 5vw, 160px) !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -538,12 +534,6 @@ span.category-tag {
 
 }
 
-.fa-ellipsis-v {
-    font-size: clamp( 18px, 1.5vw, 22px );
-    font-weight: bold;
-    gap: 5px;
-    order: 3;
-}
 
 .post-time {
     font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.2rem);
@@ -575,20 +565,33 @@ span.category-tag {
 .reacoes-popup {
     display: none; /* Agora é flex sempre */
     position: absolute;
-    left: 50%;
-    bottom: 40px;
+    left: 45%;
+    bottom: 100%;
     background: #252542;
     padding: 8px 12px;
     border-radius: 20px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-    z-index: 999;
+    z-index: 9999!important;
     border: 1px solid rgba(255, 255, 255, 0.1);
     white-space: nowrap;
     /* A MÁGICA: Escondemos assim */
     opacity: 0;
-    transform: translateX(-50%) scale(1);
+    transform: translateX(-30%) scale(1);
     transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
 }
+
+/* 1. O Wrapper deve ser relativo para segurar o popup absoluta */
+.reacao-wrapper {
+    position: relative;
+    display: inline-block; /* Garante que o wrapper não colapse */
+}
+
+/* 3. A classe que o JS ativa */
+.reacao-wrapper.popup-ativo .reacoes-popup {
+    display: flex !important;
+    opacity: 1 !important; /* Adicione isso! */
+}
+
 
 
 /*  Aumente a ponte para o menu não sumir */
@@ -611,7 +614,10 @@ span.category-tag {
 
 /* --- PÍLULAS DE REAÇÃO (NO FEED) --- */
 .reacao-item {
-    display: inline-flex;
+    display: inline-flex!important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative;
     align-items: center;
     justify-content: center;
     min-width: 30px;
@@ -638,7 +644,7 @@ span.category-tag {
 
 @media (hover: none) {
     .reacoes-popup span:active {
-        transform: scale(1.4);
+        transform: scale(1.3);
     }
 }
 
@@ -698,7 +704,7 @@ span.category-tag {
     text-transform: uppercase;
     margin: 20px 0 20px 0 !important;
      word-break: break-word;
-    /* Evita que post enormes explodam o layout */
+    /* Evita que nomes enormes explodam o layout */
     overflow-wrap: break-word;
     white-space: pre-wrap;
     /* Margem apenas embaixo para afastar do username/bio */
@@ -916,7 +922,7 @@ span.category-tag {
     transition: 0.3s;
     text-decoration: none;
     word-break: break-word;
-    /* Evita que post enormes explodam o layout */
+    /* Evita que cards enormes explodam o layout */
     overflow-wrap: break-word;
     max-width: 400px;
     margin: 10px auto;

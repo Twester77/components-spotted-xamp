@@ -1356,18 +1356,17 @@ footer a {
 }
 
 
-
 /* --- LOGIN MODO SR-71 STEALTH (TOTALMENTE INVISÍVEL) --- */
 
 .fenda-glass-container {
     background: transparent !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     border: none !important;
-    box-shadow: none !important;
+    box-shadow: none ;
     width: 100% !important;
-    margin: 0 auto !important;
-    padding: 20px !important;
+    margin: 0 auto ;
+    padding: 20px ;
 }
 
 /* Mantendo os inputs visíveis no escuro */
@@ -1387,7 +1386,7 @@ form[action="confirma-login.php"] input[type="password"] {
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
 h2.titulo-home {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     text-align: center;
     margin-top: 40px !important;
     margin-bottom: 20px;
@@ -1409,13 +1408,13 @@ h2.titulo-home {
 
 }
 
-.conteudo-principal {
+main.conteudo-principal {
     font-size: 16px;
     line-height: 1.6;
     text-align: left;
     color: #e0e0e0;
     max-width: clamp(320px, 100%, 800px) !important;
-    padding: 0 !important;
+    padding: 12px ;
 }
 
 .aviso-legal {
@@ -1469,7 +1468,6 @@ h2.titulo-home {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    padding: 10px;
 }
 
 /* Cada "Slide" da nossa apresentação */
@@ -1477,16 +1475,16 @@ h2.titulo-home {
     background: rgba(0, 0, 0, 0.473);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
-    padding: 15px;
+    padding: clamp(10px, 2.5dvh, 20px) clamp(10px, 2.5dvh, 20px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease, border-color 0.3s ease;
-    margin: 20px auto;
+    margin: 30px auto;
 }
 
 .fenda-slide:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
     border-color: rgba(252, 144, 12, 0.3); /* Brilho sutil com o dourado/laranja da Fenda */
 }
 
@@ -1515,7 +1513,7 @@ h2.titulo-home {
 /* Conteúdo de texto dos slides */
 .slide-body {
     font-size: 1.125rem; /* 18px */
-    line-height: 1.6;
+    line-height: 1.5;
     color: #e0e0e0;
 }
 
@@ -1531,19 +1529,28 @@ h2.titulo-home {
 
 .campus-flex {
     display: flex;
-    gap: 15px;
-    align-content: center;
-    flex-wrap: wrap;
+    flex-wrap: wrap;         
+    justify-content: center; /* Centraliza lado a lado no PC */
+    align-items: center;     /* Alinha verticalmente */
+    gap: 20px;               /* Espaço entre as fotos */
+    width: 100%;
+}
+
+/* Alinhamento das tags picture */
+.campus-flex picture {
+    display: block;
+    text-align: center;      /* Garante o conteúdo centrado */
 }
 
 /* Correção e upgrade da imagem do Câmpus */
 .img-campus {
-    width: clamp(250px, 100dvh, 320px);
-    height: 250px;
-    object-fit: cover; /* Recorta a imagem perfeitamente sem amassar */
+    width: clamp(250px, 100dvh, 400px);
+    min-height: 230px;
+    object-fit: cover;
     border-radius: 12px;
     transition: transform 0.3s ease;
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    display: block;          /* Remove espaços em branco inferiores */
 }
 
 .img-campus:hover {
@@ -2230,30 +2237,29 @@ textarea[name="bio"] {
         align-items: center !important;
         padding-top: 50px !important;
         /* Espaço para a navbar não cobrir o post */
-        gap: 5px !important;
     }
 
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
-        width: 95% !important;
+        width: 100% !important;
         max-width: 400px !important;
         margin-bottom: 10px !important;
-        padding: 5px !important;
+        padding: 10px !important;
     }
 
     .container-feed {
-        padding: 8px !important;
+        padding: 10px !important;
     }
 
     .main-perdidos {
-        padding: 8px !important;
+        padding: 5px !important;
         margin: 15px auto !important;
     }
 
     /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
     .post-content,
     .post-content-focado {
-        max-height: 52dvh !important;
+        max-height: 55dvh !important;
         /* Limita a altura do texto */
         overflow: auto;
     }
@@ -2299,13 +2305,14 @@ textarea[name="bio"] {
         right: 0 !important;
         margin: 10px auto !important;
         padding: 5px !important;
-        width: 97% !important;
+        width: 100% !important;
     }
 
     /* Garante que o container do feed não tenha padding lateral */
     .container-feed {
         margin: 0 auto !important;
         width: 100% !important;
+        grid-template-columns: 1fr!important;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2319,7 +2326,7 @@ textarea[name="bio"] {
 
     footer {
         /* Garante que ele saia debaixo de floats */
-        padding: 10px 15px 15px 10px;
+        padding: 8px 15px 15px 8px;
         font-size: 0.76rem;
         color: var(--dourado);
 

@@ -137,11 +137,11 @@ body.hacker-mode .fenda-glass-container::before,
 body.hacker-mode .main-perfil-container::before,
 body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
-    content: "+================================================================================+" !important;
+    content: "+==================================================================+==============================================================+" !important;
     position: absolute !important;
-    top: -20px !important;
-    left: -6px !important; /* Ajuste para alinhar com o border-left double */
-    right: -6px !important;
+    top: -20px ;
+    left: -6px ; /* Ajuste para alinhar com o border-left double */
+    right: -6px ;
     color: var(--hacker-green) !important;
     font-family: monospace !important;
     font-weight: bold !important;
@@ -1096,27 +1096,12 @@ body.hacker-mode .hacker-booting {
 @media (prefers-reduced-motion: no-preference) {
     .feed-empilhado .spotted-card {
         background: rgba(255, 255, 255, 0.068);
-        -webkit-backdrop-filter: blur(6px); /* Essencial para funcionar no Safari/iPhone */
-        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(5px); /* Essencial para funcionar no Safari/iPhone */
+        backdrop-filter: blur(5px);
     }
 }
 
-body.hacker-mode .feed-empilhado .spotted-card {
-    transition: transform 0.3s ease-out !important; /* Devolve a animação mínima */
-    animation: none !important; /* Mas mantém as animações de 'typing' desligadas */
-}
-
-/* Trava Hacker: Prioriza performance no Swipe */
-body.hacker-mode .spotted-card {
-    box-shadow: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-    border: double 2px solid #00ff00 !important; /* Visual Matrix total */
-}
 
 
-body.hacker-mode .spotted-card.dragging {
-    transition: none !important;
-    border: 2px solid #00ff00 !important;
-    background: rgba(0, 20, 0, 0.9) !important;
-}
+
+

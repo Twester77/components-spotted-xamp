@@ -549,21 +549,28 @@ textarea {
 
 /* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
 
+/* Blindagem absoluta contra estouros de padding */
+.main-perdidos,
+.main-perdidos *,
+section.sessao-publicar,
+.form-publicar,
+.form-publicar * {
+    box-sizing: border-box !important;
+}
+
 /* Container Principal */
 .main-perdidos {
-    /* Largura flutua entre 320px e 1200px dependendo da tela */
     width: clamp(300px, 100%, 1200px);
     padding: clamp(8px, 3vw, 25px);
     margin: 20px auto;
-    box-sizing: border-box !important;
     max-width: 95%;
 }
 
-/* O Form de busca/filtro (aquele treco estranho kk) */
+/* O Form de busca/filtro */
 .form-perdidos {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: clamp(15px, 4vw, 40px);
+    padding: clamp(15px, 4vw, 25px);
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -573,11 +580,10 @@ textarea {
     margin-bottom: 20px;
     padding: clamp(15px, 2vw, 25px);
     border-radius: 12px;
-    /* Fonte da mensagem flutuando entre 14px e 18px */
     font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
 }
 
-/* O container que envolve o formulário de postagem  */
+/* O container que envolve o formulário de postagem */
 section.sessao-publicar {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -585,19 +591,12 @@ section.sessao-publicar {
     padding: 20px;
     margin: 20px auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    width: 95%;
-    max-width: clamp(300px, 95%, 500px);
-    display: flex !important;
-    /* Para garantir o alinhamento interno */
-    flex-direction: column !important;
-    align-items: center;
+    max-width: clamp(300px, 96%, 1000px);
     background-color: #49414121;
     background: rgba(0, 0, 0, 0.45);
     border-radius: 20px !important;
     height: auto !important;
-
 }
-
 
 .sessao-publicar h3,
 .titulo-publicar {
@@ -606,60 +605,7 @@ section.sessao-publicar {
     margin-bottom: 20px;
     text-align: center;
     font-size: clamp(1.2rem, 2.5vw, 2rem);
-
 }
-
-/* Forçando o formulário a ser um bloco de largura total */
-.form-publicar {
-    width: 100% !important;
-    display: block !important;
-    /* Mudando de flex para block se necessário */
-    margin-top: 15px;
-}
-
-/* O segredo para os inputs pararem de teimar */
-.form-publicar select,
-.form-publicar textarea,
-.form-publicar .fenda-input
- {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    /* Espaçamento interno mais robusto */
-    padding: clamp(12px, 2vw, 20px) !important;
-    margin-bottom: 15px !important;
-    /* Reset de bordas e box-sizing */
-    box-sizing: border-box !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    background: rgba(0, 0, 0, 0.4) !important;
-    color: #fff !important;
-    border-radius: 10px !important;
-}
-
- #file-upload-button {
-    box-shadow: 0 0 0 20px 0 #0000;
-    border-radius: 10px;
-    color: #0a0a0a;
-    background-color: #f0cd05e8;
-    font-style: none;
-    padding: 4px 12px;
-}
-
-/* Deixando a caixa de texto maior */
-.form-publicar textarea {
-    min-height: 120px !important;
-    line-height: 1.5;
-}
-
-.form-publicar select:focus,
-.form-publicar textarea:focus {
-    border-color: #ffbc00;
-    outline: none;
-    background: rgba(0, 0, 0, 0.589) !important;
-
-}
-
 
 .nota-seguranca {
     background: rgba(252, 144, 12, 0.1);
@@ -671,13 +617,77 @@ section.sessao-publicar {
     border-radius: 4px;
 }
 
-/* Ajuste dos inputs dentro do formulário */
+/* --- O FORMULÁRIO EM ROW INTELIGENTE (FLEX WRAP) --- */
+.form-publicar {
+    width: 100% !important;
+    margin-top: 15px;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;      
+    align-items: flex-end !important; /* CORREÇÃO: Alinha todos por baixo, impedindo de esticarem */
+    gap: 12px !important;            
+}
+
+/* Os blocos de embrulho (.input-group) se adaptando ao espaço */
 .form-publicar .input-group {
-    margin-bottom: 15px;
+    margin-bottom: 0 !important;
+    flex: 1 1 calc(50% - 12px) !important; 
+    min-width: 140px !important;           
+}
+
+/* CORREÇÃO: Aumentando a prioridade de espaço/width da Textarea no flexbox */
+.form-publicar .input-group:has(textarea) {
+    flex: 3 1 280px !important; /* Peso maior (3) para esticar bem pros lados */
+}
+
+/* Estilo base dos seus inputs (Deixando mais magrelos e elegantes) */
+.form-publicar select,
+.form-publicar textarea,
+.form-publicar .fenda-input {
+    display: block !important;
+    width: auto ;
+    max-width: 100% !important;
+    padding: clamp(10px, 1.5vw, 15px) !important; /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    color: #fff !important;
+    border-radius: 14px !important;
+    margin-bottom: 0 !important;
+}
+
+/* Tamanho de altura fixo para inputs normais (PC e Mobile) */
+.form-publicar select,
+.form-publicar .fenda-input {
+    height: 50px !important; /* Altura magrela padrão ideal */
+}
+
+#file-upload-button {
+    box-shadow: 0 0 0 20px 0 #0000;
+    border-radius: 10px;
+    color: #0a0a0a;
+    background-color: #f0cd05e8;
+    font-style: none;
+    padding: 4px 12px;
+}
+
+/* CORREÇÃO: Altura específica apenas para a Textarea */
+.form-publicar textarea {
+    min-height: 80px; /* Menos espaço vertical, priorizando a largura */
+    max-height: 120px !important;
+    line-height: 1.4;
+    resize: vertical !important; 
+}
+
+.form-publicar select:focus,
+.form-publicar textarea:focus {
+    border-color: #ffbc00;
+    outline: none;
+    background: rgba(0, 0, 0, 0.589) !important;
 }
 
 .fenda-input {
     width: 100%;
+    height: auto;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
@@ -693,28 +703,29 @@ section.sessao-publicar {
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
 
-
-
-/* O Botão de Publicar */
+/* O Botão de Lançar se comportando na grade flex */
 .btn-lancar {
-    width: 100%;
+    flex: 1 1 100% !important; 
     background: #7cd632e8;
     color: black;
     border: none;
-    padding: 15px;
+    height: 44px; /* Casando com a altura dos inputs magrelos */
+    padding: 0 15px;
     border-radius: 8px;
     font-weight: 800;
+    max-width: 400px;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.3s;
-    margin-bottom: 0;
+    margin-top: 5px !important;
 }
 
 .btn-lancar:hover {
     background: #c8ff00d3;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
+
 
 
 /* ESTILO DOS BOTÕES DE EDIÇÃO */
