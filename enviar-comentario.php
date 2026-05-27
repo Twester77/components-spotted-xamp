@@ -22,10 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sua sequência: id_mensagem (i), comentario (s), usuario_nome (s), usuario_id (i), parent_id (i), vibe (s), cor (s)
     // Sequência correta: "ississi" (o 5º é integer, não string)
 
-    $stmt->bind_param("ississi", $id_mensagem, $comentario, $usuario_nome, $usuario_id, $parent_id, $vibe, $cor_borda);
-
+    // Correção da sequência para: int, string, string, int, string, string, string
+    $stmt->bind_param("ississs", $id_mensagem, $comentario, $usuario_nome, $usuario_id, $parent_id, $vibe, $cor_borda);
     if ($stmt->execute()) {
-        // ... o resto do seu código de notificações e menções continua igualzinho aqui para baixo ...
 
         // Ajuste para não quebrar se for visitante (identifica como "Visitante" na notificação)
         $meu_id = $_SESSION['usuario_id'] ?? 0;

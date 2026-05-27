@@ -550,11 +550,12 @@ nav {
 /* --- BOTÃO FLUTUANTE (FAB) --- */
 .fab-postar {
     position: fixed;
-    bottom: 200px;
+    bottom: 40px;
     left: 15px;
     width: clamp(40px, 5vw, 80px);
     height: clamp(40px, 5vw, 80px);
     background: #b8f11ace;
+    padding: 4px 10px;
     /* Branco acinzentado */
     color: #000;
     /* Ícone preto para alto contraste */
@@ -572,7 +573,7 @@ nav {
 }
 
 .fa-plus::before {
-    font-size: clamp(22px, 2vw, 35px);
+    font-size: clamp(25px, 0.5vw, 35px);
     font-weight: bold;
 }
 
@@ -1791,12 +1792,12 @@ input[type="check-box"] {
 }
 
 .main-perfil-container-publico.vibe-light {
-    background: linear-gradient(160deg, #fffcf070 0%, #c59c3cc0 100%) !important;
+    background: linear-gradient(160deg, #fffcf08a 0%, #ca9f3bc0 100%) !important;
     border: 2px solid rgba(139, 128, 100, 0.2) !important;
     border-top: 4px solid var(--aura-user) !important;
     box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 /* Texto num tom "Terra Escura" (nada de preto puro!) */
@@ -1814,8 +1815,8 @@ input[type="check-box"] {
     /* 2. Grid de Circuito (Sutil) */
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 20%);
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) ,
+        radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 20%)!important;
     background-size: 40px 40px, 40px 40px, 100% 100%;
 
     /* 3. Borda Superior da Aura */
@@ -1825,7 +1826,7 @@ input[type="check-box"] {
     /* 4. Sombra suave baseada na aura */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
 
-    animation: overclock-pulse 8s infinite alternate ease-in-out;
+    animation: overclock-pulse 8s infinite alternate ease-in-out!important;
     transition: all 0.5s ease;
 }
 
@@ -1853,7 +1854,7 @@ input[type="check-box"] {
         background-image:
             linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255, 255, 255, 0.103) 1px, transparent 1px),
-            radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 40%);
+            radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 40%)!important;
     }
 
     50% {
@@ -1862,7 +1863,7 @@ input[type="check-box"] {
         background-image:
             linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            radial-gradient(circle at 50% -10%, var(--aura-user) 0%, transparent 30%);
+            radial-gradient(circle at 50% -10%, var(--aura-user) 0%, transparent 30%)!important;
     }
 }
 
@@ -2235,13 +2236,13 @@ textarea[name="bio"] {
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
         width: 95% !important;
-        max-width: 500px !important;
+        max-width: 400px !important;
         margin-bottom: 10px !important;
-        padding: 8px !important;
+        padding: 5px !important;
     }
 
     .container-feed {
-        padding: 10px !important;
+        padding: 8px !important;
     }
 
     .main-perdidos {
@@ -2252,7 +2253,7 @@ textarea[name="bio"] {
     /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
     .post-content,
     .post-content-focado {
-        max-height: 50dvh !important;
+        max-height: 52dvh !important;
         /* Limita a altura do texto */
         overflow: auto;
     }

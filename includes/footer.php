@@ -57,6 +57,5 @@
 </footer>
 
 <script src="js/fenda-main.js"></script>
-<script src="js/fenda-swipe.js"></script>
 </body>
 </html>

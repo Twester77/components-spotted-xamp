@@ -630,13 +630,12 @@ body.hacker-mode .comentario-item.vibe-neon {
    ================================================================== */
 body.hacker-mode .comentario-item.vibe-ads {
     background-color: #000000 !important; /* Fundo breu total do terminal */
-    border: 1px solid var(--hacker-green) !important; /* Borda fina clássica */
-    border-radius: 0px !important; /* Lei Suprema Hacker: sem curvas! */
-    animation: none !important; /* Desliga o pulsar suave (estilo monitor CRT antigo) */
+    border: 1px solid var(--hacker-green) !important; 
+    border-radius: 0px !important; 
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1' stroke-opacity='0.15'/%3E%3C/svg%3E") !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.15'/%3E%3C/svg%3E") !important;
     background-size: 30px 30px !important;
 }
 

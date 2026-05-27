@@ -36,7 +36,7 @@ form {
 /* 1. Ajuste do Container do Modal (o pai) */
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
-    max-width: clamp(300px, 95%, 650px) !important;
+    max-width: clamp(280px, 92%, 650px) !important;
     max-height: clamp(250px, 80vh, 500px) !important;
     /* Padding dinâmico: menor em telas pequenas */
     padding: clamp(10px, 5vw, 25px) !important;
@@ -213,8 +213,7 @@ form[action="confirma-login.php"] {
 .bio-texto,
 .post-content,
 .card-body p,
-.perfil-info-publica p,
-.comentario-item span {
+.perfil-info-publica p {
     word-wrap: break-word !important;
     overflow-wrap: anywhere !important;
     white-space: pre-wrap !important;

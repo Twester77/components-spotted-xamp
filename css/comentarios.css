@@ -316,7 +316,7 @@ main.container-post-foco {
 .comentario-item.vibe-ads {
     background-color: #161625 !important;
     border: 2px solid var(--cor-borda-glow);
-    padding: 16px ;
+    padding: 14px ;
     position: relative;
     overflow: hidden;
     animation: pulsar-luz 3s infinite ease-in-out;
@@ -359,6 +359,11 @@ main.container-post-foco {
     text-shadow: 0 0 8px var(--cor-borda-glow);
     font-weight: 500;
 }
+.comentario-item.vibe-ads .comentario-data {
+    color: var(--cor-aura-user) !important;
+    text-shadow: 0 0 8px var(--cor-borda-glow);
+    font-weight: bold;
+}
 
 /* Tag ADS "Tech" */
 .comentario-item.vibe-ads .comentario-autor::after {
@@ -387,11 +392,6 @@ main.container-post-foco {
     font-weight: bold;
 }
 
-.comentario-item span {
-    font-size: 0.9rem !important;
-    line-height: 1.4;
-    color: #eee;
-}
 
 /* META DADOS - SEU ORIGINAL */
 .comentario-meta {
@@ -457,11 +457,11 @@ main.container-post-foco {
 }
 
 .reply-indicator {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: bold;
     background: rgba(255, 255, 255, 0.144);
     border-left: 3px solid var(--cor-borda-glow);
-    padding: 4px 8px;
+    padding: 4px 6px;
     margin-bottom: 10px;
     border-radius: 10px;
     opacity: 0.75;
