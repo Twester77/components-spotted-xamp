@@ -33,7 +33,7 @@ $total_habitantes = mysqli_num_rows($res);
     <div class="grid-habitantes">
         <?php if ($total_habitantes > 0): ?>
             <?php while ($h = mysqli_fetch_assoc($res)): 
-                $foto_h = !empty($h['foto']) ? "uploads/".$h['foto'] : "imagensfoto/default.jpg";
+                $foto_h = !empty($h['foto']) ? "uploads/".$h['foto'] : "imagensfoto/default.webp";
             ?>
                 <a href="ver-perfil.php?user=<?php echo $h['username']; ?>" class="card-habitante" alt="Card do usuário - link para perfil público">
                     <img src="<?php echo $foto_h; ?>" class="avatar-lista">

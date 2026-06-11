@@ -14,36 +14,48 @@ header {
     position: relative;
     border-radius: 0 0 10px 10px;
     z-index: 9997 !important;
+    display: flex;
+    justify-content: space-between;
+    /* Empurra o menu pra esquerda e o perfil pra direita */
     align-items: center;
-    justify-content: flex-start;
+    padding: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    display: flex;
     gap: 10px;
-    align-items: center;
-    padding: 12px ;
 
+}
+
+/* Nova classe para alinhar o que está dentro do header */
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Espaço entre o botão hamburguer e o título */
+}
+
+/* Ajuste fino para o botão do hambúrguer não ficar estranho */
+.btn-menu-header {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 5px;
 }
 
 header h1 {
-    font-size: clamp(1.2rem, 1.5vw, 2rem) !important;
+    font-size: clamp(1rem, 1.5vw, 2rem);
     letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
-    margin: 0;
     font-family: 'Urbanist', sans-serif;
     font-weight: bold;
+    height: auto;
 
-}
-
-.header-content {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 
@@ -65,7 +77,7 @@ header h1 {
 
 .header-icons i {
     color: var(--dourado) !important;
-    font-size: clamp(1rem, 6vw, 1.7rem);
+    font-size: clamp(0.9rem, 6vw, 1.7rem);
     transition: all 0.3s ease;
 }
 
@@ -78,7 +90,7 @@ header h1 {
 /*  HOVER ESPECÍFICO DA ENGRENAGEM  */
 .btn-config:hover i {
     transform: rotate(90deg) scale(1.2) !important;
-    color: #fff !important;
+    color: #fff;
 }
 
 
@@ -123,10 +135,9 @@ main article {
 }
 
 main {
-    max-width: 96vw;
-    /* Ocupa 95% da largura da janela visual */
+    max-width: 100vw;
     margin: 20px auto;
-    padding: 0 15px !important;
+    padding: 0 12px;
     /* Isso devolve o respiro nas laterais */
     width: 100%;
     box-sizing: border-box !important;
@@ -148,7 +159,7 @@ nav {
     gap: 15px;
     max-width: 2000px;
     margin: 0 auto;
-    padding: 12px;
+    padding: 15px;
 }
 
 
@@ -157,7 +168,7 @@ nav {
     color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(0.95rem, 0.8rem + 0.5vw, 1.5rem)!important;
+    font-size: clamp(0.95rem, 0.8rem + 0.5vw, 1.5rem) !important;
     line-height: 1.5;
     padding: 8px 16px;
     display: block;
@@ -181,9 +192,9 @@ nav {
 .sidebar-fenda {
     position: fixed;
     top: 0;
-    left: -300px !important;
+    left: -330px !important;
     /* Começa escondida */
-    width: 280px;
+    max-width: 320px;
     height: 100dvh;
     /* Força a barra a ter EXATAMENTE a altura da tela */
     -webkit-overflow-scrolling: touch;
@@ -197,7 +208,7 @@ nav {
     backdrop-filter: blur(10px);
     border: 2px solid #222;
     border-radius: 20px;
-    padding: 15px 20px;
+    padding: 15px;
     /* Camada acima de tudo */
     z-index: 999999 !important;
     transition: left 0.3s ease;
@@ -220,8 +231,8 @@ nav {
     background: rgba(255, 255, 255, 0.1);
     border: none;
     color: #fff;
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     cursor: pointer;
     transition: 0.3s;
@@ -267,22 +278,21 @@ nav {
 /* --- ESTILO DO BOTÃO DO MAPA (NOVO MENU) --- */
 
 .hamburger-floating-container {
-    position: fixed;
+    position: relative;
     /* Mantém ele fixo no canto superior */
-    top: 20px;
-    left: 30px;
     z-index: 10001;
     /* Garante que fique acima de tudo */
 }
 
 #btn-menu-hamburguer {
-    background: rgba(5, 14, 65, 0.4);
+    background: rgba(5, 14, 65, 0.329);
     /* Fundo semi-transparente */
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    padding: 10px;
+    padding: 8px;
+    margin-right: 8px;
     cursor: pointer;
     color: #ffc72d;
     display: flex;
@@ -301,27 +311,13 @@ nav {
 
 /* Ajuste fino do ícone dentro do botão */
 #btn-menu-hamburguer svg {
-    width: 40px;
-    height: 40px;
+    width: clamp(35px, 1.5vw 60px);
+    height: clamp(35px, 1.5vw 60px);
     display: block;
 }
 
 
-/* --- ÍCONE DA TOOLBAR  --- */
 
-.icon-hacker {
-    font-size: clamp(25px, 1vw, 45px);
-    padding: 5px;
-    color: var(--accent-cyan);
-    transition: all 0.3s ease;
-    filter: drop-shadow(0 0 4px rgba(16, 255, 75, 0.4));
-    /* Efeito neon/hacker */
-}
-
-.toolbar-trigger:hover .icon-hacker {
-    color: #ff8c00;
-    transform: scale(1.05);
-}
 
 /* Estilo dos itens do menu na gaveta */
 .menu-gaveta {
@@ -402,31 +398,31 @@ nav {
 .toolbar-content {
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    max-height: 40vh !important;
+    max-height: 55dvh;
     padding-right: 5px;
 }
 
 #fenda-toolbar {
     position: fixed;
-    right: -250px;
+    right: -280px;
     /* Escondida para fora da tela */
-    top: 38%;
+    top: 40%;
     transform: translateY(-50%);
-    width: 250px;
+    width: 280px;
     background: rgba(0, 20, 20, 0.678);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     border: 1px solid #00ff00;
     border-radius: 15px 0 0 15px;
     transition: 0.5s ease-in-out;
-    z-index: 99999;
+    z-index: 9998;
     padding: 20px;
     color: #00ff00;
     font-family: 'Courier New', monospace;
     display: flex;
     flex-direction: column;
     /* ===== SCROLL VERTICAL ===== */
-    max-height: 50vh !important;
+    max-height: 50dvh !important;
     /* Altura máxima de 50% da tela */
 
 }
@@ -438,27 +434,26 @@ nav {
 
 /* O Gatilho (Bússola) */
 .toolbar-trigger {
-    position: absolute;
-    left: -40px;
-    top: 5%;
+    position: fixed;
+    left: -35px;
+    top: 10%;
     background: #001a1a;
     border: 1px solid #00ff00;
-    width: clamp(35px, 2vw, 65px);
-    height: clamp(35px, 2vw, 65px);
-    display: flex;
     border-radius: 5px 0 0 5px;
     cursor: pointer;
-    display: flex;
+    display: none!important;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     border-radius: 10px 0 0 10px;
-    font-size: clamp(18px, 2vw, 32px);
+    font-size: clamp(16px, 15vmin, 26px);
+    width: clamp(40px, 8vmin, 65px);
+    height: clamp(40px, 8vmin, 65px);
+    padding: 6px;
     box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
     background: #004d40;
     color: #00ffcc;
     transform: translateY(-50%);
-    margin: auto 10px;
+    margin: auto ;
 
 
 }
@@ -552,10 +547,10 @@ nav {
     position: fixed;
     bottom: 40px;
     left: 15px;
-    width: clamp(40px, 5vw, 80px);
-    height: clamp(40px, 5vw, 80px);
+    width: clamp(50px, 15vmin, 80px);
+    height: clamp(50px, 15vmin, 80px);
     background: #b8f11ace;
-    padding: 4px 10px;
+    padding: 10px;
     /* Branco acinzentado */
     color: #000;
     /* Ícone preto para alto contraste */
@@ -566,14 +561,14 @@ nav {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     cursor: pointer;
     z-index: 998;
-    display: flex;
+    display: none!important;
     align-items: center;
     justify-content: center;
     transition: 0.3s;
 }
 
 .fa-plus::before {
-    font-size: clamp(25px, 0.5vw, 35px);
+    font-size: clamp(25px, 0.5vw, 45px);
     font-weight: bold;
 }
 
@@ -607,7 +602,7 @@ body.modal-aberto .fab-postar {
     box-shadow: 0 0 30px rgba(255, 188, 0, 0.2);
     animation: surgimentoModal 0.3s ease-out;
     padding: 15px;
-    max-width: 98%;
+    max-width: 95%;
 }
 
 
@@ -753,7 +748,7 @@ body.modal-aberto .fab-postar {
 
 .submenu {
     background: rgba(0, 0, 0, 0.2);
-     border-radius: 0 0 10px 10px ;
+    border-radius: 0 0 10px 10px;
     display: none;
     position: absolute;
     top: 100%;
@@ -773,7 +768,7 @@ body.modal-aberto .fab-postar {
     color: #d4b8b8;
     padding: 8px 12px;
     line-height: 1.2;
-    
+
 }
 
 
@@ -835,7 +830,7 @@ body.modal-aberto .fab-postar {
     width: 100%;
     max-width: 2000px;
     margin: 0 auto;
-    padding: 20px 5px;
+    padding: 20px 0;
     box-sizing: border-box;
 }
 
@@ -1119,9 +1114,21 @@ footer a {
     background: rgba(255, 188, 0, 0.15) !important;
     border-color: #ddc80e !important;
     /* Cor Dourada da Fenda */
-    color: #ddc80e !important;
+    color: #ddc80e ;
     box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
 }
+
+.btn-bolhas-on.active-blue {
+    background-color: rgb(27, 158, 219) !important; /* Ou a cor que preferir */
+    color: white !important;
+}
+
+/* Estilo para as bolhas desligadas */
+.btn-bolhas-off.active-red {
+    background-color: rgba(243, 76, 53, 0.87) !important; /* Ou a cor que preferir */
+    color: white !important;
+}
+
 
 .campo-grupo input[type="color"] {
     width: 120px;
@@ -1140,7 +1147,7 @@ footer a {
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-    min-width: 110px;
+    min-width: 120px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -1232,6 +1239,68 @@ footer a {
 }
 
 
+/* GAVETA DE CONFIGURAÇÕES - O "Manto Invisível" */
+.drawer-perfil-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 800px;
+    height: 100dvh;
+    background-color: #11111146;
+    color: #fff;
+    z-index: 999999;
+    transform: translateX(100%);
+    /* Começa escondida à direita */
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 12px;
+    border-left: 1px solid #333;
+}
+
+/* O estado ativo - Quando o JS adiciona a classe */
+.drawer-perfil-container.ativa {
+    transform: translateX(0);
+    /* Desliza para a posição 0 (dentro da tela) */
+}
+
+.drawer-backdrop {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    left: 0;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    /* Escondido por padrão */
+    z-index: 99998;
+    /* Um pouco abaixo da gaveta */
+}
+
+/* Quando abrir, faz o backdrop aparecer ( trigger) */
+.drawer-backdrop.ativa {
+    display: block;
+}
+
+/* Estilo base do botão de fechar */
+.btn-fechar-drawer {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    /* Um pouco mais visível */
+    border: none;
+    color: white;
+    font-size: 1.4rem;
+    cursor: pointer;
+    /* Aumentei o z-index para garantir que fique por cima de tudo */
+    z-index: 1000000;
+    padding: 6px 10px;
+    border-radius: 50%;
+    pointer-events: auto;
+    /* Garante que o clique funcione */
+}
+
 
 /*  SESSÃO DE BUSCA - FORMULÁRIO E RESULTADOS  */
 
@@ -1243,7 +1312,7 @@ footer a {
     align-items: stretch !important;
     gap: 8px;
     width: 100% !important;
-    max-width: 400px !important;
+    max-width: 600px;
     margin: 25px auto !important;
     background: transparent !important;
     border: none !important;
@@ -1360,13 +1429,13 @@ footer a {
 
 .fenda-glass-container {
     background: transparent !important;
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border: none !important;
-    box-shadow: none ;
+    box-shadow: none;
     width: 100% !important;
-    margin: 0 auto ;
-    padding: 20px ;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 /* Mantendo os inputs visíveis no escuro */
@@ -1386,7 +1455,7 @@ form[action="confirma-login.php"] input[type="password"] {
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
 h2.titulo-home {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     text-align: center;
     margin-top: 40px !important;
     margin-bottom: 20px;
@@ -1408,18 +1477,18 @@ h2.titulo-home {
 
 }
 
-main.conteudo-principal {
+.conteudo-principal {
     font-size: 16px;
     line-height: 1.6;
     text-align: left;
     color: #e0e0e0;
-    max-width: clamp(320px, 100%, 800px) !important;
-    padding: 12px ;
+    max-width: clamp(300px, 100%, 900px) !important;
+    padding: 10px;
 }
 
 .aviso-legal {
     font-style: italic;
-    opacity: 0.75;
+    opacity: 0.8;
     margin-bottom: 20px;
     color: #a6d4eeee;
 }
@@ -1433,7 +1502,7 @@ main.conteudo-principal {
 }
 
 .bloco-conselhos {
-    padding: 15px;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.082);
     border-radius: 15px;
 }
@@ -1467,7 +1536,7 @@ main.conteudo-principal {
 .presentation-deck {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
 }
 
 /* Cada "Slide" da nossa apresentação */
@@ -1475,17 +1544,18 @@ main.conteudo-principal {
     background: rgba(0, 0, 0, 0.473);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
-    padding: clamp(10px, 2.5dvh, 20px) clamp(10px, 2.5dvh, 20px);
+    padding: clamp(8px, 2.5dvh, 20px) clamp(8px, 2.5dvh, 20px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease, border-color 0.3s ease;
-    margin: 30px auto;
+    margin: 20px auto;
 }
 
 .fenda-slide:hover {
     transform: translateY(-8px);
-    border-color: rgba(252, 144, 12, 0.3); /* Brilho sutil com o dourado/laranja da Fenda */
+    border-color: rgba(252, 144, 12, 0.3);
+    /* Brilho sutil com o dourado/laranja da Fenda */
 }
 
 /* Títulos dos Slides */
@@ -1512,7 +1582,8 @@ main.conteudo-principal {
 
 /* Conteúdo de texto dos slides */
 .slide-body {
-    font-size: 1.125rem; /* 18px */
+    font-size: 1.125rem;
+    /* 18px */
     line-height: 1.5;
     color: #e0e0e0;
 }
@@ -1529,17 +1600,21 @@ main.conteudo-principal {
 
 .campus-flex {
     display: flex;
-    flex-wrap: wrap;         
-    justify-content: center; /* Centraliza lado a lado no PC */
-    align-items: center;     /* Alinha verticalmente */
-    gap: 20px;               /* Espaço entre as fotos */
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Centraliza lado a lado no PC */
+    align-items: center;
+    /* Alinha verticalmente */
+    gap: 20px;
+    /* Espaço entre as fotos */
     width: 100%;
 }
 
 /* Alinhamento das tags picture */
 .campus-flex picture {
     display: block;
-    text-align: center;      /* Garante o conteúdo centrado */
+    text-align: center;
+    /* Garante o conteúdo centrado */
 }
 
 /* Correção e upgrade da imagem do Câmpus */
@@ -1549,8 +1624,9 @@ main.conteudo-principal {
     object-fit: cover;
     border-radius: 12px;
     transition: transform 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    display: block;          /* Remove espaços em branco inferiores */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    display: block;
+    /* Remove espaços em branco inferiores */
 }
 
 .img-campus:hover {
@@ -1658,22 +1734,11 @@ main.conteudo-principal {
 
 /* --- AJUSTE CORRIGIDO PARA O FORMULÁRIO MOBILE --- */
 
-.main-perfil-container-config {
-    flex-direction: column !important;
-    align-items: center !important;
-    width: 95% !important;
-    margin: 15px auto;
-    padding: 12px;
-    display: flex !important;
-    float: none !important;
-    border-radius: 20px;
-    background-color: #0c0b0bdc;
-    max-width: 1100px;
-}
+
 
 .config-item {
     justify-content: left !important;
-    border: 2px solid rgba(255, 255, 255, 0.1) !important;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 15px;
 }
@@ -1687,7 +1752,6 @@ input[type="check-box"] {
 
 
 .main-perfil-container-publico {
-    display: block !important;
     width: 100% !important;
     max-width: 4000px;
     margin: 0 !important;
@@ -1754,7 +1818,7 @@ input[type="check-box"] {
 /* Se a vibe for Neon */
 .main-perfil-container-publico.vibe-neon {
     /* Mantive o gradiente que já estava, está perfeito */
-    background: linear-gradient(to bottom, transparent 0%, var(--aura-user) 31%, #000000 50%) !important;
+    background: linear-gradient(to bottom, transparent 0%, var(--aura-user) 25%, #000000 50%) !important;
 
     /* A animação agora chama 'neon-flicker-subtle' */
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
@@ -1792,14 +1856,42 @@ input[type="check-box"] {
 
 /* Se a vibe for Glass (Transparente) */
 .main-perfil-container-publico.vibe-glass {
-    background: rgba(255, 255, 255, 0.151) !important;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    /* 1. MISTURA: Puxamos a cor da aura mais forte (opacidade 0.5) + Gradiente de Luz e Sombra */
+    background: linear-gradient(135deg,
+            oklch(1 0 0 / 0.45) 0%,
+            /* Reflexo de luz grosso e nítido no topo */
+            oklch(1 0 0 / 0.05) 45%,
+            /* Área limpa para mostrar a cor da aura */
+            oklch(0 0 0 / 0.45) 100%
+            /* Sombra profunda na base para dar peso ao vidro */
+        ), oklch(from var(--aura-user) l c h / 0.4) !important;
+
+    /* 2. EMBALAGEM: O truque do 'soft-light' cria a ilusão de uma película reflexiva por cima */
+    background-blend-mode: soft-light;
+
+    /* 3. JATEADO: Desfoque limpo, puxando os tons de fundo sem distorcer as cores */
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+
+    /* 4. QUINA DO VIDRO: Borda dupla simulada (Mais clara no topo e nítida) */
+    border: 1px solid oklch(1 0 0 / 0.35) !important;
+
+    /* 5. PROFUNDIDADE: Sombra pesada por fora e um contorno reflexivo interno (inset) bem marcado */
+    box-shadow:
+        0 16px 45px oklch(0 0 0 / 0.45),
+        inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+
+    /* Garante que o reflexo interno respeite os cantos arredondados */
+    position: relative;
+    overflow: hidden;
 }
 
+
+
+
+
 .main-perfil-container-publico.vibe-light {
-    background: linear-gradient(160deg, #fffcf08a 0%, #ca9f3bc0 100%) !important;
+    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) !important;
     border: 2px solid rgba(139, 128, 100, 0.2) !important;
     border-top: 4px solid var(--aura-user) !important;
     box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
@@ -1822,8 +1914,8 @@ input[type="check-box"] {
     /* 2. Grid de Circuito (Sutil) */
     background-image:
         linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px) ,
-        radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 20%)!important;
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        radial-gradient(circle at 50% -20%, var(--aura-user) 1%, transparent 10%) !important;
     background-size: 40px 40px, 40px 40px, 100% 100%;
 
     /* 3. Borda Superior da Aura */
@@ -1833,8 +1925,8 @@ input[type="check-box"] {
     /* 4. Sombra suave baseada na aura */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
 
-    animation: overclock-pulse 8s infinite alternate ease-in-out!important;
-    transition: all 0.5s ease;
+    animation: overclock-pulse 2s infinite alternate ease-in-out;
+    transition: all 0.3s ease;
 }
 
 /* 5. Títulos com a cor da Aura */
@@ -1854,49 +1946,35 @@ input[type="check-box"] {
 
 /* 6. Animação de Pulsação utilizando a Aura */
 @keyframes overclock-pulse {
-
-    0%,
-    100% {
+    0% {
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        /* Mantém o grid visível */
         background-image:
-            linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.103) 1px, transparent 1px),
-            radial-gradient(circle at 50% -20%, var(--aura-user) 0%, transparent 40%)!important;
+            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.) 1px, transparent 1px),
+            radial-gradient(circle at 50% -20%, var(--aura-user) 10%, transparent 40%);
     }
 
-    50% {
-        box-shadow: 0 0 25px rgba(var(--aura-user), 0.2);
-        /* O brilho pulsa com a cor da aura */
+    100% {
+        box-shadow: 0 0 30px rgba(var(--aura-user), 0.5);
         background-image:
-            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-            radial-gradient(circle at 50% -10%, var(--aura-user) 0%, transparent 30%)!important;
+            linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+            radial-gradient(circle at 50% -10%, var(--aura-user) 20%, transparent 60%);
     }
 }
 
-.form-perfil-corpo {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    padding: 15px;
-    box-sizing: border-box !important;
-    margin: 10px !important;
-    gap: 20px !important;
-    margin: 0 !important;
 
-}
 
 /* OS CAMPOS (Organização vertical) */
 .campo-grupo {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-    flex-direction: column !important;
-    margin-bottom: 15px !important;
-    display: block !important;
+    width: 100%;
+    max-width: 100%;
+    flex-direction: column;
+    margin-bottom: 15px;
     box-sizing: border-box !important;
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: column;
     grid-column: span 1 !important;
 
 }
@@ -1930,15 +2008,14 @@ textarea {
     box-sizing: border-box !important;
     /* ISSO AQUI resolve o vazamento da Bio */
     margin: 0 auto !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid #333 !important;
-    border-radius: 8px !important;
-    color: #fff !important;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
 }
 
 /* Correção do campo @Username */
 .input-username-wrapper {
-    display: flex !important;
     height: 45px !important;
     align-items: center !important;
     padding: 0 !important;
@@ -1949,7 +2026,7 @@ textarea {
 
 
 .input-username-wrapper span {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.1);
     padding: 0 12px !important;
     height: 100%;
     display: flex;
@@ -2037,8 +2114,8 @@ textarea[name="bio"] {
     bottom: -90px !important;
     /* Quanto ocupa da capa */
     transform: translateX(-50%);
-    width: clamp(100px, 15vw, 250px);
-    height: clamp(100px, 15vw, 250px);
+    width: clamp(80px, 15vw, 250px);
+    height: clamp(80px, 15vw, 250px);
     z-index: 15;
     gap: 10px;
     object-fit: cover;
@@ -2140,7 +2217,6 @@ textarea[name="bio"] {
 .post-admin-gold {
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
     position: relative;
-    overflow: hidden;
 }
 
 .post-admin-gold::after {
@@ -2149,78 +2225,13 @@ textarea[name="bio"] {
     top: 8px;
     right: 50px;
     /* Ajuste conforme o menu de opções */
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: bold;
     color: #FFD700;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-
-/* ==========================================================================
-   REGRAS DE @CONTAINER - BLINDAGEM CONTRA O "ESPARTILHO" (IPHONE 4/SE)
-   ========================================================================== */
-
-/* Container muito estreito (iPhone 4, Lumia 520) */
-@container feedComentarios (max-width: 360px) {
-    .comentario-item {
-        max-width: 90%;
-        min-width: 160px;
-        padding: 6px 10px;
-        font-size: 0.85rem;
-    }
-
-    /* 🚨 Alívio do cinto: diminui a margem do filho para caber na tela de 320px */
-    .comentario-filho {
-        margin-left: 25px;
-        max-width: 83%;
-        font-size: 0.8rem;
-    }
-
-    .comentario-autor {
-        max-width: 100px;
-        font-size: 0.8rem;
-    }
-
-    .comentario-texto {
-        font-size: 0.98rem;
-        line-height: 1.4;
-    }
-
-
-}
-
-
-
-/* Container pequeno (celular médio) */
-@container feedComentarios (min-width: 361px) and (max-width: 500px) {
-    .comentario-item {
-        max-width: 90%;
-        min-width: 220px !important;
-        padding: 8px 10px;
-    }
-
-    .comentario-filho {
-        margin-left: 35px;
-        max-width: 88%;
-    }
-}
-
-/* Container médio (tablets pequenos) */
-@container feedComentarios (min-width: 501px) and (max-width: 800px) {
-    .comentario-item {
-        max-width: 85%;
-        min-width: 280px !important;
-    }
-}
-
-/* Container largo (PC, notebook) */
-@container feedComentarios (min-width: 801px) {
-    .comentario-item {
-        max-width: 80%;
-        min-width: 330px !important;
-    }
-}
 
 
 /* ============================================================
@@ -2243,13 +2254,13 @@ textarea[name="bio"] {
     article.spotted-card {
         width: 100% !important;
         max-width: 400px !important;
-        margin-bottom: 10px !important;
-        padding: 10px !important;
+        margin-bottom: 10px;
     }
 
     .container-feed {
-        padding: 10px !important;
+        padding: 8px !important;
     }
+
 
     .main-perdidos {
         padding: 5px !important;
@@ -2259,7 +2270,7 @@ textarea[name="bio"] {
     /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
     .post-content,
     .post-content-focado {
-        max-height: 55dvh !important;
+        max-height: 50dvh !important;
         /* Limita a altura do texto */
         overflow: auto;
     }
@@ -2269,6 +2280,9 @@ textarea[name="bio"] {
         width: 40px !important;
         height: 40px !important;
     }
+
+    footer {
+    padding: 10px 10px 20px 10px; }
 
 }
 
@@ -2297,7 +2311,7 @@ textarea[name="bio"] {
 
 
 /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
-@media (max-width: 380px) and (orientation: portrait) {
+@media (max-width: 450px) and (orientation: portrait) {
 
     /* Reseta o main-perdidos que estava deslocado */
     .main-perdidos {
@@ -2305,31 +2319,145 @@ textarea[name="bio"] {
         right: 0 !important;
         margin: 10px auto !important;
         padding: 5px !important;
-        width: 100% !important;
     }
 
     /* Garante que o container do feed não tenha padding lateral */
     .container-feed {
         margin: 0 auto !important;
         width: 100% !important;
-        grid-template-columns: 1fr!important;
+        grid-template-columns: 1fr !important;
+        padding: 8px !important;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
     .spotted-card,
     .perdidos-item {
         width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        margin-left: 0;
+        margin-right: 0;
         box-sizing: border-box !important;
     }
 
     footer {
         /* Garante que ele saia debaixo de floats */
-        padding: 8px 15px 15px 8px;
-        font-size: 0.76rem;
-        color: var(--dourado);
+        padding: 8px 12px 12px 8px;
+        font-size: 0.75rem;
 
     }
 
+    .container-feed article {
+        max-width: 300px;
+    }
+
 }
+
+
+/* Container Pai - Fica no canto inferior direito */
+.fenda-nexus {
+    position: fixed;
+    bottom: 30%;
+    right: 15px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse; /* Abre para cima */
+    align-items: flex-end;
+    gap: 15px;
+}
+
+#fenda-nexus {
+    transition: opacity 0.3s ease;
+}
+
+/* Quando um modal abre, podemos dar um leve fade-out no Nexus para focar no conteúdo */
+body.modal-aberto #fenda-nexus {
+    opacity: 0.3;
+    pointer-events: none; /* Impede cliques no Nexus enquanto o modal estiver aberto */
+}
+
+
+/* O Botão Principal (O "Leque" fechado) */
+.nexus-trigger {
+    width: clamp(45px, 15vmin, 100px);
+    background: var(--dourado, #ffbc00);
+    border-radius: 50%!important; 
+    aspect-ratio: 1 / 1;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Estado Aberto - Rotação do botão */
+.fenda-nexus.aberto .nexus-trigger {
+    transform: rotate(45deg);
+}
+
+/* Lista de Ações (O Leque) */
+.nexus-menu {
+    display: none; /* Escondido por padrão */
+    flex-direction: column;
+    font-size: clamp(0.95rem, 0.382vw + 0.625rem, 1.3rem);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.fenda-nexus.aberto .nexus-menu {
+    display: flex;
+    animation: surgimentoMenu 0.3s ease-out;
+}
+
+.nexus-item {
+    background: rgba(20, 11, 0, 0.397);
+    border: 1px solid var(--cor-borda-glow, #00ff00);
+    padding: 12px;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    text-align: center;
+    backdrop-filter: blur(4px);
+    font-size: clamp(0.95rem, 0.382vw + 0.625rem, 1.4rem) ;
+}
+
+@keyframes surgimentoMenu {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* O botão ativo fica com destaque */
+.nexus-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Um glow extra */
+}
+
+#bussola-svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Garante que o SVG fique centralizado no botão */
+.nexus-trigger svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60%;  /* Ocupa 60% do espaço do botão */
+    height: 60%; /* Ocupa 60% do espaço do botão */
+    display: block;
+}
+
+/* O Ponteiro: Animação suave e origem no centro */
+#ponteiro-bussola {
+    transform-origin: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Classes de rotação (que o JS vai aplicar) */
+.girar-0   { transform: rotate(0deg); }   /* Norte */
+.girar-90  { transform: rotate(90deg); }  /* Leste */
+.girar-180 { transform: rotate(180deg); } /* Sul */
+.girar-270 { transform: rotate(270deg); } /* Oeste */

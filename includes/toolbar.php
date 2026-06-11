@@ -10,10 +10,13 @@
 ?>
     <!-- Adicionado role e label para identificar a barra lateral de ferramentas -->
     <div id="fenda-toolbar" class="toolbar-fechada" role="region" aria-label="Painel de Controle Lateral">
-        <!-- Adicionado aria-expanded para indicar se o menu lateral está aberto ou fechado -->
-        <div class="toolbar-trigger" onclick="toggleToolbar()" role="button" aria-label="Abrir Painel de Controle">
-    <i class="fas fa-terminal icon-hacker" aria-hidden="true"></i>
-</div>
+    
+    <button type="button" 
+            class="toolbar-trigger" 
+            onclick="toggleToolbar()" 
+            aria-label="Abrir Painel de Controle"
+            aria-expanded="false"> <span id="trigger-icon" aria-hidden="true">🧭</span>
+    </button>
 
         <div class="toolbar-content">
             <h3 style=" font-family: 'JetBrains Mono', monospace; margin-bottom: 15px; text-align: center;">Navegação</h3>

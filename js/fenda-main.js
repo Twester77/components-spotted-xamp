@@ -1,46 +1,67 @@
 /* A FENDA - ENGINE CENTRAL (UI + Áudio + Notificações) */
-/* Sem swipe – toda a física de cards agora está em fenda-swipe.js */
+/* Sem swipe – toda a física de cards agora está em fenda-swipe-pc.js e fenda-swipe-mobile.js */
 
 window.audioLiberado = false;
 
+// ==================== BOLHAS (Imediato) ====================
 window.setBolhasLocal = function (valor) {
-    const inputHidden = document.getElementById('input_pref_bolhas');
-    if (inputHidden) inputHidden.value = valor;
-    const btnOn = document.getElementById('btn-bolhas-on');
-    const btnOff = document.getElementById('btn-bolhas-off');
-    if (valor === 1) {
-        btnOn.classList.add('active');
-        btnOff.classList.remove('active');
-    } else {
-        btnOff.classList.add('active');
-        btnOn.classList.remove('active');
-    }
-    const containerBolhas = document.querySelector('.bubbles-container');
-    if (containerBolhas) containerBolhas.style.display = (valor === 1) ? 'block' : 'none';
+    document.querySelectorAll('input[name="pref_bolhas"]').forEach(i => i.value = valor);
+    
+    // Marca active com cor específica para cada estado, e garante que só um estado esteja ativo
+    document.querySelectorAll('.btn-bolhas-on').forEach(b => b.classList.toggle('active-blue', valor == 1));
+    document.querySelectorAll('.btn-bolhas-off').forEach(b => b.classList.toggle('active-red', valor == 0));
+
+    const container = document.querySelector('.bubbles-container');
+    if (container) container.style.display = (valor == 1) ? 'block' : 'none';
 };
 
-window.atualizarInterfaceBolhas = function (ligar) {
-    const btnOn = document.getElementById('btn-bolhas-on');
-    const btnOff = document.getElementById('btn-bolhas-off');
-    if (btnOn && btnOff) {
-        if (ligar) {
-            btnOn.style.backgroundColor = '#00a896';
-            btnOff.style.backgroundColor = 'transparent';
+// ==================== SOM (Imediato) ====================
+window.mudarSomAmbiente = function (valor) {
+    document.querySelectorAll('input[name="pref_som_trilha"]').forEach(i => i.value = valor);
+
+    // MUDANÇA: Procura APENAS botões que possuem o atributo data-som
+    document.querySelectorAll('.btn-audio-choice[data-som]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-som') == valor);
+    });
+
+    // Lógica do Áudio
+    const audio = document.getElementById('som-oceano');
+    if (audio) {
+        if (valor === 'off') {
+            audio.pause();
         } else {
-            btnOn.style.backgroundColor = 'transparent';
-            btnOff.style.backgroundColor = '#ff4444';
+            audio.src = (valor === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
+            if (window.audioLiberado) audio.play().catch(() => {});
         }
     }
 };
 
-window.toggleToolbar = function () {
-    const toolbar = document.getElementById('fenda-toolbar');
-    const icon = document.getElementById('trigger-icon');
-    if (!toolbar) return;
-    toolbar.classList.toggle('toolbar-aberta');
-    icon.innerText = toolbar.classList.contains('toolbar-aberta') ? '❌' : '🧭';
+// ==================== NOTIFICAÇÕES (Imediato) ====================
+window.mudarTemaNotif = function (valor) {
+    document.querySelectorAll('input[name="pref_som_notif"]').forEach(i => i.value = valor);
+
+    // MUDANÇA: Procura APENAS botões que possuem o atributo data-notif
+    document.querySelectorAll('.btn-audio-choice[data-notif]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-notif') == valor);
+    });
 };
 
+// ==================== TOOLBAR ====================
+window.toggleToolbar = function () {
+    const toolbar = document.getElementById('fenda-toolbar');
+    const btn = toolbar.querySelector('.toolbar-trigger'); // Pega o botão
+    const icon = document.getElementById('trigger-icon');
+    
+    if (!toolbar) return;
+    
+    const estaAberta = toolbar.classList.toggle('toolbar-aberta');
+    
+    // Atualiza o estado de acessibilidade do botão
+    if (btn) btn.setAttribute('aria-expanded', estaAberta);
+    
+};
+
+// ==================== HACKER MODE ====================
 window.toggleHackerMode = function () {
     const body = document.body;
     const btnNav = document.getElementById('hacker-toggle');
@@ -71,6 +92,7 @@ window.removerBordasInlineHacker = function () {
     });
 };
 
+// ==================== LOGOUT / MODAIS ====================
 window.deslogar = function () {
     const modal = document.getElementById('modal-sair-fenda');
     if (modal) modal.style.display = 'flex';
@@ -90,6 +112,44 @@ function confirmarExclusao(idPost) {
 function abrirDenuncia(idPost) {
     alert("Denúncia do post #" + idPost + " enviada aos ADMs.");
 }
+
+// ==================== PERFIL DRAWER (GAVETA) ====================
+window.abrirPerfilDrawer = function (e) {
+    if (e) e.preventDefault();
+    
+    const drawer = document.getElementById('perfil-drawer');
+    const containerPerfil = document.getElementById('conteudo-perfil');
+    const backdrop = document.getElementById('drawer-backdrop');
+
+    if (!drawer || !containerPerfil) return;
+
+    fetch('perfil.php?modo=gaveta')
+        .then(res => res.text())
+        .then(html => {
+            containerPerfil.innerHTML = html; 
+            if (typeof window.configurarFormularioPerfil === 'function') {
+                window.configurarFormularioPerfil();
+            }
+            // Reaplica a sincronização após carregar a gaveta
+            inicializarPreferenciasAPartirDoDOM();
+            
+            drawer.classList.add('ativa');
+            drawer.setAttribute('aria-hidden', 'false');
+            backdrop.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        })
+        .catch(err => console.error("Erro na Fenda:", err));
+};
+
+window.fecharPerfilDrawer = function () {
+    const drawer = document.getElementById('perfil-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+    
+    drawer.classList.remove('ativa');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
 
 function abrirModalPost() {
     const modal = document.getElementById('modal-postar-fenda');
@@ -146,10 +206,12 @@ window.abrirGavetaControle = function () {
     }
 };
 
+
+// ==================== POSTS E MENUS ====================
 window.configurarPosts = function () {
     const posts = document.querySelectorAll('.post-content');
     posts.forEach(post => {
-        const precisaExpandir = post.scrollHeight > post.offsetHeight + 10;
+        const precisaExpandir = post.scrollHeight > post.offsetHeight + 3;
         if (precisaExpandir && !post.dataset.ouvinte) {
             post.classList.add('tem-mais');
             post.dataset.ouvinte = "true";
@@ -173,100 +235,117 @@ window.toggleMenu = function (menuId) {
     if (menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 };
 
-// ==================== INICIALIZAÇÃO GERAL (UI) ====================
+// ==================== ÁUDIO E PREFERÊNCIAS (FONTE ÚNICA: DOM) ====================
+
+window.atualizarPreferenciasGlobais = function(idInput, novoValor) {
+    const inputGlobal = document.getElementById(idInput);
+    if (inputGlobal) {
+        inputGlobal.value = novoValor;
+        console.log(`[SYS] Preferência ${idInput} atualizada globalmente para: ${novoValor}`);
+    }
+};
+
 const destravarAudio = () => {
     window.audioLiberado = true;
     console.log("[AUDIO] Áudio autorizado pelo usuário.");
+    
+    // NOVO: Assim que o usuário clicar, verifica se já tem algo configurado e manda tocar
+    const audio = document.getElementById('som-oceano');
+    if (audio && window.somAmbiente && window.somAmbiente !== 'off') {
+        audio.play().catch(e => console.log("Erro ao iniciar áudio: ", e));
+    }
+
     document.removeEventListener('click', destravarAudio);
     document.removeEventListener('touchstart', destravarAudio);
 };
-document.addEventListener('click', destravarAudio);
-document.addEventListener('touchstart', destravarAudio);
 
-document.addEventListener("DOMContentLoaded", function () {
-    if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
+// Lê os valores dos inputs hidden e atualiza a interface (botões e áudio)
+function inicializarPreferenciasAPartirDoDOM() {
+    const inputTrilha = document.getElementById('input_pref_som_trilha');
+    const inputNotif = document.getElementById('input_pref_som_notif');
+    const inputBolhas = document.getElementById('input_pref_bolhas');
 
-    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
-    dropdownLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            if (window.innerWidth <= 1024) {
-                const pai = this.parentElement;
-                const estaAberto = pai.classList.contains('active');
-                if (!estaAberto) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
-                    pai.classList.add('active');
-                }
-            }
-        });
-    });
-
-    let somAmbiente = localStorage.getItem('fenda_tipo_som') || 'off';
-    let temaNotif = localStorage.getItem('fenda_tema_notif') || 'padrao';
-
-    window.atualizarInterfaceAudio = function () {
+    // -- PREFERÊNCIA DE SOM --
+    if (inputTrilha && inputTrilha.value) {
+        const trilha = inputTrilha.value;
+        window.somAmbiente = trilha;
+        localStorage.setItem('fenda_tipo_som', trilha);
+        
+        // Remove active de todos, mas só se eles existirem
         document.querySelectorAll('[id^="btn-som-"]').forEach(btn => btn.classList.remove('active'));
-        const btnM = document.getElementById('btn-som-' + somAmbiente);
-        if (btnM) btnM.classList.add('active');
-        document.querySelectorAll('[id^="btn-notif-"]').forEach(btn => btn.classList.remove('active'));
-        const btnN = document.getElementById('btn-notif-' + temaNotif);
-        if (btnN) btnN.classList.add('active');
-    };
-    atualizarInterfaceAudio();
-
-    window.mudarSomAmbiente = function (tipo) {
-        somAmbiente = tipo;
-        localStorage.setItem('fenda_tipo_som', tipo);
-        let audio = document.getElementById('som-oceano');
+        
+        const btnSom = document.getElementById('btn-som-' + trilha);
+        if (btnSom) btnSom.classList.add('active');
+        
+        const audio = document.getElementById('som-oceano');
         if (audio) {
-            if (tipo === 'off') { audio.pause(); }
-            else {
-                audio.src = (tipo === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
-                audio.volume = 0.04;
-                audio.play().catch(() => {});
+            if (trilha === 'off') {
+                audio.pause();
+            } else {
+                audio.src = (trilha === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
+                audio.volume = 0.05;
+                if (window.audioLiberado) {
+                    audio.play().catch(e => console.log("Aguardando interação."));
+                }
             }
         }
-        atualizarInterfaceAudio();
-    };
+    }
+    
+    // -- PREFERÊNCIA DE NOTIFICAÇÃO --
+    if (inputNotif && inputNotif.value) {
+        const notif = inputNotif.value;
+        window.temaNotif = notif;
+        localStorage.setItem('fenda_tema_notif', notif);
+        
+        document.querySelectorAll('[id^="btn-notif-"]').forEach(btn => btn.classList.remove('active'));
+        const btnNotif = document.getElementById('btn-notif-' + notif);
+        if (btnNotif) btnNotif.classList.add('active');
+    }
+    
+    // -- PREFERÊNCIA DE BOLHAS --
+    if (inputBolhas) {
+        const bolhas = inputBolhas.value;
+        const btnOn = document.getElementById('btn-bolhas-on');
+        const btnOff = document.getElementById('btn-bolhas-off');
+        
+        // AQUI: Proteção para não quebrar se os botões não estiverem na página
+        if (btnOn && btnOff) {
+            if (bolhas === '1') {
+                btnOn.classList.add('active');
+                btnOff.classList.remove('active');
+            } else {
+                btnOn.classList.remove('active');
+                btnOff.classList.add('active');
+            }
+        }
+    }
+}
 
-    window.mudarTemaNotif = function (tema) {
-        temaNotif = tema;
-        localStorage.setItem('fenda_tema_notif', tema);
-        atualizarInterfaceAudio();
-    };
 
-    window.atualizarContadorAlertas = function () {
-        fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
-            .then(res => res.text())
-            .then(texto => {
-                const match = texto.match(/\{.*\}/);
-                if (!match) return;
-                const data = JSON.parse(match[0]);
-                const badge = document.getElementById('badge-alertas');
-                if (badge && data.total !== undefined) {
-                    let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
-                    if (data.total > ultimoAviso) {
-                        if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
-                    }
-                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                    badge.innerText = data.total;
-                    badge.style.display = data.total > 0 ? 'flex' : 'none';
+
+// ==================== NOTIFICAÇÕES E ALERTAS ====================
+window.atualizarContadorAlertas = function () {
+    fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
+        .then(res => res.text())
+        .then(texto => {
+            const match = texto.match(/\{.*\}/);
+            if (!match) return;
+            const data = JSON.parse(match[0]);
+            const badge = document.getElementById('badge-alertas');
+            if (badge && data.total !== undefined) {
+                let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
+                if (data.total > ultimoAviso) {
+                    if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
                 }
-            })
-            .catch(err => console.warn("[RADAR] Aguardando sinal limpo..."));
-    };
+                sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                badge.innerText = data.total;
+                badge.style.display = data.total > 0 ? 'flex' : 'none';
+            }
+        })
+        .catch(err => console.warn("[RADAR] Aguardando sinal limpo..."));
+};
 
-    setTimeout(() => {
-        window.atualizarContadorAlertas();
-        setInterval(window.atualizarContadorAlertas, 8000);
-    }, 1000);
-
-    setTimeout(() => {
-        if (typeof configurarPosts === 'function') configurarPosts();
-    }, 500);
-});
-
+// ==================== POPUPS E NOTIFICAÇÕES ====================
 function mostrarPopup(mensagem) {
     let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
     let tempoExibicao = 5000;
@@ -278,7 +357,7 @@ function mostrarPopup(mensagem) {
             'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },
             'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
             'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
-            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.2 },
+            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.3 },
             'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
             'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
             'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
@@ -295,7 +374,7 @@ function mostrarPopup(mensagem) {
                 bip.volume = somEscolhido.volume;
                 bip.play().then(() => {
                     bip.onloadedmetadata = function () {
-                        if (bip.duration > 3) {
+                        if (bip.duration > 4) {
                             setTimeout(() => {
                                 let intervaloFade = setInterval(() => {
                                     if (bip.volume > 0.03) bip.volume -= 0.03;
@@ -361,6 +440,7 @@ window.addEventListener('click', function (e) {
     }
 });
 
+// ==================== REAÇÕES ====================
 window.enviarReacao = function (postId, tipo) {
     fetch(`includes/reagir.php?id=${postId}&tipo=${tipo}`)
         .then(res => res.json())
@@ -396,6 +476,9 @@ window.addEventListener('click', function (event) {
     if (event.target === modalSair) window.fecharModalSair();
     const clicouNoMenu = event.target.closest('.dropdown');
     const clicouNaReacao = event.target.closest('.reacao-wrapper') || event.target.closest('.btn-reagir');
+    // --- COLOQUE O LOG AQUI ---
+    console.log("Clicou no botão de reação?", clicouNaReacao); 
+    // --------------------------
     const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
     const clicouNoPost = event.target.closest('.post-content');
     if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
@@ -411,15 +494,55 @@ window.addEventListener('click', function (event) {
     }
 });
 
-// ==================== LOAD FINAL (Apenas boot e hacker mode) ====================
+// ==================== INICIALIZAÇÃO PRINCIPAL ====================
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
+
+    const btnConfig = document.querySelector('.btn-config');
+    if (btnConfig) {
+        btnConfig.addEventListener('click', window.abrirPerfilDrawer);
+    }
+
+    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            if (window.innerWidth <= 1024) {
+                const pai = this.parentElement;
+                const estaAberto = pai.classList.contains('active');
+                if (!estaAberto) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
+                    pai.classList.add('active');
+                }
+            }
+        });
+    });
+
+    // INICIALIZA AS PREFERÊNCIAS A PARTIR DOS INPUTS HIDDEN (FONTE DA VERDADE)
+    inicializarPreferenciasAPartirDoDOM();
+    // Adiciona o ouvinte para destravar o áudio no primeiro clique
+    document.addEventListener('click', destravarAudio, { once: true });
+
+    // CONTADOR DE ALERTAS
+    setTimeout(() => {
+        window.atualizarContadorAlertas();
+        setInterval(window.atualizarContadorAlertas, 8000);
+    }, 1000);
+
+    // CONFIGURA POSTS
+    setTimeout(() => {
+        if (typeof configurarPosts === 'function') configurarPosts();
+    }, 500);
+});
+
+// ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
 window.addEventListener('load', () => {
-    // --- Restaura Hacker Mode salvo ---
     if (localStorage.getItem('fenda_hacker') === 'active') {
         document.body.classList.add('hacker-mode');
         window.removerBordasInlineHacker();
     }
 
-    // --- Boot screen (mantido igual) ---
     const bootScreen = document.getElementById('bios-boot');
     if (bootScreen && !sessionStorage.getItem('boot_concluido')) {
         setTimeout(() => {
@@ -431,17 +554,13 @@ window.addEventListener('load', () => {
         }, 2500);
     } else if (bootScreen) bootScreen.style.display = 'none';
 
-    // --- ==================== SUSPENSÃO DO HACKER MODE DURANTE O SWIPE ==================== ---
-    // Se o modo swipe estiver ativo (classes no body) e o Hacker Mode estiver ativo, suspende
     if (document.body.classList.contains('modo-swipe-ativo')) {
         if (document.body.classList.contains('hacker-mode')) {
-            // Guarda no sessionStorage que o Hacker Mode foi suspenso pelo swipe
             sessionStorage.setItem('fenda_hacker_suspended_by_swipe', 'true');
             document.body.classList.remove('hacker-mode');
             console.log("[HACKER] Modo Hacker suspenso porque o modo swipe está ativo.");
         }
     } else {
-        // Se o modo swipe NÃO está ativo, mas o Hacker Mode foi suspenso anteriormente, restaura
         if (sessionStorage.getItem('fenda_hacker_suspended_by_swipe') === 'true') {
             if (localStorage.getItem('fenda_hacker') === 'active') {
                 document.body.classList.add('hacker-mode');
@@ -453,5 +572,109 @@ window.addEventListener('load', () => {
     }
 });
 
+// ========================================================
+// LIGHTBOX DE IMAGENS (Só roda se o modal existir na página)
+// ========================================================
+document.addEventListener('click', function(e) {
+    // A VERIFICAÇÃO QUE SALVA O DIA:
+    // Se não encontrar o modal nesta página, o script para aqui e não faz nada.
+    const modal = document.getElementById('modal-imagem');
+    if (!modal) return; 
 
+    if (e.target.classList.contains('comentario-img')) {
+        const imgAmpliada = document.getElementById('img-ampliada');
+        if (!imgAmpliada) return;
+        
+        imgAmpliada.src = e.target.src; 
+        modal.classList.remove('modal-hidden');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+});
+
+
+// 3. Ação de Fechar: Fechar ao clicar no fundo ou no botão X
+// Esta parte pode ficar fora do listener global para manter o código limpo
+const modalFechamento = document.getElementById('modal-imagem');
+if (modalFechamento) {
+    modalFechamento.addEventListener('click', function(e) {
+        // Fecha apenas se clicar no fundo (this) ou no botão X (fechar-modal)
+        if (e.target === this || e.target.classList.contains('fechar-modal')) {
+            this.classList.add('modal-hidden');
+            this.setAttribute('aria-hidden', 'true');
+        }
+    });
+}
+
+/* ==========================================================
+   NEXUS ENGINE - CONTROLE ROBUSTO (À PROVA DE GLITCHES)
+   ========================================================== */
+
+let isAnimating = false; // Flag para impedir cliques rápidos (trava de segurança)
+
+// 1. Função de Execução com Delay (O efeito "Procurando Função")
+window.executarAcao = function(btn, graus, callback) {
+    if (isAnimating) return; // Se já está girando, ignora novos cliques até terminar
+
+    const ponteiro = document.getElementById('ponteiro-bussola');
+
+    isAnimating = true; // Bloqueia o sistema durante a animação
+    marcarBotaoAtivo(btn);
+    aplicarRotacao(ponteiro, graus);
+
+    // Delay de 500ms para a bússola atingir a posição antes de disparar a função
+    setTimeout(() => {
+        toggleNexus(); // Fecha o leque
+        callback();    // Executa a função (abrir modal ou redirecionar)
+        isAnimating = false; // Libera o sistema para novos cliques
+    }, 500);
+};
+
+// 2. Função de Feedback Visual (Active)
+window.marcarBotaoAtivo = function(btnClicado) {
+    document.querySelectorAll('.nexus-item').forEach(item => item.classList.remove('active'));
+    btnClicado.classList.add('active');
+};
+
+// 3. Rotação Auxiliar (Manipula apenas as classes)
+function aplicarRotacao(elemento, graus) {
+    if (!elemento) return;
+    elemento.classList.remove('girar-0', 'girar-90', 'girar-180', 'girar-270');
+    elemento.classList.add('girar-' + graus);
+}
+
+// 4. Toggle do Nexus (Entrada e Reset)
+function toggleNexus() {
+    const nexus = document.getElementById('fenda-nexus');
+    if (!nexus) return;
+
+    nexus.classList.toggle('aberto');
+
+    // Se fechou, resetamos a bússola para o Norte e limpamos os destaques
+    if (!nexus.classList.contains('aberto')) {
+        const ponteiro = document.getElementById('ponteiro-bussola');
+        aplicarRotacao(ponteiro, 0);
+        document.querySelectorAll('.nexus-item').forEach(item => item.classList.remove('active'));
+    }
+}
+
+// VIEWPORT TRACKER (SOLUÇÃO PARA TECLADO EM LANDSCAPE)
+function initViewportTracker() {
+    function atualizarAltura() {
+        const altura = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        document.documentElement.style.setProperty('--app-height', altura + 'px');
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            requestAnimationFrame(atualizarAltura);
+        });
+        window.visualViewport.addEventListener('scroll', () => {
+            requestAnimationFrame(atualizarAltura);
+        });
+    }
+    window.addEventListener('resize', () => {
+        requestAnimationFrame(atualizarAltura);
+    });
+    atualizarAltura();
+}
 

@@ -1,0 +1,11 @@
+CREATE TABLE `comunidades` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `descricao` text,
+  `criador_id` int(11) NOT NULL,
+  `data_criacao` timestamp DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+);
+
+-- Adicionar na tabela de mensagens para saber em qual comunidade ela pertence
+ALTER TABLE `mensagens` ADD COLUMN `comunidade_id` int(11) DEFAULT NULL;

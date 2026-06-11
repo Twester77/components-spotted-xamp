@@ -99,8 +99,7 @@
     top: 90px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 9999;
-    background: rgba(40, 167, 69, 0.9);
+    z-index: 999999;
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     color: white;
@@ -119,6 +118,11 @@
 
 }
 
+.toast-sucesso-global {
+        background: rgba(40, 167, 69, 0.9);
+
+}
+
 @keyframes slideDown {
     from {
         transform: translate(-50%, -150px);
@@ -129,6 +133,11 @@
         transform: translate(-50%, 0);
         opacity: 1;
     }
+}
+
+.toast-erro-global{
+ background: rgba(221, 47, 64, 0.9);
+
 }
 
 

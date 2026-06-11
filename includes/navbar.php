@@ -1,18 +1,3 @@
-<div class="hamburger-floating-container">
-    <button id="btn-menu-hamburguer" 
-            aria-label="Abrir menu de navegação" 
-            aria-expanded="false" 
-            aria-controls="sidebar-fenda">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 7l6 -3l6 3l6 -3v13l-6 3l-6 -3l-6 3v-13" />
-            <path d="M9 12v.01" />
-            <path d="M6 13v.01" />
-            <path d="M17 15l-4 -4" />
-            <path d="M13 15l4 -4" />
-        </svg>
-    </button>
-</div>
-
 <aside id="sidebar-fenda" class="sidebar-fenda" aria-hidden="true">
     <div class="sidebar-header">
         <button id="btn-fechar-menu" aria-label="Fechar menu de navegação">✕</button>
@@ -22,7 +7,7 @@
         <ul class="menu">
             <li class="menu-item"><a href="index.php">Início</a></li>
             <li class="menu-item"><a href="feed.php">Feed Geral</a></li>
-            <li class="menu-item"><a href="feed.pessoal.php">Feed Pessoal</a></li>
+            <li class="menu-item"><a href="">Feed Pessoal</a></li>
             
             <li class="menu-item dropdown">
                 <a href="#" aria-haspopup="true" aria-expanded="false">Utilidade</a>

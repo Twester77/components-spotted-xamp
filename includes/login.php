@@ -3,7 +3,7 @@
     <div class="fenda-glass-container">
 
         <!-- Imagens puramente ilustrativas ocultadas com aria-hidden para não poluir o leitor de tela -->
-        <div class="imgcontainer" aria-hidden="true">
+        <div class="avatar-pequeno" aria-hidden="true">
             <img src="imagensfoto/img_avatar2.jpg" alt="" class="avatar de inicio">
             <img src="imagensfoto/img_avatar1.jpg" alt="" class="avatar de inicio">
         </div>

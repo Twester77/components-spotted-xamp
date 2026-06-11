@@ -49,11 +49,13 @@
     /* Alvo nos cards gerados pelo motor-feed */
     width: 100% !important;
     box-sizing: border-box;
+    height: auto !important;
+     /* Deixa o card crescer com o conteúdo */
 }
 
 .main-fenda-total {
     max-width: 100% !important;
-    padding: 0 !important;
+    padding: 0 ;
     /* Zera o padding que estava empurrando o feed */
     margin: 20px auto !important;
 }
@@ -70,10 +72,10 @@
     align-items: flex-start !important;
     /* Mantém cada card no seu tamanho real */
     gap: 20px !important;
-    max-width: 3000px;
+    max-width: 9999px;
     /* Limita a largura total do feed no PC */
-    margin: 20px auto !important;
-    padding: 12px;
+    margin: 20px auto ;
+    padding: 15px;
     column-count: auto !important;
 
 }
@@ -82,9 +84,8 @@
 .container-feed article {
     display: flex !important;
     flex-direction: column;
-    max-width: 350px ;
+    max-width: auto ;
     /* Deixa o Grid controlar a largura */
-    margin: 0 !important;
     flex-shrink: 0 !important;
     position: relative ;
     margin: 20px auto !important;
@@ -98,16 +99,15 @@
     display: block;
     overflow: hidden;
     position: relative;
-    max-height: 8rem;
-    line-height: 1.5;
+    line-height: clamp(1.2, 0.2vw + 1rem, 1.6rem);
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
     overflow-wrap: break-word;
     white-space: pre-wrap;
     color: #fff;
     transition: max-height 0.4s ease-in-out;
-    margin: 20px 0;
-    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.5rem);
+    margin: 10px 0;
+    font-size: clamp(0.85rem, 0.2vw + 0.8rem, 1.4rem);
 }
 
 
@@ -145,51 +145,53 @@
 }
 
 .spotted-card {
-    background: rgba(10, 10, 10, 0.151);
-    -webkit-backdrop-filter: blur(8px); 
-    backdrop-filter: blur(8px); 
+    background:var(--glass-bg);
+    -webkit-backdrop-filter: blur(6px); 
+    backdrop-filter: blur(6px); 
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 10px;
-    padding: 12px !important;
+    padding: 12px ;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
     margin-bottom: 40px;
     margin-left: auto;
     margin-right: auto;
     display: flex !important;
-    overflow: visible !important;
     /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
-    max-width: 500px !important;
+    max-width: 450px ;
+    gap: 8px;
     /* Limita a largura máxima do card */
-    min-height: 160px;
     height: auto ;
-    -webkit-user-select:none ;
-    user-select: none;
+    /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
     will-change: backdrop-filter, transform, opacity !important;
-
+    transform: translate(var(--pos-x), var(--pos-y)) rotate(var(--swipe-rot, 0deg)) rotate(var(--shake-rot, 0deg));
 }
 
+body.modo-swipe-ativo .spotted-card * {
+    pointer-events: none !important;
+}
 
 /* ==========================================================================
    BLINDAGEM DO HOVER - FIM DA TREMEDEIRA SUPREMA
    O hover SÓ vai existir se a página NÃO estiver no Modo Swipe/App!
    ========================================================================== */
 
-.allow-hover.spotted-card:hover {
+body:not(.modo-swipe-ativo) .spotted-card:hover {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.192);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.397);
+    border-color: rgba(255, 255, 255, 0.144);
     transition: 0.3s ease;
-    transform: translateX(-5px) ;
+    transform: translateY(-10px);
 }
 
 @supports (backdrop-filter: blur(4px)) {
-    .allow-hover.spotted-card:hover {
+    body:not(.modo-swipe-ativo) .spotted-card:hover {
         backdrop-filter: blur(4px);
-        background: rgba(22, 22, 22, 0.185);
-        /* Um pouco mais escuro para o texto ler melhor no blur */
+        background: rgba(0, 0, 0, 0.473); /* Um pouco mais escuro para o texto ler melhor no blur */
+        transition: 0.3s ease;
+        transform: translateY(-10px);
     }
 }
 
@@ -372,7 +374,8 @@
     white-space: normal;
     letter-spacing: 1px;
     font-size: 16px;
-    margin-bottom: auto!important;
+    margin-bottom: auto;
+    pointer-events: auto;
 }
 
 
@@ -384,7 +387,7 @@
 /* BOTÃO FILTRO PERDIDOS */
 
 .btn-filtro {
-    padding: 7px 15px;
+    padding: 6px 15px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
@@ -410,7 +413,7 @@
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     justify-content: center;
     font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
-    padding: clamp(8px, 0.5vw + 2px, 12px) 16px;
+    padding: clamp(6px, 0.5vw + 2px, 10px) 16px;
     align-content: center;
 }
 
@@ -419,7 +422,7 @@
 .badge-perdido {
     background-color: #ff4b2b !important;
     color: white;
-    padding: 3px 12px;
+    padding: 3px 8px;
     border-radius: 20px;
     font-size: 14px;
     margin-right: 10px;
@@ -536,7 +539,7 @@ span.category-tag {
 
 
 .post-time {
-    font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.2rem);
+    font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.5rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
@@ -563,7 +566,8 @@ span.category-tag {
 /* --- POPUP DE REAÇÕES (O MENU) --- */
 /* o popup para fica sempre no DOM, apenas invisível */
 .reacoes-popup {
-    display: none; /* Agora é flex sempre */
+    visibility: hidden;
+    opacity: 0;
     position: absolute;
     left: 45%;
     bottom: 100%;
@@ -577,7 +581,8 @@ span.category-tag {
     /* A MÁGICA: Escondemos assim */
     opacity: 0;
     transform: translateX(-30%) scale(1);
-    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;
+    
 }
 
 /* 1. O Wrapper deve ser relativo para segurar o popup absoluta */
@@ -589,10 +594,10 @@ span.category-tag {
 /* 3. A classe que o JS ativa */
 .reacao-wrapper.popup-ativo .reacoes-popup {
     display: flex !important;
-    opacity: 1 !important; /* Adicione isso! */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-30%) translateY(0px); /* Ele "sobe" para a posição zero */
 }
-
-
 
 /*  Aumente a ponte para o menu não sumir */
 .reacoes-popup::before {
@@ -631,6 +636,9 @@ span.category-tag {
     cursor: pointer;
     margin: 0 2px;
     transition: transform 0.2s ease, background 0.2s ease;
+    user-select: none;
+    pointer-events: auto;
+    transform: scale(1.05);
 }
 
 /* Quando já votou */
@@ -655,7 +663,6 @@ span.category-tag {
 }
 
 
-
 .footer-links {
     display: flex;
     gap: 10px !important;
@@ -665,16 +672,10 @@ span.category-tag {
     bottom: 0;
 }
 
-/* Ajuste fino footer-links */
 
-.footer-links .btn-trigger-reacoes,
-.footer-links .btn-comentar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.95rem;
-    margin-top: auto;
 
+.btn-reagir, .btn-fofocar, .reacao-wrapper {
+    pointer-events: auto !important;
 }
 
 /*  TEXTOS (NOME E USERNAME) */
@@ -700,7 +701,7 @@ span.category-tag {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: clamp(1.5rem, 0.9rem + 0.5vw, 2.2rem);
+    font-size: clamp(1.3rem, 0.9rem + 0.5vw, 2.2rem);
     text-transform: uppercase;
     margin: 20px 0 20px 0 !important;
      word-break: break-word;
@@ -740,8 +741,8 @@ span.category-tag {
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
-    left: auto!important;
     flex-shrink: 0;
+    padding: 4px;
     /* Impede que a imagem seja espremida se o nome for grande */
 }
 
@@ -754,9 +755,9 @@ span.category-tag {
 
 .nome-linha {
     display: flex;
-    align-items: center;
+    align-items: space-between;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
     width: 100%;
 }
 
@@ -785,7 +786,7 @@ span.category-tag {
     max-width: 100% !important;
     max-height: 100% !important;
     object-fit: contain !important;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
 }
 
 
@@ -806,14 +807,13 @@ span.category-tag {
 
 .user-info-post {
     display: flex;
-    font-size: 14px;
+    font-size: clamp(0.75rem, 0.2vw + 0.6rem, 1.2rem);
     margin-bottom: auto;
     align-items: flex-start !important;
 }
 
-.anonimo,
-.user-mention {
-    color: var(--dourado);
+.user-anonimo{
+    color: #cccccc;
     text-decoration: none;
     font-weight: bold;
     font-size: 0.9rem;
@@ -821,9 +821,24 @@ span.category-tag {
     overflow: hidden;
     text-overflow: ellipsis;
     align-self: center;
-    max-width: clamp(90px, 15vw, 130px);
-    margin-left: 8px;
+    max-width: clamp(90px, 25vmin, 150px);
+    margin-left: 10px;
     width: auto;
+}
+
+.user-mention {
+    color: var(--dourado);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: clamp(0.9rem, 0.2vw + 0.6rem, 1.2rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-self: center;
+    max-width: clamp(90px, 25vmin, 150px);
+    margin-left: 10px;
+    width: auto;
+    pointer-events: auto;
 
 }
 
@@ -862,8 +877,8 @@ span.category-tag {
     right: 5px;
     background: var(--dourado);
     color: #000;
-    width: 30px;
-    height: 30px;
+    width: clamp(25px, 5vmin, 35px);
+    height: clamp(25px, 5vmin, 35px);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -905,7 +920,7 @@ span.category-tag {
 .grid-habitantes {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 10px;
+    gap: 15px;
     padding: 15px;
     max-width: auto;
     margin: 0 auto;
@@ -921,11 +936,14 @@ span.category-tag {
     gap: 15px;
     transition: 0.3s;
     text-decoration: none;
+    break-inside: avoid;
+    text-overflow: ellipsis;
     word-break: break-word;
     /* Evita que cards enormes explodam o layout */
     overflow-wrap: break-word;
-    max-width: 400px;
-    margin: 10px auto;
+    max-width: 280px;
+    margin: 20px auto;
+    position: relative;
 }
 
 .card-habitante:hover {
@@ -1003,13 +1021,9 @@ span.category-tag {
     letter-spacing: 1px;
 }
 
-.form-busca-fenda {
-    max-width: 95% !important;
-    gap: 5px !important;
-}
 
 .form-busca-fenda input[type="text"] {
-    padding: 12px 15px !important;
+    padding: 12px 15px ;
     font-size: 1rem !important;
 }
 
@@ -1038,7 +1052,7 @@ span.category-tag {
     align-items: center;
     text-align: center;
     width: 100%;
-    padding: 0 20px 0 20px;
+    padding: 0 15px;
 }
 
 .info-usuario-section h1.nome-publico {

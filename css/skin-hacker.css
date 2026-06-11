@@ -29,6 +29,7 @@ body.hacker-mode {
     -webkit-user-select: none ;
     user-select: none ;
     transition: background 0.3s ease, color 0.3s ease !important;
+    pointer-events: auto!important;
 }
 
 /* Libera seleção apenas em textos funcionais */
@@ -96,7 +97,7 @@ body.hacker-mode::after {
    4. SCROLLBAR ESTILO TERMINAL
    --------------------------------------------------------------- */
 
-body.hacker-mode::-webkit-scrollbar { width: 8px !important; }
+body.hacker-mode::-webkit-scrollbar { width: 2px !important; }
 body.hacker-mode::-webkit-scrollbar-track { background: #000 !important; }
 body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00 !important; border-radius: 0 !important; }
 
@@ -139,14 +140,15 @@ body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
     content: "+==================================================================+==============================================================+" !important;
     position: absolute !important;
-    top: -20px ;
+    padding: 6px;
+    top: -26px ;
     left: -6px ; /* Ajuste para alinhar com o border-left double */
     right: -6px ;
     color: var(--hacker-green) !important;
     font-family: monospace !important;
     font-weight: bold !important;
     white-space: nowrap !important;
-    overflow: hidden !important;
+    overflow: hidden ;
     z-index: 10 !important;
 }
 
@@ -250,7 +252,6 @@ body.hacker-mode .textarea-fenda {
     border-radius: 0 !important;
     caret-color: #00ff00 !important;
     font-family: monospace !important;
-    padding: 10px !important;
 }
 
 /* Efeito de typing / cursor piscando em inputs (usando box-shadow) */
@@ -291,19 +292,18 @@ body.hacker-mode .btn-ficar-terra,
 body.hacker-mode .btn-zarpar,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,
-body.hacker-mode .img-comunidade-grande,
-body.hacker-mode .insignia-atletica-link {  /* Inclui links e bottoms de atléticas */
+body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atléticas */
     background: #000 !important;
     color: #00ff00 !important;
     border: 4px double var(--hacker-green) !important;
-    border-radius: 0 !important;
+    border-radius: 0 ;
     font-family: monospace !important;
     text-transform: uppercase !important;
     position: relative !important;
     transition: none !important;
     cursor: crosshair !important;
-    overflow: visible !important;
-    letter-spacing: 1px !important;
+    overflow: visible ;
+    letter-spacing: 1px ;
     text-decoration: none !important;
     display: inline-block;
 }
@@ -324,21 +324,41 @@ body.hacker-mode .btn-zarpar:hover,
 body.hacker-mode .btn-enviar-fenda:hover,
 body.hacker-mode .btn-ficar-terra:hover,
 body.hacker-mode .btn-finalizar-fenda:hover,
-body.hacker-mode .login-btn:hover,
-body.hacker-mode .insignia-atletica-link:hover {
+body.hacker-mode .login-btn:hover {
     background-color: #00ff00 !important;
     color: #000000 !important;
     box-shadow: 0 0 15px #00ff00 !important;
     padding-left: 25px !important;
 }
 
-body.hacker-mode .img.insignia-atletica-bottom:hover,
+body.hacker-mode .nexus-trigger {
+    border-radius: 50%!important;
+    color: #00ff00;
+    background-color: #000000;
+    border: 2px solid #00ff41;
+
+}
+
+body.hacker-mode .insignia-atletica-bottom:hover,
+body.hacker-mode .nexus-trigger:hover,
+body.hacker-mode .insignia-atletica-link:hover ,
 body.hacker-mode .img-comunidade-grande:hover {
     background-color: #00ff00 ;
+    object-fit: contain !important;
     color: #000000 !important;
-    border-radius: 50% !important;
+    border-radius: 50%!important;
     border-style: none !important;
+     background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03) 0px,
+        rgba(0, 255, 0, 0.03) 2px,
+        transparent 2px,
+        transparent 6px
+    ) !important;
+    transform: scale(1.1) !important;
 }
+
+
 
 body.hacker-mode .btn::before,
 body.hacker-mode .fenda-btn-glow::before,
@@ -373,8 +393,6 @@ body.hacker-mode img,
 body.hacker-mode .foto-perfil,
 body.hacker-mode .comentario-avatar,
 body.hacker-mode .avatar-usuario,
-body.hacker-mode .img-perfil-feed,
-body.hacker-mode .rounded-circle,
 body.hacker-mode .avatar-p,
 body.hacker-mode .avatar-busca,
 body.hacker-mode .img-avatar-perfil,
@@ -390,9 +408,15 @@ body.hacker-mode .avatar-p:hover,
 body.hacker-mode .insignia-atletica-link:hover img {
     filter: sepia(0.3) brightness(1.1) contrast(1.05) grayscale(0) !important;
     box-shadow: 0 0 10px #00ff00 !important;
-    transform: scale(1.03) !important;
+    transform: scale(1.02) ;
+    overflow: hidden ;
 }
 
+
+body.hacker-mode .spotted-card-img:hover {
+    transform: none!important;
+    
+}
 /* ---------------------------------------------------------------
    12. ÍCONES FONT AWESOME (VERDE NEON + FLICKER - MANTIDOS)
    --------------------------------------------------------------- */
@@ -453,13 +477,12 @@ body.hacker-mode .badge-alertas {
    14. COMENTÁRIOS (ESTILO STDOUT COM PREFIXO)
    --------------------------------------------------------------- */
 
-body.hacker-mode .comentario-item, body.hacker-mode .card-focado, body.hacker-mode .comentario-item.comentario-filho  {
+body.hacker-mode .comentario-item, body.hacker-mode .comentario-item.comentario-filho  {
     border-left: 2px solid #0f0 !important;
     border-right: 2px solid #0f0 !important;
     border-top: 2px solid #0f0 !important;
     border-bottom: 2px solid #0f0 !important;
     position: relative !important;
-    overflow: hidden !important;
 
 }
 
@@ -512,7 +535,6 @@ body.hacker-mode .comentario-item.vibe-neon {
     margin-bottom: 15px;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), 0 0 5px #00ff00 !important;
     position: relative;
-    overflow: hidden;
     animation: hacker-glitch 3s infinite alternate !important;
 }
 
@@ -589,7 +611,6 @@ body.hacker-mode .comentario-item.vibe-neon {
 body.hacker-mode .comentario-item.vibe-dark:hover,
 body.hacker-mode .comentario-item.vibe-light:hover,
 body.hacker-mode .comentario-item.vibe-glass:hover,
-body.hacker-mode .comentario-item.vibe-ads:hover,
 body.hacker-mode .comentario-item.vibe-neon:hover {
     background-color: #00ff00 !important;
     color: #000000 !important;
@@ -600,10 +621,7 @@ body.hacker-mode .comentario-item.vibe-dark:hover .comentario-data,
 body.hacker-mode .comentario-item.vibe-dark:hover .comentario-texto,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-autor,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-data,
-body.hacker-mode .comentario-item.vibe-ads:hover .comentario-data,
-body.hacker-mode .comentario-item.vibe-ads:hover .comentario-texto,
-body.hacker-mode .comentario-item.vibe-ads::after:hover,
-body.hacker-mode .comentario-item.vibe-ads::before:hover,
+
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-texto,
 body.hacker-mode .comentario-item.vibe-glass:hover .comentario-autor,
 body.hacker-mode .comentario-item.vibe-glass:hover .comentario-data,
@@ -635,7 +653,7 @@ body.hacker-mode .comentario-item.vibe-ads {
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.15'/%3E%3C/svg%3E") !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") !important;
     background-size: 30px 30px !important;
 }
 
@@ -669,15 +687,6 @@ body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
     font-family: var(--hacker-font) !important;
 }
 
-/* Tag ADS "Tech" adaptada para o Kernel da Fenda */
-body.hacker-mode .comentario-item.vibe-ads .comentario-autor::after {
-    content: "[ALCATEIA.SYS]" !important; /* Visual mais sistema operacional */
-    background: var(--hacker-green) !important;
-    color: #000000 !important; /* Texto preto em cima do verde */
-    border-radius: 0px !important;
-    font-weight: bold !important;
-    box-shadow: 0 0 8px var(--hacker-green) !important;
-}
 
 /* ---------------------------------------------------------------
    16. TIPOGRAFIA GERAL (TÍTULOS COM PREFIXO DE TERMINAL)
@@ -768,13 +777,15 @@ body.hacker-mode .box-diretrizes li:hover {
    --------------------------------------------------------------- */
 
 body.hacker-mode footer::after {
-    content: " [ SYSTEM_STABLE_V2.0 ] - SESSION_ACTIVE" !important;
+    content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
     display: block !important;
     text-align: center !important;
     font-size: 0.7rem !important;
     color: #0f0 !important;
     opacity: 0.6 !important;
 }
+
+
 
 body.hacker-mode .post-content.tem-mais:not(.expandido)::after {
     content: ' > [ CARREGAR_DADOS... ]' !important;
@@ -818,12 +829,12 @@ body.hacker-mode #fenda-toolbar {
     color: #00ff00 !important;
     font-family: monospace !important;
 }
-body.hacker-mode .btn-audio-choice {
+body.hacker-mode .btn-notif-choice {
     background: #000 !important;
     border: 1px solid #00ff00 !important;
     color: #00ff00 !important;
 }
-body.hacker-mode .btn-audio-choice.active {
+body.hacker-mode .btn-notif-choice.active {
     background: #00ff00 !important;
     color: #000 !important;
 }

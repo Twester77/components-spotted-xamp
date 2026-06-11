@@ -6,7 +6,7 @@
     --laranja-fenda: linear-gradient(165deg, #fc5f21, #9b5ab9d2);
     --dourado: #ffbc00;
     --background-dark: #0d0d0d;
-    --glass-bg: rgba(255, 255, 255, 0.13);
+    --glass-bg: rgba(255, 255, 255, 0.055);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box!important; }
@@ -42,39 +42,4 @@ html {
     scroll-behavior: smooth;
 }
 
-.capa-default-fenda {
-    width: 100%;
-    height: 300px; 
-    background: linear-gradient(135deg, #004a8f 0%, #00a896 100%);
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px 12px 0 0; 
-}
-
-.capa-default-fenda::before {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    background: radial-gradient(circle at 10% 150%, #ffbc00 10%, transparent 20%),
-                radial-gradient(circle at 90% 150%, #ffbc00 15%, transparent 25%);
-    opacity: 0.3; 
-}
-
-/* Texto de Boas-Vindas centralizado */
-.capa-default-fenda .boas-vindas-texto {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-family: 'Inter', sans-serif; 
-    font-weight: bold;
-    font-size: 24px;
-    text-align: center;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
-    letter-spacing: 1px;
-}
 

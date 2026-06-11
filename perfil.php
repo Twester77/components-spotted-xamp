@@ -1,19 +1,28 @@
 <?php
+// 1. PRIMEIRO: Conexão e Sessão (Obrigatório, não pode faltar)
 include 'conexao.php';
 
+// 2. SEGUNDO: Segurança (Bloqueia quem não está logado)
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");
     exit();
 }
 
-include 'includes/header.php';
-include 'includes/navbar.php';
-include 'includes/bolhas.php';
+// TERCEIRO: Lógica do "Modo Gaveta" (Definimos se vamos ou não carregar o resto)
+$isAjax = isset($_GET['modo']) && $_GET['modo'] === 'gaveta';
 
+// QUARTO: Includes Condicionais (Só carrega o que é global se NÃO for gaveta)
+if (!$isAjax) {
+    include 'includes/header.php';
+    include 'includes/navbar.php';
+    include 'includes/bolhas.php';
+}
+
+//QUINTO: Sua lógica de consulta ao banco (O motor de dados)
 $id_meu = $_SESSION['usuario_id'];
 
 // 1. O banco reconhece a escolha do usuário
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas FROM usuarios WHERE id = '$id_meu'";
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, pref_som_trilha, pref_som_notif FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
@@ -25,6 +34,7 @@ $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOT
 $foto_atual = !empty($foto_limpa) ? "uploads/" . $foto_limpa : "uploads/default_masculino.jpg";
 $capa_atual = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.jpg";
 
+
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 // Pega do banco ou usa o padrão
 $cor_banco = $dados['pref_cor_padrao'] ?? '#70cde4';
@@ -33,44 +43,15 @@ if (substr($cor_banco, 0, 1) !== '#') {
     $cor_banco = '#' . $cor_banco;
 }
 
+// 2. Definição dos valores padrão para os campos de configuração, usando o operador de coalescência nula para garantir que sempre haja um valor
+$trilha_default = $dados['pref_som_trilha'] ?? 'ondas';
+$notif_default = $dados['pref_som_notif'] ?? 'padrao';
 $cor_default = $cor_banco;
 $bolhas_default = $dados['pref_bolhas'] ?? 1;
 $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 ?>
 
 <main class="main-perfil-container-config <?php echo $classe_presenca; ?>">
-    <?php if (isset($_GET['sucesso'])): ?>
-        <div id="toast-sucesso" class="toast-fenda">
-            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-            <span>Perfil atualizado com sucesso!</span>
-        </div>
-
-        <script>
-            setTimeout(() => {
-                const toast = document.getElementById('toast-sucesso');
-                if (toast) {
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 500);
-                }
-            }, 4000);
-        </script>
-    <?php endif; ?>
-
-    <?php if (isset($_GET['erro']) && $_GET['erro'] === 'username_duplicado'): ?>
-        <div id="toast-erro" class="toast-fenda" style="background: rgba(255, 75, 43, 0.85); border-color: #ff4b2b;">
-            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-            <span>Esse @ já está sendo usado por outro habitante!</span>
-        </div>
-        <script>
-            setTimeout(() => {
-                const toast = document.getElementById('toast-erro');
-                if (toast) {
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 500);
-                }
-            }, 4000);
-        </script>
-    <?php endif; ?>
 
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
@@ -84,7 +65,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <?php endif; ?>
 
                 <label id="label-capa" class="btn-mudar-capa">
-                    <i class="fas fa-camera" aria-hidden="true"></i> 
+                    <i class="fas fa-camera" aria-hidden="true"></i>
                     <input type="file" name="capa" style="display:none;" aria-labelledby="label-capa">
                 </label>
             </div>
@@ -123,10 +104,10 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                         id="username"
                         name="username"
                         value="<?php echo htmlspecialchars($dados['username']); ?>"
-                        pattern="[a-z0-9_\.]{5,15}"
+                        pattern="[a-z0-9_\.]{5,18}"
                         minlength="5"
-                        maxlength="15"
-                        title="Apenas letras minúsculas, números, underline (_) ou ponto (.). Sem espaços! (De 5 a 15 caracteres)"
+                        maxlength="18"
+                        title="Apenas letras minúsculas, números, underline (_) ou ponto (.). Sem espaços! (De 5 a 18 caracteres)"
                         oninput="this.value = this.value.toLowerCase().replace(/\s/g, '')"
                         required>
                 </div>
@@ -167,65 +148,47 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo" style="margin-top: 15px;">
                 <label>Configurações de Áudio e Interface</label>
+
                 <div class="audio-settings-card">
+                    <input type="hidden" name="pref_som_trilha" id="drawer_input_pref_som_trilha" value="<?php echo $dados['pref_som_trilha']; ?>">
+                    <input type="hidden" name="pref_som_notif" id="drawer_input_pref_som_notif" value="<?php echo $dados['pref_som_notif']; ?>">
+                    <input type="hidden" name="pref_bolhas" id="drawer_input_pref_bolhas" value="<?php echo $dados['pref_bolhas']; ?>">
+
                     <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Música de Fundo</span>
                     <div class="audio-choices-container">
-                        <button type="button" id="btn-som-chuva" class="btn-audio-choice <?php echo (isset($_SESSION['som']) && $_SESSION['som'] == 'chuva') ? 'active' : ''; ?>" onclick="mudarSomAmbiente('chuva')">Chuva</button>
-                        <button type="button" id="btn-som-ondas" class="btn-audio-choice <?php echo (isset($_SESSION['som']) && $_SESSION['som'] == 'ondas') ? 'active' : ''; ?>" onclick="mudarSomAmbiente('ondas')">Oceano</button>
-                        <button type="button" id="btn-som-off" class="btn-audio-choice <?php echo (!isset($_SESSION['som']) || $_SESSION['som'] == 'off') ? 'active' : ''; ?>" onclick="mudarSomAmbiente('off')">Mudo</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'chuva') ? 'active' : '' ?>" data-som="chuva" onclick="mudarSomAmbiente('chuva')">Chuva</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'ondas') ? 'active' : '' ?>" data-som="ondas" onclick="mudarSomAmbiente('ondas')">Oceano</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'off') ? 'active' : '' ?>" data-som="off" onclick="mudarSomAmbiente('off')">Mudo</button>
                     </div>
 
                     <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
 
                     <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
                     <div class="audio-choices-container">
-                        <button type="button" id="btn-notif-padrao" class="btn-audio-choice" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle" aria-hidden="true"></i> Padrão</button>
-                        <button type="button" id="btn-notif-cs" class="btn-audio-choice" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs" aria-hidden="true"></i> CS</button>
-                        <button type="button" id="btn-notif-resident" class="btn-audio-choice" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard" aria-hidden="true"></i> RE</button>
-                        <button type="button" id="btn-notif-off" class="btn-audio-choice" onclick="mudarTemaNotif('off')"><i class="fas fa-bell-slash" aria-hidden="true"></i> Mudo</button>
-
-                        <button type="button" id="btn-notif-starwars" class="btn-audio-choice" onclick="mudarTemaNotif('starwars')"><i class="fas fa-jedi" aria-hidden="true"></i> Star Wars</button>
-                        <button type="button" id="btn-notif-mario" class="btn-audio-choice" onclick="mudarTemaNotif('mario')">
-                            <img src="imagensfoto/mushroom.png" width="18" style="vertical-align: middle; margin-right: 5px;" alt="Cogumelo"> Mario
-                        </button>
-
-                        <button type="button" id="btn-notif-pokemon" class="btn-audio-choice" onclick="mudarTemaNotif('pokemon')">
-                            <img src="imagensfoto/pokebola.png" width="18" style="vertical-align: middle; margin-right: 5px;" alt="Pokebola"> Pokémon
-                        </button>
-
-                        <button type="button" id="btn-notif-digimon" class="btn-audio-choice" onclick="mudarTemaNotif('digimon')">
-                            <img src="imagensfoto/digivice.png" width="22" style="vertical-align: middle; margin-right: 5px;" alt="Digivice"> Digimon
-                        </button>
-
-                        <button type="button" id="btn-notif-dbz" class="btn-audio-choice" onclick="mudarTemaNotif('dbz')">
-                            <img src="imagensfoto/esferas-nuvem.png" width="20" style="vertical-align: middle; margin-right: 5px;" alt="Esferas do Dragão"> DBZ
-                        </button>
-
-                        <button type="button" id="btn-notif-naruto" class="btn-audio-choice" onclick="mudarTemaNotif('naruto')">
-                            <img src="imagensfoto/kunai.png" width="20" style="vertical-align: middle; margin-right: 5px;" alt="Kunai"> Naruto
-                        </button>
-                        <button type="button" id="btn-notif-streetfighter" class="btn-audio-choice" onclick="mudarTemaNotif('streetfighter')">
-                            <i class="fa-solid fa-hand-fist" aria-hidden="true"></i> Street Fighter
-                        </button>
-                        <button type="button" id="btn-notif-desgraca1" class="btn-audio-choice" onclick="mudarTemaNotif('desgraca1')">
-                            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Desgraça
-                        </button>
-
-                        <button type="button" id="btn-notif-desgraca2" class="btn-audio-choice" onclick="mudarTemaNotif('desgraca2')">
-                            <i class="fa-solid fa-skull" aria-hidden="true"></i> Quero dormir
-                        </button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'padrao') ? 'active' : '' ?>" data-notif="padrao" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle"></i> Padrão</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'cs') ? 'active' : '' ?>" data-notif="cs" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs"></i> CS</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'resident') ? 'active' : '' ?>" data-notif="resident" onclick="mudarTemaNotif('resident')"><i class="fas fa-biohazard"></i> RE</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'off') ? 'active' : '' ?>" data-notif="off" onclick="mudarTemaNotif('off')"><i class="fas fa-bell-slash"></i> Mudo</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'starwars') ? 'active' : '' ?>" data-notif="starwars" onclick="mudarTemaNotif('starwars')"><i class="fas fa-jedi"></i> Star Wars</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'mario') ? 'active' : '' ?>" data-notif="mario" onclick="mudarTemaNotif('mario')"><img src="imagensfoto/mushroom.png" width="18" style="vertical-align: middle;"> Mario</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'pokemon') ? 'active' : '' ?>" data-notif="pokemon" onclick="mudarTemaNotif('pokemon')"><img src="imagensfoto/pokebola.png" width="18" style="vertical-align: middle;"> Pokémon</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'digimon') ? 'active' : '' ?>" data-notif="digimon" onclick="mudarTemaNotif('digimon')"><img src="imagensfoto/digivice.png" width="20" style="vertical-align: middle;"> Digimon</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'dbz') ? 'active' : '' ?>" data-notif="dbz" onclick="mudarTemaNotif('dbz')"><img src="imagensfoto/esferas-nuvem.png" width="20" style="vertical-align: middle;"> DBZ</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'naruto') ? 'active' : '' ?>" data-notif="naruto" onclick="mudarTemaNotif('naruto')"><img src="imagensfoto/kunai.png" width="20" style="vertical-align: middle;"> Naruto</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'streetfighter') ? 'active' : '' ?>" data-notif="streetfighter" onclick="mudarTemaNotif('streetfighter')"><i class="fa-solid fa-hand-fist"></i> Street Fighter</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'desgraca1') ? 'active' : '' ?>" data-notif="desgraca1" onclick="mudarTemaNotif('desgraca1')"><i class="fa-solid fa-triangle-exclamation"></i> Desgraça</button>
+                        <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'desgraca2') ? 'active' : '' ?>" data-notif="desgraca2" onclick="mudarTemaNotif('desgraca2')"><i class="fa-solid fa-skull"></i> Quero dormir</button>
                     </div>
 
                     <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
 
                     <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">(De)feitos Visuais</span>
                     <div class="audio-choices-container">
-                        <input type="hidden" name="pref_bolhas" id="input_pref_bolhas" value="<?php echo $bolhas_default; ?>">
-                        <button type="button" id="btn-bolhas-on" class="btn-audio-choice <?php echo ($bolhas_default == 1) ? 'active' : ''; ?>" onclick="setBolhasLocal(1)">
-                            <i class="fas fa-soap" aria-hidden="true"></i> Bolhas On
+                        <button type="button" class="btn-audio-choice btn-bolhas-on <?= ($dados['pref_bolhas'] == 1) ? 'active' : '' ?>" onclick="setBolhasLocal(1)">
+                            <i class="fas fa-soap"></i> Bolhas On
                         </button>
-                        <button type="button" id="btn-bolhas-off" class="btn-audio-choice <?php echo ($bolhas_default == 0) ? 'active' : ''; ?>" onclick="setBolhasLocal(0)">
-                            <i class="fas fa-times" aria-hidden="true"></i> Desligar
+                        <button type="button" class="btn-audio-choice btn-bolhas-off <?= ($dados['pref_bolhas'] == 0) ? 'active' : '' ?>" onclick="setBolhasLocal(0)">
+                            <i class="fas fa-times"></i> Desligar
                         </button>
                     </div>
                 </div>
@@ -269,17 +232,6 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 </main>
 
 <script>
-    // Função simples para gerenciar os botões de bolha sem complicar o código
-    function setBolhasLocal(valor) {
-        document.getElementById('input_pref_bolhas').value = valor;
-        document.getElementById('btn-bolhas-on').classList.toggle('active', valor === 1);
-        document.getElementById('btn-bolhas-off').classList.toggle('active', valor === 0);
-
-        if (typeof setBolhas === "function") {
-            setBolhas(valor === 1);
-        }
-    }
-
     // NOVA FUNÇÃO: Validação de tamanho de imagem (Máximo 2MB)
     document.querySelectorAll('input[type="file"]').forEach(input => {
         input.addEventListener('change', function() {
@@ -294,4 +246,9 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
     });
 </script>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+// SÉTIMO: Footer condicional
+if (!$isAjax) {
+    include 'includes/footer.php';
+}
+?>

@@ -27,10 +27,15 @@ include 'includes/navbar.php';
     <h2>🔍 Buscar Estudantes</h2>
     
     <form action="buscar-usuario.php" method="GET" class="form-busca-fenda">
-        <input type="text" name="q" value="<?php echo htmlspecialchars($busca); ?>" 
+    <div class="container-autocomplete">
+        <input type="text" name="q" id="input-busca" value="<?php echo htmlspecialchars($busca); ?>" 
                placeholder="Digite o nome ou @username..." autocomplete="off">
-        <button type="submit">IR</button>
-    </form>
+        
+        <div id="dropdown-busca" class="dropdown-busca"></div>
+    </div>
+    
+    <button type="submit">IR</button>
+</form>
 
     <div class="lista-resultados"> <?php if (!empty($busca)): ?>
             <?php if (count($resultados) > 0): ?>
@@ -52,5 +57,49 @@ include 'includes/navbar.php';
             <?php endif; ?>
         <?php endif; ?>
     </div> </main>
+    <script>
+const inputBusca = document.getElementById('input-busca');
+const dropdown = document.getElementById('dropdown-busca');
+
+inputBusca.addEventListener('input', function() {
+    const termo = this.value.trim();
+    
+    if (termo.length < 2) {
+        dropdown.style.display = 'none';
+        return;
+    }
+
+    // Chama o seu arquivo que já existe e funciona
+    fetch('buscar-mencoes.php?q=' + encodeURIComponent(termo))
+        .then(res => res.json())
+        .then(data => {
+            dropdown.innerHTML = '';
+            if (data.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            // Cria a lista de resultados
+            data.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'item-sugestao';
+                div.textContent = '@' + user;
+                div.onclick = () => {
+                    window.location.href = 'ver-perfil.php?user=' + user;
+                };
+                dropdown.appendChild(div);
+            });
+            
+            dropdown.style.display = 'block';
+        });
+});
+
+// Fecha se clicar fora
+document.addEventListener('click', (e) => {
+    if (!inputBusca.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
+});
+</script>
 
 <?php include 'includes/footer.php'; ?>

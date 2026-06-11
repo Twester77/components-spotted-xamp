@@ -5,7 +5,7 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php'; 
 ?>
 
-<main style="max-width: 900px; margin: auto; padding: 20px 0;" id="conteudo-principal">
+<main style="max-width: 900px; margin: auto;" id="conteudo-principal">
     
     <div class="presentation-deck">
 

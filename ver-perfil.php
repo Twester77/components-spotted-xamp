@@ -1,15 +1,30 @@
 <?php
-include 'conexao.php';
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-include 'includes/header.php';
-include 'includes/navbar.php';
+// 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
+include_once 'conexao.php';
 
+// 🚨 CURTO-CIRCUITO DE SEGURANÇA MÁXIMA (Sem confiar em username de sessão)
 if (!isset($_GET['user'])) {
+    if (isset($_SESSION['usuario_id'])) {
+        $meu_id_fallback = $_SESSION['usuario_id'];
+        
+        // Vamos direto na Fonte da Verdade (O Banco de Dados) pelo ID que NUNCA muda!
+        $busca_nome = mysqli_query($conn, "SELECT username FROM usuarios WHERE id = '$meu_id_fallback'");
+        
+        if ($busca_nome && $dados_nome = mysqli_fetch_assoc($busca_nome)) {
+            // Redireciona com o username mais atualizado do universo
+            header("Location: ver-perfil.php?user=" . $dados_nome['username']);
+            exit();
+        }
+    }
+    
+    // Se não achar nada ou não estiver logado, feed nele
     header("Location: feed.php");
     exit();
 }
+
+//  SÓ DAQUI PRA BAIXO O PHP PODE CUSPIR LAYOUT NA TELA
+include 'includes/header.php';
+include 'includes/navbar.php';
 
 $user_get = mysqli_real_escape_string($conn, $_GET['user']);
 // BUSCA COMPLETA: Agora pegamos as preferências de visual
@@ -46,7 +61,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 <style>
     /* Aplicando a cor e brilho dinâmico no Avatar */
     .avatar-main {
-        border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?> !important;
+        border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?> ;
         box-shadow: 0 0 15px <?php echo $cor_user; ?>55;
         /* Cor com transparência */
     }

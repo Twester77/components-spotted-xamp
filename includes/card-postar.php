@@ -1,4 +1,4 @@
-<section id="postar" class="main-novo-post" style="margin-bottom: 40px !important;">
+<section id="postar" class="main-novo-post">
     <div class="form-container">
         <h2>O que tá rolando na UNIFEV?</h2>
 

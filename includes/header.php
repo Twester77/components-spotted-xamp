@@ -1,5 +1,6 @@
 <?php
 include_once 'conexao.php';
+$is_post_page = true;
 
 $u_id = $_SESSION['usuario_id'] ?? 0;
 $pref_swipe_real = 0;
@@ -39,7 +40,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         <link rel="stylesheet" href="css/comentarios.css">
     <?php endif; ?>
     <?php if ($pagina_atual == 'feed.php'): ?>
-    <link rel="stylesheet" href="css/swipe.css?v=<?php echo time(); ?>">
+        <link rel="stylesheet" href="css/swipe.css?v=<?php echo time(); ?>">
     <?php endif; ?>
     <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
     <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
@@ -50,46 +51,144 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
 
 </head>
 
-<body class="<?php echo $classes_finais; ?>">
-    <header>
-        <h1>A Fenda - Spotted Universitário</h1>
+<body class="<?php echo $classes_finais; ?> <?php echo (isset($is_post_page) && $is_post_page) ? 'pagina-post' : ''; ?>">
+    <header class="header-principal header-visivel">
+        <div class="header-left">
+            <div class="hamburger-floating-container">
+                <button id="btn-menu-hamburguer"
+                    aria-label="Abrir menu de navegação"
+                    aria-expanded="false"
+                    aria-controls="sidebar-fenda">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7l6 -3l6 3l6 -3v13l-6 3l-6 -3l-6 3v-13" />
+                        <path d="M9 12v.01" />
+                        <path d="M6 13v.01" />
+                        <path d="M17 15l-4 -4" />
+                        <path d="M13 15l4 -4" />
+                    </svg>
+                </button>
+            </div>
 
-        <?php
-        // MELHORIA SUPREMA: Os ícones agora aparecem na Index e no Feed, 
-        // desde que o Habitante esteja devidamente logado no sistema!
-        if ($u_id > 0):
-        ?>
-            <div class="header-icons">
-                <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes" aria-label="Pesquisar habitantes">
-                    <i class="fas fa-search"></i>
-                </a>
+            <h1>A Fenda - Spotted Universitário</h1>
+        </div>
 
-                <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()" aria-label="Suas Notificações">
-                    <i class="fa-solid fa-bell"></i>
+        <?php if ($u_id > 0): ?>
+            <div class="header-right">
+                <div class="header-icons">
+                    <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes" aria-label="Pesquisar habitantes">
+                        <i class="fas fa-search"></i>
+                    </a>
 
-                    <?php
-                    $total_n = 0;
-                    if (isset($conn)) {
-                        $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
-                        $stmt_count_header->bind_param("i", $u_id);
-                        $stmt_count_header->execute();
-                        $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
-                        $total_n = $res_header_notif['total'] ?? 0;
-                    }
-                    ?>
+                    <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()" aria-label="Suas Notificações">
+                        <i class="fa-solid fa-bell"></i>
 
-                    <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
-                        <?php echo $total_n; ?>
-                    </span>
+                        <?php
+                        $total_n = 0;
+                        if (isset($conn)) {
+                            $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
+                            $stmt_count_header->bind_param("i", $u_id);
+                            $stmt_count_header->execute();
+                            $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
+                            $total_n = $res_header_notif['total'] ?? 0;
+                        }
+                        ?>
 
-                    <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
-                        <p style="padding:10px; color:#999;">Carregando fofocas...</p>
+                        <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
+                            <?php echo $total_n; ?>
+                        </span>
+
+                        <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
+                            <p style="padding:10px; color:#999;">Carregando fofocas...</p>
+                        </div>
                     </div>
-                </div>
 
-                <a href="perfil.php" class="btn-config" title="Configurações do Perfil" aria-label="Configurar seu perfil ">
-                    <i class="fas fa-cog"></i>
-                </a>
+                    <a href="#"
+                        class="btn-config"
+                        onclick="event.preventDefault(); abrirPerfilDrawer();"
+                        title="Configurações do Perfil"
+                        aria-label="Configurar seu perfil"
+                        aria-expanded="false"
+                        aria-controls="perfil-drawer">
+                        <i class="fas fa-cog"></i>
+                    </a>
+                </div>
             </div>
         <?php endif; ?>
     </header>
+
+    <!-- ========================================== -->
+    <!-- 🚀 MOTOR GLOBAL DE TOASTS DA FENDA UNIVERSITY -->
+    <!-- ========================================== -->
+    <?php
+    $exibir_toast = false;
+    $toast_mensagem = "";
+    $toast_classe = "";
+    $toast_icone = "";
+
+    // 🔴 1. CAPTURA DE ERROS GLOBAIS
+    if (isset($_GET['erro'])) {
+        $exibir_toast = true;
+        $toast_classe = "toast-erro-global"; // Estilize no CSS com fundo vermelho/laranja
+        $toast_icone = "fa-solid fa-triangle-exclamation";
+        
+        switch ($_GET['erro']) {
+            case 'username_duplicado':
+                $toast_mensagem = "Este nome de usuário já está em uso por outro habitante!";
+                break;
+            case 'username_espaco':
+                $toast_mensagem = "O nome de usuário não pode conter espaços em branco!";
+                break;
+            case 'username_curto':
+                $toast_mensagem = "Username muito curto! Escolha um com no mínimo 5 caracteres.";
+                break;
+            case 'perfil_invalido':
+                $toast_mensagem = " Usuário não especificado ou inexistente.";
+                break;
+            default:
+                $toast_mensagem = "Ops! Algo deu errado. Tente novamente.";
+                break;
+        }
+    }
+
+    // 🟢 2. CAPTURA DE SUCESSOS GLOBAIS
+    if (isset($_GET['sucesso'])) {
+        $exibir_toast = true;
+        $toast_classe = "toast-sucesso-global"; 
+        $toast_icone = "fa-solid fa-circle-check";
+
+        switch ($_GET['sucesso']) {
+            case 'perfil':
+            case 'perfil_atualizado':
+                $toast_mensagem = "Perfil atualizado com sucesso! ";
+                break;
+            case 'postado':
+                $toast_mensagem = "Sussurro enviado com sucesso para a Fenda! ";
+                break;
+            default:
+                $toast_mensagem = "Perfil atualizado com sucesso! ";
+                break;
+        }
+    }
+
+    // 🎬 3. RENDERIZAÇÃO DO TOAST
+    if ($exibir_toast): 
+    ?>
+        <div id="toast-fenda-global" class="toast-fenda <?php echo $toast_classe; ?>" role="alert" aria-live="assertive" aria-atomic="true">
+            <i class="<?php echo $toast_icone; ?>" aria-hidden="true"></i>
+            <span style="margin-left: 10px;"><?php echo $toast_mensagem; ?></span>
+        </div>
+
+        <script>
+            setTimeout(() => {
+                const toastGlobal = document.getElementById('toast-fenda-global');
+                if (toastGlobal) {
+                    toastGlobal.style.opacity = '0';
+                    setTimeout(() => toastGlobal.remove(), 500);
+                }
+                // Limpa os parâmetros da URL para o F5 não ficar repetindo o Toast
+                window.history.replaceState({}, document.title, window.location.pathname + window.location.search.replace(/[?&](erro|sucesso)=[^&*]/g, ''));
+            }, 4000);
+        </script>
+    <?php endif; ?>
+
+    
