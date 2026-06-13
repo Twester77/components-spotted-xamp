@@ -145,13 +145,10 @@ body.modo-swipe-ativo .container-feed {
     overflow-y: hidden !important;
     overflow-x: hidden !important;
     overscroll-behavior: none;
-
-    /* 🔥 Variáveis para controle via JS (swipe e tremor) */
+    /*  Variáveis para controle via JS (swipe e tremor) */
     --pos-x: 0px;
     --pos-y: 0px;
     --swipe-rot: 0deg;
-    --shake-rot: 0deg;
-
     border-radius: 12px;
     background: rgba(10, 10, 10, 0.185);
     -webkit-backdrop-filter: blur(4px);
@@ -350,28 +347,14 @@ body.modo-swipe-ativo .btn-fofocar {
    10. BOTÃO DE FILTRO E GAVETA – REGRAS CONSOLIDADAS
    ============================================================ */
 
-/* --- MODO NORMAL (sem swipe) --- */
-@media (min-width: 769px) {
-    body:not(.modo-swipe-ativo) #btn-abrir-filtros {
-        display: none !important;
-    }
-
-    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil {
-        display: block !important;
-        position: relative;
-        background: transparent !important;
-        backdrop-filter: none !important;
-        padding: 10px;
-        margin: 20px 0;
-        box-shadow: none !important;
-    }
-
-    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
+ body.modo-swipe-ativo .controles-feed-topo {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: transparent !important;
+    padding: 0 !important;
 }
 
 /* --- MODO SWIPE (cards empilhados) --- */
@@ -381,7 +364,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil {
 
 body.modo-swipe-ativo #btn-abrir-filtros {
     display: inline-flex !important;
-    position: relative;
+    position: absolute;
     top: 30%;
     left: 50%;
     transform: translateX(-50%);
@@ -416,19 +399,6 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     border-bottom: 4px solid #ff8c00;
 }
 
-@media (min-width: 769px) {
-    body.modo-swipe-ativo #btn-abrir-filtros {
-        top: -20px;
-    }
-
-    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 40px !important;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    
-}
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
@@ -436,15 +406,6 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     }
 }
 
-.filtros-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    width: 100% !important;
-    margin-top: 40px;
-    padding: 20px 10px 30px 10px;
-}
 
 @keyframes slideDown {
     from {
@@ -466,6 +427,7 @@ body.modo-swipe-ativo .container-load-more {
 body:not(.modo-swipe-ativo) .spotted-card {
     position: relative !important;
     opacity: 1 !important;
+    pointer-events: auto;
 }
 
 /* ============================================================
@@ -522,22 +484,19 @@ body:not(.modo-swipe-ativo) .spotted-card {
    ============================================================ */
 .container-img-post {
     position: relative !important;
-    max-width: 330px;
     border-radius: 10px;
-    margin: 10px 0;
-    max-height: 350px;
+    margin: 4px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 100 !important;
     background: #111;
-    touch-action: auto !important;
     overflow: hidden;
 }
 
 .spotted-card-img {
-    max-width: 100%;
-    height: auto;
+    width: 100%;
+    height: 100%;
     border: 2px solid #ee9529;
     object-fit: contain;
     object-position: center !important;
@@ -558,104 +517,10 @@ body:not(.modo-swipe-ativo) .spotted-card {
     }
 }
 
-/* ============================================================
-   14. AJUSTES MOBILE (MENU, GAVETA, ETC.)
-   ============================================================ */
-@media (max-width: 768px) {
-    .chat-input-container {
-        justify-content: space-between !important;
-    }
 
-    .textarea-chat {
-        display: flex;
-        flex: 1;
-        max-width: 100% !important;
-    }
-
-    #form-comentario {
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    .sidebar-fenda {
-        display: block !important;
-        visibility: visible !important;
-        width: 200px !important;
-        height: auto !important;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-    }
-
-    .sidebar-fenda .menu {
-        display: flex !important;
-        flex-direction: column !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-
-    .menu.ativa {
-        display: flex;
-    }
-
-    #btn-menu-hamburguer {
-        display: block;
-    }
-
-    .drawer-perfil-container {
-        width: 86% !important;
-    }
-
-    .main-perfil-container-config {
-        padding: 10px !important;
-    }
-
-    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 55px !important;
-    }
-
-    body:not(.modo-swipe-ativo) #btn-abrir-filtros {
-        display: inline-flex !important;
-        position: fixed !important;
-        top: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10000 !important;
-        color: #000;
-        padding: 5px 10px;
-        font-size: 0.8rem;
-        border-radius: 40px;
-        font-weight: bold;
-        white-space: nowrap;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil {
-        display: none !important;
-    }
-
-    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil.aberto {
-        display: block;
-        position: fixed !important;
-        top: 55px;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(4px);
-        border-radius: 0 0 20px 20px;
-        border-bottom: 5px solid #ff8c00;
-        padding: 15px;
-        z-index: 999999 !important;
-        max-height: 60dvh !important;
-        overflow-y: auto !important;
-    }
-
-    .lista-comentarios-social {
-        padding-bottom: 90px;
-    }
-}
 
 /* ============================================================
-   15. GARANTIA EXTRA – PRIMEIRO CARD RECEBE EVENTOS
+   14. GARANTIA EXTRA – PRIMEIRO CARD RECEBE EVENTOS
    ============================================================ */
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child {
     pointer-events: auto !important;
@@ -694,7 +559,7 @@ body.fenda-arrastando .anonimo {
     position: absolute !important;
     top: 10px !important;
     right: 10px !important;
-    z-index: 9999999999999 !important;
+    z-index: 999999 !important;
     pointer-events: auto !important;
     cursor: pointer !important;
 }
@@ -710,6 +575,7 @@ body.fenda-arrastando .anonimo {
 @keyframes fadeIn {
     from {
         opacity: 0;
+        opacity: 0.5;
     }
 
     to {
@@ -718,50 +584,44 @@ body.fenda-arrastando .anonimo {
 }
 
 
+/* O estado de 'Prisma' - Ativado via JS */
+.modo-swipe-ativo .spotted-card.card-long-press-active {
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.4) ;
+    background-image: linear-gradient(120deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%) ;
+    background-size: 200% 100% ;
+    animation: shimmer-pulse 0.8s infinite ease-in-out  !important;
+    backdrop-filter: brightness(1.1) saturate(1.2) ;
+     transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s;
+}
 
-/* ============================================================
-   BOTÃO LUPA FALLBACK (modo swipe)
-   ============================================================ */
-.btn-lupa-fallback {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 56px;
-    height: 56px;
+/* A animação: muda apenas a posição do gradiente (GPU Friendly) */
+@keyframes shimmer-pulse {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+
+
+/* Quando a reação está sendo enviada */
+.spotted-card.is-loading {
+    filter: brightness(0.7) blur(2px);
+    pointer-events: none;
+    transition: filter 0.3s ease;
+}
+
+/* O spinner (o seu Radar de Maracutaia) */
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #ff8c00; /* Cor da Fenda */
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    border: 1px solid #ff8c00;
-    color: #ff8c00;
-    font-size: 1.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 100000;
-    transition: 0.2s;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: spin 1s linear infinite;
+    z-index: 100;
 }
 
-.btn-lupa-fallback:hover {
-    background: #ff8c00;
-    color: #000;
-    transform: scale(1.05);
-}
-
-/* 1. Define a animação APENAS para a variável (sem tocar em transform aqui!) */@keyframes tremida-total {
-    0% { --shake-rot: 0deg; }
-    25% { --shake-rot: -2deg; }
-    75% { --shake-rot: 2deg; }
-    100% { --shake-rot: 0deg; }
-}/* 2. Aplica a classe sem causar o deslocamento */body.modo-swipe-ativo .spotted-card.card-tremendo {
-    /* IMPORTANTE: Não coloque 'transform: ...' aqui */
-    animation: tremida-total 0.15s infinite cubic-bezier(0.4, 0, 0.2, 1) ;
-    will-change: transform;
-}
-
-
-/* Isso mata qualquer card que, por erro, ainda tenha a classe */
-.spotted-card.card-tremendo.parar-tremor {
-    animation: none !important;
-}
+@keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }

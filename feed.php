@@ -60,7 +60,7 @@ include 'includes/bolhas.php';
         var cardPadding = cardWidth * 0.05; // 5% da largura
         var fontSize = cardWidth * 0.05; // 5% da largura (base)
         var avatarSize = cardWidth * 0.12; // 12% da largura
-        var maxCardHeight = vh * 0.80; // 80% da altura da tela
+        var maxCardHeight = vh * 0.85; // 80% da altura da tela
 
         // Aplica em todos os cards atuais (e futuros – chamamos novamente quando novos cards entram)
         var cards = document.querySelectorAll('.feed-empilhado .spotted-card');
@@ -137,6 +137,115 @@ include 'includes/bolhas.php';
             }
         }
     };
+
+    window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
+    // Se já houver um modal aberto, não cria outro
+    if (window._activeModal) return;
+    
+    // Guarda a referência do card para remover o efeito depois
+    const targetCard = cardElement || null;
+    
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        z-index: 30000;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 15%;
+        font-family: 'Inter', system-ui, sans-serif;
+    `;
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: rgba(20, 20, 32, 0.92);
+        backdrop-filter: blur(20px);
+        border-radius: 28px;
+        padding: 28px 24px;
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        border: 1px solid rgba(255, 140, 0, 0.5);
+        box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+    `;
+    
+    const title = document.createElement('div');
+    title.textContent = isOwner ? ' GERENCIAR POST ' : ' SINALIZAR POST ';
+    title.style.cssText = `font-size:0.85rem; letter-spacing:2px; color:#ffbc00; margin-bottom:20px; text-transform:uppercase; font-weight:600;`;
+    modal.appendChild(title);
+    
+    const buttonStyle = `
+        background: rgba(255,255,255,0.05);
+        border: none;
+        border-radius: 60px;
+        padding: 12px 20px;
+        margin: 10px 0;
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    `;
+    
+    if (isOwner) {
+        const btnDelete = document.createElement('button');
+        btnDelete.innerHTML = '🗑️ Expurgar da Fenda';
+        btnDelete.style.cssText = buttonStyle + `background: rgba(220,53,69,0.15); border:1px solid rgba(220,53,69,0.5); color:#ff8a8a;`;
+        btnDelete.onclick = () => {
+            if (confirm("⚠️ Isso removerá o post permanentemente. Continuar?")) {
+                window.location.href = `includes/excluir.php?id=${postId}`;
+            }
+            closeGlobalModal();
+        };
+        modal.appendChild(btnDelete);
+    } else {
+        const btnReport = document.createElement('button');
+        btnReport.innerHTML = '🚨 Chamar o Camburão';
+        btnReport.style.cssText = buttonStyle + `background: rgba(255,188,0,0.12); border:1px solid rgba(255,188,0,0.5); color:#ffde9e;`;
+        btnReport.onclick = () => {
+            alert("📢 Agradecemos o aviso! A moderação foi notificada.");
+            closeGlobalModal();
+        };
+        modal.appendChild(btnReport);
+    }
+    
+    const btnClose = document.createElement('button');
+    btnClose.innerHTML = '✖️ Voltar ao Feed';
+    btnClose.style.cssText = buttonStyle + `background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.2); color:#ccc;`;
+    btnClose.onclick = closeGlobalModal;
+    modal.appendChild(btnClose);
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    window._activeModal = overlay;
+    
+    function closeGlobalModal() {
+        if (window._activeModal) {
+            window._activeModal.remove();
+            window._activeModal = null;
+        }
+        // 🔥 Remove o efeito Prisma do card que abriu o modal
+        if (targetCard && targetCard.classList) {
+            targetCard.classList.remove('card-long-press-active');
+        }
+    }
+    
+    // Fechar ao clicar fora
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeGlobalModal();
+    });
+};
 
     // ==================== GERENCIAMENTO DO FEED (AJAX) ====================
     let offset = 0;
@@ -243,55 +352,56 @@ include 'includes/bolhas.php';
         });
     });
 
-    window.enviarReacao = function(postId, tipoReacao) {
-        const tradutorEmojis = {
-            'amei': '💖',
-            'perplecto': '😲',
-            'haha': '😂',
-            'ranco': '🙄',
-            'forca': '🫂',
-            'triste': '😢',
-            'tendi-nada': '🤔'
-        };
-        fetch(`includes/reagir.php?id=${postId}&tipo=${tipoReacao}`)
-            .then(response => {
-                if (response.status === 429) {
-                    alert("Calma lá! O motor da Fenda precisa respirar.");
-                    throw new Error("Rate limit exceeded");
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.status === 'success') {
-                    const containerReacoes = document.getElementById(`reacoes-post-${postId}`);
-                    if (!containerReacoes) return;
-                    containerReacoes.innerHTML = '';
-                    Object.keys(data.contagens).forEach(tipo => {
-                        const total = data.contagens[tipo];
-                        if (total > 0) {
-                            const emoji = tradutorEmojis[tipo] || '👍';
-                            const classeVoted = data.minhas_reacoes.includes(tipo) ? 'voted' : '';
-                            containerReacoes.insertAdjacentHTML('beforeend',
-                                `<span class="reacao-item ${classeVoted}">${emoji} ${total}</span>`
-                            );
-                        }
-                    });
-                }
-            })
-            .catch(err => {
-                if (err.message !== "Rate limit exceeded") {
-                    console.error("[AJAX Error]", err);
-                }
-            });
+    window.enviarReacao = async function(postId, tipoReacao) {
+    const tradutorEmojis = {
+        'amei': '💖',
+        'perplecto': '😲',
+        'haha': '😂',
+        'ranco': '🙄',
+        'forca': '🫂',
+        'triste': '😢',
+        'tendi-nada': '🤔'
     };
+    
+    try {
+        const response = await fetch(`includes/reagir.php?id=${postId}&tipo=${tipoReacao}`);
+        
+        if (response.status === 429) {
+            alert("Calma lá! O motor da Fenda precisa respirar.");
+            throw new Error("Rate limit exceeded");
+        }
+        
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            const containerReacoes = document.getElementById(`reacoes-post-${postId}`);
+            if (containerReacoes) {
+                containerReacoes.innerHTML = '';
+                Object.keys(data.contagens).forEach(tipo => {
+                    const total = data.contagens[tipo];
+                    if (total > 0) {
+                        const emoji = tradutorEmojis[tipo] || '👍';
+                        const classeVoted = data.minhas_reacoes.includes(tipo) ? 'voted' : '';
+                        containerReacoes.insertAdjacentHTML('beforeend',
+                            `<span class="reacao-item ${classeVoted}">${emoji} ${total}</span>`
+                        );
+                    }
+                });
+            }
+        }
+        return data; // retorna o resultado para quem chamou (opcional)
+    } catch (err) {
+        if (err.message !== "Rate limit exceeded") {
+            console.error("[AJAX Error]", err);
+        }
+        throw err; // repassa o erro para o chamador lidar
+    }
+};
 
     // Chute inicial
     document.addEventListener("DOMContentLoaded", function() {
         carregarFeedGeral();
     });
-
-
-
 
 </script>
 

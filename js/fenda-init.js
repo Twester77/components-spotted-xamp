@@ -1,9 +1,8 @@
 /* ============================================================
    FENDA INIT – DETECTOR ISOMÓRFICO (PC vs. MOBILE)
    ============================================================
-   Carrega a engine de swipe correta baseada no dispositivo.
-   Mantém a mesma API pública (iniciarFisicaSwipe, forcarParadaSwipe)
-   para que o resto do sistema (abastecerPilhaFenda, etc.) continue funcionando.
+   Carrega APENAS o adapter de swipe correto baseado no dispositivo.
+   Sem core – o adapter é autossuficiente.
    ============================================================ */
 (function() {
     'use strict';
@@ -11,17 +10,23 @@
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     const adapterName = isTouchDevice ? 'fenda-swipe-mobile.js' : 'fenda-swipe-pc.js';
 
-    // 1. Carrega o core primeiro
-    const coreScript = document.createElement('script');
-    coreScript.src = 'js/swipe-engine-shared.js';
-    coreScript.defer = true;
-    coreScript.onload = () => {
-        console.log("[SWIPE] Core carregado. Carregando adapter:", adapterName);
-        const adapterScript = document.createElement('script');
-        adapterScript.src = `js/${adapterName}`;
-        adapterScript.defer = true;
-        document.head.appendChild(adapterScript);
+    // Carrega diretamente o adapter (sem core)
+    const script = document.createElement('script');
+    script.src = `js/${adapterName}`;
+    script.defer = true;
+    script.onload = () => {
+        console.log(`[FENDA INIT] Adapter ${adapterName} carregado com sucesso.`);
+        // Se o modo swipe já estiver ativo, inicializa a engine
+        if (document.body.classList.contains('modo-swipe-ativo')) {
+            if (typeof window.iniciarFisicaSwipe === 'function') {
+                window.iniciarFisicaSwipe();
+            } else {
+                console.warn("[FENDA INIT] window.iniciarFisicaSwipe não encontrada.");
+            }
+        }
     };
-    coreScript.onerror = () => console.error("[SWIPE] Falha ao carregar core.");
-    document.head.appendChild(coreScript);
+    script.onerror = () => {
+        console.error(`[FENDA INIT] Falha ao carregar ${adapterName}. O swipe não estará disponível.`);
+    };
+    document.head.appendChild(script);
 })();

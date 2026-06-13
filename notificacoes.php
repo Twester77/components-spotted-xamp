@@ -31,7 +31,7 @@ include 'includes/navbar.php';
                  style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #ffbc00; display: flex; justify-content: space-between; align-items: center;">
                 <div class="notificacao-conteudo">
                     <p style="margin: 0; font-size: 1rem; color: #fff;"><?php echo htmlspecialchars($row['mensagem']); ?></p>
-                    <small style="color: #aaa; font-size: 0.8rem;">
+                    <small style=" font-size: 0.85rem;">
                         <i class="far fa-clock"></i> <?php echo date('d/m H:i', strtotime($row['data_criacao'])); ?>
                     </small>
                 </div>

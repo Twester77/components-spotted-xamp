@@ -36,7 +36,7 @@ form {
 /* 1. Ajuste do Container do Modal (o pai) */
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
-    max-width: clamp(250px, 70%, 650px) !important;
+    max-width: clamp(280px, 75%, 650px) !important;
     max-height: clamp(200px, 50vh, 500px) !important;
     /* Padding dinâmico: menor em telas pequenas */
     padding: clamp(10px, 5vw, 25px) !important;
@@ -813,8 +813,8 @@ section.sessao-publicar {
 /* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
-    width: clamp(70px, 15vw + 10px, 200px);
-    height: clamp(70px, 15vw + 10px, 200px);
+    width: clamp(70px, 15vmin + 10px, 200px);
+    height: clamp(70px, 15vmin + 10px, 200px);
     aspect-ratio: 1/1;
     margin: -30px auto 20px auto !important; 
     z-index: 10;

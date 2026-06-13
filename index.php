@@ -57,6 +57,7 @@ include 'includes/bolhas.php';
 <?php endif; ?>
 
 <main class="<?php echo $tema_classe; ?>">
+    
     <div class="fenda-container">
 
         <?php if (!isset($_SESSION['usuario_id'])): ?>
@@ -114,7 +115,6 @@ include 'includes/bolhas.php';
                 </ul>
             </article>
         </article>
-
         <div id="bios-boot" class="hacker-boot-screen">
             <div class="boot-text">
                 <p>> LOAD FENDA_OS_V1.0...</p>

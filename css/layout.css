@@ -18,13 +18,12 @@ header {
     justify-content: space-between;
     /* Empurra o menu pra esquerda e o perfil pra direita */
     align-items: center;
-    padding: 12px;
+    padding: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    gap: 10px;
 
 }
 
@@ -48,7 +47,7 @@ header {
 }
 
 header h1 {
-    font-size: clamp(1rem, 1.5vw, 2rem);
+    font-size: clamp(1rem, 3.5vmin, 2.3rem);
     letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
@@ -64,6 +63,7 @@ header h1 {
     display: flex;
     gap: 8px;
     align-items: center;
+    padding: 6px;
 
 }
 
@@ -77,7 +77,7 @@ header h1 {
 
 .header-icons i {
     color: var(--dourado) !important;
-    font-size: clamp(0.9rem, 6vw, 1.7rem);
+    font-size: clamp(0.95rem, 6vmin, 1.6rem);
     transition: all 0.3s ease;
 }
 
@@ -186,8 +186,6 @@ nav {
 }
 
 
-
-
 /* Sidebar simples, limpa e com scroll funcional */
 .sidebar-fenda {
     position: fixed;
@@ -201,7 +199,6 @@ nav {
     /* Scroll liso no celular */
     /* Força o navegador a aceitar a rolagem vertical antes do JS do Swipe interceptar: */
     touch-action: pan-y !important;
-    overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
     -webkit-backdrop-filter: blur(10px);
@@ -291,7 +288,7 @@ nav {
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    padding: 8px;
+    padding: 5px;
     margin-right: 8px;
     cursor: pointer;
     color: #ffc72d;
@@ -310,13 +307,13 @@ nav {
 }
 
 /* Ajuste fino do ícone dentro do botão */
-#btn-menu-hamburguer svg {
-    width: clamp(35px, 1.5vw 60px);
-    height: clamp(35px, 1.5vw 60px);
+.btn-menu-hamburguer {
+    width: clamp(35px, 10vmin, 75px);
+    height: clamp(35px, 10vmin, 75px);
     display: block;
+    stroke: currentColor; 
+
 }
-
-
 
 
 /* Estilo dos itens do menu na gaveta */
@@ -445,7 +442,7 @@ nav {
     align-items: center;
     justify-content: center;
     border-radius: 10px 0 0 10px;
-    font-size: clamp(16px, 15vmin, 26px);
+    font-size: clamp(16px, 16vmin, 26px);
     width: clamp(40px, 8vmin, 65px);
     height: clamp(40px, 8vmin, 65px);
     padding: 6px;
@@ -646,12 +643,12 @@ body.modal-aberto .fab-postar {
     background: var(--dourado);
     color: #000;
     border: none;
-    padding: 8px 14px;
-    border-radius: 10px;
+    padding: 6px 10px;
+    border-radius: 12px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-    font-size: clamp(14px, 1.5vw, 22px);
+    font-size: clamp(13px, 3vmin, 18px);
 }
 
 .btn-zarpar {
@@ -659,15 +656,15 @@ body.modal-aberto .fab-postar {
     background: rgba(255, 255, 255, 0.05);
     color: #fff;
     border: 1px solid #444;
-    padding: 6px 12px;
-    border-radius: 10px;
+    padding: 6px 8px;
+    border-radius: 12px;
     text-decoration: none;
     font-weight: bold;
     transition: 0.3s;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(14px, 1.5vw, 22px);
+    font-size: clamp(13px, 3vmin, 18px);
 }
 
 .btn-ficar-terra:hover {
@@ -677,7 +674,7 @@ body.modal-aberto .fab-postar {
 
 .btn-zarpar:hover {
     background: rgba(255, 99, 71, 0.2);
-    border-color: #ff6347;
+    border-color: #ff5638;
 }
 
 /* Estilização do Botão de Ir para o Feed na Toolbar */
@@ -768,10 +765,7 @@ body.modal-aberto .fab-postar {
     color: #d4b8b8;
     padding: 8px 12px;
     line-height: 1.2;
-
 }
-
-
 
 .submenu li:hover {
     background: rgba(255, 255, 255, 0.11);
@@ -822,7 +816,6 @@ body.modal-aberto .fab-postar {
     flex-direction: column;
     /* Força o menu a ficar vertical dentro da gaveta */
     width: 100%;
-    padding: 20px;
 }
 
 /* O Container que segura a onda no index */
@@ -1353,8 +1346,8 @@ footer a {
     border-radius: 10px;
     font-weight: 900 !important;
     font-size: 1rem;
-    cursor: pointer !important;
-    padding: 0 20px !important;
+    cursor: pointer ;
+    padding: 0 20px ;
     outline: none !important;
 }
 
@@ -1991,10 +1984,10 @@ input[type="text"],
 input[type="password"],
 select,
 textarea {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100% ;
+    max-width: 100% ;
     box-sizing: border-box !important;
-    padding: 12px !important;
+    padding: 12px ;
 }
 
 
@@ -2007,7 +2000,7 @@ textarea {
     max-width: auto !important;
     box-sizing: border-box !important;
     /* ISSO AQUI resolve o vazamento da Bio */
-    margin: 0 auto !important;
+    margin: 0 auto ;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid #333;
     border-radius: 8px;
@@ -2038,8 +2031,8 @@ textarea {
     flex: 1 !important;
     border: none !important;
     background: transparent !important;
-    height: 100% !important;
-    margin: 0 !important;
+    height: 100% ;
+    margin: 0 ;
     white-space: nowrap;
     /* Impede que o @ pule pra baixo */
     flex-shrink: 0;
@@ -2050,20 +2043,18 @@ textarea {
 .campo-grupo textarea {
     min-height: 120px !important;
     resize: none !important;
-    padding: 12px !important;
+    padding: 12px ;
 }
 
 textarea[name="bio"] {
     min-height: 120px !important;
     resize: none;
-    word-wrap: break-word !important;
-    /* O que você sugeriu */
+    word-wrap: break-word ;
     overflow-wrap: break-word !important;
 }
 
 
 /* OS BOTÕES: Menores e um embaixo do outro se precisar */
-
 
 .perfil-controles {
     display: flex !important;
@@ -2270,7 +2261,7 @@ textarea[name="bio"] {
     /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
     .post-content,
     .post-content-focado {
-        max-height: 50dvh !important;
+        max-height: 20dvh !important;
         /* Limita a altura do texto */
         overflow: auto;
     }
@@ -2310,6 +2301,155 @@ textarea[name="bio"] {
 }
 
 
+/* ============================================================
+    AJUSTES MOBILE (MENU, GAVETA, ETC.)
+   ============================================================ */
+@media (max-width: 768px) {
+    .chat-input-container {
+        justify-content: space-between !important;
+    }
+
+    .textarea-chat {
+        display: flex;
+        flex: 1;
+        max-width: 100% !important;
+    }
+
+    #form-comentario {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .sidebar-fenda {
+        display: block !important;
+        visibility: visible !important;
+        width: 180px ;
+        max-height: 100vh ;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+    }
+
+    .sidebar-fenda .menu {
+        display: flex !important;
+        flex-direction: column !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    .menu.ativa {
+        display: flex;
+    }
+
+    #btn-menu-hamburguer {
+        display: block;
+    }
+
+    .drawer-perfil-container {
+        width: 86% !important;
+    }
+
+    .main-perfil-container-config {
+        padding: 10px !important;
+    }
+
+    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
+        top: 55px !important;
+    }
+
+    body:not(.modo-swipe-ativo) #btn-abrir-filtros {
+        display: inline-flex ;
+        position: fixed ;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10000 ;
+        color: #000;
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        border-radius: 40px;
+        font-weight: bold;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
+        display: none ;
+    }
+
+    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil.aberto .filtros-container {
+        display: inline-flex ;
+        background: #111;
+        position: fixed!important;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999 ;
+        color: #000;
+        gap: 10px;
+        padding:  30px 15px 25px 15px;
+        border-radius: 0 0 20px 20px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        max-height: 35vh;
+        overflow-y: auto;
+        border-bottom: 3px solid #ff8c00;
+    }
+
+    .lista-comentarios-social {
+        padding-bottom: 90px;
+    }
+    .gaveta-opcoes { padding: 12px; gap: 8px; }
+    .textarea-chat { font-size: 0.85rem; padding: 8px; }
+}
+
+@media (min-width: 769px) {
+    body:not(.modo-swipe-ativo) #btn-abrir-filtros {
+        display: none !important;
+    }
+
+    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil {
+        display: block ;
+        position: relative;
+        background: transparent !important;
+        backdrop-filter: none ;
+        padding: 10px;
+        margin: 20px 0;
+        box-shadow: none !important;
+    }
+
+    body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+        body.modo-swipe-ativo #btn-abrir-filtros {
+        top: -20px;
+    }
+
+    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
+        top: 40px !important;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .sticky-header {
+    max-height: 60vh;
+}
+
+}
+
+
+@media (orientation: landscape) and (max-height: 500px) {
+    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
+        top: 40px !important;
+        max-height: 55dvh !important;
+    }
+}
+
 /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
 @media (max-width: 450px) and (orientation: portrait) {
 
@@ -2341,7 +2481,7 @@ textarea[name="bio"] {
     footer {
         /* Garante que ele saia debaixo de floats */
         padding: 8px 12px 12px 8px;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
 
     }
 
@@ -2377,7 +2517,7 @@ body.modal-aberto #fenda-nexus {
 
 /* O Botão Principal (O "Leque" fechado) */
 .nexus-trigger {
-    width: clamp(45px, 15vmin, 100px);
+    width: clamp(45px, 15vmin, 90px);
     background: var(--dourado, #ffbc00);
     border-radius: 50%!important; 
     aspect-ratio: 1 / 1;
@@ -2386,7 +2526,7 @@ body.modal-aberto #fenda-nexus {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 20px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
@@ -2400,9 +2540,9 @@ body.modal-aberto #fenda-nexus {
 .nexus-menu {
     display: none; /* Escondido por padrão */
     flex-direction: column;
-    font-size: clamp(0.95rem, 0.382vw + 0.625rem, 1.3rem);
     gap: 10px;
     margin-bottom: 10px;
+    max-width: clamp(100px, 30vw, 180px);
 }
 
 .fenda-nexus.aberto .nexus-menu {
@@ -2461,3 +2601,28 @@ body.modal-aberto #fenda-nexus {
 .girar-90  { transform: rotate(90deg); }  /* Leste */
 .girar-180 { transform: rotate(180deg); } /* Sul */
 .girar-270 { transform: rotate(270deg); } /* Oeste */
+
+
+/* ---------------------------------------------------------------
+    MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO (OPCIONAL)
+   --------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    body.hacker-mode::before,
+    body.hacker-mode::after,
+    body.hacker-mode .post-content,
+    .main-perfil-container-publico.vibe-neon,
+    body.hacker-mode .comentario-texto,
+    body.hacker-mode .hacker-booting,
+    .modo-swipe-ativo .spotted-card {
+        animation: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .feed-empilhado .spotted-card {
+        background: rgba(255, 255, 255, 0.068);
+        -webkit-backdrop-filter: blur(5px); /* Essencial para funcionar no Safari/iPhone */
+        backdrop-filter: blur(5px);
+    }
+}

@@ -144,7 +144,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
             <span><i class="fas fa-comment"></i> <?php echo $total_comentarios; ?></span>
             <span><i class="fas fa-heart"></i> <?php echo $total_reacoes; ?></span>
         </div>
-        <button class="preview-botao" id="btnRevelarConteudo">📝 Comentar</button>
+        <button class="preview-botao" id="btnRevelarConteudo"> Comentar</button>
     </div>
 </div>
 
@@ -184,7 +184,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 </span>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <span class="reacao-placeholder">😶 Ninguém reagiu ainda. Seja o primeiro!</span>
+                            <span class="reacao-placeholder"> Ninguém reagiu ainda. Seja o primeiro!</span>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -319,12 +319,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         }
     });
 </script>
-
-<!-- Modal de Imagem (Lightbox) -->
-<div id="modal-imagem" class="modal-hidden" aria-hidden="true" role="dialog">
-    <span class="fechar-modal" aria-label="Fechar">&times;</span>
-    <img id="img-ampliada" src="" alt="Visualização ampliada">
-</div>
 
 <?php include 'includes/footer.php'; ?>
 <script src="js/fenda-mencoes.js"></script>

@@ -12,12 +12,12 @@ $user_alvo = isset($_GET['user']) ? $_GET['user'] : '';
 // ==================================================
 // 1. QUERY PRINCIPAL (COM SUBQUERIES PARA CONTAGENS)
 // ==================================================
-$sql = "SELECT m.*, 
-               u.username, u.foto, u.pref_vibe_padrao, u.pref_cor_padrao,
-               (SELECT COUNT(c.id) FROM comentarios c WHERE c.id_mensagem = m.id) as total_comentarios,
-               (SELECT COUNT(r.id) FROM curtidas r WHERE r.mensagem_id = m.id) as total_reacoes
+$sql = "SELECT m.*, u.username, u.foto, u.pref_vibe_padrao, u.pref_cor_padrao,
+        (SELECT COUNT(c.id) FROM comentarios c WHERE c.id_mensagem = m.id) as total_comentarios,
+        (SELECT COUNT(r.id) FROM curtidas r WHERE r.mensagem_id = m.id) as total_reacoes
         FROM mensagens m 
-        INNER JOIN usuarios u ON m.usuario_id = u.id";
+        INNER JOIN usuarios u ON m.usuario_id = u.id
+        WHERE m.status = 'ativo'";
 
 $filtros = [];
 $tipos = "";
@@ -39,7 +39,7 @@ if ($tipo_feed === 'perfil' && !empty($user_alvo)) {
     $params[] = $meu_id;
 }
 if (count($filtros) > 0) {
-    $sql .= " WHERE " . implode(' AND ', $filtros);
+    $sql .= " AND " . implode(' AND ', $filtros);  //  mudou de WHERE para AND
 }
 $sql .= " ORDER BY m.id DESC LIMIT 10 OFFSET ?";
 $tipos .= "i";
@@ -130,8 +130,11 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $data_post = date('d/m H:i', strtotime($linha['data_post']));
 ?>
 
-            <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>" style="border: 2px solid <?php echo $cor_post; ?> !important;">
-                <div class="card-inner-content">
+
+<article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>" 
+         data-id="<?php echo $post_id_atual; ?>"
+         style="border: 2px solid <?php echo $cor_post; ?> !important;">
+                         <div class="card-inner-content">
                     <div class="card-header">
                         <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
                         <span class="post-time"><?php echo $data_post; ?></span>
@@ -148,9 +151,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                         <p class="post-content"><?php echo $mensagem_corpo; ?></p>
                         <?php if ($imagem_post): ?>
                             <div class="container-img-post">
-                                <button class="btn-expandir" onclick="expandirPostCompleto(this);" style="pointer-events: auto; top: 10px; right: 10px; background: rgba(0,0,0,0.6); color: #fff; border: none; padding: 8px 12px; border-radius: 20px; z-index: 10;">
-                                    <i class="fas fa-expand"></i>
-                                </button>
                                 <img src="<?php echo $imagem_post; ?>" class="spotted-card-img" loading="lazy" alt="Imagem do Post">
                             </div>
                         <?php endif; ?>

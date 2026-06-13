@@ -17,7 +17,7 @@
     --hacker-green: #00ff41;
     --hacker-bg: #000000;
     --hacker-font: 'Courier New', 'Courier', monospace;
-    --boot-duration: 10s; /* Ajuste para tornar o boot mais lento */
+    --boot-duration: 15s; /* Ajuste para tornar o boot mais lento */
 }
 
 body.hacker-mode {
@@ -30,6 +30,7 @@ body.hacker-mode {
     user-select: none ;
     transition: background 0.3s ease, color 0.3s ease !important;
     pointer-events: auto!important;
+    
 }
 
 /* Libera seleção apenas em textos funcionais */
@@ -48,7 +49,7 @@ body.hacker-mode .post-content {
    2. REMOÇÃO TOTAL DE BORDAS ARREDONDADAS
    --------------------------------------------------------------- */
 
-body.hacker-mode *,
+body.hacker-mode ,
 body.hacker-mode *::before,
 body.hacker-mode *::after {
     border-radius: 0 !important;
@@ -83,7 +84,7 @@ body.hacker-mode::after {
     background: rgba(0, 255, 0, 0.03) !important;
     z-index: 9998 !important;
     pointer-events: none !important;
-    animation: flicker 0.15s infinite !important;
+    animation: flicker 0.15s infinite ease !important;
 }
 
 @keyframes flicker {
@@ -130,6 +131,20 @@ body.hacker-mode .perfil-gold {
     border-right: 4px double var(--hacker-green) !important;
     border-bottom: 4px double var(--hacker-green) !important;
     box-shadow: none !important;
+}
+
+body.hacker-mode .sessao-fofoca-focada {
+    border: 1px solid var(--hacker-green);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) 
+}
+
+body.hacker-mode .fixed-input::after , .footer {
+    display: none;
+}
+
+body.hacker-mode .fixed-input {
+    border: none;
+    background: transparent;
 }
 
 /* TOPO: Mantendo os títulos dinâmicos da Deep com cantos "+" */
@@ -183,7 +198,7 @@ body.hacker-mode footer {
     background-color: rgba(0, 0, 0, 0.95) !important;
     background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
     background-size: 100% 4px !important;
-    border-bottom: 2px solid #00ff00 !important;
+    border-bottom: 2px solid #00ff00 ;
     font-family: monospace !important;
 }
 
@@ -207,10 +222,14 @@ body.hacker-mode .navbar-nav .nav-link:hover,
 body.hacker-mode .menu li a:hover,
 body.hacker-mode .dropdown-item:hover,
 body.hacker-mode .item-menu:hover,
+body.hacker-mode .lista-conselhos li:hover,
+body.hacker-mode .btn-zarpar:hover:hover,
+body.hacker-mode .btn-ficar-terra:hover,
+body.hacker-mode .bloco-diretrizes li:hover,
 body.hacker-mode .submenu li a:hover {
     background-color: #00ff00 !important;
     color: #000000 !important;
-    padding-left: 30px !important;
+    padding-left: 25px !important;
     box-shadow: 0 0 15px #00ff00 !important;
     text-shadow: none !important;
     cursor: crosshair !important;
@@ -219,9 +238,13 @@ body.hacker-mode .submenu li a:hover {
 /* Seta ">" no hover */
 body.hacker-mode .navbar-nav .nav-link:hover::before,
 body.hacker-mode .menu li a:hover::before,
+body.hacker-mode .lista-conselhos li:hover::before,
+body.hacker-mode .btn-zarpar::before,
+body.hacker-mode .btn-ficar-terra::before,
 body.hacker-mode .dropdown-item:hover::before {
     content: ">" !important;
     position: absolute !important;
+    font-size: 1rem;
     left: 10px !important;
     color: #000 !important;
     font-weight: bold !important;
@@ -279,8 +302,6 @@ body.hacker-mode .reply-indicator,
 body.hacker-mode .btn-enviar-fenda,
 body.hacker-mode .btn-voltar-fenda,
 body.hacker-mode .btn-sair-fenda,
-body.hacker-mode .btn-reagir,
-body.hacker-mode .btn-fofocar,
 body.hacker-mode .btn-seguir-fenda,
 body.hacker-mode #btn-load-more,
 body.hacker-mode .btn-lancar,
@@ -289,13 +310,14 @@ body.hacker-mode .btn-finalizar-fenda,
 body.hacker-mode .login-btn,
 body.hacker-mode .btn-salvar-perfil,
 body.hacker-mode .btn-ficar-terra,
+body.hacker-mode #btn-menu-hamburguer,
 body.hacker-mode .btn-zarpar,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,
 body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atléticas */
     background: #000 !important;
     color: #00ff00 !important;
-    border: 4px double var(--hacker-green) !important;
+    border: 3px double var(--hacker-green) !important;
     border-radius: 0 ;
     font-family: monospace !important;
     text-transform: uppercase !important;
@@ -306,6 +328,11 @@ body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atlétic
     letter-spacing: 1px ;
     text-decoration: none !important;
     display: inline-block;
+}
+
+body.hacker-mode #btn-menu-hamburguer:hover {
+    background: #00ff0015 !important;
+    color: #ffca00 !important;
 }
 
 /* Hover: fundo verde, texto preto, seta aparecendo */
@@ -348,16 +375,9 @@ body.hacker-mode .img-comunidade-grande:hover {
     color: #000000 !important;
     border-radius: 50%!important;
     border-style: none !important;
-     background-image: repeating-linear-gradient(
-        0deg,
-        rgba(0, 255, 0, 0.03) 0px,
-        rgba(0, 255, 0, 0.03) 2px,
-        transparent 2px,
-        transparent 6px
-    ) !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
     transform: scale(1.1) !important;
 }
-
 
 
 body.hacker-mode .btn::before,
@@ -531,7 +551,6 @@ body.hacker-mode .comentario-item.vibe-neon {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border-left: 3px solid #00ff00 !important;
-    border-radius: 0 !important;
     margin-bottom: 15px;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), 0 0 5px #00ff00 !important;
     position: relative;
@@ -598,12 +617,12 @@ body.hacker-mode .comentario-item.vibe-light {
     ) !important;
 }
 
-/* 5. BASE UNIFICADA: Remove arredondamentos e garante consistência */
+/* 5. BASE UNIFICADA: garante consistência */
 body.hacker-mode .comentario-item.vibe-dark,
 body.hacker-mode .comentario-item.vibe-light,
 body.hacker-mode .comentario-item.vibe-glass,
+body.hacker-mode .comentario-item.vibe-ads,
 body.hacker-mode .comentario-item.vibe-neon {
-    border-radius: 0 !important;
     transition: all 0.2s ease;
 }
 
@@ -633,13 +652,6 @@ body.hacker-mode .comentario-item.vibe-neon:hover .comentario-texto {
     text-shadow: none !important;
 }
 
-/* 7. GARANTIA: Remove o border-radius original de qualquer vibe */
-body.hacker-mode .comentario-item.vibe-light,
-body.hacker-mode .comentario-item.vibe-dark,
-body.hacker-mode .comentario-item.vibe-glass,
-body.hacker-mode .comentario-item.vibe-neon {
-    border-radius: 0 !important;
-}
 
 /* EXTRA : ADS MODE */
 
@@ -648,37 +660,14 @@ body.hacker-mode .comentario-item.vibe-neon {
    ================================================================== */
 body.hacker-mode .comentario-item.vibe-ads {
     background-color: #000000 !important; /* Fundo breu total do terminal */
-    border: 1px solid var(--hacker-green) !important; 
-    border-radius: 0px !important; 
+    border: 2px solid var(--hacker-green) !important; 
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") !important;
-    background-size: 30px 30px !important;
+    background-size: 45px 45px !important;
 }
 
-/* Cantos estilo "Terminal Hacker" (Versão Sem Curvas) */
-body.hacker-mode .comentario-item.vibe-ads::before,
-body.hacker-mode .comentario-item.vibe-ads::after {
-    border: 2px solid var(--hacker-green) !important;
-    border-radius: 0px !important; /* Cantos retos e afiados */
-    width: 15px !important;
-    height: 15px !important;
-}
-
-body.hacker-mode .comentario-item.vibe-ads::before {
-    top: 3px !important;
-    left: 3px !important;
-    border-right: none !important;
-    border-bottom: none !important;
-}
-
-body.hacker-mode .comentario-item.vibe-ads::after {
-    bottom: 3px !important;
-    right: 3px !important;
-    border-left: none !important;
-    border-top: none !important;
-}
 
 /* Texto do comentário em matriz verde fosforescente */
 body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
@@ -725,7 +714,10 @@ body.hacker-mode .bio-texto {
 body.hacker-mode .filtro-btn,
 body.hacker-mode .btn-abrir-filtros,
 body.hacker-mode .btn-filtro,
-body.hacker-mode .btn-enviar-chat {
+body.hacker-mode .btn-fenda-padrao,
+body.hacker-mode .btn-enviar-chat,
+body.hacker-mode .preview-botao
+ {
     background: #000 !important;
     border: 1px solid #00ff00 !important;
     color: #00ff00 !important;
@@ -733,13 +725,15 @@ body.hacker-mode .btn-enviar-chat {
 
 body.hacker-mode .filtro-btn.ativo:hover,
 body.hacker-mode .btn-abrir-filtros:hover,
+body.hacker-mode .btn-fenda-padrao:hover,
+body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
 body.hacker-mode .filtro-btn:hover {
     background: #00ff00 !important;
     color: #000000 !important;
 }
 
 body.hacker-mode .filtros-perdidos {
-    margin: 40px 0;
+    margin-top: 40px;
 }
 
 /* ---------------------------------------------------------------
@@ -778,9 +772,9 @@ body.hacker-mode .box-diretrizes li:hover {
 
 body.hacker-mode footer::after {
     content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
-    display: block !important;
+    display: block ;
     text-align: center !important;
-    font-size: 0.7rem !important;
+    font-size: 0.7rem ;
     color: #0f0 !important;
     opacity: 0.6 !important;
 }
@@ -814,10 +808,19 @@ body.hacker-mode .reacao-item.voted {
 }
 
 body.hacker-mode .reacoes-popup {
-    background: #000 !important;
+    background: #0000009a !important;
     border: 1px solid #0f0 !important;
     box-shadow: 0 0 15px #0f0 !important;
+    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
+    background-size:  6px 100%!important;
 }
+body.hacker-mode .reacoes-popup span:hover {
+      background: rgba(0, 255, 0, 0.863);
+      transform: scale(1.05) 0.2s ease;
+      border-radius: 3px;
+      filter: saturate(1.1);
+}
+
 
 /* ---------------------------------------------------------------
    21. TOOLBAR LATERAL E CONFIGURAÇÕES DE ÁUDIO
@@ -988,29 +991,36 @@ body.hacker-mode .fab-postar:hover {
    29. LINK DE NOTIFICAÇÕES E CARD DE NOTIFICAÇÃO
    --------------------------------------------------------------- */
 
-body.hacker-mode .card-notificacao  {
-    background: #000 !important;
+body.hacker-mode .card-notificacao {
     border: 1px solid #0f0 !important;
     border-left: 2px solid #0f0 !important;
     border-right: 2px solid #0f0 !important;
+    color:#0f0 !important;
 }
 
-body.hacker-mode .notificacao-conteudo p{
-    background: rgba(0, 255, 0, 0) !important;
-    color: #0f0 !important;
-    font-weight: bold !important;
-}
-
-body.hacker-mode .notificacao-conteudo p:hover {
+body.hacker-mode .card-notificacao:hover {
     background: #0f0 !important;
     color: #000 !important;
+}  
+
+body.hacker-mode .notificacao-conteudo p,
+body.hacker-mode .notificacao-conteudo small
+ {
+    color:#0f0 !important;
+    font-weight: bold!important ;
+
+}
+body.hacker-mode .notificacao-conteudo :hover{
+    color: #000 !important;
+    visibility: visible;
+    filter: contrast(1.05);
 }
 
 
 body.hacker-mode .link-notificacao:hover,
 body.hacker-mode .card-notificacao:hover
  {
-    background: #0f0 !important;
+    background: #0f0 ;
     color: #000 !important;
 }
 
@@ -1076,6 +1086,54 @@ body.hacker-mode .char-counter {
 /* ---------------------------------------------------------------
    34. BOOT MAIS LENTO (ajustável via variável)
    --------------------------------------------------------------- */
+.hacker-boot-screen {
+    position: absolute;
+    top: 50%!important; left: 50%!important; transform: translate(-50%, -50%); width:100%; height: 100%;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    background: #000;
+    color: #0f0;
+    z-index: 100000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+}
+
+.boot-text p {
+    margin: 10px auto;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 14px;
+    border-right: .15em solid #0f0;
+    animation: typing 8s steps(30, end) infinite;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.bios-bar {
+    height: 20px;
+    border: 1px solid #0f0;
+}
+
+
+.loading {
+    height: 100%;
+    max-width: 600px;
+    background: #0f0;
+    width: 0;
+    animation: load-bar 10s ease-in-out forwards;
+}
+
+@keyframes load-bar {
+    to { width: 100%; }
+}
 
 body.hacker-mode .hacker-booting {
     animation: bootSystem var(--boot-duration) steps(10) forwards !important;
@@ -1088,29 +1146,7 @@ body.hacker-mode .hacker-booting {
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
 
-/* ---------------------------------------------------------------
-   35. MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO (OPCIONAL)
-   --------------------------------------------------------------- */
 
-@media (prefers-reduced-motion: reduce) {
-    body.hacker-mode::before,
-    body.hacker-mode::after,
-    body.hacker-mode .post-content,
-    .main-perfil-container-publico.vibe-neon,
-    body.hacker-mode .comentario-texto,
-    body.hacker-mode .hacker-booting,
-    .modo-swipe-ativo .spotted-card {
-        animation: none !important;
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .feed-empilhado .spotted-card {
-        background: rgba(255, 255, 255, 0.068);
-        -webkit-backdrop-filter: blur(5px); /* Essencial para funcionar no Safari/iPhone */
-        backdrop-filter: blur(5px);
-    }
-}
 
 
 

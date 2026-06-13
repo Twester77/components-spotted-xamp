@@ -63,8 +63,8 @@
         <h2 id="titulo-modal-sair">Vai zarpar, marujo?</h2>
         <p id="desc-modal-sair">Tem certeza que deseja sair da Fenda e voltar para a terra firme?</p>
         <div class="fenda-modal-buttons">
-            <button type="button" onclick="fecharModalSair()" class="btn-ficar-terra">⚓ Ficar em Terra Firme</button>
-            <a href="logout.php" class="btn-zarpar" role="button">🌊 Zarpar (Sair)</a>
+            <button type="button" onclick="fecharModalSair()" class="btn-ficar-terra"> Ficar em Terra Firme</button>
+            <a href="logout.php" class="btn-zarpar" role="button"> Zarpar (Sair)</a>
         </div>
     </div>
 </div>
@@ -86,5 +86,6 @@
 <?php endif; ?>
 
 <script src="js/fenda-main.js"></script>
+
 </body>
 </html>

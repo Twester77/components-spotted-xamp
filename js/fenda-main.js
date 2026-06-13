@@ -152,6 +152,10 @@ window.fecharPerfilDrawer = function () {
 };
 
 function abrirModalPost() {
+    // 🔓 Destrava o swipe caso esteja bloqueado (ex.: menu de long press não fechado)
+    if (window.SwipeEngine && typeof window.SwipeEngine.unlock === 'function') {
+        window.SwipeEngine.unlock();
+    }
     const modal = document.getElementById('modal-postar-fenda');
     if (modal) {
         modal.style.display = 'flex';
@@ -161,6 +165,10 @@ function abrirModalPost() {
 }
 
 function fecharModalPost() {
+    // 🔓 Destrava o swipe novamente ao fechar o modal
+    if (window.SwipeEngine && typeof window.SwipeEngine.unlock === 'function') {
+        window.SwipeEngine.unlock();
+    }
     const modal = document.getElementById('modal-postar-fenda');
     if (modal) {
         modal.style.display = 'none';
@@ -472,15 +480,22 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
 };
 
 window.addEventListener('click', function (event) {
+    // SE O MODO SWIPE ESTÁ ATIVO, NÃO INTERFERIR NOS CARDS
+    if (document.body.classList.contains('modo-swipe-ativo') && event.target.closest('.spotted-card')) {
+        return; 
+    }
+
     const modalSair = document.getElementById('modal-sair-fenda');
     if (event.target === modalSair) window.fecharModalSair();
+    
     const clicouNoMenu = event.target.closest('.dropdown');
     const clicouNaReacao = event.target.closest('.reacao-wrapper') || event.target.closest('.btn-reagir');
-    // --- COLOQUE O LOG AQUI ---
-    console.log("Clicou no botão de reação?", clicouNaReacao); 
-    // --------------------------
+    
+    // Log removido para não poluir o console durante o swipe
+    
     const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
     const clicouNoPost = event.target.closest('.post-content');
+    
     if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
         document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
         document.querySelectorAll('.reacoes-popup').forEach(p => {
@@ -677,4 +692,3 @@ function initViewportTracker() {
     });
     atualizarAltura();
 }
-

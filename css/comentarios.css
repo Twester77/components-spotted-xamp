@@ -26,15 +26,17 @@
 /* HEADER – flexível, sem altura fixa, com relative para o botão */
 .sticky-header {
     position: relative;
-    z-index: 1000;
+    z-index: 100000;
     background: #1a1a1a;
     backdrop-filter: blur(6px);
     padding: 8px;
     transition: max-height 0.2s ease-out;
-    overflow: auto; /* permite o botão "pendurado" */
     scrollbar-width: none;
-    max-height: 50vh;
+    max-height: 100vh;
     height: auto;
+    overflow: visible;
+    overflow-y: auto; /* permite o botão "pendurado" */
+
 }
 
 .sticky-header::-webkit-scrollbar {
@@ -46,8 +48,10 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1001;
-    width: 60px;
-    height: 35px;
+    width: 45px;
+    height: 30px;
+    width: clamp(60px, 15vmin, 120px);
+    height: clamp(25px, 8vmin, 60px);
     background: #1a1a1a;
     color: #fff;
     border: 1px solid #333;
@@ -146,10 +150,10 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    max-width: 750px;
+    max-width: 700px;
     margin: 0 auto;
-    padding: 20px 16px;
-    gap: 15px;
+    padding: 20px 15px;
+    gap: 10px;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
 }
@@ -188,7 +192,7 @@
     padding-top: 6px;
     padding-inline-end: 8px;
     padding-inline-start: 9px;
-    border-radius: 20px 20px 20px 5px;
+    border-radius: 20px 20px 20px 5px ;
     border-right: 5px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
     backdrop-filter: blur(5px);
@@ -197,7 +201,6 @@
     align-self: flex-start;
     width: min-content;
     min-width: 180px;
-    max-width: 75%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -215,7 +218,6 @@
     align-self: flex-end;
     margin-left: auto;
     margin-right: 0;
-    max-width: 70%;
     width: min-content;
     min-width: 180px;
 }
@@ -292,31 +294,19 @@
 .comentario-item.vibe-ads {
     background-color: #161625;
     border: 2px solid var(--cor-borda-glow);
-    padding: 14px;
     position: relative;
     animation: pulsar-luz 3s infinite ease-in-out;
     color: var(--cor-borda-glow);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
     background-size: 30px 30px;
 }
-.comentario-item.vibe-ads::before,
-.comentario-item.vibe-ads::after {
-    content: '';
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border: 4px solid var(--cor-borda-glow);
-    transition: 0.3s;
-    border-radius: 8px;
-}
-.comentario-item.vibe-ads::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
-.comentario-item.vibe-ads::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+
 .comentario-item.vibe-ads .comentario-texto { color: #fff; text-shadow: 0 0 8px var(--cor-borda-glow); font-weight: 500; }
 .comentario-item.vibe-ads .comentario-data { color: var(--cor-aura-user); text-shadow: 0 0 8px var(--cor-borda-glow); font-weight: bold; }
 
 .comentario-item:hover {
-    transform: translateY(-5px) scale(1.03);
-    background: rgba(255, 255, 255, 0.096);
+    transform:  translateY(-10px);
+    transition: 0.3 ease;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
 }
 .comentario-item strong {
@@ -331,6 +321,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 3px;
     margin-bottom: 8px;
     letter-spacing: 1px;
     width: 100%;
@@ -340,7 +331,7 @@
     font-size: clamp(0.75rem, 0.382vw + 0.625rem, 0.9rem);
     font-weight: bold;
     flex-grow: 1;
-    max-width: 50%;
+    max-width: clamp( 90px, 20vmin, 150px);
     margin-right: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -369,7 +360,7 @@
 /* COMENTÁRIOS FILHOS */
 .comentario-filho {
     margin-left: 40px;
-    max-width: 82%;
+    max-width: 60%;
     position: relative;
 }
 .reply-indicator {
@@ -417,15 +408,16 @@
 .sessao-fofoca-focada {
     display: flex;
     align-items: center;
-    align-self: center;
     gap: 8px;
     background-color: rgba(0, 0, 0, 0.75);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 6px;
     position: relative;
-    max-width: 600px;
+    width: 100%;
+    max-width: 900px;
     box-sizing: border-box;
+    margin: 0 auto; /* Zera as margens em cima/embaixo e divide o resto dos lados */
     z-index: 9999;
 }
 
@@ -434,9 +426,9 @@
     background: rgba(255, 255, 255, 0.1);
     border: none;
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    font-size: 1.8rem;
+    width: clamp(35px, 8vmin, 70px);
+    height: clamp(35px, 8vmin, 70px);
+    font-size: clamp(1.4rem , 2vw , 2rem);
     font-weight: bold;
     color: #fff;
     display: flex;
@@ -445,7 +437,7 @@
     cursor: pointer;
     flex-shrink: 0;
 }
-.textarea-chat {
+ .textarea-chat {
     flex: 1;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -456,8 +448,9 @@
     font-family: inherit;
     resize: vertical;
     min-height: 40px;
-    max-height: 100px;
+    max-height: 90px;
     overflow-y: auto;
+    margin: 0 auto;
     line-height: 1.4;
 }
 .textarea-chat:focus {
@@ -468,15 +461,15 @@
     background: var(--laranja-fenda, #ff8c00);
     border: none;
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
+    width: clamp(35px , 8vmin , 70px);
+    height: clamp(35px , 8vmin , 70px);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
     color: #000;
-    font-size: 1.2rem;
+    font-size: clamp(1.3rem , 2vw , 1.8rem);
 }
 .gaveta-opcoes {
     position: absolute;
@@ -548,16 +541,20 @@
     color: #ccc;
     margin-top: 4px;
 }
-#char-count, #nome-arquivo {
-    font-size: 0.7rem;
+#char-count {
+    font-size: 0.75rem;
+    max-width: 5vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#nome-arquivo {
+    font-size: 0.8rem;
     max-width: 10vw;
     text-overflow: ellipsis;
     overflow: hidden;
 }
 
-/* ==================================================
-   BOTÃO VOLTAR
-   ================================================== */
+
 /* BOTÃO VOLTAR: Mantido no topo, alinhado à esquerda ou centro pelo container */
 .btn-voltar-fenda {
     position: relative;
@@ -565,8 +562,8 @@
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
     font-size: clamp(0.85rem, 0.382vw + 0.625rem, 1.4rem);
-    margin-top: 20px;
-    margin-bottom: 15px;
+    margin: 20px 0;
+    padding:  6px 10px;
     flex-shrink: 0;
     align-self: flex-start; /* Alinha o botão à esquerda. Mude para 'center' se quiser centralizado */
 }
@@ -577,6 +574,7 @@
 
 .box-post-central {
     display: flex;
+    margin-top: 20px;
     flex-direction: column; 
     align-items: center;
     width: 100%;
@@ -593,7 +591,7 @@
    CONTAINER QUERIES (responsividade das bolhas)
    ================================================== */
 @container feedComentarios (max-width: 360px) {
-    .comentario-item { max-width: 78%; min-width: 120px; padding: 4px 8px; font-size: 0.85rem; }
+    .comentario-item { max-width: 78%; min-width: 200px; padding: 4px 8px; font-size: 0.85rem; }
     .comentario-filho { margin-left: 25px; max-width: 75%; }
     .comentario-autor { max-width: 100px; font-size: 0.8rem; }
     .comentario-texto { font-size: 0.9rem; line-height: 1.1; }
@@ -606,32 +604,47 @@
     .comentario-item { max-width: 71%; min-width: 220px; }
 }
 @container feedComentarios (min-width: 801px) {
-    .comentario-item { max-width: 65%; min-width: 250px; }
-    .comentario-item.meu-comentario { max-width: 62%; }
-    .comentario-filho { margin-left: 40px; max-width: 60%; }
+    .comentario-item { max-width: 55%; min-width: 250px; }
+    .comentario-item.meu-comentario { max-width: 53%; }
+    .comentario-filho { margin-left: 40px; max-width: 52%; }
 }
 
 /* IMAGENS NOS COMENTÁRIOS */
 .comentario-media-wrapper {
     container-type: inline-size;
-    margin-top: 10px;
-    max-width: 320px;
-    max-height: 350px;
+    container-name: foto-comentario;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     background: rgba(0, 0, 0, 0.05);
     overflow: hidden;
 }
-.comentario-img {
+.comentario-img  {
     max-width: 100%;
-    height: auto;
+    max-height: 100%;
+    aspect-ratio: auto;
     display: block;
     cursor: pointer;
+    -webkit-user-drag: element;
+    user-select: none;
+    cursor: zoom-in; /* Indica para o usuário que pode clicar para ampliar */
+    transition: transform 0.3s ease;
+
 }
-@container (max-width: 300px) { .comentario-img { max-height: 180px; object-fit: cover; } }
-@container (min-width: 301px) and (max-width: 500px) { .comentario-img { max-height: 250px; object-fit: cover; } }
-@container (min-width: 501px) { .comentario-img { max-height: 500px; object-fit: cover; } }
+
+@container foto-comentario (max-width: 200px) { .comentario-img {  object-fit: cover; } }
+@container foto-comentario (min-width: 201px) and (max-width: 300px) { .comentario-img {  object-fit: cover; } }
+@container foto-comentario (max-width: 350px) { .comentario-img {   object-fit:  cover; } }
+@container foto-comentario (max-height: 200px) { .comentario-img {  object-fit: cover; } }
+@container foto-comentario (min-height: 201px) and (max-width: 250px) { .comentario-img {  object-fit: cover; } }
+@container foto-comentario (max-height: 320px) { .comentario-img {  object-fit: cover; } }
+
+
+.comentario-img:active {
+transform: scale(1.05);
+
+}
+
 
 
 /* CORTINA (PREVIEW) */
@@ -642,14 +655,14 @@
     z-index: 999999;
     background: rgba(0, 0, 0, 0.6);
     color: white;
-    width: 45px;
-    height: 45px;
+    width: 35px;
+    height: 35px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(5px);
     cursor: pointer;
@@ -660,7 +673,6 @@ background-color: #70cde4;
 transform: scale(1.05); 
 transition: 0.3s ease-out;
 }
-
 
 
 .preview-overlay {
@@ -689,8 +701,8 @@ transition: 0.3s ease-out;
     scrollbar-width: none;
     display: block;
     flex-direction: column;
-    max-height: 90%;
-    padding: 20px;
+    max-height: 85%;
+    padding: 15px;
     text-align: center;
     border: 1px solid rgba(255,188,0,0.3);
 }
@@ -752,6 +764,8 @@ transition: 0.3s ease-out;
     margin: 16px 0;
     border-radius: 16px;
     overflow: hidden;
+    border: 2px solid var(--glass-bg);
+    border-right: none;
 }
 .preview-imagem img {
     width: 100%;
@@ -762,10 +776,9 @@ transition: 0.3s ease-out;
     display: flex;
     justify-content: center;
     gap: 20px;
-    border-top: 2px solid var(--glass-bg);
     margin: 20px 0;
     color: #ccc;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
 }
 .preview-engajamento i {
     margin-right: 6px;
@@ -789,11 +802,10 @@ transition: 0.3s ease-out;
     align-items: center;    /* Centraliza os elementos horizontalmente */
     width: 100%;
     padding: 10px;
-    margin: 20px auto;
-    scrollbar-width: none;
+   
 }
 
-.fenda-estatica-context::-webkit-scrollbar {
+.fenda-estatica-context .spotted-card:-webkit-scrollbar {
     display: none; }
 
 
@@ -818,7 +830,8 @@ transition: 0.3s ease-out;
     overflow: hidden;
     overflow-y: auto;
     height: auto;
-    max-height: 30vh;
+    max-height: 35vh;
+    scrollbar-width: none;
 }
 
 .reacao-placeholder {
@@ -829,12 +842,10 @@ transition: 0.3s ease-out;
     margin-top: 8px;         /* Espaçamento extra do card se necessário */
 }
 
-
 .fenda-estatica-context {
     display: flex;
     justify-items: center;
 }
-
 
 
 /* Oculta o header global na página de post (compatível) */
@@ -844,20 +855,15 @@ body.pagina-post .header-principal {
 
 /* Landscape e Mobile (ajustes finos) */
 @media (orientation: landscape) {
-    .container-img-post {
+    .fenda-estatica-context .container-img-post {
         max-height: 25vh;
-        height: var(--app-height);
         display: flex;
         justify-content: center;
         background: #000;
     }
-    .container-img-post img {
-        max-height: 100%;
-        width: auto;
-        object-fit: contain;
+    .fenda-estatica-context .container-img-post img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
     }
-}
-@media (max-width: 480px) {
-    .gaveta-opcoes { padding: 12px; gap: 8px; }
-    .textarea-chat { font-size: 0.85rem; padding: 8px; }
 }
