@@ -1,5 +1,10 @@
 <?php
 include_once 'conexao.php';
+/* ==========================================================================
+   Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir.
+   Cada linha, cada debug, cada madrugada valeram a pena.
+   A Fenda está viva. Até a próxima travessia, companheiro. 💚
+   ========================================================================== */
 // --- LÓGICA DE EXCEÇÃO PARA PERDIDOS : 🚨 CURTO-CIRCUITO DE SEGURANÇA---
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -109,7 +114,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
 <style>
     /* Esconde o cabeçalho e o texto do rodapé APENAS nesta página */
     .header-visivel,
-    .footer-texto-institucional, .footer-global {
+    .footer-texto-institucional,
+    .footer-global {
         display: none !important;
 
     }
@@ -137,7 +143,11 @@ $total_reacoes = array_sum($reacoes_detalhes);
         </div>
         <?php if (!empty($post['imagem_url'])): ?>
             <div class="preview-imagem">
-                <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" alt="Preview da imagem">
+                <?php if (filter_var($post['imagem_url'], FILTER_VALIDATE_URL)): ?>
+                    <img src="<?php echo htmlspecialchars($post['imagem_url']); ?>" alt="Preview da imagem">
+                <?php else: ?>
+                    <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" alt="Preview da imagem">
+                <?php endif; ?>
             </div>
         <?php endif; ?>
         <div class="preview-engajamento">
@@ -169,7 +179,11 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             <p class="post-content-focado"><?php echo nl2br(htmlspecialchars($post['mensagem'])); ?></p>
                             <?php if (!empty($post['imagem_url'])): ?>
                                 <div class="container-img-post">
-                                    <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post - Seção Comentários">
+                                    <?php if (filter_var($post['imagem_url'], FILTER_VALIDATE_URL)): ?>
+                                        <img src="<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post - Seção Comentários">
+                                    <?php else: ?>
+                                        <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post - Seção Comentários">
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -191,14 +205,19 @@ $total_reacoes = array_sum($reacoes_detalhes);
             </div>
         </header>
         <button id="btn-toggle-collapse" class="btn-toggle-collapse" aria-label="Minimizar/Expandir post">
-                <i class="fas fa-chevron-up"></i>
-            </button>
+            <i class="fas fa-chevron-up"></i>
+        </button>
 
         <!-- ÁREA DE COMENTÁRIOS (ROLAVEL) -->
         <main class="lista-scrollavel">
             <div class="lista-comentarios-social">
                 <?php
-                $sql_c = "SELECT c.* FROM comentarios c WHERE c.id_mensagem = ? ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
+                // Query com subconsulta para buscar o texto do comentário pai (resposta)
+                $sql_c = "SELECT c.*, 
+                          (SELECT comentario FROM comentarios WHERE id = c.parent_id) as parent_comentario
+                          FROM comentarios c 
+                          WHERE c.id_mensagem = ? 
+                          ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
                 $stmt_c = $conn->prepare($sql_c);
                 $stmt_c->bind_param("i", $id);
                 $stmt_c->execute();
@@ -214,6 +233,14 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         $sou_eu = (isset($_SESSION['usuario_id']) && $id_autor_comentario == $_SESSION['usuario_id']) ? 'meu-comentario' : '';
                         $nome_limpo_js = !empty($c['usuario_nome']) ? str_replace("'", "", $c['usuario_nome']) : "Habitante";
                         $estilo_filho = $classe_filho ? "var(--cor-borda-glow);" : "";
+
+                        // Gera o trecho do comentário original (se for resposta)
+                        $trecho_resposta = '';
+                        if (!empty($c['parent_id']) && !empty($c['parent_comentario'])) {
+                            $texto_puro = strip_tags($c['parent_comentario']);
+                            $texto_cortado = mb_substr($texto_puro, 0, 50);
+                            $trecho_resposta = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
+                        }
                 ?>
                         <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>"
                             id="comentario-<?php echo $c['id']; ?>"
@@ -224,17 +251,28 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 </strong>
                                 <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
                             </div>
-                            <?php if ($classe_filho): ?>
-                                <div class="reply-indicator">
-                                    <i class="fas fa-reply"></i> Respondendo a @<?php echo htmlspecialchars($nome_limpo_js); ?>
+
+                            <!-- Indicador de resposta (clicável) -->
+                            <?php if (!empty($c['parent_id'])): ?>
+                                <div class="indicador-resposta" onclick="irParaMensagem(<?php echo $c['parent_id']; ?>)">
+                                    <i class="fas fa-reply"></i> <small><?php echo htmlspecialchars($trecho_resposta); ?></small>
                                 </div>
                             <?php endif; ?>
+
                             <p class="comentario-texto"><?php echo nl2br(formatarMencoes($c['comentario'])); ?></p>
+
                             <?php if (!empty($c['imagem_url'])): ?>
                                 <div class="comentario-media-wrapper">
-                                    <img src="comentarios/<?php echo htmlspecialchars($c['imagem_url']); ?>" class="comentario-img" alt="Imagem do comentário">
+                                    <?php if (filter_var($c['imagem_url'], FILTER_VALIDATE_URL)): ?>
+                                        <!-- GIF externo (GIPHY) -->
+                                        <img src="<?php echo htmlspecialchars($c['imagem_url']); ?>" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy">
+                                    <?php else: ?>
+                                        <!-- Imagem local (upload) -->
+                                        <img src="comentarios/<?php echo htmlspecialchars($c['imagem_url']); ?>" class="comentario-img" alt="Imagem do comentário" loading="lazy">
+                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
+
                             <div class="acoes-bolha">
                                 <button onclick="prepararResposta(<?php echo intval($id_vincular); ?>, '<?php echo htmlspecialchars($nome_limpo_js); ?>')" class="btn-responder-bolha">
                                     RESPONDER
@@ -275,7 +313,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     </div>
                     <input type="file" name="imagem_comentario" id="input-img-comentario" accept="image/*" style="display:none;">
                     <button type="button" id="btn-anexar-img" class="btn-attach-opcao"><i class="fas fa-image"></i> Imagem</button>
-                    <button type="button" id="btn-gif" class="btn-attach-opcao"><i class="fas fa-grin-tongue-squint"></i> GIF</button>
+                    <button type="button" id="btn-gif" class="btn-attach-opcao" onclick="abrirGiphyModal()">
+                        <i class="fas fa-grin-tongue-squint"></i> GIF/Sticker
+                    </button>
                 </div>
 
                 <form action="enviar-comentario.php" method="POST" enctype="multipart/form-data" class="form-chat" id="form-comentario" style="display: none;">
@@ -320,11 +360,13 @@ $total_reacoes = array_sum($reacoes_detalhes);
     });
 </script>
 
+<script src="js/fenda-giphy.js"></script>
+
 <?php include 'includes/footer.php'; ?>
 <script src="js/fenda-mencoes.js"></script>
 
 <script>
-    // ==================== LÓGICA DE COMENTÁRIOS (ENVIO, ANEXOS, ETC) ====================
+    // ==================== LÓGICA DE COMENTÁRIOS (ENVIO, ANEXOS, RESPOSTAS) ====================
     const barraFofoca = document.querySelector('.sessao-fofoca-focada');
     const campoTexto = document.querySelector('.textarea-chat');
     const contadorChar = document.getElementById('char-count');
@@ -364,6 +406,22 @@ $total_reacoes = array_sum($reacoes_detalhes);
             setTimeout(() => {
                 if (campoTexto) campoTexto.focus();
             }, 80);
+        }
+    };
+
+    window.irParaMensagem = function(commentId) {
+        const element = document.getElementById('comentario-' + commentId);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+            element.classList.add('comentario-highlight');
+            setTimeout(() => {
+                element.classList.remove('comentario-highlight');
+            }, 2600);
+        } else {
+            console.warn("Elemento não encontrado: comentario-" + commentId);
         }
     };
 
@@ -454,21 +512,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         inputFile.addEventListener('change', validarArquivo);
     }
 
-    const btnGif = document.getElementById('btn-gif');
-    if (btnGif) {
-        btnGif.addEventListener('click', () => {
-            const gifUrl = prompt('Cole o link direto da imagem (GIF, JPG, PNG, WEBP):');
-            if (gifUrl && gifUrl.match(/\.(gif|webp|jpg|jpeg|png)$/i)) {
-                if (campoTexto) {
-                    campoTexto.value += (campoTexto.value ? ' ' : '') + gifUrl;
-                    campoTexto.dispatchEvent(new Event('input'));
-                    mostrarFeedback('Link adicionado!', 'sucesso');
-                }
-            } else if (gifUrl) {
-                mostrarFeedback('URL inválida. Use um link direto para imagem.', 'erro');
-            }
-        });
-    }
 
     if (btnGaveta && gaveta) {
         btnGaveta.addEventListener('click', (e) => {
@@ -622,7 +665,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         const container = document.getElementById('lingoteContainer');
         const btnToggle = document.getElementById('btn-toggle-collapse');
         const textarea = document.getElementById('comentario-textarea');
-        
+
         if (!container || !btnToggle) return;
 
         btnToggle.addEventListener('click', () => {
@@ -645,9 +688,4 @@ $total_reacoes = array_sum($reacoes_detalhes);
             });
         }
     }
-
-    // ==================== INICIALIZAÇÃO ÚNICA ====================
-    document.addEventListener('DOMContentLoaded', function() {
-        initLingoteController();
-    });
 </script>

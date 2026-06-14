@@ -39,7 +39,7 @@ if ($tipo_feed === 'perfil' && !empty($user_alvo)) {
     $params[] = $meu_id;
 }
 if (count($filtros) > 0) {
-    $sql .= " AND " . implode(' AND ', $filtros);  //  mudou de WHERE para AND
+    $sql .= " AND " . implode(' AND ', $filtros);
 }
 $sql .= " ORDER BY m.id DESC LIMIT 10 OFFSET ?";
 $tipos .= "i";
@@ -126,7 +126,19 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         $link_autor = 'ver-perfil.php?user=' . urlencode($linha['username']);
     }
     $mensagem_corpo = nl2br(formatarMencoes($linha['mensagem']));
-    $imagem_post = !empty($linha['imagem_url']) ? 'postagens/' . htmlspecialchars($linha['imagem_url']) : '';
+    
+    // 🔥 CORREÇÃO: Suporte a GIFs externos (GIPHY)
+    $imagem_post = '';
+    if (!empty($linha['imagem_url'])) {
+        if (filter_var($linha['imagem_url'], FILTER_VALIDATE_URL)) {
+            // URL externa (GIPHY)
+            $imagem_post = htmlspecialchars($linha['imagem_url']);
+        } else {
+            // Imagem local
+            $imagem_post = 'postagens/' . htmlspecialchars($linha['imagem_url']);
+        }
+    }
+    
     $data_post = date('d/m H:i', strtotime($linha['data_post']));
 ?>
 
@@ -134,50 +146,50 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>" 
          data-id="<?php echo $post_id_atual; ?>"
          style="border: 2px solid <?php echo $cor_post; ?> !important;">
-                         <div class="card-inner-content">
-                    <div class="card-header">
-                        <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
-                        <span class="post-time"><?php echo $data_post; ?></span>
-                    </div>
-                    <div class="user-info-post">
-                        <img src="<?php echo $avatar; ?>" class="avatar-p">
-                        <?php if ($categoria_atual !== 'anonimo'): ?>
-                            <a href="<?php echo $link_autor; ?>" class="user-mention"><?php echo $nome_autor; ?></a>
-                        <?php else: ?>
-                            <span class="user-anonimo"><?php echo $nome_autor; ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="card-body">
-                        <p class="post-content"><?php echo $mensagem_corpo; ?></p>
-                        <?php if ($imagem_post): ?>
-                            <div class="container-img-post">
-                                <img src="<?php echo $imagem_post; ?>" class="spotted-card-img" loading="lazy" alt="Imagem do Post">
-                            </div>
-                        <?php endif; ?>
-                        <div id="reacoes-post-<?php echo $post_id_atual; ?>" class="reacoes-gravadas">
-                            <?php
-                            $detalhes = $reacoes_por_post[$post_id_atual] ?? [];
-                            $minhas = $minhas_reacoes_por_post[$post_id_atual] ?? [];
-                            foreach ($detalhes as $tipo => $total): ?>
-                                <span class="reacao-item <?php echo in_array($tipo, $minhas) ? 'voted' : ''; ?>">
-                                    <?php echo $tradutor[$tipo] ?? '👍'; ?> <?php echo $total; ?>
-                                </span>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="footer-links">
-                            <div class="reacao-wrapper">
-                                <span class="btn-reagir">👍 Reagir</span>
-                                <div class="reacoes-popup">
-                                    <?php foreach ($tradutor as $tipo => $emoji): ?>
-                                        <span onclick="window.enviarReacao(<?php echo $post_id_atual; ?>, '<?php echo $tipo; ?>')"><?php echo $emoji; ?></span>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                            <a href="post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar"><i class="fas fa-comments"></i> Fofocar</a>
-                        </div>
+    <div class="card-inner-content">
+        <div class="card-header">
+            <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
+            <span class="post-time"><?php echo $data_post; ?></span>
+        </div>
+        <div class="user-info-post">
+            <img src="<?php echo $avatar; ?>" class="avatar-p">
+            <?php if ($categoria_atual !== 'anonimo'): ?>
+                <a href="<?php echo $link_autor; ?>" class="user-mention"><?php echo $nome_autor; ?></a>
+            <?php else: ?>
+                <span class="user-anonimo"><?php echo $nome_autor; ?></span>
+            <?php endif; ?>
+        </div>
+        <div class="card-body">
+            <p class="post-content"><?php echo $mensagem_corpo; ?></p>
+            <?php if ($imagem_post): ?>
+                <div class="container-img-post">
+                    <img src="<?php echo $imagem_post; ?>" class="spotted-card-img" loading="lazy" alt="Imagem do Post">
+                </div>
+            <?php endif; ?>
+            <div id="reacoes-post-<?php echo $post_id_atual; ?>" class="reacoes-gravadas">
+                <?php
+                $detalhes = $reacoes_por_post[$post_id_atual] ?? [];
+                $minhas = $minhas_reacoes_por_post[$post_id_atual] ?? [];
+                foreach ($detalhes as $tipo => $total): ?>
+                    <span class="reacao-item <?php echo in_array($tipo, $minhas) ? 'voted' : ''; ?>">
+                        <?php echo $tradutor[$tipo] ?? '👍'; ?> <?php echo $total; ?>
+                    </span>
+                <?php endforeach; ?>
+            </div>
+            <div class="footer-links">
+                <div class="reacao-wrapper">
+                    <span class="btn-reagir">👍 Reagir</span>
+                    <div class="reacoes-popup">
+                        <?php foreach ($tradutor as $tipo => $emoji): ?>
+                            <span onclick="window.enviarReacao(<?php echo $post_id_atual; ?>, '<?php echo $tipo; ?>')"><?php echo $emoji; ?></span>
+                        <?php endforeach; ?>
                     </div>
                 </div>
-        </article>
+                <a href="comentarios-post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar"><i class="fas fa-comments"></i> Fofocar</a>
+            </div>
+        </div>
+    </div>
+</article>
 <?php
 } // fim do while
 ?>

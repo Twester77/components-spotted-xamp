@@ -41,8 +41,8 @@ body.hacker-mode textarea,
 body.hacker-mode [contenteditable="true"],
 body.hacker-mode .bio-texto,
 body.hacker-mode .post-content {
-    -webkit-user-select: text !important;
-    user-select: text !important;
+    -webkit-user-select: text ;
+    user-select: text ;
 }
 
 /* ---------------------------------------------------------------
@@ -88,9 +88,9 @@ body.hacker-mode::after {
 }
 
 @keyframes flicker {
-    0% { opacity: 0.97; }
-    5% { opacity: 0.92; }
-    10% { opacity: 0.99; }
+    0% { opacity: 0.92; }
+    5% { opacity: 0.95; }
+    10% { opacity: 0.98; }
     100% { opacity: 1; }
 }
 
@@ -119,7 +119,6 @@ body.hacker-mode .bolha {
 body.hacker-mode .spotted-card,
 body.hacker-mode .container-principal,
 body.hacker-mode .formulario-caixa,
-body.hacker-mode .comentario-item,
 body.hacker-mode .sessao-publicar,
 body.hacker-mode .main-perfil-container,
 body.hacker-mode .fenda-modal-content,
@@ -127,15 +126,16 @@ body.hacker-mode .perfil-gold {
     position: relative !important;
     background: #000 !important;
     /* LATERAIS: O duplo pipe "||" */
-    border-left: 4px double var(--hacker-green) !important;
-    border-right: 4px double var(--hacker-green) !important;
-    border-bottom: 4px double var(--hacker-green) !important;
+    border-left: 2px double var(--hacker-green) !important;
+    border-right: 2px double var(--hacker-green) !important;
+    border-bottom: 2px double var(--hacker-green) !important;
     box-shadow: none !important;
 }
 
 body.hacker-mode .sessao-fofoca-focada {
     border: 1px solid var(--hacker-green);
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) 
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    background-color: #323232 ;
 }
 
 body.hacker-mode .fixed-input::after , .footer {
@@ -298,7 +298,6 @@ body.hacker-mode .btn,
 body.hacker-mode .fenda-btn-glow,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-responder-bolha,
-body.hacker-mode .reply-indicator,
 body.hacker-mode .btn-enviar-fenda,
 body.hacker-mode .btn-voltar-fenda,
 body.hacker-mode .btn-sair-fenda,
@@ -521,8 +520,8 @@ body.hacker-mode .comentario-autor {
 body.hacker-mode .comentario-item.vibe-dark {
     background: #0a0a0ace !important;
     border-left: 3px solid #00ff00 !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     color: #00ff00 !important;
 }
 
@@ -534,8 +533,8 @@ body.hacker-mode .comentario-item.vibe-dark .comentario-autor {
 /* 2. VIBE GLASS - Efeito Matrix translúcido */
 body.hacker-mode .comentario-item.vibe-glass {
     background: rgba(0, 30, 0, 0.7) !important;
-    -webkit-backdrop-filter: blur(4px) !important;
-    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) ;
+    backdrop-filter: blur(4px) ;
     border-left: 3px solid #00ff00 !important;
     color: #00ff00 ;
 }
@@ -548,8 +547,8 @@ body.hacker-mode .comentario-item.vibe-glass .comentario-autor {
 /* 3. VIBE NEON - Efeito glitch pulsante */
 body.hacker-mode .comentario-item.vibe-neon {
     background: #000000 !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     border-left: 3px solid #00ff00 !important;
     margin-bottom: 15px;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), 0 0 5px #00ff00 !important;
@@ -613,7 +612,7 @@ body.hacker-mode .comentario-item.vibe-light {
         rgba(0, 255, 0, 0.03) 0px,
         rgba(0, 255, 0, 0.03) 2px,
         transparent 2px,
-        transparent 6px
+        transparent 2px
     ) !important;
 }
 
@@ -640,7 +639,6 @@ body.hacker-mode .comentario-item.vibe-dark:hover .comentario-data,
 body.hacker-mode .comentario-item.vibe-dark:hover .comentario-texto,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-autor,
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-data,
-
 body.hacker-mode .comentario-item.vibe-light:hover .comentario-texto,
 body.hacker-mode .comentario-item.vibe-glass:hover .comentario-autor,
 body.hacker-mode .comentario-item.vibe-glass:hover .comentario-data,
@@ -650,6 +648,7 @@ body.hacker-mode .comentario-item.vibe-neon:hover .comentario-data,
 body.hacker-mode .comentario-item.vibe-neon:hover .comentario-texto {
     color: #000000 !important;
     text-shadow: none !important;
+    font-weight: bold;
 }
 
 
@@ -916,12 +915,13 @@ body.hacker-mode .article p {
     to { clip-path: inset(0 0 0 0) ; }
 }
 
-/* Remove typing de menus, botões, badges e cabeçalhos */
+/* Remove typing de menus, botões, badges , modais e cabeçalhos */
 body.hacker-mode .navbar-nav .nav-link,
 body.hacker-mode .menu li a,
 body.hacker-mode .dropdown-menu a,
 body.hacker-mode .submenu li a,
 body.hacker-mode .item-menu,
+body.hacker-mode .fenda-modal-content,
 body.hacker-mode .btn,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,
@@ -1068,7 +1068,7 @@ body.hacker-mode .pagination span {
 body.hacker-mode .btn-responder-bolha::before,
 body.hacker-mode .comentario-item.comentario-filho::before
 {
-    background: none !important;
+    background: #000 !important;
     border: none !important;
     color: #0f0 !important;
 }

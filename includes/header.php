@@ -35,8 +35,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <link rel="stylesheet" href="css/formularios.css">
     <link rel="stylesheet" href="css/animacoes.css">
     <link rel="stylesheet" href="css/feed.css">
-    <link rel="stylesheet" href="css/skin-hacker.css">
-    <?php if ($pagina_atual == 'post.php'): ?>
+    <?php if ($pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="css/comentarios.css">
     <?php endif; ?>
     <?php if ($pagina_atual == 'feed.php'): ?>
@@ -130,7 +129,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         $exibir_toast = true;
         $toast_classe = "toast-erro-global"; // Estilize no CSS com fundo vermelho/laranja
         $toast_icone = "fa-solid fa-triangle-exclamation";
-        
+
         switch ($_GET['erro']) {
             case 'username_duplicado':
                 $toast_mensagem = "Este nome de usuário já está em uso por outro habitante!";
@@ -153,7 +152,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     // 🟢 2. CAPTURA DE SUCESSOS GLOBAIS
     if (isset($_GET['sucesso'])) {
         $exibir_toast = true;
-        $toast_classe = "toast-sucesso-global"; 
+        $toast_classe = "toast-sucesso-global";
         $toast_icone = "fa-solid fa-circle-check";
 
         switch ($_GET['sucesso']) {
@@ -171,7 +170,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     }
 
     // 🎬 3. RENDERIZAÇÃO DO TOAST
-    if ($exibir_toast): 
+    if ($exibir_toast):
     ?>
         <div id="toast-fenda-global" class="toast-fenda <?php echo $toast_classe; ?>" role="alert" aria-live="assertive" aria-atomic="true">
             <i class="<?php echo $toast_icone; ?>" aria-hidden="true"></i>
@@ -190,5 +189,3 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
             }, 4000);
         </script>
     <?php endif; ?>
-
-    

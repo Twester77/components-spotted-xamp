@@ -27,10 +27,22 @@ $comentario = trim($comentario_raw) === '' ? null : $comentario_raw;
 $vibe = $_POST['pref_vibe_comentario'] ?? 'vibe-glass';
 $cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
 
-// 🖼️ PROCESSAMENTO DA IMAGEM (se enviada)
+// 🖼️ PROCESSAMENTO DA IMAGEM (prioridade: gif_url externa)
 $imagem_url = null;
+$gif_url = isset($_POST['gif_url']) ? trim($_POST['gif_url']) : '';
 
-if ($usuario_id && isset($_FILES['imagem_comentario']) && $_FILES['imagem_comentario']['error'] === 0) {
+// 🔥 Se veio uma URL externa (GIPHY), valida e salva diretamente
+if (!empty($gif_url) && filter_var($gif_url, FILTER_VALIDATE_URL)) {
+    // Opcional: restringe apenas a domínios conhecidos (GIPHY)
+    if (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false) {
+        $imagem_url = $gif_url;
+    } else {
+        // URL inválida ou não permitida – ignorar (não salva)
+        $imagem_url = null;
+    }
+} 
+// Se não veio URL externa, tenta upload de arquivo local
+else if ($usuario_id && isset($_FILES['imagem_comentario']) && $_FILES['imagem_comentario']['error'] === 0) {
     $pasta = 'comentarios';
     if (!is_dir($pasta)) {
         mkdir($pasta, 0755, true);
@@ -100,27 +112,61 @@ if ($stmt->execute()) {
     
     // 🚀 RENDERIZA O HTML DO COMENTÁRIO (Source of Truth)
     $nomeExibicao = $usuario_nome ? '@' . htmlspecialchars($usuario_nome, ENT_QUOTES, 'UTF-8') : '👤 Anônimo';
-    
+
     // Só adiciona a div de texto se houver conteúdo
     $textoHtml = '';
     if ($comentario !== null && trim($comentario) !== '') {
         $textoRenderizado = nl2br(htmlspecialchars($comentario, ENT_QUOTES, 'UTF-8'));
         $textoHtml = '<div class="comentario-texto">' . $textoRenderizado . '</div>';
     }
-    
+
+    // 🔥 CONSTRUÇÃO DA MÍDIA (suporta URL externa ou arquivo local)
     $mediaHtml = '';
     if ($imagem_url) {
-        $mediaHtml = '<div class="comentario-media-wrapper"><img src="comentarios/' . htmlspecialchars($imagem_url) . '" class="comentario-img" alt="Imagem do comentário"></div>';
+        // Verifica se é uma URL externa (começa com http:// ou https://)
+        if (filter_var($imagem_url, FILTER_VALIDATE_URL)) {
+            // GIF externo (GIPHY)
+            $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($imagem_url) . '" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy"></div>';
+        } else {
+            // Arquivo local (subido pelo usuário)
+            $mediaHtml = '<div class="comentario-media-wrapper"><img src="comentarios/' . htmlspecialchars($imagem_url) . '" class="comentario-img" alt="Imagem do comentário" loading="lazy"></div>';
+        }
     }
+
+    // 🔥 NOVIDADE: identifica se é resposta (comentário filho)
+    $classe_filho = ($parent_id > 0) ? 'comentario-filho' : '';
     
+    // 🔥 INDICADOR DE RESPOSTA (COM ONCLICK E TRECHO) - CORRIGIDO
+    $reply_indicator = '';
+    if ($parent_id > 0) {
+        // Busca o comentário pai para exibir o trecho
+        $stmt_parent = $conn->prepare("SELECT comentario, usuario_nome FROM comentarios WHERE id = ?");
+        $stmt_parent->bind_param("i", $parent_id);
+        $stmt_parent->execute();
+        $parent_data = $stmt_parent->get_result()->fetch_assoc();
+        $trecho = '';
+        if ($parent_data) {
+            $texto_puro = strip_tags($parent_data['comentario']);
+            $texto_cortado = mb_substr($texto_puro, 0, 50);
+            $trecho = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
+        }
+        $reply_indicator = '<div class="indicador-resposta" onclick="irParaMensagem(' . $parent_id . ')">
+                                <i class="fas fa-reply"></i> <small>' . htmlspecialchars($trecho) . '</small>
+                            </div>';
+    }
+
     $comentarioHtml = '
-        <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . '" style="--cor-borda-glow: ' . $cor_borda . ';">
+        <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" style="--cor-borda-glow: ' . $cor_borda . ';">
             <div class="comentario-meta">
                 <strong class="comentario-autor" style="color: ' . $cor_borda . ';">' . $nomeExibicao . '</strong>
                 <span class="comentario-data">Agora</span>
             </div>
+            ' . $reply_indicator . '
             ' . $textoHtml . '
             ' . $mediaHtml . '
+            <div class="acoes-bolha">
+                <button onclick="prepararResposta(' . $stmt->insert_id . ', \'' . addslashes($usuario_nome) . '\')" class="btn-responder-bolha">RESPONDER</button>
+            </div>
         </div>
     ';
     
@@ -128,7 +174,7 @@ if ($stmt->execute()) {
         'status' => 'success',
         'message' => 'Comentário enviado!',
         'html' => $comentarioHtml,
-        'imagem_url' => $imagem_url ? 'comentarios/' . $imagem_url : null
+        'imagem_url' => $imagem_url
     ];
     ob_clean();
     header('Content-Type: application/json');

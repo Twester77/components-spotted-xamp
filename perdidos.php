@@ -145,7 +145,7 @@ include 'includes/bolhas.php';
 
                         <div class="card-footer" style=" border-top: 1px solid rgba(255,255,255,0.1);">
                             <!-- aria-label detalha qual post está sendo clicado para evitar links repetidos cegos -->
-                            <a href="post.php?id=<?php echo $linha['id']; ?>" class="link-fofoca" aria-label="Ver detalhes / ajudar a encontrar o objeto de @<?php echo !empty($linha['username']) ? $linha['username'] : 'Anônimo'; ?>">
+                            <a href="comentarios-post.php?id=<?php echo $linha['id']; ?>" class="link-fofoca" aria-label="Ver detalhes / ajudar a encontrar o objeto de @<?php echo !empty($linha['username']) ? $linha['username'] : 'Anônimo'; ?>">
                                 <i class="fas fa-comment-dots" aria-hidden="true"></i> Ver detalhes / Ajudar a encontrar →
                             </a>
                         </div>

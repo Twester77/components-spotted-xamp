@@ -3,6 +3,17 @@
 
 window.audioLiberado = false;
 
+// ==================== CARREGAMENTO DINÂMICO DO CSS HACKER ====================
+function carregarCssHacker() {
+    if (document.getElementById('hacker-css')) return;
+    const link = document.createElement('link');
+    link.id = 'hacker-css';
+    link.rel = 'stylesheet';
+    link.href = 'css/skin-hacker.css';
+    document.head.appendChild(link);
+    console.log("[HACKER] CSS carregado dinamicamente.");
+}
+
 // ==================== BOLHAS (Imediato) ====================
 window.setBolhasLocal = function (valor) {
     document.querySelectorAll('input[name="pref_bolhas"]').forEach(i => i.value = valor);
@@ -66,6 +77,12 @@ window.toggleHackerMode = function () {
     const body = document.body;
     const btnNav = document.getElementById('hacker-toggle');
     const btnToolbar = document.getElementById('hacker-toggle-lateral');
+    
+    // Se for ativar o modo hacker e o CSS ainda não foi carregado, carrega
+    if (!body.classList.contains('hacker-mode')) {
+        carregarCssHacker();
+    }
+    
     body.classList.toggle('hacker-mode');
     const isHacker = body.classList.contains('hacker-mode');
     localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
@@ -553,7 +570,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
 window.addEventListener('load', () => {
+    // Restaura modo hacker se estava ativo
     if (localStorage.getItem('fenda_hacker') === 'active') {
+        carregarCssHacker(); // carrega o CSS antes de ativar
         document.body.classList.add('hacker-mode');
         window.removerBordasInlineHacker();
     }
@@ -569,6 +588,7 @@ window.addEventListener('load', () => {
         }, 2500);
     } else if (bootScreen) bootScreen.style.display = 'none';
 
+    // Swipe ativo: suspende modo hacker
     if (document.body.classList.contains('modo-swipe-ativo')) {
         if (document.body.classList.contains('hacker-mode')) {
             sessionStorage.setItem('fenda_hacker_suspended_by_swipe', 'true');
@@ -576,8 +596,10 @@ window.addEventListener('load', () => {
             console.log("[HACKER] Modo Hacker suspenso porque o modo swipe está ativo.");
         }
     } else {
+        // Saiu do modo swipe: restaura hacker se estava suspenso e ativo no localStorage
         if (sessionStorage.getItem('fenda_hacker_suspended_by_swipe') === 'true') {
             if (localStorage.getItem('fenda_hacker') === 'active') {
+                carregarCssHacker(); // carrega o CSS novamente (se não estiver carregado)
                 document.body.classList.add('hacker-mode');
                 window.removerBordasInlineHacker();
                 console.log("[HACKER] Modo Hacker restaurado ao sair do modo swipe.");
@@ -650,6 +672,7 @@ window.marcarBotaoAtivo = function(btnClicado) {
     btnClicado.classList.add('active');
 };
 
+
 // 3. Rotação Auxiliar (Manipula apenas as classes)
 function aplicarRotacao(elemento, graus) {
     if (!elemento) return;
@@ -671,6 +694,248 @@ function toggleNexus() {
         document.querySelectorAll('.nexus-item').forEach(item => item.classList.remove('active'));
     }
 }
+
+// ==================== LONG PRESS NOS COMENTÁRIOS (COM SCROLL PROTECTION) ====================
+(function() {
+    let longPressTimer = null;
+    let currentComment = null;
+    let startX = 0, startY = 0;
+    let startScrollTop = 0;
+    let scrollableParent = null;
+    const MOVE_THRESHOLD = 10;
+    const SCROLL_THRESHOLD = 10; // se rolar mais que 10px, cancela long press
+
+    function getScrollableParent(element) {
+        while (element && element !== document.body) {
+            const overflowY = window.getComputedStyle(element).overflowY;
+            if (overflowY === 'auto' || overflowY === 'scroll') return element;
+            element = element.parentElement;
+        }
+        return null;
+    }
+
+    function onPointerDown(e) {
+        if (document.body.classList.contains('modo-swipe-ativo')) return;
+        
+        const comment = e.target.closest('.comentario-item');
+        if (!comment) return;
+        if (e.target.closest('.btn-responder-bolha') || e.target.closest('a')) return;
+
+        currentComment = comment;
+        startX = e.clientX;
+        startY = e.clientY;
+        scrollableParent = getScrollableParent(comment);
+        startScrollTop = scrollableParent ? scrollableParent.scrollTop : 0;
+
+        longPressTimer = setTimeout(async () => {
+            if (currentComment) {
+                // Verifica se houve rolagem significativa durante o long press
+                const currentScrollTop = scrollableParent ? scrollableParent.scrollTop : 0;
+                if (Math.abs(currentScrollTop - startScrollTop) > SCROLL_THRESHOLD) {
+                    cleanup();
+                    return;
+                }
+
+                const isOwner = currentComment.classList.contains('meu-comentario');
+                if (isOwner) {
+                    const commentId = currentComment.id.replace('comentario-', '');
+                    const confirmado = await window.exibirConfirmacao('Deseja realmente excluir este comentário?', '⚠️ Excluir Comentário');
+                    if (confirmado) {
+                        if (typeof window.excluirComentario === 'function') {
+                            window.excluirComentario(commentId, null);
+                        } else {
+                            console.error("excluirComentario não encontrada");
+                        }
+                    }
+                } else {
+                    alert("Mais opções em breve.");
+                }
+            }
+            cleanup();
+        }, 300);
+    }
+
+    function onPointerMove(e) {
+        if (!currentComment) return;
+        const dx = Math.abs(e.clientX - startX);
+        const dy = Math.abs(e.clientY - startY);
+        if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) cleanup();
+    }
+
+    function onPointerUp() { cleanup(); }
+
+    function cleanup() {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+        currentComment = null;
+        startX = startY = 0;
+        scrollableParent = null;
+        startScrollTop = 0;
+    }
+
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+})();
+
+// ==================== MODAL DE CONFIRMAÇÃO CUSTOMIZADO ====================
+window.exibirConfirmacao = function(mensagem, titulo = 'Confirmação') {
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 50000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `;
+        
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: rgba(20, 20, 32, 0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 24px;
+            min-width: 250px;
+            max-width: 85%;
+            text-align: center;
+            border: 1px solid rgba(255, 140, 0, 0.5);
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+        `;
+        
+        const titleEl = document.createElement('h3');
+        titleEl.textContent = titulo;
+        titleEl.style.cssText = 'margin: 0 0 16px 0; color: #ffbc00; font-size: 1.2rem;';
+        
+        const msgEl = document.createElement('p');
+        msgEl.textContent = mensagem;
+        msgEl.style.cssText = 'margin: 0 0 24px 0; color: #fff; font-size: 1rem;';
+        
+        const btnSim = document.createElement('button');
+        btnSim.textContent = 'SIM, EXCLUIR';
+        btnSim.style.cssText = `
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #ff4b2b;
+            border-radius: 40px;
+            padding: 8px 16px;
+            margin: 0 8px;
+            color: #ff8a8a;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        `;
+        btnSim.onmouseenter = () => btnSim.style.background = 'rgba(220, 53, 69, 0.4)';
+        btnSim.onmouseleave = () => btnSim.style.background = 'rgba(220, 53, 69, 0.2)';
+        btnSim.onclick = () => {
+            overlay.remove();
+            resolve(true);
+        };
+        
+        const btnNao = document.createElement('button');
+        btnNao.textContent = 'CANCELAR';
+        btnNao.style.cssText = `
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #aaa;
+            border-radius: 40px;
+            padding: 8px 16px;
+            margin: 0 8px;
+            color: #ccc;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        `;
+        btnNao.onmouseenter = () => btnNao.style.background = 'rgba(255,255,255,0.2)';
+        btnNao.onmouseleave = () => btnNao.style.background = 'rgba(255,255,255,0.1)';
+        btnNao.onclick = () => {
+            overlay.remove();
+            resolve(false);
+        };
+        
+        const botoes = document.createElement('div');
+        botoes.style.cssText = 'display: flex; justify-content: center; gap: 16px;';
+        botoes.appendChild(btnSim);
+        botoes.appendChild(btnNao);
+        
+        modal.appendChild(titleEl);
+        modal.appendChild(msgEl);
+        modal.appendChild(botoes);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+                resolve(false);
+            }
+        });
+    });
+};
+
+// ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS ====================
+window.excluirComentario = async function(commentId, btnElement) {
+    if (btnElement && btnElement.disabled) return;
+
+    // Usa o modal customizado (substitui o confirm)
+    const confirmado = await window.exibirConfirmacao('Deseja realmente excluir este comentário?', '⚠️ Excluir Comentário');
+    if (!confirmado) return;
+
+    const comentarioDiv = document.getElementById(`comentario-${commentId}`);
+    if (!comentarioDiv) return;
+
+    // Feedback visual
+    if (btnElement) {
+        btnElement.disabled = true;
+        btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+    comentarioDiv.classList.add('is-loading');
+
+    try {
+        const response = await fetch('includes/excluir-comentario.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${commentId}`
+        });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            comentarioDiv.classList.remove('is-loading');
+            comentarioDiv.classList.add('comentario-deletado');
+            comentarioDiv.innerHTML = `
+                <div class="comentario-deletado-msg">
+                    <i class="fas fa-trash-alt"></i> Comentário removido pelo autor.
+                </div>
+            `;
+        } else {
+            alert(data.message || "Erro ao excluir comentário.");
+            comentarioDiv.classList.remove('is-loading');
+            if (btnElement) {
+                btnElement.disabled = false;
+                btnElement.innerHTML = btnElement._originalText || '🗑️ Excluir';
+            }
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Erro de conexão. Tente novamente.");
+        comentarioDiv.classList.remove('is-loading');
+        if (btnElement) {
+            btnElement.disabled = false;
+            btnElement.innerHTML = btnElement._originalText || '🗑️ Excluir';
+        }
+    }
+};
+
+// ==================== INICIALIZAÇÃO ====================
+document.addEventListener('DOMContentLoaded', function() {
+    initLingoteController();
+});
 
 // VIEWPORT TRACKER (SOLUÇÃO PARA TECLADO EM LANDSCAPE)
 function initViewportTracker() {

@@ -204,7 +204,7 @@
             };
             reagirComTimeout(card, idPost);
         } else if (dy < -threshold && Math.abs(dx) < 80) {
-            window.location.href = `post.php?id=${idPost}#fofocar`;
+            window.location.href = `comentarios-post.php?id=${idPost}#fofocar`;
         } else {
             card.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
             setTimeout(() => { if (card) card.style.transition = 'none'; }, 300);

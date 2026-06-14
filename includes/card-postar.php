@@ -12,6 +12,12 @@
                 <input type="file" name="imagem" id="imagem" accept="image/*" style="display: block; margin-top: 5px; color: #ccc; font-size: 0.8rem;" aria-labelledby="label-imagem">
             </div>
 
+            <input type="hidden" name="gif_url" id="post-gif-url" value="">
+
+            <button type="button" id="btn-post-gif" class="btn-attach-opcao" onclick="window.setGiphyTarget('post-gif-url'); abrirGiphyModal();">
+                <i class="fas fa-grin-tongue-squint"></i> Buscar GIF/Sticker
+            </button>
+
             <label for="categoria" style="color: var(--dourado); font-size: 14px;">Categoria:</label>
             <!-- Adicionado aria-label para o elemento select descrever o seu propósito de forma clara -->
             <select name="categoria" id="categoria" style="background: #1a1a1a; color: #fff; border: 1px solid var(--dourado); border-radius: 10px; padding: 10px; margin-bottom: 15px; display: block; width: 100%;" aria-label="Selecione a categoria da sua publicação">
@@ -30,8 +36,8 @@
             <button type="submit" class="btn-lancar" style="background: var(--dourado); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%;">
                 Lançar ao Mar! 🌊
             </button>
-        </form> 
-        
+        </form>
+
         <!-- Corrigido: Fechamento correto e isolado do formulário -->
         <div style="margin-top: 10px; text-align: center; font-size: 12px; opacity: 0.8;">
             <small>🔍 Perdeu algo? <a href="perdidos.php" style="color: var(--dourado);" aria-label="Perdeu algo? Ir para a Página Especializada de achados e perdidos">Página Especializada</a></small>
@@ -40,3 +46,4 @@
 </section>
 
 <script src="js/fenda-mencoes.js"></script>
+<script src="js/fenda-giphy.js"></script>

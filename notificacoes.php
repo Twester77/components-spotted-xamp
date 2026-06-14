@@ -26,7 +26,7 @@ include 'includes/navbar.php';
     if ($res_notificacoes_lista && $res_notificacoes_lista->num_rows > 0): 
         while ($row = $res_notificacoes_lista->fetch_assoc()): 
     ?>
-        <a href="post.php?id=<?php echo $row['post_id']; ?>#fofocar" class="link-notificacao" style="text-decoration: none; color: inherit;">
+        <a href="comentarios-post.php?id=<?php echo $row['post_id']; ?>#fofocar" class="link-notificacao" style="text-decoration: none; color: inherit;">
             <div class="card-notificacao <?php echo ($row['lida'] == 0) ? 'nova' : ''; ?>" 
                  style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid #ffbc00; display: flex; justify-content: space-between; align-items: center;">
                 <div class="notificacao-conteudo">

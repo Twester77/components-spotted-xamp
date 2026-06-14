@@ -29,7 +29,7 @@ if ($res->num_rows > 0):
     while ($n = $res->fetch_assoc()):
         $lida_classe = ($n['lida'] == 0) ? 'notif-nova' : '';
         // Se não tiver post_id, manda para a página geral de notificações
-        $link = ($n['post_id']) ? "post.php?id=" . $n['post_id'] : "notificacoes.php";
+        $link = ($n['post_id']) ? "comentarios-post.php?id=" . $n['post_id'] : "notificacoes.php";
 ?>
         <a href="<?php echo $link; ?>" class="item-notif-rapida <?php echo $lida_classe; ?>">
             <div class="notif-avatar">

@@ -78,12 +78,12 @@ form {
     flex-direction: column;
     margin: 0 auto !important;
     background: transparent !important;
-    border: none !important;
+    border: none ;
     box-shadow: none !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    max-width: 95% !important;
-    width: 95% !important;
+    max-width: 95% ;
+    width: 95% ;
     height: auto;
 }
 
@@ -132,6 +132,36 @@ form {
 
 .modal-body-ajuste .main-novo-post textarea {
     min-height: 90px !important;
+}
+
+/* Botão de GIF/Sticker no modal de post */
+#btn-post-gif {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 10px 16px;
+    margin-bottom: 15px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#btn-post-gif:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #ffbc00;
+    transform: scale(1.02);
+}
+
+#btn-post-gif i {
+    font-size: 1.1rem;
+    color: #ffbc00;
 }
 
 
@@ -1079,7 +1109,6 @@ input[type="checkbox"]:focus {
     border: 2px solid var(--dourado);
     border-radius: 20px;
 }
-
 
 
 .badge-presenca {

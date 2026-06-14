@@ -1,6 +1,6 @@
 <?php
 include 'conexao.php';
-require_once 'includes/upload_engine.php'; // 🚀 Motor oficial de upload (intocável)
+require_once 'includes/upload_engine.php'; // 🚀 Motor oficial de upload
 
 // 1. Verificação de Segurança
 if (!isset($_SESSION['usuario_id'])) {
@@ -12,30 +12,30 @@ if (!isset($_SESSION['usuario_id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mensagem    = mysqli_real_escape_string($conn, $_POST['mensagem']);
     $categoria   = mysqli_real_escape_string($conn, $_POST['categoria']);
-    // Pega a subcategoria se ela existir (formulário de perdidos), senão deixa vazio (feed geral)
     $subcategoria = isset($_POST['subcategoria']) ? mysqli_real_escape_string($conn, $_POST['subcategoria']) : "";
     $usuario_id   = $_SESSION['usuario_id'];
-    $imagem_nome  = null; // nome do arquivo salvo (ou null)
+    $imagem_nome  = null;
 
     // ============================================================
-    // 🚀 UPLOAD DE IMAGEM – Delegado ao motor oficial
+    // 🖼️ PROCESSAMENTO DA IMAGEM (prioridade: gif_url externa)
     // ============================================================
-    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
-        // Parâmetros: $file_data, $destino, $prefixo, $max_size (2MB)
+    $gif_url = isset($_POST['gif_url']) ? trim($_POST['gif_url']) : '';
+
+    // 🔥 Se veio uma URL externa (GIPHY), valida e salva diretamente
+    if (!empty($gif_url) && filter_var($gif_url, FILTER_VALIDATE_URL)) {
+        if (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false) {
+            $imagem_nome = $gif_url;
+        }
+    } 
+    // Se não veio URL externa, tenta upload de arquivo local
+    else if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === 0) {
         $imagem_nome = processarUploadSeguro(
             $_FILES['imagem'],
-            'postagens',       // pasta onde salvar
-            'post',            // prefixo do arquivo
-            2 * 1024 * 1024    // limite de 2MB
+            'postagens',
+            'post',
+            2 * 1024 * 1024
         );
-
-        // Se o upload falhar (arquivo inválido, muito pesado, etc.), NÃO interrompe o post.
-        // Apenas não salva imagem. O post segue sem imagem.
-        if ($imagem_nome === false) {
-            $imagem_nome = null; // garante que não salve nada corrompido
-            // Você pode adicionar um log ou mensagem de erro se quiser:
-            // error_log("Falha no upload de imagem no post do usuário $usuario_id");
-        }
+        if ($imagem_nome === false) $imagem_nome = null;
     }
 
     // ============================================================
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         $post_id_recem_criado = $conn->insert_id;
 
-        // --- 🧠 MENÇÕES (inalterado, funciona com ou sem imagem) ---
+        // --- 🧠 MENÇÕES ---
         if (preg_match_all('/@([a-zA-Z0-9\._]+)/', $mensagem, $matches)) {
             $mencoes = array_unique($matches[1]);
             foreach ($mencoes as $nome_usuario) {

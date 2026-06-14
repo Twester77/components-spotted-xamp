@@ -164,7 +164,7 @@
     /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
-    max-width: 400px ;
+    max-width: 500px ;
     gap: 5px;
     /* Limita a largura máxima do card */
     height: auto;

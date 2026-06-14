@@ -1,6 +1,6 @@
 <footer class="footer-global">
     <!-- ============================================ -->
-    <!-- CONTEÚDO INSTITUCIONAL (será escondido no post.php) -->
+    <!-- CONTEÚDO INSTITUCIONAL (será escondido no comentarios-post) -->
     <!-- ============================================ -->
     <div class="footer-texto-institucional">
         <p><strong>Aviso:</strong> "A Fenda" é uma plataforma independente e colaborativa. Não possuímos vínculo administrativo ou oficial com a UNIFEV. O conteúdo é de responsabilidade exclusiva de seus autores.</p>
