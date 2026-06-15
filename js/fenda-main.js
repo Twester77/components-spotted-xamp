@@ -376,7 +376,7 @@ function mostrarPopup(mensagem) {
     let tempoExibicao = 5000;
     if (temaSalvo !== 'off') {
         let configuracaoSons = {
-            'padrao': { arquivo: 'padrao.mp3', volume: 1.1 },
+            'padrao': { arquivo: 'padrao.mp3', volume: 1.5 },
             'resident': { arquivo: 'resident.mp3', volume: 0.6 },
             'cs': { arquivo: 'cs.mp3', volume: 0.7 },
             'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },

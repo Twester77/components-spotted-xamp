@@ -52,7 +52,7 @@ $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOT
 
 // 2. Monta os caminhos finais corretos jogando para a pasta uploads/
 $foto_user = !empty($foto_limpa) ? "uploads/" . $foto_limpa : "uploads/default_masculino.jpg";
-$capa_user = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.jpg";
+$capa_user = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.webp";
 $is_presenca = ($id_visto == 1);
 
 $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM seguidores WHERE id_seguido = '$id_visto'"))['total'];

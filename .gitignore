@@ -1,0 +1,9 @@
+# Senhas e configurações locais
+*.env
+
+# Pastas de dependências ou logs (boa prática)
+node_modules/
+vendor/
+*.log
+lixeira_postagens/
+postagens/

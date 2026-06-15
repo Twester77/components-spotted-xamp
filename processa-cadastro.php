@@ -16,11 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if ($aura_inicial === 'feminino') {
         $foto_perfil_final = 'default_feminino.jpg';
-        $foto_capa_final   = 'default_capa_feminino.jpg';
+        $foto_capa_final   = 'default_capa_feminino.webp';
     } else {
         
         $foto_perfil_final = 'default_masculino.jpg'; 
-        $foto_capa_final   = 'default_capa_masculino.jpg'; 
+        $foto_capa_final   = 'default_capa_masculino.webp'; 
     }
 
     // 2. Verificação se o e-mail já existe

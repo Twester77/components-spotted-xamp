@@ -1,0 +1,26 @@
+{
+  "name": "A Fenda - Spotted Universitário",
+  "short_name": "Fenda",
+  "description": "O feed mais irado da UNIFEV. Spotted, comentários e muito mais.",
+  "start_url": "/feed.php",
+  "display": "standalone",
+  "theme_color": "#1a1a2e",
+  "background_color": "#0a0a0a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/imagensfoto/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/imagensfoto/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["social", "education"]
+}

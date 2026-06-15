@@ -31,8 +31,8 @@ $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOT
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
 // Se o utilizador tiver foto gravada (mesmo que seja a default dele), usa. Se não, usa o novo padrão masculino como última linha de defesa.
-$foto_atual = !empty($foto_limpa) ? "uploads/" . $foto_limpa : "uploads/default_masculino.jpg";
-$capa_atual = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.jpg";
+$foto_atual = !empty($foto_limpa) ? "uploads/" . $foto_limpa : "uploads/default_masculino.webp";
+$capa_atual = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.webp";
 
 
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';

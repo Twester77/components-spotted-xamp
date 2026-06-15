@@ -87,5 +87,21 @@
 
 <script src="js/fenda-main.js"></script>
 
+<!-- ========================================== -->
+<!-- REGISTRO DO SERVICE WORKER (PWA)           -->
+<!-- ========================================== -->
+<script>
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                    console.log('[PWA] Service Worker registrado com sucesso:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('[PWA] Falha no registro do Service Worker:', error);
+                });
+        });
+    }
+</script>
 </body>
 </html>

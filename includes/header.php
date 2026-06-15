@@ -28,8 +28,24 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="A Fenda - Spotted Universitário da UNIFEV. Compartilhe ideias, comentários e interaja com a comunidade de forma anônima ou pública.">
+    <meta name="keywords" content="spotted, unifev, spotted universitário, fenda, comunidade, votuporanga">
+    <meta name="author" content="A Fenda">
+    <meta property="og:title" content="A Fenda - Spotted Universitário">
+    <meta property="og:description" content=" A comunidade digital da UNIFEV. Participe com comentários, reações e muito mais.">
+    <meta property="og:image" content="https://fendauniversity.com.br/imagensfoto/favicon.png">
+    <meta property="og:url" content="www.fendauniversity.com.br">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    
     <title>A Fenda - Spotted Universitário (Votuporanga)</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="css/root.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/formularios.css">
@@ -41,13 +57,16 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <?php if ($pagina_atual == 'feed.php'): ?>
         <link rel="stylesheet" href="css/swipe.css?v=<?php echo time(); ?>">
     <?php endif; ?>
+    
+    <!-- Ícones e favicon -->
     <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
     <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
+    
+    <!-- Fontes e ícones externos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 </head>
 
 <body class="<?php echo $classes_finais; ?> <?php echo (isset($is_post_page) && $is_post_page) ? 'pagina-post' : ''; ?>">
@@ -116,7 +135,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     </header>
 
     <!-- ========================================== -->
-    <!-- 🚀 MOTOR GLOBAL DE TOASTS DA FENDA UNIVERSITY -->
+    <!--  MOTOR GLOBAL DE TOASTS DA FENDA UNIVERSITY -->
     <!-- ========================================== -->
     <?php
     $exibir_toast = false;
