@@ -1,85 +1,70 @@
 <?php
-// APENAS mostre erros se NÃO for uma requisição feita via AJAX (fetch/XMLHttpRequest)
-$is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-
-if (!$is_ajax) {
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL);
-} else {
-    ini_set('display_errors', 0);
-    error_reporting(E_ALL);
-}
+// Reportar erros (mantido como solicitado)
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 if (ob_get_level() == 0) ob_start();
 
-/*-----------------------------------------------------------------------------------
-PROJETO: A FENDA - SPOTTED UNIFEV
-DESENVOLVEDOR: Leonardo (O Idealizador)
-------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------------------------
+PROJETO: A FENDA - SPOTTED UNIFEV (MODO PROFISSIONAL - TIDB CLOUD)
+---------------------------------------------------------------------------------------------------------------*/
 
-// ==================================================
-// CONEXÃO COM BANCO DE DADOS (TiDB Cloud)
-// ==================================================
-
-// Tenta pegar variáveis de ambiente (produção no Render)
+// Variáveis de ambiente (Render/Produção)
 $db_host_env = getenv('DB_HOST');
 $db_user_env = getenv('DB_USER');
 $db_pass_env = getenv('DB_PASS');
 $db_name_env = getenv('DB_NAME');
 $db_port_env = getenv('DB_PORT') ?: 4000;
-$ca_cert_env = getenv('DB_CA_CERT'); // caminho para o certificado no servidor
+$db_ca_env   = getenv('DB_CA_CERT'); // Caminho opcional
 
-if ($db_host_env && $db_user_env && $db_pass_env) {
-    // === AMBIENTE DE PRODUÇÃO (RENDER) ===
-    $host    = $db_host_env;
-    $usuario = $db_user_env;
-    $senha   = $db_pass_env;
-    $banco   = $db_name_env;
-    $porta   = (int)$db_port_env;
-    $certPath = $ca_cert_env ?: __DIR__ . '/config/isrgrootx1.pem';
-} else {
-    // === AMBIENTE LOCAL (XAMPP / WAMP) ===
-    // Configure aqui com os dados do seu cluster TiDB Cloud
-    $host    = 'gateway01.us-east-1.prod.aws.tidbcloud.com';
-    $porta   = 4000;
-    $usuario = '4QGTrzXrgzivy34.root';
-    $senha   = '1HftPjHsoQb1pEmi';
-    $banco   = 'sys'; // ATENÇÃO: o banco padrão é 'sys', mas você pode criar outro e mudar aqui
-    $certPath = __DIR__ . '/config/isrgrootx1.pem'; // caminho local do certificado
-}
+// Caminho padrão do certificado (Pasta 'config' na raiz)
+$certPath = __DIR__ . '/config/isrgrootx1.pem';
 
-// Conecta usando MySQLi com SSL
+// Definição dos valores (Se não achar variável de ambiente, usa estes padrões locais)
+$host    = $db_host_env ?: 'gateway01.us-east-1.prod.aws.tidbcloud.com';
+$usuario = $db_user_env ?: '4QGTrzXrgzivy34.root';
+$senha   = $db_pass_env ?: '1HftPjHsoQb1pEmi';     
+$banco   = $db_name_env ?: 'fenda_db';
+$porta   = (int)($db_port_env ?: 4000);
+
+// --- INICIALIZAÇÃO DA CONEXÃO ---
 $conn = mysqli_init();
 if (!$conn) {
-    error_log("Falha ao inicializar a conexão MySQLi");
+    error_log("Falha ao inicializar o MySQLi");
     die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
 }
 
-// Configura SSL (obrigatório para TiDB Cloud)
-mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
-mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false); // evita problemas de hostname
+// Configuração SSL (Obrigatória para TiDB Cloud)
+if (file_exists($certPath)) {
+    mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
+    mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+    $ssl_flag = MYSQLI_CLIENT_SSL;
+} else {
+    // Loga o erro, mas tenta conectar (se o TiDB permitir sem SSL, mas geralmente não permite)
+    error_log("AVISO: Certificado SSL não encontrado em: $certPath");
+    $ssl_flag = 0; 
+}
 
-// Tenta a conexão
-if (!mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, MYSQLI_CLIENT_SSL)) {
+// Conexão efetiva
+if (!mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $ssl_flag)) {
     error_log("ERRO FATAL DE CONEXÃO: " . mysqli_connect_error());
     die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
 }
 
-// Configuração de charset
+// Configurações Globais
 mysqli_set_charset($conn, "utf8mb4");
 
-// Inicia sessão se necessário
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Atualiza última atividade do usuário logado
+// Atualiza a última atividade
 if (isset($_SESSION['usuario_id'])) {
     $id_logado = mysqli_real_escape_string($conn, $_SESSION['usuario_id']);
     mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
 }
 
-/* ==================== FUNÇÃO DE FORMATAÇÃO DE MENÇÕES ==================== */
+/* MOTOR DE MENÇÕES */
 if (!function_exists('formatarMencoes')) {
     function formatarMencoes($texto) {
         $texto = $texto ?? '';
@@ -89,7 +74,6 @@ if (!function_exists('formatarMencoes')) {
     }
 }
 
-// Chave da API Resend (se utilizada)
 if (!defined('RESEND_KEY')) {
     define('RESEND_KEY', 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8');
 }
