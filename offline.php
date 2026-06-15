@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Fenda - Offline</title>
     <link rel="stylesheet" href="/css/root.css">
+    <link rel="stylesheet" href="/css/layout.css">
     <style>
         body {
             background: #0a0a0a;
@@ -58,7 +59,7 @@
 <body>
     <div class="offline-card">
         <i class="fas fa-wifi"></i>
-        <h1>📡 Fenda Desconectada</h1>
+        <h1> Fenda Desconectada</h1>
         <p>Parece que você está sem internet.<br>Assim que a conexão voltar, o feed será recarregado automaticamente.</p>
         <button class="btn-rec" onclick="window.location.reload()">🔄 Tentar Novamente</button>
     </div>

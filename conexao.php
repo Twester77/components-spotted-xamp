@@ -1,65 +1,75 @@
 <?php
-// Reportar erros (mantido como solicitado)
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 if (ob_get_level() == 0) ob_start();
 
 /*--------------------------------------------------------------------------------------------------------------
-PROJETO: A FENDA - SPOTTED UNIFEV (MODO PROFISSIONAL - TIDB CLOUD)
+PROJETO: A FENDA - SPOTTED UNIFEV (Otimizado para Local/Produção)
 ---------------------------------------------------------------------------------------------------------------*/
 
-// Variáveis de ambiente (Render/Produção)
-$db_host_env = getenv('DB_HOST');
-$db_user_env = getenv('DB_USER');
-$db_pass_env = getenv('DB_PASS');
-$db_name_env = getenv('DB_NAME');
-$db_port_env = getenv('DB_PORT') ?: 4000;
-$db_ca_env   = getenv('DB_CA_CERT'); // Caminho opcional
+// 1. Detectar se estamos em Localhost
+$is_local = in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
 
-// Caminho padrão do certificado (Pasta 'config' na raiz)
-$certPath = __DIR__ . '/config/isrgrootx1.pem';
+if ($is_local) {
+    // === CONFIGURAÇÃO LOCAL (XAMPP) ===
+    $host    = '127.0.0.1';
+    $usuario = 'root';
+    $senha   = '';
+    $banco   = 'fenda_local'; // Verifique se este é o nome do seu banco local
+    $porta   = 3307;
+    $ssl_flag = 0; // Local não usa SSL
+} else {
+    // === CONFIGURAÇÃO PRODUÇÃO (RENDER + TIDB CLOUD) ===
+    $db_host_env = getenv('DB_HOST') ?: 'gateway01.us-east-1.prod.aws.tidbcloud.com';
+    $db_user_env = getenv('DB_USER') ?: '4QGTrzXrgzivy34.root';
+    $db_pass_env = getenv('DB_PASS') ?: '1HftPjHsoQb1pEmi';
+    $db_name_env = getenv('DB_NAME') ?: 'fenda_db';
+    $db_port_env = (int)(getenv('DB_PORT') ?: 4000);
+    $certPath    = __DIR__ . '/config/isrgrootx1.pem';
 
-// Definição dos valores (Se não achar variável de ambiente, usa estes padrões locais)
-$host    = $db_host_env ?: 'gateway01.us-east-1.prod.aws.tidbcloud.com';
-$usuario = $db_user_env ?: '4QGTrzXrgzivy34.root';
-$senha   = $db_pass_env ?: '1HftPjHsoQb1pEmi';     
-$banco   = $db_name_env ?: 'fenda_db';
-$porta   = (int)($db_port_env ?: 4000);
+    $host    = $db_host_env;
+    $usuario = $db_user_env;
+    $senha   = $db_pass_env;
+    $banco   = $db_name_env;
+    $porta   = $db_port_env;
+    $ssl_flag = 0;
+
+    // Configuração SSL (Apenas para produção)
+    if (file_exists($certPath)) {
+        $ssl_flag = MYSQLI_CLIENT_SSL;
+    }
+}
 
 // --- INICIALIZAÇÃO DA CONEXÃO ---
 $conn = mysqli_init();
 if (!$conn) {
-    error_log("Falha ao inicializar o MySQLi");
-    die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
+    die("Falha ao inicializar o MySQLi");
 }
 
-// Configuração SSL (Obrigatória para TiDB Cloud)
-if (file_exists($certPath)) {
+if ($ssl_flag === MYSQLI_CLIENT_SSL) {
     mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
     mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
-    $ssl_flag = MYSQLI_CLIENT_SSL;
-} else {
-    // Loga o erro, mas tenta conectar (se o TiDB permitir sem SSL, mas geralmente não permite)
-    error_log("AVISO: Certificado SSL não encontrado em: $certPath");
-    $ssl_flag = 0; 
 }
 
-// Conexão efetiva
 if (!mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $ssl_flag)) {
     error_log("ERRO FATAL DE CONEXÃO: " . mysqli_connect_error());
     die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
 }
 
-// Configurações Globais
 mysqli_set_charset($conn, "utf8mb4");
 
+// 2. Correção da Sessão para parar os warnings
 if (session_status() === PHP_SESSION_NONE) {
+    // Define o cookie para ser válido no domínio (resolve problemas de login/warnings)
+    if (!$is_local) {
+        ini_set('session.cookie_domain', $_SERVER['HTTP_HOST']);
+    }
     session_start();
 }
 
-// Atualiza a última atividade
-if (isset($_SESSION['usuario_id'])) {
+// Atualiza a última atividade (com verificação de existência para evitar warning)
+if (!empty($_SESSION['usuario_id'])) {
     $id_logado = mysqli_real_escape_string($conn, $_SESSION['usuario_id']);
     mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
 }

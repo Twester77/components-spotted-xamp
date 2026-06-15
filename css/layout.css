@@ -107,20 +107,12 @@ header h1 {
 
 
 
-
 /* --- MENU NAVBAR (RECUPERADO) --- */
 
 .fenda-saudacao {
     margin: 20px auto;
     padding: 15px;
     width: 100%;
-    justify-content: center;
-}
-
-img {
-    max-width: 100%;
-    height: auto;
-    /* Mantém a proporção */
     justify-content: center;
 }
 
@@ -2586,8 +2578,8 @@ body.modal-aberto #fenda-nexus {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60%;  /* Ocupa 60% do espaço do botão */
-    height: 60%; /* Ocupa 60% do espaço do botão */
+    width: 70%;  /* Ocupa 70% do espaço do botão */
+    height: 70%; /* Ocupa 70% do espaço do botão */
     display: block;
 }
 

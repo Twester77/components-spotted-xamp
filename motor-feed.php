@@ -110,7 +110,11 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $categoria_atual = $linha['categoria'];
     $total_comentarios = $linha['total_comentarios'] ?? 0;
     $total_reacoes = $linha['total_reacoes'] ?? 0;
-    $sou_eu = ($linha['usuario_id'] == $_SESSION['usuario_id'] ?? 0);
+    
+    // 🔥 CORREÇÃO DO WARNING: verifica se a sessão existe antes de usar
+    $usuario_logado = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;
+    $sou_eu = ($linha['usuario_id'] == $usuario_logado);
+    
     $cor_post = $sou_eu ? '#FFD700' : ($linha['pref_cor_padrao'] ?? '#70cde4');
     $vibe_post = $linha['pref_vibe_padrao'] ?? 'vibe-glass';
     $classe_admin = $sou_eu ? 'post-admin-gold' : '';
@@ -131,17 +135,14 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $imagem_post = '';
     if (!empty($linha['imagem_url'])) {
         if (filter_var($linha['imagem_url'], FILTER_VALIDATE_URL)) {
-            // URL externa (GIPHY)
             $imagem_post = htmlspecialchars($linha['imagem_url']);
         } else {
-            // Imagem local
             $imagem_post = 'postagens/' . htmlspecialchars($linha['imagem_url']);
         }
     }
     
     $data_post = date('d/m H:i', strtotime($linha['data_post']));
 ?>
-
 
 <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>" 
          data-id="<?php echo $post_id_atual; ?>"

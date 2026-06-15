@@ -360,7 +360,7 @@
 /* COMENTÁRIOS FILHOS */
 .comentario-filho {
     margin-left: 40px;
-    max-width: 60%;
+    max-width: 58%;
     position: relative;
 }
 
@@ -938,8 +938,17 @@ body.pagina-post .header-principal {
     filter: brightness(0.7) blur(1px);
     pointer-events: none;
     transition: filter 0.2s;
-}
 
+}
+ .fenda-estatica-context .container-img-post {
+        max-height: 100vh;
+        display: flex;
+        justify-content: center;
+        
+    }
+    .fenda-estatica-context .container-img-post img {
+        object-fit: cover;
+    }
 
 /* Landscape e Mobile (ajustes finos) */
 @media (orientation: landscape) {
@@ -947,7 +956,7 @@ body.pagina-post .header-principal {
         max-height: 100vh;
         display: flex;
         justify-content: center;
-        background: #000;
+        background: #00000066;
     }
     .fenda-estatica-context .container-img-post img {
         max-height: 100%;
