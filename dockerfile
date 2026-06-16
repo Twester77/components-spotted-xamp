@@ -9,20 +9,26 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql zip exif opcache
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# 2. Ativa o módulo mod_rewrite do Apache
-RUN a2enmod rewrite
+# 2. Configura GD (com suporte a JPEG, WebP)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
 
-# 3. Copia a configuração do OPcache para dentro do container
+# 3. Instala as extensões (exceto opcache)
+RUN docker-php-ext-install gd mysqli pdo pdo_mysql zip exif
+
+# 4. Ativa o opcache (já vem com o PHP, só precisa habilitar)
+RUN docker-php-ext-enable opcache
+
+# 5. Ativa módulos do Apache
+RUN a2enmod rewrite headers
+
+# 6. Copia a configuração do OPcache
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-# 4. Copia os arquivos do seu projeto para dentro do servidor
+# 7. Copia o código fonte
 COPY . /var/www/html/
 
-# 5. Garante as permissões de acesso corretas para o Apache
+# 8. Permissões
 RUN chown -R www-data:www-data /var/www/html
-
-# 6. Habilita o mod_headers (opcional)
-RUN a2enmod headers
