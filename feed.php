@@ -43,7 +43,7 @@ include 'includes/bolhas.php';
 
 <script>
     // ==================== MOTOR DE LAYOUT UNIVERSAL ====================
-    function recalcFeedLayout() {
+     function recalcFeedLayout() {
         if (!document.body.classList.contains('modo-swipe-ativo')) return;
         var vw = window.innerWidth;
         var vh = window.innerHeight;

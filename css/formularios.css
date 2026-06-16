@@ -655,7 +655,7 @@ section.sessao-publicar {
     flex-direction: row !important;
     flex-wrap: wrap !important;      
     align-items: flex-end !important; /* CORREÇÃO: Alinha todos por baixo, impedindo de esticarem */
-    gap: 12px ;            
+    gap: 15px ;            
 }
 
 /* Os blocos de embrulho (.input-group) se adaptando ao espaço */
@@ -677,34 +677,41 @@ section.sessao-publicar {
     display: block;
     width: auto;
     max-width: 100% !important;
-    padding: clamp(10px, 1.5vw, 15px) !important; /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
+    padding: clamp(10px, 1.5vw, 15px) ; /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
     border: 1px solid rgba(7, 4, 4, 0.2) !important;
-    background: rgba(0, 0, 0, 0.4) !important;
-    color: #fff !important;
-    border-radius: 14px !important;
-    margin-bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.4) ;
+    color: #fff ;
+    border-radius: 14px ;
+    margin-bottom: 0 ;
 }
 
 /* Tamanho de altura fixo para inputs normais (PC e Mobile) */
 .form-publicar select,
 .form-publicar .fenda-input {
-    height: 50px !important; /* Altura magrela padrão ideal */
+    height: 55px ; /* Altura magrela padrão ideal */
 }
 
-#file-upload-button {
-    box-shadow: 0 0 0 20px 0 #0000;
+#imagem.fenda-input {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.219);
     border-radius: 10px;
-    color: #0a0a0a;
-    background-color: #f0cd05e8;
+    background-color: #0a0a0a9c;
+    color: #f0cd05e8;
     font-style: none;
-    padding: 4px 10px;
+    padding: 4px 8px;
+    align-content:center ;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#file-upload-button {
+    font-style: none;
+    border-style: none;
 }
 
 /* CORREÇÃO: Altura específica apenas para a Textarea */
 .form-publicar textarea {
     display: flex!important;
     min-height: 80px; /* Menos espaço vertical, priorizando a largura */
-    max-height: 150px!important;
+    max-height: 150px;
     line-height: 1.4;
     resize: vertical; 
 }
@@ -1059,8 +1066,8 @@ input[type="checkbox"]:focus {
 
 .avatar-main {
     /* Quanto ocupa da capa */
-    width: clamp(80px, 1.5vw, 250px);
-    height: clamp(80px, 1.55vw, 250px);
+    width: clamp(80px, 15vw, 250px);
+    height: clamp(80px, 15vw, 250px);
     z-index: 16;
     object-fit: cover;
     aspect-ratio: 1/1;

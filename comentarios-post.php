@@ -117,7 +117,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
     .footer-texto-institucional,
     .footer-global {
         display: none !important;
-
     }
 </style>
 
@@ -139,7 +138,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
             ?>
         </div>
         <div class="preview-mensagem">
-            <?php echo nl2br(htmlspecialchars(mb_substr($post['mensagem'], 0, 150))) . (strlen($post['mensagem']) > 150 ? '...' : ''); ?>
+            <?php echo nl2br(htmlspecialchars(mb_substr($post['mensagem'], 0, 200))) . (strlen($post['mensagem']) > 200 ? '...' : ''); ?>
         </div>
         <?php if (!empty($post['imagem_url'])): ?>
             <div class="preview-imagem">
@@ -326,10 +325,19 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     <textarea name="comentario" id="hidden-textarea"></textarea>
                 </form>
 
+                <!-- RODAPÉ DA BARRA – CONTADOR + PREVIEW DO ANEXO -->
                 <div class="chat-footer-info">
+                    <!-- Contador (sempre visível, à direita) -->
                     <span id="char-count" class="char-counter">500</span>
-                    <span id="nome-arquivo"></span>
-                    <div id="feedback-upload" style="color: #25ff25;"></div>
+
+                    <!-- Miniatura do anexo (aparece apenas quando há arquivo) -->
+                    <span id="anexo-preview" style="display: none; cursor: pointer;" title="Arquivo anexado"></span>
+
+                    <!-- Feedback toast (flutuante sobre o canto) -->
+                    <div id="feedback-upload">
+                        <span class="icone-feedback"></span>
+                        <span class="texto-feedback"></span>
+                    </div>
                 </div>
             </section>
         </footer>
@@ -375,8 +383,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
     const btnGaveta = document.getElementById('btn-attach-gaveta');
     const gaveta = document.getElementById('gaveta-opcoes');
     const inputFile = document.getElementById('input-img-comentario');
-    const nomeArquivoSpan = document.getElementById('nome-arquivo');
-    const feedbackDiv = document.getElementById('feedback-upload');
+    const previewAnexo = document.getElementById('anexo-preview');
+    const feedbackUpload = document.getElementById('feedback-upload');
     const hiddenVibe = document.getElementById('hidden-vibe');
     const hiddenCor = document.getElementById('hidden-cor');
     const hiddenTextarea = document.getElementById('hidden-textarea');
@@ -394,6 +402,120 @@ $total_reacoes = array_sum($reacoes_detalhes);
         if (hiddenTextarea) hiddenTextarea.value = campoTexto.value;
     }
 
+    // ==================== ABRIR LIGHTBOX MANUAL (para miniatura) ====================
+    function abrirLightboxManual(src) {
+        if (!src) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    }
+
+    // ==================== VALIDAÇÃO E PREVIEW DO ARQUIVO ====================
+    // ========== FEEDBACK TOAST ==========
+    function mostrarFeedback(mensagem, tipo) {
+        const toast = document.getElementById('feedback-upload');
+        if (!toast) return;
+        const icone = toast.querySelector('.icone-feedback');
+        const texto = toast.querySelector('.texto-feedback');
+
+        // Define ícone e cor
+        if (tipo === 'sucesso') {
+            icone.textContent = '✅';
+            toast.className = 'visivel sucesso';
+        } else if (tipo === 'erro') {
+            icone.textContent = '❌';
+            toast.className = 'visivel erro';
+        } else {
+            icone.textContent = 'ℹ️';
+            toast.className = 'visivel';
+        }
+        texto.textContent = mensagem;
+
+        // Remove após 2 segundos
+        clearTimeout(window._feedbackTimeout);
+        window._feedbackTimeout = setTimeout(() => {
+            toast.classList.remove('visivel');
+        }, 2500);
+    }
+
+    function limparFeedback() {
+        const toast = document.getElementById('feedback-upload');
+        if (toast) toast.classList.remove('visivel');
+    }
+
+    // ========== VALIDAÇÃO E PREVIEW ==========
+    function validarArquivo() {
+        const preview = document.getElementById('anexo-preview');
+        if (!inputFile || !inputFile.files.length) {
+            if (preview) {
+                preview.style.display = 'none';
+                preview.innerHTML = '';
+                preview.onclick = null;
+            }
+            limparFeedback();
+            arquivoValido = true;
+            return true;
+        }
+        const file = inputFile.files[0];
+        const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        if (file.size > maxSizeBytes) {
+            mostrarFeedback(`Arquivo excede ${maxSizeMB}MB`, 'erro');
+            arquivoValido = false;
+            return false;
+        }
+        if (!tiposPermitidos.includes(file.type)) {
+            mostrarFeedback('Formato não suportado', 'erro');
+            arquivoValido = false;
+            return false;
+        }
+
+        // Sucesso – mostra miniatura
+        if (preview) {
+            preview.style.display = 'inline-flex';
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="miniatura">`;
+                    preview.onclick = function(ev) {
+                        ev.stopPropagation();
+                        abrirLightboxManual(e.target.result);
+                    };
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '📎';
+                preview.onclick = null;
+            }
+        }
+        mostrarFeedback('Arquivo OK', 'sucesso');
+        arquivoValido = true;
+        return true;
+    }
+
+    // ==================== EVENTOS ====================
     window.toggleBarraFofoca = function() {
         const icone = document.querySelector('#toggle-chat-barra i');
         if (!barraFofoca) return;
@@ -457,61 +579,11 @@ $total_reacoes = array_sum($reacoes_detalhes);
         if (typeof esconderSugestoes === 'function') esconderSugestoes();
     };
 
-    function mostrarFeedback(msg, tipo) {
-        if (!feedbackDiv) return;
-        feedbackDiv.textContent = msg;
-        feedbackDiv.style.color = (tipo === 'erro') ? '#ff4444' : '#00ff00';
-        setTimeout(() => {
-            if (feedbackDiv) feedbackDiv.textContent = '';
-        }, 3000);
-    }
-
-    function limparFeedback() {
-        if (feedbackDiv) feedbackDiv.textContent = '';
-    }
-
-    function validarArquivo() {
-        if (!inputFile || !inputFile.files.length) {
-            if (nomeArquivoSpan) nomeArquivoSpan.textContent = '';
-            limparFeedback();
-            arquivoValido = true;
-            return true;
-        }
-        const file = inputFile.files[0];
-        const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-        if (file.size > maxSizeBytes) {
-            if (nomeArquivoSpan) {
-                nomeArquivoSpan.textContent = file.name;
-                nomeArquivoSpan.style.color = '#ff4444';
-            }
-            mostrarFeedback(`❌ Arquivo excede ${maxSizeMB}MB`, 'erro');
-            arquivoValido = false;
-            return false;
-        }
-        if (!tiposPermitidos.includes(file.type)) {
-            if (nomeArquivoSpan) {
-                nomeArquivoSpan.textContent = file.name;
-                nomeArquivoSpan.style.color = '#ff4444';
-            }
-            mostrarFeedback('❌ Formato inválido (use JPG, PNG, WEBP ou GIF)', 'erro');
-            arquivoValido = false;
-            return false;
-        }
-        if (nomeArquivoSpan) {
-            nomeArquivoSpan.textContent = file.name;
-            nomeArquivoSpan.style.color = '#ccc';
-        }
-        mostrarFeedback('✅ Arquivo válido!', 'sucesso');
-        arquivoValido = true;
-        return true;
-    }
-
     const btnAnexarImg = document.getElementById('btn-anexar-img');
     if (btnAnexarImg && inputFile) {
         btnAnexarImg.addEventListener('click', () => inputFile.click());
         inputFile.addEventListener('change', validarArquivo);
     }
-
 
     if (btnGaveta && gaveta) {
         btnGaveta.addEventListener('click', (e) => {
@@ -578,7 +650,12 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         campoTexto.value = '';
                         campoTexto.style.height = 'auto';
                         contadorChar.textContent = '500';
-                        nomeArquivoSpan.textContent = '';
+                        // Limpa preview do anexo
+                        if (previewAnexo) {
+                            previewAnexo.style.display = 'none';
+                            previewAnexo.innerHTML = '';
+                            previewAnexo.onclick = null;
+                        }
                         limparFeedback();
                         arquivoValido = true;
                         inputFile.value = '';
@@ -629,18 +706,18 @@ $total_reacoes = array_sum($reacoes_detalhes);
         const modal = document.createElement('div');
         modal.id = 'modal-lightbox-fenda';
         modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
-        const imgModal = document.createElement('img');
-        imgModal.src = imgSrc;
-        imgModal.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
-        const fecharBtn = document.createElement('button');
-        fecharBtn.innerHTML = '✖';
-        fecharBtn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
-        fecharBtn.onclick = () => {
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
             modal.style.opacity = '0';
             setTimeout(() => modal.remove(), 200);
         };
-        modal.appendChild(imgModal);
-        modal.appendChild(fecharBtn);
+        modal.appendChild(img);
+        modal.appendChild(btn);
         document.body.appendChild(modal);
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {

@@ -196,7 +196,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 @supports (backdrop-filter: blur(3px)) {
     body:not(.modo-swipe-ativo) .spotted-card:hover {
-        backdrop-filter: blur(3px);
+        backdrop-filter: blur(5px);
         background: rgba(0, 0, 0, 0.473); /* Um pouco mais escuro para o texto ler melhor no blur */
         transition: 0.3s ease;
     }
@@ -747,7 +747,7 @@ span.category-tag {
 .insignia-atletica-bottom {
     /* Mínimo de 40px para não sumir, escala com 5% da tela, e trava em 90px no máximo */
     width: clamp(45px, 15vmin, 90px) ;
-    height: clamp(45px, 5vmin, 90px) ;
+    height: clamp(45px, 15vmin, 90px) ;
     object-fit: contain !important;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));

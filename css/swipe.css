@@ -363,7 +363,7 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     top: 30%;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10001 !important;
+    z-index: 100000 !important;
     background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301));
     color: #000000d0;
     padding: clamp(4px, 1.5vw, 12px) clamp(10px, 1.5vw, 16px);
@@ -478,7 +478,7 @@ body:not(.modo-swipe-ativo) .spotted-card {
    ============================================================ */
 .container-img-post {
     position: relative !important;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -488,11 +488,10 @@ body:not(.modo-swipe-ativo) .spotted-card {
 }
 
 .spotted-card-img {
-    background: #111;
     width: 100%;
     height: 100%;
     border: 2px solid #ee9529;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center !important;
     border-radius: 10px;
     z-index: 1;
@@ -533,12 +532,15 @@ body:not(.modo-swipe-ativo) .spotted-card {
     touch-action: none;
     -webkit-user-select: none !important;
     user-select: none !important;
+    transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
+
 }
 
 .feed-empilhado .spotted-card .user-info-post {
     touch-action: none;
     -webkit-user-select: none !important;
     user-select: none !important;
+    
 }
 
 /* Bloqueia cliques nos links APENAS quando o card passou da tolerância de arraste */
