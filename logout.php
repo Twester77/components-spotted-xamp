@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php'; // Chama o porteiro que já sabe lidar com a sessão
+include 'conexao.php';
 
 // Limpa todas as variáveis da sessão
 $_SESSION = array();

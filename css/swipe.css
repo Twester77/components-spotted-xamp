@@ -146,7 +146,7 @@ body.modo-swipe-ativo .container-feed {
     --pos-y: 0px;
     --swipe-rot: 0deg;
     border-radius: 12px;
-    background: rgba(10, 10, 10, 0.185);
+    background: rgba(10, 10, 10, 0.247);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -200,8 +200,8 @@ body.modo-swipe-ativo .container-feed {
     }
 
     .feed-empilhado .spotted-card .avatar-p {
-        width: 45px;
-        height: 45px;
+        width: 60px;
+        height: 60px;
     }
 }
 
@@ -211,21 +211,20 @@ body.modo-swipe-ativo .container-feed {
     }
 
     .feed-empilhado .spotted-card .avatar-p {
-        width: 70px !important;
-        height: 70px !important;
+        width: 70px ;
+        height: 70px ;
     }
 }
 
 @media (min-width: 1601px) {
     body.modo-swipe-ativo .post-content {
-        font-size: 1.5rem !important;
+        font-size: 1.7rem !important;
     }
 }
 
 /* 5. Altura do texto no modo swipe */
 body.modo-swipe-ativo .post-content {
     max-height: clamp(4.5rem, 10vh, 18rem) !important;
-    font-size: clamp(0.9rem, 1.2vh, 1.2rem);
     line-height: 1.5;
     margin-bottom: 15px;
 }

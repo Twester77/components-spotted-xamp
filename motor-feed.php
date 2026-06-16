@@ -62,9 +62,8 @@ $posts_ids = [];
 while ($linha = mysqli_fetch_assoc($resultado)) {
     $posts_ids[] = $linha['id'];
 }
-mysqli_data_seek($resultado, 0); // volta ao início
+mysqli_data_seek($resultado, 0);
 
-// Buscar reações detalhadas (tipo + contagem) para todos os posts de uma vez
 $reacoes_por_post = [];
 if (!empty($posts_ids)) {
     $placeholders = implode(',', array_fill(0, count($posts_ids), '?'));
@@ -83,7 +82,7 @@ if (!empty($posts_ids)) {
     mysqli_stmt_close($stmt_react);
 }
 
-// Buscar reações do usuário logado (para marcar as que ele votou)
+// Buscar reações do usuário logado
 $minhas_reacoes_por_post = [];
 if (isset($_SESSION['usuario_id'])) {
     $meu_id = $_SESSION['usuario_id'];
@@ -101,7 +100,7 @@ if (isset($_SESSION['usuario_id'])) {
 }
 
 // ==================================================
-// 3. LOOP DE EXIBIÇÃO (USANDO DADOS PRONTOS)
+// 3. LOOP DE EXIBIÇÃO
 // ==================================================
 $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
 
@@ -111,7 +110,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $total_comentarios = $linha['total_comentarios'] ?? 0;
     $total_reacoes = $linha['total_reacoes'] ?? 0;
     
-    // 🔥 CORREÇÃO DO WARNING: verifica se a sessão existe antes de usar
+    // 🔥 Sessão segura
     $usuario_logado = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;
     $sou_eu = ($linha['usuario_id'] == $usuario_logado);
     
@@ -131,7 +130,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     }
     $mensagem_corpo = nl2br(formatarMencoes($linha['mensagem']));
     
-    // 🔥 CORREÇÃO: Suporte a GIFs externos (GIPHY)
     $imagem_post = '';
     if (!empty($linha['imagem_url'])) {
         if (filter_var($linha['imagem_url'], FILTER_VALIDATE_URL)) {
@@ -143,7 +141,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     
     $data_post = date('d/m H:i', strtotime($linha['data_post']));
 ?>
-
 <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>" 
          data-id="<?php echo $post_id_atual; ?>"
          style="border: 2px solid <?php echo $cor_post; ?> !important;">
@@ -192,5 +189,5 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     </div>
 </article>
 <?php
-} // fim do while
+}
 ?>

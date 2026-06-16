@@ -116,6 +116,12 @@ header h1 {
     justify-content: center;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+    /* Mantém a proporção */
+    justify-content: center;
+}
 
 
 main article {
@@ -1592,7 +1598,7 @@ h2.titulo-home {
     /* Alinha verticalmente */
     gap: 20px;
     /* Espaço entre as fotos */
-    width: 100%;
+    max-width: 100%;
 }
 
 /* Alinhamento das tags picture */
@@ -1605,8 +1611,8 @@ h2.titulo-home {
 /* Correção e upgrade da imagem do Câmpus */
 .img-campus {
     width: clamp(250px, 100dvh, 400px);
-    min-height: 230px;
-    object-fit: cover;
+    min-height: 220px;
+    object-fit: contain;
     border-radius: 12px;
     transition: transform 0.3s ease;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -2253,15 +2259,15 @@ textarea[name="bio"] {
     /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
     .post-content,
     .post-content-focado {
-        max-height: 20dvh !important;
+        max-height: 25dvh !important;
         /* Limita a altura do texto */
         overflow: auto;
     }
 
     /* Esconde elementos não essenciais para ganhar altura */
     .avatar-p {
-        width: 40px !important;
-        height: 40px !important;
+        width: 40px ;
+        height: 40px ;
     }
 
     footer {

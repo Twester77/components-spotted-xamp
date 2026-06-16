@@ -97,7 +97,7 @@
     border: 2px solid var(--cor-borda-glow);
     position: relative;
     animation: glowPulsar 3s infinite alternate;
-    max-width: 700px;
+    max-width: 650px;
     display: flex;
     margin: 15px auto;
     transform: none;
@@ -924,8 +924,9 @@ body.pagina-post .header-principal {
 }
 .comentario-deletado-msg {
     text-align: center;
+    border-left: 3px solid var(--cor-borda-glow);
     padding: 8px;
-    color: #aaa;
+    color:#c4c4c4;
     font-style: italic;
     font-size: 0.85rem;
 }

@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 if (ob_get_level() == 0) ob_start();
 
 /*--------------------------------------------------------------------------------------------------------------
-PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente)
+PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente e cookie dinâmico)
 ---------------------------------------------------------------------------------------------------------------*/
 
 // Determina o ambiente de forma explícita (padrão: produção)
@@ -20,6 +20,12 @@ if ($is_production) {
     $porta   = (int)(getenv('DB_PORT') ?: 4000);
     $certPath = __DIR__ . '/config/isrgrootx1.pem';
     $ssl_flag = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
+    
+    // Cookie de sessão: dinâmico via variável de ambiente ou fallback
+    $cookieDomain = getenv('SESSION_COOKIE_DOMAIN');
+    if (empty($cookieDomain)) {
+        $cookieDomain = '.fendauniversity.com.br'; // fallback seguro
+    }
 } else {
     // === MODO LOCAL (XAMPP) ===
     $host    = '127.0.0.1';
@@ -29,6 +35,7 @@ if ($is_production) {
     $banco   = 'fenda_local'; // Nome do banco local
     $ssl_flag = 0;
     $certPath = null;
+    $cookieDomain = null; // localhost não precisa de domínio explícito
 }
 
 // --- INICIALIZAÇÃO DA CONEXÃO ---
@@ -52,11 +59,13 @@ if (!mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $
 
 mysqli_set_charset($conn, "utf8mb4");
 
-// Gerenciamento de sessão
+// Gerenciamento de sessão (centralizado)
 if (session_status() === PHP_SESSION_NONE) {
-    // Em produção, define o domínio do cookie para evitar warnings de sessão
-    if ($is_production) {
-        ini_set('session.cookie_domain', $_SERVER['HTTP_HOST'] ?? '.fendauniversity.com.br');
+    // Em produção, define o domínio do cookie para compartilhar entre www e sem www
+    if ($is_production && $cookieDomain) {
+        ini_set('session.cookie_domain', $cookieDomain);
+        ini_set('session.cookie_httponly', 1);
+        ini_set('session.use_strict_mode', 1);
     }
     session_start();
 }

@@ -50,8 +50,8 @@ include 'includes/bolhas.php';
         var cardWidth = Math.max(280, Math.min(vw * 0.80, 400));
         var cardPadding = cardWidth * 0.05;
         var fontSize = cardWidth * 0.05;
-        var avatarSize = cardWidth * 0.12;
-        var maxCardHeight = vh * 0.85;
+        var avatarSize = cardWidth * 0.15;
+        var maxCardHeight = vh * 0.80;
         var cards = document.querySelectorAll('.feed-empilhado .spotted-card');
         for (var i = 0; i < cards.length; i++) {
             var card = cards[i];
