@@ -1,6 +1,6 @@
 FROM php:8.5-apache
 
-# 1. Instala dependências do Linux (Imagens, Zip e utilitários úteis)
+# 1. Instala dependências do Linux
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -10,9 +10,9 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql zip
+    && docker-php-ext-install gd mysqli pdo pdo_mysql zip exif  
 
-# 2. Ativa o módulo mod_rewrite do Apache (para URLs limpas no futuro)
+# 2. Ativa o módulo mod_rewrite do Apache
 RUN a2enmod rewrite
 
 # 3. Copia os arquivos do seu GitHub para dentro do servidor
