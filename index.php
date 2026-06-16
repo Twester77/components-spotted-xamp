@@ -1,6 +1,5 @@
 <?php
-include 'conexao.php'; // Mantendo a segurança com include_once
-$hora = '3';
+include_once __DIR__ . '/conexao.php';
 // Ajuste do fuso para SP
 date_default_timezone_set('America/Sao_Paulo');
 

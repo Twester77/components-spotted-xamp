@@ -761,25 +761,31 @@ section.sessao-publicar {
 
 /* ESTILO DOS BOTÕES DE EDIÇÃO */
 
-.avatar  {
-    width: 100px;
-    height: 100px;
+.avatar-pequeno {
+    gap: 20px;
+    justify-content: center ;
+    display: flex;
+
+}
+
+.avatar.de.inicio {
+    max-width: clamp(100px, 20vmin, 200px);
+    max-height: clamp(100px, 20vmin, 200px);
+    gap: 15px;
     object-fit: cover;
     position: relative;
-    justify-items: space-between;
+     align-content: center;
     border-radius: 50%;
     border: none !important;
     /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
     -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
     mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
-    transition: transform 0.3s ease;
+        transition: transform 0.3s ease;
+
+
 }
 
-.avatar-pequeno {
-    max-width: 100% ;
-    justify-content: center ;
-}
-.avatar:hover {
+.avatar.de.inicio:hover {
     transform: scale(1.1);
 }
 

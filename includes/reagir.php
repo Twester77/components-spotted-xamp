@@ -1,9 +1,4 @@
 <?php
-// Inicia a sessão antes de qualquer checagem para evitar o erro de "Login necessário"
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // ==================== ESCUDO ANTI-GROSOPE (RATE LIMITER) ====================
 $tempo_minimo = 0.4; // 400ms: impede scripts maliciosos de inundarem o banco
 if (isset($_SESSION['ultimo_click_reacao'])) {
@@ -21,14 +16,12 @@ if (isset($_SESSION['ultimo_click_reacao'])) {
 $_SESSION['ultimo_click_reacao'] = microtime(true);
 // ============================================================================
 
-if (file_exists('conexao.php')) {
-    include 'conexao.php';
-} else {
-    include '../conexao.php';
-}
+// Inclui a conexão (já inicia a sessão)
+require_once __DIR__ . '/../conexao.php';
 
 header('Content-Type: application/json');
 
+// Verifica se o usuário está logado
 if (!isset($_SESSION['usuario_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'Login necessário']);
     exit();
@@ -72,7 +65,7 @@ if ($post_id > 0 && !empty($tipo)) {
     $res_count = $stmt_count->get_result();
 
     $contagens = [];
-    while($row = $res_count->fetch_assoc()){
+    while ($row = $res_count->fetch_assoc()) {
         $contagens[$row['tipo_reacao']] = (int)$row['total'];
     }
 
@@ -82,7 +75,7 @@ if ($post_id > 0 && !empty($tipo)) {
     $stmt_meu->bind_param("ii", $post_id, $usuario_id);
     $stmt_meu->execute();
     $res_meu = $stmt_meu->get_result();
-    while($m = $res_meu->fetch_assoc()){
+    while ($m = $res_meu->fetch_assoc()) {
         $minhas_reacoes[] = $m['tipo_reacao'];
     }
 
@@ -94,3 +87,4 @@ if ($post_id > 0 && !empty($tipo)) {
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Dados inválidos']);
 }
+?>

@@ -1473,7 +1473,7 @@ h2.titulo-home {
     line-height: 1.6;
     text-align: left;
     color: #e0e0e0;
-    max-width: clamp(300px, 100%, 900px) !important;
+    max-width: clamp(300px, 100%, 800px) !important;
     padding: 10px;
 }
 
@@ -2357,7 +2357,7 @@ textarea[name="bio"] {
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
         display: inline-flex ;
         position: fixed ;
-        top: 20%;
+        top: 15%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 10000 ;
@@ -2494,7 +2494,7 @@ textarea[name="bio"] {
 /* Container Pai - Fica no canto inferior direito */
 .fenda-nexus {
     position: fixed;
-    bottom: 35%;
+    bottom: 30%;
     right: 15px;
     z-index: 9999;
     display: flex;

@@ -2,7 +2,7 @@
 error_reporting(0); 
 ini_set('display_errors', 0);
 // buscar-mencoes.php
-include_once 'conexao.php';
+include_once __DIR__ . '/conexao.php';
 
 $termo = isset($_GET['q']) ? mysqli_real_escape_string($conn, $_GET['q']) : '';
 $resultados = []; // Inicializamos vazio

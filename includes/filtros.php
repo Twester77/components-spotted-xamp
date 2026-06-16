@@ -1,3 +1,4 @@
+<?php include_once __DIR__ . '/../conexao.php';?>
 <section class="filtros-container">
     <a href="feed.php" class="filtro-btn <?php echo !isset($_GET['categoria']) || $_GET['categoria'] == '' ? 'ativo' : ''; ?>">
         #TODOS

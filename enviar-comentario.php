@@ -3,7 +3,7 @@ ini_set('display_errors', 0);
 error_reporting(E_ALL);
 ob_start();
 
-include 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 require_once 'includes/upload_engine.php';
 
 // Apenas processa POST

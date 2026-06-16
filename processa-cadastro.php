@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include_once __DIR__ . '/conexao.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 1. Limpeza de dados para evitar SQL Injection

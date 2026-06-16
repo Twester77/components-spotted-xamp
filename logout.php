@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include_once __DIR__ . '/conexao.php';
 
 // Limpa todas as variáveis da sessão
 $_SESSION = array();

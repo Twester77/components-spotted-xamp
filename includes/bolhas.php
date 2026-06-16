@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include_once __DIR__ . '/../conexao.php';
 // 1. Garante que temos acesso à conexão e à sessão
 
 $u_id_bolhas = $_SESSION['usuario_id'] ?? 0;

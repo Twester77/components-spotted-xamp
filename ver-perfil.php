@@ -1,6 +1,6 @@
 <?php
 // 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
-include_once 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 
 // 🚨 CURTO-CIRCUITO DE SEGURANÇA MÁXIMA (Sem confiar em username de sessão)
 if (!isset($_GET['user'])) {

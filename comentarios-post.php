@@ -98,7 +98,7 @@ $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' 
 
 // 4. CONTAGEM TOTAL DE COMENTÁRIOS
 $total_comentarios = 0;
-$sql_count = "SELECT COUNT(*) as total FROM comentarios WHERE id_mensagem = ?";
+$sql_count = "SELECT COUNT(*) as total FROM comentarios WHERE id_mensagem = ? AND status = 'ativo'";
 $stmt_count = $conn->prepare($sql_count);
 $stmt_count->bind_param("i", $id);
 $stmt_count->execute();
@@ -214,10 +214,10 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 <?php
                 // Query com subconsulta para buscar o texto do comentário pai (resposta)
                 $sql_c = "SELECT c.*, 
-                          (SELECT comentario FROM comentarios WHERE id = c.parent_id) as parent_comentario
-                          FROM comentarios c 
-                          WHERE c.id_mensagem = ? 
-                          ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
+          (SELECT comentario FROM comentarios WHERE id = c.parent_id) as parent_comentario
+          FROM comentarios c 
+          WHERE c.id_mensagem = ? AND c.status = 'ativo'
+          ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
                 $stmt_c = $conn->prepare($sql_c);
                 $stmt_c->bind_param("i", $id);
                 $stmt_c->execute();

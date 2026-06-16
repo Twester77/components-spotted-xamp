@@ -1,4 +1,9 @@
+<?php
+// footer.php
+$u_id = $_SESSION['usuario_id'] ?? 0;
+?>
 <footer class="footer-global">
+
     <!-- ============================================ -->
     <!-- CONTEÚDO INSTITUCIONAL (será escondido no comentarios-post) -->
     <!-- ============================================ -->

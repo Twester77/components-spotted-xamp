@@ -3,7 +3,7 @@ ob_start(); // Inicia o buffer para segurar qualquer "sujeira"
 error_reporting(0); 
 ini_set('display_errors', 0);
 
-include '../conexao.php';
+include_once __DIR__ . '/../conexao.php';
 
 
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

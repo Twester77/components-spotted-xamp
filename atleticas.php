@@ -1,6 +1,6 @@
 <?php
 // 1. CONEXÃO E ESTRUTURA (Lógica)
-include 'conexao.php';
+include_once __DIR__ . '/conexao.php';
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php'; 

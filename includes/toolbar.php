@@ -1,4 +1,7 @@
-<?php if (isset($_SESSION['usuario_id'])):
+<?php 
+include_once __DIR__ . '/../conexao.php';
+
+if (isset($_SESSION['usuario_id'])):
     $meu_id_toolbar = $_SESSION['usuario_id'];
     // Buscamos quem você segue
     $sql_seguindo = "SELECT u.nome, u.username, u.ultima_atividade 

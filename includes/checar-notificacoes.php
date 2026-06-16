@@ -1,5 +1,5 @@
 <?php
-include '../conexao.php';
+include_once __DIR__ . '/../conexao.php';
 
 if (!isset($_SESSION['usuario_id'])) {
     echo json_encode(['tem' => false]);

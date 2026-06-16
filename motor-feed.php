@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-include 'conexao.php';
+include_once __DIR__ . '/conexao.php';
 
 /* MOTOR UNIVERSAL DA FENDA - OTIMIZADO (SEM N+1) */
 $offset    = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;

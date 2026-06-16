@@ -2,12 +2,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-include '../conexao.php';
+require_once __DIR__ . '/../auth_check.php';
 
-if (!isset($_SESSION['usuario_id']) || !isset($_GET['id'])) {
-    header("Location: ../feed.php");
-    exit();
-}
 
 $post_id = (int)$_GET['id'];
 $usuario_id = (int)$_SESSION['usuario_id'];

@@ -1,10 +1,5 @@
 <?php
-include_once 'conexao.php';
-
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: index.php");
-    exit();
-}
+require_once __DIR__ . '/auth_check.php';
 
 $busca = isset($_GET['q']) ? mysqli_real_escape_string($conn, $_GET['q']) : '';
 $resultados = [];

@@ -1,6 +1,6 @@
 <?php
 // 1. PRIMEIRO: Conexão e Sessão (Obrigatório, não pode faltar)
-include 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 
 // 2. SEGUNDO: Segurança (Bloqueia quem não está logado)
 if (!isset($_SESSION['usuario_id'])) {

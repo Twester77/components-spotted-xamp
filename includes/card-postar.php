@@ -26,7 +26,7 @@
                 <option value="comunidade" aria-label="Comunidade">👥 Comunidade</option>
                 <option value="academico" aria-label="Dúvidas Acadêmicas">❓ Dúvidas Acadêmicas</option>
                 <option value="elogio" aria-label="Correio Elegante">💖 Correio Elegante</option>
-                <option value="ranco" aria-label="Ranço">👌 Ranço</option>
+                <option value="tenho-ranco" aria-label="Ranço">👌 Ranço</option>
                 <option value="acaba-pelo-amor-de-deus" aria-label="Eu não estou suportando mais">😭 Eu não estou suportando mais</option>
                 <option value="caronas" aria-label="Caronas">🚗 Caronas</option>
                 <option value="esportes" aria-label="Esportes">🏀 Esportes</option>

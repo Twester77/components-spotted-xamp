@@ -1,5 +1,5 @@
 <?php
-include_once 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 
 if (!isset($_SESSION['usuario_id'])) {
     header("Location: index.php");

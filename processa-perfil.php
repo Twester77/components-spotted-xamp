@@ -1,6 +1,6 @@
 <?php
 // 1. LIGAR O BUFFER E SILENCIAR ERROS ANTES DE QUALQUER OUTRA COISA
-include 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 require_once 'includes/upload_engine.php'; // 🚀 Motor oficial de upload
 
 // Se veio do feed.php, vira feed.php. Se veio do perfil.php, vira perfil.php...

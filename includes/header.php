@@ -1,10 +1,11 @@
 <?php
-include_once 'conexao.php';
+include_once __DIR__ . '/../conexao.php';
+
 $is_post_page = true;
 
 $u_id = $_SESSION['usuario_id'] ?? 0;
 $pref_swipe_real = 0;
-$pagina_atual = basename($_SERVER['PHP_SELF']); // Identifica a página (ex: feed.php)
+$pagina_atual = basename($_SERVER['PHP_SELF']);
 
 if ($u_id > 0 && isset($conn)) {
     $stmt_pref = $conn->prepare("SELECT pref_swipe FROM usuarios WHERE id = ?");
@@ -14,14 +15,12 @@ if ($u_id > 0 && isset($conn)) {
     $pref_swipe_real = $resultado_header_pessoal['pref_swipe'] ?? 0;
 }
 
-// === REGRA DE OURO DA FENDA ===
-// O Modo Swipe SÓ ativa se: 1. A preferência for 1 E 2. Estivermos no feed.php
 $ativar_modo_app = ($pref_swipe_real == 1 && $pagina_atual == 'feed.php');
 
 $classe_tema = $tema_classe ?? '';
 $classe_pref = ($ativar_modo_app) ? 'modo-swipe-ativo feed-empilhado' : 'allow-hover';
-// Se o modo swipe estiver ativo, o body fica limpo para o JS rodar a física livre!
-$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema is-touch-device"); ?>
+$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema is-touch-device");
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">

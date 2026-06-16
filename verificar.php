@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+include_once __DIR__ . '/conexao.php';
 
 $mensagem = "";
 $status = "";

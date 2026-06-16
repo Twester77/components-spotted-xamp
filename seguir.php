@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 
 if (isset($_GET['id']) && isset($_SESSION['usuario_id'])) {
     $seguidor_id = $_SESSION['usuario_id']; // Você

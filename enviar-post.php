@@ -1,5 +1,5 @@
 <?php
-include 'conexao.php';
+require_once __DIR__ . '/auth_check.php';
 require_once 'includes/upload_engine.php'; // 🚀 Motor oficial de upload
 
 // 1. Verificação de Segurança

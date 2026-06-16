@@ -1,5 +1,5 @@
 <?php 
-include 'conexao.php'; // Aqui já roda o ob_start()
+include_once __DIR__ . '/conexao.php'; // Aqui já roda o ob_start()
 // 1. INICIALIZAÇÃO E SEGURANÇA
 
 // 2. BUSCA DE DADOS (Lógica Independente)
