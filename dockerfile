@@ -15,20 +15,17 @@ RUN apt-get update && apt-get install -y \
 # 2. Configura GD (com suporte a JPEG, WebP)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
 
-# 3. Instala as extensões (exceto opcache)
+# 3. Instala as extensões (exif é a única que faltava para uploads)
 RUN docker-php-ext-install gd mysqli pdo pdo_mysql zip exif
 
-# 4. Ativa o opcache (já vem com o PHP, só precisa habilitar)
-RUN docker-php-ext-enable opcache
-
-# 5. Ativa módulos do Apache
+# 4. Ativa módulos do Apache
 RUN a2enmod rewrite headers
 
-# 6. Copia a configuração do OPcache
+# 5. Copia a configuração do OPcache (já ativa via php.ini)
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-# 7. Copia o código fonte
+# 6. Copia o código fonte
 COPY . /var/www/html/
 
-# 8. Permissões
+# 7. Permissões
 RUN chown -R www-data:www-data /var/www/html
