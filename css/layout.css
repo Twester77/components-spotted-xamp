@@ -397,7 +397,7 @@ nav {
     position: fixed;
     right: -280px;
     /* Escondida para fora da tela */
-    top: 40%;
+    top: 45%;
     transform: translateY(-50%);
     width: 280px;
     background: rgba(0, 20, 20, 0.678);
@@ -407,7 +407,7 @@ nav {
     border-radius: 15px 0 0 15px;
     transition: 0.5s ease-in-out;
     z-index: 9998;
-    padding: 20px;
+    padding: 18px;
     color: #00ff00;
     font-family: 'Courier New', monospace;
     display: flex;
@@ -2490,7 +2490,7 @@ textarea[name="bio"] {
 /* Container Pai - Fica no canto inferior direito */
 .fenda-nexus {
     position: fixed;
-    bottom: 25%;
+    bottom: 22%;
     right: 15px;
     z-index: 9999;
     display: flex;
@@ -2512,7 +2512,7 @@ body.modal-aberto #fenda-nexus {
 
 /* O Botão Principal (O "Leque" fechado) */
 .nexus-trigger {
-    width: clamp(40px, 15vmin, 90px);
+    width: clamp(40px, 10vmin, 90px);
     background: var(--dourado, #ffbc00);
     border-radius: 50%!important; 
     aspect-ratio: 1 / 1;

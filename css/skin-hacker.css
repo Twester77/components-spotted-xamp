@@ -582,7 +582,7 @@ body.hacker-mode .comentario-item.vibe-neon .comentario-autor {
 
 /* 4. VIBE LIGHT - Terminal Monocromático Vintage (verde-fósforo suave) */
 body.hacker-mode .comentario-item.vibe-light {
-    background: #0a120ad5 ;  
+    background: #2e5b2ec9;  
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     border-left: 3px solid #33ff33 !important;  
@@ -622,10 +622,11 @@ body.hacker-mode .comentario-item.vibe-light,
 body.hacker-mode .comentario-item.vibe-glass,
 body.hacker-mode .comentario-item.vibe-ads,
 body.hacker-mode .comentario-item.vibe-neon {
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 /* 6. HOVER PADRÃO DO MODO HACKER (inversão verde/preto) PARA TODAS AS VIBES */
+body.hacker-mode .comentario-item .indicador-resposta:hover,
 body.hacker-mode .comentario-item.vibe-dark:hover,
 body.hacker-mode .comentario-item.vibe-light:hover,
 body.hacker-mode .comentario-item.vibe-glass:hover,
@@ -658,21 +659,51 @@ body.hacker-mode .comentario-item.vibe-neon:hover .comentario-texto {
    INTEGRAÇÃO DA VIBE ADS NO MODO HACKER TERMINAL (ALCATEIA OVERRIDE)
    ================================================================== */
 body.hacker-mode .comentario-item.vibe-ads {
-    background-color: #000000 !important; /* Fundo breu total do terminal */
-    border: 2px solid var(--hacker-green) !important; 
+    background-color: #000000 ; /* Fundo breu total do terminal */
+    border: 3px solid var(--hacker-green) !important; 
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") !important;
-    background-size: 45px 45px !important;
+    background-size: 45px 45px ;
 }
 
 
 /* Texto do comentário em matriz verde fosforescente */
 body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
     color: var(--hacker-green) !important;
-    text-shadow: 0 0 6px var(--hacker-green) !important;
+    text-shadow: 0 0 6px var(--hacker-green) ;
     font-family: var(--hacker-font) !important;
+}
+
+/* ==========================================================
+   HIGHLIGHT HACKER – EFEITO GLITCH VERDE
+   ========================================================== */
+
+/* A keyframe exclusiva para o hacker */
+@keyframes hacker-highlight {
+    0% {
+        background-color: rgba(0, 255, 65, 0.6);
+        box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        border-left: 3px solid #00ff41;
+    }
+    30% {
+        background-color: rgba(0, 255, 65, 0.2);
+        box-shadow: 0 0 40px rgba(0, 255, 65, 0.6);
+        border-left: 6px solid #00ff41;
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+        border-left: 3px solid var(--cor-borda-glow);
+    }
+}
+
+/* Seletor com alta especificidade para vencer qualquer regra */
+body.hacker-mode .comentario-item.comentario-highlight {
+    animation: hacker-highlight 4s ease-out forwards !important;
+    border-radius: 8px !important;
+    border-left: 3px solid #00ff41 !important;
 }
 
 
@@ -931,11 +962,13 @@ body.hacker-mode .card-header,
 body.hacker-mode .user-info-post,
 body.hacker-mode .post-time,
 body.hacker-mode .spotted-card,
-article.spotted-card,
+body.hacker-mode article.spotted-card,
 body.hacker-mode .post-content,
 body.hacker-mode .post-content-focado,
 body.hacker-mode .comentario-autor,
-body.hacker-mode .comentario-texto p  {
+body.hacker-mode .comentario-texto,
+body.hacker-mode .comentario-texto p
+body.hacker-mode .dialog-conteudo .dialog-mensagem p {
     clip-path: none !important;
     
 }
@@ -1107,7 +1140,7 @@ body.hacker-mode .char-counter {
     white-space: nowrap;
     font-size: 14px;
     border-right: .15em solid #0f0;
-    animation: typing 8s steps(30, end) infinite;
+    animation: typing 5s steps(15, end) forwards;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

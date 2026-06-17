@@ -171,7 +171,6 @@
     scrollbar-width: none ;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
     will-change: backdrop-filter, transform, opacity ;
-
 }
 
 .spotted-card::-webkit-scrollbar{
@@ -179,7 +178,7 @@
 }
 
 body.modo-swipe-ativo .spotted-card * {
-    pointer-events: none !important;
+    pointer-events: none ;
 }
 
 /* ==========================================================================

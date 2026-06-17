@@ -695,217 +695,102 @@ function toggleNexus() {
     }
 }
 
-// ==================== LONG PRESS NOS COMENTÁRIOS (COM SCROLL PROTECTION) ====================
-(function() {
-    let longPressTimer = null;
-    let currentComment = null;
-    let startX = 0, startY = 0;
-    let startScrollTop = 0;
-    let scrollableParent = null;
-    const MOVE_THRESHOLD = 10;
-    const SCROLL_THRESHOLD = 10; // se rolar mais que 10px, cancela long press
 
-    function getScrollableParent(element) {
-        while (element && element !== document.body) {
-            const overflowY = window.getComputedStyle(element).overflowY;
-            if (overflowY === 'auto' || overflowY === 'scroll') return element;
-            element = element.parentElement;
-        }
-        return null;
-    }
-
-    function onPointerDown(e) {
-        if (document.body.classList.contains('modo-swipe-ativo')) return;
-        
-        const comment = e.target.closest('.comentario-item');
-        if (!comment) return;
-        if (e.target.closest('.btn-responder-bolha') || e.target.closest('a')) return;
-
-        currentComment = comment;
-        startX = e.clientX;
-        startY = e.clientY;
-        scrollableParent = getScrollableParent(comment);
-        startScrollTop = scrollableParent ? scrollableParent.scrollTop : 0;
-
-        longPressTimer = setTimeout(async () => {
-            if (currentComment) {
-                // Verifica se houve rolagem significativa durante o long press
-                const currentScrollTop = scrollableParent ? scrollableParent.scrollTop : 0;
-                if (Math.abs(currentScrollTop - startScrollTop) > SCROLL_THRESHOLD) {
-                    cleanup();
-                    return;
-                }
-
-                const isOwner = currentComment.classList.contains('meu-comentario');
-                if (isOwner) {
-                    const commentId = currentComment.id.replace('comentario-', '');
-                    const confirmado = await window.exibirConfirmacao('Deseja realmente excluir este comentário?', '⚠️ Excluir Comentário');
-                    if (confirmado) {
-                        if (typeof window.excluirComentario === 'function') {
-                            window.excluirComentario(commentId, null);
-                        } else {
-                            console.error("excluirComentario não encontrada");
-                        }
-                    }
-                } else {
-                    alert("Mais opções em breve.");
-                }
-            }
-            cleanup();
-        }, 300);
-    }
-
-    function onPointerMove(e) {
-        if (!currentComment) return;
-        const dx = Math.abs(e.clientX - startX);
-        const dy = Math.abs(e.clientY - startY);
-        if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) cleanup();
-    }
-
-    function onPointerUp() { cleanup(); }
-
-    function cleanup() {
-        if (longPressTimer) {
-            clearTimeout(longPressTimer);
-            longPressTimer = null;
-        }
-        currentComment = null;
-        startX = startY = 0;
-        scrollableParent = null;
-        startScrollTop = 0;
-    }
-
-    document.addEventListener('pointerdown', onPointerDown);
-    document.addEventListener('pointermove', onPointerMove);
-    document.addEventListener('pointerup', onPointerUp);
-})();
-
-// ==================== MODAL DE CONFIRMAÇÃO CUSTOMIZADO ====================
-window.exibirConfirmacao = function(mensagem, titulo = 'Confirmação') {
+// ==================== MODAL DE CONFIRMAÇÃO (DIALOG NATIVO - GLOBAL) ====================
+window.exibirConfirmacao = function(mensagem, titulo = '⚠️ Confirmação') {
     return new Promise((resolve) => {
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 50000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
-        
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            background: rgba(20, 20, 32, 0.95);
-            backdrop-filter: blur(16px);
-            border-radius: 28px;
-            padding: 24px;
-            min-width: 250px;
-            max-width: 85%;
-            text-align: center;
-            border: 1px solid rgba(255, 140, 0, 0.5);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
-        `;
-        
-        const titleEl = document.createElement('h3');
-        titleEl.textContent = titulo;
-        titleEl.style.cssText = 'margin: 0 0 16px 0; color: #ffbc00; font-size: 1.2rem;';
-        
-        const msgEl = document.createElement('p');
-        msgEl.textContent = mensagem;
-        msgEl.style.cssText = 'margin: 0 0 24px 0; color: #fff; font-size: 1rem;';
-        
-        const btnSim = document.createElement('button');
-        btnSim.textContent = 'SIM, EXCLUIR';
-        btnSim.style.cssText = `
-            background: rgba(220, 53, 69, 0.2);
-            border: 1px solid #ff4b2b;
-            border-radius: 40px;
-            padding: 8px 16px;
-            margin: 0 8px;
-            color: #ff8a8a;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        `;
-        btnSim.onmouseenter = () => btnSim.style.background = 'rgba(220, 53, 69, 0.4)';
-        btnSim.onmouseleave = () => btnSim.style.background = 'rgba(220, 53, 69, 0.2)';
-        btnSim.onclick = () => {
-            overlay.remove();
+        const dialog = document.getElementById('dialog-confirmacao');
+        if (!dialog) {
+            // Fallback seguro (caso o dialog não exista)
+            console.warn('[exibirConfirmacao] Dialog não encontrado, usando confirm()');
+            const confirmado = confirm(mensagem);
+            resolve(confirmado);
+            return;
+        }
+
+        // Define título e mensagem
+        document.getElementById('dialog-titulo').textContent = titulo;
+        document.getElementById('dialog-mensagem').textContent = mensagem;
+
+        // Remove listeners antigos para evitar duplicação
+        const btnSim = document.getElementById('dialog-btn-sim');
+        const btnNao = document.getElementById('dialog-btn-nao');
+        const newSim = btnSim.cloneNode(true);
+        const newNao = btnNao.cloneNode(true);
+        btnSim.parentNode.replaceChild(newSim, btnSim);
+        btnNao.parentNode.replaceChild(newNao, btnNao);
+
+        // Configura os botões
+        newSim.addEventListener('click', function() {
+            dialog.close();
+            window._modalAberto = false;
             resolve(true);
-        };
-        
-        const btnNao = document.createElement('button');
-        btnNao.textContent = 'CANCELAR';
-        btnNao.style.cssText = `
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #aaa;
-            border-radius: 40px;
-            padding: 8px 16px;
-            margin: 0 8px;
-            color: #ccc;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        `;
-        btnNao.onmouseenter = () => btnNao.style.background = 'rgba(255,255,255,0.2)';
-        btnNao.onmouseleave = () => btnNao.style.background = 'rgba(255,255,255,0.1)';
-        btnNao.onclick = () => {
-            overlay.remove();
-            resolve(false);
-        };
-        
-        const botoes = document.createElement('div');
-        botoes.style.cssText = 'display: flex; justify-content: center; gap: 16px;';
-        botoes.appendChild(btnSim);
-        botoes.appendChild(btnNao);
-        
-        modal.appendChild(titleEl);
-        modal.appendChild(msgEl);
-        modal.appendChild(botoes);
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-        
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                overlay.remove();
-                resolve(false);
-            }
         });
+
+        newNao.addEventListener('click', function() {
+            dialog.close();
+            window._modalAberto = false;
+            resolve(false);
+        });
+
+        // 🔥 REMOVIDO: listener que fechava ao clicar fora
+        // Agora o diálogo só fecha pelos botões.
+
+        // Abre como pop-up flutuante (não bloqueante)
+        window._modalAberto = true;
+        dialog.show();
     });
 };
 
 // ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS ====================
+// ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS (COM LOGS) ====================
 window.excluirComentario = async function(commentId, btnElement) {
-    if (btnElement && btnElement.disabled) return;
+    console.log('[excluirComentario] 🟢 Iniciando exclusão para ID:', commentId, '| btnElement:', btnElement);
 
-    // Usa o modal customizado (substitui o confirm)
+    if (btnElement && btnElement.disabled) {
+        console.warn('[excluirComentario] ⚠️ Botão já desabilitado, ignorando.');
+        return;
+    }
+
+    // Usa a função de confirmação (dialog global)
     const confirmado = await window.exibirConfirmacao('Deseja realmente excluir este comentário?', '⚠️ Excluir Comentário');
-    if (!confirmado) return;
+    if (!confirmado) {
+        console.log('[excluirComentario] 🔴 Usuário cancelou a exclusão.');
+        return;
+    }
+
+    console.log('[excluirComentario] 🟡 Usuário confirmou. Buscando elemento #comentario-' + commentId + '...');
 
     const comentarioDiv = document.getElementById(`comentario-${commentId}`);
-    if (!comentarioDiv) return;
+    if (!comentarioDiv) {
+        console.error('[excluirComentario] ❌ Elemento #comentario-' + commentId + ' NÃO ENCONTRADO no DOM!');
+        console.log('[excluirComentario] 🔍 Verifique se o ID está correto e se o elemento foi inserido.');
+        alert('Erro: comentário não encontrado na página.');
+        return;
+    }
+
+    console.log('[excluirComentario] ✅ Elemento encontrado:', comentarioDiv);
 
     // Feedback visual
     if (btnElement) {
         btnElement.disabled = true;
         btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        console.log('[excluirComentario] 🔄 Feedback visual aplicado no botão.');
     }
     comentarioDiv.classList.add('is-loading');
 
     try {
+        console.log('[excluirComentario] 📤 Enviando requisição para excluir-comentario.php...');
         const response = await fetch('includes/excluir-comentario.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `id=${commentId}`
         });
         const data = await response.json();
+        console.log('[excluirComentario] 📥 Resposta do servidor:', data);
 
         if (data.status === 'success') {
+            console.log('[excluirComentario] ✅ Exclusão bem-sucedida!');
             comentarioDiv.classList.remove('is-loading');
             comentarioDiv.classList.add('comentario-deletado');
             comentarioDiv.innerHTML = `
@@ -913,7 +798,9 @@ window.excluirComentario = async function(commentId, btnElement) {
                     <i class="fas fa-trash-alt"></i> Comentário removido pelo autor.
                 </div>
             `;
+            console.log('[excluirComentario] 🗑️ Comentário removido do DOM.');
         } else {
+            console.error('[excluirComentario] ❌ Servidor retornou erro:', data.message);
             alert(data.message || "Erro ao excluir comentário.");
             comentarioDiv.classList.remove('is-loading');
             if (btnElement) {
@@ -922,7 +809,7 @@ window.excluirComentario = async function(commentId, btnElement) {
             }
         }
     } catch (err) {
-        console.error(err);
+        console.error('[excluirComentario] 💥 Erro de rede ou servidor:', err);
         alert("Erro de conexão. Tente novamente.");
         comentarioDiv.classList.remove('is-loading');
         if (btnElement) {

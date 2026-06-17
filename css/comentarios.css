@@ -99,7 +99,7 @@
     border: 2px solid var(--cor-borda-glow);
     position: relative;
     animation: glowPulsar 3s infinite alternate;
-    max-width: 650px;
+    max-width: 600px;
     display: flex;
     margin: 15px auto;
     transform: none;
@@ -216,6 +216,7 @@
     width: min-content;
     min-width: 180px;
     box-sizing: border-box;
+    position: relative;
     display: flex;
     flex-direction: column;
     word-break: break-word;
@@ -224,8 +225,8 @@
     scroll-snap-align: start;
     scroll-margin-top: 50px;
     /* Ajuste conforme a altura do seu header fixo */
-    -moz-user-select: none;
-    user-select: none;
+    -moz-user-select: text;
+    user-select: text;
 
 }
 
@@ -789,9 +790,9 @@
 @container feedComentarios (max-width: 360px) {
     .comentario-item {
         max-width: 78%;
-        min-width: 200px;
-        padding: 4px 8px;
-        font-size: 0.85rem;
+        min-width: 180px;
+        padding: 3px 6px;
+        font-size: 0.8rem;
     }
 
     .comentario-filho {
@@ -1133,7 +1134,7 @@ body.pagina-post .header-principal {
 }
 
 .comentario-item.comentario-highlight {
-    animation: highlightFade 2.5s ease-out forwards!important;
+    animation: highlightFade 3s ease-out forwards;
     border-radius: 8px;
     /* Para seguir o arredondado dos seus cards */
     padding: 5px;
@@ -1242,6 +1243,194 @@ body.pagina-post .header-principal {
         object-fit: contain;
     }
 
+}
 
 
+/* ==================================================
+   ELLIPSIS FLUTUANTE À ESQUERDA (estilo WhatsApp)
+   ================================================== */
+
+
+.btn-excluir-comentario {
+    position: absolute;
+    top: 6px;
+    left: -38px; /* um pouco mais para fora para não poluir */
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7); /* <- MAIS NÍTIDO */
+    cursor: pointer;
+    padding: 8px 10px; 
+    font-size: 1.3rem; 
+    font-weight: bold;
+    transition: 0.2s;
+    pointer-events: none;
+    line-height: 1;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* ajuda a destacar no fundo escuro */
+}
+
+/* Mostra no hover (desktop) */
+ .btn-excluir-comentario,
+.btn-excluir-comentario:focus {
+    opacity: 1;
+    pointer-events: auto;
+    color: #cccccc; /* dourado da Fenda para ficar mais chamativo */
+    transform: scale(1.15);
+}
+
+/* No mobile, sempre visível (ajuste para não atrapalhar) */
+@media (hover: none) {
+    .btn-excluir-comentario {
+        opacity: 0.6;
+        pointer-events: auto;
+        left: -28px; /* um pouco mais próximo */
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+.btn-excluir-comentario:hover {
+    color: #ff4b2b;
+    transform: scale(1.2);
+}
+
+/* Ajuste para comentários do autor (lado direito) – o ellipsis fica à esquerda, então não muda */
+.comentario-item.meu-comentario .btn-excluir-comentario {
+    left: -32px; /* mantém à esquerda, mesmo com o comentário à direita */
+}
+
+/* ==================================================
+   DIALOG POP-UP ESTILO WHATSAPP (compacto)
+   ================================================== */
+.dialog-confirmacao {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    background: transparent;
+    max-width: 90%;
+    width: 280px; /* mais compacto */
+    margin: auto;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Remove o backdrop padrão (não usado com show()) */
+.dialog-confirmacao::backdrop {
+    display: none;
+}
+
+.dialog-conteudo {
+    background: rgba(20, 20, 32, 0.96);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    padding: 16px 20px 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    pointer-events: auto;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.dialog-conteudo h3 {
+    margin: 0 0 8px 0;
+    color: #ffbc00;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.dialog-conteudo p {
+    margin: 0 0 16px 0;
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.dialog-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.dialog-btn {
+    border: none;
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+    min-width: 80px;
+}
+
+.dialog-btn-sim {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid #ff4b2b;
+    color: #ff8a8a;
+}
+
+.dialog-btn-sim:hover {
+    background: rgba(220, 53, 69, 0.4);
+}
+
+.dialog-btn-nao {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid #666;
+    color: #ccc;
+}
+
+.dialog-btn-nao:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ==================================================
+   RESPONSIVIDADE – telas pequenas e landscape
+   ================================================== */
+@media (max-width: 480px) {
+    .btn-excluir-comentario {
+        left: -24px;
+        font-size: 0.85rem;
+        top: 4px;
+    }
+    .dialog-confirmacao {
+        width: 250px;
+    }
+    .dialog-conteudo {
+        padding: 14px 16px 16px;
+    }
+    .dialog-conteudo h3 {
+        font-size: 0.9rem;
+    }
+    .dialog-conteudo p {
+        font-size: 0.8rem;
+    }
+    .dialog-btn {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        min-width: 60px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .dialog-confirmacao {
+        width: 240px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .dialog-conteudo {
+        padding: 10px 14px 14px;
+    }
+    .dialog-conteudo h3 {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+    .dialog-conteudo p {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+    .dialog-btn {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        min-width: 50px;
+    }
 }

@@ -90,6 +90,19 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
     <input type="hidden" name="pref_bolhas" id="input_pref_bolhas" value="<?php echo $res_pref['pref_bolhas'] ?? 1; ?>">
 <?php endif; ?>
 
+
+<!-- ==================== DIALOG DE CONFIRMAÇÃO (NATIVO - GLOBAL) ==================== -->
+<dialog id="dialog-confirmacao" class="dialog-confirmacao">
+    <div class="dialog-conteudo">
+        <h3 id="dialog-titulo">⚠️ Confirmação</h3>
+        <p id="dialog-mensagem">Deseja realmente excluir?</p>
+        <div class="dialog-botoes">
+            <button id="dialog-btn-sim" class="dialog-btn dialog-btn-sim">SIM, EXCLUIR</button>
+            <button id="dialog-btn-nao" class="dialog-btn dialog-btn-nao">CANCELAR</button>
+        </div>
+    </div>
+</dialog>
+
 <script src="js/fenda-main.js"></script>
 
 <!-- ========================================== -->
@@ -108,5 +121,8 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
         });
     }
 </script>
+
+
+
 </body>
 </html>

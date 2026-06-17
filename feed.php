@@ -43,15 +43,15 @@ include 'includes/bolhas.php';
 
 <script>
     // ==================== MOTOR DE LAYOUT UNIVERSAL ====================
-     function recalcFeedLayout() {
+    function recalcFeedLayout() {
         if (!document.body.classList.contains('modo-swipe-ativo')) return;
         var vw = window.innerWidth;
         var vh = window.innerHeight;
-        var cardWidth = Math.max(280, Math.min(vw * 0.80, 400));
+        var cardWidth = Math.max(290, Math.min(vw * 0.80, 400));
         var cardPadding = cardWidth * 0.05;
         var fontSize = cardWidth * 0.05;
-        var avatarSize = cardWidth * 0.15;
-        var maxCardHeight = vh * 0.80;
+        var avatarSize = cardWidth * 0.12;
+        var maxCardHeight = vh * 0.75;
         var cards = document.querySelectorAll('.feed-empilhado .spotted-card');
         for (var i = 0; i < cards.length; i++) {
             var card = cards[i];
@@ -112,101 +112,174 @@ include 'includes/bolhas.php';
         }
     };
 
-    window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
-        if (window._activeModal) return;
-        const targetCard = cardElement || null;
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            backdrop-filter: blur(8px);
-            z-index: 30000;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 15%;
-            font-family: 'Inter', system-ui, sans-serif;
-        `;
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            background: rgba(20, 20, 32, 0.92);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 28px 24px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            border: 1px solid rgba(255, 140, 0, 0.5);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
-        `;
-        const title = document.createElement('div');
-        title.textContent = isOwner ? ' GERENCIAR POST ' : ' SINALIZAR POST ';
-        title.style.cssText = `font-size:0.85rem; letter-spacing:2px; color:#ffbc00; margin-bottom:20px; text-transform:uppercase; font-weight:600;`;
-        modal.appendChild(title);
-        const buttonStyle = `
-            background: rgba(255,255,255,0.05);
-            border: none;
-            border-radius: 60px;
-            padding: 12px 20px;
-            margin: 10px 0;
-            color: #fff;
-            font-weight: 500;
-            font-size: 0.95rem;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        `;
-        if (isOwner) {
-            const btnDelete = document.createElement('button');
-            btnDelete.innerHTML = '🗑️ Expurgar da Fenda';
-            btnDelete.style.cssText = buttonStyle + `background: rgba(220,53,69,0.15); border:1px solid rgba(220,53,69,0.5); color:#ff8a8a;`;
-            btnDelete.onclick = () => {
-                if (confirm("⚠️ Isso removerá o post permanentemente. Continuar?")) {
-                    window.location.href = `includes/excluir.php?id=${postId}`;
-                }
-                closeGlobalModal();
-            };
-            modal.appendChild(btnDelete);
-        } else {
-            const btnReport = document.createElement('button');
-            btnReport.innerHTML = '🚨 Chamar o Camburão';
-            btnReport.style.cssText = buttonStyle + `background: rgba(255,188,0,0.12); border:1px solid rgba(255,188,0,0.5); color:#ffde9e;`;
-            btnReport.onclick = () => {
-                alert("📢 Agradecemos o aviso! A moderação foi notificada.");
-                closeGlobalModal();
-            };
-            modal.appendChild(btnReport);
-        }
-        const btnClose = document.createElement('button');
-        btnClose.innerHTML = '✖️ Voltar ao Feed';
-        btnClose.style.cssText = buttonStyle + `background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.2); color:#ccc;`;
-        btnClose.onclick = closeGlobalModal;
-        modal.appendChild(btnClose);
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-        window._activeModal = overlay;
+    // ==================== DECLARAÇÃO GLOBAL ====================
+    window._modalAberto = false;
 
-        function closeGlobalModal() {
-            if (window._activeModal) {
-                window._activeModal.remove();
-                window._activeModal = null;
+    // ==================== MODAL DE AÇÕES (LONG PRESS) ====================
+    // ==================== MODAL DE AÇÕES (LONG PRESS) ====================
+window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
+    if (window._activeModal) return;
+    window._modalAberto = true;
+    const targetCard = cardElement || null;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        z-index: 30000;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 15%;
+        font-family: 'Inter', system-ui, sans-serif;
+    `;
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        background: rgba(20, 20, 32, 0.92);
+        backdrop-filter: blur(20px);
+        border-radius: 28px;
+        padding: 28px 24px;
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        border: 1px solid rgba(255, 140, 0, 0.5);
+        box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+    `;
+    const title = document.createElement('div');
+    title.textContent = isOwner ? ' GERENCIAR POST ' : ' SINALIZAR POST ';
+    title.style.cssText = `font-size:0.85rem; letter-spacing:2px; color:#ffbc00; margin-bottom:20px; text-transform:uppercase; font-weight:600;`;
+    modal.appendChild(title);
+    const buttonStyle = `
+        background: rgba(255,255,255,0.05);
+        border: none;
+        border-radius: 60px;
+        padding: 12px 20px;
+        margin: 10px 0;
+        color: #fff;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        width: 100%;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    `;
+    if (isOwner) {
+        const btnDelete = document.createElement('button');
+        btnDelete.innerHTML = '🗑️ Expurgar da Fenda';
+        btnDelete.style.cssText = buttonStyle + `background: rgba(220,53,69,0.15); border:1px solid rgba(220,53,69,0.5); color:#ff8a8a;`;
+        btnDelete.onclick = async (e) => {
+            e.stopPropagation(); // ← IMPEDE QUE O CLIQUE CHEGUE AO OVERLAY
+            const confirmado = await window.exibirConfirmacao(
+                '⚠️ Isso removerá o post permanentemente. Continuar?',
+                'Excluir Post'
+            );
+            if (confirmado) {
+                window.location.href = `includes/excluir.php?id=${postId}`;
             }
-            if (targetCard && targetCard.classList) {
-                targetCard.classList.remove('card-long-press-active');
-            }
-        }
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeGlobalModal();
-        });
+            closeGlobalModal(); // Fecha o modal após a ação (ou cancelamento)
+        };
+        modal.appendChild(btnDelete);
+    } else {
+        const btnReport = document.createElement('button');
+        btnReport.innerHTML = '🚨 Chamar o Camburão';
+        btnReport.style.cssText = buttonStyle + `background: rgba(255,188,0,0.12); border:1px solid rgba(255,188,0,0.5); color:#ffde9e;`;
+        btnReport.onclick = (e) => {
+            e.stopPropagation();
+            alert("📢 Agradecemos o aviso! A moderação foi notificada.");
+            closeGlobalModal();
+        };
+        modal.appendChild(btnReport);
+    }
+    const btnClose = document.createElement('button');
+    btnClose.innerHTML = '✖️ Voltar ao Feed';
+    btnClose.style.cssText = buttonStyle + `background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.2); color:#ccc;`;
+    btnClose.onclick = (e) => {
+        e.stopPropagation();
+        closeGlobalModal();
     };
+    modal.appendChild(btnClose);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    window._activeModal = overlay;
+
+    function closeGlobalModal() {
+        if (window._activeModal) {
+            window._activeModal.remove();
+            window._activeModal = null;
+        }
+        window._modalAberto = false;
+        if (targetCard && targetCard.classList) {
+            targetCard.classList.remove('card-long-press-active');
+        }
+    }
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeGlobalModal();
+        }
+    });
+};
+
+    // ==================== LONG PRESS NO MODO GRID ====================
+    function initGridLongPress() {
+        let timer = null;
+        let pressedCard = null;
+        let startX = 0, startY = 0;
+        const MOVE_THRESHOLD = 10;
+
+        function onPointerDown(e) {
+            if (window._modalAberto) return; // BLOQUEIA SE MODAL ABERTO
+            if (document.body.classList.contains('modo-swipe-ativo')) return;
+            const card = e.target.closest('.spotted-card');
+            if (!card) return;
+            if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') ||
+                e.target.closest('.reacoes-popup') || e.target.closest('.reacao-wrapper')) return;
+            e.preventDefault();
+            pressedCard = card;
+            startX = e.clientX;
+            startY = e.clientY;
+            timer = setTimeout(() => {
+                if (pressedCard) {
+                    const postId = pressedCard.dataset.id;
+                    const isOwner = pressedCard.classList.contains('post-admin-gold');
+                    if (postId) window.mostrarMenuAcoes(postId, isOwner, pressedCard);
+                    cleanup();
+                }
+            }, 300);
+        }
+
+        function onPointerMove(e) {
+            if (!pressedCard) return;
+            const dx = Math.abs(e.clientX - startX);
+            const dy = Math.abs(e.clientY - startY);
+            if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) cleanup();
+        }
+
+        function onPointerUp() {
+            cleanup();
+        }
+
+        function cleanup() {
+            if (timer) clearTimeout(timer);
+            timer = null;
+            pressedCard = null;
+            startX = startY = 0;
+        }
+        document.removeEventListener('pointerdown', onPointerDown);
+        document.removeEventListener('pointermove', onPointerMove);
+        document.removeEventListener('pointerup', onPointerUp);
+        document.removeEventListener('pointercancel', onPointerUp);
+        document.addEventListener('pointerdown', onPointerDown);
+        document.addEventListener('pointermove', onPointerMove);
+        document.addEventListener('pointerup', onPointerUp);
+        document.addEventListener('pointercancel', onPointerUp);
+    }
 
     // ==================== GERENCIAMENTO DO FEED (AJAX) - VERSÃO ROBUSTA ====================
     let offset = 0;
@@ -379,61 +452,6 @@ include 'includes/bolhas.php';
         }
     };
 
-    // ==================== LONG PRESS NO MODO GRID ====================
-    function initGridLongPress() {
-        let timer = null;
-        let pressedCard = null;
-        let startX = 0,
-            startY = 0;
-        const MOVE_THRESHOLD = 10;
-
-        function onPointerDown(e) {
-            if (document.body.classList.contains('modo-swipe-ativo')) return;
-            const card = e.target.closest('.spotted-card');
-            if (!card) return;
-            if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') ||
-                e.target.closest('.reacoes-popup') || e.target.closest('.reacao-wrapper')) return;
-            e.preventDefault();
-            pressedCard = card;
-            startX = e.clientX;
-            startY = e.clientY;
-            timer = setTimeout(() => {
-                if (pressedCard) {
-                    const postId = pressedCard.dataset.id;
-                    const isOwner = pressedCard.classList.contains('post-admin-gold');
-                    if (postId) window.mostrarMenuAcoes(postId, isOwner, pressedCard);
-                    cleanup();
-                }
-            }, 300);
-        }
-
-        function onPointerMove(e) {
-            if (!pressedCard) return;
-            const dx = Math.abs(e.clientX - startX);
-            const dy = Math.abs(e.clientY - startY);
-            if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) cleanup();
-        }
-
-        function onPointerUp() {
-            cleanup();
-        }
-
-        function cleanup() {
-            if (timer) clearTimeout(timer);
-            timer = null;
-            pressedCard = null;
-            startX = startY = 0;
-        }
-        document.removeEventListener('pointerdown', onPointerDown);
-        document.removeEventListener('pointermove', onPointerMove);
-        document.removeEventListener('pointerup', onPointerUp);
-        document.removeEventListener('pointercancel', onPointerUp);
-        document.addEventListener('pointerdown', onPointerDown);
-        document.addEventListener('pointermove', onPointerMove);
-        document.addEventListener('pointerup', onPointerUp);
-        document.addEventListener('pointercancel', onPointerUp);
-    }
-
     // ==================== RADAR DE MARACUTAIA (SWIPE) ====================
     let radarBloqueado = false;
     window.abastecerPilhaFenda = function() {
@@ -477,9 +495,7 @@ include 'includes/bolhas.php';
             btnLoad.innerText = "Exibir Mais Resultados";
         }
         carregarFeedGeral(true);
-        setTimeout(() => {
-            radarBloqueado = false;
-        }, 1500);
+        setTimeout(() => { radarBloqueado = false; }, 1500);
     };
 
     // ==================== INICIALIZAÇÃO ====================

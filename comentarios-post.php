@@ -118,6 +118,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
     .footer-global {
         display: none !important;
     }
+
 </style>
 
 <!-- PREVIEW (CORTINA) – aparece primeiro -->
@@ -244,6 +245,14 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>"
                             id="comentario-<?php echo $c['id']; ?>"
                             style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
+
+                            <!-- ===== BOTÃO ELLIPSIS (apenas para o autor) ===== -->
+                            <?php if ($sou_eu): ?>
+                                <button class="btn-excluir-comentario" data-id="<?php echo $c['id']; ?>" title="Excluir comentário">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            <?php endif; ?>
+
                             <div class="comentario-meta">
                                 <strong class="comentario-autor" style="color: var(--cor-borda-glow);">
                                     <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
@@ -344,6 +353,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
     </div>
 </div>
 
+
 <script>
     // ==================== ALTERNÂNCIA CORTINA/LINGOTE ====================
     document.addEventListener('DOMContentLoaded', function() {
@@ -357,14 +367,55 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 lingote.style.display = 'block';
                 const textarea = document.querySelector('#lingoteContainer .textarea-chat');
                 if (textarea) {
-                    textarea.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
+                    textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     textarea.focus();
                 }
             });
         }
+
+        // ==================== CLIQUE NO BOTÃO ELLIPSIS ====================
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-excluir-comentario');
+            if (!btn) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const commentId = btn.dataset.id;
+            if (!commentId) return;
+
+            const dialog = document.getElementById('dialog-confirmacao');
+            if (!dialog) {
+                if (confirm('Deseja realmente excluir este comentário?')) {
+                    window.location.href = 'includes/excluir-comentario.php?id=' + commentId;
+                }
+                return;
+            }
+
+            document.getElementById('dialog-titulo').textContent = '⚠️ Excluir Comentário';
+            document.getElementById('dialog-mensagem').textContent = 'Deseja realmente excluir este comentário?';
+
+            const btnSim = document.getElementById('dialog-btn-sim');
+            const btnNao = document.getElementById('dialog-btn-nao');
+            const newSim = btnSim.cloneNode(true);
+            const newNao = btnNao.cloneNode(true);
+            btnSim.parentNode.replaceChild(newSim, btnSim);
+            btnNao.parentNode.replaceChild(newNao, btnNao);
+
+            newSim.addEventListener('click', function() {
+                dialog.close();
+                if (typeof window.excluirComentario === 'function') {
+                    window.excluirComentario(commentId, null);
+                } else {
+                    window.location.href = 'includes/excluir-comentario.php?id=' + commentId;
+                }
+            });
+
+            newNao.addEventListener('click', function() {
+                dialog.close();
+            });
+
+            dialog.show();
+        });
     });
 </script>
 
@@ -433,15 +484,13 @@ $total_reacoes = array_sum($reacoes_detalhes);
         modal.style.opacity = '1';
     }
 
-    // ==================== VALIDAÇÃO E PREVIEW DO ARQUIVO ====================
-    // ========== FEEDBACK TOAST ==========
+    // ==================== FEEDBACK TOAST ====================
     function mostrarFeedback(mensagem, tipo) {
         const toast = document.getElementById('feedback-upload');
         if (!toast) return;
         const icone = toast.querySelector('.icone-feedback');
         const texto = toast.querySelector('.texto-feedback');
 
-        // Define ícone e cor
         if (tipo === 'sucesso') {
             icone.textContent = '✅';
             toast.className = 'visivel sucesso';
@@ -454,7 +503,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         }
         texto.textContent = mensagem;
 
-        // Remove após 2 segundos
         clearTimeout(window._feedbackTimeout);
         window._feedbackTimeout = setTimeout(() => {
             toast.classList.remove('visivel');
@@ -492,7 +540,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
             return false;
         }
 
-        // Sucesso – mostra miniatura
         if (preview) {
             preview.style.display = 'inline-flex';
             if (file.type.startsWith('image/')) {
@@ -534,10 +581,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
     window.irParaMensagem = function(commentId) {
         const element = document.getElementById('comentario-' + commentId);
         if (element) {
-            element.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             element.classList.add('comentario-highlight');
             setTimeout(() => {
                 element.classList.remove('comentario-highlight');
@@ -625,9 +669,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
             fetch('enviar-comentario.php', {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 })
                 .then(async response => {
                     const text = await response.text();
@@ -643,14 +685,10 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         cancelarResposta();
                         const container = document.querySelector('.lista-comentarios-social');
                         container.insertAdjacentHTML('beforeend', data.html);
-                        container.lastElementChild.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'nearest'
-                        });
+                        container.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         campoTexto.value = '';
                         campoTexto.style.height = 'auto';
                         contadorChar.textContent = '500';
-                        // Limpa preview do anexo
                         if (previewAnexo) {
                             previewAnexo.style.display = 'none';
                             previewAnexo.innerHTML = '';

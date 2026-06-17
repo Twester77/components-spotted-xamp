@@ -33,11 +33,9 @@ $gif_url = isset($_POST['gif_url']) ? trim($_POST['gif_url']) : '';
 
 // 🔥 Se veio uma URL externa (GIPHY), valida e salva diretamente
 if (!empty($gif_url) && filter_var($gif_url, FILTER_VALIDATE_URL)) {
-    // Opcional: restringe apenas a domínios conhecidos (GIPHY)
     if (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false) {
         $imagem_url = $gif_url;
     } else {
-        // URL inválida ou não permitida – ignorar (não salva)
         $imagem_url = null;
     }
 } 
@@ -68,7 +66,13 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("issiisss", $id_mensagem, $comentario, $usuario_nome, $usuario_id, $parent_id, $vibe, $cor_borda, $imagem_url);
 
 if ($stmt->execute()) {
-    // 🔔 NOTIFICAÇÕES (dono do post) - código mantido
+    // 🔥 GUARDA O ID DO NOVO COMENTÁRIO
+    $novo_id = $stmt->insert_id;
+    
+    // 🔥 LOG PHP (vai para o log do servidor – ex: /var/log/php_errors.log)
+    error_log("[enviar-comentario] Novo ID gerado: " . $novo_id . " para mensagem $id_mensagem");
+
+    // 🔔 NOTIFICAÇÕES (dono do post)
     $meu_id = $usuario_id ?? 0;
     $quem_comentou = $usuario_nome ?? "Visitante";
     
@@ -123,7 +127,6 @@ if ($stmt->execute()) {
     // 🔥 CONSTRUÇÃO DA MÍDIA (suporta URL externa ou arquivo local)
     $mediaHtml = '';
     if ($imagem_url) {
-        // Verifica se é uma URL externa (começa com http:// ou https://)
         if (filter_var($imagem_url, FILTER_VALIDATE_URL)) {
             // GIF externo (GIPHY)
             $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($imagem_url) . '" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy"></div>';
@@ -133,13 +136,12 @@ if ($stmt->execute()) {
         }
     }
 
-    // 🔥 NOVIDADE: identifica se é resposta (comentário filho)
+    // 🔥 identifica se é resposta (comentário filho)
     $classe_filho = ($parent_id > 0) ? 'comentario-filho' : '';
     
-    // 🔥 INDICADOR DE RESPOSTA (COM ONCLICK E TRECHO) - CORRIGIDO
+    // 🔥 INDICADOR DE RESPOSTA (COM ONCLICK E TRECHO)
     $reply_indicator = '';
     if ($parent_id > 0) {
-        // Busca o comentário pai para exibir o trecho
         $stmt_parent = $conn->prepare("SELECT comentario, usuario_nome FROM comentarios WHERE id = ?");
         $stmt_parent->bind_param("i", $parent_id);
         $stmt_parent->execute();
@@ -155,8 +157,20 @@ if ($stmt->execute()) {
                             </div>';
     }
 
+    // ============================================================
+    // 🔥 BOTÃO ELLIPSIS COM $novo_id
+    // ============================================================
+    $ellipsisHtml = '';
+    if ($usuario_id) {
+        $ellipsisHtml = '<button class="btn-excluir-comentario" data-id="' . $novo_id . '" title="Excluir comentário">
+                            <i class="fas fa-ellipsis-v"></i>
+                         </button>';
+    }
+
+    // 🔥 MONTAGEM FINAL DO HTML
     $comentarioHtml = '
-        <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" style="--cor-borda-glow: ' . $cor_borda . ';">
+        <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" id="comentario-' . $novo_id . '" style="--cor-borda-glow: ' . $cor_borda . ';">
+            ' . $ellipsisHtml . '
             <div class="comentario-meta">
                 <strong class="comentario-autor" style="color: ' . $cor_borda . ';">' . $nomeExibicao . '</strong>
                 <span class="comentario-data">Agora</span>
@@ -165,7 +179,7 @@ if ($stmt->execute()) {
             ' . $textoHtml . '
             ' . $mediaHtml . '
             <div class="acoes-bolha">
-                <button onclick="prepararResposta(' . $stmt->insert_id . ', \'' . addslashes($usuario_nome) . '\')" class="btn-responder-bolha">RESPONDER</button>
+                <button onclick="prepararResposta(' . $novo_id . ', \'' . addslashes($usuario_nome) . '\')" class="btn-responder-bolha">RESPONDER</button>
             </div>
         </div>
     ';
