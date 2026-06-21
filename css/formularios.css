@@ -27,7 +27,7 @@ select:focus {
 
 
 form {
-    margin: 20px auto !important;
+    margin: 20px auto ;
 }
 
 
@@ -36,13 +36,13 @@ form {
 /* 1. Ajuste do Container do Modal (o pai) */
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
-    max-width: clamp(280px, 75%, 650px) !important;
-    max-height: clamp(200px, 50vh, 500px) !important;
+    max-width: clamp(280px, 80%, 650px) !important;
+    max-height: clamp(200px, 65vh, 500px) !important;
     /* Padding dinâmico: menor em telas pequenas */
-    padding: clamp(10px, 5vw, 25px) !important;
-    border-radius: 15px;
-    background: #121212;
-    border: 1px solid #333;
+    padding: clamp(10px, 5vw, 24px) ;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
     position: relative;
     /* Garante que o 'X' de fechar se posicione certo */
     /* Garante que se o texto for gigante, apareça um scroll interno só no modal */
@@ -80,8 +80,8 @@ form {
     background: transparent !important;
     border: none ;
     box-shadow: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     max-width: 95% ;
     width: 95% ;
     height: auto;
@@ -90,7 +90,7 @@ form {
 /* 3. Ajuste do formulário interno */
 .modal-body-ajuste .main-novo-post .form-container {
     width: 100% !important;
-    padding: 15px 0 !important;
+    padding: 15px 0 ;
 }
 
 /* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
@@ -107,15 +107,15 @@ form {
 .modal-body-ajuste .main-novo-post select,
 .modal-body-ajuste .main-novo-post input {
     width: 100% !important;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.158);
     border: 1px solid #444;
     /* Cinza escuro */
     border-radius: 12px;
-    padding: 12px !important;
+    padding: 12px ;
     color: #fff;
     margin-bottom: 15px;
-    margin-top: 10px;
     transition: 0.3s;
+    font-size: 1rem;
 }
 
 .modal-body-ajuste .btn-lancar {
@@ -131,8 +131,221 @@ form {
 }
 
 .modal-body-ajuste .main-novo-post textarea {
-    min-height: 90px !important;
+    min-height: 90px ;
 }
+
+/* ============================================================
+   FORMULÁRIO VIVO – EXTENSÃO DOS ESTILOS EXISTENTES
+   ============================================================ */
+
+/* Container do formulário */
+.form-container-vivo {
+    padding: 0;
+    background: transparent;
+}
+
+/* Área de texto – fundo cinza escuro */
+.area-texto-vivo {
+    background: #16161d73;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.area-texto-vivo:focus-within {
+    border-color: var(--dourado);
+    background: #2a2a2a;
+}
+
+#mensagem-vivo {
+    width: 100%;
+    min-height: 100px;
+    max-height: 300px;
+    background: transparent;
+    border: none;
+    color: #eee;
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    padding: 0;
+    font-family: inherit;
+    outline: none;
+}
+
+#mensagem-vivo::placeholder {
+    color: #a1a1a1;
+    font-style: italic;
+}
+
+/* Prévia da mídia – com botão remover */
+.previa-midia-vivo {
+    margin-top: 12px;
+    max-width: 100%;
+}
+
+.midia-wrapper {
+    position: relative;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.midia-wrapper img {
+    max-width: 100%;
+    max-height: 250px;
+    border-radius: 10px;
+    object-fit: contain;
+    background: #000;
+    display: block;
+    object-position: center;
+}
+
+.btn-remover-midia {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.btn-remover-midia:hover {
+    background: rgba(255, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+/* Categoria – badge clean */
+.campo-categoria-vivo {
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.campo-categoria-vivo select {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 6px 18px;
+    padding-right: 36px;
+    color: #ccc;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ccc' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.campo-categoria-vivo select:hover {
+    border-color: var(--dourado);
+    background-color: rgba(255, 188, 0, 0.04);
+}
+
+.campo-categoria-vivo select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* Barra de ações */
+.barra-acoes-vivo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 8px 0 4px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.acoes-esquerda,
+.acoes-direita {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Botões de ação – ícones maiores e mais clean */
+.btn-acao-vivo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-acao-vivo:hover {
+    background: rgba(255, 188, 0, 0.08);
+    border-color: var(--dourado);
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* Contador */
+.contador-caracteres {
+    font-size: 1rem;
+    color: #a3a3a3;
+    margin-right: 4px;
+    font-weight: 500;
+}
+
+/* Botão cancelar – versão limpa */
+.btn-cancelar-vivo {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 6px 14px;
+    border-radius: 30px;
+    color: #aaa;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancelar-vivo:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Botão publicar – dourado com leveza */
+.btn-lancar-vivo {
+    background: var(--dourado);
+    border: none;
+    border-radius: 30px;
+    padding: 8px 28px;
+    color: #000;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-lancar-vivo:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 25px rgba(255, 188, 0, 0.25);
+}
+
 
 /* Botão de GIF/Sticker no modal de post */
 #btn-post-gif {
@@ -163,7 +376,6 @@ form {
     font-size: 1.1rem;
     color: #ffbc00;
 }
-
 
 
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
@@ -1263,8 +1475,8 @@ select,
 textarea {
     width: 100% !important;
     max-width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 8px !important;
+    box-sizing: border-box ;
+    padding: 8px ;
 }
 
 

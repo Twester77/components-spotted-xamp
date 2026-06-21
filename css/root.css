@@ -14,6 +14,7 @@
 html, body {
     min-height: 100dvh; 
     height: 100dvh;
+    height: 100vh;
     background-color: var(--cor-principal); 
     color: #fffffff8;
     font-family: 'Inter', 'Segoe UI', Tahoma, Verdana, sans-serif;

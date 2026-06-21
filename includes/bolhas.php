@@ -25,7 +25,7 @@ if ($exibir == 0) {
 
 <div class="bubbles-container">
     <?php
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 12; $i++) {
         $left = rand(0, 100);
         $delay = rand(0, 8);
         $size = rand(20, 60);

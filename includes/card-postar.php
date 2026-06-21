@@ -1,49 +1,187 @@
 <section id="postar" class="main-novo-post">
-    <div class="form-container">
-        <h2>O que tá rolando na UNIFEV?</h2>
+    <div class="form-container form-container-vivo">
 
-        <form action="enviar-post.php" method="POST" enctype="multipart/form-data">
-            <textarea name="mensagem" placeholder="Sussurre algo para a Fenda..." required maxlength="600" aria-label="Sussurre algo para a Fenda"></textarea>
+        <form action="enviar-post.php" method="POST" enctype="multipart/form-data" id="form-postar-vivo">
 
-            <div style="margin-bottom: 15px;">
-                <label id="label-imagem" for="imagem" style="color: var(--dourado); font-size: 14px; cursor: pointer;">
-                    <i class="fas fa-camera" aria-hidden="true"></i> Adicionar Foto (Opcional)
-                </label>
-                <input type="file" name="imagem" id="imagem" accept="image/*" style="display: block; margin-top: 5px; color: #ccc; font-size: 0.8rem;" aria-labelledby="label-imagem">
+            <!-- Categoria -->
+            <div class="campo-categoria-vivo">
+                <select name="categoria" id="categoria-vivo" aria-label="Selecione a categoria">
+                    <option value="anonimo">🕵️ Anônimo</option>
+                    <option value="comunidade">👥 Comunidade</option>
+                    <option value="academico">❓ Dúvidas Acadêmicas</option>
+                    <option value="elogio">💖 Correio Elegante</option>
+                    <option value="tenho-ranco">👌 Ranço</option>
+                    <option value="acaba-pelo-amor-de-deus">😭 Eu não estou suportando mais</option>
+                    <option value="caronas">🚗 Caronas</option>
+                    <option value="esportes">🏀 Esportes</option>
+                    <option value="games">🎮 Games</option>
+                </select>
             </div>
 
-            <input type="hidden" name="gif_url" id="post-gif-url" value="">
+            <!-- Área de texto -->
+            <div class="area-texto-vivo">
+                <textarea name="mensagem" id="mensagem-vivo" placeholder="O que tá rolando na UNIFEV?" required maxlength="600"></textarea>
+                
+                <div class="previa-midia-vivo" id="previa-midia-vivo"></div>
+            </div>
 
-            <button type="button" id="btn-post-gif" class="btn-attach-opcao" onclick="window.setGiphyTarget('post-gif-url'); abrirGiphyModal();">
-                <i class="fas fa-grin-tongue-squint"></i> Buscar GIF/Sticker
-            </button>
+            <!-- Barra de ações -->
+            <div class="barra-acoes-vivo">
+                <div class="acoes-esquerda">
+                    <label for="imagem-vivo" class="btn-acao btn-acao-vivo" title="Adicionar imagem">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" name="imagem" id="imagem-vivo" accept="image/*" style="display: none;">
+                    
+                    <button type="button" id="btn-gif-vivo" class="btn-acao btn-acao-vivo" title="Buscar GIF/Sticker" onclick="window.setGiphyTarget('gif-url-vivo'); abrirGiphyModal();">
+                        <i class="fas fa-grin-tongue-squint"></i>
+                    </button>
+                    <input type="hidden" name="gif_url" id="gif-url-vivo" value="">
+                </div>
 
-            <label for="categoria" style="color: var(--dourado); font-size: 14px;">Categoria:</label>
-            <!-- Adicionado aria-label para o elemento select descrever o seu propósito de forma clara -->
-            <select name="categoria" id="categoria" style="background: #1a1a1a; color: #fff; border: 1px solid var(--dourado); border-radius: 10px; padding: 10px; margin-bottom: 15px; display: block; width: 100%;" aria-label="Selecione a categoria da sua publicação">
-                <!-- Adicionados aria-labels nas opções para traduzir o significado dos emojis para o leitor de tela -->
-                <option value="anonimo" aria-label="Anônimo">🕵️ Anônimo </option>
-                <option value="comunidade" aria-label="Comunidade">👥 Comunidade</option>
-                <option value="academico" aria-label="Dúvidas Acadêmicas">❓ Dúvidas Acadêmicas</option>
-                <option value="elogio" aria-label="Correio Elegante">💖 Correio Elegante</option>
-                <option value="tenho-ranco" aria-label="Ranço">👌 Ranço</option>
-                <option value="acaba-pelo-amor-de-deus" aria-label="Eu não estou suportando mais">😭 Eu não estou suportando mais</option>
-                <option value="caronas" aria-label="Caronas">🚗 Caronas</option>
-                <option value="esportes" aria-label="Esportes">🏀 Esportes</option>
-                <option value="games" aria-label="Games">🎮 Games</option>
-            </select>
+                <div class="acoes-direita">
+                    <span class="contador-caracteres" id="contador-vivo">0/600</span>
+                    <button type="button" class="btn-cancelar btn-cancelar-vivo" onclick="fecharModalPostLimpo()">Cancelar</button>
+                    <button type="submit" class="btn-lancar btn-lancar-vivo">Publicar</button>
+                </div>
+            </div>
 
-            <button type="submit" class="btn-lancar" style="background: var(--dourado); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%;">
-                Lançar ao Mar! 🌊
-            </button>
         </form>
 
-        <!-- Corrigido: Fechamento correto e isolado do formulário -->
-        <div style="margin-top: 10px; text-align: center; font-size: 12px; opacity: 0.8;">
-            <small>🔍 Perdeu algo? <a href="perdidos.php" style="color: var(--dourado);" aria-label="Perdeu algo? Ir para a Página Especializada de achados e perdidos">Página Especializada</a></small>
+        <div style="margin-top: 8px; text-align: center; font-size: 12px; opacity: 0.6;">
+            <small>🔍 Perdeu algo? <a href="perdidos.php" style="color: var(--dourado);">Página Especializada</a></small>
         </div>
     </div>
 </section>
 
 <script src="js/fenda-mencoes.js"></script>
 <script src="js/fenda-giphy.js"></script>
+
+<script>
+    (function() {
+        const textarea = document.getElementById('mensagem-vivo');
+        const previewMidia = document.getElementById('previa-midia-vivo');
+        const inputFile = document.getElementById('imagem-vivo');
+        const inputGif = document.getElementById('gif-url-vivo');
+        const selectCategoria = document.getElementById('categoria-vivo');
+        const contador = document.getElementById('contador-vivo');
+
+        // Atualiza contador
+        function atualizarContador() {
+            const len = textarea.value.length;
+            contador.textContent = len + '/600';
+            contador.style.color = len >= 550 ? '#ff3c00d0' : '#888';
+        }
+
+        // Atualiza a prévia da mídia
+        function atualizarMidia() {
+            const gifUrl = inputGif.value.trim();
+            const file = inputFile.files[0];
+
+            previewMidia.innerHTML = '';
+
+            if (gifUrl && gifUrl !== '') {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'midia-wrapper';
+                const img = document.createElement('img');
+                img.src = gifUrl;
+                img.alt = 'GIF/Sticker';
+                img.loading = 'lazy';
+                wrapper.appendChild(img);
+                const btnRemove = document.createElement('button');
+                btnRemove.type = 'button';
+                btnRemove.className = 'btn-remover-midia';
+                btnRemove.innerHTML = '✕';
+                btnRemove.title = 'Remover GIF';
+                btnRemove.onclick = function(e) {
+                    e.stopPropagation();
+                    inputGif.value = '';
+                    inputFile.value = '';
+                    atualizarMidia();
+                };
+                wrapper.appendChild(btnRemove);
+                previewMidia.appendChild(wrapper);
+            } else if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'midia-wrapper';
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Imagem selecionada';
+                    img.loading = 'lazy';
+                    wrapper.appendChild(img);
+                    const btnRemove = document.createElement('button');
+                    btnRemove.type = 'button';
+                    btnRemove.className = 'btn-remover-midia';
+                    btnRemove.innerHTML = '✕';
+                    btnRemove.title = 'Remover imagem';
+                    btnRemove.onclick = function(e) {
+                        e.stopPropagation();
+                        inputFile.value = '';
+                        inputGif.value = '';
+                        atualizarMidia();
+                    };
+                    wrapper.appendChild(btnRemove);
+                    previewMidia.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Eventos
+        textarea.addEventListener('input', atualizarContador);
+
+        inputFile.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                inputGif.value = '';
+            }
+            atualizarMidia();
+        });
+
+        inputGif.addEventListener('change', function() {
+            if (this.value && this.value !== '') {
+                inputFile.value = '';
+            }
+            atualizarMidia();
+        });
+
+        // 🟢 FALLBACK: observa mudanças no input hidden (para casos onde o evento não é disparado)
+        const observer = new MutationObserver(function() {
+            if (inputGif.value && inputGif.value !== '') {
+                atualizarMidia();
+            }
+        });
+        observer.observe(inputGif, { attributes: true, attributeFilter: ['value'] });
+
+        // Evento customizado do GIPHY
+        document.addEventListener('gifSelecionado', function(e) {
+            if (e.detail && e.detail.url) {
+                inputGif.value = e.detail.url;
+                inputFile.value = '';
+                atualizarMidia();
+            }
+        });
+
+        // Fechar modal e limpar mídia
+        window.fecharModalPostLimpo = function() {
+            if (inputFile.files.length > 0 || inputGif.value.trim() !== '') {
+                inputFile.value = '';
+                inputGif.value = '';
+                atualizarMidia();
+            }
+            if (typeof fecharModalPost === 'function') {
+                fecharModalPost();
+            } else {
+                const modal = document.getElementById('modal-postar-fenda');
+                if (modal) modal.style.display = 'none';
+                document.body.classList.remove('modal-aberto');
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        // Inicializa
+        atualizarContador();
+        atualizarMidia();
+    })();
+</script>

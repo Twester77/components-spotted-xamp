@@ -144,7 +144,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>" 
          data-id="<?php echo $post_id_atual; ?>"
          style="border: 2px solid <?php echo $cor_post; ?> !important;">
-    <div class="card-inner-content">
         <div class="card-header">
             <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
             <span class="post-time"><?php echo $data_post; ?></span>

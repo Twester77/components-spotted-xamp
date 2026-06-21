@@ -442,6 +442,26 @@ function mostrarPopup(mensagem) {
     }, tempoExibicao);
 }
 
+// ==================== TOAST SIMPLES (sem redirecionamento) ====================
+window.exibirToast = function(mensagem) {
+    const toast = document.createElement('div');
+    toast.className = 'notificacao-popup';
+    toast.style.cursor = 'default';
+    toast.innerHTML = `
+        <div style="font-size: 20px;">🗑️</div>
+        <div style="flex-grow: 1;">
+            <strong style="display: block; font-size: 14px; color: #ddc80e;">Sucesso!</strong>
+            <span>${mensagem}</span>
+        </div>
+    `;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+};
+
 window.toggleJanelaNotificacoes = function () {
     const box = document.getElementById('dropdown-notificacoes');
     if (box.style.display === 'none' || box.style.display === '') {

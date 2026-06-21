@@ -340,7 +340,6 @@ body.hacker-mode .fenda-btn-glow:hover,
 body.hacker-mode #btn-load-more:hover,
 body.hacker-mode .btn-seguir-fenda:hover,
 body.hacker-mode .filtro-btn:hover,
-body.hacker-mode .btn-filtro.ativo:hover,
 body.hacker-mode .btn-voltar-fenda:hover,
 body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode .btn-sair-fenda:hover,
@@ -364,6 +363,7 @@ body.hacker-mode .nexus-trigger {
     border: 2px solid #00ff41;
 
 }
+
 
 body.hacker-mode .insignia-atletica-bottom:hover,
 body.hacker-mode .nexus-trigger:hover,
@@ -497,12 +497,16 @@ body.hacker-mode .badge-alertas {
    --------------------------------------------------------------- */
 
 body.hacker-mode .comentario-item, body.hacker-mode .comentario-item.comentario-filho  {
-    border-left: 2px solid #0f0 !important;
-    border-right: 2px solid #0f0 !important;
-    border-top: 2px solid #0f0 !important;
-    border-bottom: 2px solid #0f0 !important;
-    position: relative !important;
+    border-left: 1px solid #0f0 !important;
+    border-right: 1px solid #0f0 !important;
+    border-top: 1px solid #0f0 !important;
+    border-bottom: 1px solid #0f0 !important;
+    border-radius: 10px 10px 10px 2px;
 
+}
+
+body.hacker-mode .comentario-item.meu-comentario {
+    border-radius: 8px 8px 2px 8px;
 }
 
 
@@ -519,7 +523,6 @@ body.hacker-mode .comentario-autor {
 /* 1. VIBE DARK (Eigengrau) - Terminal clássico pesado */
 body.hacker-mode .comentario-item.vibe-dark {
     background: #0a0a0ace !important;
-    border-left: 3px solid #00ff00 !important;
     -webkit-backdrop-filter: none ;
     backdrop-filter: none ;
     color: #00ff00 !important;
@@ -535,7 +538,6 @@ body.hacker-mode .comentario-item.vibe-glass {
     background: rgba(0, 30, 0, 0.7) !important;
     -webkit-backdrop-filter: blur(4px) ;
     backdrop-filter: blur(4px) ;
-    border-left: 3px solid #00ff00 !important;
     color: #00ff00 ;
 }
 
@@ -549,11 +551,9 @@ body.hacker-mode .comentario-item.vibe-neon {
     background: #000000 !important;
     -webkit-backdrop-filter: none ;
     backdrop-filter: none ;
-    border-left: 3px solid #00ff00 !important;
     margin-bottom: 15px;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3), 0 0 5px #00ff00 !important;
     position: relative;
-    animation: hacker-glitch 3s infinite alternate !important;
+    animation: hacker-glitch 5s infinite alternate !important;
 }
 
 body.hacker-mode .comentario-item.vibe-neon .comentario-data,
@@ -585,8 +585,6 @@ body.hacker-mode .comentario-item.vibe-light {
     background: #2e5b2ec9;  
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    border-left: 3px solid #33ff33 !important;  
-    color: #b3ffb3 !important;  /* Verde bem claro, quase branco-esverdeado */
     font-weight: normal;
 }
 
@@ -594,6 +592,11 @@ body.hacker-mode .comentario-item.vibe-light .comentario-autor {
     color: #66ff66 ;  /* Verde médio para o nome do autor */
     text-shadow: 0 0 4px #33ff33 !important;
     font-weight: bold;
+}
+
+body.hacker-mode .comentario-item.vibe-light .indicador-resposta,
+ body.hacker-mode .resposta-indicador {
+    background: #7fa7776e;
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-data {
@@ -617,40 +620,6 @@ body.hacker-mode .comentario-item.vibe-light {
 }
 
 /* 5. BASE UNIFICADA: garante consistência */
-body.hacker-mode .comentario-item.vibe-dark,
-body.hacker-mode .comentario-item.vibe-light,
-body.hacker-mode .comentario-item.vibe-glass,
-body.hacker-mode .comentario-item.vibe-ads,
-body.hacker-mode .comentario-item.vibe-neon {
-    transition: all 0.3s ease;
-}
-
-/* 6. HOVER PADRÃO DO MODO HACKER (inversão verde/preto) PARA TODAS AS VIBES */
-body.hacker-mode .comentario-item .indicador-resposta:hover,
-body.hacker-mode .comentario-item.vibe-dark:hover,
-body.hacker-mode .comentario-item.vibe-light:hover,
-body.hacker-mode .comentario-item.vibe-glass:hover,
-body.hacker-mode .comentario-item.vibe-neon:hover {
-    background-color: #00ff00 !important;
-    color: #000000 !important;
-}
-
-body.hacker-mode .comentario-item.vibe-dark:hover .comentario-autor,
-body.hacker-mode .comentario-item.vibe-dark:hover .comentario-data,
-body.hacker-mode .comentario-item.vibe-dark:hover .comentario-texto,
-body.hacker-mode .comentario-item.vibe-light:hover .comentario-autor,
-body.hacker-mode .comentario-item.vibe-light:hover .comentario-data,
-body.hacker-mode .comentario-item.vibe-light:hover .comentario-texto,
-body.hacker-mode .comentario-item.vibe-glass:hover .comentario-autor,
-body.hacker-mode .comentario-item.vibe-glass:hover .comentario-data,
-body.hacker-mode .comentario-item.vibe-glass:hover .comentario-texto,
-body.hacker-mode .comentario-item.vibe-neon:hover .comentario-autor,
-body.hacker-mode .comentario-item.vibe-neon:hover .comentario-data,
-body.hacker-mode .comentario-item.vibe-neon:hover .comentario-texto {
-    color: #000000 !important;
-    text-shadow: none !important;
-    font-weight: bold;
-}
 
 
 /* EXTRA : ADS MODE */
@@ -660,7 +629,6 @@ body.hacker-mode .comentario-item.vibe-neon:hover .comentario-texto {
    ================================================================== */
 body.hacker-mode .comentario-item.vibe-ads {
     background-color: #000000 ; /* Fundo breu total do terminal */
-    border: 3px solid var(--hacker-green) !important; 
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
@@ -753,7 +721,7 @@ body.hacker-mode .preview-botao
     color: #00ff00 !important;
 }
 
-body.hacker-mode .filtro-btn.ativo:hover,
+body.hacker-mode .btn-filtro.ativo:hover,
 body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .btn-fenda-padrao:hover,
 body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
@@ -952,7 +920,8 @@ body.hacker-mode .menu li a,
 body.hacker-mode .dropdown-menu a,
 body.hacker-mode .submenu li a,
 body.hacker-mode .item-menu,
-body.hacker-mode .fenda-modal-content,
+body.hacker-mode .fenda-modal-content p,
+body.hacker-mode .fenda-modal-content .desc-modal-sair,
 body.hacker-mode .btn,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,
@@ -967,7 +936,7 @@ body.hacker-mode .post-content,
 body.hacker-mode .post-content-focado,
 body.hacker-mode .comentario-autor,
 body.hacker-mode .comentario-texto,
-body.hacker-mode .comentario-texto p
+body.hacker-mode .comentario-texto p,
 body.hacker-mode .dialog-conteudo .dialog-mensagem p {
     clip-path: none !important;
     

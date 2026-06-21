@@ -42,59 +42,53 @@ include 'includes/bolhas.php';
 <script src="js/fenda-init.js"></script>
 
 <script>
-    // ==================== MOTOR DE LAYOUT UNIVERSAL ====================
-    function recalcFeedLayout() {
-        if (!document.body.classList.contains('modo-swipe-ativo')) return;
-        var vw = window.innerWidth;
-        var vh = window.innerHeight;
-        var cardWidth = Math.max(290, Math.min(vw * 0.80, 400));
-        var cardPadding = cardWidth * 0.05;
-        var fontSize = cardWidth * 0.05;
-        var avatarSize = cardWidth * 0.12;
-        var maxCardHeight = vh * 0.75;
-        var cards = document.querySelectorAll('.feed-empilhado .spotted-card');
-        for (var i = 0; i < cards.length; i++) {
-            var card = cards[i];
-            card.style.width = cardWidth + 'px';
-            card.style.padding = cardPadding + 'px';
-            card.style.maxHeight = maxCardHeight + 'px';
-            card.style.fontSize = fontSize + 'px';
-            card.style.height = 'auto';
-            card.style.overflowY = 'auto';
-            var imgContainer = card.querySelector('.container-img-post');
-            var img = imgContainer ? imgContainer.querySelector('img') : null;
-            if (img && imgContainer) {
-                if (vw > vh) {
-                    img.style.objectFit = 'contain';
-                    img.style.maxHeight = (maxCardHeight * 0.6) + 'px';
-                    imgContainer.style.background = '#000';
-                } else {
-                    img.style.objectFit = 'cover';
-                    img.style.maxHeight = 'none';
-                    imgContainer.style.background = 'transparent';
-                }
-            }
-        }
-        var avatares = document.querySelectorAll('.feed-empilhado .spotted-card .avatar-p, .feed-empilhado .spotted-card .avatar');
-        for (var j = 0; j < avatares.length; j++) {
-            avatares[j].style.width = avatarSize + 'px';
-            avatares[j].style.height = avatarSize + 'px';
-        }
-    }
+    // ==================== MOTOR DE LAYOUT UNIVERSAL (COM LOGS) ====================
+function recalcFeedLayout() {
+    if (!document.body.classList.contains('modo-swipe-ativo')) return;
 
-    var layoutTimeout;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var isLandscape = vw > vh;
 
-    function debounceLayout() {
-        clearTimeout(layoutTimeout);
-        layoutTimeout = setTimeout(recalcFeedLayout, 150);
-    }
-    window.addEventListener('load', recalcFeedLayout);
-    window.addEventListener('resize', debounceLayout);
-    window.addEventListener('orientationchange', debounceLayout);
+    var cardWidth = isLandscape
+        ? Math.max(320, Math.min(vw * 0.60, 600))
+        : Math.max(250, Math.min(vw * 0.70, 550));
 
-    function reforcarLayoutNosCards() {
-        recalcFeedLayout();
-    }
+    var cardPadding = Math.max(12, cardWidth * 0.05);
+    var fontSize = Math.max(0.9, Math.min(cardWidth * 0.055, 1.7));
+    var avatarSize = Math.max(34, cardWidth * 0.12);
+    var maxCardHeight = Math.min(vh * 0.80, 650);
+
+    // Atualiza variáveis CSS – sem !important
+    var root = document.documentElement;
+    root.style.setProperty('--card-width', cardWidth + 'px');
+    root.style.setProperty('--card-padding', cardPadding + 'px');
+    root.style.setProperty('--card-font-size', fontSize + 'rem');
+    root.style.setProperty('--card-max-height', maxCardHeight + 'px');
+    root.style.setProperty('--avatar-size', avatarSize + 'px');
+
+    // Para imagens (opcional)
+    root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
+    root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
+    root.style.setProperty('--img-max-height', isLandscape ? (maxCardHeight * 0.6) + 'px' : 'none');
+
+}
+
+// ==================== DEBOUNCE E EVENTOS ====================
+var layoutTimeout;
+
+function debounceLayout() {
+    clearTimeout(layoutTimeout);
+    layoutTimeout = setTimeout(recalcFeedLayout, 150);
+}
+window.addEventListener('load', recalcFeedLayout);
+window.addEventListener('resize', debounceLayout);
+window.addEventListener('orientationchange', debounceLayout);
+
+function reforcarLayoutNosCards() {
+    console.log('[RECALC] 🔄 reforcarLayoutNosCards chamado.');
+    recalcFeedLayout();
+}
 
     // ==================== TOGGLE FILTROS ====================
     window.toggleFiltrosMobile = function() {
@@ -115,8 +109,7 @@ include 'includes/bolhas.php';
     // ==================== DECLARAÇÃO GLOBAL ====================
     window._modalAberto = false;
 
-    // ==================== MODAL DE AÇÕES (LONG PRESS) ====================
-    // ==================== MODAL DE AÇÕES (LONG PRESS) ====================
+// ==================== MODAL DE AÇÕES (LONG PRESS) ====================
 window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
     if (window._activeModal) return;
     window._modalAberto = true;
@@ -153,6 +146,7 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
     title.textContent = isOwner ? ' GERENCIAR POST ' : ' SINALIZAR POST ';
     title.style.cssText = `font-size:0.85rem; letter-spacing:2px; color:#ffbc00; margin-bottom:20px; text-transform:uppercase; font-weight:600;`;
     modal.appendChild(title);
+
     const buttonStyle = `
         background: rgba(255,255,255,0.05);
         border: none;
@@ -169,34 +163,91 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         align-items: center;
         justify-content: center;
         gap: 8px;
+        user-select: none;
     `;
+
+    // Botão de exclusão (apenas para o dono)
     if (isOwner) {
         const btnDelete = document.createElement('button');
         btnDelete.innerHTML = '🗑️ Expurgar da Fenda';
         btnDelete.style.cssText = buttonStyle + `background: rgba(220,53,69,0.15); border:1px solid rgba(220,53,69,0.5); color:#ff8a8a;`;
+
         btnDelete.onclick = async (e) => {
-            e.stopPropagation(); // ← IMPEDE QUE O CLIQUE CHEGUE AO OVERLAY
-            const confirmado = await window.exibirConfirmacao(
-                '⚠️ Isso removerá o post permanentemente. Continuar?',
-                'Excluir Post'
-            );
-            if (confirmado) {
-                window.location.href = `includes/excluir.php?id=${postId}`;
+            e.stopPropagation();
+
+            console.log('[EXCLUIR] Botão clicado! ID:', postId);
+
+            const confirmado = confirm('⚠️ Isso removerá o post permanentemente. Continuar?');
+            if (!confirmado) {
+                console.log('[EXCLUIR] Usuário cancelou.');
+                closeGlobalModal();
+                return;
             }
-            closeGlobalModal(); // Fecha o modal após a ação (ou cancelamento)
+
+            btnDelete.innerHTML = '⏳ Excluindo...';
+            btnDelete.disabled = true;
+
+            try {
+                const response = await fetch('includes/excluir.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: 'id=' + postId
+                });
+
+                console.log('[EXCLUIR] Status da resposta:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('[EXCLUIR] Resposta NÃO é JSON:', text);
+                    alert('Erro inesperado. Verifique o console.');
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('[EXCLUIR] Dados recebidos:', data);
+
+                if (data.status === 'success') {
+                    // Remove o card com animação
+                    const card = document.querySelector(`.spotted-card[data-id="${postId}"]`);
+                    if (card) {
+                        card.style.transition = 'opacity 0.3s, transform 0.3s';
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.95)';
+                        setTimeout(() => card.remove(), 300);
+                    }
+                    // 🔥 AGORA USA O TOAST SEM REDIRECIONAMENTO
+                    if (typeof exibirToast === 'function') {
+                        exibirToast('Post expurgado da Fenda!');
+                    } else if (typeof mostrarPopup === 'function') {
+                        mostrarPopup('Post expurgado da Fenda!'); // fallback
+                    }
+                } else {
+                    alert(data.message || 'Erro ao excluir post.');
+                }
+            } catch (err) {
+                console.error('[EXCLUIR] Erro no fetch:', err);
+
+                if (err instanceof SyntaxError && err.message.includes('JSON')) {
+                    alert('Erro no formato da resposta. Tente novamente.');
+                } else {
+                    alert('Erro de conexão. Tente novamente.');
+                }
+            } finally {
+                closeGlobalModal();
+            }
         };
         modal.appendChild(btnDelete);
-    } else {
-        const btnReport = document.createElement('button');
-        btnReport.innerHTML = '🚨 Chamar o Camburão';
-        btnReport.style.cssText = buttonStyle + `background: rgba(255,188,0,0.12); border:1px solid rgba(255,188,0,0.5); color:#ffde9e;`;
-        btnReport.onclick = (e) => {
-            e.stopPropagation();
-            alert("📢 Agradecemos o aviso! A moderação foi notificada.");
-            closeGlobalModal();
-        };
-        modal.appendChild(btnReport);
     }
+
+    // Botão fechar
     const btnClose = document.createElement('button');
     btnClose.innerHTML = '✖️ Voltar ao Feed';
     btnClose.style.cssText = buttonStyle + `background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.2); color:#ccc;`;
@@ -205,6 +256,7 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         closeGlobalModal();
     };
     modal.appendChild(btnClose);
+
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
     window._activeModal = overlay;
@@ -219,6 +271,7 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
             targetCard.classList.remove('card-long-press-active');
         }
     }
+
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
             closeGlobalModal();
@@ -289,97 +342,109 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
     const feedContainer = document.querySelector('.container-feed');
 
     function carregarFeedGeral(reset = false) {
-        if (loadingMore) return;
-        loadingMore = true;
+    if (loadingMore) return;
+    loadingMore = true;
 
-        if (reset) {
-            offset = 0;
-            if (feedContainer) feedContainer.innerHTML = '';
-            if (btnLoad) {
-                btnLoad.disabled = false;
-                btnLoad.innerText = "Exibir Mais Resultados";
-            }
+    if (reset) {
+        offset = 0;
+        if (feedContainer) feedContainer.innerHTML = '';
+        if (btnLoad) {
+            btnLoad.disabled = false;
+            btnLoad.innerText = "Exibir Mais Resultados";
         }
-
-        if (feedContainer) feedContainer.setAttribute('aria-busy', 'true');
-        if (btnLoad) btnLoad.disabled = true;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoria = urlParams.get('categoria') || '';
-        currentCategoria = categoria;
-
-        fetch(`motor-feed.php?offset=${offset}&categoria=${categoria}&tipo=geral`)
-            .then(response => response.text())
-            .then(data => {
-                if (data.trim() === "FIM_DADOS") {
-                    if (offset === 0 && feedContainer) {
-                        feedContainer.innerHTML = "<p style='text-align:center; color:#ccc;'>Nenhum post encontrado.</p>";
-                    }
-                    if (btnLoad) {
-                        btnLoad.innerText = "FIM DO FEED";
-                        btnLoad.disabled = true;
-                    }
-                } else {
-                    if (feedContainer) {
-                        const qtdAntes = feedContainer.children.length;
-                        if (offset === 0) feedContainer.innerHTML = '';
-                        feedContainer.insertAdjacentHTML('beforeend', data);
-
-                        const novosCards = Array.from(feedContainer.children).slice(qtdAntes);
-                        const isSwipe = document.body.classList.contains('modo-swipe-ativo');
-
-                        novosCards.forEach((card, idx) => {
-                            if (isSwipe) {
-                                // === NOVA ANIMAÇÃO DO RADAR (Protocolo Blur-to-Focus + Brightness) ===
-                                card.classList.add('swipe-distribuicao');
-                                const delay = Math.min(idx * 0.12, 0.6); // mais espaçado e máximo 0.6s
-                                card.style.animationDelay = `${delay}s`;
-                                const onEnd = () => {
-                                    card.classList.remove('swipe-distribuicao');
-                                    card.style.animationDelay = '';
-                                    card.removeEventListener('animationend', onEnd);
-                                };
-                                card.addEventListener('animationend', onEnd, {
-                                    once: true
-                                });
-                            } else {
-                                // Grid: animação cascata com transform (inalterada)
-                                card.classList.add('grid-card-entrada');
-                                const delay = Math.min(idx * 0.05, 0.4);
-                                card.style.animationDelay = `${delay}s`;
-                                const onEnd = () => {
-                                    card.classList.remove('grid-card-entrada');
-                                    card.style.animationDelay = '';
-                                    card.removeEventListener('animationend', onEnd);
-                                };
-                                card.addEventListener('animationend', onEnd, {
-                                    once: true
-                                });
-                            }
-                        });
-
-                        if (isSwipe && feedContainer && !feedContainer.classList.contains('feed-empilhado')) {
-                            feedContainer.classList.add('feed-empilhado');
-                        }
-                        if (typeof reforcarLayoutNosCards === 'function') reforcarLayoutNosCards();
-                    }
-                    offset += 10;
-                    if (btnLoad) btnLoad.disabled = false;
-                }
-                if (feedContainer) feedContainer.setAttribute('aria-busy', 'false');
-            })
-            .catch(err => {
-                console.error("[AJAX] Erro no feed:", err);
-                if (btnLoad) btnLoad.disabled = false;
-            })
-            .finally(() => {
-                loadingMore = false;
-                if (feedContainer) feedContainer.setAttribute('aria-busy', 'false');
-                if (btnLoad && !document.body.classList.contains('modo-swipe-ativo') && btnLoad.innerText !== "FIM DO FEED") {
-                    btnLoad.disabled = false;
-                }
-            });
     }
+
+    if (feedContainer) feedContainer.setAttribute('aria-busy', 'true');
+    if (btnLoad) btnLoad.disabled = true;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoria = urlParams.get('categoria') || '';
+    currentCategoria = categoria;
+
+    fetch(`motor-feed.php?offset=${offset}&categoria=${categoria}&tipo=geral`)
+        .then(response => response.text())
+        .then(data => {
+            console.log('[FEED] Dados recebidos, tamanho:', data.length);
+
+            if (data.trim() === "FIM_DADOS") {
+                console.log('[FEED] Fim dos dados alcançado.');
+                if (offset === 0 && feedContainer) {
+                    feedContainer.innerHTML = "<p style='text-align:center; color:#ccc;'>Nenhum post encontrado.</p>";
+                }
+                if (btnLoad) {
+                    btnLoad.innerText = "FIM DO FEED";
+                    btnLoad.disabled = true;
+                }
+            } else {
+                if (feedContainer) {
+                    const qtdAntes = feedContainer.children.length;
+                    if (offset === 0) feedContainer.innerHTML = '';
+                    feedContainer.insertAdjacentHTML('beforeend', data);
+
+                    const novosCards = Array.from(feedContainer.children).slice(qtdAntes);
+                    const isSwipe = document.body.classList.contains('modo-swipe-ativo');
+
+                    console.log('[FEED] Novos cards inseridos:', novosCards.length, 'Modo swipe:', isSwipe);
+
+                    novosCards.forEach((card, idx) => {
+                        if (isSwipe) {
+                            // === NOVA ANIMAÇÃO DO RADAR (Protocolo Blur-to-Focus + Brightness) ===
+                            card.classList.add('swipe-distribuicao');
+                            const delay = Math.min(idx * 0.12, 0.6);
+                            card.style.animationDelay = `${delay}s`;
+                            const onEnd = () => {
+                                card.classList.remove('swipe-distribuicao');
+                                card.style.animationDelay = '';
+                                card.removeEventListener('animationend', onEnd);
+                            };
+                            card.addEventListener('animationend', onEnd, { once: true });
+                        } else {
+                            // Grid: animação cascata
+                            card.classList.add('grid-card-entrada');
+                            const delay = Math.min(idx * 0.05, 0.4);
+                            card.style.animationDelay = `${delay}s`;
+                            const onEnd = () => {
+                                card.classList.remove('grid-card-entrada');
+                                card.style.animationDelay = '';
+                                card.removeEventListener('animationend', onEnd);
+                            };
+                            card.addEventListener('animationend', onEnd, { once: true });
+                        }
+                    });
+
+                    // Adiciona a classe feed-empilhado se estiver no modo swipe
+                    if (isSwipe && feedContainer && !feedContainer.classList.contains('feed-empilhado')) {
+                        feedContainer.classList.add('feed-empilhado');
+                        console.log('[FEED] ✅ Classe feed-empilhado adicionada ao container.');
+                    }
+
+                    // 🔥 CHAMA O LAYOUT COM DELAY (50ms) PARA GARANTIR QUE O DOM FOI ATUALIZADO
+                    setTimeout(function() {
+                        console.log('[FEED] ⏳ Chamando reforcarLayoutNosCards após delay.');
+                        if (typeof reforcarLayoutNosCards === 'function') {
+                            reforcarLayoutNosCards();
+                        } else {
+                            console.warn('[FEED] ⚠️ reforcarLayoutNosCards NÃO está definida!');
+                        }
+                    }, 50);
+                }
+                offset += 10;
+                if (btnLoad) btnLoad.disabled = false;
+            }
+            if (feedContainer) feedContainer.setAttribute('aria-busy', 'false');
+        })
+        .catch(err => {
+            console.error("[AJAX] Erro no feed:", err);
+            if (btnLoad) btnLoad.disabled = false;
+        })
+        .finally(() => {
+            loadingMore = false;
+            if (feedContainer) feedContainer.setAttribute('aria-busy', 'false');
+            if (btnLoad && !document.body.classList.contains('modo-swipe-ativo') && btnLoad.innerText !== "FIM DO FEED") {
+                btnLoad.disabled = false;
+            }
+        });
+}
 
     // ==================== EVENTO DE CLIQUE DO BOTÃO (CORRIGIDO) ====================
     if (btnLoad) {

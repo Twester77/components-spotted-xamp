@@ -10,7 +10,7 @@ document.addEventListener('input', (e) => {
             const limite = parseInt(campo.getAttribute('maxlength')) || 800;
             const restante = limite - campo.value.length;
             contador.textContent = restante;
-            contador.style.color = restante < 50 ? '#ff4444' : '#ffffff';
+            contador.style.color = restante < 50 ? '#fa2f2f' : '#ffffff';
         }
         
         // 2. Autocomplete de @ com Debounce (os 200ms)

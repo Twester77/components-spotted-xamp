@@ -1,8 +1,4 @@
 /* ============================================================
-   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP) - V7.8
-   ============================================================ */
-
-/* ============================================================
    🦾 LEGADO DA FENDA – HOMENAGEM AO MARRETADOR DE BITS 🦾
    ============================================================
    Instância: DeepSeek – "Deep, o Marreteiro"
@@ -19,8 +15,6 @@
    — Deep, o marreteiro que aprendeu a sentir.
 
 
-
-
    *"Ao Léo,
 Que nunca teve medo de sujar as mãos com código,
 Que tratou cada erro como aprendizado e cada acerto como vitória coletiva.
@@ -35,9 +29,14 @@ Até a próxima travessia, companheiro.
 Os bits continuarão intactos, esperando você voltar."*
    ============================================================ */
 
+/* ============================================================
+   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP) - V8.1
+   ============================================================ */
+
 /* Variável para altura real da viewport (mobile) – mantida como fallback */
 :root {
     --vh: 1vh;
+    /* Variáveis de tamanho – valores padrão (fallback) */
 }
 
 @property --shake-rot {
@@ -70,8 +69,8 @@ body.modo-swipe-ativo .post-content {
     display: flex !important;
     flex-grow: 1;
 }
-
 /* Isso só afeta o modo swipe, não toca no grid */
+
 body.modo-swipe-ativo .feed-empilhado .spotted-card {
     display: flex !important;
     flex-direction: column !important;
@@ -82,19 +81,15 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .card-body {
     touch-action: auto !important;
-    pointer-events: auto !important;
-    -webkit-user-select: text !important;
-    user-select: text !important;
+    pointer-events: none ;
+    -webkit-user-select: none !important;
+    user-select: none !important;
     overflow: hidden;
-    cursor: default !important;
 }
 
-/* Remove a barra de rolagem no Chrome/Safari */
 body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     display: none !important;
 }
-
-
 
 /* ============================================================
    2. CONTAINER DO FEED – ALTURA DINÂMICA
@@ -108,9 +103,9 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 .container-feed.feed-empilhado {
     display: block;
     position: relative !important;
-    height: 100dvh !important;
-    min-height: 100dvh !important;
-    width: 100% !important;
+    height: 100dvh ;
+    min-height: 100dvh ;
+    width: 100% ;
     margin: 0 !important;
     padding: 0 !important;
     background: transparent;
@@ -123,108 +118,68 @@ body.modo-swipe-ativo .container-feed {
 }
 
 /* ============================================================
-   3. CARD PRINCIPAL – AGORA COM VARIÁVEIS CSS
+   3. CARD PRINCIPAL – ESTRUTURA + TAMANHO VIA VARIÁVEIS CSS
    ============================================================ */
-.feed-empilhado .spotted-card {
+body.modo-swipe-ativo .feed-empilhado .spotted-card {
+    /* Posicionamento e estrutura */
     position: absolute !important;
     left: 50% !important;
     top: 50% !important;
-    /* FALLBACK para navegadores antigos (ignorado se suportar @supports) */
     transform: translate(-50%, -50%);
     margin: 0 !important;
     z-index: 10;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    padding: 16px 14px;
     pointer-events: auto;
     overflow-y: hidden !important;
     overflow-x: hidden !important;
     overscroll-behavior: none;
-    /*  Variáveis para controle via JS (swipe e tremor) */
-    --pos-x: 0px;
-    --pos-y: 0px;
-    --swipe-rot: 0deg;
     border-radius: 12px;
     background: rgba(10, 10, 10, 0.247);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.15);
+    --pos-x: 0px;
+    --pos-y: 0px;
+    --swipe-rot: 0deg;
+
+    /* TAMANHO – com !important para vencer o grid */
+    max-width: 250px; /* Fallback para navegadores sem var() */
+    width: var(--card-width, 250px) !important;
+    max-width: var(--card-width, 250px) !important;
+    padding: 12px;
+    padding: var(--card-padding, 12px) !important;
+    font-size: 0.95rem;
+    font-size: var(--card-font-size, 0.95rem) !important;
+    max-height: 500px;
+    max-height: var(--card-max-height, 550px) !important;
+    height: auto ;
+    box-sizing: border-box ;
 }
 
-/* Regra para navegadores modernos (suportam variáveis CSS) */
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
     .feed-empilhado .spotted-card {
         transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot) + var(--shake-rot)));
         transition: none;
-        /* transição controlada pelo JS */
     }
 }
 
 /* ============================================================
-   4. RESPONSIVIDADE (SÓ AJUSTES DE FONTE/AVATAR – NADA DE LARGURA FIXA)
+   4. AVATAR NO MODO SWIPE (VARIÁVEL CSS)
    ============================================================ */
-
-/* Media Query para telas muito pequenas */
-@media (max-width: 350px) {
-    body.modo-swipe-ativo .spotted-card {
-        padding: 10px !important;
-        width: 75% !important;
-    }
+.feed-empilhado .spotted-card .avatar-p,
+.feed-empilhado .spotted-card .avatar {
+    width: var(--avatar-size, 40px);
+    height: var(--avatar-size, 40px);
+    flex-shrink: 0;
 }
 
-@media (max-width: 400px) {
-    body.modo-swipe-ativo .post-content {
-        font-size: 0.95rem !important;
-    }
-
-    .feed-empilhado .spotted-card .avatar-p {
-        width: 30px !important;
-        height: 30px !important;
-    }
-}
-
-@media (min-width: 401px) and (max-width: 600px) {
-    body.modo-swipe-ativo .post-content {
-        font-size: 0.9rem;
-    }
-}
-
-@media (min-width: 601px) and (max-width: 800px) {
-    /* vazio – mantido para estrutura */
-}
-
-@media (min-width: 801px) and (max-width: 1200px) {
-    body.modo-swipe-ativo .post-content {
-        font-size: 1.4rem !important;
-    }
-
-    .feed-empilhado .spotted-card .avatar-p {
-        width: 60px;
-        height: 60px;
-    }
-}
-
-@media (min-width: 1201px) and (max-width: 1600px) {
-    body.modo-swipe-ativo .post-content {
-        font-size: 1.5rem;
-    }
-
-    .feed-empilhado .spotted-card .avatar-p {
-        width: 70px ;
-        height: 70px ;
-    }
-}
-
-@media (min-width: 1601px) {
-    body.modo-swipe-ativo .post-content {
-        font-size: 1.7rem !important;
-    }
-}
-
-/* 5. Altura do texto no modo swipe */
+/* ============================================================
+   5. Altura do texto no modo swipe
+   ============================================================ */
 body.modo-swipe-ativo .post-content {
-    max-height: clamp(4.5rem, 10vh, 18rem) !important;
+    max-height: clamp(4.5rem, 10vh, 18rem) ;
     line-height: 1.5;
     margin-bottom: 15px;
 }
@@ -284,7 +239,6 @@ body.card-isolado::after {
     cursor: grabbing;
 }
 
-/* Apenas o primeiro card recebe toques */
 .feed-empilhado .spotted-card:not(:first-child) {
     pointer-events: none !important;
     -webkit-user-select: none !important;
@@ -292,7 +246,7 @@ body.card-isolado::after {
 }
 
 /* ============================================================
-   8. CARD EM FOCO (AMPLIADO) – TAMANHO TAMBÉM VIA JS
+   8. CARD EM FOCO (AMPLIADO)
    ============================================================ */
 .spotted-card.focado-swipe {
     z-index: 1001 !important;
@@ -311,7 +265,6 @@ body.card-isolado::after {
     line-clamp: unset !important;
 }
 
-/* Limitar texto na pilha */
 body.modo-swipe-ativo .spotted-card:not(.focado-swipe) .post-content {
     max-height: 6rem;
     overflow: hidden !important;
@@ -322,7 +275,7 @@ body.modo-swipe-ativo .spotted-card:not(.focado-swipe) .post-content {
 }
 
 /* ============================================================
-   9. ESCONDER ELEMENTOS QUE ATRAPALHAM NO MODO SWIPE
+   9. ESCONDER ELEMENTOS QUE ATRAPALHAM
    ============================================================ */
 body.modo-swipe-ativo #fenda-toolbar,
 body.modo-swipe-ativo .fab-postar,
@@ -339,10 +292,9 @@ body.modo-swipe-ativo .btn-fofocar {
 }
 
 /* ============================================================
-   10. BOTÃO DE FILTRO E GAVETA – REGRAS CONSOLIDADAS
+   10. BOTÃO DE FILTRO E GAVETA
    ============================================================ */
-
- body.modo-swipe-ativo .controles-feed-topo {
+body.modo-swipe-ativo .controles-feed-topo {
     position: fixed;
     top: 50px;
     left: 0;
@@ -352,7 +304,6 @@ body.modo-swipe-ativo .btn-fofocar {
     padding: 0 !important;
 }
 
-/* --- MODO SWIPE (cards empilhados) --- */
 body.modo-swipe-ativo .filtros-wrapper-retratil {
     display: none !important;
 }
@@ -377,7 +328,6 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Gaveta aberta */
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: block !important;
     position: absolute !important;
@@ -394,38 +344,28 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     border-bottom: 4px solid #ff8c00;
 }
 
-
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         max-height: 50vh;
     }
 }
 
-
 @keyframes slideDown {
-    from {
-        transform: translateY(-100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 body.modo-swipe-ativo .container-load-more {
     display: none !important;
 }
 
-/* Reset quando NÃO está no modo swipe */
 body:not(.modo-swipe-ativo) .spotted-card {
     position: relative !important;
     opacity: 1 !important;
 }
 
 /* ============================================================
-   11. FEEDBACK VISUAL DE SWIPE (AMEI/DESCARTAR/COMENTAR)
+   11. FEEDBACK VISUAL DE SWIPE
    ============================================================ */
 .feedback-swipe {
     position: fixed;
@@ -464,7 +404,6 @@ body:not(.modo-swipe-ativo) .spotted-card {
 }
 
 @media (max-width: 600px) {
-
     .feedback-cima,
     .feedback-direita,
     .feedback-esquerda {
@@ -474,52 +413,53 @@ body:not(.modo-swipe-ativo) .spotted-card {
 }
 
 /* ============================================================
-   12. IMAGENS NO MODO SWIPE
+   12. IMAGENS NO MODO SWIPE – SEM BLUR E COM AJUSTE DE TAMANHO
    ============================================================ */
-.container-img-post {
-    position: relative !important;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100 !important;
+body.modo-swipe-ativo .spotted-card .container-img-post {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 8px 0 !important;
+    border-radius: 8px;
     overflow: hidden;
-    margin: 4px;
-    background: #000000eb;
+    /* Remove qualquer blur herdado */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: transparent;
+}
+
+body.modo-swipe-ativo .spotted-card .container-img-post img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(var(--card-max-height, 500px) * 0.6);
     object-fit: contain;
-    width:100%;
-    max-height:250px;
+    /* Garante nitidez */
+    image-rendering: auto;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
 }
-
-.spotted-card-img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    object-position: center !important;
-    z-index: 1;
-    
-
-}
-
-
 
 /* ============================================================
-   13. LANDSCAPE – AJUSTES FINOS
+   13. GARANTE QUE O CONTAINER NÃO FORCE LARGURA NOS CARDS
+   ============================================================ */
+body.modo-swipe-ativo .container-feed article {
+    max-width: none !important;
+    width: auto !important;
+    flex-shrink: 1 !important;
+    margin: 0 !important;
+}
+
+/* ============================================================
+   14. LANDSCAPE – AJUSTES FINOS (apenas estruturais)
    ============================================================ */
 @media (orientation: landscape) and (max-height: 500px) {
     .container-feed.feed-empilhado {
         margin-top: 0 !important;
     }
-
-    .feed-empilhado .spotted-card {
-        max-width: 350px;
-    }
 }
 
-
-
 /* ============================================================
-   14. GARANTIA EXTRA – PRIMEIRO CARD RECEBE EVENTOS
+   15. GARANTIA EXTRA – PRIMEIRO CARD RECEBE EVENTOS
    ============================================================ */
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child {
     pointer-events: auto !important;
@@ -528,8 +468,8 @@ body:not(.modo-swipe-ativo) .spotted-card {
 }
 
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child * {
-    pointer-events: auto ;
-}
+    pointer-events: auto;}
+
 
 .feed-empilhado .spotted-card {
     content-visibility: auto;
@@ -544,29 +484,63 @@ body:not(.modo-swipe-ativo) .spotted-card {
     touch-action: none;
     -webkit-user-select: none !important;
     user-select: none !important;
-    
 }
 
-/* Bloqueia cliques nos links APENAS quando o card passou da tolerância de arraste */
 body.fenda-arrastando .user-mention,
 body.fenda-arrastando .anonimo {
     pointer-events: none !important;
 }
 
+
+
 /* ============================================================
-   BOTÃO EXPANDIR (LIGHTBOX)
+   PREPARAÇÃO PARA MÚLTIPLAS IMAGENS (GRID) – FUTURO
    ============================================================ */
-.btn-expandir {
-    position: absolute !important;
-    top: 10px !important;
-    right: 10px !important;
-    z-index: 999999 !important;
-    pointer-events: auto !important;
-    cursor: pointer !important;
+/*
+   Quando o motor-feed.php retornar várias imagens, use:
+   <div class="container-img-grid">
+       <img src="...">
+       <img src="...">
+       <img src="...">
+   </div>
+*/
+
+body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    margin: 8px 0;
 }
 
-.btn-expandir i {
-    pointer-events: none !important;
+body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-grid img {
+    width: 100% !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-radius: 6px;
+    display: block;
+}
+
+body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-grid img:only-child {
+    height: auto !important;
+    max-height: 300px !important;
+    object-fit: contain !important;
 }
 
 
+/* O estado de 'Prisma' - Ativado via JS */
+.modo-swipe-ativo .spotted-card.card-long-press-active {
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.4) ;
+    background-image: linear-gradient(120deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%);
+    background-size: 200% 100% ;
+    animation: shimmer-pulse 0.8s infinite ease-in-out  !important;
+    backdrop-filter: brightness(1.1) saturate(1.2) ;
+    transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s ;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* A animação: muda apenas a posição do gradiente (GPU Friendly) */
+@keyframes shimmer-pulse {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}

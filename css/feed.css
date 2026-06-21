@@ -84,11 +84,11 @@
 
 }
 
-/* O CARD -nvai respeitar o espaço */
+/* O CARD - vai respeitar o espaço */
 .container-feed article {
     display: flex !important;
     flex-direction: column;
-    width: auto ;
+    width: 100% ;
     /* Deixa o Grid controlar a largura */
     flex-shrink: 0 !important;
     position: relative ;
@@ -148,16 +148,17 @@
 
 }
 
+
 .spotted-card {
     background:var(--glass-bg);
     -webkit-backdrop-filter: blur(8px); 
     backdrop-filter: blur(8px); 
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     border-radius: 10px;
-    padding: 12px ;
+    padding: 12px;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     margin-left: auto;
     margin-right: auto;
     display: flex ;
@@ -179,6 +180,35 @@
 
 body.modo-swipe-ativo .spotted-card * {
     pointer-events: none ;
+}
+
+/*  Imagens no grid (feed e perfil) */
+
+/* Garante que o container da imagem não ultrapasse o card */
+.spotted-card .container-img-post {
+    position: relative !important;
+    width: 100% ;
+    max-width: 100% ;
+    z-index: 100 ;
+    overflow: hidden;
+    border-radius: 8px;
+    margin: 8px 0;
+    background: transparent;
+    object-fit: cover;
+     display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+}
+
+/* A imagem em si se ajusta ao container */
+.spotted-card .container-img-post img {
+    width: 100% ;
+    height: auto ;
+    max-height: 220px; /* opcional, evita imagens muito altas */
+    object-fit: contain;
+    display: block;
+    border-radius: 5px;
 }
 
 /* ==========================================================================
@@ -302,7 +332,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     font-weight: 900;
     position: absolute;
     right: 10px;
-    font-size: clamp(18px, 1.5vw, 24px) !important;
+    font-size: clamp(16px, 1.5vmin, 24px) !important;
     opacity: 0.6;
     position: absolute;
     padding: 5px;
