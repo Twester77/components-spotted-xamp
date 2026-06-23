@@ -1,5 +1,6 @@
 // sw.js – Service Worker da Fenda
-const CACHE_VERSION = 'fenda-v1.0.0';   // 🔥 INCREMENTE QUANDO ALTERAR ARQUIVOS
+// 🔥 VERSÃO AUTOMÁTICA (NUNCA MAIS PRECISA MEXER AQUI)
+const CACHE_VERSION = 'fenda-v' + Date.now();   // Ex: fenda-v1712345678901
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -19,7 +20,7 @@ const STATIC_FILES = [
   '/css/feed.css',
   '/css/swipe.css',
   '/css/comentarios.css',
-  // skin-hacker.css será tratado separadamente (stale-while-revalidate)
+  // skin-hacker.css será tratado separadamente
 
   // JS
   '/js/fenda-main.js',
@@ -57,19 +58,17 @@ const STATIC_FILES = [
   '/sons/padrao.mp3'
 ];
 
-// ==================== ARQUIVOS OPÇIONAIS (STALE-WHILE-REVALIDATE) ====================
-// skin-hacker.css e outros sons (se houver) serão tratados com estratégia mista
+// ==================== ARQUIVOS OPÇIONAIS ====================
 const OPTIONAL_FILES = [
   '/css/skin-hacker.css'
 ];
 
-// Instalação: cacheia os arquivos estáticos
+// ==================== INSTALAÇÃO ====================
 self.addEventListener('install', (event) => {
   console.log(`[SW] Instalando ${CACHE_VERSION}`);
   event.waitUntil(
     caches.open(CACHE_STATIC)
       .then((cache) => {
-        // Adiciona STATIC_FILES (ignorando falhas em um ou outro)
         return Promise.allSettled(
           STATIC_FILES.map(url => cache.add(url).catch(err => console.warn(`Falha ao cachear ${url}:`, err)))
         );
@@ -78,13 +77,14 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Ativação: remove caches antigos e toma controle das páginas
+// ==================== ATIVAÇÃO (LIMPEZA DE CACHES ANTIGOS) ====================
 self.addEventListener('activate', (event) => {
   console.log(`[SW] Ativando ${CACHE_VERSION}`);
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
+          // 🔥 Remove qualquer cache que não seja o da versão atual
           if (cacheName !== CACHE_STATIC && cacheName !== CACHE_DYNAMIC) {
             console.log(`[SW] Removendo cache antigo: ${cacheName}`);
             return caches.delete(cacheName);
@@ -95,11 +95,11 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Interceptação das requisições
+// ==================== INTERCEPTAÇÃO ====================
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // === 1. Requisições ao motor-feed.php (dados dinâmicos) → network first, fallback cache ===
+  // 1. motor-feed.php → network first, fallback cache
   if (url.pathname.includes('/motor-feed.php')) {
     event.respondWith(
       fetch(event.request)
@@ -113,7 +113,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // === 2. Arquivos estáticos da lista → cache-first ===
+  // 2. Arquivos estáticos → cache-first
   if (STATIC_FILES.some(staticPath => url.pathname === staticPath || url.pathname.endsWith(staticPath))) {
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
@@ -124,7 +124,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // === 3. Arquivos opcionais (skin-hacker.css, outros sons) → stale-while-revalidate ===
+  // 3. Opcionais → stale-while-revalidate
   if (OPTIONAL_FILES.some(optPath => url.pathname.endsWith(optPath))) {
     event.respondWith(
       caches.open(CACHE_STATIC).then((cache) => {
@@ -140,7 +140,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // === 4. Para as páginas principais (feed.php, comentarios-post.php, etc.) → network first, fallback offline ===
+  // 4. Páginas principais → network first, fallback offline
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
@@ -149,7 +149,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // === 5. Todo o resto (imagens de usuário, etc.) → rede primeiro, sem cache persistente ===
+  // 5. Todo o resto → rede primeiro
   event.respondWith(
     fetch(event.request).catch(() => new Response('Recurso não disponível offline', { status: 503 }))
   );
