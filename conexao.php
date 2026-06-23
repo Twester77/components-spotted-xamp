@@ -33,11 +33,9 @@ if ($is_production) {
     $certPath = __DIR__ . '/config/isrgrootx1.pem';
     $ssl_flag = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
     
-    // Cookie de sessão: dinâmico via variável de ambiente ou fallback
-    $cookieDomain = getenv('SESSION_COOKIE_DOMAIN');
-    if (empty($cookieDomain)) {
-        $cookieDomain = '.fendauniversity.com.br'; // fallback seguro
-    }
+    // 🔥 REMOVIDO: Cookie de sessão com domínio fixo
+    // O navegador agora gerencia o domínio automaticamente
+    $cookieDomain = null; // Não usamos mais
 } else {
     // === MODO LOCAL (XAMPP) ===
     $host    = '127.0.0.1';
@@ -73,12 +71,10 @@ mysqli_set_charset($conn, "utf8mb4");
 
 // Gerenciamento de sessão (centralizado)
 if (session_status() === PHP_SESSION_NONE) {
-    // Em produção, define o domínio do cookie para compartilhar entre www e sem www
-    if ($is_production && $cookieDomain) {
-        ini_set('session.cookie_domain', $cookieDomain);
+    // Em produção, define apenas as opções de segurança (sem domínio fixo)
+    if ($is_production) {
         ini_set('session.cookie_httponly', 1);
         ini_set('session.use_strict_mode', 1);
-        // 🔧 CORREÇÃO: adicionado cookie_secure e samesite para HTTPS
         ini_set('session.cookie_secure', 1);
         ini_set('session.cookie_samesite', 'Lax');
     }
