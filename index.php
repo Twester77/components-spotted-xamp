@@ -1,4 +1,16 @@
 <?php
+// ============================================================
+// 🔥 REDIRECIONAMENTO FORÇADO: HTTPS + WWW
+// ============================================================
+// Garante que a página seja acessada apenas via HTTPS e com www
+if ($_SERVER['HTTP_HOST'] != 'www.fendauniversity.com.br' || !isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
+    $protocolo = 'https://';
+    $dominio = 'www.fendauniversity.com.br';
+    $uri = $_SERVER['REQUEST_URI'];
+    header('Location: ' . $protocolo . $dominio . $uri, true, 301);
+    exit();
+}
+
 include_once __DIR__ . '/conexao.php';
 // Ajuste do fuso para SP
 date_default_timezone_set('America/Sao_Paulo');

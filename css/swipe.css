@@ -536,12 +536,13 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-grid img:only
 
 /* O estado de 'Prisma' - Ativado via JS */
 .modo-swipe-ativo .spotted-card.card-long-press-active {
-    box-shadow: 0 0 20px rgba(255, 140, 0, 0.4) ;
+    filter: drop-shadow( 0 0 20px rgba(255, 140, 0, 0.4)) ;
     background-image: linear-gradient(120deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 60%);
     background-size: 200% 100% ;
     animation: shimmer-pulse 0.8s infinite ease-in-out  !important;
     backdrop-filter: brightness(1.1) saturate(1.2) ;
     transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s ;
+    will-change: transition;
     -webkit-user-select: none;
     user-select: none;
 }

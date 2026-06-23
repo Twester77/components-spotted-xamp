@@ -137,7 +137,7 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
     const modal = document.createElement('div');
     modal.style.cssText = `
         background: rgba(20, 20, 32, 0.92);
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(15px);
         border-radius: 28px;
         padding: 28px 24px;
         width: 90%;
@@ -145,6 +145,8 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         text-align: center;
         border: 1px solid rgba(255, 140, 0, 0.5);
         box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+        user-select: none;
+        -webkit-user-select: none;
     `;
     const title = document.createElement('div');
     title.textContent = isOwner ? ' GERENCIAR POST ' : ' SINALIZAR POST ';
