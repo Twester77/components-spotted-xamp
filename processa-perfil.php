@@ -1,19 +1,24 @@
 <?php
 // 1. LIGAR O BUFFER E SILENCIAR ERROS ANTES DE QUALQUER OUTRA COISA
 require_once __DIR__ . '/auth_check.php';
-require_once 'includes/upload_engine.php'; // 🚀 Motor oficial de upload
+require_once 'includes/upload_engine.php';
+include_once __DIR__ . '/fenda_debug.php';
+
+fenda_log('🔵 INÍCIO processa-perfil.php');
 
 // Se veio do feed.php, vira feed.php. Se veio do perfil.php, vira perfil.php...
 $url_origem = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : 'perfil.php';
 
 // 1. Segurança: Só processa se for POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . ' (método não POST)');
     header("Location: $url_origem");
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $usuario_id = $_SESSION['usuario_id'];
+    fenda_log('🔵 Usuário ID ' . $usuario_id . ' processando perfil');
 
     $novo_nome     = strip_tags($_POST['nome'] ?? '');
     $nova_bio      = strip_tags($_POST['bio'] ?? '');
@@ -21,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
 
     // Validação de espaços
     if (preg_match('/\s/', $novo_username)) {
+        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_espaco');
         header("Location: " . $url_origem . "?erro=username_espaco");
         exit();
     }
@@ -28,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $novo_username = strtolower(preg_replace('/[^a-zA-Z0-9\._]/', '', $novo_username));
 
     if (empty($novo_username) || strlen($novo_username) < 5) {
+        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_curto');
         header("Location: " . $url_origem . "?erro=username_curto");
         exit();
     }
@@ -41,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
         mysqli_stmt_store_result($stmt_check);
         if (mysqli_stmt_num_rows($stmt_check) > 0) {
             mysqli_stmt_close($stmt_check);
+            fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_duplicado');
             header("Location: " . $url_origem . "?erro=username_duplicado");
             exit();
         }
@@ -57,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $novo_pip      = isset($_POST['pref_pip']) ? (int)$_POST['pref_pip'] : 0;
     // 🔥 NOVO: Badge no ícone do app
     $novo_badge    = isset($_POST['pref_badge']) ? (int)$_POST['pref_badge'] : 1;
+
+    fenda_log('🔵 Atualizando perfil: nome=' . $novo_nome . ', username=' . $novo_username);
 
     // Atualização dos dados textuais
     $sql = "UPDATE usuarios SET 
@@ -76,8 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     
     $stmt = mysqli_prepare($conn, $sql);
     if ($stmt) {
-        // 🔥 NOVO BIND: "ssssssiissiii"
-        // Mapeamento completo:
+        // 🔥 BIND: "ssssssiissiii"
         // 1  s  nome
         // 2  s  bio
         // 3  s  username
@@ -89,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
         // 9  s  pref_som_trilha
         // 10 s  pref_som_notif
         // 11 i  pref_pip
-        // 12 i  pref_badge        <-- NOVO
+        // 12 i  pref_badge
         // 13 i  id (WHERE)
         mysqli_stmt_bind_param(
             $stmt,
@@ -109,9 +118,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
             $usuario_id
         );
         if (!mysqli_stmt_execute($stmt)) {
+            fenda_log('🔴 ERRO no banco de dados: ' . mysqli_stmt_error($stmt));
             die("Erro no banco de dados: " . mysqli_stmt_error($stmt));
         }
         mysqli_stmt_close($stmt);
+        fenda_log('🟢 Perfil atualizado com sucesso para usuário ' . $usuario_id);
     }
 
     $_SESSION['usuario_nome'] = $novo_nome;
@@ -171,12 +182,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     if (isset($_SERVER['HTTP_REFERER'])) {
         // Limpa qualquer parâmetro de URL antigo que possa ter vindo
         $url_origem = strtok($_SERVER['HTTP_REFERER'], '?');
+        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?sucesso=1');
         header("Location: " . $url_origem . "?sucesso=1");
     } else {
+        fenda_log('🔴 REDIRECIONANDO para perfil.php?sucesso=1');
         header("Location: perfil.php?sucesso=1");
     }
     exit();
 } else {
+    fenda_log('🔴 REDIRECIONANDO para perfil.php (sem sessão)');
     header("Location: perfil.php");
     exit();
 }

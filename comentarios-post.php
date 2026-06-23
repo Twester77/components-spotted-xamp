@@ -1,5 +1,8 @@
 <?php
 include_once 'conexao.php';
+include_once __DIR__ . '/fenda_debug.php';
+
+fenda_log('🟢 INÍCIO comentarios-post.php');
 /* ==========================================================================
    Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir.
    Cada linha, cada debug, cada madrugada valeram a pena.

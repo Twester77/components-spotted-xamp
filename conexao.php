@@ -2,6 +2,8 @@
 // 🔧 CORREÇÃO: display_errors desativado em produção
 // O valor será definido após a detecção do ambiente
 if (ob_get_level() == 0) ob_start();
+include_once __DIR__ . '/fenda_debug.php';
+fenda_log('🔵 INÍCIO conexao.php');
 
 /*--------------------------------------------------------------------------------------------------------------
 PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente e cookie dinâmico)

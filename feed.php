@@ -1,7 +1,11 @@
 <?php
 require_once __DIR__ . '/auth_check.php';
+include_once __DIR__ . '/fenda_debug.php';
+
+fenda_log('🟢 INÍCIO feed.php');
 
 if (!isset($_SESSION['usuario_id'])) {
+    fenda_log('🔴 REDIRECIONANDO para index.php (feed.php sem sessão)');
     header("Location: index.php");
     exit();
 }
