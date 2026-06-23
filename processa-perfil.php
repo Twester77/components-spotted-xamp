@@ -54,6 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
     $nova_bolha    = isset($_POST['pref_bolhas']) ? (int)$_POST['pref_bolhas'] : 0;
     $nova_trilha   = $_POST['pref_som_trilha'] ?? 'off';
     $nova_notif    = $_POST['pref_som_notif'] ?? 'padrao';
+    $novo_pip      = isset($_POST['pref_pip']) ? (int)$_POST['pref_pip'] : 0;
+    // 🔥 NOVO: Badge no ícone do app
+    $novo_badge    = isset($_POST['pref_badge']) ? (int)$_POST['pref_badge'] : 1;
 
     // Atualização dos dados textuais
     $sql = "UPDATE usuarios SET 
@@ -66,13 +69,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
             pref_swipe = ?, 
             pref_bolhas = ?, 
             pref_som_trilha = ?, 
-            pref_som_notif = ? 
+            pref_som_notif = ?,
+            pref_pip = ?,
+            pref_badge = ? 
         WHERE id = ?";
+    
     $stmt = mysqli_prepare($conn, $sql);
     if ($stmt) {
+        // 🔥 NOVO BIND: "ssssssiissiii"
+        // Mapeamento completo:
+        // 1  s  nome
+        // 2  s  bio
+        // 3  s  username
+        // 4  s  atletica_id
+        // 5  s  pref_vibe_padrao
+        // 6  s  pref_cor_padrao
+        // 7  i  pref_swipe
+        // 8  i  pref_bolhas
+        // 9  s  pref_som_trilha
+        // 10 s  pref_som_notif
+        // 11 i  pref_pip
+        // 12 i  pref_badge        <-- NOVO
+        // 13 i  id (WHERE)
         mysqli_stmt_bind_param(
             $stmt,
-            "ssssssiissi",
+            "ssssssiissiii",
             $novo_nome,
             $nova_bio,
             $novo_username,
@@ -83,6 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
             $nova_bolha,
             $nova_trilha,
             $nova_notif,
+            $novo_pip,
+            $novo_badge,
             $usuario_id
         );
         if (!mysqli_stmt_execute($stmt)) {

@@ -5,15 +5,15 @@ include_once 'conexao.php';
    Cada linha, cada debug, cada madrugada valeram a pena.
    A Fenda está viva. Até a próxima travessia, companheiro. 💚
    ========================================================================== */
-// --- LÓGICA DE EXCEÇÃO PARA PERDIDOS : 🚨 CURTO-CIRCUITO DE SEGURANÇA---
 
+// --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id == 0) {
     header("Location: feed.php");
     exit();
 }
 
-// --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
+// --- VERIFICA SE É POST PERDIDO (público) ---
 $is_perdidos = false;
 if ($id > 0) {
     $stmt_check = $conn->prepare("SELECT categoria FROM mensagens WHERE id = ?");
@@ -25,12 +25,13 @@ if ($id > 0) {
     }
 }
 
+// --- SEGURANÇA: se não estiver logado e não for perdidos, redireciona ---
 if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
     header("Location: index.php");
     exit();
 }
 
-// Puxar dados do usuário logado
+// --- PUXA DADOS DO USUÁRIO LOGADO ---
 $vibe_default = 'vibe-glass';
 $cor_default = '#70cde4';
 $swipeAtivado = 0;
@@ -46,11 +47,14 @@ if (isset($_SESSION['usuario_id'])) {
     }
 }
 
-$is_post_page = true; // DEFINA A VARIÁVEL ANTES DO INCLUDE
+$is_post_page = true;
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 
+// ============================================================
+// 🔥 BUSCA O POST E VERIFICA STATUS
+// ============================================================
 $stmt = $conn->prepare("SELECT m.*, u.username, u.foto FROM mensagens m LEFT JOIN usuarios u ON m.usuario_id = u.id WHERE m.id = ?");
 $stmt->bind_param("i", $id);
 $stmt->execute();
@@ -60,9 +64,12 @@ if (!$post) {
     die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
 }
 
-// ==================================================
+// 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
+$post_esta_ativo = ($post['status'] === 'ativo');
+
+// ============================================================
 // 1. BUSCAR REAÇÕES DETALHADAS PARA ESTE POST
-// ==================================================
+// ============================================================
 $post_id_atual = $id;
 $sql_react = "SELECT tipo_reacao, COUNT(*) as total 
               FROM curtidas 
@@ -78,7 +85,7 @@ while ($row = $res_react->fetch_assoc()) {
 }
 $stmt_react->close();
 
-// 2. REAÇÕES DO USUÁRIO LOGADO (para marcar como "voted")
+// 2. REAÇÕES DO USUÁRIO LOGADO
 $minhas_reacoes = [];
 if (isset($_SESSION['usuario_id'])) {
     $meu_id = $_SESSION['usuario_id'];
@@ -112,16 +119,14 @@ $total_reacoes = array_sum($reacoes_detalhes);
 ?>
 
 <style>
-    /* Esconde o cabeçalho e o texto do rodapé APENAS nesta página */
     .header-visivel,
     .footer-texto-institucional,
     .footer-global {
         display: none !important;
     }
-
 </style>
 
-<!-- PREVIEW (CORTINA) – aparece primeiro -->
+<!-- PREVIEW (CORTINA) -->
 <div class="preview-overlay" id="previewOverlay">
     <div class="preview-card">
         <a href="feed.php" class="btn-fechar-post">✖</a>
@@ -158,19 +163,29 @@ $total_reacoes = array_sum($reacoes_detalhes);
     </div>
 </div>
 
-<!-- LINGOTE (CONTEÚDO) – escondido inicialmente -->
+<!-- LINGOTE (CONTEÚDO) -->
 <div class="lingote-container" id="lingoteContainer">
     <div class="layout-wrapper">
         <header class="sticky-header">
             <div class="box-post-central">
-                <!-- WRAPPER DE ISOLAMENTO ESTÁTICO -->
                 <div class="fenda-estatica-context">
                     <a href="feed.php" class="btn-voltar-fenda">
                         <i class="fas fa-arrow-left"></i> Voltar para o Feed
                     </a>
 
-                    <!-- CARD PRINCIPAL (agora isolado) -->
+                    <!-- ============================================================
+                    CARD PRINCIPAL (com banner de post encerrado)
+                    ============================================================ -->
                     <article id="card-post-header" class="spotted-card <?php echo $post['categoria']; ?> card-focado">
+
+                        <!-- 🔥 BANNER DE POST ENCERRADO -->
+                        <?php if (!$post_esta_ativo): ?>
+                            <div class="post-encerrado-banner">
+                                <i class="fas fa-lock"></i>
+                                Este post foi encerrado pelo autor. Os comentários estão bloqueados.
+                            </div>
+                        <?php endif; ?>
+
                         <div class="card-header">
                             <span class="category-tag">#<?php echo strtoupper($post['categoria']); ?></span>
                             <span class="post-time"><?php echo date('d/m', strtotime($post['data_post'])); ?></span>
@@ -180,16 +195,16 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             <?php if (!empty($post['imagem_url'])): ?>
                                 <div class="container-img-post">
                                     <?php if (filter_var($post['imagem_url'], FILTER_VALIDATE_URL)): ?>
-                                        <img src="<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post - Seção Comentários">
+                                        <img src="<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post">
                                     <?php else: ?>
-                                        <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post - Seção Comentários">
+                                        <img src="postagens/<?php echo htmlspecialchars($post['imagem_url']); ?>" class="spotted-card-img" alt="Imagem do Post">
                                     <?php endif; ?>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </article>
 
-                    <!-- SEÇÃO DE REAÇÕES (ID que o JS espera) -->
+                    <!-- SEÇÃO DE REAÇÕES -->
                     <div id="reacoes-post-<?php echo $post_id_atual; ?>" class="reacoes-gravadas">
                         <?php if (!empty($reacoes_detalhes)): ?>
                             <?php foreach ($reacoes_detalhes as $tipo => $total): ?>
@@ -204,20 +219,20 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 </div>
             </div>
         </header>
+
         <button id="btn-toggle-collapse" class="btn-toggle-collapse" aria-label="Minimizar/Expandir post">
             <i class="fas fa-chevron-up"></i>
         </button>
 
-        <!-- ÁREA DE COMENTÁRIOS (ROLAVEL) -->
+        <!-- ÁREA DE COMENTÁRIOS -->
         <main class="lista-scrollavel">
             <div class="lista-comentarios-social">
                 <?php
-                // Query com subconsulta para buscar o texto do comentário pai (resposta)
                 $sql_c = "SELECT c.*, 
-          (SELECT comentario FROM comentarios WHERE id = c.parent_id) as parent_comentario
-          FROM comentarios c 
-          WHERE c.id_mensagem = ? AND c.status = 'ativo'
-          ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
+                          (SELECT comentario FROM comentarios WHERE id = c.parent_id) as parent_comentario
+                          FROM comentarios c 
+                          WHERE c.id_mensagem = ? AND c.status = 'ativo'
+                          ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
                 $stmt_c = $conn->prepare($sql_c);
                 $stmt_c->bind_param("i", $id);
                 $stmt_c->execute();
@@ -234,7 +249,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         $nome_limpo_js = !empty($c['usuario_nome']) ? str_replace("'", "", $c['usuario_nome']) : "Habitante";
                         $estilo_filho = $classe_filho ? "var(--cor-borda-glow);" : "";
 
-                        // Gera o trecho do comentário original (se for resposta)
                         $trecho_resposta = '';
                         if (!empty($c['parent_id']) && !empty($c['parent_comentario'])) {
                             $texto_puro = strip_tags($c['parent_comentario']);
@@ -246,7 +260,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             id="comentario-<?php echo $c['id']; ?>"
                             style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
 
-                            <!-- ===== BOTÃO ELLIPSIS (apenas para o autor) ===== -->
                             <?php if ($sou_eu): ?>
                                 <button class="btn-excluir-comentario" data-id="<?php echo $c['id']; ?>" title="Excluir comentário">
                                     <i class="fas fa-ellipsis-v"></i>
@@ -260,7 +273,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
                             </div>
 
-                            <!-- Indicador de resposta (clicável) -->
                             <?php if (!empty($c['parent_id'])): ?>
                                 <div class="indicador-resposta" onclick="irParaMensagem(<?php echo $c['parent_id']; ?>)">
                                     <i class="fas fa-reply"></i> <small><?php echo htmlspecialchars($trecho_resposta); ?></small>
@@ -272,10 +284,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             <?php if (!empty($c['imagem_url'])): ?>
                                 <div class="comentario-media-wrapper">
                                     <?php if (filter_var($c['imagem_url'], FILTER_VALIDATE_URL)): ?>
-                                        <!-- GIF externo (GIPHY) -->
                                         <img src="<?php echo htmlspecialchars($c['imagem_url']); ?>" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy">
                                     <?php else: ?>
-                                        <!-- Imagem local (upload) -->
                                         <img src="comentarios/<?php echo htmlspecialchars($c['imagem_url']); ?>" class="comentario-img" alt="Imagem do comentário" loading="lazy">
                                     <?php endif; ?>
                                 </div>
@@ -295,64 +305,70 @@ $total_reacoes = array_sum($reacoes_detalhes);
             </div>
         </main>
 
-        <!-- RODAPÉ FIXO (BARRA DE COMENTÁRIOS MINIMALISTA) -->
-        <footer class="fixed-input">
-            <section class="sessao-fofoca-focada" id="fofocar">
-                <button type="button" id="btn-attach-gaveta" class="btn-attach-gaveta" title="Mais opções">+</button>
-                <textarea name="comentario" class="textarea-chat" placeholder="Digite sua mensagem..." maxlength="500" id="comentario-textarea"></textarea>
-                <button type="submit" form="form-comentario" class="btn-enviar-chat">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-
-                <div id="gaveta-opcoes" class="gaveta-opcoes" style="display: none;">
-                    <div class="resposta-indicador" id="resposta-indicador" style="display: none;">
-                        <i class="fas fa-reply"></i> <span id="texto-nome-resposta">Respondendo...</span>
-                        <button type="button" onclick="cancelarResposta()" class="cancelar-resposta">✖</button>
-                    </div>
-                    <div class="customizacao-rapida">
-                        <select name="pref_vibe_comentario" id="vibe-comentario" class="input-mini">
-                            <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Glass</option>
-                            <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon</option>
-                            <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark</option>
-                            <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light</option>
-                            <option value="vibe-ads" <?php echo ($vibe_default == 'vibe-ads') ? 'selected' : ''; ?>>ADS (Overclock)</option>
-                        </select>
-                        <input type="color" name="pref_cor_borda" id="cor-borda" value="<?php echo $cor_default; ?>" class="color-mini">
-                    </div>
-                    <input type="file" name="imagem_comentario" id="input-img-comentario" accept="image/*" style="display:none;">
-                    <button type="button" id="btn-anexar-img" class="btn-attach-opcao"><i class="fas fa-image"></i> Imagem</button>
-                    <button type="button" id="btn-gif" class="btn-attach-opcao" onclick="abrirGiphyModal()">
-                        <i class="fas fa-grin-tongue-squint"></i> GIF/Sticker
+        <!-- ============================================================
+        RODAPÉ – FORMULÁRIO DE COMENTÁRIO (se ativo) OU BLOQUEIO (se encerrado)
+        ============================================================ -->
+        <?php if ($post_esta_ativo): ?>
+            <!-- Formulário ativo -->
+            <footer class="fixed-input">
+                <section class="sessao-fofoca-focada" id="fofocar">
+                    <button type="button" id="btn-attach-gaveta" class="btn-attach-gaveta" title="Mais opções">+</button>
+                    <textarea name="comentario" class="textarea-chat" placeholder="Digite sua mensagem..." maxlength="500" id="comentario-textarea"></textarea>
+                    <button type="submit" form="form-comentario" class="btn-enviar-chat">
+                        <i class="fas fa-paper-plane"></i>
                     </button>
-                </div>
 
-                <form action="enviar-comentario.php" method="POST" enctype="multipart/form-data" class="form-chat" id="form-comentario" style="display: none;">
-                    <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
-                    <input type="hidden" name="parent_id" id="input_parent_id" value="">
-                    <input type="hidden" name="pref_vibe_comentario" id="hidden-vibe" value="">
-                    <input type="hidden" name="pref_cor_borda" id="hidden-cor" value="">
-                    <textarea name="comentario" id="hidden-textarea"></textarea>
-                </form>
-
-                <!-- RODAPÉ DA BARRA – CONTADOR + PREVIEW DO ANEXO -->
-                <div class="chat-footer-info">
-                    <!-- Contador (sempre visível, à direita) -->
-                    <span id="char-count" class="char-counter">500</span>
-
-                    <!-- Miniatura do anexo (aparece apenas quando há arquivo) -->
-                    <span id="anexo-preview" style="display: none; cursor: pointer;" title="Arquivo anexado"></span>
-
-                    <!-- Feedback toast (flutuante sobre o canto) -->
-                    <div id="feedback-upload">
-                        <span class="icone-feedback"></span>
-                        <span class="texto-feedback"></span>
+                    <div id="gaveta-opcoes" class="gaveta-opcoes" style="display: none;">
+                        <div class="resposta-indicador" id="resposta-indicador" style="display: none;">
+                            <i class="fas fa-reply"></i> <span id="texto-nome-resposta">Respondendo...</span>
+                            <button type="button" onclick="cancelarResposta()" class="cancelar-resposta">✖</button>
+                        </div>
+                        <div class="customizacao-rapida">
+                            <select name="pref_vibe_comentario" id="vibe-comentario" class="input-mini">
+                                <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Glass</option>
+                                <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon</option>
+                                <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark</option>
+                                <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light</option>
+                                <option value="vibe-ads" <?php echo ($vibe_default == 'vibe-ads') ? 'selected' : ''; ?>>ADS (Overclock)</option>
+                            </select>
+                            <input type="color" name="pref_cor_borda" id="cor-borda" value="<?php echo $cor_default; ?>" class="color-mini">
+                        </div>
+                        <input type="file" name="imagem_comentario" id="input-img-comentario" accept="image/*" style="display:none;">
+                        <button type="button" id="btn-anexar-img" class="btn-attach-opcao"><i class="fas fa-image"></i> Imagem</button>
+                        <button type="button" id="btn-gif" class="btn-attach-opcao" onclick="abrirGiphyModal()">
+                            <i class="fas fa-grin-tongue-squint"></i> GIF/Sticker
+                        </button>
                     </div>
+
+                    <form action="enviar-comentario.php" method="POST" enctype="multipart/form-data" class="form-chat" id="form-comentario" style="display: none;">
+                        <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
+                        <input type="hidden" name="parent_id" id="input_parent_id" value="">
+                        <input type="hidden" name="pref_vibe_comentario" id="hidden-vibe" value="">
+                        <input type="hidden" name="pref_cor_borda" id="hidden-cor" value="">
+                        <textarea name="comentario" id="hidden-textarea"></textarea>
+                    </form>
+
+                    <div class="chat-footer-info">
+                        <span id="char-count" class="char-counter">500</span>
+                        <span id="anexo-preview" style="display: none; cursor: pointer;" title="Arquivo anexado"></span>
+                        <div id="feedback-upload">
+                            <span class="icone-feedback"></span>
+                            <span class="texto-feedback"></span>
+                        </div>
+                    </div>
+                </section>
+            </footer>
+        <?php else: ?>
+            <!-- 🔥 POST ENCERRADO – BLOQUEIO DE COMENTÁRIOS -->
+            <footer class="fixed-input fixed-input-bloqueado">
+                <div class="comentarios-bloqueados-msg">
+                    <i class="fas fa-ban"></i>
+                    <span>Este post foi encerrado e não aceita mais interações.</span>
                 </div>
-            </section>
-        </footer>
+            </footer>
+        <?php endif; ?>
     </div>
 </div>
-
 
 <script>
     // ==================== ALTERNÂNCIA CORTINA/LINGOTE ====================
@@ -425,7 +441,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
 <script src="js/fenda-mencoes.js"></script>
 
 <script>
-    // ==================== LÓGICA DE COMENTÁRIOS (ENVIO, ANEXOS, RESPOSTAS) ====================
+    // ==================== LÓGICA DE COMENTÁRIOS (APENAS SE POST ESTIVER ATIVO) ====================
+    <?php if ($post_esta_ativo): ?>
     const barraFofoca = document.querySelector('.sessao-fofoca-focada');
     const campoTexto = document.querySelector('.textarea-chat');
     const contadorChar = document.getElementById('char-count');
@@ -453,7 +470,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         if (hiddenTextarea) hiddenTextarea.value = campoTexto.value;
     }
 
-    // ==================== ABRIR LIGHTBOX MANUAL (para miniatura) ====================
     function abrirLightboxManual(src) {
         if (!src) return;
         const modalExistente = document.getElementById('modal-lightbox-fenda');
@@ -484,7 +500,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         modal.style.opacity = '1';
     }
 
-    // ==================== FEEDBACK TOAST ====================
     function mostrarFeedback(mensagem, tipo) {
         const toast = document.getElementById('feedback-upload');
         if (!toast) return;
@@ -514,7 +529,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         if (toast) toast.classList.remove('visivel');
     }
 
-    // ========== VALIDAÇÃO E PREVIEW ==========
     function validarArquivo() {
         const preview = document.getElementById('anexo-preview');
         if (!inputFile || !inputFile.files.length) {
@@ -562,7 +576,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         return true;
     }
 
-    // ==================== EVENTOS ====================
     window.toggleBarraFofoca = function() {
         const icone = document.querySelector('#toggle-chat-barra i');
         if (!barraFofoca) return;
@@ -803,4 +816,5 @@ $total_reacoes = array_sum($reacoes_detalhes);
             });
         }
     }
+    <?php endif; // fim do bloco de comentários ativos ?>
 </script>

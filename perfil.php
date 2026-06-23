@@ -21,8 +21,8 @@ if (!$isAjax) {
 //QUINTO: Sua lógica de consulta ao banco (O motor de dados)
 $id_meu = $_SESSION['usuario_id'];
 
-// 1. O banco reconhece a escolha do usuário
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, pref_som_trilha, pref_som_notif FROM usuarios WHERE id = '$id_meu'";
+// 🔥 ADICIONADO: pref_pip na lista de campos
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, pref_som_trilha, pref_som_notif, pref_pip, pref_badge FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
@@ -205,6 +205,26 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
                     <option value="vibe-ads" <?php echo ($dados['pref_vibe_padrao'] == 'vibe-ads') ? 'selected' : ''; ?>>ADS (Overclock)</option>
                 </select>
+            </div>
+
+            <!-- 🔥 NOVO: Toggle do PiP -->
+            <div class="config-item">
+                <span>Notificações Flutuantes (PiP):</span>
+                <label class="switch">
+                    <input type="checkbox" name="pref_pip" value="1" <?php echo (isset($dados['pref_pip']) && $dados['pref_pip'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round"></span>
+                </label>
+                <small>Receba notificações em janela flutuante (experimental, disponível apenas em desktop Chrome/Edge)</small>
+            </div>
+
+            <!-- 🔥 NOVO: Toggle do Badge -->
+            <div class="config-item">
+                <span>Badge no Ícone:</span>
+                <label class="switch">
+                    <input type="checkbox" name="pref_badge" value="1" <?php echo (isset($dados['pref_badge']) && $dados['pref_badge'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round"></span>
+                </label>
+                <small>Exibe o número de notificações no ícone do app (desktop/Android)</small>
             </div>
 
             <div class="config-item">

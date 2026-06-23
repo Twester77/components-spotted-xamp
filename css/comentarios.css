@@ -1089,7 +1089,6 @@
 .fenda-estatica-context .spotted-card {
     max-height: none;
     overflow-y: visible;
-    margin-bottom: 15px;
     scrollbar-width: none;
 }
 
@@ -1168,7 +1167,7 @@ body.pagina-post .header-principal {
 .comentario-img.gif-externo {
     padding: 4px;
     max-width: 100%;
-    max-height: 250px;
+    max-height: 200px;
     object-fit: contain;
     background: transparent;
 }
@@ -1401,6 +1400,14 @@ body.pagina-post .header-principal {
         padding: 4px 10px;
         min-width: 60px;
     }
+
+   .post-encerrado-banner {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+     .comentarios-bloqueados-msg {
+            font-size: 0.85rem;
+        }
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
@@ -1426,3 +1433,53 @@ body.pagina-post .header-principal {
         min-width: 50px;
     }
 }
+
+
+/* ============================================================
+       🔥 POST ENCERRADO – BANNER E BLOQUEIO
+       ============================================================ */
+    .post-encerrado-banner {
+        background: rgba(255, 188, 0, 0.08);
+        border-left: 4px solid #ffbc00;
+        padding: 10px 16px;
+        margin-bottom: 12px;
+        border-radius: 4px;
+        color: #ffbc00;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .post-encerrado-banner i {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .fixed-input-bloqueado {
+        background: rgba(255, 255, 255, 0.02);
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 16px 20px;
+    }
+
+    .comentarios-bloqueados-msg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        color: #ffffff;
+        opacity: 0.7;
+        font-size: 0.95rem;
+        font-style: italic;
+        flex-wrap: wrap;
+        text-align: center;
+    }
+
+    .comentarios-bloqueados-msg i {
+        font-size: 1.2rem;
+        color: #ffffff;
+        opacity: 0.7;
+    }
+
+    

@@ -347,101 +347,7 @@ function inicializarPreferenciasAPartirDoDOM() {
 }
 
 
-
 // ==================== NOTIFICAÇÕES E ALERTAS ====================
-window.atualizarContadorAlertas = function () {
-    fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
-        .then(res => res.text())
-        .then(texto => {
-            const match = texto.match(/\{.*\}/);
-            if (!match) return;
-            const data = JSON.parse(match[0]);
-            const badge = document.getElementById('badge-alertas');
-            if (badge && data.total !== undefined) {
-                let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
-                if (data.total > ultimoAviso) {
-                    if (typeof mostrarPopup === 'function') mostrarPopup("Nova interação na Fenda!");
-                }
-                sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                badge.innerText = data.total;
-                badge.style.display = data.total > 0 ? 'flex' : 'none';
-            }
-        })
-        .catch(err => console.warn("[RADAR] Aguardando sinal limpo..."));
-};
-
-// ==================== POPUPS E NOTIFICAÇÕES ====================
-function mostrarPopup(mensagem) {
-    let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
-    let tempoExibicao = 5000;
-    if (temaSalvo !== 'off') {
-        let configuracaoSons = {
-            'padrao': { arquivo: 'padrao.mp3', volume: 1.5 },
-            'resident': { arquivo: 'resident.mp3', volume: 0.6 },
-            'cs': { arquivo: 'cs.mp3', volume: 0.7 },
-            'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },
-            'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
-            'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
-            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.3 },
-            'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
-            'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
-            'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
-            'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3', volume: 0.4 },
-            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.3 }
-        };
-        if (temaSalvo === 'digimon') tempoExibicao = 11000;
-        else if (temaSalvo === 'starwars') tempoExibicao = 9000;
-        if (configuracaoSons[temaSalvo]) {
-            let somEscolhido = configuracaoSons[temaSalvo];
-            const dispararSom = () => {
-                let somUrl = 'sons/' + somEscolhido.arquivo + '?v=' + Date.now();
-                let bip = new Audio(somUrl);
-                bip.volume = somEscolhido.volume;
-                bip.play().then(() => {
-                    bip.onloadedmetadata = function () {
-                        if (bip.duration > 4) {
-                            setTimeout(() => {
-                                let intervaloFade = setInterval(() => {
-                                    if (bip.volume > 0.03) bip.volume -= 0.03;
-                                    else {
-                                        bip.volume = 0;
-                                        bip.pause();
-                                        clearInterval(intervaloFade);
-                                    }
-                                }, 50);
-                            }, tempoExibicao - 1500);
-                        }
-                    };
-                }).catch(err => console.warn("[AUDIO] Aguardando clique."));
-            };
-            if (window.audioLiberado) {
-                dispararSom();
-            } else {
-                document.addEventListener('click', () => {
-                    window.audioLiberado = true;
-                    dispararSom();
-                }, { once: true });
-            }
-        }
-    }
-    const popup = document.createElement('div');
-    popup.className = 'notificacao-popup';
-    popup.style.cursor = 'pointer';
-    popup.innerHTML = `
-        <div style="font-size: 20px;">🔔</div>
-        <div style="flex-grow: 1;">
-            <strong style="display: block; font-size: 14px; color: #ddc80e;">Nova Interação!</strong>
-            <span>${mensagem}</span>
-        </div>
-    `;
-    popup.onclick = () => window.location.href = 'notificacoes.php';
-    document.body.appendChild(popup);
-    setTimeout(() => {
-        popup.style.opacity = '0';
-        setTimeout(() => popup.remove(), 500);
-    }, tempoExibicao);
-}
-
 // ==================== TOAST SIMPLES (sem redirecionamento) ====================
 window.exibirToast = function(mensagem) {
     const toast = document.createElement('div');
@@ -462,7 +368,196 @@ window.exibirToast = function(mensagem) {
     }, 3000);
 };
 
+// ==================== NOTIFICAÇÕES EM PiP ====================
+window.abrirPipNotificacao = async function(titulo, mensagem, link, icone = '🔔') {
+    // 1. Verifica se o usuário ativou o PiP
+    const prefPipInput = document.getElementById('input_pref_pip');
+    if (prefPipInput && prefPipInput.value !== '1') {
+        console.log('[PIP] Usuário desativou PiP. Usando toast.');
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ' ' + mensagem);
+        }
+        return;
+    }
+
+    // 2. Verifica suporte do navegador
+    if (!('documentPictureInPicture' in window)) {
+        console.warn('[PIP] Navegador não suporta. Usando toast.');
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ' ' + mensagem);
+        }
+        return;
+    }
+
+    // 3. Verifica se a página está visível e não está em modo swipe ou modal aberto
+    if (document.visibilityState !== 'visible' || 
+        document.body.classList.contains('modo-swipe-ativo') ||
+        document.body.classList.contains('modal-aberto')) {
+        console.log('[PIP] Condições de bloqueio ativas. Usando toast.');
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ' ' + mensagem);
+        }
+        return;
+    }
+
+    // 4. Fecha PiP anterior se existir
+    if (window._pipAtivo) {
+        try { window._pipAtivo.close(); } catch (e) {}
+        window._pipAtivo = null;
+    }
+
+    try {
+        const pipWindow = await documentPictureInPicture.requestWindow({
+            width: 380,
+            height: 140,
+        });
+
+        // Conteúdo HTML do PiP
+        pipWindow.document.body.innerHTML = `
+            <style>
+                body { margin: 0; padding: 0; background: #1a1a2e; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+                .pip-container { padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; height: 100%; box-sizing: border-box; }
+                .pip-icone { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+                .pip-conteudo { flex: 1; min-width: 0; }
+                .pip-titulo { font-weight: 600; color: #ffbc00; font-size: 0.85rem; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .pip-mensagem { font-size: 0.8rem; color: #ccc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+                .pip-acoes { display: flex; gap: 6px; margin-top: 6px; }
+                .pip-acoes button { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 3px 14px; color: #fff; cursor: pointer; font-size: 0.7rem; font-weight: 500; transition: 0.2s; font-family: inherit; }
+                .pip-acoes button:hover { background: rgba(255,188,0,0.15); border-color: #ffbc00; color: #ffbc00; }
+                .pip-acoes .btn-ver-pip { background: #ffbc00; border-color: #ffbc00; color: #000; }
+                .pip-acoes .btn-ver-pip:hover { background: #ffd44d; border-color: #ffd44d; }
+            </style>
+            <div class="pip-container">
+                <div class="pip-icone">${icone}</div>
+                <div class="pip-conteudo">
+                    <span class="pip-titulo">${titulo}</span>
+                    <div class="pip-mensagem">${mensagem}</div>
+                    <div class="pip-acoes">
+                        <button onclick="window.parent.fecharPipNotificacao()">✕ Ignorar</button>
+                        <button class="btn-ver-pip" onclick="window.parent.irParaLinkPip('${link}')">👀 Ver</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        window._pipAtivo = pipWindow;
+
+        // Fecha automaticamente após 12 segundos
+        setTimeout(() => {
+            if (window._pipAtivo) {
+                window._pipAtivo.close();
+                window._pipAtivo = null;
+            }
+        }, 12000);
+
+    } catch (err) {
+        console.error('[PIP] Erro ao abrir:', err);
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ': ' + mensagem);
+        }
+    }
+};
+
+// Fecha o PiP
+window.fecharPipNotificacao = function() {
+    if (window._pipAtivo) {
+        try { window._pipAtivo.close(); } catch (e) {}
+        window._pipAtivo = null;
+    }
+};
+
+// Redireciona para o link e fecha
+window.irParaLinkPip = function(link) {
+    window.fecharPipNotificacao();
+    if (link) window.location.href = link;
+};
+
+// ==================== BADGING (Ícone com número) ====================
+window.atualizarBadge = function(total) {
+    // 1. Verifica se o usuário ativou o badge
+    const prefBadgeInput = document.getElementById('input_pref_badge');
+    if (prefBadgeInput && prefBadgeInput.value !== '1') {
+        // Usuário desativou o badge
+        if (navigator.clearAppBadge) {
+            navigator.clearAppBadge();
+        }
+        return;
+    }
+
+    // 2. Verifica suporte da API
+    if (!navigator.setAppBadge) {
+        console.log('[BADGE] API não suportada neste navegador.');
+        return;
+    }
+
+    // 3. Atualiza o badge com o total de notificações
+    if (total > 0) {
+        try {
+            navigator.setAppBadge(total);
+            console.log('[BADGE] Badge atualizado:', total);
+        } catch (err) {
+            console.warn('[BADGE] Erro ao atualizar badge:', err);
+        }
+    } else {
+        // Limpa o badge se total for 0
+        try {
+            navigator.clearAppBadge();
+            console.log('[BADGE] Badge limpo.');
+        } catch (err) {
+            console.warn('[BADGE] Erro ao limpar badge:', err);
+        }
+    }
+};
+
+// Limpa o badge em eventos de interação
+window.limparBadge = function() {
+    if (navigator.clearAppBadge) {
+        try {
+            navigator.clearAppBadge();
+            console.log('[BADGE] Badge limpo por interação do usuário.');
+        } catch (err) {
+            console.warn('[BADGE] Erro ao limpar badge:', err);
+        }
+    }
+};
+
+// ==================== NOTIFICAÇÕES E ALERTAS (COM BADGE) ====================
+window.atualizarContadorAlertas = function () {
+    fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('badge-alertas');
+            if (badge && data.total !== undefined) {
+                //  ATUALIZA O BADGE DO ÍCONE
+                window.atualizarBadge(data.total);
+
+                let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
+                if (data.total > ultimoAviso && data.ultima) {
+                    // Nova notificação!
+                    const titulo = 'Nova interação!';
+                    const mensagem = data.ultima.mensagem || 'Alguém interagiu com você.';
+                    const link = data.ultima.post_id ? '/comentarios-post.php?id=' + data.ultima.post_id : '/notificacoes.php';
+                    
+                    if (typeof abrirPipNotificacao === 'function') {
+                        abrirPipNotificacao(titulo, mensagem, link);
+                    } else {
+                        mostrarPopup(titulo + ' ' + mensagem);
+                    }
+                }
+                sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                badge.innerText = data.total;
+                badge.style.display = data.total > 0 ? 'flex' : 'none';
+            }
+        })
+        .catch(err => console.warn("[RADAR] Erro:", err));
+};
+
+// ==================== LIMPEZA DO BADGE EM INTERAÇÕES ====================
+// Quando o usuário abre o dropdown de notificações
 window.toggleJanelaNotificacoes = function () {
+    // Limpa o badge ao abrir as notificações
+    window.limparBadge();
+
     const box = document.getElementById('dropdown-notificacoes');
     if (box.style.display === 'none' || box.style.display === '') {
         fetch('notificacoes-rapidas.php')
@@ -478,12 +573,25 @@ window.toggleJanelaNotificacoes = function () {
     }
 };
 
-window.addEventListener('click', function (e) {
-    const box = document.getElementById('dropdown-notificacoes');
-    if (box && !e.target.closest('.notificacao-wrapper')) {
-        box.style.display = 'none';
+// Quando a janela ganha foco (usuário volta para a aba)
+window.addEventListener('focus', function() {
+    // Se o usuário está logado e a página é o feed, limpa o badge
+    if (document.getElementById('input_pref_badge')) {
+        // Verifica se não há notificações não lidas (ou se o usuário já viu)
+        const badgeElement = document.getElementById('badge-alertas');
+        if (badgeElement && badgeElement.style.display === 'none') {
+            window.limparBadge();
+        }
     }
 });
+
+// Quando o usuário clica em "Ver" no PiP, também limpa o badge
+// (já está no irParaLinkPip, mas adicionamos a limpeza lá também)
+window.irParaLinkPip = function(link) {
+    window.fecharPipNotificacao();
+    window.limparBadge(); //  Limpa o badge ao clicar em "Ver"
+    if (link) window.location.href = link;
+};
 
 // ==================== REAÇÕES ====================
 window.enviarReacao = function (postId, tipo) {
@@ -762,7 +870,6 @@ window.exibirConfirmacao = function(mensagem, titulo = '⚠️ Confirmação') {
     });
 };
 
-// ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS ====================
 // ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS (COM LOGS) ====================
 window.excluirComentario = async function(commentId, btnElement) {
     console.log('[excluirComentario] 🟢 Iniciando exclusão para ID:', commentId, '| btnElement:', btnElement);

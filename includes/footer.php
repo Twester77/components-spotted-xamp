@@ -80,7 +80,7 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
 </audio>
 
 <?php if (isset($_SESSION['usuario_id'])):
-    $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas FROM usuarios WHERE id = ?");
+   $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas, pref_pip, pref_badge FROM usuarios WHERE id = ?");
     $stmt_footer->bind_param("i", $_SESSION['usuario_id']);
     $stmt_footer->execute();
     $res_pref = $stmt_footer->get_result()->fetch_assoc();
@@ -88,6 +88,8 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
     <input type="hidden" name="pref_som_trilha" id="input_pref_som_trilha" value="<?php echo $res_pref['pref_som_trilha'] ?? 'ondas'; ?>">
     <input type="hidden" name="pref_som_notif" id="input_pref_som_notif" value="<?php echo $res_pref['pref_som_notif'] ?? 'padrao'; ?>">
     <input type="hidden" name="pref_bolhas" id="input_pref_bolhas" value="<?php echo $res_pref['pref_bolhas'] ?? 1; ?>">
+    <input type="hidden" name="pref_pip" id="input_pref_pip" value="<?php echo $res_pref['pref_pip'] ?? 0; ?>">
+    <input type="hidden" name="pref_badge" id="input_pref_badge" value="<?php echo $res_pref['pref_badge'] ?? 1; ?>">
 <?php endif; ?>
 
 

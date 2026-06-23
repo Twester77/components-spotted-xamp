@@ -65,6 +65,8 @@ body.modo-swipe-ativo .article.spotted-card {
     -webkit-user-drag: none !important;
 }
 
+
+
 body.modo-swipe-ativo .post-content {
     display: flex !important;
     flex-grow: 1;
@@ -80,7 +82,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
    AJUSTE DE ORELHINHA: Card Body no Modo Swipe
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .card-body {
-    touch-action: auto !important;
+    touch-action: auto ;
     pointer-events: none ;
     -webkit-user-select: none !important;
     user-select: none !important;
@@ -127,13 +129,13 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     top: 50% !important;
     transform: translate(-50%, -50%);
     margin: 0 !important;
-    z-index: 10;
+    z-index: 10 !important;
     display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    flex-direction: column ;
+    justify-content: space-between ;
     pointer-events: auto;
-    overflow-y: hidden !important;
-    overflow-x: hidden !important;
+    overflow-y: hidden ;
+    overflow-x: hidden ;
     overscroll-behavior: none;
     border-radius: 12px;
     background: rgba(10, 10, 10, 0.247);
@@ -362,6 +364,11 @@ body.modo-swipe-ativo .container-load-more {
 body:not(.modo-swipe-ativo) .spotted-card {
     position: relative !important;
     opacity: 1 !important;
+     overflow: hidden !important;
+    display: -webkit-box ;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical
 }
 
 /* ============================================================
@@ -397,7 +404,7 @@ body:not(.modo-swipe-ativo) .spotted-card {
 }
 
 .feedback-cima {
-    top: 20%;
+    top: 30%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #00a896;
@@ -480,8 +487,8 @@ body.modo-swipe-ativo .container-feed article {
 
 }
 
-.feed-empilhado .spotted-card .user-info-post {
-    touch-action: none;
+.modo-swipe-ativo .feed-empilhado .spotted-card .user-info-post * {
+    touch-action: none!important;
     -webkit-user-select: none !important;
     user-select: none !important;
 }

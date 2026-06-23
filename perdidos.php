@@ -61,41 +61,67 @@ include 'includes/bolhas.php';
         </div>
     </article>
 
-    <section class="sessao-publicar" style="width: 100% !important; margin: 20px 0 !important;" aria-labelledby="titulo-form-publicar">
-        <h3 id="titulo-form-publicar" class="titulo-publicar">Perdeu ou Achou algo?</h3>
+    <section class="sessao-publicar" style="width: 100%" aria-labelledby="titulo-form-publicar">
+    <h3 id="titulo-form-publicar" class="titulo-publicar">Perdeu ou Achou algo?</h3>
 
-        <div class="nota-seguranca" role="note" aria-label="Aviso de Segurança">
-            <strong><span aria-hidden="true">⚠️</span> NOTA DE SEGURANÇA:</strong> Ao postar fotos, por favor, cubra dados sensíveis.
-        </div>
+    <div class="nota-seguranca" role="note" aria-label="Aviso de Segurança">
+        <strong><span aria-hidden="true">⚠️</span> NOTA DE SEGURANÇA:</strong> Ao postar fotos, por favor, cubra dados sensíveis.
+    </div>
 
-        <?php if ($usuario_logado): ?>
-            <form action="enviar-post.php" method="POST" enctype="multipart/form-data" class="form-publicar" aria-label="Formulário para reportar item achado ou perdido">
-                <input type="hidden" name="categoria" value="perdidos">
+    <?php if ($usuario_logado): ?>
+        <!-- ============================================================
+        FORMULÁRIO VIVO – ACHADOS E PERDIDOS
+        ============================================================ -->
+        <form action="enviar-post.php" method="POST" enctype="multipart/form-data" class="form-publicar form-perdidos-vivo">
 
-                <div class="input-group">
-                    <!-- aria-label adicionada para o select possuir uma descrição direta -->
-                    <select name="subcategoria" class="fenda-input" required aria-label="Selecione se você perdeu ou achou um objeto">
-                        <option value="perdi">❌ Eu perdi algo...</option>
-                        <option value="achei">✅ Eu achei algo...</option>
-                    </select>
+            <input type="hidden" name="categoria" value="perdidos">
+
+            <!-- Toggle: Perdi / Achei (como badges) -->
+            <div class="toggle-perdidos-vivo">
+                <button type="button" class="btn-toggle-perdido ativo" data-valor="perdi" onclick="selecionarSubcategoria('perdi')">
+                    ❌ Perdi
+                </button>
+                <button type="button" class="btn-toggle-perdido" data-valor="achei" onclick="selecionarSubcategoria('achei')">
+                    ✅ Achei
+                </button>
+                <input type="hidden" name="subcategoria" id="subcategoria-perdidos" value="perdi">
+            </div>
+
+            <!-- Área de texto + prévia -->
+            <div class="area-texto-vivo area-perdidos-vivo">
+                <textarea name="mensagem" id="mensagem-perdidos" placeholder="Descreva o objeto..." required maxlength="600"></textarea>
+                
+                <!-- Prévia da mídia (imagem/GIF) -->
+                <div class="previa-midia-vivo" id="previa-midia-perdidos">
+                    <!-- Imagem/GIF aparece aqui dinamicamente -->
                 </div>
+            </div>
 
-                <div class="input-group">
-                    <textarea name="mensagem" class="fenda-input fenda-textarea" placeholder="Descreva o objeto..." required aria-label="Descrição detalhada do objeto"></textarea>
-                </div>
-                <div class="input-group">
-                    <label for="imagem" style="color: #fc900c; font-size: 0.9rem; cursor: pointer;">
-                        <i class="fas fa-camera" aria-hidden="true"></i> Postar foto do objeto (Opcional)
+            <!-- Barra de ações (upload, GIF, contador, enviar) -->
+            <div class="barra-acoes-vivo barra-perdidos-vivo">
+                <div class="acoes-esquerda">
+                    <label for="imagem-perdidos" class="btn-acao btn-acao-vivo" title="Adicionar imagem">
+                        <i class="fas fa-image"></i>
                     </label>
-                    <input type="file" name="imagem" id="imagem" accept="image/*" class="fenda-input" style="padding: 5px;">
+                    <input type="file" name="imagem" id="imagem-perdidos" accept="image/*" style="display: none;">
+                    
+                    <button type="button" class="btn-acao btn-acao-vivo" title="Buscar GIF/Sticker" onclick="window.setGiphyTarget('gif-url-perdidos'); abrirGiphyModal();">
+                        <i class="fas fa-grin-tongue-squint"></i>
+                    </button>
+                    <input type="hidden" name="gif_url" id="gif-url-perdidos" value="">
                 </div>
 
-                <button type="submit" class="btn-lancar">Publicar na Fenda</button>
-            </form>
-        <?php else: ?>
-            <p style="text-align: center; opacity: 0.7;">Faça login acima para publicar seu achado/perdido!</p>
-        <?php endif; ?>
-    </section>
+                <div class="acoes-direita">
+                    <span class="contador-caracteres" id="contador-perdidos">0/600</span>
+                    <button type="submit" class="btn-lancar btn-lancar-vivo btn-lancar-perdidos">Publicar na Fenda </button>
+                </div>
+            </div>
+
+        </form>
+    <?php else: ?>
+        <p style="text-align: center; opacity: 0.7;">Faça login acima para publicar seu achado/perdido!</p>
+    <?php endif; ?>
+</section>
 
     <!-- Menu de abas/filtros ganha grupo de navegação para facilitar comandos via teclado -->
     <nav class="filtros-perdidos" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;" aria-label="Filtros do feed">
@@ -158,5 +184,125 @@ include 'includes/bolhas.php';
     </section>
     
 </main>
+
+<script>
+    // ============================================================
+    // FORMULÁRIO VIVO – ACHADOS E PERDIDOS
+    // ============================================================
+    (function() {
+        const textarea = document.getElementById('mensagem-perdidos');
+        const previewMidia = document.getElementById('previa-midia-perdidos');
+        const inputFile = document.getElementById('imagem-perdidos');
+        const inputGif = document.getElementById('gif-url-perdidos');
+        const contador = document.getElementById('contador-perdidos');
+        const subcategoriaInput = document.getElementById('subcategoria-perdidos');
+        const botoesToggle = document.querySelectorAll('.btn-toggle-perdido');
+
+        // Atualiza contador
+        function atualizarContador() {
+            const len = textarea.value.length;
+            contador.textContent = len + '/600';
+            contador.style.color = len >= 550 ? '#ff8c00' : '#888';
+        }
+
+        // Atualiza a prévia da mídia
+        function atualizarMidia() {
+            const gifUrl = inputGif.value.trim();
+            const file = inputFile.files[0];
+
+            previewMidia.innerHTML = '';
+
+            if (gifUrl && gifUrl !== '') {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'midia-wrapper';
+                const img = document.createElement('img');
+                img.src = gifUrl;
+                img.alt = 'GIF/Sticker';
+                img.loading = 'lazy';
+                wrapper.appendChild(img);
+                // Botão remover
+                const btnRemove = document.createElement('button');
+                btnRemove.type = 'button';
+                btnRemove.className = 'btn-remover-midia';
+                btnRemove.innerHTML = '✕';
+                btnRemove.title = 'Remover GIF';
+                btnRemove.onclick = function(e) {
+                    e.stopPropagation();
+                    inputGif.value = '';
+                    inputFile.value = '';
+                    atualizarMidia();
+                };
+                wrapper.appendChild(btnRemove);
+                previewMidia.appendChild(wrapper);
+            } else if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'midia-wrapper';
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Imagem selecionada';
+                    img.loading = 'lazy';
+                    wrapper.appendChild(img);
+                    const btnRemove = document.createElement('button');
+                    btnRemove.type = 'button';
+                    btnRemove.className = 'btn-remover-midia';
+                    btnRemove.innerHTML = '✕';
+                    btnRemove.title = 'Remover imagem';
+                    btnRemove.onclick = function(e) {
+                        e.stopPropagation();
+                        inputFile.value = '';
+                        inputGif.value = '';
+                        atualizarMidia();
+                    };
+                    wrapper.appendChild(btnRemove);
+                    previewMidia.innerHTML = '';
+                    previewMidia.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Selecionar subcategoria (toggle)
+        window.selecionarSubcategoria = function(valor) {
+            subcategoriaInput.value = valor;
+            botoesToggle.forEach(function(btn) {
+                btn.classList.toggle('ativo', btn.dataset.valor === valor);
+            });
+        };
+
+        // Eventos
+        textarea.addEventListener('input', function() {
+            atualizarContador();
+        });
+
+        inputFile.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                inputGif.value = '';
+            }
+            atualizarMidia();
+        });
+
+        inputGif.addEventListener('change', function() {
+            if (this.value && this.value !== '') {
+                inputFile.value = '';
+            }
+            atualizarMidia();
+        });
+
+        // Evento customizado do GIPHY
+        document.addEventListener('gifSelecionado', function(e) {
+            if (e.detail && e.detail.url) {
+                inputGif.value = e.detail.url;
+                inputFile.value = '';
+                atualizarMidia();
+            }
+        });
+
+        // Inicializa
+        atualizarContador();
+        atualizarMidia();
+    })();
+</script>
 
 <?php include 'includes/footer.php'; ?>

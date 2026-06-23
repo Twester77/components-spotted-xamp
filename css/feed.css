@@ -186,7 +186,7 @@ body.modo-swipe-ativo .spotted-card * {
 
 /* Garante que o container da imagem não ultrapasse o card */
 .spotted-card .container-img-post {
-    position: relative !important;
+    position: relative ;
     width: 100% ;
     max-width: 100% ;
     z-index: 100 ;
@@ -205,7 +205,7 @@ body.modo-swipe-ativo .spotted-card * {
 .spotted-card .container-img-post img {
     width: 100% ;
     height: auto ;
-    max-height: 220px; /* opcional, evita imagens muito altas */
+    max-height: 280px; /* opcional, evita imagens muito altas */
     object-fit: contain;
     display: block;
     border-radius: 5px;
@@ -399,6 +399,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     width: 100%;
     flex-wrap: wrap;
     padding: 8px 0;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 
@@ -432,7 +434,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     transition: all 0.3s ease;
     height: auto;
     width: 95% !important;
-    max-width: fit-content;
+    max-width: min-content;
     margin-top: 15px;
 
 }
@@ -536,9 +538,8 @@ span.data-post {
 }
 
 .category-tag small {
-  font-size: 14px;
+   font-size: clamp(0.95rem, 0.5vw + 0.5rem, 1.2rem);
   color: #dfdfdf; 
-  margin-left: 8px; 
   vertical-align: middle; 
 }
 
@@ -743,7 +744,7 @@ span.category-tag {
     gap: 15px;
     font-size: clamp(1.3rem, 0.9rem + 0.5vw, 2.2rem);
     text-transform: uppercase;
-    margin: 20px 0 20px 0 !important;
+    margin: 20px 0 20px 0 ;
      word-break: break-word;
     /* Evita que nomes enormes explodam o layout */
     overflow-wrap: break-word;
@@ -1008,12 +1009,10 @@ span.category-tag {
 }
 
 
-
-
 .bio-box {
     width: 100% !important;
     max-width: auto;
-    margin: 20px 0 !important;
+    margin: 20px 0 ;
     text-align: center;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -1027,7 +1026,7 @@ span.category-tag {
     /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
     font-size: clamp(0.95rem, 0.2vw + 0.9rem, 1.6rem) !important;
     width: 100% !important;
-    margin: 20px 0 !important;
+    margin: 20px 0 ;
     text-align: center;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
@@ -1046,8 +1045,8 @@ span.category-tag {
 /* STATS (Seguidores) */
 .stats-perfil {
     justify-content: center !important;
-    margin: 15px 0 !important;
-    gap: 20px !important;
+    margin: 15px 0 ;
+    gap: 20px ;
     font-weight: 800;
 }
 
@@ -1063,8 +1062,8 @@ span.category-tag {
 }
 
 .form-busca-fenda button {
-    padding: 0 15px !important;
-    font-size: 1rem !important;
+    padding: 0 15px ;
+    font-size: 1rem ;
 }
 
 

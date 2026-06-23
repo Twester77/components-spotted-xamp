@@ -1,11 +1,4 @@
-*,
-*:before,
-*:after {
-    -webkit-box-sizing: border-box !important;
-    /* Pro iPhone 4 e Lumia entenderem */
-    box-sizing: border-box !important;
 
-}
 
 /* --- HEADER E ÍCONES (CORREÇÃO AQUI) --- */
 
@@ -410,7 +403,7 @@ nav {
     border: 1px solid #00ff00;
     border-radius: 15px 0 0 15px;
     transition: 0.5s ease-in-out;
-    z-index: 9998;
+    z-index: 9995;
     padding: 18px;
     color: #00ff00;
     font-family: 'Courier New', monospace;
@@ -584,7 +577,7 @@ body.modal-aberto .fab-postar {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.637);
+    background: rgb(0 0 0 / 78%);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     display: flex;
@@ -2000,7 +1993,7 @@ textarea {
 .input-username-wrapper {
     width: 100% !important;
     max-width: auto !important;
-    box-sizing: border-box !important;
+    box-sizing: border-box ;
     /* ISSO AQUI resolve o vazamento da Bio */
     margin: 0 auto ;
     background: rgba(255, 255, 255, 0.05);
@@ -2126,18 +2119,18 @@ textarea[name="bio"] {
     position: absolute;
     right: 0;
     /* Alinha com a direita do sino */
-    top: 40px;
+    top: 55px;
     /* Joga um pouco para baixo do sino */
-    width: 270px;
+    width: 250px;
     background: rgba(10, 25, 41, 0.98);
     /* Fundo bem sólido para não vazar o que está atrás */
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    border-radius: 6px 6px 12px 12px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
     /* A MÁGICA AQUI: */
-    z-index: 99999 !important;
+    z-index: 10000;
     /* Valor absurdamente alto para ganhar da navbar */
     overflow: hidden;
 }
@@ -2246,7 +2239,7 @@ textarea[name="bio"] {
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
         width: 100%;
-        max-width: 450px ;
+        max-width: 400px ;
         margin-bottom: 10px;
     }
 
@@ -2355,18 +2348,17 @@ textarea[name="bio"] {
     }
 
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 55px !important;
+        top: 55px ;
     }
 
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
         display: inline-flex ;
         position: fixed ;
-        top: 15%;
         left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 10000 ;
+        z-index: 9998 ;
         color: #000;
-        padding: 6px 10px;
+        padding: 5px 10px;
         font-size: 0.9rem;
         border-radius: 40px;
         font-weight: bold;
@@ -2385,10 +2377,10 @@ textarea[name="bio"] {
         top: 30%;
         left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 9999 ;
+        z-index: 98;
         color: #000;
         gap: 10px;
-        padding:  30px 20px 25px 20px;
+        padding:  40px 15px 25px 15px;
         border-radius: 0 0 20px 20px;
         font-size: 0.9rem;
         font-weight: bold;
@@ -2406,7 +2398,54 @@ textarea[name="bio"] {
 
     .gaveta-opcoes { padding: 12px; gap: 8px; }
     .textarea-chat { font-size: 0.85rem; padding: 8px; }
+
+    .form-perdidos-vivo {
+    padding: 10px;
+    border-radius: 12px;
+    justify-content: center;
 }
+
+     .barra-perdidos-vivo {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .barra-perdidos-vivo .acoes-esquerda,
+    .barra-perdidos-vivo .acoes-direita {
+        justify-content: center;
+    }
+    .btn-lancar-perdidos {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+    .btn-toggle-perdido {
+        max-width: 100%;
+        flex: 1 1 50%;
+    }
+
+    .barra-acoes-vivo {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+    }
+    .acoes-esquerda, .acoes-direita {
+        justify-content: center;
+    }
+    .btn-lancar-vivo {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-lancar {
+     flex: 1 1 100% ;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 15px;
+   
+}
+    
+}
+
 
 @media (min-width: 769px) {
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
@@ -2489,17 +2528,7 @@ textarea[name="bio"] {
 
     } 
 
-     .barra-acoes-vivo {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .acoes-esquerda, .acoes-direita {
-        justify-content: center;
-    }
-    .btn-lancar-vivo {
-        width: 100%;
-        justify-content: center;
-    }
+     
 }
 
 

@@ -4,9 +4,10 @@
   "description": "O feed mais irado da UNIFEV. Spotted, comentários e muito mais.",
   "start_url": "/feed.php",
   "display": "standalone",
+  "display_override": ["window-controls-overlay"],
   "theme_color": "#1a1a2e",
   "background_color": "#0a0a0a",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "icons": [
     {
       "src": "/imagensfoto/icon-192x192.png",
@@ -21,6 +22,7 @@
       "purpose": "any maskable"
     }
   ],
+  "badge": "/imagensfoto/badge-72x72.png",
   "screenshots": [],
   "categories": ["social", "education"]
 }

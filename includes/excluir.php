@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 }
 
 // ============================================================
-// FUNÇÃO AUXILIAR PARA RESPONDER JSON (garante cabeçalho e exit)
+// FUNÇÃO AUXILIAR PARA RESPONDER JSON
 // ============================================================
 function responderJSON($status, $message = '') {
     header('Content-Type: application/json');
@@ -73,6 +73,13 @@ if ($executou) {
             rename($origem, $destino);
         }
     }
+
+    // 🔥 NOVO: Limpa as notificações que apontam para este post
+    // (seta post_id = NULL para manter a notificação, mas sem link direto)
+    $limpar_notif = $conn->prepare("UPDATE notificacoes SET post_id = NULL WHERE post_id = ?");
+    $limpar_notif->bind_param("i", $post_id);
+    $limpar_notif->execute();
+    $limpar_notif->close();
 }
 
 $soft_delete->close();
@@ -88,7 +95,7 @@ if ($is_ajax) {
         responderJSON('error', 'Falha ao excluir no banco de dados.');
     }
 } else {
-    // Modo tradicional (GET) – fallback para navegadores sem JS
+    // Modo tradicional (GET) – fallback
     if ($executou) {
         header("Location: ../feed.php?msg=deletado");
     } else {

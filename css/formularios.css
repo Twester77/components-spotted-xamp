@@ -96,7 +96,7 @@ form {
 /* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
 .modal-body-ajuste .main-novo-post h2 {
     color: #f5f5f5;
-    font-size: clamp(1.1rem, 4vw, 1.5rem) !important;
+    font-size: clamp(1.1rem, 4vw, 1.5rem) ;
     margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -106,7 +106,7 @@ form {
 .modal-body-ajuste .main-novo-post textarea,
 .modal-body-ajuste .main-novo-post select,
 .modal-body-ajuste .main-novo-post input {
-    width: 100% !important;
+    width: 100% ;
     background: rgba(0, 0, 0, 0.158);
     border: 1px solid #444;
     /* Cinza escuro */
@@ -156,7 +156,6 @@ form {
 
 .area-texto-vivo:focus-within {
     border-color: var(--dourado);
-    background: #2a2a2a;
 }
 
 #mensagem-vivo {
@@ -194,10 +193,10 @@ form {
 
 .midia-wrapper img {
     max-width: 100%;
-    max-height: 250px;
+    max-height: 200px;
     border-radius: 10px;
     object-fit: contain;
-    background: #000;
+    background: #000000c5;
     display: block;
     object-position: center;
 }
@@ -263,7 +262,6 @@ form {
 /* Barra de ações */
 .barra-acoes-vivo {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
@@ -274,7 +272,7 @@ form {
 .acoes-esquerda,
 .acoes-direita {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     align-items: center;
     flex-wrap: wrap;
 }
@@ -304,10 +302,9 @@ form {
 
 /* Contador */
 .contador-caracteres {
-    font-size: 1rem;
-    color: #a3a3a3;
-    margin-right: 4px;
-    font-weight: 500;
+    font-size: 1.1rem;
+    color: #aaaaaa;
+    font-weight: 600;
 }
 
 /* Botão cancelar – versão limpa */
@@ -328,23 +325,7 @@ form {
     color: #fff;
 }
 
-/* Botão publicar – dourado com leveza */
-.btn-lancar-vivo {
-    background: var(--dourado);
-    border: none;
-    border-radius: 30px;
-    padding: 8px 28px;
-    color: #000;
-    font-weight: bold;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
 
-.btn-lancar-vivo:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 25px rgba(255, 188, 0, 0.25);
-}
 
 
 /* Botão de GIF/Sticker no modal de post */
@@ -521,9 +502,8 @@ textarea {
     width: 100%;
     border-radius: 15px;
     border: 1px solid #333;
-    margin-bottom: 10px;
     display: block;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
 
 }
 
@@ -613,11 +593,11 @@ textarea {
     background: #cc420c;
     color: #fff;
     border: none;
-    padding: 10px 25px;
+    padding: 10px 24px;
     border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     transition: 0.3s ease;
     display: inline-block;
 }
@@ -645,22 +625,22 @@ textarea {
 .fenda-reg-box {
     display: flex !important;
     align-items: center !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) ;
+    border: 1px solid rgba(255, 255, 255, 0.2) ;
     border-radius: 12px !important;
     width: 100% !important;
     transition: all 0.3s ease;
-    overflow: hidden !important;
+    overflow: hidden ;
     /* Garante que nada vaze */
 }
 
 /* Ícone dentro da box - agora em fluxo normal */
 .fenda-reg-box i {
-    color: #f8c946ec !important;
-    font-size: 1.2rem !important;
-    margin-left: 15px !important;
-    margin-right: 8px !important;
-    width: 24px !important;
+    color: #f8c946ec ;
+    font-size: 1.2rem ;
+    margin-left: 15px ;
+    margin-right: 8px ;
+    width: 24px ;
     text-align: center !important;
     flex-shrink: 0 !important;
     /* Não encolhe */
@@ -673,11 +653,12 @@ textarea {
     flex: 1 !important;
     background: transparent !important;
     border: none !important;
-    color: white !important;
-    font-size: 1rem !important;
-    padding: 12px 12px 12px 6px !important;
+    color: white ;
+    font-size: 1rem ;
+    padding: 12px 12px 12px 6px ;
     outline: none !important;
-    width: 100% !important;
+    width: 100% ;
+    align-content: center;
 }
 
 /* Para selects, mantém o mesmo estilo */
@@ -696,8 +677,8 @@ textarea {
 .fenda-reg-box input[type="color"] {
     width: 50px !important;
     padding: 0 !important;
-    margin: 5px 0 5px 5px !important;
-    height: 35px !important;
+    margin: 5px 0 5px 5px ;
+    height: 35px ;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -830,10 +811,10 @@ section.sessao-publicar {
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.007);
-    padding: 20px;
+    padding: 15px;
     margin: 20px auto;
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    max-width: clamp(300px, 96%, 1000px);
+    max-width: clamp(300px, 95%, 600px);
     background-color: #49414121;
     background: rgba(0, 0, 0, 0.45);
     border-radius: 20px !important;
@@ -872,14 +853,14 @@ section.sessao-publicar {
 
 /* Os blocos de embrulho (.input-group) se adaptando ao espaço */
 .form-publicar .input-group {
-    margin-bottom: 0 !important;
+    margin-bottom: 0 ;
     flex: 1 1 calc(50% - 12px) ; 
-    min-width: 140px !important;           
+    min-width: 140px ;           
 }
 
 /* CORREÇÃO: Aumentando a prioridade de espaço/width da Textarea no flexbox */
 .form-publicar .input-group:has(textarea) {
-    flex: 3 1 280px !important; /* Peso maior (3) para esticar bem pros lados */
+    flex: 3 1 280px ; /* Peso maior (3) para esticar bem pros lados */
 }
 
 /* Estilo base dos seus inputs (Deixando mais magrelos e elegantes) */
@@ -890,7 +871,7 @@ section.sessao-publicar {
     width: auto;
     max-width: 100% !important;
     padding: clamp(10px, 1.5vw, 15px) ; /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
-    border: 1px solid rgba(7, 4, 4, 0.2) !important;
+    border: 1px solid rgba(7, 4, 4, 0.2) ;
     background: rgba(0, 0, 0, 0.4) ;
     color: #fff ;
     border-radius: 14px ;
@@ -954,28 +935,168 @@ section.sessao-publicar {
 }
 
 /* O Botão de Lançar se comportando na grade flex */
-.btn-lancar {
-    flex: 1 1 100% !important; 
+.btn-lancar  { 
     background: #7cd632e8;
     color: black;
     border: none;
     height: 44px; /* Casando com a altura dos inputs magrelos */
-    padding: 0 10px;
+    padding: 0 14px;
     border-radius: 8px;
     font-weight: 800;
-    max-width: 400px;
+    font-size: 0.95rem;
+    max-width: 300px;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.3s;
     margin-top: 5px !important;
 }
 
-.btn-lancar:hover {
+.btn-lancar :hover {
     background: #c8ff00d3;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
 
+
+
+/* Container do formulário vivo */
+.form-perdidos-vivo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    margin-bottom: 0;
+    width: 100%;
+}
+
+/* Toggle de Perdi/Achei */
+.toggle-perdidos-vivo {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.btn-toggle-perdido {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 30px;
+    padding: 4px 16px;
+    color: #aaa;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+    max-width: 200px;
+    min-width: 100px;
+}
+
+.btn-toggle-perdido:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.btn-toggle-perdido.ativo[data-valor="perdi"] {
+    background: rgba(204, 66, 12, 0.329);
+    border-color: #cc420c;
+    color: #ff8a5e;
+    box-shadow: 0 0 20px rgba(204, 66, 12, 0.08);
+}
+
+.btn-toggle-perdido.ativo[data-valor="achei"] {
+    background: rgba(46, 204, 112, 0.247);
+    border-color: #2ecc71;
+    color: #5dffa0;
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.08);
+}
+
+/* Área de texto – adaptada para a página (reutiliza estrutura do modal, mas com fundo próprio) */
+.area-perdidos-vivo {
+    border-radius: 12px;
+    padding: 10px 14px;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+.area-perdidos-vivo:focus-within {
+    border-color: var(--dourado);
+}
+
+#mensagem-perdidos {
+    width: 100%;
+    min-height: 80px;
+    max-height: 200px;
+    background: transparent;
+    color: #eee;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: vertical;
+    padding: 0;
+    font-family: inherit;
+    outline: none;
+     border: none;
+}
+
+#mensagem-perdidos::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+/* Barra de ações – específica para a página, herda .barra-acoes-vivo */
+.barra-perdidos-vivo {
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding-top: 8px;
+    margin-top: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Ajuste para os grupos de ações (já usam .acoes-esquerda e .acoes-direita do modal) */
+.barra-perdidos-vivo .acoes-esquerda,
+.barra-perdidos-vivo .acoes-direita {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Botão Publicar – versão específica para perdidos (verde) */
+.btn-lancar-perdidos {
+    background: #7cd632e8 !important;
+    color: #000 !important;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+    height: auto;
+    max-width: 400px;
+    margin-top: 0 !important;
+    flex: 0 1 auto;
+}
+
+.btn-lancar-perdidos:hover {
+    background: #c8ff00d3 !important;
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
+}
+
+/* Esconde os input-group antigos que foram substituídos pelo formulário vivo */
+.sessao-publicar .form-publicar .input-group {
+    display: none;
+}
 
 
 /* ESTILO DOS BOTÕES DE EDIÇÃO */

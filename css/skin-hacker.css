@@ -318,9 +318,9 @@ body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atlétic
     color: #00ff00 !important;
     border: 3px double var(--hacker-green) !important;
     border-radius: 0 ;
-    font-family: monospace !important;
-    text-transform: uppercase !important;
-    position: relative !important;
+    font-family: monospace ;
+    text-transform: uppercase ;
+    position: relative ;
     transition: none !important;
     cursor: crosshair !important;
     overflow: visible ;
@@ -344,7 +344,6 @@ body.hacker-mode .btn-voltar-fenda:hover,
 body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode .btn-sair-fenda:hover,
 body.hacker-mode .btn-lancar:hover,
-body.hacker-mode .link-fofoca:hover,
 body.hacker-mode .btn-zarpar:hover,
 body.hacker-mode .btn-enviar-fenda:hover,
 body.hacker-mode .btn-ficar-terra:hover,
