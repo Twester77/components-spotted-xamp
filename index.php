@@ -3,8 +3,6 @@ include_once __DIR__ . '/conexao.php';
 // Ajuste do fuso para SP
 date_default_timezone_set('America/Sao_Paulo');
 
-
-
 $hora = (int)date('H');
 $tema_classe = "";
 $classe_saudacao = "";

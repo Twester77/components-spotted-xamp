@@ -1,7 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
+// 🔧 CORREÇÃO: display_errors desativado em produção
+// O valor será definido após a detecção do ambiente
 if (ob_get_level() == 0) ob_start();
 
 /*--------------------------------------------------------------------------------------------------------------
@@ -10,6 +9,17 @@ PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente e 
 
 // Determina o ambiente de forma explícita (padrão: produção)
 $is_production = (getenv('ENVIRONMENT') === 'production');
+
+// 🔧 CORREÇÃO: configuração de erro baseada no ambiente
+if ($is_production) {
+    // Em produção: não exibe erros na tela, mas ainda registra no log
+    ini_set('display_errors', 0);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+} else {
+    // Em desenvolvimento: exibe todos os erros
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+}
 
 if ($is_production) {
     // === MODO PRODUÇÃO (RENDER + TiDB Cloud) ===
@@ -66,6 +76,9 @@ if (session_status() === PHP_SESSION_NONE) {
         ini_set('session.cookie_domain', $cookieDomain);
         ini_set('session.cookie_httponly', 1);
         ini_set('session.use_strict_mode', 1);
+        // 🔧 CORREÇÃO: adicionado cookie_secure e samesite para HTTPS
+        ini_set('session.cookie_secure', 1);
+        ini_set('session.cookie_samesite', 'Lax');
     }
     session_start();
 }
