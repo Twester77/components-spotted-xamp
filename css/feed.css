@@ -648,7 +648,7 @@ span.category-tag {
 /* --- ITEMS DO POPUP (EMOJIS) --- */
 .reacoes-popup span {
     cursor: pointer;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     display: inline-block;
 }
 
