@@ -230,7 +230,34 @@ form {
     text-align: left;
 }
 
+.campo-categoria-vivo select {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 6px 16px;
+    padding-right: 36px;
+    color: #ccc;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ccc' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
 
+.campo-categoria-vivo select:hover {
+    border-color: var(--dourado);
+    background-color: rgba(255, 188, 0, 0.04);
+}
+
+.campo-categoria-vivo select option {
+    background: #1a1a1a;
+    color: #fff;
+}
 
 /* Barra de ações */
 .barra-acoes-vivo {
