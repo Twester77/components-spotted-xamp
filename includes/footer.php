@@ -124,7 +124,5 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
     }
 </script>
 
-
-
 </body>
 </html>

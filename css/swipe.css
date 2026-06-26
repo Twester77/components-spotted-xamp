@@ -364,7 +364,6 @@ body.modo-swipe-ativo .container-load-more {
 body:not(.modo-swipe-ativo) .spotted-card {
     position: relative !important;
     opacity: 1 !important;
-     overflow: hidden !important;
     display: -webkit-box ;
     -webkit-line-clamp: 3;
     line-clamp: 3;

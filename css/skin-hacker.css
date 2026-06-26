@@ -371,10 +371,9 @@ body.hacker-mode .img-comunidade-grande:hover {
     background-color: #00ff00 ;
     object-fit: contain !important;
     color: #000000 !important;
-    border-radius: 50%!important;
     border-style: none !important;
     background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
-    transform: scale(1.1) !important;
+    transform: scale(1.05) !important;
 }
 
 
@@ -611,7 +610,7 @@ body.hacker-mode .comentario-item.vibe-light .comentario-texto {
 body.hacker-mode .comentario-item.vibe-light {
     background-image: repeating-linear-gradient(
         0deg,
-        rgba(0, 255, 0, 0.03) 0px,
+        rgba(0, 255, 0, 0.03) 2px,
         rgba(0, 255, 0, 0.03) 2px,
         transparent 2px,
         transparent 2px
@@ -808,9 +807,16 @@ body.hacker-mode .reacoes-popup {
     background: #0000009a !important;
     border: 1px solid #0f0 !important;
     box-shadow: 0 0 15px #0f0 !important;
-    background: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
-    background-size:  6px 100%!important;
+     background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 0, 0.03) 0px,
+        rgba(0, 255, 0, 0.03) 2px,
+        transparent 2px,
+        transparent 2px
+    ) !important;
+    background-size:  2px 100%!important;
 }
+
 body.hacker-mode .reacoes-popup span:hover {
       background: rgba(0, 255, 0, 0.863);
       transform: scale(1.05) 0.2s ease;

@@ -145,7 +145,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     // 🔴 1. CAPTURA DE ERROS GLOBAIS
     if (isset($_GET['erro'])) {
         $exibir_toast = true;
-        $toast_classe = "toast-erro-global"; // Estilize no CSS com fundo vermelho/laranja
+        $toast_classe = "toast-erro-global";
         $toast_icone = "fa-solid fa-triangle-exclamation";
 
         switch ($_GET['erro']) {
@@ -202,8 +202,106 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
                     toastGlobal.style.opacity = '0';
                     setTimeout(() => toastGlobal.remove(), 500);
                 }
-                // Limpa os parâmetros da URL para o F5 não ficar repetindo o Toast
                 window.history.replaceState({}, document.title, window.location.pathname + window.location.search.replace(/[?&](erro|sucesso)=[^&*]/g, ''));
             }, 4000);
         </script>
     <?php endif; ?>
+
+    <!-- ============================================================
+         SUPABASE SDK E FUNÇÕES DE AUTENTICAÇÃO (GLOBAL)
+         ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Inicializa o cliente Supabase (apenas uma vez)
+        if (typeof window.supabase === 'undefined') {
+            const SUPABASE_URL = '<?php echo getenv('SUPABASE_URL') ?: 'https://SEU_PROJETO.supabase.co'; ?>';
+            const SUPABASE_ANON_KEY = '<?php echo getenv('SUPABASE_ANON_KEY') ?: 'SUA_CHAVE_ANON_AQUI'; ?>';
+            window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // Funções globais (apenas se não existirem)
+        if (typeof window.logarUsuario === 'undefined') {
+            window.logarUsuario = async function(email, senha) {
+                try {
+                    const { data, error } = await window.supabase.auth.signInWithPassword({
+                        email: email,
+                        password: senha
+                    });
+                    if (error) throw error;
+                    const token = data.session.access_token;
+                    const response = await fetch('/auth-bridge.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token: token })
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        window.location.href = result.redirect;
+                    } else {
+                        alert('Erro ao criar sessão: ' + (result.error || 'Tente novamente'));
+                    }
+                } catch (err) {
+                    console.error('[LOGIN] Erro:', err.message);
+                    alert('Erro ao fazer login: ' + err.message);
+                }
+            };
+        }
+
+        if (typeof window.deslogarUsuario === 'undefined') {
+            window.deslogarUsuario = async function() {
+                try {
+                    const { error } = await window.supabase.auth.signOut();
+                    if (error) throw error;
+                    window.location.href = '/logout.php';
+                } catch (err) {
+                    console.error('[LOGOUT] Erro:', err.message);
+                    alert('Erro ao sair: ' + err.message);
+                }
+            };
+        }
+
+        if (typeof window.verificarSessaoSupabase === 'undefined') {
+            window.verificarSessaoSupabase = async function() {
+                try {
+                    const { data, error } = await window.supabase.auth.getSession();
+                    if (error) throw error;
+                    return data.session;
+                } catch (err) {
+                    console.error('[SESSAO] Erro:', err.message);
+                    return null;
+                }
+            };
+        }
+
+        if (typeof window.cadastrarUsuario === 'undefined') {
+            window.cadastrarUsuario = async function(nome, email, senha, atletica_id, pref_cor_padrao, pref_vibe_padrao) {
+                try {
+                    const { data, error } = await window.supabase.auth.signUp({
+                        email: email,
+                        password: senha,
+                        options: {
+                            data: {
+                                nome: nome,
+                                atletica_id: atletica_id,
+                                pref_cor_padrao: pref_cor_padrao,
+                                pref_vibe_padrao: pref_vibe_padrao,
+                                pref_swipe: 0,
+                                pref_bolhas: 1,
+                                pref_som_trilha: 'ondas',
+                                pref_som_notif: 'padrao',
+                                pref_pip: 0,
+                                pref_badge: 1
+                            }
+                        }
+                    });
+                    if (error) throw error;
+                    if (data.user) {
+                        window.location.href = 'sucesso.php?email=' + encodeURIComponent(email);
+                    }
+                } catch (err) {
+                    console.error('[CADASTRO] Erro:', err.message);
+                    alert('Erro ao cadastrar: ' + err.message);
+                }
+            };
+        }
+    </script>

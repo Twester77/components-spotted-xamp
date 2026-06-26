@@ -1,12 +1,17 @@
 <?php
-// 🔧 CORREÇÃO: display_errors desativado em produção
-// O valor será definido após a detecção do ambiente
+// ============================================================
+// 🔥 AJUSTADO PARA VERCEL – caminhos absolutos com ROOT_PATH
+// ============================================================
+
+// Define o caminho raiz do projeto (fora da pasta /api)
+define('ROOT_PATH', dirname(__DIR__)); // Isso aponta para a raiz do projeto
+
 if (ob_get_level() == 0) ob_start();
 include_once __DIR__ . '/fenda_debug.php';
-fenda_log('🔵 INÍCIO conexao.php');
+fenda_log('🔵 INÍCIO conexao.php (Vercel)');
 
 /*--------------------------------------------------------------------------------------------------------------
-PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente e cookie dinâmico)
+PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente)
 ---------------------------------------------------------------------------------------------------------------*/
 
 // Determina o ambiente de forma explícita (padrão: produção)
@@ -24,28 +29,28 @@ if ($is_production) {
 }
 
 if ($is_production) {
-    // === MODO PRODUÇÃO (RENDER + TiDB Cloud) ===
+    // === MODO PRODUÇÃO (VERCEL + TiDB Cloud) ===
     $host    = getenv('DB_HOST') ?: 'gateway01.us-east-1.prod.aws.tidbcloud.com';
     $usuario = getenv('DB_USER') ?: '4QGTrzXrgzivy34.root';
     $senha   = getenv('DB_PASS') ?: '1HftPjHsoQb1pEmi';
     $banco   = getenv('DB_NAME') ?: 'fenda_db';
     $porta   = (int)(getenv('DB_PORT') ?: 4000);
-    $certPath = __DIR__ . '/config/isrgrootx1.pem';
+    $certPath = ROOT_PATH . '/config/isrgrootx1.pem'; // 🔥 CORRIGIDO: usa ROOT_PATH
     $ssl_flag = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
-    
+
     // 🔥 REMOVIDO: Cookie de sessão com domínio fixo
     // O navegador agora gerencia o domínio automaticamente
-    $cookieDomain = null; // Não usamos mais
+    $cookieDomain = null;
 } else {
     // === MODO LOCAL (XAMPP) ===
     $host    = '127.0.0.1';
-    $porta   = 3307;          // Ajuste para a porta do seu MySQL local
+    $porta   = 3307;
     $usuario = 'root';
     $senha   = '';
-    $banco   = 'fenda_local'; // Nome do banco local
+    $banco   = 'fenda_local';
     $ssl_flag = 0;
     $certPath = null;
-    $cookieDomain = null; // localhost não precisa de domínio explícito
+    $cookieDomain = null;
 }
 
 // --- INICIALIZAÇÃO DA CONEXÃO ---
@@ -71,7 +76,6 @@ mysqli_set_charset($conn, "utf8mb4");
 
 // Gerenciamento de sessão (centralizado)
 if (session_status() === PHP_SESSION_NONE) {
-    // Em produção, define apenas as opções de segurança (sem domínio fixo)
     if ($is_production) {
         ini_set('session.cookie_httponly', 1);
         ini_set('session.use_strict_mode', 1);
@@ -97,7 +101,8 @@ if (!function_exists('formatarMencoes')) {
     }
 }
 
+// 🔥 CORREÇÃO: Chave via variável de ambiente (NUNCA hardcoded)
 if (!defined('RESEND_KEY')) {
-    define('RESEND_KEY', 're_gu3A9uZq_GeK1mRzZC6pkaq6rUHAaBLA8');
+    define('RESEND_KEY', getenv('RESEND_KEY') ?: '');
 }
 ?>

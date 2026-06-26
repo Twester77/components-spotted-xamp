@@ -77,7 +77,7 @@ include 'includes/bolhas.php';
                 </p>
                 <div class="fenda-acoes-container">
                     <a href="feed.php" class="fenda-btn-glow fenda-primary"> Ir para o Feed</a>
-                    <button onclick="deslogar()" class="fenda-btn-glow fenda-outline">🔒 Sair da Conta</button>
+                   <button onclick="deslogarUsuario()" class="fenda-btn-glow fenda-outline">🔒 Sair da Conta</button>
                 </div>
             </div>
         <?php endif; ?>

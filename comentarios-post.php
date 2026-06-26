@@ -259,9 +259,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             $trecho_resposta = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
                         }
                 ?>
-                        <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>"
-                            id="comentario-<?php echo $c['id']; ?>"
-                            style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
+                        <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
 
                             <?php if ($sou_eu): ?>
                                 <button class="btn-excluir-comentario" data-id="<?php echo $c['id']; ?>" title="Excluir comentário">
@@ -315,6 +313,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
             <!-- Formulário ativo -->
             <footer class="fixed-input">
                 <section class="sessao-fofoca-focada" id="fofocar">
+                    <!--  HONEYPOT – campo invisível para bots -->
+                    <input type="text" name="honeypot" style="display: none; position: absolute; left: -9999px;" tabindex="-1" autocomplete="off">
+                    
                     <button type="button" id="btn-attach-gaveta" class="btn-attach-gaveta" title="Mais opções">+</button>
                     <textarea name="comentario" class="textarea-chat" placeholder="Digite sua mensagem..." maxlength="500" id="comentario-textarea"></textarea>
                     <button type="submit" form="form-comentario" class="btn-enviar-chat">
@@ -362,7 +363,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 </section>
             </footer>
         <?php else: ?>
-            <!-- 🔥 POST ENCERRADO – BLOQUEIO DE COMENTÁRIOS -->
+            <!--  POST ENCERRADO – BLOQUEIO DE COMENTÁRIOS -->
             <footer class="fixed-input fixed-input-bloqueado">
                 <div class="comentarios-bloqueados-msg">
                     <i class="fas fa-ban"></i>
@@ -436,10 +437,114 @@ $total_reacoes = array_sum($reacoes_detalhes);
             dialog.show();
         });
     });
+
+    // ==================== LIGHTBOX PARA IMAGENS DOS COMENTÁRIOS ====================
+    function initLightbox() {
+        const imagens = document.querySelectorAll('.comentario-img');
+        imagens.forEach(img => {
+            img.removeEventListener('click', abrirLightbox);
+            img.addEventListener('click', abrirLightbox);
+        });
+    }
+
+    function abrirLightbox(e) {
+        e.stopPropagation();
+        const imgSrc = e.currentTarget.src;
+        if (!imgSrc) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    }
+
+    // ==================== REMOÇÃO UNIFICADA DE MÍDIA (GLOBAL) ====================
+    window.removerMidia = function() {
+        // Limpa input file
+        const inputFile = document.getElementById('input-img-comentario');
+        if (inputFile) inputFile.value = '';
+        
+        // Limpa hidden GIF
+        const hiddenGif = document.getElementById('hidden-gif-url');
+        if (hiddenGif) hiddenGif.value = '';
+        // Também limpa qualquer outro input de GIF (por segurança)
+        const gifInput = document.querySelector('input[name="gif_url"]');
+        if (gifInput) gifInput.value = '';
+        
+        // Limpa prévia
+        const preview = document.getElementById('anexo-preview');
+        if (preview) {
+            preview.innerHTML = '';
+            preview.style.display = 'none';
+            preview.onclick = null;
+        }
+        
+        // Reseta flags
+        if (typeof arquivoValido !== 'undefined') arquivoValido = true;
+        limparFeedback();
+        
+        // Remove placeholder do textarea
+        const campoTexto = document.querySelector('.textarea-chat');
+        if (campoTexto && campoTexto.value === '🎬 GIF enviado') {
+            campoTexto.value = '';
+            campoTexto.dispatchEvent(new Event('input'));
+        }
+    };
+
+    // ==================== ABRIR LIGHTBOX MANUAL (GLOBAL) ====================
+    window.abrirLightboxManual = function(src) {
+        if (!src) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    };
 </script>
 
 <script src="js/fenda-giphy.js"></script>
-
 <?php include 'includes/footer.php'; ?>
 <script src="js/fenda-mencoes.js"></script>
 
@@ -473,36 +578,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         if (hiddenTextarea) hiddenTextarea.value = campoTexto.value;
     }
 
-    function abrirLightboxManual(src) {
-        if (!src) return;
-        const modalExistente = document.getElementById('modal-lightbox-fenda');
-        if (modalExistente) modalExistente.remove();
-        const modal = document.createElement('div');
-        modal.id = 'modal-lightbox-fenda';
-        modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
-        const img = document.createElement('img');
-        img.src = src;
-        img.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
-        const btn = document.createElement('button');
-        btn.innerHTML = '✖';
-        btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
-        btn.onclick = () => {
-            modal.style.opacity = '0';
-            setTimeout(() => modal.remove(), 200);
-        };
-        modal.appendChild(img);
-        modal.appendChild(btn);
-        document.body.appendChild(modal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.opacity = '0';
-                setTimeout(() => modal.remove(), 200);
-            }
-        });
-        modal.offsetHeight;
-        modal.style.opacity = '1';
-    }
-
     function mostrarFeedback(mensagem, tipo) {
         const toast = document.getElementById('feedback-upload');
         if (!toast) return;
@@ -532,6 +607,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         if (toast) toast.classList.remove('visivel');
     }
 
+    // 🔥 VALIDAÇÃO DE ARQUIVO COM BOTÃO "X"
     function validarArquivo() {
         const preview = document.getElementById('anexo-preview');
         if (!inputFile || !inputFile.files.length) {
@@ -559,13 +635,28 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
         if (preview) {
             preview.style.display = 'inline-flex';
+            preview.style.position = 'relative';
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    preview.innerHTML = `<img src="${e.target.result}" alt="miniatura">`;
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" alt="miniatura" style="max-height:60px; max-width:60px; border-radius:4px; object-fit:cover;">
+                        <button type="button" onclick="window.removerMidia()" style="
+                            position: absolute; top: -6px; right: -6px; 
+                            background: rgba(0,0,0,0.7); border: none; 
+                            color: #fff; border-radius: 50%; 
+                            width: 18px; height: 18px; font-size: 10px; 
+                            cursor: pointer; display: flex; align-items: center; justify-content: center;
+                            line-height: 1;
+                        ">✕</button>
+                    `;
                     preview.onclick = function(ev) {
-                        ev.stopPropagation();
-                        abrirLightboxManual(e.target.result);
+                        if (ev.target.tagName !== 'BUTTON') {
+                            ev.stopPropagation();
+                            if (typeof window.abrirLightboxManual === 'function') {
+                                window.abrirLightboxManual(e.target.result);
+                            }
+                        }
                     };
                 };
                 reader.readAsDataURL(file);
@@ -578,6 +669,23 @@ $total_reacoes = array_sum($reacoes_detalhes);
         arquivoValido = true;
         return true;
     }
+
+    // 🔥 EXCLUSIVIDADE MÚTUA: ao selecionar imagem, limpa GIF
+    inputFile.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            // Limpa o GIF
+            const hiddenGif = document.getElementById('hidden-gif-url');
+            if (hiddenGif) hiddenGif.value = '';
+            const gifInput = document.querySelector('input[name="gif_url"]');
+            if (gifInput) gifInput.value = '';
+            // Limpa prévia de GIF (se houver)
+            if (previewAnexo) {
+                previewAnexo.innerHTML = '';
+                previewAnexo.style.display = 'none';
+            }
+        }
+        validarArquivo();
+    });
 
     window.toggleBarraFofoca = function() {
         const icone = document.querySelector('#toggle-chat-barra i');
@@ -642,7 +750,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
     const btnAnexarImg = document.getElementById('btn-anexar-img');
     if (btnAnexarImg && inputFile) {
         btnAnexarImg.addEventListener('click', () => inputFile.click());
-        inputFile.addEventListener('change', validarArquivo);
+        // O evento change já está definido acima
     }
 
     if (btnGaveta && gaveta) {
@@ -742,47 +850,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         });
     }
 
-    // ==================== LIGHTBOX PARA IMAGENS DOS COMENTÁRIOS ====================
-    function initLightbox() {
-        const imagens = document.querySelectorAll('.comentario-img');
-        imagens.forEach(img => {
-            img.removeEventListener('click', abrirLightbox);
-            img.addEventListener('click', abrirLightbox);
-        });
-    }
-
-    function abrirLightbox(e) {
-        e.stopPropagation();
-        const imgSrc = e.currentTarget.src;
-        if (!imgSrc) return;
-        const modalExistente = document.getElementById('modal-lightbox-fenda');
-        if (modalExistente) modalExistente.remove();
-        const modal = document.createElement('div');
-        modal.id = 'modal-lightbox-fenda';
-        modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.style.cssText = `max-width:90%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 30px rgba(0,0,0,0.5);`;
-        const btn = document.createElement('button');
-        btn.innerHTML = '✖';
-        btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
-        btn.onclick = () => {
-            modal.style.opacity = '0';
-            setTimeout(() => modal.remove(), 200);
-        };
-        modal.appendChild(img);
-        modal.appendChild(btn);
-        document.body.appendChild(modal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.opacity = '0';
-                setTimeout(() => modal.remove(), 200);
-            }
-        });
-        modal.offsetHeight;
-        modal.style.opacity = '1';
-    }
-
     const observerLightbox = new MutationObserver(() => initLightbox());
     const listaComentarios = document.querySelector('.lista-comentarios-social');
     if (listaComentarios) observerLightbox.observe(listaComentarios, {
@@ -819,5 +886,5 @@ $total_reacoes = array_sum($reacoes_detalhes);
             });
         }
     }
-    <?php endif; // fim do bloco de comentários ativos ?>
+    <?php endif;?> // fim do bloco de comentários ativos
 </script>

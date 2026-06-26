@@ -971,3 +971,19 @@ function initViewportTracker() {
     });
     atualizarAltura();
 }
+
+// ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
+window.deslogarUsuario = async function() {
+    try {
+        // 1. Tenta fazer logout no Supabase (se o SDK estiver carregado)
+        if (typeof supabase !== 'undefined' && supabase.auth) {
+            await supabase.auth.signOut();
+            console.log('[LOGOUT] Supabase logout realizado.');
+        }
+    } catch (err) {
+        console.warn('[LOGOUT] Erro ao fazer logout no Supabase:', err.message);
+    }
+
+    // 2. Redireciona para o logout.php (que já existe e é seguro)
+    window.location.href = 'logout.php';
+};

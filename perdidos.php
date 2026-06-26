@@ -34,7 +34,7 @@ include 'includes/bolhas.php';
     <?php else: ?>
         <div class="painel-sessao" role="region" aria-label="Informações da Sessão">
             <p>Logado como: <strong><?php echo $_SESSION['usuario_nome']; ?></strong> <span aria-hidden="true">🎓</span></p>
-            <button type="button" onclick="deslogar()" class="btn-sair-fenda">Sair da Conta</button>
+            <button onclick="deslogarUsuario()" class="fenda-btn-glow fenda-outline">🔒 Sair da Conta</button>
         </div>
     <?php endif; ?>
 

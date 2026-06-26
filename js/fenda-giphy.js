@@ -2,16 +2,11 @@
 (function() {
     'use strict';
 
-    // 🔑 SUA API KEY (substitua pela sua)
     const GIPHY_API_KEY = 'lGufKJv8wtztDnSovFTMFHhcJm1kofhL';
-
-    // Endpoints da API
     const ENDPOINTS = {
         gifs: 'https://api.giphy.com/v1/gifs/search',
         stickers: 'https://api.giphy.com/v1/stickers/search'
     };
-
-    // Configurações
     const CONFIG = {
         limit: 20,
         debounceMs: 500,
@@ -23,16 +18,12 @@
     let searchInput = null;
     let resultsContainer = null;
     let debounceTimer = null;
-
-    // 🔥 ALVO DINÂMICO: ID do campo hidden (padrão para comentários)
     let gifTargetInputId = 'hidden-gif-url';
 
-    // Função pública para mudar o alvo (chamada antes de abrir o modal)
     window.setGiphyTarget = function(targetId) {
         gifTargetInputId = targetId;
     };
 
-    // Cria o modal de busca de GIFs (estilos inline)
     function criarModal() {
         if (activeModal) return activeModal;
 
@@ -167,7 +158,7 @@
         });
         searchBar.appendChild(searchInput);
 
-        // Container dos resultados (rolável)
+        // Container dos resultados
         resultsContainer = document.createElement('div');
         resultsContainer.style.cssText = `
             overflow-y: auto;
@@ -245,30 +236,66 @@
         });
     }
 
+    // 🔥 FUNÇÃO DE SELEÇÃO DE GIF COM PRÉVIA E BOTÃO "X"
     function selecionarGif(url) {
         fecharModal();
         
-        // 🔥 Usa o target dinâmico (pode ser de comentário ou post)
+        // Define o hidden
         let hiddenGifUrl = document.getElementById(gifTargetInputId);
         if (!hiddenGifUrl) {
             hiddenGifUrl = document.createElement('input');
             hiddenGifUrl.type = 'hidden';
             hiddenGifUrl.id = gifTargetInputId;
             hiddenGifUrl.name = 'gif_url';
-            
-            // Tenta encontrar o formulário correto (comentário ou post)
             const form = document.getElementById('form-comentario') || document.querySelector('#modal-postar-fenda form');
             if (form) form.appendChild(hiddenGifUrl);
         }
         hiddenGifUrl.value = url;
-        
-        // Opcional: preenche um placeholder no campo de texto adequado
+
+        // 🔥 LIMPA O INPUT DE IMAGEM (se houver)
+        const inputFile = document.getElementById('input-img-comentario');
+        if (inputFile) {
+            inputFile.value = ''; // reseta o upload de imagem
+        }
+
+        // 🔥 ATUALIZA A PRÉVIA VISUAL COM BOTÃO "X"
+        const previewAnexo = document.getElementById('anexo-preview');
+        if (previewAnexo) {
+            previewAnexo.style.display = 'inline-flex';
+            previewAnexo.style.position = 'relative';
+            previewAnexo.innerHTML = `
+                <img src="${url}" alt="Prévia do GIF" style="max-height:70px; max-width:70px; border-radius:4px; object-fit:contain;">
+                <button type="button" onclick="window.removerMidia()" style="
+                    position: absolute; top: -6px; right: -6px; 
+                    background: rgba(0,0,0,0.7); border: none; 
+                    color: #fff; border-radius: 50%; 
+                    width: 18px; height: 18px; font-size: 10px; 
+                    cursor: pointer; display: flex; align-items: center; justify-content: center;
+                    line-height: 1;
+                ">✕</button>
+            `;
+            previewAnexo.onclick = function(ev) {
+                if (ev.target.tagName !== 'BUTTON') {
+                    ev.stopPropagation();
+                    if (typeof window.abrirLightboxManual === 'function') {
+                        window.abrirLightboxManual(url);
+                    } else {
+                        window.open(url, '_blank');
+                    }
+                }
+            };
+        }
+
+        // Opcional: preenche o placeholder no campo de texto
         const campoTexto = document.querySelector('.textarea-chat') || document.querySelector('#modal-postar-fenda textarea');
         if (campoTexto && campoTexto.value.trim() === '') {
             campoTexto.value = '🎬 GIF enviado';
             campoTexto.dispatchEvent(new Event('input'));
         }
         campoTexto?.focus();
+
+        // Dispara evento para sincronizar com outras partes (ex: modal de postagem)
+        document.dispatchEvent(new CustomEvent('gifSelecionado', { detail: { url: url } }));
     }
 
     function fecharModal() {
@@ -282,7 +309,7 @@
         criarModal();
     };
 
-    // Limpeza do hidden após envio (para comentários)
+    // Limpeza do hidden após envio
     function limparHiddenGif() {
         const hidden = document.getElementById('hidden-gif-url');
         if (hidden) hidden.value = '';

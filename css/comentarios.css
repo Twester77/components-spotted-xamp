@@ -208,7 +208,7 @@
     padding-inline-end: 8px;
     padding-inline-start: 9px;
     border-radius:16px 16px 16px 4px;
-    border-right: 5px solid var(--cor-borda-glow);
+    border-right: 3px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -326,6 +326,9 @@
     background: rgb(255 255 255 / 5%);
     backdrop-filter: blur(8px);
     color: #fff;
+    border-bottom: 2px solid #11111140;
+    border-top: 2px solid #11111140;
+    border-left: 2px solid #11111140;
     
 }
 
@@ -529,15 +532,15 @@
     background: var(--laranja-fenda, #ff8c00);
     border: none;
     border-radius: 50%;
-    width: clamp(30px, 8vmin, 70px);
-    height: clamp(30px, 8vmin, 70px);
+    width: clamp(30px, 6vmin, 70px);
+    height: clamp(30px, 6vmin, 70px);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
     color: #000;
-    font-size: clamp(0.95rem, 5vmin, 1.8rem);
+    font-size: clamp(0.95rem, 3.5vmin, 1.8rem);
 }
 
 /* --- Rodapé (contador + miniatura) – AGORA NO FLUXO NORMAL --- */
@@ -1003,8 +1006,8 @@
 }
 
 .preview-avatar .avatar-p {
-    width: clamp(45px, 8vmin, 80px);
-    height: clamp(45px 8vmin, 80px);
+    width: clamp(40px, 6vmin, 80px);
+    height: clamp(40px, 6vmin, 80px);
     border-radius: 50%;
     border: 2px solid #ffbc00;
 }
