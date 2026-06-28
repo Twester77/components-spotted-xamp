@@ -210,11 +210,12 @@ body.hacker-mode .item-menu,
 body.hacker-mode .btn-header,
 body.hacker-mode .submenu li a {
     color: #00ff00 !important;
-    text-shadow: 0 0 10px #00ff00 !important;
-    text-transform: uppercase !important;
+    text-shadow: 0 0 10px #00ff00 ;
+    text-transform: uppercase ;
     transition: all 0.1s steps(2) !important;
-    position: relative !important;
+    position: relative ;
     background: transparent !important;
+    border-radius: 0;
 }
 
 /* Hover dos menus: inversão total */
@@ -314,8 +315,8 @@ body.hacker-mode .btn-zarpar,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,
 body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atléticas */
-    background: #000 !important;
-    color: #00ff00 !important;
+    background: #000 ;
+    color: #00ff00 ;
     border: 3px double var(--hacker-green) !important;
     border-radius: 0 ;
     font-family: monospace ;
@@ -332,6 +333,12 @@ body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atlétic
 body.hacker-mode #btn-menu-hamburguer:hover {
     background: #00ff0015 !important;
     color: #ffca00 !important;
+}
+
+body.hacker-mode .perdidos-item .link-fofoca:hover {
+    color:#000;
+    background: #00ff00;
+
 }
 
 /* Hover: fundo verde, texto preto, seta aparecendo */
@@ -580,10 +587,12 @@ body.hacker-mode .comentario-item.vibe-neon .comentario-autor {
 
 /* 4. VIBE LIGHT - Terminal Monocromático Vintage (verde-fósforo suave) */
 body.hacker-mode .comentario-item.vibe-light {
-    background: #2e5b2ec9;  
+    background: #8fc28f2e;  
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
     font-weight: normal;
+    /* Aplica a cor verde e a grade por cima de todo o quadrado */
+    
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-autor {
@@ -598,7 +607,7 @@ body.hacker-mode .comentario-item.vibe-light .indicador-resposta,
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-data {
-    color: #44aa44 !important;  /* Verde mais escuro para a data */
+    color: #4dc44d !important;  /* Verde mais escuro para a data */
     opacity: 0.8;
 }
 
@@ -606,16 +615,6 @@ body.hacker-mode .comentario-item.vibe-light .comentario-texto {
     color: #c0ffc0 !important;  /* Verde bem suave para o texto principal */
 }
 
-/* Versão alternativa: se quiser um efeito de "papel carbono" no vibe-light */
-body.hacker-mode .comentario-item.vibe-light {
-    background-image: repeating-linear-gradient(
-        0deg,
-        rgba(0, 255, 0, 0.03) 2px,
-        rgba(0, 255, 0, 0.03) 2px,
-        transparent 2px,
-        transparent 2px
-    ) !important;
-}
 
 /* 5. BASE UNIFICADA: garante consistência */
 
@@ -649,11 +648,11 @@ body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
 /* A keyframe exclusiva para o hacker */
 @keyframes hacker-highlight {
     0% {
-        background-color: rgba(0, 255, 65, 0.6);
+        background-color: rgba(0, 255, 64, 0.897);
         box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
         border-left: 3px solid #00ff41;
     }
-    30% {
+    40% {
         background-color: rgba(0, 255, 65, 0.2);
         box-shadow: 0 0 40px rgba(0, 255, 65, 0.6);
         border-left: 6px solid #00ff41;
@@ -667,9 +666,9 @@ body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
 
 /* Seletor com alta especificidade para vencer qualquer regra */
 body.hacker-mode .comentario-item.comentario-highlight {
-    animation: hacker-highlight 4s ease-out forwards !important;
-    border-radius: 8px !important;
-    border-left: 3px solid #00ff41 !important;
+    animation: hacker-highlight 6s ease-out forwards !important;
+    border-radius: 8px ;
+    border-left: 3px solid #00ff41 ;
 }
 
 
@@ -719,7 +718,7 @@ body.hacker-mode .preview-botao
     color: #00ff00 !important;
 }
 
-body.hacker-mode .btn-filtro.ativo:hover,
+body.hacker-mode .btn-filtro.ativo,
 body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .btn-fenda-padrao:hover,
 body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
@@ -803,26 +802,54 @@ body.hacker-mode .reacao-item.voted {
     transform: none!important;
 }
 
+/* Garante que o container dos emojis use flexbox e alinhe os itens em grade/linha */
 body.hacker-mode .reacoes-popup {
-    background: #0000009a !important;
-    border: 1px solid #0f0 !important;
-    box-shadow: 0 0 15px #0f0 !important;
-     background-image: repeating-linear-gradient(
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    background: repeating-linear-gradient(
         0deg,
-        rgba(0, 255, 0, 0.03) 0px,
-        rgba(0, 255, 0, 0.03) 2px,
-        transparent 2px,
-        transparent 2px
-    ) !important;
-    background-size:  2px 100%!important;
+        rgba(0, 0, 0, 0.5) 0px,
+        rgba(0, 0, 0, 0.5) 1px,
+        transparent 1px,
+        transparent 3px
+    ), #031403 ;
+    background-size: 100% 3px ;
+    border-radius: 0;
+    /* Configurações extras para o container */
+    display: flex ;
+    gap: 4px ; /* Espaço entre os quadradinhos dos emojis */
+    padding: 6px ; /* Margem interna do pop-up */
 }
 
-body.hacker-mode .reacoes-popup span:hover {
-      background: rgba(0, 255, 0, 0.863);
-      transform: scale(1.05) 0.2s ease;
-      border-radius: 3px;
-      filter: saturate(1.1);
+/* Modifica os elementos dos emojis para virarem quadradinhos perfeitos */
+body.hacker-mode .reacoes-popup span {
+    display: inline-flex ;
+    align-items: center ;
+    justify-content: center ;
+    border-radius: 3px;
+    transition: transform 0.2s ease;
 }
+
+/* Hover: Agora preencherá o quadrado inteiro de 32x32 pixels */
+body.hacker-mode .reacoes-popup span:hover {
+    transform: scale(1.1); /* Um leve zoom para destacar o quadradinho */
+    filter: saturate(1.2) drop-shadow(0 0 2px #00ff00);
+    
+    /* Aplica a cor verde e a grade por cima de todo o quadrado */
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.5) 0px,
+        rgba(0, 0, 0, 0.5) 1px,
+        transparent 1px,
+        transparent 3px
+    ), #0dff0d !important;
+    
+    background-size: 100% 3px !important;
+}
+
+
+
+
 
 
 /* ---------------------------------------------------------------

@@ -227,6 +227,7 @@
     /* Ajuste conforme a altura do seu header fixo */
     -moz-user-select: text;
     user-select: text;
+    will-change: transform;
 
 }
 
@@ -290,12 +291,11 @@
     backdrop-filter: none;
     position: relative;
     animation: neon-ultra 5s infinite alternate ease-in-out;
-    color: var(--cor-borda-glow)
+    color: var(--cor-borda-glow);
 }
 
 .comentario-item.vibe-neon .comentario-data,
 .comentario-item.vibe-neon .comentario-autor {
-    color: var(--cor-borda-glow);
     font-weight: bold;
     text-shadow: 0 0 6px var(--cor-borda-glow);
     opacity: 0.9;
@@ -322,16 +322,6 @@
     }
 }
 
-.comentario-item.vibe-glass {
-    background: rgb(255 255 255 / 5%);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    border-bottom: 2px solid #11111140;
-    border-top: 2px solid #11111140;
-    border-left: 2px solid #11111140;
-    
-}
-
 @keyframes pulsar-luz {
     0% {
         box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
@@ -345,6 +335,18 @@
         box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
     }
 }
+
+
+.comentario-item.vibe-glass {
+    background: rgb(255 255 255 / 5%);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    border-bottom: 1px solid #11111141;
+    border-top: 1px solid #11111141;
+    border-left: 1px solid #11111141;
+    
+}
+
 
 .comentario-item.vibe-ads {
     background-color: #161625;
@@ -382,6 +384,7 @@
     align-items: center;
     margin-bottom: 5px;
     letter-spacing: 1px;
+    gap: 8px;
     width: 100%;
 }
 
@@ -391,7 +394,6 @@
     font-weight: bold;
     flex-grow: 1;
     max-width: clamp(75px, 60vmax, 150px);
-    margin-right: 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -510,7 +512,7 @@
     border-radius: 50%;
     width: clamp(30px, 8vmin, 70px);
     height: clamp(30px, 8vmin, 70px);
-    font-size: clamp(1.2rem, 5vmin, 2rem);
+    font-size: clamp(1.1rem, 5vmin, 2rem);
     font-weight: bold;
     color: #fff;
     display: flex;
@@ -518,6 +520,7 @@
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
+    aspect-ratio: 1 / 1;
 }
 
 .btn-attach-gaveta:hover {
@@ -548,7 +551,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
     /* não encolhe */
     color: #aaa;
@@ -590,13 +593,12 @@
     color: #b1b1b1;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.5);
-    padding: 1px 6px;
     border-radius: 10px;
     white-space: nowrap;
     font-size: 0.8rem;
     overflow-wrap: break-word;
     overflow: hidden;
-    gap: 5px;
+    gap: 4px;
 }
 
 /* --- Feedback toast (flutuante sobre a barra, sem atrapalhar) --- */

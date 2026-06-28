@@ -58,15 +58,15 @@
 }
 
 .main-fenda-total {
-    max-width: 100% !important;
+    max-width: 100% ;
     padding: 0 ;
     /* Zera o padding que estava empurrando o feed */
-    margin: 20px auto !important;
+    margin: 20px auto ;
 }
 
 .main-fenda-total article {
-    width: 100% !important;
-    margin: 0 !important;
+    width: 100% ;
+    margin: 0 ;
     box-sizing: border-box;
 }
 
@@ -92,7 +92,7 @@
     /* Deixa o Grid controlar a largura */
     flex-shrink: 0 !important;
     position: relative ;
-    margin: 20px auto !important;
+    margin: 20px auto ;
     top: auto !important;
     left: auto !important;
 }
@@ -103,7 +103,6 @@
     display: block;
     overflow: hidden;
     position: relative;
-    line-height: clamp(1.2, 0.2vw + 1rem, 1.6rem);
     word-break: break-word;
     /* Evita que post enormes explodam o layout */
     overflow-wrap: break-word;
@@ -111,7 +110,6 @@
     color: #fff;
     transition: max-height 0.4s ease-in-out;
     margin: 10px 0;
-    font-size: clamp(0.85rem, 0.2vw + 0.8rem, 1.4rem);
 }
 
 
@@ -152,7 +150,7 @@
     background:var(--glass-bg);
     -webkit-backdrop-filter: blur(6px); 
     backdrop-filter: blur(6px); 
-    filter: drop-shadow (0 8px 24px 0 rgba(0, 0, 0, 0.37));
+    filter: drop-shadow (0 8px 20px 0 rgba(0, 0, 0, 0.37));
     border-radius: 10px;
     padding: 12px;
     break-inside: avoid;
@@ -165,12 +163,12 @@
     flex-direction: column;
     width: 100%;
     max-width: 500px ;
-    gap: 5px;
+    gap: 6px;
     /* Limita a largura máxima do card */
     height: auto;
     scrollbar-width: none ;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
-    will-change: backdrop-filter, transform, opacity, filter ;
+    will-change: transform, opacity, filter ;
 }
 
 .spotted-card::-webkit-scrollbar{
@@ -222,9 +220,9 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     transition: 0.3s ease;
 }
 
-@supports (backdrop-filter: blur(3px)) {
+@supports (backdrop-filter: blur(4px)) {
     body:not(.modo-swipe-ativo) .spotted-card:hover {
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(4px);
         background: rgba(0, 0, 0, 0.473); /* Um pouco mais escuro para o texto ler melhor no blur */
         transition: 0.3s ease;
     }
@@ -259,22 +257,18 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 /* Cores das Categorias */
 .spotted-card.ranco {
     border-left: 5px solid #ce0f0f !important;
-    box-shadow: -5px 0 15px rgba(104, 0, 0, 0.253);
 }
 
 .spotted-card.comunidade {
     border-left: 5px solid #ffffffbe !important;
-    box-shadow: -5px 0 15px rgba(152, 15, 206, 0.2);
 }
 
 .spotted-card.acaba-pelo-amor-de-deus {
     border-left: 5px solid #f78605 !important;
-    box-shadow: -5px 0 15px rgba(223, 125, 14, 0.342);
 }
 
 .spotted-card.perdidos {
     border-left: 5px solid #ece80ffa !important;
-    box-shadow: -5px 0 15px rgba(206, 203, 15, 0.253);
 }
 
 
@@ -405,20 +399,16 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     word-break: break-word;
     white-space: normal;
     letter-spacing: 1px;
-    font-size: 16px;
+    font-size: clamp(0.95rem, 0.2vw + 0.5rem, 1.5rem);
     margin-bottom: auto;
     pointer-events: auto;
-}
-
-.spotted-card:first-child {
-    margin-top: 30px;
 }
 
 
 /* BOTÃO FILTRO PERDIDOS */
 
 .btn-filtro {
-    padding: 6px 15px;
+    padding: 5px 15px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
@@ -427,9 +417,9 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     font-weight: bold;
     transition: all 0.3s ease;
     height: auto;
-    width: 95% !important;
     max-width: min-content;
-    margin-top: 15px;
+    margin-top: 20px;
+    align-content: center;
 
 }
 
@@ -497,12 +487,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     width: 100%;
     display: block;
     text-align: center;
-    background: var(--dourado) !important;
-    color: #000 !important;
+    background: var(--dourado) ;
+    color: #000 ;
     padding: 12px;
     border-radius: 10px;
     text-decoration: none;
-    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.1rem);
+    font-size: clamp(0.75rem, 0.2vw + 0.6rem, 1.1rem);
     font-weight: 800;
     text-transform: uppercase;
     transition: 0.3s ease-in-out;
@@ -520,8 +510,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
  
 
 .link-fofoca:hover {
-    color: #fff !important;
-    transform: translateX(4px);
+    color: #fff ;
+    transform: translateX(2px);
     /* Efeito de setinha andando */
 }
 

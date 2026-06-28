@@ -873,7 +873,7 @@ body.modal-aberto .fab-postar {
 
 .fenda-btn-glow:hover {
     filter: brightness(1.1);
-    transform: scale(1.05);
+    transform: scale(1.03);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -2459,7 +2459,7 @@ textarea[name="bio"] {
         backdrop-filter: none ;
         padding: 10px;
         margin: 20px 0;
-        box-shadow: none !important;
+        box-shadow: none ;
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
@@ -2489,7 +2489,7 @@ textarea[name="bio"] {
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         top: 40px !important;
-        max-height: 55dvh !important;
+        max-height: 50dvh !important;
     }
 }
 
@@ -2557,7 +2557,7 @@ body.modal-aberto #fenda-nexus {
 
 /* O Botão Principal (O "Leque" fechado) */
 .nexus-trigger {
-    width: clamp(40px, 10vmin, 90px);
+    width: clamp(40px, 8.5vmin, 90px);
     background: var(--dourado, #ffbc00);
     border-radius: 50%!important; 
     aspect-ratio: 1 / 1;
