@@ -68,17 +68,7 @@ if ($is_production) {
 }
 
 // ============================================================
-// 🔍 VERIFICAÇÃO DO CERTIFICADO SSL (antes da conexão)
-// ============================================================
-if ($is_production && $ssl_flag && !file_exists($certPath)) {
-    $erro = 'Certificado SSL não encontrado em: ' . $certPath;
-    error_log('[CONEXAO] ERRO: ' . $erro);
-    fenda_log('🔴 ERRO: ' . $erro);
-    die("Erro de configuração do servidor. Contate o administrador.");
-}
-
-// ============================================================
-// 🔌 INICIALIZAÇÃO DA CONEXÃO COM TRATAMENTO DE ERRO
+// 🔌 INICIALIZAÇÃO DA CONEXÃO COM SSL FORÇADO
 // ============================================================
 $conn = mysqli_init();
 if (!$conn) {
@@ -88,17 +78,33 @@ if (!$conn) {
     die("Erro interno do servidor.");
 }
 
-// Configura SSL (apenas se for produção e o certificado existir)
-if ($ssl_flag === MYSQLI_CLIENT_SSL) {
-    mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
-    mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+// ============================================================
+// 🔐 CONFIGURAÇÃO SSL (apenas produção)
+// ============================================================
+if ($is_production) {
+    // Se o certificado existe, usa ele
+    if (file_exists($certPath)) {
+        mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
+        mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+        fenda_log('🟢 SSL: Certificado encontrado em ' . $certPath);
+    } else {
+        // Fallback: tenta conexão SSL sem certificado (apenas criptografia)
+        fenda_log('🟡 SSL: Certificado não encontrado, tentando conexão SSL com verificação reduzida');
+        // Força SSL mesmo sem certificado (alguns drivers aceitam)
+        mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+        // Configura SSL com parâmetros vazios (usa o padrão do sistema)
+        mysqli_ssl_set($conn, NULL, NULL, NULL, NULL, NULL);
+    }
 }
 
 // ============================================================
-// 🔥 TENTATIVA DE CONEXÃO COM TRY/CATCH DETALHADO
+// 🔥 TENTATIVA DE CONEXÃO COM TRATAMENTO DE ERRO
 // ============================================================
 try {
-    $conectou = mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $ssl_flag);
+    // 🔥 Força o uso de SSL na conexão (para TiDB)
+    $flags = ($is_production) ? MYSQLI_CLIENT_SSL : 0;
+    
+    $conectou = mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $flags);
     
     if (!$conectou) {
         $erro = mysqli_connect_error();
