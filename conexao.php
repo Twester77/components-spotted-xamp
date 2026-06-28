@@ -10,6 +10,12 @@ if (ob_get_level() == 0) ob_start();
 include_once __DIR__ . '/fenda_debug.php';
 fenda_log('🔵 INÍCIO conexao.php (Vercel)');
 
+// --- SONDA DIAGNÓSTICA ---
+fenda_log('DEBUG: DB_HOST está presente? ' . (getenv('DB_HOST') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: DB_USER está presente? ' . (getenv('DB_USER') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: DB_PORT está presente? ' . (getenv('DB_PORT') ? 'SIM' : 'NÃO'));
+// -------------------------
+
 /*--------------------------------------------------------------------------------------------------------------
 PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente)
 ---------------------------------------------------------------------------------------------------------------*/
