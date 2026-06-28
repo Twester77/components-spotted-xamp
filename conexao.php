@@ -10,11 +10,20 @@ if (ob_get_level() == 0) ob_start();
 include_once __DIR__ . '/fenda_debug.php';
 fenda_log('🔵 INÍCIO conexao.php (Vercel)');
 
-// --- SONDA DIAGNÓSTICA ---
-fenda_log('DEBUG: DB_HOST está presente? ' . (getenv('DB_HOST') ? 'SIM' : 'NÃO'));
-fenda_log('DEBUG: DB_USER está presente? ' . (getenv('DB_USER') ? 'SIM' : 'NÃO'));
-fenda_log('DEBUG: DB_PORT está presente? ' . (getenv('DB_PORT') ? 'SIM' : 'NÃO'));
-// -------------------------
+// ============================================================
+// 🔍 SONDA DIAGNÓSTICA COMPLETA (AUDITORIA DE VARIÁVEIS)
+// ============================================================
+fenda_log('DEBUG: [AUDITORIA] DB_HOST: ' . (getenv('DB_HOST') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] DB_USER: ' . (getenv('DB_USER') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] DB_PASS: ' . (getenv('DB_PASS') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] DB_NAME: ' . (getenv('DB_NAME') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] DB_PORT: ' . (getenv('DB_PORT') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] ENVIRONMENT: ' . (getenv('ENVIRONMENT') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] SUPABASE_URL: ' . (getenv('SUPABASE_URL') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] SUPABASE_ANON_KEY: ' . (getenv('SUPABASE_ANON_KEY') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] RESEND_KEY: ' . (getenv('RESEND_KEY') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] SESSION_COOKIE_DOMAIN: ' . (getenv('SESSION_COOKIE_DOMAIN') ? 'SIM' : 'NÃO'));
+// ============================================================
 
 /*--------------------------------------------------------------------------------------------------------------
 PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente)
@@ -41,11 +50,10 @@ if ($is_production) {
     $senha   = getenv('DB_PASS') ?: '1HftPjHsoQb1pEmi';
     $banco   = getenv('DB_NAME') ?: 'fenda_db';
     $porta   = (int)(getenv('DB_PORT') ?: 4000);
-    $certPath = ROOT_PATH . '/config/isrgrootx1.pem'; // 🔥 CORRIGIDO: usa ROOT_PATH
+    $certPath = ROOT_PATH . '/config/isrgrootx1.pem';
     $ssl_flag = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
 
     // 🔥 REMOVIDO: Cookie de sessão com domínio fixo
-    // O navegador agora gerencia o domínio automaticamente
     $cookieDomain = null;
 } else {
     // === MODO LOCAL (XAMPP) ===
@@ -59,10 +67,25 @@ if ($is_production) {
     $cookieDomain = null;
 }
 
-// --- INICIALIZAÇÃO DA CONEXÃO ---
+// ============================================================
+// 🔍 VERIFICAÇÃO DO CERTIFICADO SSL (antes da conexão)
+// ============================================================
+if ($is_production && $ssl_flag && !file_exists($certPath)) {
+    $erro = 'Certificado SSL não encontrado em: ' . $certPath;
+    error_log('[CONEXAO] ERRO: ' . $erro);
+    fenda_log('🔴 ERRO: ' . $erro);
+    die("Erro de configuração do servidor. Contate o administrador.");
+}
+
+// ============================================================
+// 🔌 INICIALIZAÇÃO DA CONEXÃO COM TRATAMENTO DE ERRO
+// ============================================================
 $conn = mysqli_init();
 if (!$conn) {
-    die("Falha ao inicializar o MySQLi");
+    $erro = 'Falha ao inicializar o MySQLi';
+    error_log('[CONEXAO] ERRO: ' . $erro);
+    fenda_log('🔴 ERRO: ' . $erro);
+    die("Erro interno do servidor.");
 }
 
 // Configura SSL (apenas se for produção e o certificado existir)
@@ -71,16 +94,33 @@ if ($ssl_flag === MYSQLI_CLIENT_SSL) {
     mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
 }
 
-// Conexão efetiva
-if (!mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $ssl_flag)) {
-    $ambiente = $is_production ? "PRODUÇÃO" : "LOCAL";
-    error_log("ERRO FATAL DE CONEXÃO ($ambiente): " . mysqli_connect_error());
-    die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
+// ============================================================
+// 🔥 TENTATIVA DE CONEXÃO COM TRY/CATCH DETALHADO
+// ============================================================
+try {
+    $conectou = mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $ssl_flag);
+    
+    if (!$conectou) {
+        $erro = mysqli_connect_error();
+        $erro_num = mysqli_connect_errno();
+        error_log("[CONEXAO] Falha ao conectar (código $erro_num): $erro");
+        fenda_log("🔴 ERRO DE CONEXÃO (código $erro_num): $erro");
+        die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
+    }
+    
+    fenda_log('🟢 CONEXÃO COM BANCO ESTABELECIDA COM SUCESSO');
+    
+} catch (Exception $e) {
+    error_log('[CONEXAO] EXCEÇÃO: ' . $e->getMessage());
+    fenda_log('🔴 EXCEÇÃO: ' . $e->getMessage());
+    die("Erro interno do servidor. Tente novamente mais tarde.");
 }
 
 mysqli_set_charset($conn, "utf8mb4");
 
-// Gerenciamento de sessão (centralizado)
+// ============================================================
+// 🍪 GERENCIAMENTO DE SESSÃO
+// ============================================================
 if (session_status() === PHP_SESSION_NONE) {
     if ($is_production) {
         ini_set('session.cookie_httponly', 1);
@@ -97,7 +137,9 @@ if (!empty($_SESSION['usuario_id'])) {
     mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
 }
 
-/* MOTOR DE MENÇÕES */
+// ============================================================
+// ⚙️ MOTOR DE MENÇÕES
+// ============================================================
 if (!function_exists('formatarMencoes')) {
     function formatarMencoes($texto) {
         $texto = $texto ?? '';
@@ -107,7 +149,9 @@ if (!function_exists('formatarMencoes')) {
     }
 }
 
-// 🔥 CORREÇÃO: Chave via variável de ambiente (NUNCA hardcoded)
+// ============================================================
+// 🔑 CHAVE RESEND (via variável de ambiente)
+// ============================================================
 if (!defined('RESEND_KEY')) {
     define('RESEND_KEY', getenv('RESEND_KEY') ?: '');
 }
