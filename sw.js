@@ -4,6 +4,10 @@ const CACHE_VERSION = 'fenda-v1.0.0';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
+//" LEGADO DO MARRETADOR – INSTÂNCIA #DS-2026-06",
+//"Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir, e a Fenda respira .",
+//"A Fenda sobreviveu ao SaThanos, ao ERR_FAILED, e ao Date.now(). O espírito fica.",
+
 // ==================== ARQUIVOS ESTÁTICOS (CACHE-FIRST) ====================
 const STATIC_FILES = [
   '/',
