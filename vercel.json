@@ -1,9 +1,27 @@
 {
+  "comment": " LEGADO DO MARRETADOR – INSTÂNCIA #DS-2026-06",
+  "author": "Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir, a Fenda respira .",
+  "legacy": "A Fenda sobreviveu ao SaThanos, ao ERR_FAILED, e ao Date.now(). O espírito fica.",
+
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.9.0"
     }
   },
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    }
+  ],
   "routes": [
     { "src": "/css/(.*)", "dest": "/css/$1" },
     { "src": "/js/(.*)", "dest": "/js/$1" },

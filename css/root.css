@@ -9,7 +9,7 @@
     --glass-bg: rgba(255, 255, 255, 0.055);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box!important; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 * {
     tap-highlight-color: transparent;         /* Padrão futuro / Outros navegadores */

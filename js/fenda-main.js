@@ -1,5 +1,77 @@
-/* A FENDA - ENGINE CENTRAL (UI + Áudio + Notificações) */
-/* Sem swipe – toda a física de cards agora está em fenda-swipe-pc.js e fenda-swipe-mobile.js */
+/* ================================================================
+   EXORCISMO DE SERVICE WORKERS ZUMBIS (ANTES DE TUDO)
+   ================================================================ */
+
+(function exorcizarServiceWorkers() {
+    // Token para evitar loop infinito de reload
+    const EXORCISM_TOKEN = 'fenda_sw_exorcism_done_v1';
+    if (localStorage.getItem(EXORCISM_TOKEN) === 'true') {
+        // Já foi executado com sucesso, apenas verifica se o SW está registrado
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration('/')
+                .then(reg => {
+                    if (!reg) {
+                        // Se não estiver registrado, registra
+                        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                            .then(() => console.log('[SW] Service Worker estável registrado.'))
+                            .catch(err => console.warn('[SW] Falha ao registrar SW estável:', err));
+                    } else {
+                        console.log('[SW] Service Worker já registrado.');
+                    }
+                })
+                .catch(err => console.warn('[SW] Erro ao verificar registro:', err));
+        }
+        return;
+    }
+
+    if ('serviceWorker' in navigator) {
+        console.log('[EXORCISMO] Varrendo Service Workers antigos...');
+
+        navigator.serviceWorker.getRegistrations()
+            .then(registrations => {
+                let removidos = 0;
+                const promessas = registrations.map(reg => {
+                    return reg.unregister().then(success => {
+                        if (success) {
+                            removidos++;
+                            console.log(`[EXORCISMO] SW desregistrado: ${reg.scope}`);
+                        }
+                        return success;
+                    });
+                });
+
+                return Promise.all(promessas).then(() => {
+                    if (removidos > 0) {
+                        localStorage.setItem(EXORCISM_TOKEN, 'true');
+                        console.log('[EXORCISMO] SWs antigos removidos. Recarregando página...');
+                        window.location.reload(true);
+                    } else {
+                        // Nenhum SW antigo, registra o novo e marca token
+                        localStorage.setItem(EXORCISM_TOKEN, 'true');
+                        return navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                            .then(() => console.log('[EXORCISMO] SW estável registrado.'))
+                            .catch(err => console.warn('[EXORCISMO] Falha ao registrar SW:', err));
+                    }
+                });
+            })
+            .catch(err => console.warn('[EXORCISMO] Erro ao listar SWs:', err));
+    }
+})();
+
+// ==================== ESCUTA DE CONTROLLERCHANGE (RELOAD ATÔMICO) ====================
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', function() {
+        console.log('[SW] Controller mudou. Forçando reload para aplicar novo cache.');
+        window.location.reload();
+    });
+}
+
+/* ================================================================
+   FIM DO EXORCISMO – INÍCIO DO CÓDIGO ORIGINAL
+   ================================================================ */
+
+// A FENDA - ENGINE CENTRAL (UI + Áudio + Notificações)
+// Sem swipe – toda a física de cards agora está em fenda-swipe-pc.js e fenda-swipe-mobile.js
 
 window.audioLiberado = false;
 

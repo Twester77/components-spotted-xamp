@@ -1,8 +1,20 @@
 <?php
 include_once __DIR__ . '/../conexao.php';
 
-$is_post_page = true;
+// ==================== SENSOR DE ASSETS AUTOMÁTICO (ANTI-ESQUECIMENTO) ====================
+// Gera URL com timestamp da última modificação do arquivo para quebrar cache do navegador
+function asset_versao($path)
+{
+    // Converte caminho relativo para absoluto a partir da raiz do projeto
+    $fullPath = __DIR__ . '/../' . $path;
+    if (file_exists($fullPath)) {
+        return $path . '?v=' . filemtime($fullPath);
+    }
+    // Fallback seguro (caso o arquivo não exista no sistema de arquivos)
+    return $path . '?v=1.0.0';
+}
 
+$is_post_page = true;
 $u_id = $_SESSION['usuario_id'] ?? 0;
 $pref_swipe_real = 0;
 $pagina_atual = basename($_SERVER['PHP_SELF']);
@@ -21,7 +33,6 @@ $classe_tema = $tema_classe ?? '';
 $classe_pref = ($ativar_modo_app) ? 'modo-swipe-ativo feed-empilhado' : 'allow-hover';
 $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema is-touch-device");
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -33,34 +44,34 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <meta name="keywords" content="spotted, unifev, spotted universitário, fenda, comunidade, votuporanga">
     <meta name="author" content="A Fenda">
     <meta property="og:title" content="A Fenda - Spotted Universitário">
-    <meta property="og:description" content=" A comunidade digital da UNIFEV. Participe com comentários, reações e muito mais.">
+    <meta property="og:description" content="A comunidade digital da UNIFEV. Participe com comentários, reações e muito mais.">
     <meta property="og:image" content="https://fendauniversity.com.br/imagensfoto/favicon.png">
     <meta property="og:url" content="www.fendauniversity.com.br">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
-    
+
     <title>A Fenda - Spotted Universitário (Votuporanga)</title>
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/root.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/formularios.css">
-    <link rel="stylesheet" href="css/animacoes.css">
-    <link rel="stylesheet" href="css/feed.css">
+
+    <!-- CSS com Cache Busting Automático -->
+    <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">
+    <link rel="stylesheet" href="<?= asset_versao('css/layout.css') ?>">
+    <link rel="stylesheet" href="<?= asset_versao('css/formularios.css') ?>">
+    <link rel="stylesheet" href="<?= asset_versao('css/animacoes.css') ?>">
+    <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
     <?php if ($pagina_atual == 'comentarios-post.php'): ?>
-        <link rel="stylesheet" href="css/comentarios.css">
+        <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
     <?php endif; ?>
     <?php if ($pagina_atual == 'feed.php'): ?>
-        <link rel="stylesheet" href="css/swipe.css?v=<?php echo time(); ?>">
+        <link rel="stylesheet" href="<?= asset_versao('css/swipe.css') ?>">
     <?php endif; ?>
-    
+
     <!-- Ícones e favicon -->
     <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
     <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
-    
+
     <!-- Fontes e ícones externos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -223,7 +234,10 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         if (typeof window.logarUsuario === 'undefined') {
             window.logarUsuario = async function(email, senha) {
                 try {
-                    const { data, error } = await window.supabase.auth.signInWithPassword({
+                    const {
+                        data,
+                        error
+                    } = await window.supabase.auth.signInWithPassword({
                         email: email,
                         password: senha
                     });
@@ -231,8 +245,12 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
                     const token = data.session.access_token;
                     const response = await fetch('/auth-bridge.php', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ token: token })
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            token: token
+                        })
                     });
                     const result = await response.json();
                     if (result.success) {
@@ -250,7 +268,9 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         if (typeof window.deslogarUsuario === 'undefined') {
             window.deslogarUsuario = async function() {
                 try {
-                    const { error } = await window.supabase.auth.signOut();
+                    const {
+                        error
+                    } = await window.supabase.auth.signOut();
                     if (error) throw error;
                     window.location.href = '/logout.php';
                 } catch (err) {
@@ -263,7 +283,10 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         if (typeof window.verificarSessaoSupabase === 'undefined') {
             window.verificarSessaoSupabase = async function() {
                 try {
-                    const { data, error } = await window.supabase.auth.getSession();
+                    const {
+                        data,
+                        error
+                    } = await window.supabase.auth.getSession();
                     if (error) throw error;
                     return data.session;
                 } catch (err) {
@@ -276,7 +299,10 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         if (typeof window.cadastrarUsuario === 'undefined') {
             window.cadastrarUsuario = async function(nome, email, senha, atletica_id, pref_cor_padrao, pref_vibe_padrao) {
                 try {
-                    const { data, error } = await window.supabase.auth.signUp({
+                    const {
+                        data,
+                        error
+                    } = await window.supabase.auth.signUp({
                         email: email,
                         password: senha,
                         options: {

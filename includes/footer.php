@@ -1,6 +1,18 @@
 <?php
 // footer.php
 $u_id = $_SESSION['usuario_id'] ?? 0;
+
+// ==================== SENSOR DE ASSETS AUTOMÁTICO (FALLBACK) ====================
+// A função asset_versao() já deve estar definida no header.php, mas garantimos fallback seguro
+if (!function_exists('asset_versao')) {
+    function asset_versao($path) {
+        $fullPath = __DIR__ . '/../' . $path;
+        if (file_exists($fullPath)) {
+            return $path . '?v=' . filemtime($fullPath);
+        }
+        return $path . '?v=1.0.0'; // Fallback de segurança
+    }
+}
 ?>
 <footer class="footer-global">
 
@@ -105,23 +117,37 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
     </div>
 </dialog>
 
-<script src="js/fenda-main.js"></script>
+<!-- ========================================== -->
+<!-- SCRIPTS PRINCIPAIS (CARREGADOS NO RODAPÉ)  -->
+<!-- ========================================== -->
+<script src="<?= asset_versao('js/fenda-main.js') ?>"></script>
 
 <!-- ========================================== -->
-<!-- REGISTRO DO SERVICE WORKER (PWA)           -->
+<!-- ESCUDO DOS 99,999% - CONTROLLER CHANGE     -->
 <!-- ========================================== -->
 <script>
-    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('/sw.js')
-                .then(function(registration) {
-                    console.log('[PWA] Service Worker registrado com sucesso:', registration.scope);
-                })
-                .catch(function(error) {
-                    console.log('[PWA] Falha no registro do Service Worker:', error);
+    (function() {
+        if ('serviceWorker' in navigator) {
+            // Listener para quando o novo SW assumir o controle
+            navigator.serviceWorker.addEventListener('controllerchange', function() {
+                console.log('[PWA] Service Worker atualizou. Recarregando página para aplicar novo cache.');
+                window.location.reload();
+            });
+
+            // Fallback de registro (caso o exorcismo no fenda-main.js não tenha rodado)
+            if (!localStorage.getItem('fenda_sw_exorcism_done_v1')) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(function(registration) {
+                            console.log('[PWA] Service Worker registrado (fallback):', registration.scope);
+                        })
+                        .catch(function(error) {
+                            console.warn('[PWA] Falha no registro (fallback):', error);
+                        });
                 });
-        });
-    }
+            }
+        }
+    })();
 </script>
 
 </body>

@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🔥 VERSÃO AUTOMÁTICA (NUNCA MAIS PRECISA MEXER AQUI)
-const CACHE_VERSION = 'fenda-v' + Date.now();   // Ex: fenda-v1712345678901
+// 🛡️ VERSÃO ESTÁVEL – NUNCA MAIS MUDE O NOME DA VERSÃO MANUALMENTE
+const CACHE_VERSION = 'fenda-v1.0.0';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -58,7 +58,7 @@ const STATIC_FILES = [
   '/sons/padrao.mp3'
 ];
 
-// ==================== ARQUIVOS OPÇIONAIS ====================
+// ==================== ARQUIVOS OPCIONAIS (stale-while-revalidate) ====================
 const OPTIONAL_FILES = [
   '/css/skin-hacker.css'
 ];
@@ -84,7 +84,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          // 🔥 Remove qualquer cache que não seja o da versão atual
+          // Remove qualquer cache que não seja da versão atual
           if (cacheName !== CACHE_STATIC && cacheName !== CACHE_DYNAMIC) {
             console.log(`[SW] Removendo cache antigo: ${cacheName}`);
             return caches.delete(cacheName);
@@ -140,8 +140,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 4. Páginas principais → network first, fallback offline
-  if (event.request.mode === 'navigate') {
+  // 4. Páginas principais (.php, navegação) → network first, fallback offline
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.php')) {
     event.respondWith(
       fetch(event.request)
         .catch(() => caches.match('/offline.php'))
