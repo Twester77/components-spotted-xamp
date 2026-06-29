@@ -71,7 +71,7 @@ include 'includes/bolhas.php';
                     </span>
                 </p>
                 <p>
-                    <span style="font-size: 20px; opacity: 0.9; color: <?php echo $cor_extra; ?>">
+                    <span style="font-size: 20px; opacity: 0.8; color: <?php echo $cor_extra; ?>">
                         <?php echo $extra; ?>
                     </span>
                 </p>

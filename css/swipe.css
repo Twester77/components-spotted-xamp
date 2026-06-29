@@ -85,7 +85,6 @@ body.modo-swipe-ativo .feed-empilhado .card-body {
     pointer-events: none ;
     -webkit-user-select: none !important;
     user-select: none !important;
-    overflow: hidden;
 }
 
 body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
