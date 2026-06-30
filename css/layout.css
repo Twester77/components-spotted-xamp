@@ -188,8 +188,8 @@ nav {
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
@@ -236,8 +236,8 @@ nav {
 .sidebar-fenda.ativa {
     left: 0 !important;
     /* Aparece */
-    background: #4a60c483;
-    border: 2px solid #029687;
+    background: rgba(10, 25, 47, 0.95);
+    border: 1px solid #029687;
     padding: 20px;
 }
 

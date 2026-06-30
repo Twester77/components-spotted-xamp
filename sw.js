@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO ESTÁVEL – CORREÇÃO DO ERR_FAILED (FILTRO GET)
-const CACHE_VERSION = 'fenda-v1.0.1'; // Incrementado para forçar atualização
+// 🛡️ VERSÃO ESTÁVEL – CORREÇÃO DEFINITIVA DO ERR_FAILED (FILTRO GET + REDIRECT HANDLING)
+const CACHE_VERSION = 'fenda-v1.0.2'; // Incrementado para forçar atualização com a correção do redirect
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -144,9 +144,25 @@ self.addEventListener('fetch', (event) => {
   }
 
   // 4. Páginas principais (.php, navegação) → network first, fallback offline
+  // 🔥 CORREÇÃO DO ERR_FAILED EM REDIRECIONAMENTOS
   if (event.request.mode === 'navigate' || url.pathname.endsWith('.php')) {
     event.respondWith(
       fetch(event.request)
+        .then((response) => {
+          // Se a resposta for um redirecionamento travado (redirect: 'manual'),
+          // criamos uma nova requisição com redirect: 'follow' para o navegador
+          // seguir o fluxo naturalmente.
+          if (response.type === 'opaqueredirect' || response.redirected) {
+            console.log('[SW] Redirecionamento detectado em página PHP. Forçando modo follow...');
+            return fetch(new Request(event.request.url, {
+              method: event.request.method,
+              headers: event.request.headers,
+              credentials: 'include', // Mantém a sessão
+              redirect: 'follow'      // Força o navegador a seguir o redirecionamento
+            }));
+          }
+          return response;
+        })
         .catch(() => caches.match('/offline.php'))
     );
     return;

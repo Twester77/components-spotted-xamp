@@ -6,7 +6,7 @@
 
 
 .input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 30px #00000086 inset;
+    -webkit-box-shadow: 0 0 0 20px #00000086 inset;
     ;
 }
 
@@ -1068,8 +1068,8 @@ section.sessao-publicar {
 
 /* Botão Publicar – versão específica para perdidos (verde) */
 .btn-lancar-perdidos {
-    background: #7cd632e8 !important;
-    color: #000 !important;
+    background: #7cd632e8 ;
+    color: #000 ;
     border: none;
     padding: 8px 24px;
     border-radius: 30px;
@@ -1291,15 +1291,15 @@ input[type="checkbox"]:focus {
     display: inline-flex !important;
     align-items: center;
     justify-content: auto;
-    width: auto !important;
+    width: auto ;
     min-width: 150px;
-    padding: 10px 20px !important;
-    white-space: nowrap !important;
+    padding: 10px 20px ;
+    white-space: nowrap ;
     font-weight: 800;
     text-transform: uppercase;
-    text-decoration: none !important;
-    background: var(--dourado) !important;
-    color: #000 !important;
+    text-decoration: none ;
+    background: var(--dourado) ;
+    color: #000 ;
     border-radius: 50px !important;
     border: none;
     cursor: pointer;
@@ -1317,7 +1317,7 @@ input[type="checkbox"]:focus {
 .btn-seguir:hover,
 .btn-editar-atalho:hover,
 .btn-seguir-fenda:hover {
-    transform: scale(1.1) !important;
+    transform: scale(1.05) ;
     filter: brightness(1.1);
     box-shadow: 0 8px 20px rgba(255, 188, 0, 0.4);
 }

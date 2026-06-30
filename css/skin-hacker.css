@@ -52,7 +52,7 @@ body.hacker-mode .post-content {
 body.hacker-mode ,
 body.hacker-mode *::before,
 body.hacker-mode *::after {
-    border-radius: 0 !important;
+    border-radius: 0 ;
 }
 
 /* ---------------------------------------------------------------
@@ -156,7 +156,7 @@ body.hacker-mode .sessao-publicar::before {
     content: "+==================================================================+==============================================================+" !important;
     position: absolute !important;
     padding: 6px;
-    top: -26px ;
+    top: -22px ;
     left: -6px ; /* Ajuste para alinhar com o border-left double */
     right: -6px ;
     color: var(--hacker-green) !important;
@@ -212,7 +212,7 @@ body.hacker-mode .submenu li a {
     color: #00ff00 !important;
     text-shadow: 0 0 10px #00ff00 ;
     text-transform: uppercase ;
-    transition: all 0.1s steps(2) !important;
+    transition: all 0.2s steps(2) !important;
     position: relative ;
     background: transparent !important;
     border-radius: 0;
@@ -317,12 +317,12 @@ body.hacker-mode .link-fofoca,
 body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atléticas */
     background: #000 ;
     color: #00ff00 ;
-    border: 3px double var(--hacker-green) !important;
+    border: 3px double var(--hacker-green) ;
     border-radius: 0 ;
     font-family: monospace ;
     text-transform: uppercase ;
     position: relative ;
-    transition: none !important;
+    transition: none ;
     cursor: crosshair !important;
     overflow: visible ;
     letter-spacing: 1px ;
@@ -345,10 +345,8 @@ body.hacker-mode .perdidos-item .link-fofoca:hover {
 body.hacker-mode .btn:hover,
 body.hacker-mode .fenda-btn-glow:hover,
 body.hacker-mode #btn-load-more:hover,
-body.hacker-mode .btn-seguir-fenda:hover,
 body.hacker-mode .filtro-btn:hover,
 body.hacker-mode .btn-voltar-fenda:hover,
-body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode .btn-sair-fenda:hover,
 body.hacker-mode .btn-lancar:hover,
 body.hacker-mode .btn-zarpar:hover,
@@ -721,6 +719,7 @@ body.hacker-mode .preview-botao
 body.hacker-mode .btn-filtro.ativo,
 body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .btn-fenda-padrao:hover,
+body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
 body.hacker-mode .filtro-btn:hover {
     background: #00ff00 !important;
@@ -901,10 +900,10 @@ body.hacker-mode .fenda-reg-box i {
 body.hacker-mode .stats-perfil span {
     color: #0f0 !important;
 }
-body.hacker-mode .btn-seguir-fenda.seguindo {
-    background: rgba(0,255,0,0.1) !important;
-    border-color: #0f0 !important;
-    color: #0f0 !important;
+body.hacker-mode .btn-seguir-fenda {
+    background: rgba(0,255,0,0.1) ;
+    border-color: #0f0 ;
+    color: #0f0 ;
 }
 
 /* ---------------------------------------------------------------
@@ -992,7 +991,11 @@ body.hacker-mode .fa-regular,
 body.hacker-mode [class*="fa-"] {
     display: inline-block !important;
     visibility: visible !important;
-    font-family: "Font Awesome 6 Free" !important;
+    font-family: "Font Awesome 6 Free" ;
+}
+
+body.hacker-mode [class*="fa-"]::before:hover {
+    color: #000 !important;
 }
 
 /* ---------------------------------------------------------------
