@@ -815,9 +815,9 @@ span.category-tag {
 
 .avatar-p {
     border: 1px solid var(--dourado);
-    gap: 15px;
-    width: clamp(45px, 5vw, 55px) ;
-    height: clamp(45px, 5vw, 55px) ;
+    gap: 10px;
+    width: clamp(45px, 5vw, 60px) ;
+    height: clamp(45px, 5vw, 60px) ;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;

@@ -188,13 +188,13 @@ nav {
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
     /* Camada acima de tudo */
-    z-index: 999999 !important;
+    z-index: 999999 ;
     transition: left 0.3s ease;
     overflow-y: auto !important;
 
@@ -1913,7 +1913,7 @@ input[type="check-box"] {
     /* 4. Sombra suave baseada na aura */
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
 
-    animation: overclock-pulse 2s infinite alternate ease-in-out;
+    animation: overclock-pulse 3s infinite alternate ease-in-out;
     transition: all 0.4s ease;
 }
 

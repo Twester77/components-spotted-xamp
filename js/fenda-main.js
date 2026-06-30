@@ -618,6 +618,78 @@ window.atualizarContadorAlertas = function () {
         .catch(err => console.warn("[RADAR] Erro:", err));
 };
 
+// ==================== POPUPS E NOTIFICAÇÕES (COM SOM TEMATIZADO) ====================
+function mostrarPopup(mensagem) {
+    let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
+    let tempoExibicao = 5000;
+    if (temaSalvo !== 'off') {
+        let configuracaoSons = {
+            'padrao': { arquivo: 'padrao.mp3', volume: 0.8 },
+            'resident': { arquivo: 'resident.mp3', volume: 0.6 },
+            'cs': { arquivo: 'cs.mp3', volume: 0.7 },
+            'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },
+            'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
+            'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
+            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.3 },
+            'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
+            'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
+            'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
+            'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3', volume: 0.4 },
+            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.3 }
+        };
+        if (temaSalvo === 'digimon') tempoExibicao = 11000;
+        else if (temaSalvo === 'starwars') tempoExibicao = 9000;
+        if (configuracaoSons[temaSalvo]) {
+            let somEscolhido = configuracaoSons[temaSalvo];
+            const dispararSom = () => {
+                let somUrl = 'sons/' + somEscolhido.arquivo + '?v=' + Date.now();
+                let bip = new Audio(somUrl);
+                bip.volume = somEscolhido.volume;
+                bip.play().then(() => {
+                    bip.onloadedmetadata = function () {
+                        if (bip.duration > 4) {
+                            setTimeout(() => {
+                                let intervaloFade = setInterval(() => {
+                                    if (bip.volume > 0.03) bip.volume -= 0.04;
+                                    else {
+                                        bip.volume = 0;
+                                        bip.pause();
+                                        clearInterval(intervaloFade);
+                                    }
+                                }, 50);
+                            }, tempoExibicao - 1500);
+                        }
+                    };
+                }).catch(err => console.warn("[AUDIO] Aguardando clique."));
+            };
+            if (window.audioLiberado) {
+                dispararSom();
+            } else {
+                document.addEventListener('click', () => {
+                    window.audioLiberado = true;
+                    dispararSom();
+                }, { once: true });
+            }
+        }
+    }
+    const popup = document.createElement('div');
+    popup.className = 'notificacao-popup';
+    popup.style.cursor = 'pointer';
+    popup.innerHTML = `
+        <div style="font-size: 20px;">🔔</div>
+        <div style="flex-grow: 1;">
+            <strong style="display: block; font-size: 14px; color: #ddc80e;">Nova Interação!</strong>
+            <span>${mensagem}</span>
+        </div>
+    `;
+    popup.onclick = () => window.location.href = 'notificacoes.php';
+    document.body.appendChild(popup);
+    setTimeout(() => {
+        popup.style.opacity = '0';
+        setTimeout(() => popup.remove(), 500);
+    }, tempoExibicao);
+}
+
 // ==================== LIMPEZA DO BADGE EM INTERAÇÕES ====================
 // Quando o usuário abre o dropdown de notificações
 window.toggleJanelaNotificacoes = function () {
@@ -720,6 +792,35 @@ window.addEventListener('click', function (event) {
     }
 });
 
+// ==================== CONTROLLER ÚNICO DE MINIMIZAÇÃO DO HEADER ====================
+function initLingoteController() {
+    const container = document.getElementById('lingoteContainer');
+    const btnToggle = document.getElementById('btn-toggle-collapse');
+    const textarea = document.getElementById('comentario-textarea');
+
+    if (!container || !btnToggle) return;
+
+    btnToggle.addEventListener('click', () => {
+        container.classList.toggle('minimizado');
+        const icon = btnToggle.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('fa-chevron-down');
+        }
+    });
+
+    if (textarea) {
+        textarea.addEventListener('focus', () => {
+            container.classList.add('minimizado');
+            const icon = btnToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+    }
+}
+
 // ==================== INICIALIZAÇÃO PRINCIPAL ====================
 document.addEventListener("DOMContentLoaded", function () {
     if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
@@ -760,6 +861,9 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
         if (typeof configurarPosts === 'function') configurarPosts();
     }, 500);
+
+    // INICIALIZA O CONTROLLER DO LINGOTE (se existir)
+    initLingoteController();
 });
 
 // ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
@@ -1002,7 +1106,7 @@ window.excluirComentario = async function(commentId, btnElement) {
             }
         }
     } catch (err) {
-        console.error('[excluirComentario] 💥 Erro de rede ou servidor:', err);
+        console.error('[excluirComentario]  Erro de rede ou servidor:', err);
         alert("Erro de conexão. Tente novamente.");
         comentarioDiv.classList.remove('is-loading');
         if (btnElement) {
@@ -1012,12 +1116,7 @@ window.excluirComentario = async function(commentId, btnElement) {
     }
 };
 
-// ==================== INICIALIZAÇÃO ====================
-document.addEventListener('DOMContentLoaded', function() {
-    initLingoteController();
-});
-
-// VIEWPORT TRACKER (SOLUÇÃO PARA TECLADO EM LANDSCAPE)
+// ==================== VIEWPORT TRACKER (SOLUÇÃO PARA TECLADO EM LANDSCAPE) ====================
 function initViewportTracker() {
     function atualizarAltura() {
         const altura = window.visualViewport ? window.visualViewport.height : window.innerHeight;
@@ -1053,3 +1152,6 @@ window.deslogarUsuario = async function() {
     // 2. Redireciona para o logout.php (que já existe e é seguro)
     window.location.href = 'logout.php';
 };
+
+// Inicializa o viewport tracker
+initViewportTracker();

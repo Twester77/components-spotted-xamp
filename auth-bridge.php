@@ -1,13 +1,11 @@
 <?php
 // auth-bridge.php – Ponte entre Supabase Auth e Sessão PHP (Vercel)
-// 🔥 NÃO ALTERE ESTE ARQUIVO SEM AUTORIZAÇÃO DA DJÊ
 
 include_once __DIR__ . '/conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
 
 fenda_log('🔵 INÍCIO auth-bridge.php (Vercel)');
 
-// Recebe o token do Supabase (enviado via POST)
 $input = json_decode(file_get_contents('php://input'), true);
 $supabase_token = $input['token'] ?? null;
 
@@ -18,10 +16,6 @@ if (!$supabase_token) {
     exit();
 }
 
-// ============================================================
-// 1. VALIDA O TOKEN COM O SUPABASE (via API)
-// ============================================================
-// 🔥 Usa variáveis de ambiente (NUNCA hardcoded)
 $supabase_url = getenv('SUPABASE_URL');
 $supabase_anon_key = getenv('SUPABASE_ANON_KEY');
 
@@ -59,9 +53,6 @@ if (!$user_email) {
     exit();
 }
 
-// ============================================================
-// 2. BUSCA O USUÁRIO NO BANCO DE DADOS
-// ============================================================
 $sql = "SELECT id, nome, username, email FROM usuarios WHERE email = ? AND ativo = 1";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user_email);
@@ -76,16 +67,37 @@ if (!$usuario) {
     exit();
 }
 
-// ============================================================
-// 3. CRIA A SESSÃO PHP
-// ============================================================
 session_start();
 $_SESSION['usuario_id'] = $usuario['id'];
 $_SESSION['usuario_nome'] = $usuario['nome'];
 $_SESSION['usuario_username'] = $usuario['username'];
 $_SESSION['usuario_email'] = $usuario['email'];
 
-fenda_log('🟢 Sessão criada para usuário: ' . $usuario['id'] . ' (' . $usuario['email'] . ')');
+// 🛡️ GERAÇÃO DO TOKEN DE ESTADO PERSISTENTE VIA BRIDGE (30 DIAS) COM EXPIRAÇÃO INTERNA
+$expires_in = time() + (86400 * 30);
+$cookie_payload = json_encode([
+    'id' => $usuario['id'],
+    'nome' => $usuario['nome'],
+    'username' => $usuario['username'],
+    'email' => $usuario['email'],
+    'exp' => $expires_in
+]);
+
+$encrypted_payload = fenda_encrypt_state($cookie_payload);
+
+// Define o domínio do cookie baseado no ambiente
+$cookieDomain = $is_production ? '.fendauniversity.com.br' : null;
+
+setcookie('fenda_state_token', $encrypted_payload, [
+    'expires' => $expires_in,
+    'path' => '/',
+    'domain' => $cookieDomain,
+    'secure' => $is_production,
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
+fenda_log('🟢 Sessão e Token de persistência criados para usuário: ' . $usuario['id'] . ' (' . $usuario['email'] . ')');
 
 echo json_encode(['success' => true, 'redirect' => 'feed.php']);
 exit();

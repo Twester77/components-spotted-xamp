@@ -3,8 +3,7 @@
 // 🔥 AJUSTADO PARA VERCEL – caminhos absolutos com ROOT_PATH
 // ============================================================
 
-// Define o caminho raiz do projeto (fora da pasta /api)
-define('ROOT_PATH', dirname(__DIR__)); // Isso aponta para a raiz do projeto
+define('ROOT_PATH', dirname(__DIR__));
 
 if (ob_get_level() == 0) ob_start();
 include_once __DIR__ . '/fenda_debug.php';
@@ -23,28 +22,18 @@ fenda_log('DEBUG: [AUDITORIA] SUPABASE_URL: ' . (getenv('SUPABASE_URL') ? 'SIM' 
 fenda_log('DEBUG: [AUDITORIA] SUPABASE_ANON_KEY: ' . (getenv('SUPABASE_ANON_KEY') ? 'SIM' : 'NÃO'));
 fenda_log('DEBUG: [AUDITORIA] RESEND_KEY: ' . (getenv('RESEND_KEY') ? 'SIM' : 'NÃO'));
 fenda_log('DEBUG: [AUDITORIA] SESSION_COOKIE_DOMAIN: ' . (getenv('SESSION_COOKIE_DOMAIN') ? 'SIM' : 'NÃO'));
-// ============================================================
 
-/*--------------------------------------------------------------------------------------------------------------
-PROJETO: A FENDA - SPOTTED UNIFEV (Conexão robusta com variável de ambiente)
----------------------------------------------------------------------------------------------------------------*/
-
-// Determina o ambiente de forma explícita (padrão: produção)
 $is_production = (getenv('ENVIRONMENT') === 'production');
 
-// 🔧 CORREÇÃO: configuração de erro baseada no ambiente
 if ($is_production) {
-    // Em produção: não exibe erros na tela, mas ainda registra no log
     ini_set('display_errors', 0);
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 } else {
-    // Em desenvolvimento: exibe todos os erros
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
 }
 
 if ($is_production) {
-    // === MODO PRODUÇÃO (VERCEL + TiDB Cloud) ===
     $host    = getenv('DB_HOST') ?: 'gateway01.us-east-1.prod.aws.tidbcloud.com';
     $usuario = getenv('DB_USER') ?: '4QGTrzXrgzivy34.root';
     $senha   = getenv('DB_PASS') ?: '1HftPjHsoQb1pEmi';
@@ -52,11 +41,8 @@ if ($is_production) {
     $porta   = (int)(getenv('DB_PORT') ?: 4000);
     $certPath = ROOT_PATH . '/config/isrgrootx1.pem';
     $ssl_flag = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
-
-    // 🔥 REMOVIDO: Cookie de sessão com domínio fixo
-    $cookieDomain = null;
+    $cookieDomain = '.fendauniversity.com.br'; //  Domínio fixo em produção (com ponto para subdomínios)
 } else {
-    // === MODO LOCAL (XAMPP) ===
     $host    = '127.0.0.1';
     $porta   = 3307;
     $usuario = 'root';
@@ -64,12 +50,9 @@ if ($is_production) {
     $banco   = 'fenda_local';
     $ssl_flag = 0;
     $certPath = null;
-    $cookieDomain = null;
+    $cookieDomain = null; // Em local, deixa o navegador definir
 }
 
-// ============================================================
-// 🔌 INICIALIZAÇÃO DA CONEXÃO COM SSL FORÇADO
-// ============================================================
 $conn = mysqli_init();
 if (!$conn) {
     $erro = 'Falha ao inicializar o MySQLi';
@@ -78,34 +61,21 @@ if (!$conn) {
     die("Erro interno do servidor.");
 }
 
-// ============================================================
-// 🔐 CONFIGURAÇÃO SSL (apenas produção)
-// ============================================================
 if ($is_production) {
-    // Se o certificado existe, usa ele
     if (file_exists($certPath)) {
         mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
         fenda_log('🟢 SSL: Certificado encontrado em ' . $certPath);
     } else {
-        // Fallback: tenta conexão SSL sem certificado (apenas criptografia)
         fenda_log('🟡 SSL: Certificado não encontrado, tentando conexão SSL com verificação reduzida');
-        // Força SSL mesmo sem certificado (alguns drivers aceitam)
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
-        // Configura SSL com parâmetros vazios (usa o padrão do sistema)
         mysqli_ssl_set($conn, NULL, NULL, NULL, NULL, NULL);
     }
 }
 
-// ============================================================
-// 🔥 TENTATIVA DE CONEXÃO COM TRATAMENTO DE ERRO
-// ============================================================
 try {
-    // 🔥 Força o uso de SSL na conexão (para TiDB)
     $flags = ($is_production) ? MYSQLI_CLIENT_SSL : 0;
-    
     $conectou = mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $flags);
-    
     if (!$conectou) {
         $erro = mysqli_connect_error();
         $erro_num = mysqli_connect_errno();
@@ -113,9 +83,7 @@ try {
         fenda_log("🔴 ERRO DE CONEXÃO (código $erro_num): $erro");
         die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
     }
-    
     fenda_log('🟢 CONEXÃO COM BANCO ESTABELECIDA COM SUCESSO');
-    
 } catch (Exception $e) {
     error_log('[CONEXAO] EXCEÇÃO: ' . $e->getMessage());
     fenda_log('🔴 EXCEÇÃO: ' . $e->getMessage());
@@ -125,7 +93,34 @@ try {
 mysqli_set_charset($conn, "utf8mb4");
 
 // ============================================================
-// 🍪 GERENCIAMENTO DE SESSÃO
+// 🔒 MOTOR DE SEGURANÇA E CRIPTOGRAFIA SIMÉTRICA (AES-256-CBC)
+// ============================================================
+if (!defined('FENDA_CRYPT_KEY')) {
+    define('FENDA_CRYPT_KEY', hash('sha256', (getenv('SUPABASE_ANON_KEY') ?: 'Fenda_Fallback_Sec_Key_2026_!!!')));
+}
+
+if (!function_exists('fenda_encrypt_state')) {
+    function fenda_encrypt_state($plain_text) {
+        $iv_len = openssl_cipher_iv_length('aes-256-cbc');
+        $iv = openssl_random_pseudo_bytes($iv_len);
+        $encrypted = openssl_encrypt($plain_text, 'aes-256-cbc', FENDA_CRYPT_KEY, 0, $iv);
+        return base64_encode($encrypted . '::' . base64_encode($iv));
+    }
+}
+
+if (!function_exists('fenda_decrypt_state')) {
+    function fenda_decrypt_state($encrypted_bundle) {
+        $data = base64_decode($encrypted_bundle, true);
+        if (!$data || !str_contains($data, '::')) return false;
+        list($encrypted_text, $iv_encoded) = explode('::', $data, 2);
+        $iv = base64_decode($iv_encoded, true);
+        if (!$iv) return false;
+        return openssl_decrypt($encrypted_text, 'aes-256-cbc', FENDA_CRYPT_KEY, 0, $iv);
+    }
+}
+
+// ============================================================
+// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO (com validação de expiração)
 // ============================================================
 if (session_status() === PHP_SESSION_NONE) {
     if ($is_production) {
@@ -135,6 +130,39 @@ if (session_status() === PHP_SESSION_NONE) {
         ini_set('session.cookie_samesite', 'Lax');
     }
     session_start();
+}
+
+// 🔋 MÁGICA DO STATELESS: Recupera estado caso a instância Vercel tenha resetado
+if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
+    $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
+    if ($decrypted_payload) {
+        $user_data = json_decode($decrypted_payload, true);
+        // 🔥 VERIFICAÇÃO DE EXPIRAÇÃO INTERNA
+        if (is_array($user_data) && !empty($user_data['id']) && !empty($user_data['exp'])) {
+            if (time() < $user_data['exp']) {
+                // Token ainda válido
+                $_SESSION['usuario_id']       = $user_data['id'];
+                $_SESSION['usuario_nome']     = $user_data['nome'];
+                $_SESSION['usuario_username'] = $user_data['username'];
+                if (!empty($user_data['email'])) {
+                    $_SESSION['usuario_email'] = $user_data['email'];
+                }
+                fenda_log('🟢 [HYDRATION] Sessão recuperada via Token de Estado para ID: ' . $user_data['id']);
+            } else {
+                // Token expirado – força limpeza do cookie
+                fenda_log('🔴 [HYDRATION] Token expirado para ID: ' . $user_data['id'] . '. Removendo cookie.');
+                setcookie('fenda_state_token', '', [
+                    'expires' => time() - 86400,
+                    'path' => '/',
+                    'domain' => $cookieDomain,
+                    'secure' => $is_production,
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+                unset($_COOKIE['fenda_state_token']);
+            }
+        }
+    }
 }
 
 // Atualiza última atividade do usuário (se logado)
@@ -158,6 +186,7 @@ if (!function_exists('formatarMencoes')) {
 // ============================================================
 // 🔑 CHAVE RESEND (via variável de ambiente)
 // ============================================================
+
 if (!defined('RESEND_KEY')) {
     define('RESEND_KEY', getenv('RESEND_KEY') ?: '');
 }

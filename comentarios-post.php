@@ -858,33 +858,10 @@ $total_reacoes = array_sum($reacoes_detalhes);
     });
     document.addEventListener('DOMContentLoaded', initLightbox);
 
-    // ==================== CONTROLLER ÚNICO DE MINIMIZAÇÃO DO HEADER ====================
-    function initLingoteController() {
-        const container = document.getElementById('lingoteContainer');
-        const btnToggle = document.getElementById('btn-toggle-collapse');
-        const textarea = document.getElementById('comentario-textarea');
+    // ==================== CONTROLLER AGORA ESTÁ NO fenda-main.js ====================
+    // A função initLingoteController() foi movida para o arquivo global.
+    // Nenhuma chamada adicional é necessária aqui, pois ela é chamada
+    // dentro do DOMContentLoaded no fenda-main.js.
 
-        if (!container || !btnToggle) return;
-
-        btnToggle.addEventListener('click', () => {
-            container.classList.toggle('minimizado');
-            const icon = btnToggle.querySelector('i');
-            if (icon) {
-                icon.classList.toggle('fa-chevron-up');
-                icon.classList.toggle('fa-chevron-down');
-            }
-        });
-
-        if (textarea) {
-            textarea.addEventListener('focus', () => {
-                container.classList.add('minimizado');
-                const icon = btnToggle.querySelector('i');
-                if (icon) {
-                    icon.classList.remove('fa-chevron-up');
-                    icon.classList.add('fa-chevron-down');
-                }
-            });
-        }
-    }
     <?php endif;?> // fim do bloco de comentários ativos
 </script>

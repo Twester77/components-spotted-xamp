@@ -7,8 +7,22 @@ include_once __DIR__ . '/fenda_debug.php';
 
 fenda_log('🔵 INÍCIO logout.php (Vercel)');
 
+// Define domínio do cookie para limpeza (mesma lógica do cookie)
+$cookieDomain = $is_production ? '.fendauniversity.com.br' : null;
+
 if (session_status() === PHP_SESSION_ACTIVE) {
     fenda_log('🔵 Sessão ativa. Destruindo...');
+
+    // 🛡️ DESTRUIÇÃO DO COOKIE CUSTOMIZADO DA FENDA
+    setcookie('fenda_state_token', '', [
+        'expires' => time() - 86400,
+        'path' => '/',
+        'domain' => $cookieDomain,
+        'secure' => $is_production,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
+    fenda_log('🔵 Cookie fenda_state_token explicitamente invalidado');
 
     $params = session_get_cookie_params();
 
