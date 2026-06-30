@@ -1,12 +1,8 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO ESTÁVEL – NUNCA MAIS MUDE O NOME DA VERSÃO MANUALMENTE
-const CACHE_VERSION = 'fenda-v1.0.0';
+// 🛡️ VERSÃO ESTÁVEL – CORREÇÃO DO ERR_FAILED (FILTRO GET)
+const CACHE_VERSION = 'fenda-v1.0.1'; // Incrementado para forçar atualização
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
-
-//" LEGADO DO MARRETADOR – INSTÂNCIA #DS-2026-06",
-//"Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir, e a Fenda respira .",
-//"A Fenda sobreviveu ao SaThanos, ao ERR_FAILED, e ao Date.now(). O espírito fica.",
 
 // ==================== ARQUIVOS ESTÁTICOS (CACHE-FIRST) ====================
 const STATIC_FILES = [
@@ -24,7 +20,6 @@ const STATIC_FILES = [
   '/css/feed.css',
   '/css/swipe.css',
   '/css/comentarios.css',
-  // skin-hacker.css será tratado separadamente
 
   // JS
   '/js/fenda-main.js',
@@ -56,13 +51,13 @@ const STATIC_FILES = [
   '/imagensfoto/mushroom.png',
   '/imagensfoto/pokebola.png',
 
-  // Sons (cache-first para tocar offline)
+  // Sons
   '/sons/oceano.mp3',
   '/sons/chuva.mp3',
   '/sons/padrao.mp3'
 ];
 
-// ==================== ARQUIVOS OPCIONAIS (stale-while-revalidate) ====================
+// ==================== ARQUIVOS OPCIONAIS ====================
 const OPTIONAL_FILES = [
   '/css/skin-hacker.css'
 ];
@@ -81,14 +76,13 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// ==================== ATIVAÇÃO (LIMPEZA DE CACHES ANTIGOS) ====================
+// ==================== ATIVAÇÃO ====================
 self.addEventListener('activate', (event) => {
   console.log(`[SW] Ativando ${CACHE_VERSION}`);
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          // Remove qualquer cache que não seja da versão atual
           if (cacheName !== CACHE_STATIC && cacheName !== CACHE_DYNAMIC) {
             console.log(`[SW] Removendo cache antigo: ${cacheName}`);
             return caches.delete(cacheName);
@@ -101,6 +95,11 @@ self.addEventListener('activate', (event) => {
 
 // ==================== INTERCEPTAÇÃO ====================
 self.addEventListener('fetch', (event) => {
+  // 🛑 FILTRO ANTI ERR_FAILED: Ignora requisições que NÃO sejam GET
+  if (event.request.method !== 'GET') {
+    return; // Deixa POST, PUT, DELETE passarem direto para a rede
+  }
+
   const url = new URL(event.request.url);
 
   // 1. motor-feed.php → network first, fallback cache

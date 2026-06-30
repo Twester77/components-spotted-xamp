@@ -58,13 +58,7 @@
     }
 })();
 
-// ==================== ESCUTA DE CONTROLLERCHANGE (RELOAD ATÔMICO) ====================
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('controllerchange', function() {
-        console.log('[SW] Controller mudou. Forçando reload para aplicar novo cache.');
-        window.location.reload();
-    });
-}
+
 
 /* ================================================================
    FIM DO EXORCISMO – INÍCIO DO CÓDIGO ORIGINAL
