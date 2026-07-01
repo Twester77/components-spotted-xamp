@@ -1,7 +1,7 @@
 <?php
-// ============================================================
+// ⏰ CONFIGURAÇÃO GLOBAL DE TEMPO (FUSO HORÁRIO BRASIL)
+date_default_timezone_set('America/Sao_Paulo');
 // 🔒 CARREGAMENTO HÍBRIDO DO AMBIENTE (LOCAL + PRODUÇÃO)
-// ============================================================
 // PRIMEIRO: carrega o .env.php se existir (ambiente local)
 if (file_exists(__DIR__ . '/.env.php')) {
     include_once __DIR__ . '/.env.php';
