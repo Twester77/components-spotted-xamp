@@ -54,8 +54,13 @@ if ($is_production) {
     $senha        = getenv('DB_PASS');
     $banco        = getenv('DB_NAME');
     $porta        = (int)(getenv('DB_PORT') ?: 4000);
-    $certPath     = ROOT_PATH . '/config/isrgrootx1.pem';
-    $ssl_flag     = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
+    
+    //  CORREÇÃO: usa __DIR__ para apontar para a pasta atual (raiz do projeto)
+    // O arquivo isrgrootx1.pem está em /config dentro da raiz
+    $certPath     = __DIR__ . '/config/isrgrootx1.pem';
+    
+    //  FORÇA SSL: TiDB Cloud exige conexão segura
+    $ssl_flag     = MYSQLI_CLIENT_SSL;
     $cookieDomain = '.fendauniversity.com.br';
 } else {
     // Em ambiente local, puxa o que foi definido no .env.php
@@ -87,7 +92,10 @@ if ($is_production) {
     if (file_exists($certPath)) {
         mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
+        fenda_log('🟢 SSL: Certificado encontrado em ' . $certPath);
     } else {
+        fenda_log('⚠️ AVISO: Arquivo de certificado não encontrado em: ' . $certPath);
+        // Fallback: tenta SSL sem verificação de certificado (menos seguro, mas evita falha total)
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
         mysqli_ssl_set($conn, NULL, NULL, NULL, NULL, NULL);
     }

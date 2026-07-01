@@ -1,7 +1,7 @@
 // sw.js – Service Worker da Fenda
 // 🛡️ VERSÃO ESTÁVEL – CORREÇÃO DEFINITIVA DO ERR_FAILED 
 // (FILTRO GET + REDIRECT HANDLING + BYPASS DE DOMÍNIOS EXTERNOS E ROTAS DE AUTENTICAÇÃO)
-const CACHE_VERSION = 'fenda-v1.0.4';
+const CACHE_VERSION = 'fenda-v1.0.5';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -27,10 +27,10 @@ const STATIC_FILES = [
   '/imagensfoto/anonimo-default.webp',
   '/imagensfoto/default.webp',
   '/imagensfoto/favicon.png',
-  '/uploads/default_capa_masculino.jpg',
-  '/uploads/default_capa_feminino.jpg',
-  '/uploads/default_feminino.jpg',
-  '/uploads/default_masculino.webp',
+  '/uploads/default_capa_masculino.webp',
+  '/uploads/default_capa_feminino.webp',
+  '/uploads/default_feminino.jpg', 
+  '/uploads/default_masculino.jpg',
   '/imagensfoto/campus-centro.webp',
   '/imagensfoto/cidade-universitaria.webp',
   '/imagensfoto/capa-entrada.webp',
