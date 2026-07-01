@@ -36,13 +36,12 @@ form {
 /* 1. Ajuste do Container do Modal (o pai) */
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
-    max-width: clamp(280px, 80%, 650px) !important;
-    max-height: clamp(200px, 65vh, 500px) !important;
     /* Padding dinâmico: menor em telas pequenas */
     padding: clamp(10px, 5vw, 24px) ;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    background: #00000094;
     position: relative;
     /* Garante que o 'X' de fechar se posicione certo */
     /* Garante que se o texto for gigante, apareça um scroll interno só no modal */
@@ -53,6 +52,8 @@ form {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    max-width: clamp(250px, 85%, 650px) ;
+    max-height: clamp(200px, 65vh, 500px) ;
 }
 
 .btn-fechar-modal {
@@ -119,7 +120,7 @@ form {
 }
 
 .modal-body-ajuste .btn-lancar {
-    padding: 8px 14px !important;
+    padding: 8px 14px ;
     margin: 30px 0 0 0;
 }
 
@@ -152,6 +153,8 @@ form {
     padding: 16px;
     margin-bottom: 12px;
     transition: border-color 0.3s ease;
+    display: flex;
+
 }
 
 .area-texto-vivo:focus-within {
@@ -160,14 +163,13 @@ form {
 
 #mensagem-vivo {
     width: 100%;
-    min-height: 100px;
-    max-height: 300px;
+    min-height: 80px;
+    max-height: 200px;
     background: transparent;
     border: none;
     color: #eee;
     font-size: 1rem;
     line-height: 1.6;
-    resize: vertical;
     padding: 0;
     font-family: inherit;
     outline: none;

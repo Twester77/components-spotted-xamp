@@ -300,7 +300,6 @@ body.hacker-mode .fenda-btn-glow,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-responder-bolha,
 body.hacker-mode .btn-enviar-fenda,
-body.hacker-mode .btn-voltar-fenda,
 body.hacker-mode .btn-sair-fenda,
 body.hacker-mode .btn-seguir-fenda,
 body.hacker-mode #btn-load-more,
@@ -335,18 +334,24 @@ body.hacker-mode #btn-menu-hamburguer:hover {
     color: #ffca00 !important;
 }
 
-body.hacker-mode .perdidos-item .link-fofoca:hover {
+body.hacker-mode .perdidos-item .link-fofoca:hover,
+body.hacker-mode .btn-voltar-fenda:hover {
     color:#000;
     background: #00ff00;
 
 }
+
+body.hacker-mode .btn-voltar-fenda {
+    background: #00ff0014;
+    color: #00fdff ;
+}
+
 
 /* Hover: fundo verde, texto preto, seta aparecendo */
 body.hacker-mode .btn:hover,
 body.hacker-mode .fenda-btn-glow:hover,
 body.hacker-mode #btn-load-more:hover,
 body.hacker-mode .filtro-btn:hover,
-body.hacker-mode .btn-voltar-fenda:hover,
 body.hacker-mode .btn-sair-fenda:hover,
 body.hacker-mode .btn-lancar:hover,
 body.hacker-mode .btn-zarpar:hover,
@@ -736,27 +741,27 @@ body.hacker-mode .filtros-perdidos {
 
 body.hacker-mode .bloco-conselhos,
 body.hacker-mode .lista-conselhos li {
-    display: block !important;
-    visibility: visible !important;
-    clip-path: none !important;
-    overflow: visible !important;
+    display: block ;
+    visibility: visible ;
+    clip-path: none ;
+    overflow: visible ;
 }
 body.hacker-mode .lista-conselhos li::before {
-    content: "> " !important;
-    color: #0f0 !important;
-    font-weight: bold !important;
+    content: "> " ;
+    color: #0f0 ;
+    font-weight: bold ;
 }
 body.hacker-mode .lista-conselhos li:hover {
-    background: #0f0 !important;
-    color: #000 !important;
-    transform: translateX(5px) !important;
+    background: #0f0 ;
+    color: #000 ;
+    transform: translateX(4px) ;
 }
 
 body.hacker-mode .box-diretrizes li:hover {
-    background: #0f0 !important;
-    color: #000 !important;
-    transform: translateX(5px) !important;
-    transform: scale(1.05) !important;
+    background: #0f0 ;
+    color: #000 ;
+    transform: translateX(4px) ;
+    transform: scale(1.03) ;
 }
 
 

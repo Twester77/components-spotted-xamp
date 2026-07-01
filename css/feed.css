@@ -202,10 +202,10 @@ body.modo-swipe-ativo .spotted-card * {
 .spotted-card .container-img-post img {
     width: 100% ;
     height: auto ;
-    max-height: 280px; /* opcional, evita imagens muito altas */
+    max-height: 220px; 
     object-fit: contain;
     display: block;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 /* ==========================================================================

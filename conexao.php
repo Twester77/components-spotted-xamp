@@ -1,13 +1,20 @@
 <?php
 // ============================================================
+// 🔒 CARREGAMENTO HÍBRIDO DO AMBIENTE (LOCAL + PRODUÇÃO)
+// ============================================================
+// PRIMEIRO: carrega o .env.php se existir (ambiente local)
+if (file_exists(__DIR__ . '/.env.php')) {
+    include_once __DIR__ . '/.env.php';
+}
+
+// ============================================================
 // 🔥 AJUSTADO PARA VERCEL – caminhos absolutos com ROOT_PATH
 // ============================================================
-
 define('ROOT_PATH', dirname(__DIR__));
 
 if (ob_get_level() == 0) ob_start();
 include_once __DIR__ . '/fenda_debug.php';
-fenda_log('🔵 INÍCIO conexao.php (Vercel)');
+fenda_log('🔵 INÍCIO conexao.php (Vercel/Local)');
 
 // ============================================================
 // 🔍 SONDA DIAGNÓSTICA COMPLETA (AUDITORIA DE VARIÁVEIS)
@@ -21,8 +28,12 @@ fenda_log('DEBUG: [AUDITORIA] ENVIRONMENT: ' . (getenv('ENVIRONMENT') ? 'SIM' : 
 fenda_log('DEBUG: [AUDITORIA] SUPABASE_URL: ' . (getenv('SUPABASE_URL') ? 'SIM' : 'NÃO'));
 fenda_log('DEBUG: [AUDITORIA] SUPABASE_ANON_KEY: ' . (getenv('SUPABASE_ANON_KEY') ? 'SIM' : 'NÃO'));
 fenda_log('DEBUG: [AUDITORIA] RESEND_KEY: ' . (getenv('RESEND_KEY') ? 'SIM' : 'NÃO'));
+fenda_log('DEBUG: [AUDITORIA] TURNSTILE_SECRET_KEY: ' . (getenv('TURNSTILE_SECRET_KEY') ? 'SIM' : 'NÃO'));
 fenda_log('DEBUG: [AUDITORIA] SESSION_COOKIE_DOMAIN: ' . (getenv('SESSION_COOKIE_DOMAIN') ? 'SIM' : 'NÃO'));
 
+// ============================================================
+// 🌍 DETERMINAÇÃO DO AMBIENTE
+// ============================================================
 $is_production = (getenv('ENVIRONMENT') === 'production');
 
 if ($is_production) {
@@ -33,31 +44,42 @@ if ($is_production) {
     error_reporting(E_ALL);
 }
 
+// ============================================================
+// 🔌 EXTRAÇÃO SEGURA DAS CONFIGURAÇÕES DO BANCO
+// ============================================================
 if ($is_production) {
-    $host    = getenv('DB_HOST') ?: 'gateway01.us-east-1.prod.aws.tidbcloud.com';
-    $usuario = getenv('DB_USER') ?: '4QGTrzXrgzivy34.root';
-    $senha   = getenv('DB_PASS') ?: '1HftPjHsoQb1pEmi';
-    $banco   = getenv('DB_NAME') ?: 'fenda_db';
-    $porta   = (int)(getenv('DB_PORT') ?: 4000);
-    $certPath = ROOT_PATH . '/config/isrgrootx1.pem';
-    $ssl_flag = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
-    $cookieDomain = '.fendauniversity.com.br'; //  Domínio fixo em produção (com ponto para subdomínios)
+    // Em produção na Vercel, o getenv busca direto do painel deles
+    $host         = getenv('DB_HOST');
+    $usuario      = getenv('DB_USER');
+    $senha        = getenv('DB_PASS');
+    $banco        = getenv('DB_NAME');
+    $porta        = (int)(getenv('DB_PORT') ?: 4000);
+    $certPath     = ROOT_PATH . '/config/isrgrootx1.pem';
+    $ssl_flag     = file_exists($certPath) ? MYSQLI_CLIENT_SSL : 0;
+    $cookieDomain = '.fendauniversity.com.br';
 } else {
-    $host    = '127.0.0.1';
-    $porta   = 3307;
-    $usuario = 'root';
-    $senha   = '';
-    $banco   = 'fenda_local';
-    $ssl_flag = 0;
-    $certPath = null;
-    $cookieDomain = null; // Em local, deixa o navegador definir
+    // Em ambiente local, puxa o que foi definido no .env.php
+    $host         = getenv('DB_HOST') ?: '127.0.0.1';
+    $porta        = (int)(getenv('DB_PORT') ?: 3307);
+    $usuario      = getenv('DB_USER') ?: 'root';
+    $senha        = getenv('DB_PASS') ?: '';
+    $banco        = getenv('DB_NAME') ?: 'fenda_local';
+    $ssl_flag     = 0;
+    $certPath     = null;
+    $cookieDomain = null;
 }
 
+// Bloqueio de segurança: Se as variáveis essenciais sumirem, o script para
+if (empty($host) || empty($usuario)) {
+    fenda_log('🔴 ERRO CRÍTICO: Variáveis de ambiente do banco de dados não foram encontradas.');
+    die("Erro interno de configuração do servidor.");
+}
+
+// ============================================================
+// 🔌 INICIALIZAÇÃO DA CONEXÃO
+// ============================================================
 $conn = mysqli_init();
 if (!$conn) {
-    $erro = 'Falha ao inicializar o MySQLi';
-    error_log('[CONEXAO] ERRO: ' . $erro);
-    fenda_log('🔴 ERRO: ' . $erro);
     die("Erro interno do servidor.");
 }
 
@@ -65,29 +87,22 @@ if ($is_production) {
     if (file_exists($certPath)) {
         mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
-        fenda_log('🟢 SSL: Certificado encontrado em ' . $certPath);
     } else {
-        fenda_log('🟡 SSL: Certificado não encontrado, tentando conexão SSL com verificação reduzida');
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
         mysqli_ssl_set($conn, NULL, NULL, NULL, NULL, NULL);
     }
 }
 
 try {
-    $flags = ($is_production) ? MYSQLI_CLIENT_SSL : 0;
-    $conectou = mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $flags);
+    $conectou = mysqli_real_connect($conn, $host, $usuario, $senha, $banco, $porta, NULL, $ssl_flag);
     if (!$conectou) {
-        $erro = mysqli_connect_error();
-        $erro_num = mysqli_connect_errno();
-        error_log("[CONEXAO] Falha ao conectar (código $erro_num): $erro");
-        fenda_log("🔴 ERRO DE CONEXÃO (código $erro_num): $erro");
+        error_log("[CONEXAO] Falha ao conectar: " . mysqli_connect_error());
         die("Estamos em manutenção técnica rápida. Volte em alguns instantes!");
     }
     fenda_log('🟢 CONEXÃO COM BANCO ESTABELECIDA COM SUCESSO');
 } catch (Exception $e) {
     error_log('[CONEXAO] EXCEÇÃO: ' . $e->getMessage());
-    fenda_log('🔴 EXCEÇÃO: ' . $e->getMessage());
-    die("Erro interno do servidor. Tente novamente mais tarde.");
+    die("Erro interno do servidor.");
 }
 
 mysqli_set_charset($conn, "utf8mb4");
@@ -120,7 +135,7 @@ if (!function_exists('fenda_decrypt_state')) {
 }
 
 // ============================================================
-// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO (com validação de expiração)
+// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO
 // ============================================================
 if (session_status() === PHP_SESSION_NONE) {
     if ($is_production) {
@@ -137,10 +152,8 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
     if ($decrypted_payload) {
         $user_data = json_decode($decrypted_payload, true);
-        // 🔥 VERIFICAÇÃO DE EXPIRAÇÃO INTERNA
         if (is_array($user_data) && !empty($user_data['id']) && !empty($user_data['exp'])) {
             if (time() < $user_data['exp']) {
-                // Token ainda válido
                 $_SESSION['usuario_id']       = $user_data['id'];
                 $_SESSION['usuario_nome']     = $user_data['nome'];
                 $_SESSION['usuario_username'] = $user_data['username'];
@@ -184,10 +197,13 @@ if (!function_exists('formatarMencoes')) {
 }
 
 // ============================================================
-// 🔑 CHAVE RESEND (via variável de ambiente)
+// 🔑 DEFINIÇÃO DE CONSTANTES (via getenv)
 // ============================================================
-
 if (!defined('RESEND_KEY')) {
     define('RESEND_KEY', getenv('RESEND_KEY') ?: '');
+}
+
+if (!defined('TURNSTILE_SECRET_KEY')) {
+    define('TURNSTILE_SECRET_KEY', getenv('TURNSTILE_SECRET_KEY') ?: '');
 }
 ?>

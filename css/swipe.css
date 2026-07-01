@@ -454,9 +454,9 @@ body.modo-swipe-ativo .spotted-card .container-img-post {
 }
 
 body.modo-swipe-ativo .spotted-card .container-img-post img {
-    display: block !important;
-    width: 100% !important;
-    height: auto !important;
+    display: block ;
+    width: 100% ;
+    height: auto ;
     max-height: calc(var(--card-max-height, 500px) * 0.6);
     object-fit: contain;
     /* Garante nitidez */

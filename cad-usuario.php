@@ -12,7 +12,10 @@ include 'includes/bolhas.php';
             <p>Junte-se à comunidade oficial da Fenda</p>
         </div>
 
-        <form action="processa-cadastro.php" method="POST" class="form-fenda-estilizado">
+        <!-- SCRIPT DO TURNSTILE (CARREGADO ASSINCRONAMENTE) -->
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+        <form action="processa-cadastro.php" method="POST" class="form-fenda-estilizado" id="form-cadastro">
             <div class="campo-grupo-fenda">
                 <label for="nome">Nome ou Apelido</label>
                 <div class="fenda-reg-box">
@@ -111,6 +114,14 @@ include 'includes/bolhas.php';
                     Reafirmo que eu li e concordo com as <a href="diretrizes.php"> Diretrizes da Comunidade</a>.
                 </label>
             </div>
+
+            <div style="display: none !important;">
+                <label for="field_verification_backup">Não preencha</label>
+                <input type="text" name="field_verification_backup" id="field_verification_backup" tabindex="-1" autocomplete="off">
+            </div>
+
+            <!-- 🔒 CONTAINER DO CLOUDFLARE TURNSTILE                     -->
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAADtirduob0Sw9lJW" style="margin: 15px 0;"></div>
 
             <button type="submit" class="btn-finalizar-fenda">
                 FINALIZAR CADASTRO <i class="fas fa-rocket"></i>

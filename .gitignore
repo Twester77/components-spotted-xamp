@@ -1,5 +1,6 @@
 # Senhas e configurações locais
 *.env
+.env.php
 
 # Pastas de dependências ou logs (boa prática)
 node_modules/
