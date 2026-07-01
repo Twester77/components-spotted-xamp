@@ -25,9 +25,9 @@ include 'includes/bolhas.php';
     </h2>
     <div style="display: flex; gap: 8px; justify-content:center;">
        <picture style="width: 100%;">
-          <source srcset="imagensfoto/capa-termos-de-segurança.avif" type="image/avif">
-          <source srcset="imagensfoto/capa-termos-de-segurança.webp" type="image/webp">
-          <img src="imagensfoto/capa-termos-de-segurança.jpg" 
+          <source srcset="imagensfoto/capa-termos-de-seguranca.avif" type="image/avif">
+          <source srcset="imagensfoto/capa-termos-de-seguranca.webp" type="image/webp">
+          <img src="imagensfoto/capa-termos-de-seguranca.jpg" 
                alt="Ilustração digital representando segurança na internet com ícones de cadeados e conexões protegidas" 
                style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" 
                loading="lazy">

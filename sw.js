@@ -1,7 +1,7 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO ESTÁVEL – CORREÇÃO DEFINITIVA DO ERR_FAILED 
-// (FILTRO GET + REDIRECT HANDLING + BYPASS DE DOMÍNIOS EXTERNOS E ROTAS DE AUTENTICAÇÃO)
-const CACHE_VERSION = 'fenda-v1.0.5';
+// 🛡️ VERSÃO ESTÁVEL v1.0.6 – CORREÇÃO REAL E DEFINITIVA DO ERR_FAILED
+// (ESCAPE NATIVO DE NAVEGAÇÃO PHP + TRATAMENTO AJAX EM BACKGROUND)
+const CACHE_VERSION = 'fenda-v1.0.6';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -131,7 +131,21 @@ self.addEventListener('fetch', (event) => {
   }
 
   // ============================================================
-  // A PARTIR DAQUI, O SW INTERCEPTA APENAS REQUISIÇÕES INTERNAS
+  // 🛡️ REGRA DE OURO: ESCAPE DE NAVEGAÇÃO DE PÁGINA (ANTI ERR_FAILED)
+  // ============================================================
+  // Se o usuário está clicando em um link e mudando de página, o SW deixa 
+  // o navegador cuidar 100% da rede de forma nativa. Se houver redirect (302),
+  // a URL lá em cima atualiza sozinha e sem travar.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match('/offline.php')) // Só mostra a tela offline se a rede cair totalmente
+    );
+    return;
+  }
+
+  // ============================================================
+  // A PARTIR DAQUI, O SW INTERCEPTA APENAS COMPONENTES INTERNOS (ASSETS/AJAX)
   // ============================================================
 
   // 1. motor-feed.php → network first, fallback cache
@@ -175,24 +189,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 4. Páginas principais (.php, navegação) → network first, fallback offline
-  // 🔥 CORREÇÃO DEFINITIVA DO ERR_FAILED EM REDIRECIONAMENTOS
-  if (event.request.mode === 'navigate' || url.pathname.endsWith('.php')) {
+  // 4. Outros scripts PHP chamados via Fetch/AJAX (ex: contar_alertas.php, etc.)
+  // Vão direto para a rede puro para carregar dados dinâmicos sem cachear erradamente
+  if (url.pathname.endsWith('.php')) {
     event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          if (response.type === 'opaqueredirect' || response.redirected) {
-            console.log('[SW] Redirecionamento detectado em página PHP. Forçando modo follow estável...');
-            return fetch(new Request(event.request.url, {
-              method: 'GET',
-              headers: event.request.headers,
-              credentials: 'include',
-              redirect: 'follow'
-            }));
-          }
-          return response;
-        })
-        .catch(() => caches.match('/offline.php'))
+      fetch(event.request).catch(() => new Response('Erro ao carregar dados dinâmicos.', { status: 503 }))
     );
     return;
   }

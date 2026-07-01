@@ -1453,9 +1453,8 @@ h2.titulo-home {
     /* Não deixa colar nas bordas do iPhone/Lumia */
     max-width: clamp(320px, 100%, 800px) !important;
     height: auto;
-    margin: 30px auto !important;
+    margin: 20px auto ;
     /* Reforça a centralização */
-    border-radius: 20px;
     display: block;
     /* Mantém o estilo da Fenda */
 
