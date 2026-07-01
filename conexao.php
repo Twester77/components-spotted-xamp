@@ -143,7 +143,7 @@ if (!function_exists('fenda_decrypt_state')) {
 }
 
 // ============================================================
-// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO
+// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO (com validação de 30 dias via banco)
 // ============================================================
 if (session_status() === PHP_SESSION_NONE) {
     if ($is_production) {
@@ -160,23 +160,60 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
     if ($decrypted_payload) {
         $user_data = json_decode($decrypted_payload, true);
-        if (is_array($user_data) && !empty($user_data['id']) && !empty($user_data['exp'])) {
-            if (time() < $user_data['exp']) {
-                $_SESSION['usuario_id']       = $user_data['id'];
-                $_SESSION['usuario_nome']     = $user_data['nome'];
-                $_SESSION['usuario_username'] = $user_data['username'];
-                if (!empty($user_data['email'])) {
-                    $_SESSION['usuario_email'] = $user_data['email'];
+        if (is_array($user_data) && !empty($user_data['id'])) {
+            
+            // 🔥 QUERY UNIFICADA: Verifica existência, status E os 30 dias de inatividade de uma vez só!
+            $stmt = $conn->prepare("
+                SELECT id, nome, username, email 
+                FROM usuarios 
+                WHERE id = ? 
+                  AND ativo = 1 
+                  AND ultima_atividade >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+            ");
+            $stmt->bind_param("i", $user_data['id']);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $usuario = $result->fetch_assoc();
+            $stmt->close();
+
+            if ($usuario) {
+                // Usuário passou em todas as validações → Restaura a sessão PHP
+                $_SESSION['usuario_id']       = $usuario['id'];
+                $_SESSION['usuario_nome']     = $usuario['nome'];
+                $_SESSION['usuario_username'] = $usuario['username'];
+                if (!empty($usuario['email'])) {
+                    $_SESSION['usuario_email'] = $usuario['email'];
                 }
-                fenda_log('🟢 [HYDRATION] Sessão recuperada via Token de Estado para ID: ' . $user_data['id']);
+
+                // 🔄 RENOVA O COOKIE POR MAIS 30 DIAS (Corrigido: Incluindo o e-mail!)
+                $new_expires_in = time() + (86400 * 30);
+                $new_cookie_payload = json_encode([
+                    'id'       => $usuario['id'],
+                    'nome'     => $usuario['nome'],
+                    'username' => $usuario['username'],
+                    'email'    => $usuario['email'] ?? '', // Mantém o ecossistema do token intacto
+                    'exp'      => $new_expires_in
+                ]);
+                $new_encrypted_payload = fenda_encrypt_state($new_cookie_payload);
+
+                setcookie('fenda_state_token', $new_encrypted_payload, [
+                    'expires'  => $new_expires_in,
+                    'path'     => '/',
+                    'domain'   => $cookieDomain,
+                    'secure'   => $is_production,
+                    'httponly' => true,
+                    'samesite' => 'Lax'
+                ]);
+
+                fenda_log('🟢 [HYDRATION] Sessão recuperada e cookie rolante renovado para ID: ' . $usuario['id']);
             } else {
-                // Token expirado – força limpeza do cookie
-                fenda_log('🔴 [HYDRATION] Token expirado para ID: ' . $user_data['id'] . '. Removendo cookie.');
+                // Se não retornou nada: Ou não existe, ou tá bloqueado, ou passou de 30 dias inativo!
+                fenda_log('🔴 [HYDRATION] Token inválido, conta inativa ou expirada por tempo. Removendo cookie.');
                 setcookie('fenda_state_token', '', [
-                    'expires' => time() - 86400,
-                    'path' => '/',
-                    'domain' => $cookieDomain,
-                    'secure' => $is_production,
+                    'expires'  => time() - 86400,
+                    'path'     => '/',
+                    'domain'   => $cookieDomain,
+                    'secure'   => $is_production,
                     'httponly' => true,
                     'samesite' => 'Lax'
                 ]);
@@ -186,7 +223,7 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     }
 }
 
-// Atualiza última atividade do usuário (se logado)
+// Atualiza última atividade do usuário (se logado) – Alimenta o rolling window e a bolinha verde do Toolbar!
 if (!empty($_SESSION['usuario_id'])) {
     $id_logado = mysqli_real_escape_string($conn, $_SESSION['usuario_id']);
     mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");

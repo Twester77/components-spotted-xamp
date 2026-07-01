@@ -104,7 +104,6 @@ if (!function_exists('asset_versao')) {
     <input type="hidden" name="pref_badge" id="input_pref_badge" value="<?php echo $res_pref['pref_badge'] ?? 1; ?>">
 <?php endif; ?>
 
-
 <!-- ==================== DIALOG DE CONFIRMAÇÃO (NATIVO - GLOBAL) ==================== -->
 <dialog id="dialog-confirmacao" class="dialog-confirmacao">
     <div class="dialog-conteudo">
@@ -117,14 +116,23 @@ if (!function_exists('asset_versao')) {
     </div>
 </dialog>
 
-<!-- ========================================== -->
+<!-- CONFIGURAÇÕES GLOBAIS PARA O JAVASCRIPT    -->
+<?php if (isset($_SESSION['usuario_id'])): 
+    // Tenta pegar da query do footer, se não existir, tenta da sessão, se não, assume 1 (ativo)
+    $pref_badge = $res_pref['pref_badge'] ?? $_SESSION['pref_badge'] ?? 1; 
+?>
+<script>
+    window.FendaConfig = window.FendaConfig || {};
+    window.FendaConfig.badgeAtivo = <?php echo ($pref_badge == 1) ? 'true' : 'false'; ?>;
+    console.log('[FendaConfig] badgeAtivo =', window.FendaConfig.badgeAtivo);
+</script>
+<?php endif; ?>
+
+
 <!-- SCRIPTS PRINCIPAIS (CARREGADOS NO RODAPÉ)  -->
-<!-- ========================================== -->
 <script src="<?= asset_versao('js/fenda-main.js') ?>"></script>
 
-<!-- ========================================== -->
 <!-- ESCUDO DOS 99,999% - CONTROLLER CHANGE     -->
-<!-- ========================================== -->
 <script>
     (function() {
         if ('serviceWorker' in navigator) {

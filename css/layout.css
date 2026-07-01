@@ -516,18 +516,18 @@ nav {
 }
 
 .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
 }
 
 .dot-online {
-    background-color: #00ffcc;
+    background-color: #00ff0d;
     box-shadow: 0 0 5px #00ffcc;
 }
 
 .dot-offline {
-    background-color: #555;
+    background-color: #555555;
 }
 
 /* --- BOTÃO FLUTUANTE (FAB) --- */

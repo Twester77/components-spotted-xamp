@@ -587,16 +587,17 @@ window.limparBadge = function() {
     }
 };
 
-// ==================== NOTIFICAÇÕES E ALERTAS (COM BADGE) ====================
+// ==================== NOTIFICAÇÕES E ALERTAS (COM BADGE + PWA) ====================
 window.atualizarContadorAlertas = function () {
     fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
         .then(res => res.json())
         .then(data => {
             const badge = document.getElementById('badge-alertas');
             if (badge && data.total !== undefined) {
-                //  ATUALIZA O BADGE DO ÍCONE
-                window.atualizarBadge(data.total);
+                // 1. ATUALIZA O BADGE DO ÍCONE (INTERNO E EXTERNO) – CHAMADA UNIFICADA
+                window.atualizarBadgingPWA(data.total);
 
+                // 2. LÓGICA DO PiP E SONS (JÁ EXISTENTE)
                 let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
                 if (data.total > ultimoAviso && data.ultima) {
                     // Nova notificação!
@@ -616,6 +617,63 @@ window.atualizarContadorAlertas = function () {
             }
         })
         .catch(err => console.warn("[RADAR] Erro:", err));
+};
+
+// ============================================================
+// 🛎️ MOTOR DE BADGING (SINCRONIZAÇÃO INTERNA E EXTERNA)
+// ============================================================
+
+/**
+ * Sincroniza o badge do sininho (interno) e o badge do PWA (externo)
+ * com base no total de notificações não lidas.
+ * @param {number} total - Total de notificações não lidas (já obtido do fetch)
+ */
+window.atualizarBadgingPWA = function(total) {
+    // Se total não foi passado, busca do badge (fallback)
+    if (typeof total === 'undefined') {
+        const badgeElement = document.getElementById('badge-alertas');
+        if (badgeElement) {
+            total = parseInt(badgeElement.textContent) || 0;
+        } else {
+            return;
+        }
+    }
+
+    // 1. Sincronização Interna (Sininho) – já é feita pelo atualizarContadorAlertas,
+    //    mas mantemos aqui para consistência se chamarem direto.
+    const badgeElement = document.getElementById('badge-alertas');
+    if (badgeElement) {
+        if (total > 0) {
+            badgeElement.textContent = total;
+            badgeElement.style.display = 'flex';
+        } else {
+            badgeElement.style.display = 'none';
+        }
+    }
+
+    // 2. Sincronização Externa (PWA Badge)
+    // Verifica a preferência do usuário (via config ou input hidden)
+    const badgeAtivo = (window.FendaConfig && window.FendaConfig.badgeAtivo === true) ||
+                       (document.getElementById('input_pref_badge') && document.getElementById('input_pref_badge').value === '1');
+
+    if (badgeAtivo && navigator.setAppBadge) {
+        if (total > 0) {
+            navigator.setAppBadge(total);
+        } else {
+            navigator.clearAppBadge();
+        }
+    } else if (!badgeAtivo && navigator.clearAppBadge) {
+        // Se o usuário desativou, limpa o badge externo
+        navigator.clearAppBadge();
+    }
+
+    // 3. Gancho para o futuro balão flutuante (Messenger-style)
+    if (total > 0) {
+        // Apenas preparamos o dado para uso futuro
+        // NOTA: A variável 'data' não existe neste escopo, mas a chamada 
+        // será feita diretamente dentro de atualizarContadorAlertas no futuro
+        // quando o balão for implementado.
+    }
 };
 
 // ==================== POPUPS E NOTIFICAÇÕES (COM SOM TEMATIZADO) ====================
