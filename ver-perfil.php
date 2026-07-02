@@ -6,17 +6,17 @@ require_once __DIR__ . '/auth_check.php';
 if (!isset($_GET['user'])) {
     if (isset($_SESSION['usuario_id'])) {
         $meu_id_fallback = $_SESSION['usuario_id'];
-        
+
         // Vamos direto na Fonte da Verdade (O Banco de Dados) pelo ID que NUNCA muda!
         $busca_nome = mysqli_query($conn, "SELECT username FROM usuarios WHERE id = '$meu_id_fallback'");
-        
+
         if ($busca_nome && $dados_nome = mysqli_fetch_assoc($busca_nome)) {
             // Redireciona com o username mais atualizado do universo
             header("Location: ver-perfil.php?user=" . $dados_nome['username']);
             exit();
         }
     }
-    
+
     // Se não achar nada ou não estiver logado, feed nele
     header("Location: feed.php");
     exit();
@@ -61,21 +61,43 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 <style>
     /* Aplicando a cor e brilho dinâmico no Avatar */
     .avatar-main {
-        border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?> ;
+        border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>;
         box-shadow: 0 0 15px <?php echo $cor_user; ?>55;
         /* Cor com transparência */
     }
 
     <?php if ($is_presenca): ?>.avatar-main {
-        box-shadow: 0 0 25px rgba(255, 188, 0, 0.7) !important;
+        box-shadow: 0 0 15px rgba(255, 188, 0, 0.7);
     }
 
     <?php endif; ?>
 </style>
 
-<!-- Adicionamos a classe da Vibe e variavel de cor diretamente no container principal[cite: 17] -->
+<!-- Adicionamos a classe da Vibe e variavel de cor diretamente no container principal -->
 <main class="main-perfil-container-publico <?php echo $vibe_user; ?> <?php echo $is_presenca ? 'perfil-gold' : ''; ?>"
     style="--aura-user: <?php echo $cor_user; ?>;">
+
+    <?php if ($vibe_user === 'vibe-ads'): ?>
+        <div class="hex-bg">
+            <?php
+            // Total de hexágonos para cobrir a tela (ajuste conforme necessário)
+            $total = 40;
+            for ($i = 0; $i < $total; $i++):
+                // Define se é estático ou dinâmico (proporção ~60% estático, 40% dinâmico)
+                $tipo = ($i % 4 === 0) ? 'dynamic' : 'static';
+                // Delay aleatório para a flutuação (entre 0s e 8s)
+                $floatDelay = number_format(mt_rand(0, 80) / 10, 1);
+                // Se for dinâmico, o delay da ativação será controlado pelo JS
+            ?>
+                <div class="hex-item <?php echo $tipo; ?>"
+                    style="animation-delay: <?php echo $floatDelay; ?>s;
+                    <?php if ($tipo === 'dynamic'): ?>
+                    data-index=" <?php echo $i; ?>"
+                    <?php endif; ?>">
+                </div>
+            <?php endfor; ?>
+        </div>
+    <?php endif; ?>
 
     <div class="perfil-header-container">
         <div class="capa-container">
@@ -125,19 +147,93 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 <?php endif; ?>
             </div>
         </div>
+    </div>
+
+    <!-- ÁREA DO FEED PESSOAL -->
+    <section class="feed-usuario-fenda" style="margin-top: 30px;">
+        <h3 style="text-align: center; color: #ccc; margin-bottom: 20px;">ÚLTIMAS POSTAGENS DE @<?php echo strtoupper($user_get); ?></h3>
+        <div class="container-feed">
+            <!-- O Motor Universal vai preencher aqui -->
         </div>
 
-        <!-- ÁREA DO FEED PESSOAL -->
-        <section class="feed-usuario-fenda" style="margin-top: 30px;">
-            <h3 style="text-align: center; color: #ccc; margin-bottom: 20px;">ÚLTIMAS POSTAGENS DE @<?php echo strtoupper($user_get); ?></h3>
-            <div class="container-feed">
-                <!-- O Motor Universal vai preencher aqui -->
-            </div>
+        <div class="container-load-more" style="text-align: center; margin-top: 20px;">
+            <button id="btn-load-more" class="btn-fenda-padrao">Exibir Mais</button>
+        </div>
+    </section>
 
-            <div class="container-load-more" style="text-align: center; margin-top: 20px;">
-                <button id="btn-load-more" class="btn-fenda-padrao">Exibir Mais</button>
-            </div>
-        </section>
+    <script>
+        (function() {
+            'use strict';
+
+            // Só executa se a vibe for ADS
+            const container = document.querySelector('.main-perfil-container-publico.vibe-ads');
+            if (!container) return;
+
+            // Busca APENAS os hexágonos dinâmicos (com a classe .dynamic)
+            const hexItems = container.querySelectorAll('.hex-item.dynamic');
+            if (!hexItems.length) return;
+
+            // Configurações
+            const config = {
+                waveInterval: 1600, // intervalo entre ondas (ms)
+                maxActive: Math.min(12, hexItems.length), // máximo acesos por vez
+                minActive: 5,
+                activeHexes: new Set()
+            };
+
+            // Função para ativar/desativar um hexágono dinâmico
+            function toggleHex(index, state) {
+                const hex = hexItems[index];
+                if (!hex) return;
+                if (state) {
+                    hex.classList.add('active');
+                } else {
+                    hex.classList.remove('active');
+                }
+            }
+
+            // Função que gera uma "onda" aleatória
+            function wave() {
+                // Remove alguns hexágonos ativos (apaga ~60% deles)
+                const toRemove = Math.floor(config.activeHexes.size * 0.6);
+                const removeList = Array.from(config.activeHexes);
+                for (let i = 0; i < Math.min(toRemove, removeList.length); i++) {
+                    const idx = removeList[i];
+                    toggleHex(idx, false);
+                    config.activeHexes.delete(idx);
+                }
+
+                // Escolhe novos hexágonos para ativar (entre minActive e maxActive)
+                const available = [];
+                for (let i = 0; i < hexItems.length; i++) {
+                    if (!config.activeHexes.has(i)) available.push(i);
+                }
+
+                // Embaralha e seleciona alguns
+                const shuffled = available.sort(() => Math.random() - 0.5);
+                const targetCount = Math.floor(Math.random() * (config.maxActive - config.minActive + 1)) + config.minActive;
+                const toActivate = shuffled.slice(0, Math.min(targetCount, shuffled.length));
+
+                toActivate.forEach(idx => {
+                    toggleHex(idx, true);
+                    config.activeHexes.add(idx);
+                });
+
+                // Agenda a próxima onda com variação aleatória
+                const nextDelay = config.waveInterval + (Math.random() * 800) - 400;
+                setTimeout(wave, nextDelay);
+            }
+
+            // Inicia o ciclo
+            setTimeout(wave, 500);
+
+            // (Opcional) Pausar quando a página não estiver visível – melhora performance
+            document.addEventListener('visibilitychange', function() {
+                // Se quiser pausar, pode adicionar lógica aqui
+            });
+
+        })();
+    </script>
 </main>
 
 <script>

@@ -81,7 +81,7 @@ body.hacker-mode::after {
     left: 0 !important;
     bottom: 0 !important;
     right: 0 !important;
-    background: rgba(0, 255, 0, 0.03) !important;
+    background: rgba(0, 255, 0, 0.03) ;
     z-index: 9998 !important;
     pointer-events: none !important;
     animation: flicker 0.15s infinite ease !important;
@@ -98,7 +98,7 @@ body.hacker-mode::after {
    4. SCROLLBAR ESTILO TERMINAL
    --------------------------------------------------------------- */
 
-body.hacker-mode::-webkit-scrollbar { width: 2px !important; }
+body.hacker-mode::-webkit-scrollbar {  width: 2px !important; }
 body.hacker-mode::-webkit-scrollbar-track { background: #000 !important; }
 body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00 !important; border-radius: 0 !important; }
 
@@ -123,13 +123,15 @@ body.hacker-mode .sessao-publicar,
 body.hacker-mode .main-perfil-container,
 body.hacker-mode .fenda-modal-content,
 body.hacker-mode .perfil-gold {
-    position: relative !important;
+    position: relative ;
     background: #000 !important;
     /* LATERAIS: O duplo pipe "||" */
-    border-left: 2px double var(--hacker-green) !important;
-    border-right: 2px double var(--hacker-green) !important;
-    border-bottom: 2px double var(--hacker-green) !important;
-    box-shadow: none !important;
+    border-left: 2px double var(--hacker-green) ;
+    border-right: 2px double var(--hacker-green) ;
+    border-bottom: 2px double var(--hacker-green) ;
+    border-top: 2px double var(--hacker-green) ;
+    box-shadow: none ;
+    border-radius: 0 ;
 }
 
 body.hacker-mode .sessao-fofoca-focada {
@@ -155,16 +157,16 @@ body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
     content: "+==================================================================+==============================================================+" !important;
     position: absolute !important;
-    padding: 6px;
-    top: -22px ;
-    left: -6px ; /* Ajuste para alinhar com o border-left double */
-    right: -6px ;
-    color: var(--hacker-green) !important;
-    font-family: monospace !important;
-    font-weight: bold !important;
-    white-space: nowrap !important;
+    padding: 5px;
+    top: -30px ;
+    left: -2px ; /* Ajuste para alinhar com o border-left double */
+    right: -2px ;
+    color: var(--hacker-green) ;
+    font-family: monospace ;
+    font-weight: bold ;
+    white-space: nowrap ;
     overflow: hidden ;
-    z-index: 10 !important;
+    z-index: 10 ;
 }
 
 
@@ -197,7 +199,7 @@ body.hacker-mode header,
 body.hacker-mode footer {
     background-color: rgba(0, 0, 0, 0.95) !important;
     background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
-    background-size: 100% 4px !important;
+    background-size: 100% 4px ;
     border-bottom: 2px solid #00ff00 ;
     font-family: monospace !important;
 }
@@ -212,7 +214,7 @@ body.hacker-mode .submenu li a {
     color: #00ff00 !important;
     text-shadow: 0 0 10px #00ff00 ;
     text-transform: uppercase ;
-    transition: all 0.2s steps(2) !important;
+    transition: all 0.1s steps(2) ;
     position: relative ;
     background: transparent !important;
     border-radius: 0;
@@ -232,7 +234,7 @@ body.hacker-mode .submenu li a:hover {
     color: #000000 !important;
     padding-left: 25px !important;
     box-shadow: 0 0 15px #00ff00 !important;
-    text-shadow: none !important;
+    text-shadow: none ;
     cursor: crosshair !important;
 }
 
@@ -257,8 +259,8 @@ body.hacker-mode .dropdown-menu,
 body.hacker-mode .submenu {
     border: 2px solid #00ff00 !important;
     background: #000 !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
+    border-radius: 0 ;
+    padding: 0 ;
 }
 
 /* ---------------------------------------------------------------
@@ -270,25 +272,30 @@ body.hacker-mode textarea,
 body.hacker-mode select,
 body.hacker-mode .fenda-input,
 body.hacker-mode .textarea-fenda {
-    background: #000 !important;
-    border: 1px solid #00ff00 !important;
-    color: #00ff00 !important;
-    border-radius: 0 !important;
-    caret-color: #00ff00 !important;
-    font-family: monospace !important;
+    background: #000 ;
+    border: 1px solid #00ff00 ;
+    color: #00ff00 ;
+    border-radius: 0 ;
+    caret-color: #00ff00 ;
+    font-family: monospace ;
 }
 
 /* Efeito de typing / cursor piscando em inputs (usando box-shadow) */
 body.hacker-mode input:focus,
 body.hacker-mode textarea:focus {
-    outline: none !important;
-    box-shadow: 0 0 0 2px #00ff00, 0 0 0 4px #000 !important;
-    animation: blink-cursor-input 1s step-end infinite !important;
+    outline: none ;
+    animation: blink-cursor-input 1s step-end infinite ;
+}
+
+body.hacker-mode .area-texto-vivo:focus-within {
+    outline: none ;
+    box-shadow: 0 0 0 2px #00ff00, 0 0 0 2px #000 ;
+    border-color: #00ff00 ;
 }
 
 @keyframes blink-cursor-input {
-    0%, 100% { box-shadow: 0 0 0 2px #00ff00, 0 0 0 4px #000; }
-    50% { box-shadow: 0 0 0 2px transparent, 0 0 0 4px #000; }
+    0%, 100% { box-shadow: 0 0 0 2px #00ff00, 0 0 0 2px #000; }
+    50% { box-shadow: 0 0 0 1px transparent, 0 0 0 2px #000; }
 }
 
 /* ---------------------------------------------------------------
@@ -619,9 +626,6 @@ body.hacker-mode .comentario-item.vibe-light .comentario-texto {
 }
 
 
-/* 5. BASE UNIFICADA: garante consistência */
-
-
 /* EXTRA : ADS MODE */
 
 /* ==================================================================
@@ -632,17 +636,27 @@ body.hacker-mode .comentario-item.vibe-ads {
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") !important;
-    background-size: 45px 45px ;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") ;
+    background-size: 40px 40px ;
 }
 
 
 /* Texto do comentário em matriz verde fosforescente */
 body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
-    color: var(--hacker-green) !important;
+    color: var(--hacker-green) ;
     text-shadow: 0 0 6px var(--hacker-green) ;
-    font-family: var(--hacker-font) !important;
+    font-family: var(--hacker-font) ;
 }
+
+body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item {
+    border-color: #00ff41 ;
+}
+body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
+    background: rgba(0, 255, 64, 0.144) ;
+    border-color: #00ff41 ;
+    box-shadow: 0 0 10px #00ff41 ;
+}
+
 
 /* ==========================================================
    HIGHLIGHT HACKER – EFEITO GLITCH VERDE
@@ -923,9 +937,9 @@ body.hacker-mode .typing::after,
 body.hacker-mode .hacker-cursor {
     content: "_" !important;
     display: inline-block !important;
-    width: 10px !important;
+    width: 15px !important;
     background: #0f0 !important;
-    animation: blink-cursor 0.8s infinite !important;
+    animation: blink-cursor 0.5s infinite !important;
 }
 
 /* ---------------------------------------------------------------
@@ -941,7 +955,7 @@ body.hacker-mode .article p {
     white-space: normal !important;
     display: block !important;
     width: auto !important;
-    animation: typing-global 5s steps(40, end) forwards ;
+    animation: typing-global 3s steps(20, end) forwards ;
 
 }
 
@@ -1149,7 +1163,7 @@ body.hacker-mode .char-counter {
     white-space: nowrap;
     font-size: 14px;
     border-right: .15em solid #0f0;
-    animation: typing 5s steps(15, end) forwards;
+    animation: typing 4s steps(20, end) forwards;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

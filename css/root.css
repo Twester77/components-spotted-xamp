@@ -7,6 +7,12 @@
     --dourado: #ffbc00;
     --background-dark: #0d0d0d;
     --glass-bg: rgba(255, 255, 255, 0.055);
+     --vibe-ads-bg: #08080ec2;
+    --vibe-ads-stroke-opacity: 0.12;
+    --vibe-ads-static-brightness: 0.06;
+    --vibe-ads-dynamic-brightness: 0.3;
+    --vibe-ads-pulse-duration: 5s;
+    --vibe-ads-header-offset: 80px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }

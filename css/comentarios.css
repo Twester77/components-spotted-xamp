@@ -322,6 +322,17 @@
     }
 }
 
+
+.comentario-item.vibe-glass {
+    background: rgb(255 255 255 / 5%);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    border-bottom: 1px solid #11111141;
+    border-top: 1px solid #11111141;
+    border-left: 1px solid #11111141;
+    
+}
+
 @keyframes pulsar-luz {
     0% {
         box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
@@ -335,18 +346,6 @@
         box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
     }
 }
-
-
-.comentario-item.vibe-glass {
-    background: rgb(255 255 255 / 5%);
-    backdrop-filter: blur(6px);
-    color: #fff;
-    border-bottom: 1px solid #11111141;
-    border-top: 1px solid #11111141;
-    border-left: 1px solid #11111141;
-    
-}
-
 
 .comentario-item.vibe-ads {
     background-color: #161625;

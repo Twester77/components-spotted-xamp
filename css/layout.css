@@ -15,8 +15,8 @@ header {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 
 }
 
@@ -188,8 +188,8 @@ nav {
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
@@ -271,8 +271,8 @@ nav {
 #btn-menu-hamburguer {
     background: rgba(5, 14, 65, 0.329);
     /* Fundo semi-transparente */
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 5px;
@@ -398,8 +398,8 @@ nav {
     transform: translateY(-50%);
     width: 280px;
     background: rgba(0, 20, 20, 0.678);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     border: 1px solid #00ff00;
     border-radius: 15px 0 0 15px;
     transition: 0.5s ease-in-out;
@@ -902,6 +902,7 @@ footer {
     color: rgba(250, 202, 44, 0.808);
     font-size: 0.9rem;
     flex-shrink: 0;
+    z-index: 1;
     /* Impede o footer de ser "esmagado" */
 }
 
@@ -1343,69 +1344,67 @@ footer a {
 }
 
 
-
 /* 2. Lista de Resultados  */
 .lista-resultados {
     max-width: 300px;
-    max-width: auto !important;
-    margin: 20px auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
+    margin: 20px auto ;
+    display: flex ;
+    flex-direction: column ;
+    gap: 12px ;
 }
 
 /* 3. O Card de Usuário  */
 .user-card {
-    display: flex !important;
-    align-items: center !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-    padding: 12px !important;
+    display: flex ;
+    align-items: center ;
+    background: rgba(255, 255, 255, 0.05) ;
+    padding: 12px ;
     border-radius: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) ;
     transition: transform 0.2s ease, background 0.2s ease !important;
 }
 
 .user-card:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.1) ;
     transform: translateX(5px);
 }
 
 /* 4. A Foto do Usuário (Tamanho fixo anti-erro) */
 .avatar-busca {
-    width: 60px !important;
-    height: 60px !important;
-    border-radius: 50% !important;
-    object-fit: cover !important;
-    margin-right: 15px !important;
+    width: 60px ;
+    height: 60px ;
+    border-radius: 50% ;
+    object-fit: cover ;
+    margin-right: 15px ;
     border: 2px solid #e48c29;
     flex-shrink: 0 !important;
 }
 
 .avatar-busca .perfil-gold {
-    border-color: var(--dourado) !important;
+    border-color: var(--dourado) ;
 }
 
 /* 5. Textos dentro do Card */
 .nome-user {
-    display: block !important;
+    display: block ;
     color: #ffffff;
     font-size: 1.1rem;
-    font-weight: bold !important;
+    font-weight: bold ;
 }
 
 .username-user {
-    color: var(--dourado) !important;
-    font-size: 1rem !important;
+    color: var(--dourado) ;
+    font-size: 1rem ;
     opacity: 0.8;
 }
 
 .erro-fenda {
     color: #ff4b2bc7 !important;
-    padding: 10px !important;
+    padding: 10px ;
     border-radius: 8px !important;
     text-align: center !important;
     margin-top: 15px !important;
-    min-height: 300px !important;
+    min-height: 300px ;
 }
 
 
@@ -1417,7 +1416,7 @@ footer a {
     backdrop-filter: none;
     border: none !important;
     box-shadow: none;
-    width: 100% !important;
+    width: 100% ;
     margin: 0 auto;
     padding: 20px;
 }
@@ -1425,9 +1424,9 @@ footer a {
 /* Mantendo os inputs visíveis no escuro */
 form[action="confirma-login.php"] input[type="text"],
 form[action="confirma-login.php"] input[type="password"] {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 187, 0, 0.288) !important;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) !important;
+    background: rgba(255, 255, 255, 0.05) ;
+    border: 1px solid rgba(255, 187, 0, 0.288) ;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) ;
 }
 
 
@@ -1441,7 +1440,7 @@ form[action="confirma-login.php"] input[type="password"] {
 h2.titulo-home {
     font-size: 1.8rem;
     text-align: center;
-    margin-top: 40px !important;
+    margin-top: 40px ;
     margin-bottom: 20px;
 }
 
@@ -1449,7 +1448,7 @@ h2.titulo-home {
     border-radius: 20px;
     -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
     mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
-    width: 100% !important;
+    width: 100% ;
     /* Não deixa colar nas bordas do iPhone/Lumia */
     max-width: clamp(320px, 100%, 800px) !important;
     height: auto;
@@ -1529,8 +1528,8 @@ h2.titulo-home {
     border-radius: 20px;
     padding: clamp(8px, 2.5dvh, 20px) clamp(8px, 2.5dvh, 20px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     transition: transform 0.3s ease, border-color 0.3s ease;
     margin: 20px auto;
 }
@@ -1731,18 +1730,18 @@ h2.titulo-home {
 }
 
 input[type="check-box"] {
-    width: 30px !important;
-    height: 30px !important;
-    margin-right: 10px !important;
-    accent-color: #b8ad0fbd !important;
+    width: 35px ;
+    height: 35px ;
+    margin-right: 10px ;
+    accent-color: #b8ad0fbd ;
 }
 
 
 .main-perfil-container-publico {
     width: 100% !important;
     max-width: 4000px;
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0 ;
+    padding: 0 ;
     border: none !important;
     position: relative;
     overflow: visible;
@@ -1753,8 +1752,8 @@ input[type="check-box"] {
 
     /* 1. FUNDO GATES/JOBS: Escuro, sólido e profundo */
     background: #16161d !important;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     /* Isso dá profundidade sem tirar a legibilidade do fundo */
 
     /* 2. A MÁSCARA ZUCKERBERG: Esmaecimento suave nas bordas para fundir com o main */
@@ -1857,8 +1856,8 @@ input[type="check-box"] {
     background-blend-mode: soft-light;
 
     /* 3. JATEADO: Desfoque limpo, puxando os tons de fundo sem distorcer as cores */
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 
     /* 4. QUINA DO VIDRO: Borda dupla simulada (Mais clara no topo e nítida) */
     border: 1px solid oklch(1 0 0 / 0.35) !important;
@@ -1874,13 +1873,10 @@ input[type="check-box"] {
 }
 
 
-
-
-
 .main-perfil-container-publico.vibe-light {
     background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) !important;
-    border: 2px solid rgba(139, 128, 100, 0.2) !important;
-    border-top: 4px solid var(--aura-user) !important;
+    border: 2px solid rgba(139, 128, 100, 0.2) ;
+    border-top: 4px solid var(--aura-user) ;
     box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
@@ -1893,62 +1889,139 @@ input[type="check-box"] {
     text-shadow: none !important;
 }
 
-/* Vibe ADS: Tema Overclock Dinâmico */
+/* ==========================================================
+   VIBE ADS - FUNDO SUTIL COM ARESTAS PULSANTES (FINAL)
+   ========================================================== */
+
 .main-perfil-container-publico.vibe-ads {
-    /* 1. Fundo Dark Navy (Mantém o contraste) */
-    background-color: #020412d5 !important;
-
-    /* 2. Grid de Circuito (Sutil) */
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.103) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        radial-gradient(circle at 50% -20%, var(--aura-user) 1%, transparent 10%) !important;
-    background-size: 40px 40px, 40px 40px, 100% 100%;
-
-    /* 3. Borda Superior da Aura */
-    border-top: 2px solid var(--aura-user) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-
-    /* 4. Sombra suave baseada na aura */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5) !important;
-
-    animation: overclock-pulse 3s infinite alternate ease-in-out;
-    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #0a0a12 ;
+    border: 1px solid rgba(255, 255, 255, 0.03) ;
+    border-top: 4px solid var(--aura-user);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    animation: ads-neon-glow-pulse 3.5s infinite ease-in-out alternate;
 }
 
-/* 5. Títulos com a cor da Aura */
-.main-perfil-container-publico.vibe-ads h3 {
-    color: var(--aura-user) !important;
-    /* Título brilha com a cor do usuário */
-    text-shadow: 0 0 10px rgba(var(--aura-user), 0.5);
-    /* Efeito neon */
-    border-bottom: 2px solid var(--aura-user);
-    font-family: inherit;
+/* CAMADA CRT: linhas de varredura */
+.main-perfil-container-publico.vibe-ads::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.04) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.12;
 }
 
-.main-perfil-container-publico.vibe-ads p {
-    color: #c0c0c0 !important;
-    /* Mantém cinza para legibilidade */
+/* ==========================================================
+   FUNDO ESTÁTICO: GRADIENTE + SVG (com pulso)
+   ========================================================== */
+.main-perfil-container-publico.vibe-ads::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    background-image: 
+        /*  SVG com stroke mais grosso (1.5) e opacidade levemente maior */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.5' stroke-opacity='0.25'/%3E%3C/svg%3E"),
+        linear-gradient(45deg, rgba(2, 4, 18, 0.95) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.95) 100%);
+    background-size: 70px 70px, 200% 200%;
+    background-repeat: repeat, no-repeat;
+    background-position: 0 0, 0% 0%;
+    mix-blend-mode: screen;
+    background-blend-mode: color-dodge;
+    animation: terminal-bg-shift 20s infinite ease-in-out alternate,
+               static-pulse-opacity 4s infinite ease-in-out alternate;
 }
 
-/* 6. Animação de Pulsação utilizando a Aura */
-@keyframes overclock-pulse {
+@keyframes terminal-bg-shift {
+    0%   { background-position: 0 0, 0% 0%; }
+    100% { background-position: 0 0, 100% 100%; }
+}
+
+/* PULSO REAL: opacidade do ::after varia – SVG e gradiente somem/aparecem */
+@keyframes static-pulse-opacity {
+    0%   { opacity: 0.25; }
+    25%  { opacity: 0.4; }
+    50%  { opacity: 0.9; }
+    100% { opacity: 0.25; }
+}
+
+/* ==========================================================
+   HEXÁGONOS DINÂMICOS (FIXED, OFFSET)
+   ========================================================== */
+.main-perfil-container-publico.vibe-ads .hex-bg {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 80px);
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    grid-auto-rows: 56px;
+    gap: 10px;
+    padding: 0;
+    opacity: 0.5;
+    mix-blend-mode: screen;
+}
+
+.main-perfil-container-publico.vibe-ads .hex-item {
+    width: 100%;
+    aspect-ratio: 1/1.15;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: rgba(0, 240, 255, 0.02);
+    border: 1px solid rgba(0, 240, 255, 0.06);
+    transform: scale(0.85);
+    transition: all 0.6s ease;
+    will-change: transform, background, border-color, box-shadow;
+}
+
+.main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
+    background: rgba(0, 255, 255, 0.521);
+    border-color: rgba(0, 238, 255, 0.897);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+    transform: scale(1.0);
+}
+
+/* ==========================================================
+   ANIMAÇÃO DE PULSO DA BORDA DO CONTAINER
+   ========================================================== */
+@keyframes ads-neon-glow-pulse {
     0% {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-        /* Mantém o grid visível */
-        background-image:
-            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.) 1px, transparent 1px),
-            radial-gradient(circle at 50% -20%, var(--aura-user) 10%, transparent 40%);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+        border-top-color: var(--aura-user);
+        border-color: rgba(255, 255, 255, 0.03);
     }
-
+    50% {
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 240, 255, 0.15);
+        border-color: rgba(0, 240, 255, 0.08);
+    }
     100% {
-        box-shadow: 0 0 30px rgba(var(--aura-user), 0.5);
-        background-image:
-            linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-            radial-gradient(circle at 50% -10%, var(--aura-user) 20%, transparent 60%);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+        border-top-color: #00f0ff;
+        border-color: rgba(255, 255, 255, 0.03);
     }
+}
+
+.main-perfil-container-publico.vibe-ads .perfil-header-container::before {
+    display: none;
 }
 
 
@@ -1959,17 +2032,17 @@ input[type="check-box"] {
     max-width: 100%;
     flex-direction: column;
     margin-bottom: 15px;
-    box-sizing: border-box !important;
-    display: flex !important;
+    box-sizing: border-box ;
+    display: flex ;
     flex-direction: column;
-    grid-column: span 1 !important;
+    grid-column: span 1 ;
 
 }
 
 .campo-grupo label {
-    text-align: left !important;
-    width: 100% !important;
-    margin-bottom: 5px !important;
+    text-align: left ;
+    width: 100% ;
+    margin-bottom: 5px ;
     color: #bbb;
 }
 
@@ -2003,18 +2076,18 @@ textarea {
 
 /* Correção do campo @Username */
 .input-username-wrapper {
-    height: 45px !important;
-    align-items: center !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    overflow: hidden !important;
+    height: 45px ;
+    align-items: center ;
+    padding: 0 ;
+    display: flex ;
+    align-items: center ;
+    overflow: hidden ;
 }
 
 
 .input-username-wrapper span {
     background: rgba(255, 255, 255, 0.1);
-    padding: 0 12px !important;
+    padding: 0 12px ;
     height: 100%;
     display: flex;
     align-items: center;
@@ -2035,28 +2108,28 @@ textarea {
 
 /* Bio Ajustada */
 .campo-grupo textarea {
-    min-height: 120px !important;
-    resize: none !important;
+    min-height: 120px ;
+    resize: none ;
     padding: 12px ;
 }
 
 textarea[name="bio"] {
-    min-height: 120px !important;
+    min-height: 120px ;
     resize: none;
     word-wrap: break-word ;
-    overflow-wrap: break-word !important;
+    overflow-wrap: break-word ;
 }
 
 
 /* OS BOTÕES: Menores e um embaixo do outro se precisar */
 
 .perfil-controles {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    width: 100% !important;
+    display: flex ;
+    flex-direction: column ;
+    gap: 10px ;
+    width: 100% ;
     justify-content: center;
-    margin-top: 30px !important;
+    margin-top: 30px ;
 }
 
 
@@ -2072,7 +2145,7 @@ textarea[name="bio"] {
 /*  CAPA - PERFIL PÚBLICO  */
 .capa-wrapper.viewer {
     width: 100% !important;
-    position: relative !important;
+    position: relative ;
     order: 1 !important;
     overflow: hidden !important;
     background-color: #000;
@@ -2080,27 +2153,26 @@ textarea[name="bio"] {
 }
 
 
-
 /*  AVATAR (CAPIVARA) */
 
-.perfil-header-container,
-.perfil-viewer-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    padding-top: 0 !important;
-    margin-top: 0 !important;
+.perfil-header-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
 }
 
 /*  O Wrapper do Avatar: para de voar e desce pra Terra */
 .avatar-posicionador {
     position: absolute;
-    bottom: -90px !important;
+    bottom: -90px ;
     /* Quanto ocupa da capa */
     transform: translateX(-50%);
-    width: clamp(80px, 15vw, 250px);
-    height: clamp(80px, 15vw, 250px);
+    width: clamp(80px, 15vw, 200px);
+    height: clamp(80px, 15vw, 200px);
     z-index: 15;
     gap: 10px;
     object-fit: cover;
@@ -2123,8 +2195,8 @@ textarea[name="bio"] {
     width: 250px;
     background: rgba(10, 25, 41, 0.98);
     /* Fundo bem sólido para não vazar o que está atrás */
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px 6px 12px 12px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
@@ -2373,7 +2445,7 @@ textarea[name="bio"] {
         display: inline-flex ;
         background: #111;
         position: fixed!important;
-        top: 30%;
+        top: 25%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 98;
@@ -2392,7 +2464,7 @@ textarea[name="bio"] {
 
     .lista-comentarios-social {
         padding: 20px 15px 80px 15px!important;
-        max-width: 500px !important;
+        max-width: 500px ;
     }
 
     .gaveta-opcoes { padding: 12px; gap: 8px; }
@@ -2439,10 +2511,24 @@ textarea[name="bio"] {
      flex: 1 1 100% ;
     border: none;
     padding: 6px 10px;
-    border-radius: 15px;
-   
+    border-radius: 15px;  
 }
-    
+
+.main-perfil-container-publico.vibe-ads::after {
+        background-image: 
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.2' stroke-opacity='0.20'/%3E%3C/svg%3E"),
+            linear-gradient(45deg, rgba(2, 4, 18, 0.95) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.95) 100%);
+        background-size: 65px 65px, 200% 200%;
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-bg {
+        top: 50px;
+        height: calc(100vh - 50px);
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        grid-auto-rows: 44px;
+        gap: 10px;
+        opacity: 0.4;
+    }
 }
 
 
@@ -2473,7 +2559,7 @@ textarea[name="bio"] {
     }
 
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 40px !important;
+        top: 40px ;
         left: 50%;
         transform: translateX(-50%);
     }
@@ -2481,14 +2567,40 @@ textarea[name="bio"] {
     .sticky-header {
     max-height: 35vh;
 }
-    
+
+  .main-perfil-container-publico.vibe-ads::after {
+        background-image: 
+            /*  SVG maior e mais grosso no desktop */
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.5' stroke-opacity='0.30'/%3E%3C/svg%3E"),
+            linear-gradient(45deg, rgba(2, 4, 18, 0.92) 0%, rgba(0, 240, 255, 0.06) 50%, rgba(2, 4, 18, 0.92) 100%);
+        background-size: 120px 120px, 200% 200%;
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-bg {
+        /* Hexágonos maiores e mais espaçados no desktop */
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-auto-rows: 78px;
+        gap: 20px;
+        opacity: 0.5;
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-item {
+        border-width: 1.5px;
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
+        background: rgba(0, 238, 255, 0.35);
+        border-color: rgba(0, 240, 255, 0.7);
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.30);
+    }
 }
 
+    
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 40px !important;
-        max-height: 50dvh !important;
+        top: 40px ;
+        max-height: 50dvh ;
     }
 }
 
@@ -2499,14 +2611,14 @@ textarea[name="bio"] {
     .main-perdidos {
         left: 0 !important;
         right: 0 !important;
-        margin: 10px auto !important;
-        padding: 5px !important;
+        margin: 10px auto ;
+        padding: 5px ;
     }
 
     /* Garante que o container do feed não tenha padding lateral */
     .container-feed {
-        margin: 0 auto !important;
-        width: 100% !important;
+        margin: 0 auto ;
+        width: 100% ;
         grid-template-columns: 1fr !important;
         padding: 8px !important;
     }
@@ -2514,7 +2626,7 @@ textarea[name="bio"] {
     /* Os cards ocupam a largura total sem margem extra */
     .spotted-card,
     .perdidos-item {
-        width: 100% !important;
+        width: 100% ;
         margin-left: 0;
         margin-right: 0;
         box-sizing: border-box !important;
@@ -2534,8 +2646,8 @@ textarea[name="bio"] {
 /* Container Pai - Fica no canto inferior direito */
 .fenda-nexus {
     position: fixed;
-    bottom: 22%;
-    right: 15px;
+    bottom: 20%;
+    right: 10px;
     z-index: 9999;
     display: flex;
     flex-direction: column-reverse; /* Abre para cima */
@@ -2556,7 +2668,7 @@ body.modal-aberto #fenda-nexus {
 
 /* O Botão Principal (O "Leque" fechado) */
 .nexus-trigger {
-    width: clamp(40px, 8.5vmin, 90px);
+    width: clamp(40px, 8.5vmin, 95px);
     background: var(--dourado, #ffbc00);
     border-radius: 50%!important; 
     aspect-ratio: 1 / 1;
@@ -2591,7 +2703,7 @@ body.modal-aberto #fenda-nexus {
 .nexus-item {
     background: rgba(20, 11, 0, 0.397);
     border: 1px solid var(--cor-borda-glow, #00ff00);
-    padding: 12px;
+    padding: 10px;
     border-radius: 12px;
     color: #fff;
     cursor: pointer;
@@ -2623,15 +2735,15 @@ body.modal-aberto #fenda-nexus {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 70%;  /* Ocupa 70% do espaço do botão */
-    height: 70%; /* Ocupa 70% do espaço do botão */
+    width: 75%;  /* Ocupa 75% do espaço do botão */
+    height: 75%; /* Ocupa 75% do espaço do botão */
     display: block;
 }
 
 /* O Ponteiro: Animação suave e origem no centro */
 #ponteiro-bussola {
     transform-origin: center;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)!important;
 }
 
 /* Classes de rotação (que o JS vai aplicar) */
@@ -2655,12 +2767,27 @@ body.modal-aberto #fenda-nexus {
     .modo-swipe-ativo .spotted-card {
         animation: none !important;
     }
+
+  .main-perfil-container-publico.vibe-ads::after,
+    .main-perfil-container-publico.vibe-ads .perfil-header-container::before {
+        animation: none ;
+        filter: none ;
+    }
+    /* No modo acessível, mantém as colmeias fixas com um brilho azul estático discreto */
+    .main-perfil-container-publico.vibe-ads::after {
+        opacity: 0.3 ;
+        background-position: 0px 0px ;
+        stroke: #00f0ff ;
+    }
+    .main-perfil-container-publico.vibe-ads .perfil-header-container::before {
+        display: none ;
+    }
 }
 
 @media (prefers-reduced-motion: no-preference) {
     .feed-empilhado .spotted-card {
         background: rgba(255, 255, 255, 0.068);
-        -webkit-backdrop-filter: blur(5px); /* Essencial para funcionar no Safari/iPhone */
-        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(4px); /* Essencial para funcionar no Safari/iPhone */
+        backdrop-filter: blur(4px);
     }
 }
