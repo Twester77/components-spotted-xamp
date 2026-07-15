@@ -1,0 +1,14 @@
+User-agent: *
+
+Allow: /css/
+Allow: /js/
+Allow: /imagensfoto/
+Allow: /postagens/
+Allow: /feed.php
+
+Disallow: /api/
+Disallow: /uploads/ui/
+Disallow: /includes
+Disallow: /proxy.php
+Disallow: /manifest.php
+Disallow: /badges/

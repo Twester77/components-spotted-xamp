@@ -45,7 +45,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <meta name="author" content="A Fenda">
     <meta property="og:title" content="A Fenda - Spotted Universitário">
     <meta property="og:description" content="A comunidade digital da UNIFEV. Participe com comentários, reações e muito mais.">
-    <meta property="og:image" content="https://fendauniversity.com.br/imagensfoto/favicon.png">
+    <meta property="og:image" content="https://fendauniversity.com.br/uploads/ui/favicon.png">
     <meta property="og:url" content="www.fendauniversity.com.br">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
@@ -53,13 +53,20 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <title>A Fenda - Spotted Universitário (Votuporanga)</title>
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <?php
+    // Define o caminho base do projeto (ex: /spotted-unifev ou vazio)
+    $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+    ?>
+    <link rel="manifest" href="<?= $basePath ?>/manifest.php">
 
     <!-- CSS com Cache Busting Automático -->
     <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/layout.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/formularios.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/animacoes.css') ?>">
+    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'feed.pessoal.php'): ?>
+        <link rel="stylesheet" href="<?= asset_versao('css/lightbox.css') ?>">
+    <?php endif; ?>
     <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
     <?php if ($pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
@@ -69,8 +76,8 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <?php endif; ?>
 
     <!-- Ícones e favicon -->
-    <link rel="icon" type="image/png" href="imagensfoto/favicon.png">
-    <link rel="apple-touch-icon" href="imagensfoto/favicon.png">
+    <link rel="icon" type="image/png" href="uploads/ui/favicon.png">
+    <link rel="apple-touch-icon" href="uploads/ui/favicon.png">
 
     <!-- Fontes e ícones externos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

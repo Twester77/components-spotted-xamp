@@ -19,10 +19,11 @@
             </div>
 
             <!-- Área de texto -->
-            <div class="area-texto-vivo">
+            <div class="area-texto-vivo area-post-vivo">
                 <textarea name="mensagem" id="mensagem-vivo" placeholder="O que tá rolando na UNIFEV?" required maxlength="600"></textarea>
                 
-                <div class="previa-midia-vivo" id="previa-midia-vivo"></div>
+                <!-- 🔥 NOVO GRID DE ANEXOS (substitui a prévia única) -->
+                <div id="anexos-grid-post" class="anexos-grid" style="display: none;"></div>
             </div>
 
             <!-- Barra de ações -->
@@ -31,12 +32,12 @@
                     <label for="imagem-vivo" class="btn-acao btn-acao-vivo" title="Adicionar imagem">
                         <i class="fas fa-image"></i>
                     </label>
-                    <input type="file" name="imagem" id="imagem-vivo" accept="image/*" style="display: none;">
+                    <input type="file" name="imagem" id="imagem-vivo" accept="image/*" style="display: none;" multiple>
                     
                     <button type="button" id="btn-gif-vivo" class="btn-acao btn-acao-vivo" title="Buscar GIF/Sticker" onclick="window.setGiphyTarget('gif-url-vivo'); abrirGiphyModal();">
                         <i class="fas fa-grin-tongue-squint"></i>
                     </button>
-                    <input type="hidden" name="gif_url" id="gif-url-vivo" value="">
+                    <!-- GIFs são adicionados via JavaScript, não via input hidden -->
                 </div>
 
                 <div class="acoes-direita">
@@ -58,130 +59,264 @@
 <script src="js/fenda-giphy.js"></script>
 
 <script>
-    (function() {
-        const textarea = document.getElementById('mensagem-vivo');
-        const previewMidia = document.getElementById('previa-midia-vivo');
-        const inputFile = document.getElementById('imagem-vivo');
-        const inputGif = document.getElementById('gif-url-vivo');
-        const selectCategoria = document.getElementById('categoria-vivo');
-        const contador = document.getElementById('contador-vivo');
+(function() {
+    'use strict';
 
-        // Atualiza contador
-        function atualizarContador() {
-            const len = textarea.value.length;
-            contador.textContent = len + '/600';
-            contador.style.color = len >= 550 ? '#ff3c00d0' : '#888';
-        }
+    const textarea = document.getElementById('mensagem-vivo');
+    const inputFile = document.getElementById('imagem-vivo');
+    const contador = document.getElementById('contador-vivo');
+    const form = document.getElementById('form-postar-vivo');
+    const gridElement = document.getElementById('anexos-grid-post');
 
-        // Atualiza a prévia da mídia
-        function atualizarMidia() {
-            const gifUrl = inputGif.value.trim();
-            const file = inputFile.files[0];
+    // ============================================================
+    // 🖼️ GERENCIADOR DE ANEXOS (MODAL POST)
+    // ============================================================
+    const ModalAnexos = {
+        anexos: [],
+        maxItems: 3,
+        gridElement: gridElement,
 
-            previewMidia.innerHTML = '';
+        // Adiciona um anexo (imagem ou GIF)
+        adicionar(file, tipo = 'imagem', url = null) {
+            // Validação de tamanho e tipo para imagens
+            if (tipo === 'imagem' && file) {
+                const maxSize = 2 * 1024 * 1024;
+                const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+                if (file.size > maxSize) {
+                    alert('❌ Arquivo excede o limite de 2MB.');
+                    return false;
+                }
+                if (!tiposPermitidos.includes(file.type)) {
+                    alert('❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.');
+                    return false;
+                }
+            }
 
-            if (gifUrl && gifUrl !== '') {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'midia-wrapper';
+            // Verifica duplicata de GIF
+            if (tipo === 'gif' && url) {
+                const existe = this.anexos.some(item => item.tipo === 'gif' && item.url === url);
+                if (existe) {
+                    alert('⚠️ Este GIF já foi adicionado.');
+                    return false;
+                }
+            }
+
+            if (this.anexos.length >= this.maxItems) {
+                alert(`⚠️ Máximo de ${this.maxItems} anexos por post.`);
+                return false;
+            }
+
+            const id = 'anexo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+            const preview = tipo === 'gif' ? url : URL.createObjectURL(file);
+
+            this.anexos.push({
+                id,
+                tipo,
+                file: tipo === 'imagem' ? file : null,
+                url: tipo === 'gif' ? url : null,
+                preview,
+                status: 'pending'
+            });
+
+            this.renderizar();
+            return true;
+        },
+
+        // Remove um anexo pelo índice
+        remover(index) {
+            if (index < 0 || index >= this.anexos.length) return;
+            const item = this.anexos[index];
+            if (item.preview && item.tipo === 'imagem') {
+                URL.revokeObjectURL(item.preview);
+            }
+            this.anexos.splice(index, 1);
+            this.renderizar();
+        },
+
+        // Limpa todos os anexos
+        limparTodos() {
+            this.anexos.forEach(item => {
+                if (item.preview && item.tipo === 'imagem') {
+                    URL.revokeObjectURL(item.preview);
+                }
+            });
+            this.anexos = [];
+            this.renderizar();
+        },
+
+        // Renderiza o grid
+        renderizar() {
+            if (!this.gridElement) return;
+            if (this.anexos.length === 0) {
+                this.gridElement.style.display = 'none';
+                this.gridElement.innerHTML = '';
+                return;
+            }
+            this.gridElement.style.display = 'flex';
+            this.gridElement.innerHTML = '';
+
+            this.anexos.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'anexo-item';
+                div.dataset.index = index;
+
                 const img = document.createElement('img');
-                img.src = gifUrl;
-                img.alt = 'GIF/Sticker';
+                img.src = item.preview;
+                img.alt = 'Anexo ' + (index + 1);
                 img.loading = 'lazy';
-                wrapper.appendChild(img);
-                const btnRemove = document.createElement('button');
-                btnRemove.type = 'button';
-                btnRemove.className = 'btn-remover-midia';
-                btnRemove.innerHTML = '✕';
-                btnRemove.title = 'Remover GIF';
-                btnRemove.onclick = function(e) {
+                div.appendChild(img);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn-remover-anexo';
+                btn.innerHTML = '✕';
+                btn.title = 'Remover anexo';
+                btn.dataset.index = index;
+                btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    inputGif.value = '';
-                    inputFile.value = '';
-                    atualizarMidia();
-                };
-                wrapper.appendChild(btnRemove);
-                previewMidia.appendChild(wrapper);
-            } else if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'midia-wrapper';
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.alt = 'Imagem selecionada';
-                    img.loading = 'lazy';
-                    wrapper.appendChild(img);
-                    const btnRemove = document.createElement('button');
-                    btnRemove.type = 'button';
-                    btnRemove.className = 'btn-remover-midia';
-                    btnRemove.innerHTML = '✕';
-                    btnRemove.title = 'Remover imagem';
-                    btnRemove.onclick = function(e) {
-                        e.stopPropagation();
-                        inputFile.value = '';
-                        inputGif.value = '';
-                        atualizarMidia();
-                    };
-                    wrapper.appendChild(btnRemove);
-                    previewMidia.appendChild(wrapper);
-                };
-                reader.readAsDataURL(file);
+                    this.remover(index);
+                });
+                div.appendChild(btn);
+
+                img.addEventListener('click', () => {
+                    if (typeof window.abrirLightboxManual === 'function') {
+                        window.abrirLightboxManual(item.preview);
+                    } else {
+                        window.open(item.preview, '_blank');
+                    }
+                });
+
+                this.gridElement.appendChild(div);
+            });
+        },
+
+        // Prepara o FormData com todos os anexos
+        prepararFormData(formData) {
+            this.anexos.forEach((item) => {
+                if (item.file) {
+                    formData.append('anexos[]', item.file);
+                } else if (item.tipo === 'gif' && item.url) {
+                    formData.append('gif_urls[]', item.url);
+                }
+            });
+        }
+    };
+
+    // ============================================================
+    // EVENTOS
+    // ============================================================
+
+    // Atualiza contador de caracteres
+    textarea.addEventListener('input', function() {
+        const len = this.value.length;
+        contador.textContent = len + '/600';
+        contador.style.color = len >= 550 ? '#ff3c00d0' : '#888';
+    });
+
+    // Input file (múltiplos arquivos)
+    inputFile.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            // Adiciona cada arquivo selecionado
+            for (let i = 0; i < this.files.length; i++) {
+                const file = this.files[i];
+                // Se atingiu o limite, para de adicionar
+                if (ModalAnexos.anexos.length >= ModalAnexos.maxItems) {
+                    alert(`⚠️ Máximo de ${ModalAnexos.maxItems} anexos por post.`);
+                    break;
+                }
+                ModalAnexos.adicionar(file, 'imagem');
             }
+            // Limpa o input para permitir re-selecionar os mesmos arquivos
+            this.value = '';
+        }
+    });
+
+    // Evento customizado do GIPHY (quando um GIF é selecionado)
+    document.addEventListener('gifSelecionado', function(e) {
+        if (e.detail && e.detail.url) {
+            // Adiciona o GIF ao grid
+            ModalAnexos.adicionar(null, 'gif', e.detail.url);
+            // Limpa o campo hidden (se houver) – não precisamos mais
+            document.getElementById('gif-url-vivo').value = '';
+        }
+    });
+
+    // ============================================================
+    // ENVIO DO FORMULÁRIO
+    // ============================================================
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const texto = textarea.value.trim();
+        const temAnexo = ModalAnexos.anexos.length > 0;
+
+        if (texto === '' && !temAnexo) {
+            alert('Escreva algo ou adicione uma imagem/GIF antes de publicar.');
+            return;
         }
 
-        // Eventos
-        textarea.addEventListener('input', atualizarContador);
+        // Monta o FormData
+        const formData = new FormData(form);
 
-        inputFile.addEventListener('change', function() {
-            if (this.files.length > 0) {
-                inputGif.value = '';
+        // 🔥 Adiciona os anexos (imagens e GIFs) via ModalAnexos
+        ModalAnexos.prepararFormData(formData);
+
+        // Remove o campo 'imagem' que pode estar vazio ou conflitar
+        // Não removemos, pois o PHP vai ignorar se não houver arquivo.
+
+        // Desabilita botão de envio
+        const btnSubmit = form.querySelector('button[type="submit"]');
+        const originalText = btnSubmit.innerHTML;
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = 'Publicando...';
+
+        fetch('enviar-post.php', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
-            atualizarMidia();
+        })
+        .then(response => {
+            if (response.redirected) {
+                // Se o PHP redirecionou, significa sucesso ou erro com session
+                window.location.href = response.url;
+                return;
+            }
+            return response.text();
+        })
+        .then(data => {
+            // Se chegou aqui, algo deu errado (erro no PHP)
+            if (data) {
+                console.error('Erro no servidor:', data);
+                alert('Erro ao publicar. Tente novamente.');
+            }
+        })
+        .catch(err => {
+            console.error('Erro na requisição:', err);
+            alert('Erro de conexão. Tente novamente.');
+        })
+        .finally(() => {
+            btnSubmit.disabled = false;
+            btnSubmit.innerHTML = originalText;
         });
+    });
 
-        inputGif.addEventListener('change', function() {
-            if (this.value && this.value !== '') {
-                inputFile.value = '';
-            }
-            atualizarMidia();
-        });
+    // ============================================================
+    // FECHAR MODAL E LIMPAR ANEXOS
+    // ============================================================
+    window.fecharModalPostLimpo = function() {
+        ModalAnexos.limparTodos();
+        if (typeof fecharModalPost === 'function') {
+            fecharModalPost();
+        } else {
+            const modal = document.getElementById('modal-postar-fenda');
+            if (modal) modal.style.display = 'none';
+            document.body.classList.remove('modal-aberto');
+            document.body.style.overflow = 'auto';
+        }
+    };
 
-        // 🟢 FALLBACK: observa mudanças no input hidden (para casos onde o evento não é disparado)
-        const observer = new MutationObserver(function() {
-            if (inputGif.value && inputGif.value !== '') {
-                atualizarMidia();
-            }
-        });
-        observer.observe(inputGif, { attributes: true, attributeFilter: ['value'] });
-
-        // Evento customizado do GIPHY
-        document.addEventListener('gifSelecionado', function(e) {
-            if (e.detail && e.detail.url) {
-                inputGif.value = e.detail.url;
-                inputFile.value = '';
-                atualizarMidia();
-            }
-        });
-
-        // Fechar modal e limpar mídia
-        window.fecharModalPostLimpo = function() {
-            if (inputFile.files.length > 0 || inputGif.value.trim() !== '') {
-                inputFile.value = '';
-                inputGif.value = '';
-                atualizarMidia();
-            }
-            if (typeof fecharModalPost === 'function') {
-                fecharModalPost();
-            } else {
-                const modal = document.getElementById('modal-postar-fenda');
-                if (modal) modal.style.display = 'none';
-                document.body.classList.remove('modal-aberto');
-                document.body.style.overflow = 'auto';
-            }
-        };
-
-        // Inicializa
-        atualizarContador();
-        atualizarMidia();
-    })();
+    // Inicializa contador
+    contador.textContent = '0/600';
+})();
 </script>

@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once __DIR__ . '/../auth_check.php';
+require_once __DIR__ . '/../includes/upload_engine.php'; // 🔥 Inclui o motor com excluirArquivoB2()
 
 // ============================================================
 // 1. DETECTA SE É REQUISIÇÃO AJAX (POST com X-Requested-With)
@@ -40,11 +41,11 @@ if ($post_id <= 0) {
 }
 
 // ============================================================
-// 3. VERIFICA PERMISSÃO E EXECUTA SOFT DELETE
+// 3. VERIFICA PERMISSÃO E BUSCA DADOS DO POST
 // ============================================================
 $usuario_id = (int)$_SESSION['usuario_id'];
 
-$check = $conn->prepare("SELECT usuario_id, imagem_url FROM mensagens WHERE id = ? AND status = 'ativo'");
+$check = $conn->prepare("SELECT usuario_id, imagem_url, anexos FROM mensagens WHERE id = ? AND status = 'ativo'");
 $check->bind_param("i", $post_id);
 $check->execute();
 $resultado = $check->get_result();
@@ -59,34 +60,86 @@ if (!$dados_post || $dados_post['usuario_id'] != $usuario_id) {
     }
 }
 
-// Soft delete
+// ============================================================
+// 4. EXCLUSÃO DOS ARQUIVOS NO B2 (ANTES DO BANCO)
+// ============================================================
+$arquivosDeletados = 0;
+$erros = [];
+
+// 🔥 4.1 - Deleta todos os arquivos listados no campo 'anexos' (JSON)
+if (!empty($dados_post['anexos'])) {
+    $anexos = json_decode($dados_post['anexos'], true);
+    if (json_last_error() === JSON_ERROR_NONE && is_array($anexos)) {
+        foreach ($anexos as $anexo) {
+            if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
+                if (excluirArquivoB2($anexo['caminho'], $usuario_id)) {
+                    $arquivosDeletados++;
+                } else {
+                    $erros[] = "Falha ao deletar: " . $anexo['caminho'];
+                    error_log("[EXCLUIR_POST] ⚠️ Falha ao deletar do B2: " . $anexo['caminho']);
+                }
+            }
+            // GIFs (tipo 'gif') são URLs externas, não deletamos
+        }
+    } else {
+        error_log("[EXCLUIR_POST] ⚠️ JSON inválido em anexos: " . $dados_post['anexos']);
+    }
+}
+
+// 🔥 4.2 - Fallback: imagem_url (se não foi deletada via anexos)
+if (!empty($dados_post['imagem_url'])) {
+    $jaDeletada = false;
+    if (!empty($anexos) && is_array($anexos)) {
+        foreach ($anexos as $anexo) {
+            if ($anexo['tipo'] === 'imagem' && $anexo['caminho'] === $dados_post['imagem_url']) {
+                $jaDeletada = true;
+                break;
+            }
+        }
+    }
+    if (!$jaDeletada) {
+        if (excluirArquivoB2($dados_post['imagem_url'], $usuario_id)) {
+            $arquivosDeletados++;
+        } else {
+            $erros[] = "Falha ao deletar imagem_url: " . $dados_post['imagem_url'];
+            error_log("[EXCLUIR_POST] ⚠️ Falha ao deletar imagem_url do B2: " . $dados_post['imagem_url']);
+        }
+    }
+}
+
+// ============================================================
+// 5. SOFT DELETE NO BANCO
+// ============================================================
 $soft_delete = $conn->prepare("UPDATE mensagens SET status = 'deletado' WHERE id = ?");
 $soft_delete->bind_param("i", $post_id);
 $executou = $soft_delete->execute();
 
 if ($executou) {
-    // Move a imagem (se existir)
-    if (!empty($dados_post['imagem_url'])) {
-        $origem = "../postagens/" . $dados_post['imagem_url'];
-        $destino = "../lixeira_postagens/" . $dados_post['imagem_url'];
-        if (file_exists($origem)) {
-            rename($origem, $destino);
-        }
-    }
-
-    // 🔥 NOVO: Limpa as notificações que apontam para este post
-    // (seta post_id = NULL para manter a notificação, mas sem link direto)
+    // Limpa as notificações que apontam para este post
     $limpar_notif = $conn->prepare("UPDATE notificacoes SET post_id = NULL WHERE post_id = ?");
     $limpar_notif->bind_param("i", $post_id);
     $limpar_notif->execute();
     $limpar_notif->close();
+
+    // Log do resultado
+    if ($arquivosDeletados > 0) {
+        error_log("[EXCLUIR_POST] ✅ Post $post_id deletado (B2: $arquivosDeletados arquivos removidos)");
+    } else {
+        error_log("[EXCLUIR_POST] ✅ Post $post_id deletado (sem arquivos B2 ou já removidos)");
+    }
+    if (!empty($erros)) {
+        error_log("[EXCLUIR_POST] ⚠️ Erros parciais: " . implode(', ', $erros));
+    }
+} else {
+    // Se o banco falhou, registra erro (não faz rollback dos arquivos, pois foram deletados do B2)
+    error_log("[EXCLUIR_POST] ❌ Erro ao atualizar status do post $post_id: " . $conn->error);
 }
 
 $soft_delete->close();
 $check->close();
 
 // ============================================================
-// 4. RESPOSTA FINAL
+// 6. RESPOSTA FINAL
 // ============================================================
 if ($is_ajax) {
     if ($executou) {

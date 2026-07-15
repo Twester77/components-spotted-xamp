@@ -58,29 +58,25 @@ function recalcFeedLayout() {
         ? Math.max(320, Math.min(vw * 0.60, 600))
         : Math.max(250, Math.min(vw * 0.70, 550));
 
+    var maxCardHeight = Math.min(vh * 0.8);
     var cardPadding = Math.max(12, cardWidth * 0.05);
-    var fontSize = Math.max(0.9, Math.min(cardWidth * 0.055, 1.7));
+    var fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
+    var textMaxHeight = Math.max(60, cardWidth * 0.25);
     var avatarSize = Math.max(34, cardWidth * 0.12);
-    var maxCardHeight = Math.min(vh * 0.80, 650);
 
-    // Atualiza variáveis CSS – sem !important
     var root = document.documentElement;
     root.style.setProperty('--card-width', cardWidth + 'px');
     root.style.setProperty('--card-padding', cardPadding + 'px');
     root.style.setProperty('--card-font-size', fontSize + 'rem');
+    root.style.setProperty('--text-max-height', textMaxHeight + 'px');
     root.style.setProperty('--card-max-height', maxCardHeight + 'px');
     root.style.setProperty('--avatar-size', avatarSize + 'px');
-
-    // Para imagens (opcional)
     root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
     root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
-    root.style.setProperty('--img-max-height', isLandscape ? (maxCardHeight * 0.6) + 'px' : 'none');
-
+    root.style.setProperty('--img-max-height', isLandscape ? (maxCardHeight * 0.5) + 'px' : 'none');
 }
 
-// ==================== DEBOUNCE E EVENTOS ====================
 var layoutTimeout;
-
 function debounceLayout() {
     clearTimeout(layoutTimeout);
     layoutTimeout = setTimeout(recalcFeedLayout, 150);
@@ -94,63 +90,85 @@ function reforcarLayoutNosCards() {
     recalcFeedLayout();
 }
 
-    // ==================== TOGGLE FILTROS ====================
-    window.toggleFiltrosMobile = function() {
-        const gaveta = document.getElementById('gaveta-filtros-swipe');
-        const btn = document.getElementById('btn-abrir-filtros');
-        if (gaveta) {
-            gaveta.classList.toggle('aberto');
-            if (gaveta.classList.contains('aberto')) {
-                btn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i> FECHAR FILTROS';
-                btn.setAttribute('aria-expanded', 'true');
-            } else {
-                btn.innerHTML = '<i class="fas fa-filter" aria-hidden="true"></i> FILTRAR CATEGORIAS';
-                btn.setAttribute('aria-expanded', 'false');
-            }
+// ==================== TOGGLE FILTROS ====================
+window.toggleFiltrosMobile = function() {
+    const gaveta = document.getElementById('gaveta-filtros-swipe');
+    const btn = document.getElementById('btn-abrir-filtros');
+    if (gaveta) {
+        gaveta.classList.toggle('aberto');
+        if (gaveta.classList.contains('aberto')) {
+            btn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i> FECHAR FILTROS';
+            btn.setAttribute('aria-expanded', 'true');
+        } else {
+            btn.innerHTML = '<i class="fas fa-filter" aria-hidden="true"></i> FILTRAR CATEGORIAS';
+            btn.setAttribute('aria-expanded', 'false');
         }
-    };
+    }
+};
 
-    // ==================== DECLARAÇÃO GLOBAL ====================
-    window._modalAberto = false;
+// ==================== DECLARAÇÃO GLOBAL ====================
+window._modalAberto = false;
 
 // ==================== MODAL DE AÇÕES (LONG PRESS) ====================
 window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
     if (window._activeModal) return;
     window._modalAberto = true;
     const targetCard = cardElement || null;
+
+    if (!document.getElementById('style-runtime-overlay')) {
+        const style = document.createElement('style');
+        style.id = 'style-runtime-overlay';
+        style.innerHTML = `
+            .fenda-overlay-safe {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.31);
+                z-index: 30000;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                padding-top: 15%;
+                font-family: 'Inter', system-ui, sans-serif;
+                backdrop-filter: none ;
+            }
+            .fenda-overlay-safe::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                filter: blur(6px);
+                z-index: -1;
+                pointer-events: none;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
     const overlay = document.createElement('div');
-    overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
-        z-index: 30000;
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        padding-top: 15%;
-        font-family: 'Inter', system-ui, sans-serif;
-    `;
+    overlay.className = 'fenda-overlay-safe';
+
     const modal = document.createElement('div');
     modal.style.cssText = `
         background: rgba(20, 20, 32, 0.92);
-        backdrop-filter: blur(15px);
         border-radius: 28px;
         padding: 28px 24px;
         width: 90%;
         max-width: 450px;
         text-align: center;
         border: 1px solid rgba(255, 140, 0, 0.5);
-        box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         user-select: none;
         -webkit-user-select: none;
     `;
+
     const title = document.createElement('div');
     title.textContent = isOwner ? ' GERENCIAR POST ' : ' SINALIZAR POST ';
-    title.style.cssText = `font-size:0.85rem; letter-spacing:2px; color:#ffbc00; margin-bottom:20px; text-transform:uppercase; font-weight:600;`;
+    title.style.cssText = `font-size:0.9rem; letter-spacing:2px; color:#ffbc00; margin-bottom:20px; text-transform:uppercase; font-weight:600;`;
     modal.appendChild(title);
 
     const buttonStyle = `
@@ -172,7 +190,20 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         user-select: none;
     `;
 
-    // Botão de exclusão (apenas para o dono)
+    const btnVerMais = document.createElement('button');
+    btnVerMais.innerHTML = 'ⓘ Ver mais detalhes';
+    btnVerMais.style.cssText = buttonStyle + `background: rgba(0,150,255,0.12); border:1px solid rgba(0,150,255,0.25); color:#6af;`;
+    btnVerMais.onclick = (e) => {
+        e.stopPropagation();
+        closeGlobalModal();
+        if (typeof window.abrirLightbox === 'function') {
+            window.abrirLightbox(postId);
+        } else {
+            console.warn('[VER MAIS] Lightbox não disponível.');
+        }
+    };
+    modal.appendChild(btnVerMais);
+
     if (isOwner) {
         const btnDelete = document.createElement('button');
         btnDelete.innerHTML = '🗑️ Expurgar da Fenda';
@@ -180,19 +211,13 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
 
         btnDelete.onclick = async (e) => {
             e.stopPropagation();
-
-            console.log('[EXCLUIR] Botão clicado! ID:', postId);
-
             const confirmado = confirm('⚠️ Isso removerá o post permanentemente. Continuar?');
             if (!confirmado) {
-                console.log('[EXCLUIR] Usuário cancelou.');
                 closeGlobalModal();
                 return;
             }
-
             btnDelete.innerHTML = '⏳ Excluindo...';
             btnDelete.disabled = true;
-
             try {
                 const response = await fetch('includes/excluir.php', {
                     method: 'POST',
@@ -202,13 +227,7 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
                     },
                     body: 'id=' + postId
                 });
-
-                console.log('[EXCLUIR] Status da resposta:', response.status);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const contentType = response.headers.get('content-type');
                 if (!contentType || !contentType.includes('application/json')) {
                     const text = await response.text();
@@ -216,12 +235,8 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
                     alert('Erro inesperado. Verifique o console.');
                     return;
                 }
-
                 const data = await response.json();
-                console.log('[EXCLUIR] Dados recebidos:', data);
-
                 if (data.status === 'success') {
-                    // Remove o card com animação
                     const card = document.querySelector(`.spotted-card[data-id="${postId}"]`);
                     if (card) {
                         card.style.transition = 'opacity 0.3s, transform 0.3s';
@@ -229,23 +244,17 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
                         card.style.transform = 'scale(0.95)';
                         setTimeout(() => card.remove(), 300);
                     }
-                    // 🔥 AGORA USA O TOAST SEM REDIRECIONAMENTO
                     if (typeof exibirToast === 'function') {
                         exibirToast('Post expurgado da Fenda!');
                     } else if (typeof mostrarPopup === 'function') {
-                        mostrarPopup('Post expurgado da Fenda!'); // fallback
+                        mostrarPopup('Post expurgado da Fenda!');
                     }
                 } else {
                     alert(data.message || 'Erro ao excluir post.');
                 }
             } catch (err) {
                 console.error('[EXCLUIR] Erro no fetch:', err);
-
-                if (err instanceof SyntaxError && err.message.includes('JSON')) {
-                    alert('Erro no formato da resposta. Tente novamente.');
-                } else {
-                    alert('Erro de conexão. Tente novamente.');
-                }
+                alert('Erro de conexão. Tente novamente.');
             } finally {
                 closeGlobalModal();
             }
@@ -253,7 +262,6 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         modal.appendChild(btnDelete);
     }
 
-    // Botão fechar
     const btnClose = document.createElement('button');
     btnClose.innerHTML = '✖️ Voltar ao Feed';
     btnClose.style.cssText = buttonStyle + `background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.2); color:#ccc;`;
@@ -277,7 +285,6 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
             targetCard.classList.remove('card-long-press-active');
         }
     }
-
     overlay.addEventListener('click', (e) => {
         if (e.target === overlay) {
             closeGlobalModal();
@@ -285,78 +292,79 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
     });
 };
 
-    // ==================== LONG PRESS NO MODO GRID ====================
-    function initGridLongPress() {
-        let timer = null;
-        let pressedCard = null;
-        let startX = 0, startY = 0;
-        const MOVE_THRESHOLD = 10;
+// ==================== LONG PRESS NO MODO GRID ====================
+function initGridLongPress() {
+    let timer = null;
+    let pressedCard = null;
+    let startX = 0, startY = 0;
+    const MOVE_THRESHOLD = 10;
 
-        function onPointerDown(e) {
-            if (window._modalAberto) return; // BLOQUEIA SE MODAL ABERTO
-            if (document.body.classList.contains('modo-swipe-ativo')) return;
-            const card = e.target.closest('.spotted-card');
-            if (!card) return;
-            if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') ||
-                e.target.closest('.reacoes-popup') || e.target.closest('.reacao-wrapper')) return;
-            e.preventDefault();
-            pressedCard = card;
-            startX = e.clientX;
-            startY = e.clientY;
-            timer = setTimeout(() => {
-                if (pressedCard) {
-                    const postId = pressedCard.dataset.id;
-                    const isOwner = pressedCard.classList.contains('post-admin-gold');
-                    if (postId) window.mostrarMenuAcoes(postId, isOwner, pressedCard);
-                    cleanup();
-                }
-            }, 300);
-        }
-
-        function onPointerMove(e) {
-            if (!pressedCard) return;
-            const dx = Math.abs(e.clientX - startX);
-            const dy = Math.abs(e.clientY - startY);
-            if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) cleanup();
-        }
-
-        function onPointerUp() {
-            cleanup();
-        }
-
-        function cleanup() {
-            if (timer) clearTimeout(timer);
-            timer = null;
-            pressedCard = null;
-            startX = startY = 0;
-        }
-        document.removeEventListener('pointerdown', onPointerDown);
-        document.removeEventListener('pointermove', onPointerMove);
-        document.removeEventListener('pointerup', onPointerUp);
-        document.removeEventListener('pointercancel', onPointerUp);
-        document.addEventListener('pointerdown', onPointerDown);
-        document.addEventListener('pointermove', onPointerMove);
-        document.addEventListener('pointerup', onPointerUp);
-        document.addEventListener('pointercancel', onPointerUp);
+    function onPointerDown(e) {
+        if (window._modalAberto) return;
+        if (document.body.classList.contains('modo-swipe-ativo')) return;
+        const card = e.target.closest('.spotted-card');
+        if (!card) return;
+        if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') ||
+            e.target.closest('.reacoes-popup') || e.target.closest('.reacao-wrapper')) return;
+        e.preventDefault();
+        pressedCard = card;
+        startX = e.clientX;
+        startY = e.clientY;
+        timer = setTimeout(() => {
+            if (pressedCard) {
+                const postId = pressedCard.dataset.id;
+                const isOwner = pressedCard.classList.contains('post-admin-gold');
+                if (postId) window.mostrarMenuAcoes(postId, isOwner, pressedCard);
+                cleanup();
+            }
+        }, 300);
     }
 
-    // ==================== GERENCIAMENTO DO FEED (AJAX) - VERSÃO ROBUSTA ====================
-    let offset = 0;
-    let loadingMore = false;
-    let currentCategoria = '';
-    const btnLoad = document.getElementById('btn-load-more');
-    const feedContainer = document.querySelector('.container-feed');
+    function onPointerMove(e) {
+        if (!pressedCard) return;
+        const dx = Math.abs(e.clientX - startX);
+        const dy = Math.abs(e.clientY - startY);
+        if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD) cleanup();
+    }
 
-    function carregarFeedGeral(reset = false) {
+    function onPointerUp() { cleanup(); }
+
+    function cleanup() {
+        if (timer) clearTimeout(timer);
+        timer = null;
+        pressedCard = null;
+        startX = startY = 0;
+    }
+    document.removeEventListener('pointerdown', onPointerDown);
+    document.removeEventListener('pointermove', onPointerMove);
+    document.removeEventListener('pointerup', onPointerUp);
+    document.removeEventListener('pointercancel', onPointerUp);
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+    document.addEventListener('pointercancel', onPointerUp);
+}
+
+// ==================== GERENCIAMENTO DO FEED (AJAX) ====================
+let offset = 0;
+let loadingMore = false;
+let currentCategoria = '';
+let feedAcabou = false; // 🔥 FLAG INDICA QUE O SERVIDOR CONFIRMOU O FIM
+const btnLoad = document.getElementById('btn-load-more');
+const feedContainer = document.querySelector('.container-feed');
+
+function carregarFeedGeral(reset = false) {
     if (loadingMore) return;
     loadingMore = true;
 
     if (reset) {
         offset = 0;
+        feedAcabou = false; // 🔥 RESETA A FLAG AO RECARREGAR
         if (feedContainer) feedContainer.innerHTML = '';
         if (btnLoad) {
             btnLoad.disabled = false;
             btnLoad.innerText = "Exibir Mais Resultados";
+            btnLoad.style.display = 'inline-block';
         }
     }
 
@@ -374,18 +382,31 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
 
             if (data.trim() === "FIM_DADOS") {
                 console.log('[FEED] Fim dos dados alcançado.');
+                feedAcabou = true; // 🔥 MARCA QUE O FEED ACABOU
+
                 if (offset === 0 && feedContainer) {
                     feedContainer.innerHTML = "<p style='text-align:center; color:#ccc;'>Nenhum post encontrado.</p>";
+                    // Se não houver posts, exibe o radar imediatamente (apenas no swipe)
+                    if (document.body.classList.contains('modo-swipe-ativo')) {
+                        exibirRadar();
+                    }
                 }
                 if (btnLoad) {
                     btnLoad.innerText = "FIM DO FEED";
                     btnLoad.disabled = true;
                 }
             } else {
+                // Se chegou dados, reseta a flag
+                feedAcabou = false;
+
                 if (feedContainer) {
                     const qtdAntes = feedContainer.children.length;
                     if (offset === 0) feedContainer.innerHTML = '';
                     feedContainer.insertAdjacentHTML('beforeend', data);
+
+                    if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+                        configurarPosts();
+                    }
 
                     const novosCards = Array.from(feedContainer.children).slice(qtdAntes);
                     const isSwipe = document.body.classList.contains('modo-swipe-ativo');
@@ -394,7 +415,6 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
 
                     novosCards.forEach((card, idx) => {
                         if (isSwipe) {
-                            // === NOVA ANIMAÇÃO DO RADAR (Protocolo Blur-to-Focus + Brightness) ===
                             card.classList.add('swipe-distribuicao');
                             const delay = Math.min(idx * 0.12, 0.6);
                             card.style.animationDelay = `${delay}s`;
@@ -405,7 +425,6 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
                             };
                             card.addEventListener('animationend', onEnd, { once: true });
                         } else {
-                            // Grid: animação cascata
                             card.classList.add('grid-card-entrada');
                             const delay = Math.min(idx * 0.05, 0.4);
                             card.style.animationDelay = `${delay}s`;
@@ -418,13 +437,11 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
                         }
                     });
 
-                    // Adiciona a classe feed-empilhado se estiver no modo swipe
                     if (isSwipe && feedContainer && !feedContainer.classList.contains('feed-empilhado')) {
                         feedContainer.classList.add('feed-empilhado');
                         console.log('[FEED] ✅ Classe feed-empilhado adicionada ao container.');
                     }
 
-                    // 🔥 CHAMA O LAYOUT COM DELAY (50ms) PARA GARANTIR QUE O DOM FOI ATUALIZADO
                     setTimeout(function() {
                         console.log('[FEED] ⏳ Chamando reforcarLayoutNosCards após delay.');
                         if (typeof reforcarLayoutNosCards === 'function') {
@@ -452,126 +469,169 @@ window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         });
 }
 
-    // ==================== EVENTO DE CLIQUE DO BOTÃO (CORRIGIDO) ====================
-    if (btnLoad) {
-        btnLoad.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (document.body.classList.contains('modo-swipe-ativo')) return;
-            if (loadingMore) {
-                console.warn("[BOTÃO] Aguarde, já carregando...");
-                return;
-            }
-            carregarFeedGeral(false);
-        });
-    } else {
-        console.error("[BOTÃO] Elemento #btn-load-more não encontrado!");
-    }
+// 🔥 FUNÇÃO AUXILIAR PARA EXIBIR O RADAR (APENAS NO SWIPE)
+function exibirRadar() {
+    if (!document.body.classList.contains('modo-swipe-ativo')) return;
+    if (feedContainer.querySelector('.fim-dos-cards-vibe')) return;
+    const radarHtml = `
+        <div class="fim-dos-cards-vibe" style="text-align:center; padding:40px 20px; color:#ccc;">
+            <i class="fas fa-ghost" style="font-size:3rem; color:#ff8c00; margin-bottom:15px; display:block;"></i>
+            <strong style="font-size:1.2rem; display:block; margin-bottom:5px; color:#fff;">A Fenda foi Limpa!</strong>
+            <p style="font-size:0.95rem; color:#888; margin-bottom:20px;">Você leu tudo por aqui ou o feed chegou ao fim.</p>
+            <button onclick="window.reiniciarPilhaFenda()" class="btn-fenda-padrao" style="background:#ff8c00; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">
+                <i class="fas fa-sync-alt" style="margin-right:8px;"></i> RADAR DE MARACUTAIA
+            </button>
+        </div>
+    `;
+    feedContainer.insertAdjacentHTML('beforeend', radarHtml);
+}
 
-    // ==================== REAÇÕES ====================
-    document.addEventListener('click', function(e) {
-        const btnReagir = e.target.closest('.btn-reagir');
-        if (btnReagir) {
-            e.stopPropagation();
-            const wrapper = btnReagir.closest('.reacao-wrapper');
-            document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
-                if (w !== wrapper) w.classList.remove('popup-ativo');
-            });
-            wrapper.classList.toggle('popup-ativo');
+// ==================== EVENTO DE CLIQUE DO BOTÃO ====================
+if (btnLoad) {
+    btnLoad.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (document.body.classList.contains('modo-swipe-ativo')) return;
+        if (loadingMore) {
+            console.warn("[BOTÃO] Aguarde, já carregando...");
             return;
         }
-        if (e.target.closest('.reacoes-popup')) return;
-        document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
-            w.classList.remove('popup-ativo');
-        });
+        carregarFeedGeral(false);
     });
+} else {
+    console.error("[BOTÃO] Elemento #btn-load-more não encontrado!");
+}
 
-    window.enviarReacao = async function(postId, tipoReacao) {
-        const tradutorEmojis = {
-            'amei': '💖',
-            'perplecto': '😲',
-            'haha': '😂',
-            'ranco': '🙄',
-            'forca': '🫂',
-            'triste': '😢',
-            'tendi-nada': '🤔'
-        };
-        try {
-            const response = await fetch(`includes/reagir.php?id=${postId}&tipo=${tipoReacao}`);
-            if (response.status === 429) {
-                alert("Calma lá! O motor da Fenda precisa respirar.");
-                throw new Error("Rate limit exceeded");
-            }
-            const data = await response.json();
-            if (data.status === 'success') {
-                const containerReacoes = document.getElementById(`reacoes-post-${postId}`);
-                if (containerReacoes) {
-                    containerReacoes.innerHTML = '';
-                    Object.keys(data.contagens).forEach(tipo => {
-                        const total = data.contagens[tipo];
-                        if (total > 0) {
-                            const emoji = tradutorEmojis[tipo] || '👍';
-                            const classeVoted = data.minhas_reacoes.includes(tipo) ? 'voted' : '';
-                            containerReacoes.insertAdjacentHTML('beforeend', `<span class="reacao-item ${classeVoted}">${emoji} ${total}</span>`);
-                        }
-                    });
-                }
-            }
-            return data;
-        } catch (err) {
-            if (err.message !== "Rate limit exceeded") console.error("[AJAX Error]", err);
-            throw err;
-        }
+// ==================== REAÇÕES ====================
+document.addEventListener('click', function(e) {
+    const btnReagir = e.target.closest('.btn-reagir');
+    if (btnReagir) {
+        e.stopPropagation();
+        const wrapper = btnReagir.closest('.reacao-wrapper');
+        document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
+            if (w !== wrapper) w.classList.remove('popup-ativo');
+        });
+        wrapper.classList.toggle('popup-ativo');
+        return;
+    }
+    if (e.target.closest('.reacoes-popup')) return;
+    document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
+        w.classList.remove('popup-ativo');
+    });
+});
+
+window.enviarReacao = async function(postId, tipoReacao) {
+    const tradutorEmojis = {
+        'amei': '💖',
+        'perplecto': '😲',
+        'haha': '😂',
+        'ranco': '🙄',
+        'forca': '🫂',
+        'triste': '😢',
+        'tendi-nada': '🤔'
     };
+    try {
+        const response = await fetch(`includes/reagir.php?id=${postId}&tipo=${tipoReacao}`);
+        if (response.status === 429) {
+            alert("Calma lá! O motor da Fenda precisa respirar.");
+            throw new Error("Rate limit exceeded");
+        }
+        const data = await response.json();
+        if (data.status === 'success') {
+            const containerReacoes = document.getElementById(`reacoes-post-${postId}`);
+            if (containerReacoes) {
+                containerReacoes.innerHTML = '';
+                Object.keys(data.contagens).forEach(tipo => {
+                    const total = data.contagens[tipo];
+                    if (total > 0) {
+                        const emoji = tradutorEmojis[tipo] || '👍';
+                        const classeVoted = data.minhas_reacoes.includes(tipo) ? 'voted' : '';
+                        containerReacoes.insertAdjacentHTML('beforeend', `<span class="reacao-item ${classeVoted}">${emoji} ${total}</span>`);
+                    }
+                });
+            }
+        }
+        return data;
+    } catch (err) {
+        if (err.message !== "Rate limit exceeded") console.error("[AJAX Error]", err);
+        throw err;
+    }
+};
 
-    // ==================== RADAR DE MARACUTAIA (SWIPE) ====================
-    let radarBloqueado = false;
-    window.abastecerPilhaFenda = function() {
-        if (!feedContainer) return;
-        if (!document.body.classList.contains('modo-swipe-ativo')) return;
+// ==================== RADAR DE MARACUTAIA (SWIPE) ====================
+let radarBloqueado = false;
+
+window.abastecerPilhaFenda = function() {
+    if (!feedContainer) return;
+    if (!document.body.classList.contains('modo-swipe-ativo')) return;
+    if (!feedAcabou) {
+        // Se o feed não acabou, tenta carregar mais cards (comportamento original)
         const cardsRestantes = feedContainer.querySelectorAll('.spotted-card').length;
         if (cardsRestantes <= 4) {
-            if (btnLoad && !btnLoad.disabled) {
-                if (!loadingMore) carregarFeedGeral(false);
-            } else if (cardsRestantes === 0) {
-                feedContainer.innerHTML = `
-                    <div class="fim-dos-cards-vibe" style="text-align:center; padding:40px 20px; color:#ccc;">
-                        <i class="fas fa-ghost" style="font-size:3rem; color:#ff8c00; margin-bottom:15px; display:block;"></i>
-                        <strong style="font-size:1.2rem; display:block; margin-bottom:5px; color:#fff;">A Fenda foi Limpa!</strong>
-                        <p style="font-size:0.9rem; color:#888; margin-bottom:20px;">Você leu tudo por aqui ou o feed chegou ao fim.</p>
-                        <button onclick="window.reiniciarPilhaFenda()" class="btn-fenda-padrao" style="background:#ff8c00; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">
-                            <i class="fas fa-sync-alt" style="margin-right:8px;"></i> RADAR DE MARACUTAIA
-                        </button>
-                    </div>
-                `;
+            if (btnLoad && !btnLoad.disabled && !loadingMore) {
+                carregarFeedGeral(false);
             }
         }
-    };
-    window.reiniciarPilhaFenda = function() {
-        if (radarBloqueado) {
-            console.log("[RADAR] Calma lá, muito rolo estraga o feed!");
-            return;
-        }
-        radarBloqueado = true;
-        offset = 0;
-        if (feedContainer) {
-            feedContainer.innerHTML = `
-                <div style="text-align:center; padding:40px; color:#ff8c00;">
-                    <i class="fas fa-sync-alt fa-spin" style="font-size:2rem; margin-bottom:10px;"></i>
-                    <p style="color:#fff;">Escaneando novas maracutaias...</p>
-                </div>
-            `;
-        }
-        if (btnLoad) {
-            btnLoad.disabled = false;
-            btnLoad.innerText = "Exibir Mais Resultados";
-        }
-        carregarFeedGeral(true);
-        setTimeout(() => { radarBloqueado = false; }, 1500);
-    };
+        return;
+    }
 
-    // ==================== INICIALIZAÇÃO ====================
-    initGridLongPress();
-    carregarFeedGeral(false);
+    // Se o feed acabou, exibe o radar quando os cards chegarem a zero
+    const cardsRestantes = feedContainer.querySelectorAll('.spotted-card').length;
+    if (cardsRestantes === 0) {
+        exibirRadar();
+    }
+};
+
+window.reiniciarPilhaFenda = function() {
+    if (radarBloqueado) {
+        console.log("[RADAR] Calma lá, muito rolo estraga o feed!");
+        return;
+    }
+    radarBloqueado = true;
+
+    // 🔥 Fecha o Lightbox se estiver aberto
+    if (typeof window.fecharLightbox === 'function') {
+        window.fecharLightbox();
+    }
+
+    offset = 0;
+    feedAcabou = false;
+    if (feedContainer) {
+        // Remove qualquer radar existente
+        const radarExistente = feedContainer.querySelector('.fim-dos-cards-vibe');
+        if (radarExistente) radarExistente.remove();
+        feedContainer.innerHTML = `
+            <div style="text-align:center; padding:40px; color:#ff8c00;">
+                <i class="fas fa-sync-alt fa-spin" style="font-size:2rem; margin-bottom:10px;"></i>
+                <p style="color:#fff;">Escaneando novas maracutaias...</p>
+            </div>
+        `;
+    }
+    if (btnLoad) {
+        btnLoad.disabled = false;
+        btnLoad.innerText = "Exibir Mais Resultados";
+        btnLoad.style.display = 'inline-block';
+    }
+    carregarFeedGeral(true);
+    setTimeout(() => { radarBloqueado = false; }, 1500);
+};
+
+// ==================== OBSERVADOR PARA ALTERNÂNCIA DE MODOS ====================
+const observerModoSwipe = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'class') {
+            if (!document.body.classList.contains('modo-swipe-ativo')) {
+                if (typeof configurarPosts === 'function') {
+                    configurarPosts();
+                }
+            }
+        }
+    });
+});
+observerModoSwipe.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+// ==================== INICIALIZAÇÃO ====================
+initGridLongPress();
+carregarFeedGeral(false);
 </script>
 
 <?php include 'includes/footer.php'; ?>

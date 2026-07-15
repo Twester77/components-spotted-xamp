@@ -28,9 +28,8 @@
     position: relative;
     z-index: 100000;
     background: #1a1a1a86;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(6px);
     padding: 10px 10px 0 10px;
-    /* padding apenas em cima e laterais */
     transition: max-height 0.3s ease-out;
     max-height: 35vh;
     overflow-y: auto;
@@ -42,35 +41,40 @@
 .sticky-header::-webkit-scrollbar {
     display: none;
 }
-
-/* Botão de Colapso (Lingueta) – posicionado na borda inferior do header */
+/* Botão de Colapso (Lingueta) – Versão Minimalista */
 .btn-toggle-collapse {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1001;
-    width: 45px;
-    height: 30px;
-    width: clamp(60px, 15vmin, 100px);
-    height: clamp(25px, 5vmin, 60px);
-    background: #1a1a1a;
-    color: #fff;
-    border: 1px solid #333;
-    border-radius: 15px;
+    width: clamp(40px, 8vmin, 60px);  
+    height: clamp(20px, 3vmin, 40px); /* mais fino */
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.btn-toggle-collapse:active {
-    transform: translateX(-50%) scale(0.9);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    margin: 5px auto;
+    padding: 6px;
 }
 
 .btn-toggle-collapse:hover {
-    background: #000;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border-color: rgba(255, 188, 0, 0.2);
+}
+
+.btn-toggle-collapse:active {
+    transform: translateX(-50%) scale(0.92);
+}
+
+.btn-toggle-collapse i {
+    font-size: clamp(0.6rem, 1.2vmin, 0.9rem);
 }
 
 /* MAIN – área rolável */
@@ -87,8 +91,8 @@
     align-content: center;
     padding: 0;
     background-color: #000;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -99,26 +103,21 @@
     border: 2px solid var(--cor-borda-glow);
     position: relative;
     animation: glowPulsar 3s infinite alternate;
-    max-width: 700px;
+    min-width: 280px;
+    max-width: fit-content;
     display: flex;
     margin: 15px auto;
     transform: none;
     transition: none;
     cursor: default;
 }
-
 .spotted-card.card-focado:hover {
     cursor: default;
 }
 
 @keyframes glowPulsar {
-    from {
-        box-shadow: 0 0 10px rgba(221, 200, 14, 0.1);
-    }
-
-    to {
-        box-shadow: 0 0 25px rgba(221, 200, 14, 0.4);
-    }
+    from { box-shadow: 0 0 8px rgba(221, 200, 14, 0.1); }
+    to { box-shadow: 0 0 15px rgba(221, 200, 14, 0.4); }
 }
 
 .post-content-focado {
@@ -137,8 +136,6 @@
 #lingoteContainer.minimizado .sticky-header {
     display: none;
 }
-
-/* Estado minimizado do conteúdo do card (opcional, se quiser esconder também) */
 #lingoteContainer.minimizado .card-body,
 #lingoteContainer.minimizado .spotted-card,
 #lingoteContainer.minimizado .container-img-post {
@@ -155,9 +152,7 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
-    max-width: 700px;
     margin: 0 auto;
-    padding: 30px 20px;
     gap: 10px;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -167,19 +162,9 @@
    ANIMAÇÃO DE ENTRADA DOS COMENTÁRIOS
    ================================================== */
 @keyframes surgirComentario {
-    from {
-        opacity: 0;
-        transform: translateY(15px) scale(0.9);
-        opacity: 0.5;
-        transform: translateY(10px) scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(15px) scale(0.9); opacity: 0.5; transform: translateY(10px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 .comentario-entrou {
     animation: surgirComentario 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) ease-in-out forwards;
 }
@@ -207,14 +192,13 @@
     padding-top: 6px;
     padding-inline-end: 8px;
     padding-inline-start: 9px;
-    border-radius:16px 16px 16px 4px;
+    border-radius: 16px 16px 16px 4px;
     border-right: 3px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
-    backdrop-filter: blur(5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     align-self: flex-start;
     width: min-content;
-    min-width: 180px;
+    min-width: 160px;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -224,14 +208,11 @@
     margin-bottom: 20px;
     scroll-snap-align: start;
     scroll-margin-top: 50px;
-    /* Ajuste conforme a altura do seu header fixo */
     -moz-user-select: text;
     user-select: text;
     will-change: transform;
-
 }
 
-/* Bolha do próprio usuário (direita) */
 .comentario-item.meu-comentario {
     border-right: none;
     border-radius: 15px 15px 5px 15px;
@@ -245,11 +226,10 @@
     display: none;
 }
 
-.comentario-item .acoes-bolha {
+.comentario-item .acoes-bolha, .comentario-data {
     text-align: left;
 }
-
-.comentario-item.meu-comentario .acoes-bolha {
+.comentario-item.meu-comentario .acoes-bolha, .comentario-data {
     text-align: right;
 }
 
@@ -293,35 +273,16 @@
     animation: neon-ultra 5s infinite alternate ease-in-out;
     color: var(--cor-borda-glow);
 }
-
 .comentario-item.vibe-neon .comentario-data,
 .comentario-item.vibe-neon .comentario-autor {
     font-weight: bold;
     text-shadow: 0 0 6px var(--cor-borda-glow);
     opacity: 0.9;
 }
-
 @keyframes neon-ultra {
-
-    0%,
-    18%,
-    22%,
-    25%,
-    53%,
-    57%,
-    100% {
-        filter: saturate(0.7);
-        box-shadow: 0 0 10px var(--cor-borda-glow);
-    }
-
-    20%,
-    24%,
-    55% {
-        color: rgba(0, 0, 0, 0.5);
-        box-shadow: 0 0 20px var(--cor-borda-glow);
-    }
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { filter: saturate(0.7); box-shadow: 0 0 10px var(--cor-borda-glow); }
+    20%, 24%, 55% { color: rgba(0,0,0,0.5); box-shadow: 0 0 20px var(--cor-borda-glow); }
 }
-
 
 .comentario-item.vibe-glass {
     background: rgb(255 255 255 / 5%);
@@ -330,23 +291,13 @@
     border-bottom: 1px solid #11111141;
     border-top: 1px solid #11111141;
     border-left: 1px solid #11111141;
-    
 }
 
 @keyframes pulsar-luz {
-    0% {
-        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
-    }
-
-    50% {
-        box-shadow: 0 0 25px var(--cor-borda-glow), inset 0 0 15px var(--cor-borda-glow);
-    }
-
-    100% {
-        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
-    }
+    0% { box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow); }
+    50% { box-shadow: 0 0 25px var(--cor-borda-glow), inset 0 0 15px var(--cor-borda-glow); }
+    100% { box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow); }
 }
-
 .comentario-item.vibe-ads {
     background-color: #161625;
     border: 2px solid var(--cor-borda-glow);
@@ -356,25 +307,22 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
     background-size: 30px 30px;
 }
-
 .comentario-item.vibe-ads .comentario-texto {
     color: #fff;
     text-shadow: 0 0 8px var(--cor-borda-glow);
     font-weight: 500;
 }
-
 .comentario-item.vibe-ads .comentario-data {
     color: var(--cor-aura-user);
     text-shadow: 0 0 8px var(--cor-borda-glow);
     font-weight: bold;
 }
 
-.comentario-item.vibe-glass:hover  {
+.comentario-item.vibe-glass:hover {
     transition: 0.3 ease;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
     background: #b8b8b800;
 }
-
 
 /* META DADOS */
 .comentario-meta {
@@ -386,8 +334,7 @@
     gap: 8px;
     width: 100%;
 }
-
-.comentario-item .comentario-autor  {
+.comentario-item .comentario-autor {
     color: var(--cor-borda-glow);
     font-size: clamp(0.85rem, 0.382vw + 0.625rem, 1rem);
     font-weight: bold;
@@ -398,13 +345,14 @@
     text-overflow: ellipsis;
     width: min-content;
 }
-
 .comentario-data {
     font-size: clamp(0.8rem, 0.382vw + 0.625rem, 0.95rem);
     opacity: 0.75;
     font-weight: bold;
     white-space: nowrap;
     flex-shrink: 0;
+    position: relative;
+    bottom: auto;
 }
 
 .comentario-texto {
@@ -427,7 +375,6 @@
     position: relative;
 }
 
-
 /* BOTÃO RESPONDER */
 .btn-responder-bolha {
     border: 1px solid rgba(0, 0, 0, 0.2);
@@ -446,7 +393,6 @@
     opacity: 0.7;
     transition: all 0.15s ease-out;
 }
-
 .btn-responder-bolha:hover {
     opacity: 1;
     background: #e4e006;
@@ -455,16 +401,16 @@
 }
 
 /* ==================================================
-   BARRA FIXA (WHATSAPP STYLE) – SEM FLUTUAÇÃO
+   NOVA BARRA DE COMENTÁRIOS (ESTILO WHATSAPP/MESSENGER)
    ================================================== */
 .sessao-fofoca-focada {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 6px;
     background-color: rgba(0, 0, 0, 0.75);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    padding: 5px;
+    padding: 8px 12px;
     position: relative;
     width: 100%;
     max-width: 900px;
@@ -473,205 +419,237 @@
     z-index: 9999;
 }
 
-/* --- Textarea (ocupa espaço disponível, mas será comprimido pelo rodapé) --- */
-.textarea-chat {
-    flex: 1 1 auto;
-    /* cresce, mas pode encolher */
-    min-width: 80px;
-    /* evita que suma */
+
+.textarea-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+/* ==================================================
+   CONTAINER PRINCIPAL – com borda e fundo
+   ================================================== */
+.textarea-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    min-height: 40px;
+    max-height: 100px;
+    overflow: hidden; /* para manter as bordas arredondadas */
+    transition: border-color 0.2s;
+}
+
+.textarea-container:focus-within {
+    border-color: var(--cor-borda-glow, #70cde4);
+}
+
+/* ==================================================
+   INDICADOR DE RESPOSTA – PÍLULA DENTRO DO TEXTAREA
+   ================================================== */
+.resposta-indicador {
+    display: none; /* visível apenas quando ativo */
+    position: absolute; /* dentro do container, sobre o textarea */
+    top: 6px;
+    left: 8px;
+    z-index: 5; /* acima do textarea */
+    align-items: center;
+    gap: 4px;
+    background: rgba(20, 20, 30, 0.92);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 188, 0, 0.25);
+    border-radius: 20px;
+    padding: 2px 10px 2px 12px;
+    font-size: clamp(0.7rem, 1.5vmin, 0.85rem);
+    color: #ffbc00;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    height: 24px;
+    box-sizing: border-box;
+    pointer-events: auto;
+    /* 🔥 LARGURA DINÂMICA – se ajusta ao conteúdo */
+    width: auto;
+    max-width: calc(100% - 16px); /* respeita as margens laterais */
+    min-width: 60px; /* largura mínima para não sumir */
+}
+
+.resposta-indicador.visivel {
+    display: flex !important;
+}
+
+/* Ícone de reply – fixo */
+.resposta-indicador i {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+/* 🔥 NOME DO USUÁRIO – DINÂMICO COM ELLIPSIS */
+.resposta-indicador strong {
+    font-weight: 600;
+    color: #ffbc00;
+    font-size: clamp(0.65rem, 1.2vmin, 0.95rem);
+    /* 🔥 ESSENCIAL PARA ELLIPSIS EM FLEX ITEM */
+    min-width: 0; /* permite que o item encolha abaixo do conteúdo */
+    max-width: 100%; /* ocupa o espaço disponível, mas respeita o overflow */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Isso faz com que o strong cresça até o limite e depois corte */
+    flex: 1; /* ocupa o espaço disponível entre o ícone e o botão */
+}
+
+/* Botão cancelar (✕) – círculo pequeno, fixo */
+.resposta-indicador .cancelar-resposta {
     background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 24px;
-    padding: 8px 16px;
+    border: none;
+    border-radius: 50%;
+    color: #ff8a8a;
+    cursor: pointer;
+    font-size: 0.7rem;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    transition: 0.2s;
+    flex-shrink: 0;
+}
+
+.resposta-indicador .cancelar-resposta:hover {
+    background: rgba(255, 80, 80, 0.25);
+    transform: scale(1.1);
+}
+
+/* ==================================================
+   TEXTAREA – com padding-top para acomodar a pílula
+   ================================================== */
+.textarea-chat {
+    flex: 1;
+    padding: 8px 12px;
+    padding-top: 34px; /* 🔥 espaço suficiente para a pílula + folga */
+    padding-right: 35px; /* espaço para o contador */
+    background: transparent;
+    border: none;
     color: #fff;
-    font-size: 0.9rem;
     font-family: inherit;
     resize: vertical;
     min-height: 40px;
     max-height: 100px;
     overflow-y: auto;
     scrollbar-width: none;
-    margin: 0;
+    width: 100%;
     line-height: 1.4;
+    box-sizing: border-box;
 }
 
 .textarea-chat:focus {
     outline: none;
-    border-color: var(--cor-borda-glow, #70cde4);
 }
 
 .textarea-chat::-webkit-scrollbar {
     display: none;
 }
 
-/* --- Botão de anexo (+) --- */
+/* Contador – posicionado dentro do container */
+.char-counter-inline {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    font-size: 0.7rem;
+    color: #aaaaaa;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    z-index: 2;
+}
+.char-counter-inline.alerta {
+    color: #ff8a00;
+}
+.char-counter-inline.critico {
+    color: #ff4b4b;
+}
+
 .btn-attach-gaveta {
-    background: #6ee2ff38;
+    background: rgba(255, 255, 255, 0.06);
     border: none;
     border-radius: 50%;
-    width: clamp(30px, 8vmin, 70px);
-    height: clamp(30px, 8vmin, 70px);
-    font-size: clamp(1.1rem, 5vmin, 2rem);
-    font-weight: bold;
+    width: clamp(32px, 8vmin, 70px);
+    height: clamp(32px, 8vmin, 70px);
+    font-size: clamp(1rem, 5vmin, 1.8rem);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
-    aspect-ratio: 1 / 1;
+    transition: 0.2s;
 }
-
 .btn-attach-gaveta:hover {
-    background: #70cde4de;
+    background: #77c9ddc5;
     filter: brightness(1.03);
     transition: 0.3s ease-in-out;
-
 }
 
-/* --- Botão de enviar --- */
 .btn-enviar-chat {
     background: var(--laranja-fenda, #ff8c00);
     border: none;
     border-radius: 50%;
-    width: clamp(30px, 6vmin, 70px);
-    height: clamp(30px, 6vmin, 70px);
-    display: flex;
+    width: clamp(32px, 8vmin, 70px);
+    height: clamp(32px, 8vmin, 70px);
+    display: none;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
     color: #000;
-    font-size: clamp(0.95rem, 3.5vmin, 1.8rem);
+    font-size: clamp(0.95rem, 3.5vmin, 1.7rem);
 }
 
-/* --- Rodapé (contador + miniatura) – AGORA NO FLUXO NORMAL --- */
-.chat-footer-info {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 6px;
-    flex-shrink: 0;
-    /* não encolhe */
-    color: #aaa;
-    margin-right: 0;
+.btn-enviar-chat.visivel {
+    display: flex !important;
 }
 
-/* --- Miniatura do anexo --- */
-#anexo-preview {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width:  clamp(25px, 8vmin, 70px);
-    height: clamp(25px, 8vmin, 70px);
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.9rem;
-    transition: 0.2s;
-    flex-shrink: 0;
-    cursor: pointer;
-}
-
-#anexo-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 3px;
-}
-
-#anexo-preview:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05);
-}
-
-/* --- Contador --- */
-#char-count {
-    pointer-events: auto;
-    /* permite selecionar o texto se quiser */
-    color: #b1b1b1;
-    font-weight: bold;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    white-space: nowrap;
-    font-size: 0.8rem;
-    overflow-wrap: break-word;
-    overflow: hidden;
-    gap: 4px;
-}
-
-/* --- Feedback toast (flutuante sobre a barra, sem atrapalhar) --- */
-#feedback-upload {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    right: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(6px);
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    z-index: 10;
-}
-
-#feedback-upload.visivel {
-    opacity: 1;
-}
-
-#feedback-upload .icone-feedback {
-    font-size: 1rem;
-    line-height: 1;
-}
-
-#feedback-upload .texto-feedback {
-    font-size: 0.7rem;
-}
-
-#feedback-upload.sucesso {
-    border-color: rgba(0, 255, 100, 0.3);
-}
-
-#feedback-upload.sucesso .icone-feedback {
-    color: #00ff64;
-}
-
-#feedback-upload.erro {
-    border-color: rgba(255, 70, 70, 0.3);
-}
-
-#feedback-upload.erro .icone-feedback {
-    color: #ff4a4a;
-}
-
-/* --- Gaveta (mantida) --- */
 .gaveta-opcoes {
+    display: none ;
     position: absolute;
     bottom: calc(100% + 8px);
     left: 5px;
     right: 0;
-    width: auto;
-    max-height: 55vh;
+    max-height: 50vh;
     max-width: 200px;
-    background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    z-index: 1000;
-    box-sizing: border-box;
-    overflow: hidden;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(4px);
     overflow-y: auto;
+    border-radius: 16px;
+    padding: 12px;
+    box-sizing: border-box;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 8px;
+}
+.gaveta-opcoes.aberta {
+    display: flex !important;
+}
+
+.btn-toggle-gaveta {
+    background: none;
+    border: none;
+    color: #fff;
+    align-self: flex-start;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.btn-toggle-gaveta:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 .customizacao-rapida {
@@ -680,7 +658,6 @@
     flex-wrap: wrap;
     justify-content: space-between;
 }
-
 .input-mini {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -689,7 +666,6 @@
     color: #fff;
     font-size: 0.85rem;
 }
-
 .color-mini {
     width: 35px;
     height: 35px;
@@ -697,40 +673,6 @@
     border: 1px solid #fff;
     cursor: pointer;
 }
-
-/* INDICADOR NA GAVETA */
-
-.nome-resposta {
-    white-space: normal;
-    font-size: clamp(0.85rem, 1.5vw, 1.3rem);
-    max-width: 3.5vw;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-.resposta-indicador {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 188, 0, 0.15);
-    padding: 6px 12px;
-    border-radius: 20px;
-    color: #ffbc00;
-    white-space: normal;
-    /* permite quebra de linha */
-    word-break: break-word;
-    /* evita estouro de palavras longas */
-    max-width: fit-content;
-    box-sizing: border-box;
-}
-
-.cancelar-resposta {
-    background: none;
-    border: none;
-    color: #ff6666;
-    cursor: pointer;
-}
-
 .btn-attach-opcao {
     background: rgba(255, 255, 255, 0.05);
     border: none;
@@ -742,11 +684,22 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: 0.2s;
+}
+.btn-attach-opcao:hover {
+    background: rgba(255, 255, 255, 0.116);
 }
 
+/* Honeypot invisível */
+.honeypot {
+    display: none !important;
+    position: absolute;
+    left: -9999px;
+}
 
-
-/* Botão voltar – fica grudado no topo do .sticky-header */
+/* ==================================================
+   OUTROS ELEMENTOS (mantidos)
+   ================================================== */
 .btn-voltar-fenda {
     position: sticky;
     top: 0;
@@ -764,7 +717,6 @@
     transition: background 0.2s;
     width: fit-content;
 }
-
 .btn-voltar-fenda:hover {
     color: var(--dourado);
     text-decoration: underline;
@@ -776,10 +728,9 @@
     align-items: center;
     width: 100%;
 }
-
 .sem-comentarios {
     opacity: 0.6;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-align: center;
     padding: 15px;
 }
@@ -790,55 +741,42 @@
 @container feedComentarios (max-width: 360px) {
     .comentario-item {
         max-width: 75%;
-        min-width: 180px;
         padding: 3px 6px;
         font-size: 0.8rem;
     }
-
     .comentario-filho {
         margin-left: 25px;
         max-width: 72%;
     }
-
-    .comentario-item .comentario-autor  {
+    .comentario-item .comentario-autor {
         font-size: 0.8rem;
     }
-
     .comentario-texto {
         font-size: 0.9rem;
-        line-height: 1.2;
+        line-height: 1.3;
     }
 }
-
 @container feedComentarios (min-width: 361px) and (max-width: 500px) {
     .comentario-item {
         max-width: 73%;
-        min-width: 180px;
     }
-
     .comentario-filho {
         margin-left: 35px;
         max-width: 70%;
     }
 }
-
 @container feedComentarios (min-width: 501px) and (max-width: 800px) {
     .comentario-item {
         max-width: 71%;
-        min-width: 220px;
     }
 }
-
 @container feedComentarios (min-width: 801px) {
     .comentario-item {
-        max-width: 55%;
-        min-width: 250px;
+        max-width: 60%;
     }
-
     .comentario-item.meu-comentario {
-        max-width: 53%;
+        max-width: 55%;
     }
-
     .comentario-filho {
         margin-left: 40px;
         max-width: 52%;
@@ -856,205 +794,29 @@
     overflow: hidden;
 }
 
-.comentario-img {
+.comentario-img , .comentario-img.gif-externo {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 100vh;
     aspect-ratio: auto;
     display: block;
+    border: none;
+    border-radius: 12px;
     cursor: pointer;
     -webkit-user-drag: element;
     user-select: none;
     cursor: zoom-in;
-    /* Indica para o usuário que pode clicar para ampliar */
     transition: transform 0.3s ease;
-
 }
 
-@container foto-comentario (max-width: 200px) {
-    .comentario-img {
-        object-fit: cover;
-    }
-}
 
-@container foto-comentario (min-width: 201px) and (max-width: 300px) {
-    .comentario-img {
-        object-fit: cover;
-    }
-}
-
-@container foto-comentario (max-width: 350px) {
-    .comentario-img {
-        object-fit: cover;
-    }
-}
-
-@container foto-comentario (max-height: 200px) {
-    .comentario-img {
-        object-fit: cover;
-    }
-}
-
-@container foto-comentario (min-height: 201px) and (max-width: 250px) {
-    .comentario-img {
-        object-fit: cover;
-    }
-}
-
-@container foto-comentario (max-height: 320px) {
-    .comentario-img {
-        object-fit: contain;
-    }
-}
-
+@container foto-comentario (max-width: 200px) { .comentario-img { object-fit: cover; } }
+@container foto-comentario (min-width: 201px) and (max-width: 300px) { .comentario-img { object-fit: cover; } }
+@container foto-comentario (max-width: 350px) { .comentario-img { object-fit: cover; } }
+@container foto-comentario (max-height: 200px) { .comentario-img { object-fit: cover; } }
+@container foto-comentario (min-height: 201px) and (max-width: 250px) { .comentario-img { object-fit: cover; } }
+@container foto-comentario (max-height: 300px) { .comentario-img { object-fit: contain; } }
 .comentario-img:active {
     transform: scale(1.05);
-
-}
-
-
-/* CORTINA (PREVIEW) */
-.btn-fechar-post {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 999999;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    text-decoration: none;
-    font-size: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    cursor: pointer;
-}
-
-.btn-fechar-post:hover {
-    background-color: #70cde4;
-    transform: scale(1.05);
-    transition: 0.3s ease-out;
-}
-
-
-.preview-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100000;
-    padding: 20px;
-    overflow: auto;
-}
-
-.preview-card {
-    background: rgba(20, 20, 30, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 25px;
-    max-width: 600px;
-    width: 90%;
-    overflow: auto;
-    scrollbar-width: none;
-    display: block;
-    flex-direction: column;
-    max-height: 85%;
-    padding: 15px;
-    text-align: center;
-    border: 1px solid rgba(255, 188, 0, 0.3);
-}
-
-.preview-card::-webkit-scrollbar {
-    display: none;
-}
-
-.preview-botao {
-    background: #ffbc00;
-    color: #000;
-    border: none;
-    border-radius: 40px;
-    padding: 12px 24px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.preview-botao:hover {
-    background: #ffd966;
-    transform: scale(1.02);
-}
-
-.preview-categoria {
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #ffbc00;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-
-.preview-avatar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.preview-avatar .avatar-p {
-    width: clamp(40px, 6vmin, 80px);
-    height: clamp(40px, 6vmin, 80px);
-    border-radius: 50%;
-    border: 2px solid #ffbc00;
-}
-
-.preview-nome {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-}
-
-.preview-mensagem {
-    font-size: 1rem;
-    line-height: 1.4;
-    color: #ddd;
-    margin: 16px 0;
-    text-align: left;
-    word-break: break-word;
-}
-
-.preview-imagem {
-    margin: 16px 0;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 2px solid var(--glass-bg);
-    border-right: none;
-}
-
-.preview-imagem img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.preview-engajamento {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
-    color: #ccc;
-    font-size: 1.4rem;
-}
-
-.preview-engajamento i {
-    margin-right: 6px;
 }
 
 /* LINGOTE */
@@ -1064,25 +826,16 @@
     height: 100%;
 }
 
-
-/* ISOLAMENTO DE CONTEXTO (swipe blocker) – sem !important desnecessário */
-
-
-/* O conteúdo do post (card + reações), sem posição especial */
 .fenda-estatica-context {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     padding: 0 10px 10px 10px;
-    /* sem overflow próprio */
 }
-
 .fenda-estatica-context .spotted-card:-webkit-scrollbar {
     display: none;
 }
-
-
 .fenda-estatica-context .reacoes-gravadas {
     width: 100%;
     display: flex;
@@ -1090,56 +843,40 @@
     justify-content: center;
     padding: 8px 0;
 }
-
-/* Garante que o card não tenha scroll interno */
 .fenda-estatica-context .spotted-card {
     max-height: none;
+    max-width: 600px;
     overflow-y: visible;
     scrollbar-width: none;
-}
 
+}
 .reacao-placeholder {
     justify-content: flex-end;
     order: 2;
     width: 100%;
     text-align: center;
-    /* Centraliza o texto "Ninguém reagiu ainda..." */
     margin-top: 8px;
-    /* Espaçamento extra do card se necessário */
 }
-
 .fenda-estatica-context {
     display: flex;
     justify-items: center;
 }
 
-
-/* Oculta o header global na página de post (compatível) */
 body.pagina-post .header-principal {
     display: none;
 }
 
 /* Animação do brilho */
 @keyframes highlightFade {
-    0% {
-        background-color: rgba(255, 193, 7, 0.4);
-    }
-
-    /* Âmbar suave com transparência */
-    100% {
-        background-color: transparent;
-    }
+    0% { background-color: rgba(255, 193, 7, 0.4); }
+    100% { background-color: transparent; }
 }
-
 .comentario-item.comentario-highlight {
     animation: highlightFade 3s ease-out forwards;
     border-radius: 8px;
-    /* Para seguir o arredondado dos seus cards */
     padding: 5px;
-    /* Aumenta a área de impacto do brilho */
 }
 
-/* INDICADOR NA BOLHA DE OCMENTÁRIOS */
 .indicador-resposta {
     cursor: pointer;
     background: rgba(255, 255, 255, 0.10);
@@ -1148,19 +885,18 @@ body.pagina-post .header-principal {
     margin-bottom: 10px;
     color: #ffffff;
     transition: background 0.3s;
+    min-width: 60px;
     max-width: fit-content;
     word-break: break-all;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: bold;
     padding: 4px 8px;
     opacity: 0.75;
 }
-
 .indicador-resposta:hover {
     background: rgba(255, 255, 255, 0.144);
 }
 
-/* GIFs externos no card principal (página do post) */
 .spotted-card.card-focado .spotted-card img {
     max-width: 100%;
     object-fit: contain;
@@ -1170,51 +906,38 @@ body.pagina-post .header-principal {
     border-radius: 12px;
 }
 
-.comentario-img.gif-externo {
-    padding: 4px;
-    max-width: 100%;
-    max-height: 200px;
-    object-fit: contain;
-    background: transparent;
-}
 
-/* sem borda para stickers */
-.comentario-img.gif-externo {
-    border: none;
-    border-radius: 12px;
-}
+.comentario-media-item .gif-externo
+ {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; }
+    
 
-
-/* Comentário deletado (placeholder) */
 .comentario-deletado {
     background: rgba(128, 128, 128, 0.1);
     border-right: 5px solid #888;
     opacity: 0.7;
 }
-
 .comentario-deletado-msg {
     text-align: center;
-    padding: 8px;
+    padding: 7px;
     color: #c4c4c4;
     font-style: italic;
     font-size: 0.9rem;
     background-color: rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
-
 .comentario-deletado-msg i {
     margin-right: 6px;
 }
 
-/* Estado de loading durante a exclusão */
 .comentario-item.is-loading {
     filter: brightness(0.7) blur(1px);
     pointer-events: none;
     transition: filter 0.2s;
-
 }
-
-
 
 .fenda-estatica-context .container-img-post img {
     object-fit: cover;
@@ -1222,88 +945,72 @@ body.pagina-post .header-principal {
     max-width: 100%;
     display: flex;
     justify-content: center;
-
 }
 
-/* Landscape e Mobile (ajustes finos) */
 @media (orientation: landscape) {
     .fenda-estatica-context .container-img-post {
         max-height: 100vh;
+        width: 100%;
         display: flex;
+        aspect-ratio: 16/9;
         justify-content: center;
         background: #00000066;
     }
-
     .fenda-estatica-context .container-img-post img {
         max-height: 100%;
         max-width: 100%;
         object-fit: contain;
     }
-
 }
 
-
-/* ==================================================
-   ELLIPSIS FLUTUANTE À ESQUERDA (estilo WhatsApp)
-   ================================================== */
-
-
+/* ELLIPSIS FLUTUANTE */
 .btn-excluir-comentario {
     position: absolute;
     top: 6px;
-    left: -38px; /* um pouco mais para fora para não poluir */
+    left: -38px;
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.7); /* <- MAIS NÍTIDO */
+    color: rgba(255, 255, 255, 0.7);
     cursor: pointer;
-    padding: 8px 10px; 
-    font-size: 1.3rem; 
+    padding: 8px 10px;
+    font-size: 1.3rem;
     font-weight: bold;
     transition: 0.2s;
     pointer-events: none;
     line-height: 1;
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5); /* ajuda a destacar no fundo escuro */
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
-
-/* Mostra no hover (desktop) */
- .btn-excluir-comentario,
+.btn-excluir-comentario,
 .btn-excluir-comentario:focus {
     opacity: 1;
     pointer-events: auto;
-    color: #cccccc; /* dourado da Fenda para ficar mais chamativo */
+    color: #cccccc;
     transform: scale(1.15);
 }
-
-/* No mobile, sempre visível (ajuste para não atrapalhar) */
 @media (hover: none) {
     .btn-excluir-comentario {
         opacity: 0.6;
         pointer-events: auto;
-        left: -28px; /* um pouco mais próximo */
+        left: -28px;
         color: rgba(255, 255, 255, 0.8);
     }
 }
-
 .btn-excluir-comentario:hover {
     color: #ff4b2b;
     transform: scale(1.2);
 }
-
-/* Ajuste para comentários do autor (lado direito) – o ellipsis fica à esquerda, então não muda */
 .comentario-item.meu-comentario .btn-excluir-comentario {
-    left: -32px; /* mantém à esquerda, mesmo com o comentário à direita */
+    left: -32px;
 }
 
-/* ==================================================
-   DIALOG POP-UP ESTILO WHATSAPP (compacto)
-   ================================================== */
+/* DIALOG POP-UP ESTILO WHATSAPP */
 .dialog-confirmacao {
     border: none;
     border-radius: 16px;
     padding: 0;
     background: transparent;
     max-width: 90%;
-    width: 280px; 
+    max-width: 320px;
     margin: auto;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     position: fixed;
@@ -1311,12 +1018,9 @@ body.pagina-post .header-principal {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
-/* Remove o backdrop padrão (não usado com show()) */
 .dialog-confirmacao::backdrop {
     display: none;
 }
-
 .dialog-conteudo {
     background: rgba(20, 20, 32, 0.96);
     backdrop-filter: blur(8px);
@@ -1328,27 +1032,23 @@ body.pagina-post .header-principal {
     -webkit-user-select: none;
     user-select: none;
 }
-
 .dialog-conteudo h3 {
     margin: 0 0 8px 0;
     color: #ffbc00;
     font-size: 1rem;
     font-weight: 600;
 }
-
 .dialog-conteudo p {
     margin: 0 0 16px 0;
     color: #fff;
     font-size: 0.9rem;
     line-height: 1.4;
 }
-
 .dialog-botoes {
     display: flex;
     justify-content: center;
     gap: 15px;
 }
-
 .dialog-btn {
     border: none;
     border-radius: 30px;
@@ -1359,23 +1059,19 @@ body.pagina-post .header-principal {
     font-size: 0.85rem;
     min-width: 80px;
 }
-
 .dialog-btn-sim {
     background: rgba(220, 53, 69, 0.2);
     border: 1px solid #ff4b2b;
     color: #ff8a8a;
 }
-
 .dialog-btn-sim:hover {
     background: rgba(220, 53, 69, 0.4);
 }
-
 .dialog-btn-nao {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid #666;
     color: #ccc;
 }
-
 .dialog-btn-nao:hover {
     background: rgba(255, 255, 255, 0.15);
 }
@@ -1390,7 +1086,7 @@ body.pagina-post .header-principal {
         top: 4px;
     }
     .dialog-confirmacao {
-        width: 250px;
+        width: 220px;
     }
     .dialog-conteudo {
         padding: 14px 16px 16px;
@@ -1406,14 +1102,13 @@ body.pagina-post .header-principal {
         padding: 4px 10px;
         min-width: 60px;
     }
-
-   .post-encerrado-banner {
-            font-size: 0.8rem;
-            padding: 8px 12px;
-        }
-     .comentarios-bloqueados-msg {
-            font-size: 0.85rem;
-        }
+    .post-encerrado-banner {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+    }
+    .comentarios-bloqueados-msg {
+        font-size: 0.85rem;
+    }
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
@@ -1440,52 +1135,102 @@ body.pagina-post .header-principal {
     }
 }
 
+/* POST ENCERRADO – BANNER E BLOQUEIO */
+.post-encerrado-banner {
+    background: rgba(255, 188, 0, 0.08);
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    color: #ffc400;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.post-encerrado-banner i {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.fixed-input-bloqueado {
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 16px 20px;
+}
+.comentarios-bloqueados-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #ffffff;
+    opacity: 0.7;
+    font-size: 0.95rem;
+    font-style: italic;
+    flex-wrap: wrap;
+    text-align: center;
+}
+.comentarios-bloqueados-msg i {
+    font-size: 1.2rem;
+    color: #ffffff;
+    opacity: 0.7;
+}
 
-/* ============================================================
-       🔥 POST ENCERRADO – BANNER E BLOQUEIO
-       ============================================================ */
-    .post-encerrado-banner {
-        background: rgba(255, 188, 0, 0.08);
-        border-left: 4px solid #ffbc00;
-        padding: 10px 16px;
-        margin-bottom: 12px;
-        border-radius: 4px;
-        color: #ffbc00;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
+/* RODAPÉ DO COMENTÁRIO (DATA) – caso queira usar no futuro */
+.comentario-rodape {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    color: #c4c4c4;
+}
 
-    .post-encerrado-banner i {
-        font-size: 1.1rem;
-        flex-shrink: 0;
-    }
 
-    .fixed-input-bloqueado {
-        background: rgba(255, 255, 255, 0.02);
-        border-top: 1px solid rgba(255, 255, 255, 0.04);
-        padding: 16px 20px;
-    }
+/* GRID DE ANEXOS MÚLTIPLOS (ESTILO WHATSAPP) */
+.comentario-media-wrapper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 4px;
+    padding: 4px 0;
+    width: 100%;
+    /* sem borda externa – a borda fica nos itens */
+}
 
-    .comentarios-bloqueados-msg {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        color: #ffffff;
-        opacity: 0.7;
-        font-size: 0.95rem;
-        font-style: italic;
-        flex-wrap: wrap;
-        text-align: center;
-    }
+/* Se houver apenas 1 item: vira flex centralizado */
+.comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
+    display: flex;
+    justify-content: center;
+}
 
-    .comentarios-bloqueados-msg i {
-        font-size: 1.2rem;
-        color: #ffffff;
-        opacity: 0.7;
-    }
+.comentario-media-item {
+    aspect-ratio: 1 / 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
 
-    
+/* Se houver apenas 1 item, ele não fica gigante */
+.comentario-media-item:only-child {
+    max-width: 180px;
+    width: 100%;
+}
+
+.comentario-media-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.comentario-media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* GIFs – mantém a proporção original (não corta) */
+.comentario-media-item img.gif-externo {
+    object-fit: contain;
+    background: rgba(0, 0, 0, 0.3);
+}

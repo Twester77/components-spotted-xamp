@@ -1,6 +1,7 @@
 <?php
 // 1. PRIMEIRO: Conexão e Sessão (Obrigatório, não pode faltar)
 require_once __DIR__ . '/auth_check.php';
+require_once __DIR__ . '/includes/upload_engine.php'; // 🔥 Inclui a função obterUrlImagem()
 
 // 2. SEGUNDO: Segurança (Bloqueia quem não está logado)
 if (!isset($_SESSION['usuario_id'])) {
@@ -30,10 +31,30 @@ $dados = mysqli_fetch_assoc($resultado);
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
-// Se o utilizador tiver foto gravada (mesmo que seja a default dele), usa. Se não, usa o novo padrão masculino como última linha de defesa.
-$foto_atual = !empty($foto_limpa) ? "uploads/" . $foto_limpa : "uploads/default_masculino.webp";
-$capa_atual = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.webp";
-
+// 🔥 OBTÉM AS URLs DO B2 PARA AVATAR E CAPA (com fallback para imagens locais)
+try {
+    $b2 = B2Client::getInstance();
+    
+    // Avatar
+    if (!empty($foto_limpa) && !filter_var($foto_limpa, FILTER_VALIDATE_URL)) {
+        $foto_url = obterUrlImagem($foto_limpa, $b2, true);
+        $foto_atual = $foto_url ?? 'uploads/ui/default_masculino.webp';
+    } else {
+        $foto_atual = 'uploads/ui/default_masculino.webp';
+    }
+    
+    // Capa
+    if (!empty($capa_limpa) && !filter_var($capa_limpa, FILTER_VALIDATE_URL)) {
+        $capa_url = obterUrlImagem($capa_limpa, $b2, true);
+        $capa_atual = $capa_url ?? 'uploads/ui/default_capa_masculino.webp';
+    } else {
+        $capa_atual = 'uploads/ui/default_capa_masculino.webp';
+    }
+} catch (Exception $e) {
+    error_log('[PERFIL] Falha ao obter URLs do B2: ' . $e->getMessage());
+    $foto_atual = 'uploads/ui/default_masculino.webp';
+    $capa_atual = 'uploads/ui/default_capa_masculino.webp';
+}
 
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 // Pega do banco ou usa o padrão
@@ -57,7 +78,8 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
         <div class="perfil-header-container">
             <div class="capa-wrapper">
                 <?php if (!empty($dados['capa'])): ?>
-                    <img src="<?php echo $capa_atual; ?>" class="img-capa-preview" alt="Sua imagem de capa de perfil">
+                    <img src="<?php echo $capa_atual; ?>" class="img-capa-preview" alt="Sua imagem de capa de perfil"
+                         onerror="this.src='uploads/ui/default_capa_masculino.webp';">
                 <?php else: ?>
                     <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); display: flex; align-items: center; justify-content: center;">
                         <span style="color: white; font-weight: bold; font-size: 1.3rem;">BEM-VINDO À FENDA!</span>
@@ -72,7 +94,8 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
         </div>
 
         <div class="avatar-wrapper">
-            <img src="<?php echo $foto_atual; ?>" class="img-avatar-perfil" alt="Sua foto de avatar">
+            <img src="<?php echo $foto_atual; ?>" class="img-avatar-perfil" alt="Sua foto de avatar"
+                 onerror="this.src='uploads/ui/fallback-avatar.webp';">
             <label id="label-avatar" class="btn-mudar-avatar">
                 <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                 <input type="file" name="foto" style="display:none;" aria-labelledby="label-avatar">
@@ -154,7 +177,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="hidden" name="pref_som_notif" id="drawer_input_pref_som_notif" value="<?php echo $dados['pref_som_notif']; ?>">
                     <input type="hidden" name="pref_bolhas" id="drawer_input_pref_bolhas" value="<?php echo $dados['pref_bolhas']; ?>">
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Música de Fundo</span>
+                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Som Ambiente</span>
                     <div class="audio-choices-container">
                         <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'chuva') ? 'active' : '' ?>" data-som="chuva" onclick="mudarSomAmbiente('chuva')">Chuva</button>
                         <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'ondas') ? 'active' : '' ?>" data-som="ondas" onclick="mudarSomAmbiente('ondas')">Oceano</button>
@@ -184,12 +207,8 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
                     <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">(De)feitos Visuais</span>
                     <div class="audio-choices-container">
-                        <button type="button" class="btn-audio-choice btn-bolhas-on <?= ($dados['pref_bolhas'] == 1) ? 'active' : '' ?>" onclick="setBolhasLocal(1)">
-                            <i class="fas fa-soap"></i> Bolhas On
-                        </button>
-                        <button type="button" class="btn-audio-choice btn-bolhas-off <?= ($dados['pref_bolhas'] == 0) ? 'active' : '' ?>" onclick="setBolhasLocal(0)">
-                            <i class="fas fa-times"></i> Desligar
-                        </button>
+                        <button type="button" class="btn-audio-choice btn-bolhas-on <?= ($dados['pref_bolhas'] == 1) ? 'active' : '' ?>" onclick="setBolhasLocal(1)"> Bolhas On</button>
+                        <button type="button" class="btn-audio-choice btn-bolhas-off <?= ($dados['pref_bolhas'] == 0) ? 'active' : '' ?>" onclick="setBolhasLocal(0)"> Desligar</button>
                     </div>
                 </div>
             </div>

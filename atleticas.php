@@ -23,7 +23,7 @@ $total_habitantes = mysqli_num_rows($res);
 
 <main>
     <section class="comunidade-topo">
-        <img src="badges/<?php echo $atletica_id; ?>.png" class="img-comunidade-grande" alt="Imagem da Atlética da Comunidade"  onerror="this.src='badges/default.png'">
+        <img src="badges/<?php echo $atletica_id; ?>.webp" class="img-comunidade-grande" alt="Imagem da Atlética da Comunidade"  onerror="this.src='badges/default.webp'">
         <h1 style="color: var(--dourado); text-transform: uppercase;">
             Comunidade <?php echo str_replace('-', ' ', $atletica_id); ?>
         </h1>

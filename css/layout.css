@@ -12,11 +12,10 @@ header {
     /* Empurra o menu pra esquerda e o perfil pra direita */
     align-items: center;
     padding: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     max-width: 100%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 
 }
 
@@ -72,7 +71,7 @@ header h1 {
 }
 
 .header-icons i {
-    color: var(--dourado) !important;
+    color: var(--dourado) ;
     font-size: clamp(0.95rem, 6vmin, 1.6rem);
     transition: all 0.3s ease;
 }
@@ -102,7 +101,6 @@ header h1 {
 }
 
 
-
 /* --- MENU NAVBAR (RECUPERADO) --- */
 
 .fenda-saudacao {
@@ -114,7 +112,7 @@ header h1 {
 
 
 main article {
-    text-align: left !important;
+    text-align: left ;
     margin: 10px auto;
     padding: 0 10px;
     width: 100%;
@@ -188,8 +186,8 @@ nav {
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
@@ -250,8 +248,6 @@ nav {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.514);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
     z-index: 9998;
 }
 
@@ -271,8 +267,8 @@ nav {
 #btn-menu-hamburguer {
     background: rgba(5, 14, 65, 0.329);
     /* Fundo semi-transparente */
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 5px;
@@ -283,7 +279,7 @@ nav {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Efeito ao passar o mouse */
@@ -530,6 +526,7 @@ nav {
     background-color: #555555;
 }
 
+/*  EX BOTÃO FLUTUANTE (FAB) - AGORA ESTÁ DENTRO DO NEXUS  */
 /* --- BOTÃO FLUTUANTE (FAB) --- */
 .fab-postar {
     position: fixed;
@@ -566,6 +563,7 @@ nav {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
+
 body.modal-aberto .fab-postar {
     display: none;
 }
@@ -577,17 +575,14 @@ body.modal-aberto .fab-postar {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgb(0 0 0 / 45%);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.473);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
 }
 
 .fenda-modal-content {
-    box-shadow: 0 0 30px rgba(255, 188, 0, 0.2);
+    box-shadow: 0 0 25px rgba(255, 188, 0, 0.2);
     animation: surgimentoModal 0.3s ease-out;
     padding: 15px;
     max-width: 95%;
@@ -818,11 +813,6 @@ body.modal-aberto .fab-postar {
     box-sizing: border-box;
 }
 
-/* Consertando as imagens de baixo que cortam */
-.fenda-container img {
-    max-width: 100%;
-    height: auto;
-}
 
 /* Ajuste específico para as duas fotos dos Campus */
 .fenda-container div[style*="flex"] {
@@ -902,7 +892,6 @@ footer {
     color: rgba(250, 202, 44, 0.808);
     font-size: 0.9rem;
     flex-shrink: 0;
-    z-index: 1;
     /* Impede o footer de ser "esmagado" */
 }
 
@@ -1030,7 +1019,7 @@ footer a {
     transform: translateY(-5px) !important;
     /* Adicionei o !important para não brigar com o transform do keyframe */
     border-color: var(--dourado);
-    box-shadow: 0 15px 35px rgba(255, 188, 0, 0.4);
+    box-shadow: 0 15px 30px rgba(255, 188, 0, 0.4);
 }
 
 .notificacao-popup strong {
@@ -1173,6 +1162,11 @@ footer a {
     /* Dá um respiro entre o sino e os outros botões */
 }
 
+.notificacao-wrapper:hover {
+    color: white;
+}
+
+
 .badge-alertas {
     position: absolute;
     top: -6px;
@@ -1201,7 +1195,7 @@ footer a {
     /* Garante que o border não aumente o círculo */
 }
 
-/* Sua animação que já é top */
+/*  animação do numero no sino */
 @keyframes pulsarNotif {
     0% {
         transform: scale(1);
@@ -1230,7 +1224,7 @@ footer a {
     top: 0;
     right: 0;
     width: 100%;
-    max-width: 800px;
+    max-width: 650px;
     height: 100dvh;
     background-color: #11111146;
     color: #fff;
@@ -1450,7 +1444,7 @@ h2.titulo-home {
     mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
     width: 100% ;
     /* Não deixa colar nas bordas do iPhone/Lumia */
-    max-width: clamp(320px, 100%, 800px) !important;
+    max-width: clamp(320px, 100%, 800px) ;
     height: auto;
     margin: 20px auto ;
     /* Reforça a centralização */
@@ -1464,7 +1458,7 @@ h2.titulo-home {
     line-height: 1.6;
     text-align: left;
     color: #e0e0e0;
-    max-width: clamp(300px, 100%, 800px) !important;
+    max-width: clamp(300px, 100%, 800px) ;
     padding: 10px;
 }
 
@@ -1603,9 +1597,9 @@ h2.titulo-home {
 
 /* Correção e upgrade da imagem do Câmpus */
 .campus-flex .img-campus {
-    width: clamp(200px, 100vh, 350px);
+    width: clamp(200px, 100vh, 300px);
     min-height: 200px;
-    max-height: 100vh;
+    max-height: 100dvh;
     object-fit: contain;
     border-radius: 12px;
     transition: transform 0.3s ease;
@@ -1637,7 +1631,7 @@ h2.titulo-home {
     border-radius: 20px;
     padding: 15px;
     /* Valor de segurança que não entendem os clamps */
-    padding: clamp(8px, 4vw, 25px) !important;
+    padding: clamp(8px, 4vw, 20px) ;
     line-height: 1.4;
     border: 1px solid rgba(252, 144, 12, 0.2);
     /* Uma bordinha bem sutil laranja */
@@ -1651,7 +1645,7 @@ h2.titulo-home {
     margin-bottom: 20px;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 2px;
-    font-size: clamp(1.1rem, 5vw, 1.8rem) !important;
+    font-size: clamp(1.1rem, 5vw, 1.8rem) ;
 }
 
 .secao-seguranca p {
@@ -1739,10 +1733,10 @@ input[type="check-box"] {
 
 .main-perfil-container-publico {
     width: 100% !important;
-    max-width: 4000px;
+    max-width: 9999px;
     margin: 0 ;
     padding: 0 ;
-    border: none !important;
+    border: none ;
     position: relative;
     overflow: visible;
 }
@@ -1810,7 +1804,7 @@ input[type="check-box"] {
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
 
     /* Reforçando a borda neon */
-    border: 1px solid var(--cor-borda-glow);
+    border: 1px solid var(--aura-user);
     transition: all 0.3s ease-in-out;
 }
 
@@ -1826,7 +1820,7 @@ input[type="check-box"] {
     56%,
     100% {
         filter: brightness(1) saturate(1);
-        box-shadow: 0 0 15px var(--cor-borda-glow), 0 0 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 15px var(--aura-user), 0 0 30px rgba(0, 0, 0, 0.5);
     }
 
     /* Estados de "oscilação leve" (o flicker) */
@@ -1834,7 +1828,7 @@ input[type="check-box"] {
     24%,
     55% {
         filter: brightness(0.85) saturate(0.8);
-        box-shadow: 0 0 5px var(--cor-borda-glow), 0 0 10px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 5px var(--aura-user), 0 0 10px rgba(0, 0, 0, 0.5);
     }
 }
 
@@ -1856,8 +1850,8 @@ input[type="check-box"] {
     background-blend-mode: soft-light;
 
     /* 3. JATEADO: Desfoque limpo, puxando os tons de fundo sem distorcer as cores */
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
 
     /* 4. QUINA DO VIDRO: Borda dupla simulada (Mais clara no topo e nítida) */
     border: 1px solid oklch(1 0 0 / 0.35) !important;
@@ -1898,30 +1892,16 @@ input[type="check-box"] {
     overflow: hidden;
     min-height: 100vh;
     background-color: #0a0a12 ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.03) ;
     border-top: 4px solid var(--aura-user);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    will-change: box-shadow, background-position, opacity, animation;
     animation: ads-neon-glow-pulse 3.5s infinite ease-in-out alternate;
 }
 
-/* CAMADA CRT: linhas de varredura */
-.main-perfil-container-publico.vibe-ads::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.04) 50%
-    );
-    background-size: 100% 4px;
-    z-index: 2;
-    pointer-events: none;
-    opacity: 0.12;
-}
+
 
 /* ==========================================================
    FUNDO ESTÁTICO: GRADIENTE + SVG (com pulso)
@@ -1933,7 +1913,7 @@ input[type="check-box"] {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
     background-image: 
         /*  SVG com stroke mais grosso (1.5) e opacidade levemente maior */
@@ -1943,6 +1923,7 @@ input[type="check-box"] {
     background-repeat: repeat, no-repeat;
     background-position: 0 0, 0% 0%;
     mix-blend-mode: screen;
+    will-change: auto;
     background-blend-mode: color-dodge;
     animation: terminal-bg-shift 20s infinite ease-in-out alternate,
                static-pulse-opacity 4s infinite ease-in-out alternate;
@@ -1957,7 +1938,7 @@ input[type="check-box"] {
 @keyframes static-pulse-opacity {
     0%   { opacity: 0.25; }
     25%  { opacity: 0.4; }
-    50%  { opacity: 0.9; }
+    50%  { opacity: 0.8; }
     100% { opacity: 0.25; }
 }
 
@@ -1974,7 +1955,7 @@ input[type="check-box"] {
     pointer-events: none;
     overflow: hidden;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     grid-auto-rows: 56px;
     gap: 10px;
     padding: 0;
@@ -1996,7 +1977,7 @@ input[type="check-box"] {
 .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
     background: rgba(0, 255, 255, 0.521);
     border-color: rgba(0, 238, 255, 0.897);
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
     transform: scale(1.0);
 }
 
@@ -2005,17 +1986,16 @@ input[type="check-box"] {
    ========================================================== */
 @keyframes ads-neon-glow-pulse {
     0% {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
         border-top-color: var(--aura-user);
         border-color: rgba(255, 255, 255, 0.03);
     }
     50% {
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.6), 0 0 16px rgba(0, 240, 255, 0.15);
-        border-color: rgba(0, 240, 255, 0.08);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15);
+        border-color: rgba(0, 238, 255, 0.219);
     }
     100% {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
-        border-top-color: #00f0ff;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
         border-color: rgba(255, 255, 255, 0.03);
     }
 }
@@ -2144,10 +2124,10 @@ textarea[name="bio"] {
 
 /*  CAPA - PERFIL PÚBLICO  */
 .capa-wrapper.viewer {
-    width: 100% !important;
+    width: 100% ;
     position: relative ;
-    order: 1 !important;
-    overflow: hidden !important;
+    order: 1 ;
+    overflow: hidden ;
     background-color: #000;
     border-radius: 12px 12px 0 0;
 }
@@ -2163,22 +2143,23 @@ textarea[name="bio"] {
     flex-direction: column;
     align-items: center;
     position: relative;
+    z-index: 2;
 }
 
 /*  O Wrapper do Avatar: para de voar e desce pra Terra */
 .avatar-posicionador {
     position: absolute;
-    bottom: -90px ;
+    bottom: -60px ;
     /* Quanto ocupa da capa */
     transform: translateX(-50%);
-    width: clamp(80px, 15vw, 200px);
-    height: clamp(80px, 15vw, 200px);
+    width: clamp(60px, 15vw, 160px);
+    height: clamp(60px, 15vw, 160px);
     z-index: 15;
     gap: 10px;
     object-fit: cover;
     aspect-ratio: 1/1;
-    left: 50% !important;
-    right: 50% !important;
+    left: 50% ;
+    right: 50% ;
 
 }
 
@@ -2199,7 +2180,7 @@ textarea[name="bio"] {
     backdrop-filter: blur(3px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px 6px 12px 12px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
     /* A MÁGICA AQUI: */
     z-index: 10000;
     /* Valor absurdamente alto para ganhar da navbar */
@@ -2315,22 +2296,15 @@ textarea[name="bio"] {
     }
 
     .container-feed {
-        padding: 10px !important;
+        padding: 10px ;
     }
 
 
     .main-perdidos {
         padding: 5px !important;
-        margin: 15px auto !important;
+        margin: 15px auto ;
     }
 
-    /* Reduzimos o tamanho da fonte para o texto não empurrar o card pra fora */
-    .post-content,
-    .post-content-focado {
-        max-height: 20dvh !important;
-        /* Limita a altura do texto */
-        overflow: auto;
-    }
 
     /* Esconde elementos não essenciais para ganhar altura */
     .avatar-p {
@@ -2352,8 +2326,9 @@ textarea[name="bio"] {
         padding: 10px !important;
     }
 
-
 }
+
+
 
 
 /* 3. TABLETS E CELULARES LARGOS (S20 Ultra Normal) */
@@ -2373,12 +2348,6 @@ textarea[name="bio"] {
 @media (max-width: 768px) {
     .chat-input-container {
         justify-content: space-between !important;
-    }
-
-    .textarea-chat {
-        display: flex;
-        flex: 1;
-        max-width: 100% !important;
     }
 
     #form-comentario {
@@ -2411,7 +2380,7 @@ textarea[name="bio"] {
     }
 
     .drawer-perfil-container {
-        width: 86% !important;
+        width: 86% ;
     }
 
     .main-perfil-container-config {
@@ -2463,7 +2432,7 @@ textarea[name="bio"] {
     }
 
     .lista-comentarios-social {
-        padding: 20px 15px 80px 15px!important;
+        padding: 20px 15px 80px 15px;
         max-width: 500px ;
     }
 
@@ -2564,6 +2533,11 @@ textarea[name="bio"] {
         transform: translateX(-50%);
     }
 
+    .lista-comentarios-social {
+    padding: 30px 20px;
+    max-width: 700px;    
+    }
+
     .sticky-header {
     max-height: 35vh;
 }
@@ -2573,9 +2547,8 @@ textarea[name="bio"] {
             /*  SVG maior e mais grosso no desktop */
             url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.5' stroke-opacity='0.30'/%3E%3C/svg%3E"),
             linear-gradient(45deg, rgba(2, 4, 18, 0.92) 0%, rgba(0, 240, 255, 0.06) 50%, rgba(2, 4, 18, 0.92) 100%);
-        background-size: 120px 120px, 200% 200%;
+        background-size: 150px 150px, 200% 200%;
     }
-
     .main-perfil-container-publico.vibe-ads .hex-bg {
         /* Hexágonos maiores e mais espaçados no desktop */
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -2591,7 +2564,7 @@ textarea[name="bio"] {
     .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
         background: rgba(0, 238, 255, 0.35);
         border-color: rgba(0, 240, 255, 0.7);
-        box-shadow: 0 0 30px rgba(0, 240, 255, 0.30);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.30);
     }
 }
 
@@ -2602,6 +2575,7 @@ textarea[name="bio"] {
         top: 40px ;
         max-height: 50dvh ;
     }
+
 }
 
 /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
@@ -2609,8 +2583,8 @@ textarea[name="bio"] {
 
     /* Reseta o main-perdidos que estava deslocado */
     .main-perdidos {
-        left: 0 !important;
-        right: 0 !important;
+        left: 0 ;
+        right: 0 ;
         margin: 10px auto ;
         padding: 5px ;
     }
@@ -2620,7 +2594,7 @@ textarea[name="bio"] {
         margin: 0 auto ;
         width: 100% ;
         grid-template-columns: 1fr !important;
-        padding: 8px !important;
+        padding: 8px !important ;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2638,6 +2612,13 @@ textarea[name="bio"] {
         font-size: 0.8rem;
 
     } 
+
+    .area-perdidos-vivo {
+    padding: 12px;
+    justify-content: space-between; 
+    display: flex; 
+    flex-direction: column !important;
+}
 
      
 }
@@ -2709,7 +2690,7 @@ body.modal-aberto #fenda-nexus {
     cursor: pointer;
     white-space: nowrap;
     text-align: center;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(3px);
     font-size: clamp(0.95rem, 0.382vw + 0.625rem, 1.4rem) ;
 }
 
@@ -2752,6 +2733,85 @@ body.modal-aberto #fenda-nexus {
 .girar-180 { transform: rotate(180deg); } /* Sul */
 .girar-270 { transform: rotate(270deg); } /* Oeste */
 
+/* ==================================================
+   GRID DE ANEXOS (COMPARTILHADO – COMENTÁRIOS E MODAL POST)
+   ================================================== */
+.anexos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px 0 8px 0;
+    width: 100%;
+}
+
+.anexo-item {
+    position: relative;
+    width: clamp(30px, 15vmin, 80px);
+    height: clamp(30px, 15vmin, 80px);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.anexo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botão de remover – unificado */
+.btn-remover-anexo {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: #fff;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: 0.2s;
+    backdrop-filter: blur(1px);
+}
+
+.btn-remover-anexo:hover {
+    background: rgba(255, 50, 50, 0.8);
+    transform: scale(1.05);
+}
+
+/* Spinner de upload */
+.anexo-item .spinner-anexo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffbc00;
+    font-size: 1.1rem;
+    animation: spin 1s linear infinite;
+    display: none; /* oculto por padrão */
+}
+
+.anexo-item.uploading img {
+    opacity: 0.4;
+}
+
+.anexo-item.uploading .spinner-anexo {
+    display: block !important;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 
 /* ---------------------------------------------------------------
     MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO (OPCIONAL)
@@ -2765,7 +2825,7 @@ body.modal-aberto #fenda-nexus {
     body.hacker-mode .comentario-texto,
     body.hacker-mode .hacker-booting,
     .modo-swipe-ativo .spotted-card {
-        animation: none !important;
+        animation: none ;
     }
 
   .main-perfil-container-publico.vibe-ads::after,
@@ -2784,10 +2844,3 @@ body.modal-aberto #fenda-nexus {
     }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-    .feed-empilhado .spotted-card {
-        background: rgba(255, 255, 255, 0.068);
-        -webkit-backdrop-filter: blur(4px); /* Essencial para funcionar no Safari/iPhone */
-        backdrop-filter: blur(4px);
-    }
-}

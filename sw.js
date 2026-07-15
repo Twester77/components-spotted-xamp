@@ -1,7 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO ESTÁVEL v1.0.6 – CORREÇÃO REAL E DEFINITIVA DO ERR_FAILED
-// (ESCAPE NATIVO DE NAVEGAÇÃO PHP + TRATAMENTO AJAX EM BACKGROUND)
-const CACHE_VERSION = 'fenda-v1.0.6';
+// 🛡️ VERSÃO v1.1.1 – Com logs de depuração
+const CACHE_VERSION = 'fenda-v1.1.2';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -24,13 +23,17 @@ const STATIC_FILES = [
   '/js/fenda-swipe-mobile.js',
   '/js/fenda-giphy.js',
   '/js/fenda-mencoes.js',
-  '/imagensfoto/anonimo-default.webp',
-  '/imagensfoto/default.webp',
-  '/imagensfoto/favicon.png',
-  '/uploads/default_capa_masculino.webp',
-  '/uploads/default_capa_feminino.webp',
-  '/uploads/default_feminino.jpg', 
-  '/uploads/default_masculino.jpg',
+  '/uploads/ui/img_avatar1.webp',
+  '/uploads/ui/img_avatar2.webp',
+  '/uploads/ui/fallback-post.webp',
+  '/uploads/ui/fallback-avatar.webp',
+  '/uploads/ui/anonimo-default.webp',
+  '/uploads/ui/default.webp',
+  '/uploads/ui/favicon.png',
+  '/uploads/ui/default_capa_masculino.webp',
+  '/uploads/ui/default_capa_feminino.webp',
+  '/uploads/ui/default_feminino.jpg', 
+  '/uploads/ui/default_masculino.jpg',
   '/imagensfoto/campus-centro.webp',
   '/imagensfoto/cidade-universitaria.webp',
   '/imagensfoto/capa-entrada.webp',
@@ -44,8 +47,8 @@ const STATIC_FILES = [
   '/imagensfoto/kunai.png',
   '/imagensfoto/mushroom.png',
   '/imagensfoto/pokebola.png',
-  '/sons/oceano.mp3',
-  '/sons/chuva.mp3',
+  '/sons/oceano.opus',
+  '/sons/chuva.opus',
   '/sons/padrao.mp3'
 ];
 
@@ -53,9 +56,6 @@ const OPTIONAL_FILES = [
   '/css/skin-hacker.css'
 ];
 
-// ============================================================
-// 🚀 DOMÍNIOS E ROTAS QUE DEVEM SER IGNORADAS PELO SW
-// ============================================================
 const EXTERNAL_DOMAINS = [
   'supabase.co',
   'resend.com',
@@ -75,106 +75,169 @@ const AUTH_ROUTES = [
 ];
 
 // ============================================================
-// 📦 INSTALAÇÃO
+// INSTALAÇÃO
 // ============================================================
 self.addEventListener('install', (event) => {
-  console.log(`[SW] Instalando ${CACHE_VERSION}`);
+  console.log('[SW] 🔵 Instalando versão', CACHE_VERSION);
   event.waitUntil(
     caches.open(CACHE_STATIC)
       .then((cache) => {
+        console.log('[SW] 📦 Cache estático aberto. Adicionando arquivos...');
         return Promise.allSettled(
-          STATIC_FILES.map(url => cache.add(url).catch(err => console.warn(`Falha ao cachear ${url}:`, err)))
+          STATIC_FILES.map(url => 
+            cache.add(url).catch(err => console.warn(`[SW] ⚠️ Falha ao cachear ${url}:`, err))
+          )
         );
       })
-      .then(() => self.skipWaiting())
+      .then(() => {
+        console.log('[SW] ✅ Instalação concluída. Forçando ativação...');
+        return self.skipWaiting();
+      })
   );
 });
 
 // ============================================================
-// 🔄 ATIVAÇÃO (LIMPEZA DE CACHES ANTIGOS)
+// ATIVAÇÃO
 // ============================================================
 self.addEventListener('activate', (event) => {
-  console.log(`[SW] Ativando ${CACHE_VERSION}`);
+  console.log('[SW] 🟢 Ativando versão', CACHE_VERSION);
   event.waitUntil(
     caches.keys().then((cacheNames) => {
+      console.log('[SW] 🗑️ Caches encontrados:', cacheNames);
       return Promise.all(
         cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_STATIC && cacheName !== CACHE_DYNAMIC) {
-            console.log(`[SW] Removendo cache antigo: ${cacheName}`);
+            console.log(`[SW] 🧹 Removendo cache antigo: ${cacheName}`);
             return caches.delete(cacheName);
           }
         })
       );
-    }).then(() => self.clients.claim())
+    }).then(() => {
+      console.log('[SW] ✅ Ativação concluída. Assumindo controle dos clientes...');
+      return self.clients.claim();
+    })
   );
 });
 
 // ============================================================
-// 🌐 INTERCEPTAÇÃO DE REQUISIÇÕES
+// INTERCEPTAÇÃO DE REQUISIÇÕES (FETCH)
 // ============================================================
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // 🛑 FILTRO 1: Ignora requisições que NÃO sejam GET
-  if (event.request.method !== 'GET') {
-    return;
-  }
+  // Log de todas as requisições interceptadas (opcional, descomente se quiser)
+  // console.log('[SW] 🌐 Interceptando:', url.pathname);
 
-  // 🛑 FILTRO 2: Ignora domínios externos (Supabase, Resend, Cloudflare, etc.)
+  if (event.request.method !== 'GET') return;
+
   if (EXTERNAL_DOMAINS.some(domain => url.hostname.includes(domain))) {
+    // console.log('[SW] ⏭️ Ignorando domínio externo:', url.hostname);
     return;
   }
 
-  // 🛑 FILTRO 3: Ignora rotas específicas de autenticação
   if (AUTH_ROUTES.some(route => url.pathname === route || url.pathname.startsWith(route))) {
+    // console.log('[SW] ⏭️ Ignorando rota de autenticação:', url.pathname);
     return;
   }
 
-  // ============================================================
-  // 🛡️ REGRA DE OURO: ESCAPE DE NAVEGAÇÃO DE PÁGINA (ANTI ERR_FAILED)
-  // ============================================================
-  // Se o usuário está clicando em um link e mudando de página, o SW deixa 
-  // o navegador cuidar 100% da rede de forma nativa. Se houver redirect (302),
-  // a URL lá em cima atualiza sozinha e sem travar.
   if (event.request.mode === 'navigate') {
+    console.log('[SW] 📄 Navegação para:', url.pathname);
     event.respondWith(
       fetch(event.request)
-        .catch(() => caches.match('/offline.php')) // Só mostra a tela offline se a rede cair totalmente
+        .catch(() => {
+          console.warn('[SW] ⚠️ Navegação offline, servindo offline.php');
+          return caches.match('/offline.php');
+        })
     );
     return;
   }
 
   // ============================================================
-  // A PARTIR DAQUI, O SW INTERCEPTA APENAS COMPONENTES INTERNOS (ASSETS/AJAX)
+  // 🔥 REGRA 1: Cache-first para proxy.php (com SWR e limite)
   // ============================================================
+  if (url.pathname.includes('/proxy.php')) {
+    console.log('[SW] 🖼️ Interceptando proxy.php:', url.pathname + url.search);
+    event.respondWith(
+      caches.open(CACHE_DYNAMIC).then((cache) => {
+        return cache.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) {
+            console.log('[SW] ✅ Servindo imagem do CACHE:', url.pathname);
+          } else {
+            console.log('[SW] 🌍 Buscando imagem da REDE (primeira vez):', url.pathname);
+          }
 
-  // 1. motor-feed.php → network first, fallback cache
+          const fetchPromise = fetch(event.request).then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              console.log('[SW] 💾 Armazenando imagem no cache:', url.pathname);
+              cache.put(event.request, networkResponse.clone());
+              // Limpeza LRU: remove os mais antigos se exceder 100
+              cache.keys().then(keys => {
+                if (keys.length > 100) {
+                  console.log(`[SW] 🧹 Cache excedeu 100 itens (${keys.length}). Removendo os mais antigos...`);
+                  const toDelete = keys.slice(0, keys.length - 80);
+                  toDelete.forEach(key => cache.delete(key));
+                }
+              });
+            } else {
+              console.warn('[SW] ⚠️ Resposta da rede não foi OK (status:', networkResponse?.status, ') para:', url.pathname);
+            }
+            return networkResponse;
+          });
+
+          // Se tiver cache, entrega ele e depois atualiza em background (SWR)
+          return cachedResponse || fetchPromise;
+        });
+      })
+    );
+    return;
+  }
+
+  // ============================================================
+  // REGRA 2: motor-feed.php → network first, fallback cache
+  // ============================================================
   if (url.pathname.includes('/motor-feed.php')) {
+    console.log('[SW] 📡 Interceptando motor-feed.php:', url.pathname);
     event.respondWith(
       fetch(event.request)
         .then((response) => {
           const responseClone = response.clone();
-          caches.open(CACHE_DYNAMIC).then((cache) => cache.put(event.request, responseClone));
+          caches.open(CACHE_DYNAMIC).then((cache) => {
+            console.log('[SW] 💾 Cacheando motor-feed.php');
+            cache.put(event.request, responseClone);
+          });
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(() => {
+          console.warn('[SW] ⚠️ motor-feed.php offline, servindo do cache (se houver)');
+          return caches.match(event.request);
+        })
     );
     return;
   }
 
-  // 2. Arquivos estáticos → cache-first
+  // ============================================================
+  // REGRA 3: Arquivos estáticos → cache-first
+  // ============================================================
   if (STATIC_FILES.some(staticPath => url.pathname === staticPath || url.pathname.endsWith(staticPath))) {
+    // console.log('[SW] 📁 Arquivo estático:', url.pathname);
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
-        if (cachedResponse) return cachedResponse;
+        if (cachedResponse) {
+          // console.log('[SW] ✅ Servindo estático do CACHE:', url.pathname);
+          return cachedResponse;
+        }
+        console.log('[SW] 🌍 Buscando estático da REDE:', url.pathname);
         return fetch(event.request);
       })
     );
     return;
   }
 
-  // 3. Opcionais → stale-while-revalidate
+  // ============================================================
+  // REGRA 4: Opcionais → stale-while-revalidate
+  // ============================================================
   if (OPTIONAL_FILES.some(optPath => url.pathname.endsWith(optPath))) {
+    // console.log('[SW] 🔄 Opcional (stale-while-revalidate):', url.pathname);
     event.respondWith(
       caches.open(CACHE_STATIC).then((cache) => {
         return cache.match(event.request).then((cachedResponse) => {
@@ -189,17 +252,28 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 4. Outros scripts PHP chamados via Fetch/AJAX (ex: contar_alertas.php, etc.)
-  // Vão direto para a rede puro para carregar dados dinâmicos sem cachear erradamente
+  // ============================================================
+  // REGRA 5: Outros PHP (exceto proxy.php, já interceptado) → rede pura
+  // ============================================================
   if (url.pathname.endsWith('.php')) {
+    // console.log('[SW] 🔄 PHP (rede pura):', url.pathname);
     event.respondWith(
-      fetch(event.request).catch(() => new Response('Erro ao carregar dados dinâmicos.', { status: 503 }))
+      fetch(event.request).catch(() => {
+        console.warn('[SW] ⚠️ Falha ao carregar PHP:', url.pathname);
+        return new Response('Erro ao carregar dados dinâmicos.', { status: 503 });
+      })
     );
     return;
   }
 
-  // 5. Todo o resto → rede primeiro
+  // ============================================================
+  // REGRA 6: Todo o resto → rede primeiro
+  // ============================================================
+  // console.log('[SW] 🌍 Todo o resto (rede):', url.pathname);
   event.respondWith(
-    fetch(event.request).catch(() => new Response('Recurso não disponível offline', { status: 503 }))
+    fetch(event.request).catch(() => {
+      console.warn('[SW] ⚠️ Recurso não disponível offline:', url.pathname);
+      return new Response('Recurso não disponível offline', { status: 503 });
+    })
   );
 });

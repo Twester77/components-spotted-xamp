@@ -19,6 +19,7 @@
     let resultsContainer = null;
     let debounceTimer = null;
     let gifTargetInputId = 'hidden-gif-url';
+    let isSelecting = false; // 🔥 Flag anti-duplicação
 
     window.setGiphyTarget = function(targetId) {
         gifTargetInputId = targetId;
@@ -46,7 +47,6 @@
         const modal = document.createElement('div');
         modal.style.cssText = `
             background: rgba(36, 36, 58, 0.45);
-            backdrop-filter: blur(10px);
             border-radius: 28px;
             width: 85%;
             max-width: 650px;
@@ -55,7 +55,7 @@
             flex-direction: column;
             overflow: hidden;
             border: 1px solid rgba(255, 140, 0, 0.5);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         `;
 
         // Cabeçalho
@@ -224,9 +224,14 @@
                 transition: transform 0.2s;
                 background: rgba(0,0,0,0.3);
             `;
-            item.onmouseenter = () => item.style.transform = 'scale(1.02)';
-            item.onmouseleave = () => item.style.transform = 'scale(1)';
-            item.onclick = () => selecionarGif(imgUrl);
+            item.addEventListener('mouseenter', () => item.style.transform = 'scale(1.02)');
+            item.addEventListener('mouseleave', () => item.style.transform = 'scale(1)');
+            // 🔥 Usa addEventListener em vez de onclick para evitar duplicação
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                selecionarGif(imgUrl);
+            });
 
             const img = document.createElement('img');
             img.src = imgUrl;
@@ -236,11 +241,46 @@
         });
     }
 
-    // 🔥 FUNÇÃO DE SELEÇÃO DE GIF COM PRÉVIA E BOTÃO "X"
+    // ============================================================
+    // 🔥 FUNÇÃO DE SELEÇÃO DE GIF – COM FLAG ANTI-DUPLICAÇÃO
+    // ============================================================
     function selecionarGif(url) {
+        // 🔥 IMPEDE DUPLICIDADE
+        if (isSelecting) {
+            console.warn('[GIPHY] Seleção em andamento, ignorando clique duplicado.');
+            return;
+        }
+        isSelecting = true;
+
         fecharModal();
-        
-        // Define o hidden
+
+        // 🔥 Se o AnexosManager estiver disponível, usamos ele
+        if (typeof window.adicionarGif === 'function') {
+            // Limpa o input file (caso exista)
+            const inputFile = document.getElementById('input-img-comentario');
+            if (inputFile) inputFile.value = '';
+
+            // Adiciona o GIF ao grid via AnexosManager
+            window.adicionarGif(url);
+
+            // Dispara evento para sincronizar com outras partes (ex: modal de postagem)
+            document.dispatchEvent(new CustomEvent('gifSelecionado', { detail: { url: url } }));
+
+            // Foca no campo de texto (opcional)
+            const campoTexto = document.querySelector('.textarea-chat') || document.querySelector('#modal-postar-fenda textarea');
+            if (campoTexto) campoTexto.focus();
+
+            // Libera a flag após um pequeno delay
+            setTimeout(() => { isSelecting = false; }, 300);
+            return;
+        }
+
+        // ============================================================
+        // FALLBACK: Caso o AnexosManager não exista (ex: modal de postagem)
+        // Mantém o comportamento antigo (preview único)
+        // ============================================================
+        console.warn('[GIPHY] AnexosManager não encontrado. Usando fallback (preview único).');
+
         let hiddenGifUrl = document.getElementById(gifTargetInputId);
         if (!hiddenGifUrl) {
             hiddenGifUrl = document.createElement('input');
@@ -252,13 +292,9 @@
         }
         hiddenGifUrl.value = url;
 
-        // 🔥 LIMPA O INPUT DE IMAGEM (se houver)
         const inputFile = document.getElementById('input-img-comentario');
-        if (inputFile) {
-            inputFile.value = ''; // reseta o upload de imagem
-        }
+        if (inputFile) inputFile.value = '';
 
-        // 🔥 ATUALIZA A PRÉVIA VISUAL COM BOTÃO "X"
         const previewAnexo = document.getElementById('anexo-preview');
         if (previewAnexo) {
             previewAnexo.style.display = 'inline-flex';
@@ -286,7 +322,6 @@
             };
         }
 
-        // Opcional: preenche o placeholder no campo de texto
         const campoTexto = document.querySelector('.textarea-chat') || document.querySelector('#modal-postar-fenda textarea');
         if (campoTexto && campoTexto.value.trim() === '') {
             campoTexto.value = '🎬 GIF enviado';
@@ -294,8 +329,9 @@
         }
         campoTexto?.focus();
 
-        // Dispara evento para sincronizar com outras partes (ex: modal de postagem)
         document.dispatchEvent(new CustomEvent('gifSelecionado', { detail: { url: url } }));
+
+        setTimeout(() => { isSelecting = false; }, 300);
     }
 
     function fecharModal() {
@@ -309,20 +345,7 @@
         criarModal();
     };
 
-    // Limpeza do hidden após envio
-    function limparHiddenGif() {
-        const hidden = document.getElementById('hidden-gif-url');
-        if (hidden) hidden.value = '';
-    }
-
-    const observerEnvio = new MutationObserver(() => {
-        const btnEnviar = document.querySelector('.btn-enviar-chat');
-        if (btnEnviar && !btnEnviar._giphyHook) {
-            btnEnviar._giphyHook = true;
-            btnEnviar.addEventListener('click', () => {
-                setTimeout(limparHiddenGif, 500);
-            });
-        }
-    });
-    observerEnvio.observe(document.body, { childList: true, subtree: true });
+    // ============================================================
+    // REMOVIDO: observer que limpava o hidden gif_url – agora o AnexosManager gerencia isso.
+    // ============================================================
 })();

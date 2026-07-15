@@ -2,6 +2,8 @@
 // 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
 require_once __DIR__ . '/auth_check.php';
 
+require_once __DIR__ . '/includes/upload_engine.php';
+
 // 🚨 CURTO-CIRCUITO DE SEGURANÇA MÁXIMA (Sem confiar em username de sessão)
 if (!isset($_GET['user'])) {
     if (isset($_SESSION['usuario_id'])) {
@@ -50,9 +52,29 @@ $cor_user  = $dados['pref_cor_padrao'] ?? '#ffffff';
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
-// 2. Monta os caminhos finais corretos jogando para a pasta uploads/
-$foto_user = !empty($foto_limpa) ? "uploads/" . $foto_limpa : "uploads/default_masculino.jpg";
-$capa_user = !empty($capa_limpa) ? "uploads/" . $capa_limpa : "uploads/default_capa_masculino.webp";
+// ============================================================
+// 🔥 CORREÇÃO: OBTÉM AS URLs VIA PROXY (B2)
+// ============================================================
+try {
+    $b2 = B2Client::getInstance();
+} catch (Exception $e) {
+    $b2 = null;
+}
+
+// Foto (avatar) – usa proxy se existir, fallback local
+if (!empty($foto_limpa)) {
+    $foto_user = obterUrlImagem($foto_limpa, $b2, true) ?? 'uploads/ui/default_masculino.jpg';
+} else {
+    $foto_user = 'uploads/ui/default_masculino.jpg';
+}
+
+// Capa – usa proxy se existir, fallback local
+if (!empty($capa_limpa)) {
+    $capa_user = obterUrlImagem($capa_limpa, $b2, true) ?? 'uploads/ui/default_capa_masculino.webp';
+} else {
+    $capa_user = 'uploads/ui/default_capa_masculino.webp';
+}
+
 $is_presenca = ($id_visto == 1);
 
 $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM seguidores WHERE id_seguido = '$id_visto'"))['total'];
@@ -62,12 +84,12 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     /* Aplicando a cor e brilho dinâmico no Avatar */
     .avatar-main {
         border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>;
-        box-shadow: 0 0 15px <?php echo $cor_user; ?>55;
+        box-shadow: 0 0 8px <?php echo $cor_user; ?>55;
         /* Cor com transparência */
     }
 
     <?php if ($is_presenca): ?>.avatar-main {
-        box-shadow: 0 0 15px rgba(255, 188, 0, 0.7);
+        box-shadow: 0 0 5px rgba(255, 188, 0, 0.7);
     }
 
     <?php endif; ?>
@@ -77,14 +99,14 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 <main class="main-perfil-container-publico <?php echo $vibe_user; ?> <?php echo $is_presenca ? 'perfil-gold' : ''; ?>"
     style="--aura-user: <?php echo $cor_user; ?>;">
 
-    <?php if ($vibe_user === 'vibe-ads'): ?>
+    <!-- <?php if ($vibe_user === 'vibe-ads'): ?> -->
         <div class="hex-bg">
             <?php
             // Total de hexágonos para cobrir a tela (ajuste conforme necessário)
-            $total = 40;
+            $total = 30;
             for ($i = 0; $i < $total; $i++):
-                // Define se é estático ou dinâmico (proporção ~60% estático, 40% dinâmico)
-                $tipo = ($i % 4 === 0) ? 'dynamic' : 'static';
+                // Define se é estático ou dinâmico (proporção ~70% estático, 30% dinâmico)
+                $tipo = ($i % 3 === 0) ? 'dynamic' : 'static';
                 // Delay aleatório para a flutuação (entre 0s e 8s)
                 $floatDelay = number_format(mt_rand(0, 80) / 10, 1);
                 // Se for dinâmico, o delay da ativação será controlado pelo JS
@@ -97,18 +119,18 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 </div>
             <?php endfor; ?>
         </div>
-    <?php endif; ?>
+    <!-- <?php endif; ?> -->
 
     <div class="perfil-header-container">
         <div class="capa-container">
             <?php if (!empty($dados['capa'])): ?>
-                <img src="uploads/<?php echo htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8'); ?>" class="capa-img" alt="Sua capa">
+                <img src="<?= htmlspecialchars($capa_user) ?>" class="capa-img" alt="Sua capa" onerror="this.src='uploads/ui/default_capa_masculino.webp';">
             <?php else: ?>
                 <div class="capa-default" style="background: linear-gradient(135deg, <?php echo $cor_user; ?>88 0%, #000 100%); width: 100%; height: 100%;"></div>
             <?php endif; ?>
 
             <div class="avatar-posicionador">
-                <img src="<?php echo $foto_user; ?>" class="avatar-main" alt="Sua foto de perfil">
+                <img src="<?= htmlspecialchars($foto_user) ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.jpg';">
                 <?php if ($is_presenca): ?>
                     <div class="badge-presenca-bottom"><i class="fa-solid fa-crown"></i></div>
                 <?php endif; ?>
@@ -120,7 +142,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 <h1 class="nome-publico"><?php echo htmlspecialchars($dados['nome']); ?></h1>
                 <?php if (!empty($dados['atletica_id'])): ?>
                     <a href="atleticas.php?id=<?php echo urlencode($dados['atletica_id']); ?>">
-                        <img src="badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.png" class="insignia-atletica-bottom" alt="Seu bottom de atlética - link para comunidade">
+                        <img src="badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.webp" class="insignia-atletica-bottom" alt="Seu bottom de atlética - link para comunidade">
                     </a>
                 <?php endif; ?>
             </div>
@@ -176,8 +198,8 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             // Configurações
             const config = {
                 waveInterval: 1600, // intervalo entre ondas (ms)
-                maxActive: Math.min(12, hexItems.length), // máximo acesos por vez
-                minActive: 5,
+                maxActive: Math.min(10, hexItems.length), // máximo acesos por vez
+                minActive: 3,
                 activeHexes: new Set()
             };
 
@@ -241,6 +263,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     const urlParams = new URLSearchParams(window.location.search);
     const usuarioAlvo = urlParams.get('user');
     const btnLoad = document.getElementById('btn-load-more');
+    const feedContainer = document.querySelector('.container-feed');
 
     function carregarFeedPerfil() {
         if (btnLoad) btnLoad.innerText = "BUSCANDO NA FENDA...";
@@ -252,13 +275,44 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 if (data.trim() === "FIM_DADOS") {
                     if (btnLoad) btnLoad.style.display = "none";
                 } else {
-                    document.querySelector('.container-feed').insertAdjacentHTML('beforeend', data);
+                    // Insere os novos posts
+                    feedContainer.insertAdjacentHTML('beforeend', data);
+
+                    // 🔥 RECONFIGURA OS POSTS PARA ATIVAR O "LER MAIS" (SE NÃO ESTIVER NO MODO SWIPE)
+                    if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+                        configurarPosts();
+                    }
+
                     offset += 10;
                     if (btnLoad) btnLoad.innerText = "EXIBIR MAIS";
                 }
+            })
+            .catch(err => {
+                console.error("[AJAX] Erro ao carregar feed do perfil:", err);
+                if (btnLoad) btnLoad.innerText = "ERRO AO CARREGAR";
             });
     }
 
+    // ==================== 🔥 OBSERVADOR PARA ALTERNÂNCIA DE MODOS ====================
+    // Reconfigura os posts quando o usuário sai do modo swipe
+    const observerModoSwipe = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                // Verifica se a classe 'modo-swipe-ativo' foi removida
+                if (!document.body.classList.contains('modo-swipe-ativo')) {
+                    // Saiu do modo swipe → reconfigura os posts para ativar "Ler Mais"
+                    if (typeof configurarPosts === 'function') {
+                        configurarPosts();
+                    }
+                }
+            }
+        });
+    });
+
+    // Inicia a observação no body
+    observerModoSwipe.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    // ==================== INICIALIZAÇÃO ====================
     carregarFeedPerfil();
 
     if (btnLoad) {

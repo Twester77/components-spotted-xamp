@@ -75,6 +75,11 @@ echo "<script>window.prefSwipeAtivada = " . ($swipe_db == 1 ? 'true' : 'false') 
                 } else {
                     feedContainer.insertAdjacentHTML('beforeend', data);
 
+                    // 🔥 RECONFIGURA OS POSTS PARA ATIVAR O "LER MAIS" (SE NÃO ESTIVER NO MODO SWIPE)
+                    if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+                        configurarPosts();
+                    }
+
                     // Garante que o modo hacker ou swipe se aplique aos novos cards
                     if (document.body.classList.contains('hacker-mode')) {
                         window.removerBordasInlineHacker();
@@ -88,10 +93,33 @@ echo "<script>window.prefSwipeAtivada = " . ($swipe_db == 1 ? 'true' : 'false') 
                     offset += 10;
                     if(btnLoad) btnLoad.innerText = "EXPLORAR MAIS REGISTROS";
                 }
+            })
+            .catch(err => {
+                console.error("[AJAX] Erro ao carregar feed pessoal:", err);
+                if (btnLoad) btnLoad.innerText = "ERRO AO CARREGAR";
             });
     }
 
-    // Inicialização
+    // ==================== 🔥 OBSERVADOR PARA ALTERNÂNCIA DE MODOS ====================
+    // Reconfigura os posts quando o usuário sai do modo swipe
+    const observerModoSwipe = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+                // Verifica se a classe 'modo-swipe-ativo' foi removida
+                if (!document.body.classList.contains('modo-swipe-ativo')) {
+                    // Saiu do modo swipe → reconfigura os posts para ativar "Ler Mais"
+                    if (typeof configurarPosts === 'function') {
+                        configurarPosts();
+                    }
+                }
+            }
+        });
+    });
+
+    // Inicia a observação no body
+    observerModoSwipe.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    // ==================== INICIALIZAÇÃO ====================
     carregarMeuFeed();
     if(btnLoad) btnLoad.addEventListener('click', carregarMeuFeed);
 

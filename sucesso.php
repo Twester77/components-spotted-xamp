@@ -2,7 +2,7 @@
 <?php include 'includes/bolhas.php'; ?>
 
 <main style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
-    <div style="text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 500px; width: 90%;">
+    <div style="text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 500px; width: 90%;">
         
         <div style="font-size: 60px; margin-bottom: 20px;">📧</div>
         

@@ -18,7 +18,7 @@ include 'includes/header.php';
 include 'includes/navbar.php';
 ?>
 
-<main class="container-busca container-fenda-flex">
+<main class="container-busca container-fenda-flex" style="height: 100dvh; margin: 15px auto;">
     <h2>🔍 Buscar Estudantes</h2>
     
     <form action="buscar-usuario.php" method="GET" class="form-busca-fenda">
@@ -35,7 +35,7 @@ include 'includes/navbar.php';
     <div class="lista-resultados"> <?php if (!empty($busca)): ?>
             <?php if (count($resultados) > 0): ?>
                 <?php foreach ($resultados as $user): 
-                    $foto = !empty($user['foto']) ? "uploads/" . $user['foto'] : "uploads/default_masculino.jpg";
+                    $foto = !empty($user['foto']) ? "uploads/" . $user['foto'] : "uploads/ui/default_masculino.jpg";
                 ?>
                     <a href="ver-perfil.php?user=<?php echo $user['username']; ?>" style="text-decoration: none; color: inherit;">
                         <div class="user-card">

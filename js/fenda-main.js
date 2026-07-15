@@ -2,62 +2,26 @@
    EXORCISMO DE SERVICE WORKERS ZUMBIS (ANTES DE TUDO)
    ================================================================ */
 
-(function exorcizarServiceWorkers() {
-    // Token para evitar loop infinito de reload
-    const EXORCISM_TOKEN = 'fenda_sw_exorcism_done_v1';
-    if (localStorage.getItem(EXORCISM_TOKEN) === 'true') {
-        // Já foi executado com sucesso, apenas verifica se o SW está registrado
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistration('/')
-                .then(reg => {
-                    if (!reg) {
-                        // Se não estiver registrado, registra
-                        navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                            .then(() => console.log('[SW] Service Worker estável registrado.'))
-                            .catch(err => console.warn('[SW] Falha ao registrar SW estável:', err));
-                    } else {
-                        console.log('[SW] Service Worker já registrado.');
-                    }
-                })
-                .catch(err => console.warn('[SW] Erro ao verificar registro:', err));
-        }
-        return;
-    }
+/* ================================================================
+   EXORCISMO DE SERVICE WORKERS ZUMBIS (APENAS LIMPEZA)
+   ================================================================ */
 
+(function exorcizarServiceWorkers() {
+    const EXORCISM_TOKEN = 'fenda_sw_exorcism_done_v1';
     if ('serviceWorker' in navigator) {
         console.log('[EXORCISMO] Varrendo Service Workers antigos...');
-
         navigator.serviceWorker.getRegistrations()
             .then(registrations => {
-                let removidos = 0;
-                const promessas = registrations.map(reg => {
-                    return reg.unregister().then(success => {
-                        if (success) {
-                            removidos++;
-                            console.log(`[EXORCISMO] SW desregistrado: ${reg.scope}`);
-                        }
-                        return success;
-                    });
-                });
-
-                return Promise.all(promessas).then(() => {
-                    if (removidos > 0) {
-                        localStorage.setItem(EXORCISM_TOKEN, 'true');
-                        console.log('[EXORCISMO] SWs antigos removidos. Recarregando página...');
-                        window.location.reload(true);
-                    } else {
-                        // Nenhum SW antigo, registra o novo e marca token
-                        localStorage.setItem(EXORCISM_TOKEN, 'true');
-                        return navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                            .then(() => console.log('[EXORCISMO] SW estável registrado.'))
-                            .catch(err => console.warn('[EXORCISMO] Falha ao registrar SW:', err));
-                    }
-                });
+                const promessas = registrations.map(reg => reg.unregister());
+                return Promise.all(promessas);
+            })
+            .then(() => {
+                localStorage.setItem(EXORCISM_TOKEN, 'true');
+                console.log('[EXORCISMO] SWs antigos removidos (se existiam).');
             })
             .catch(err => console.warn('[EXORCISMO] Erro ao listar SWs:', err));
     }
 })();
-
 
 
 /* ================================================================
@@ -83,7 +47,7 @@ function carregarCssHacker() {
 // ==================== BOLHAS (Imediato) ====================
 window.setBolhasLocal = function (valor) {
     document.querySelectorAll('input[name="pref_bolhas"]').forEach(i => i.value = valor);
-    
+
     // Marca active com cor específica para cada estado, e garante que só um estado esteja ativo
     document.querySelectorAll('.btn-bolhas-on').forEach(b => b.classList.toggle('active-blue', valor == 1));
     document.querySelectorAll('.btn-bolhas-off').forEach(b => b.classList.toggle('active-red', valor == 0));
@@ -107,8 +71,8 @@ window.mudarSomAmbiente = function (valor) {
         if (valor === 'off') {
             audio.pause();
         } else {
-            audio.src = (valor === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
-            if (window.audioLiberado) audio.play().catch(() => {});
+            audio.src = (valor === 'chuva') ? 'sons/chuva.opus' : 'sons/oceano.opus';
+            if (window.audioLiberado) audio.play().catch(() => { });
         }
     }
 };
@@ -128,14 +92,14 @@ window.toggleToolbar = function () {
     const toolbar = document.getElementById('fenda-toolbar');
     const btn = toolbar.querySelector('.toolbar-trigger'); // Pega o botão
     const icon = document.getElementById('trigger-icon');
-    
+
     if (!toolbar) return;
-    
+
     const estaAberta = toolbar.classList.toggle('toolbar-aberta');
-    
+
     // Atualiza o estado de acessibilidade do botão
     if (btn) btn.setAttribute('aria-expanded', estaAberta);
-    
+
 };
 
 // ==================== HACKER MODE ====================
@@ -143,12 +107,12 @@ window.toggleHackerMode = function () {
     const body = document.body;
     const btnNav = document.getElementById('hacker-toggle');
     const btnToolbar = document.getElementById('hacker-toggle-lateral');
-    
+
     // Se for ativar o modo hacker e o CSS ainda não foi carregado, carrega
     if (!body.classList.contains('hacker-mode')) {
         carregarCssHacker();
     }
-    
+
     body.classList.toggle('hacker-mode');
     const isHacker = body.classList.contains('hacker-mode');
     localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
@@ -199,7 +163,7 @@ function abrirDenuncia(idPost) {
 // ==================== PERFIL DRAWER (GAVETA) ====================
 window.abrirPerfilDrawer = function (e) {
     if (e) e.preventDefault();
-    
+
     const drawer = document.getElementById('perfil-drawer');
     const containerPerfil = document.getElementById('conteudo-perfil');
     const backdrop = document.getElementById('drawer-backdrop');
@@ -209,13 +173,13 @@ window.abrirPerfilDrawer = function (e) {
     fetch('perfil.php?modo=gaveta')
         .then(res => res.text())
         .then(html => {
-            containerPerfil.innerHTML = html; 
+            containerPerfil.innerHTML = html;
             if (typeof window.configurarFormularioPerfil === 'function') {
                 window.configurarFormularioPerfil();
             }
             // Reaplica a sincronização após carregar a gaveta
             inicializarPreferenciasAPartirDoDOM();
-            
+
             drawer.classList.add('ativa');
             drawer.setAttribute('aria-hidden', 'false');
             backdrop.style.display = 'block';
@@ -227,7 +191,7 @@ window.abrirPerfilDrawer = function (e) {
 window.fecharPerfilDrawer = function () {
     const drawer = document.getElementById('perfil-drawer');
     const backdrop = document.getElementById('drawer-backdrop');
-    
+
     drawer.classList.remove('ativa');
     drawer.setAttribute('aria-hidden', 'true');
     backdrop.style.display = 'none';
@@ -300,6 +264,9 @@ window.abrirGavetaControle = function () {
 
 // ==================== POSTS E MENUS ====================
 window.configurarPosts = function () {
+    // 🔥 Só executa se NÃO estiver no modo swipe
+    if (document.body.classList.contains('modo-swipe-ativo')) return;
+
     const posts = document.querySelectorAll('.post-content');
     posts.forEach(post => {
         const precisaExpandir = post.scrollHeight > post.offsetHeight + 3;
@@ -328,7 +295,7 @@ window.toggleMenu = function (menuId) {
 
 // ==================== ÁUDIO E PREFERÊNCIAS (FONTE ÚNICA: DOM) ====================
 
-window.atualizarPreferenciasGlobais = function(idInput, novoValor) {
+window.atualizarPreferenciasGlobais = function (idInput, novoValor) {
     const inputGlobal = document.getElementById(idInput);
     if (inputGlobal) {
         inputGlobal.value = novoValor;
@@ -339,7 +306,7 @@ window.atualizarPreferenciasGlobais = function(idInput, novoValor) {
 const destravarAudio = () => {
     window.audioLiberado = true;
     console.log("[AUDIO] Áudio autorizado pelo usuário.");
-    
+
     // NOVO: Assim que o usuário clicar, verifica se já tem algo configurado e manda tocar
     const audio = document.getElementById('som-oceano');
     if (audio && window.somAmbiente && window.somAmbiente !== 'off') {
@@ -361,44 +328,44 @@ function inicializarPreferenciasAPartirDoDOM() {
         const trilha = inputTrilha.value;
         window.somAmbiente = trilha;
         localStorage.setItem('fenda_tipo_som', trilha);
-        
+
         // Remove active de todos, mas só se eles existirem
         document.querySelectorAll('[id^="btn-som-"]').forEach(btn => btn.classList.remove('active'));
-        
+
         const btnSom = document.getElementById('btn-som-' + trilha);
         if (btnSom) btnSom.classList.add('active');
-        
+
         const audio = document.getElementById('som-oceano');
         if (audio) {
             if (trilha === 'off') {
                 audio.pause();
             } else {
-                audio.src = (trilha === 'chuva') ? 'sons/chuva.mp3' : 'sons/oceano.mp3';
-                audio.volume = 0.05;
+                audio.src = (trilha === 'chuva') ? 'sons/chuva.opus' : 'sons/oceano.opus';
+                audio.volume = 0.03; // Volume baixo para não incomodar
                 if (window.audioLiberado) {
                     audio.play().catch(e => console.log("Aguardando interação."));
                 }
             }
         }
     }
-    
+
     // -- PREFERÊNCIA DE NOTIFICAÇÃO --
     if (inputNotif && inputNotif.value) {
         const notif = inputNotif.value;
         window.temaNotif = notif;
         localStorage.setItem('fenda_tema_notif', notif);
-        
+
         document.querySelectorAll('[id^="btn-notif-"]').forEach(btn => btn.classList.remove('active'));
         const btnNotif = document.getElementById('btn-notif-' + notif);
         if (btnNotif) btnNotif.classList.add('active');
     }
-    
+
     // -- PREFERÊNCIA DE BOLHAS --
     if (inputBolhas) {
         const bolhas = inputBolhas.value;
         const btnOn = document.getElementById('btn-bolhas-on');
         const btnOff = document.getElementById('btn-bolhas-off');
-        
+
         // AQUI: Proteção para não quebrar se os botões não estiverem na página
         if (btnOn && btnOff) {
             if (bolhas === '1') {
@@ -415,7 +382,7 @@ function inicializarPreferenciasAPartirDoDOM() {
 
 // ==================== NOTIFICAÇÕES E ALERTAS ====================
 // ==================== TOAST SIMPLES (sem redirecionamento) ====================
-window.exibirToast = function(mensagem) {
+window.exibirToast = function (mensagem) {
     const toast = document.createElement('div');
     toast.className = 'notificacao-popup';
     toast.style.cursor = 'default';
@@ -435,7 +402,7 @@ window.exibirToast = function(mensagem) {
 };
 
 // ==================== NOTIFICAÇÕES EM PiP ====================
-window.abrirPipNotificacao = async function(titulo, mensagem, link, icone = '🔔') {
+window.abrirPipNotificacao = async function (titulo, mensagem, link, icone = '🔔') {
     // 1. Verifica se o usuário ativou o PiP
     const prefPipInput = document.getElementById('input_pref_pip');
     if (prefPipInput && prefPipInput.value !== '1') {
@@ -456,7 +423,7 @@ window.abrirPipNotificacao = async function(titulo, mensagem, link, icone = '�
     }
 
     // 3. Verifica se a página está visível e não está em modo swipe ou modal aberto
-    if (document.visibilityState !== 'visible' || 
+    if (document.visibilityState !== 'visible' ||
         document.body.classList.contains('modo-swipe-ativo') ||
         document.body.classList.contains('modal-aberto')) {
         console.log('[PIP] Condições de bloqueio ativas. Usando toast.');
@@ -468,7 +435,7 @@ window.abrirPipNotificacao = async function(titulo, mensagem, link, icone = '�
 
     // 4. Fecha PiP anterior se existir
     if (window._pipAtivo) {
-        try { window._pipAtivo.close(); } catch (e) {}
+        try { window._pipAtivo.close(); } catch (e) { }
         window._pipAtivo = null;
     }
 
@@ -525,21 +492,21 @@ window.abrirPipNotificacao = async function(titulo, mensagem, link, icone = '�
 };
 
 // Fecha o PiP
-window.fecharPipNotificacao = function() {
+window.fecharPipNotificacao = function () {
     if (window._pipAtivo) {
-        try { window._pipAtivo.close(); } catch (e) {}
+        try { window._pipAtivo.close(); } catch (e) { }
         window._pipAtivo = null;
     }
 };
 
 // Redireciona para o link e fecha
-window.irParaLinkPip = function(link) {
+window.irParaLinkPip = function (link) {
     window.fecharPipNotificacao();
     if (link) window.location.href = link;
 };
 
 // ==================== BADGING (Ícone com número) ====================
-window.atualizarBadge = function(total) {
+window.atualizarBadge = function (total) {
     // 1. Verifica se o usuário ativou o badge
     const prefBadgeInput = document.getElementById('input_pref_badge');
     if (prefBadgeInput && prefBadgeInput.value !== '1') {
@@ -576,7 +543,7 @@ window.atualizarBadge = function(total) {
 };
 
 // Limpa o badge em eventos de interação
-window.limparBadge = function() {
+window.limparBadge = function () {
     if (navigator.clearAppBadge) {
         try {
             navigator.clearAppBadge();
@@ -604,7 +571,7 @@ window.atualizarContadorAlertas = function () {
                     const titulo = 'Nova interação!';
                     const mensagem = data.ultima.mensagem || 'Alguém interagiu com você.';
                     const link = data.ultima.post_id ? '/comentarios-post.php?id=' + data.ultima.post_id : '/notificacoes.php';
-                    
+
                     if (typeof abrirPipNotificacao === 'function') {
                         abrirPipNotificacao(titulo, mensagem, link);
                     } else {
@@ -628,7 +595,7 @@ window.atualizarContadorAlertas = function () {
  * com base no total de notificações não lidas.
  * @param {number} total - Total de notificações não lidas (já obtido do fetch)
  */
-window.atualizarBadgingPWA = function(total) {
+window.atualizarBadgingPWA = function (total) {
     // Se total não foi passado, busca do badge (fallback)
     if (typeof total === 'undefined') {
         const badgeElement = document.getElementById('badge-alertas');
@@ -654,7 +621,7 @@ window.atualizarBadgingPWA = function(total) {
     // 2. Sincronização Externa (PWA Badge)
     // Verifica a preferência do usuário (via config ou input hidden)
     const badgeAtivo = (window.FendaConfig && window.FendaConfig.badgeAtivo === true) ||
-                       (document.getElementById('input_pref_badge') && document.getElementById('input_pref_badge').value === '1');
+        (document.getElementById('input_pref_badge') && document.getElementById('input_pref_badge').value === '1');
 
     if (badgeAtivo && navigator.setAppBadge) {
         if (total > 0) {
@@ -770,7 +737,7 @@ window.toggleJanelaNotificacoes = function () {
 };
 
 // Quando a janela ganha foco (usuário volta para a aba)
-window.addEventListener('focus', function() {
+window.addEventListener('focus', function () {
     // Se o usuário está logado e a página é o feed, limpa o badge
     if (document.getElementById('input_pref_badge')) {
         // Verifica se não há notificações não lidas (ou se o usuário já viu)
@@ -783,7 +750,7 @@ window.addEventListener('focus', function() {
 
 // Quando o usuário clica em "Ver" no PiP, também limpa o badge
 // (já está no irParaLinkPip, mas adicionamos a limpeza lá também)
-window.irParaLinkPip = function(link) {
+window.irParaLinkPip = function (link) {
     window.fecharPipNotificacao();
     window.limparBadge(); //  Limpa o badge ao clicar em "Ver"
     if (link) window.location.href = link;
@@ -823,20 +790,20 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
 window.addEventListener('click', function (event) {
     // SE O MODO SWIPE ESTÁ ATIVO, NÃO INTERFERIR NOS CARDS
     if (document.body.classList.contains('modo-swipe-ativo') && event.target.closest('.spotted-card')) {
-        return; 
+        return;
     }
 
     const modalSair = document.getElementById('modal-sair-fenda');
     if (event.target === modalSair) window.fecharModalSair();
-    
+
     const clicouNoMenu = event.target.closest('.dropdown');
     const clicouNaReacao = event.target.closest('.reacao-wrapper') || event.target.closest('.btn-reagir');
-    
+
     // Log removido para não poluir o console durante o swipe
-    
+
     const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
     const clicouNoPost = event.target.closest('.post-content');
-    
+
     if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
         document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
         document.querySelectorAll('.reacoes-popup').forEach(p => {
@@ -879,7 +846,6 @@ function initLingoteController() {
     }
 }
 
-// ==================== INICIALIZAÇÃO PRINCIPAL ====================
 document.addEventListener("DOMContentLoaded", function () {
     if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
 
@@ -915,13 +881,25 @@ document.addEventListener("DOMContentLoaded", function () {
         setInterval(window.atualizarContadorAlertas, 8000);
     }, 1000);
 
-    // CONFIGURA POSTS
+    // CONFIGURA POSTS (apenas se NÃO estiver no modo swipe)
     setTimeout(() => {
-        if (typeof configurarPosts === 'function') configurarPosts();
+        if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+            configurarPosts();
+        }
     }, 500);
 
     // INICIALIZA O CONTROLLER DO LINGOTE (se existir)
     initLingoteController();
+
+    // 🔥 INICIALIZA O ANEXOS MANAGER (se o grid existir)
+    if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
+        AnexosManager.init();
+    }
+
+    // 🔥 INICIALIZA O LIGHTBOX MANAGER
+if (typeof LightboxManager !== 'undefined' && LightboxManager.init) {
+    LightboxManager.init();
+}
 });
 
 // ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
@@ -968,17 +946,17 @@ window.addEventListener('load', () => {
 // ========================================================
 // LIGHTBOX DE IMAGENS (Só roda se o modal existir na página)
 // ========================================================
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     // A VERIFICAÇÃO QUE SALVA O DIA:
     // Se não encontrar o modal nesta página, o script para aqui e não faz nada.
     const modal = document.getElementById('modal-imagem');
-    if (!modal) return; 
+    if (!modal) return;
 
     if (e.target.classList.contains('comentario-img')) {
         const imgAmpliada = document.getElementById('img-ampliada');
         if (!imgAmpliada) return;
-        
-        imgAmpliada.src = e.target.src; 
+
+        imgAmpliada.src = e.target.src;
         modal.classList.remove('modal-hidden');
         modal.setAttribute('aria-hidden', 'false');
     }
@@ -989,7 +967,7 @@ document.addEventListener('click', function(e) {
 // Esta parte pode ficar fora do listener global para manter o código limpo
 const modalFechamento = document.getElementById('modal-imagem');
 if (modalFechamento) {
-    modalFechamento.addEventListener('click', function(e) {
+    modalFechamento.addEventListener('click', function (e) {
         // Fecha apenas se clicar no fundo (this) ou no botão X (fechar-modal)
         if (e.target === this || e.target.classList.contains('fechar-modal')) {
             this.classList.add('modal-hidden');
@@ -1005,7 +983,7 @@ if (modalFechamento) {
 let isAnimating = false; // Flag para impedir cliques rápidos (trava de segurança)
 
 // 1. Função de Execução com Delay (O efeito "Procurando Função")
-window.executarAcao = function(btn, graus, callback) {
+window.executarAcao = function (btn, graus, callback) {
     if (isAnimating) return; // Se já está girando, ignora novos cliques até terminar
 
     const ponteiro = document.getElementById('ponteiro-bussola');
@@ -1023,7 +1001,7 @@ window.executarAcao = function(btn, graus, callback) {
 };
 
 // 2. Função de Feedback Visual (Active)
-window.marcarBotaoAtivo = function(btnClicado) {
+window.marcarBotaoAtivo = function (btnClicado) {
     document.querySelectorAll('.nexus-item').forEach(item => item.classList.remove('active'));
     btnClicado.classList.add('active');
 };
@@ -1053,7 +1031,7 @@ function toggleNexus() {
 
 
 // ==================== MODAL DE CONFIRMAÇÃO (DIALOG NATIVO - GLOBAL) ====================
-window.exibirConfirmacao = function(mensagem, titulo = '⚠️ Confirmação') {
+window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') {
     return new Promise((resolve) => {
         const dialog = document.getElementById('dialog-confirmacao');
         if (!dialog) {
@@ -1077,13 +1055,13 @@ window.exibirConfirmacao = function(mensagem, titulo = '⚠️ Confirmação') {
         btnNao.parentNode.replaceChild(newNao, btnNao);
 
         // Configura os botões
-        newSim.addEventListener('click', function() {
+        newSim.addEventListener('click', function () {
             dialog.close();
             window._modalAberto = false;
             resolve(true);
         });
 
-        newNao.addEventListener('click', function() {
+        newNao.addEventListener('click', function () {
             dialog.close();
             window._modalAberto = false;
             resolve(false);
@@ -1099,7 +1077,7 @@ window.exibirConfirmacao = function(mensagem, titulo = '⚠️ Confirmação') {
 };
 
 // ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS (COM LOGS) ====================
-window.excluirComentario = async function(commentId, btnElement) {
+window.excluirComentario = async function (commentId, btnElement) {
     console.log('[excluirComentario] 🟢 Iniciando exclusão para ID:', commentId, '| btnElement:', btnElement);
 
     if (btnElement && btnElement.disabled) {
@@ -1174,6 +1152,166 @@ window.excluirComentario = async function(commentId, btnElement) {
     }
 };
 
+
+// ============================================================
+// 🖼️ LIGHTBOX MANAGER – MODAL UNIVERSAL PARA POSTS
+// ============================================================
+
+const LightboxManager = {
+    modalElement: null,
+    bodyElement: null,
+    abortController: null,
+    isOpen: false,
+
+    // Inicializa (chamar no DOMContentLoaded)
+    init() {
+        this.modalElement = document.getElementById('lightbox-modal');
+        this.bodyElement = document.getElementById('lightbox-body');
+        if (!this.modalElement || !this.bodyElement) {
+            console.warn('[LightboxManager] Modal ou body não encontrados no DOM.');
+            return;
+        }
+
+        // 🔥 Fechar ao clicar no overlay (fundo)
+        this.modalElement.addEventListener('click', (e) => {
+            if (e.target === this.modalElement) {
+                this.fechar();
+            }
+        });
+
+        // 🔥 Fechar com tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.fechar();
+            }
+        });
+
+        // 🔥 Fechar via evento personalizado (para o botão fechar do modal)
+        document.addEventListener('lightbox-fechar', () => {
+            this.fechar();
+        });
+
+        console.log('[LightboxManager] Inicializado.');
+    },
+
+    // Abre o lightbox com o post de ID especificado
+    abrir(postId) {
+        if (!postId) {
+            console.error('[LightboxManager] ID do post não fornecido.');
+            return;
+        }
+
+        // Se já estiver aberto, fecha o anterior antes de abrir o novo
+        if (this.isOpen) {
+            this.fechar();
+        }
+
+        // 🔥 Cancela qualquer fetch pendente
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+
+        // Cria um novo AbortController para esta requisição
+        this.abortController = new AbortController();
+
+        // Exibe o modal com estado de carregamento
+        this.modalElement.style.display = 'flex';
+        this.bodyElement.innerHTML = `
+            <div class="lightbox-loading">
+                <div class="spinner"></div>
+                <p>Carregando post...</p>
+            </div>
+        `;
+        this.isOpen = true;
+
+        // 🔥 Bloqueia o scroll do body
+        document.body.style.overflow = 'hidden';
+
+        // 🔥 Adiciona um parâmetro de timestamp para evitar cache do navegador
+        const url = `post-detalhe.php?id=${postId}&_=${Date.now()}`;
+
+        fetch(url, {
+            signal: this.abortController.signal
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.text();
+        })
+        .then(html => {
+            // Se o modal foi fechado durante o fetch, não injeta o HTML
+            if (!this.isOpen) return;
+
+            // 🔥 Adiciona um pequeno atraso para suavizar a transição
+            requestAnimationFrame(() => {
+                this.bodyElement.innerHTML = html;
+                // Reativa o lightbox para imagens dentro do modal
+                this._ativarLightboxInterno();
+            });
+        })
+        .catch(err => {
+            // Ignora erros de abort (usuário fechou o modal)
+            if (err.name === 'AbortError') {
+                console.log('[LightboxManager] Fetch cancelado pelo usuário.');
+                return;
+            }
+            console.error('[LightboxManager] Erro ao carregar post:', err);
+            if (this.isOpen) {
+                this.bodyElement.innerHTML = `
+                    <div class="lightbox-erro">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Erro ao carregar o post. Tente novamente.</p>
+                        <button onclick="LightboxManager.fechar()" class="btn-fenda-padrao">Fechar</button>
+                    </div>
+                `;
+            }
+        });
+    },
+
+    // Fecha o lightbox
+    fechar() {
+        if (!this.isOpen) return;
+
+        // 🔥 Cancela o fetch se estiver em andamento
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+
+        this.modalElement.style.display = 'none';
+        this.bodyElement.innerHTML = '';
+        this.isOpen = false;
+
+        // 🔥 Libera o scroll do body
+        document.body.style.overflow = '';
+    },
+
+    // 🔥 Ativa o lightbox de imagens dentro do modal (reutiliza a função existente)
+    _ativarLightboxInterno() {
+        const imagens = this.bodyElement.querySelectorAll('.comentario-img, .feed-anexo-item img');
+        imagens.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const src = img.src;
+                if (src && typeof window.abrirLightboxManual === 'function') {
+                    window.abrirLightboxManual(src);
+                } else {
+                    window.open(src, '_blank');
+                }
+            });
+        });
+    }
+};
+
+// ============================================================
+// EXPORTA FUNÇÕES GLOBAIS PARA USO NO HTML
+// ============================================================
+window.abrirLightbox = (postId) => LightboxManager.abrir(postId);
+window.fecharLightbox = () => LightboxManager.fechar();
+
+
 // ==================== VIEWPORT TRACKER (SOLUÇÃO PARA TECLADO EM LANDSCAPE) ====================
 function initViewportTracker() {
     function atualizarAltura() {
@@ -1195,8 +1333,260 @@ function initViewportTracker() {
     atualizarAltura();
 }
 
+// ============================================================
+// 🖼️ ANEXOS MANAGER – GERENCIAMENTO DE MÚLTIPLOS ARQUIVOS
+// ============================================================
+
+const AnexosManager = {
+    anexos: [],
+    maxItems: 3,
+    gridElement: null,
+
+    // Inicializa (chamar no DOMContentLoaded)
+    init() {
+        this.gridElement = document.getElementById('anexos-grid');
+        if (!this.gridElement) {
+            setTimeout(() => {
+                this.gridElement = document.getElementById('anexos-grid');
+                if (this.gridElement) console.log('[AnexosManager] Grid encontrado após retry.');
+            }, 500);
+        }
+    },
+
+    // 🔥 ADICIONA UM ANEXO (COM VALIDAÇÃO E FEEDBACK VISUAL)
+    adicionar(file, tipo = 'imagem', url = null) {
+        // ============================================================
+        // 🔥 1. VALIDAÇÃO PARA ARQUIVOS DE IMAGEM (UPLOAD LOCAL)
+        // ============================================================
+        if (tipo === 'imagem' && file) {
+            const maxSize = 2 * 1024 * 1024; // 2MB (mantido)
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+            // 🔥 VALIDA TAMANHO
+            if (file.size > maxSize) {
+                const mensagem = `❌ Arquivo excede o limite de 2MB. (${(file.size / 1024 / 1024).toFixed(1)}MB)`;
+                if (typeof mostrarFeedback === 'function') {
+                    mostrarFeedback(mensagem, 'erro');
+                } else {
+                    alert(mensagem);
+                }
+                return false; // 🔥 NÃO ADICIONA O ARQUIVO
+            }
+
+            // 🔥 VALIDA TIPO (MIME)
+            if (!tiposPermitidos.includes(file.type)) {
+                const mensagem = `❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.`;
+                if (typeof mostrarFeedback === 'function') {
+                    mostrarFeedback(mensagem, 'erro');
+                } else {
+                    alert(mensagem);
+                }
+                return false; // 🔥 NÃO ADICIONA O ARQUIVO
+            }
+
+            // 🔥 SE PASSOU NAS VALIDAÇÕES, EXIBE FEEDBACK DE SUCESSO
+            if (typeof mostrarFeedback === 'function') {
+                const tamanhoKB = Math.round(file.size / 1024);
+                mostrarFeedback(`✅ Arquivo aceito (${tamanhoKB} KB)`, 'sucesso');
+            }
+        }
+
+        // ============================================================
+        // 🔥 2. VERIFICAÇÃO DE DUPLICATA PARA GIFs (URL)
+        // ============================================================
+        if (tipo === 'gif' && url) {
+            const existe = this.anexos.some(item => item.tipo === 'gif' && item.url === url);
+            if (existe) {
+                if (typeof mostrarFeedback === 'function') {
+                    mostrarFeedback(`⚠️ Este GIF já foi adicionado.`, 'erro');
+                }
+                return false;
+            }
+        }
+
+        // ============================================================
+        // 🔥 3. LIMITE MÁXIMO DE ITENS (3)
+        // ============================================================
+        if (this.anexos.length >= this.maxItems) {
+            const mensagem = `⚠️ Máximo de ${this.maxItems} anexos por comentário.`;
+            if (typeof mostrarFeedback === 'function') {
+                mostrarFeedback(mensagem, 'erro');
+            } else {
+                alert(mensagem);
+            }
+            return false;
+        }
+
+        // ============================================================
+        // 🔥 4. CRIA O ITEM E ADICIONA AO ARRAY
+        // ============================================================
+        const id = 'anexo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+        const preview = tipo === 'gif' ? url : URL.createObjectURL(file);
+
+        this.anexos.push({
+            id,
+            tipo,
+            file: tipo === 'imagem' ? file : null,
+            url: tipo === 'gif' ? url : null,
+            preview,
+            status: 'pending'
+        });
+
+        // ============================================================
+        // 🔥 5. RENDERIZA O GRID E APLICA FEEDBACK VISUAL (BORDA VERDE)
+        // ============================================================
+        this.renderizar();
+
+        // 🔥 APLICA BORDA VERDE NO ÚLTIMO ITEM ADICIONADO (FEEDBACK ESPACIAL)
+        const grid = this.gridElement;
+        if (grid && grid.lastElementChild) {
+            const ultimoItem = grid.lastElementChild;
+            // 🔥 Garante que a borda não "empurre" o layout
+            ultimoItem.style.boxSizing = 'border-box';
+            ultimoItem.style.border = '4px solid #4caf50';
+            ultimoItem.style.transition = 'border-color 0.2s ease';
+
+            // 🔥 Remove a borda após 4 segundos
+            setTimeout(() => {
+                ultimoItem.style.border = '';
+                ultimoItem.style.boxSizing = '';
+            }, 3000);
+        }
+
+        this.verificarConteudo();
+        return true;
+    },
+
+    // Remove um anexo pelo índice
+    remover(index) {
+        if (index < 0 || index >= this.anexos.length) return;
+        const item = this.anexos[index];
+        if (item.preview && item.tipo === 'imagem') {
+            URL.revokeObjectURL(item.preview);
+        }
+        this.anexos.splice(index, 1);
+        this.renderizar();
+        this.verificarConteudo();
+    },
+
+    // Limpa todos os anexos (usado ao cancelar resposta ou após envio)
+    limparTodos() {
+        this.anexos.forEach(item => {
+            if (item.preview && item.tipo === 'imagem') {
+                URL.revokeObjectURL(item.preview);
+            }
+        });
+        this.anexos = [];
+        this.renderizar();
+        this.verificarConteudo();
+    },
+
+    // Renderiza o grid no DOM
+    renderizar() {
+        if (!this.gridElement) return;
+        if (this.anexos.length === 0) {
+            this.gridElement.style.display = 'none';
+            this.gridElement.innerHTML = '';
+            return;
+        }
+        this.gridElement.style.display = 'flex';
+        this.gridElement.innerHTML = '';
+        this.anexos.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'anexo-item' + (item.status === 'uploading' ? ' uploading' : '');
+            div.dataset.index = index;
+            const img = document.createElement('img');
+            img.src = item.preview;
+            img.alt = 'Anexo ' + (index + 1);
+            img.loading = 'lazy';
+            div.appendChild(img);
+            const spinner = document.createElement('span');
+            spinner.className = 'spinner-anexo';
+            spinner.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            spinner.style.display = item.status === 'uploading' ? 'block' : 'none';
+            div.appendChild(spinner);
+            const btn = document.createElement('button');
+            btn.className = 'btn-remover-anexo';
+            btn.innerHTML = '✕';
+            btn.title = 'Remover anexo';
+            btn.dataset.index = index;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.remover(index);
+            });
+            div.appendChild(btn);
+            img.addEventListener('click', () => {
+                if (item.status !== 'uploading') {
+                    if (typeof window.abrirLightboxManual === 'function') {
+                        window.abrirLightboxManual(item.preview);
+                    } else {
+                        window.open(item.preview, '_blank');
+                    }
+                }
+            });
+            this.gridElement.appendChild(div);
+        });
+    },
+
+    // 🔥 VERIFICA SE HÁ CONTEÚDO (texto ou anexos) E AJUSTA OS BOTÕES
+    verificarConteudo() {
+        const campoTexto = document.querySelector('.textarea-chat');
+        const btnEnviar = document.querySelector('.btn-enviar-chat');
+        const btnGaveta = document.querySelector('.btn-attach-gaveta');
+        const temTexto = campoTexto && campoTexto.value.trim().length > 0;
+        const temAnexo = this.anexos.length > 0;
+        const atingiuLimite = this.anexos.length >= this.maxItems;
+
+        // Botão de enviar: sempre visível, mas desabilitado se vazio
+        if (btnEnviar) {
+            btnEnviar.style.display = 'flex';
+            btnEnviar.disabled = !(temTexto || temAnexo);
+            if (temTexto || temAnexo) {
+                btnEnviar.classList.add('visivel');
+            } else {
+                btnEnviar.classList.remove('visivel');
+            }
+        }
+        // Botão de attach: visível apenas se não atingiu o limite
+        if (btnGaveta) {
+            btnGaveta.style.display = atingiuLimite ? 'none' : 'flex';
+        }
+    },
+
+    // 🔥 PREPARA O FORMDATA PARA ENVIO (ATUALMENTE ENVIA UM ÚNICO GIF)
+    prepararFormData(form) {
+        const formData = new FormData(form);
+        // Adiciona arquivos (imagens)
+        this.anexos.forEach((item) => {
+            if (item.file) {
+                formData.append('anexos[]', item.file);
+            } else if (item.tipo === 'gif' && item.url) {
+                // 🔥 AGORA ENVIA COMO 'gif_urls[]' (MÚLTIPLOS)
+                formData.append('gif_urls[]', item.url);
+            }
+        });
+        return formData;
+    },
+
+    // Atualiza o status de um item (usado durante o upload)
+    atualizarStatus(index, status) {
+        if (index < 0 || index >= this.anexos.length) return;
+        this.anexos[index].status = status;
+        this.renderizar();
+    }
+};
+
+// ============================================================
+// EXPORTA FUNÇÕES GLOBAIS (para compatibilidade com o código atual)
+// ============================================================
+window.adicionarAnexo = (file) => AnexosManager.adicionar(file, 'imagem');
+window.adicionarGif = (url) => AnexosManager.adicionar(null, 'gif', url);
+window.removerAnexo = (index) => AnexosManager.remover(index);
+window.limparTodosAnexos = () => AnexosManager.limparTodos();
+window.prepararFormDataAnexos = (form) => AnexosManager.prepararFormData(form);
+
 // ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
-window.deslogarUsuario = async function() {
+window.deslogarUsuario = async function () {
     try {
         // 1. Tenta fazer logout no Supabase (se o SDK estiver carregado)
         if (typeof supabase !== 'undefined' && supabase.auth) {

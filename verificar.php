@@ -48,7 +48,7 @@ if (isset($_GET['token'])) {
     <title>Ativação de Conta - A Fenda</title>
     <style>
         body { background: #0a0a0a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 20px; border: 1px solid #70cde4; max-width: 400px; width: 90%; }
+        .card { text-align: center; padding: 40px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border-radius: 20px; border: 1px solid #70cde4; max-width: 400px; width: 90%; }
         .btn { background: #70cde4; color: #000; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; border: none; cursor: pointer; display: inline-block; margin-top: 20px; width: 100%; box-shadow: 0 0 20px rgba(112, 205, 228, 0.3); }
     </style>
 </head>

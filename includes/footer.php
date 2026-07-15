@@ -88,8 +88,12 @@ if (!function_exists('asset_versao')) {
 
 <!-- Áudio de background -->
 <audio id="som-oceano" loop preload="auto" aria-hidden="true">
+    <source src="sons/oceano.opus" type="audio/opus">
+    <source src="sons/oceano.m4a" type="audio/mp4">
     <source src="sons/oceano.mp3" type="audio/mpeg">
 </audio>
+
+
 
 <?php if (isset($_SESSION['usuario_id'])):
    $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas, pref_pip, pref_badge FROM usuarios WHERE id = ?");
@@ -128,6 +132,19 @@ if (!function_exists('asset_versao')) {
 </script>
 <?php endif; ?>
 
+<!-- ============================================================
+     LIGHTBOX UNIVERSAL – MODAL PARA POSTS
+     ============================================================ -->
+<div id="lightbox-modal" class="lightbox-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="lightbox-titulo">
+    <div class="lightbox-content">
+        <button class="lightbox-fechar-btn" onclick="fecharLightbox()" aria-label="Fechar">
+            <i class="fas fa-times"></i>
+        </button>
+        <div id="lightbox-body">
+            <!-- O conteúdo será carregado via AJAX -->
+        </div>
+    </div>
+</div>
 
 <!-- SCRIPTS PRINCIPAIS (CARREGADOS NO RODAPÉ)  -->
 <script src="<?= asset_versao('js/fenda-main.js') ?>"></script>
@@ -136,21 +153,22 @@ if (!function_exists('asset_versao')) {
 <script>
     (function() {
         if ('serviceWorker' in navigator) {
-            // Listener para quando o novo SW assumir o controle
+            // Usa a mesma variável $basePath definida no header
+            const basePath = '<?= $basePath ?>';
+            
             navigator.serviceWorker.addEventListener('controllerchange', function() {
-                console.log('[PWA] Service Worker atualizou. Recarregando página para aplicar novo cache.');
+                console.log('[PWA] Service Worker atualizou. Recarregando página.');
                 window.location.reload();
             });
 
-            // Fallback de registro (caso o exorcismo no fenda-main.js não tenha rodado)
             if (!localStorage.getItem('fenda_sw_exorcism_done_v1')) {
                 window.addEventListener('load', function() {
-                    navigator.serviceWorker.register('/sw.js')
+                    navigator.serviceWorker.register(basePath + '/sw.js')
                         .then(function(registration) {
-                            console.log('[PWA] Service Worker registrado (fallback):', registration.scope);
+                            console.log('[PWA] SW registrado (fallback):', registration.scope);
                         })
                         .catch(function(error) {
-                            console.warn('[PWA] Falha no registro (fallback):', error);
+                            console.warn('[PWA] Falha no registro:', error);
                         });
                 });
             }

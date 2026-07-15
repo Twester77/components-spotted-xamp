@@ -273,7 +273,6 @@ body.hacker-mode select,
 body.hacker-mode .fenda-input,
 body.hacker-mode .textarea-fenda {
     background: #000 ;
-    border: 1px solid #00ff00 ;
     color: #00ff00 ;
     border-radius: 0 ;
     caret-color: #00ff00 ;
@@ -671,7 +670,7 @@ body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item.dynamic.activ
     }
     40% {
         background-color: rgba(0, 255, 65, 0.2);
-        box-shadow: 0 0 40px rgba(0, 255, 65, 0.6);
+        box-shadow: 0 0 35px rgba(0, 255, 65, 0.6);
         border-left: 6px solid #00ff41;
     }
     100% {
@@ -793,12 +792,11 @@ body.hacker-mode footer::after {
 }
 
 
-
 body.hacker-mode .post-content.tem-mais:not(.expandido)::after {
     content: ' > [ CARREGAR_DADOS... ]' !important;
-    background: #000 !important;
-    color: #0f0 !important;
-    font-weight: bold !important;
+    background: #000 ;
+    color: #0f0 ;
+    font-weight: bold ;
 }
 
 /* ---------------------------------------------------------------
@@ -972,6 +970,8 @@ body.hacker-mode .submenu li a,
 body.hacker-mode .item-menu,
 body.hacker-mode .fenda-modal-content p,
 body.hacker-mode .fenda-modal-content .desc-modal-sair,
+body.hacker-mode .lightbox-overlay,
+body.hacker-mode .lightbox-comentarios,
 body.hacker-mode .btn,
 body.hacker-mode .filtro-btn,
 body.hacker-mode .link-fofoca,

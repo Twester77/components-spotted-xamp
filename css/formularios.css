@@ -1,7 +1,7 @@
 *,
 *:before,
 *:after {
-    box-sizing: border-box ;
+    box-sizing: border-box;
 }
 
 
@@ -27,7 +27,7 @@ select:focus {
 
 
 form {
-    margin: 20px auto ;
+    margin: 20px auto;
 }
 
 
@@ -37,7 +37,7 @@ form {
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
     /* Padding dinâmico: menor em telas pequenas */
-    padding: clamp(10px, 5vw, 24px) ;
+    padding: clamp(10px, 5vw, 24px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
@@ -48,18 +48,18 @@ form {
     overflow-y: auto;
     -webkit-scrollbar: 0;
     scrollbar-width: none;
-    -ms-overflow-style: none; 
+    -ms-overflow-style: none;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    max-width: clamp(250px, 85%, 650px) ;
-    max-height: clamp(200px, 65vh, 500px) ;
+    max-width: clamp(250px, 85%, 650px);
+    max-height: clamp(200px, 65vh, 500px);
 }
 
 .btn-fechar-modal {
     position: absolute;
     top: 15px;
-    right:15px;
+    right: 15px;
     background: none;
     border: none;
     color: #fff;
@@ -70,8 +70,9 @@ form {
 }
 
 .btn-fechar-modal:hover {
-    color: var(--dourado); }
-    
+    color: var(--dourado);
+}
+
 
 /* 2. Limpando o card de postagem para ele "fundir" com o modal */
 .modal-body-ajuste .main-novo-post {
@@ -79,25 +80,25 @@ form {
     flex-direction: column;
     margin: 0 auto !important;
     background: transparent !important;
-    border: none ;
+    border: none;
     box-shadow: none !important;
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
-    max-width: 95% ;
-    width: 95% ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    max-width: 95%;
+    width: 95%;
     height: auto;
 }
 
 /* 3. Ajuste do formulário interno */
 .modal-body-ajuste .main-novo-post .form-container {
     width: 100% !important;
-    padding: 15px 0 ;
+    padding: 15px 0;
 }
 
 /* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
 .modal-body-ajuste .main-novo-post h2 {
     color: #f5f5f5;
-    font-size: clamp(1.1rem, 4vw, 1.5rem) ;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
     margin-bottom: 15px;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -107,12 +108,12 @@ form {
 .modal-body-ajuste .main-novo-post textarea,
 .modal-body-ajuste .main-novo-post select,
 .modal-body-ajuste .main-novo-post input {
-    width: 100% ;
+    width: 100%;
     background: rgba(0, 0, 0, 0.158);
     border: 1px solid #444;
     /* Cinza escuro */
     border-radius: 12px;
-    padding: 12px ;
+    padding: 12px;
     color: #fff;
     margin-bottom: 15px;
     transition: 0.3s;
@@ -120,7 +121,7 @@ form {
 }
 
 .modal-body-ajuste .btn-lancar {
-    padding: 8px 14px ;
+    padding: 8px 14px;
     margin: 30px 0 0 0;
 }
 
@@ -132,7 +133,7 @@ form {
 }
 
 .modal-body-ajuste .main-novo-post textarea {
-    min-height: 90px ;
+    min-height: 90px;
 }
 
 /* ============================================================
@@ -149,12 +150,16 @@ form {
 .area-texto-vivo {
     background: #16161d73;
     border: 1px solid #333;
-    border-radius: 16px;
-    padding: 16px;
     margin-bottom: 12px;
     transition: border-color 0.3s ease;
-    display: flex;
+}
 
+.area-post-vivo {
+    border-radius: 12px;
+    padding: 10px 14px;
+    width: 100%;
+    flex: 1 1 auto;
+    justify-content: space-between;
 }
 
 .area-texto-vivo:focus-within {
@@ -163,14 +168,15 @@ form {
 
 #mensagem-vivo {
     width: 100%;
+    flex: 1 1 auto;
     min-height: 60px;
-    max-height: 200px;
+    max-height: 120px;
     background: transparent;
     border: none;
     color: #eee;
     font-size: 1rem;
     line-height: 1.5;
-    padding: 0;
+    padding: 4px;
     font-family: inherit;
     outline: none;
 }
@@ -194,7 +200,7 @@ form {
 }
 
 .midia-wrapper img {
-    max-width: 100%;
+    width: 100%;
     max-height: 200px;
     border-radius: 10px;
     object-fit: contain;
@@ -363,13 +369,13 @@ form {
 
 /* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
 .main-perfil-container .perfil-gold {
-    display: flex ;
-    flex-direction: column ;
-    align-items: center ;
-    margin: 15x auto !important;
-    left: 50% ;
-    padding: 15px ;
-    border-radius: 30px ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 15px auto ;
+    left: 50%;
+    padding: 15px;
+    border-radius: 30px;
 }
 
 
@@ -379,20 +385,20 @@ form {
 textarea[name="bio"] {
     width: 100% !important;
     /* Ocupa a largura disponível... */
-    max-width: 100% !important;
+    max-width: 100% ;
     /* ...mas não passa disso no Tablet/PC */
     margin: 0 auto !important;
     /* CENTRALIZA no meio do formulário */
-    display: block !important;
-    box-sizing: border-box !important;
+    display: block ;
+    box-sizing: border-box ;
     /* Garante que o padding não estique a caixa */
-    padding: 15px !important;
-    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 15px ;
+    background: rgba(255, 255, 255, 0.05) ;
     color: #fff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 12px !important;
-    line-height: 1.5 !important;
-    resize: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) ;
+    border-radius: 12px ;
+    line-height: 1.5 ;
+    resize: none ;
 }
 
 
@@ -414,42 +420,44 @@ form[action="confirma-login.php"] {
 
 .capa-container {
     width: 100%;
-    max-width: 1400px !important;
-    height: clamp(250px, 35vw, 700px) !important;
-    position: relative;
+    max-width: 1000px;
+    max-height: 380px;
+    aspect-ratio: 1000 / 380;
+    /* Mantém a proporção exata da capa */
     overflow: visible;
+    position: relative;
     /* Vital para o avatar aparecer */
     background: #0a0a0a;
-    margin: 40px auto 20px auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    border: 4px solid #9f49a7c0;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid #9f49a7c0;
     border-radius: 10px;
 }
 
 .capa-img {
+    z-index: 5;
+    object-fit: contain;
+    object-position: center;
+    display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center 25%;
-    aspect-ratio: 16/9 !important;
-    z-index: 5;
-
+    transition: max-width 0.4s ease-in-out;
 }
+
 
 .bio-texto,
 .post-content,
 .card-body p,
 .perfil-info-publica p {
-    word-wrap: break-word !important;
-    overflow-wrap: anywhere !important;
-    white-space: pre-wrap !important;
-    max-width: 100% !important;
+    word-wrap: break-word ;
+    overflow-wrap: anywhere ;
+    white-space: pre-wrap ;
+    width: 100% ;
     -webkit-hyphens: auto;
     /*Safari/Chrome*/
     -ms-hyphens: auto;
     /*IE/Edge */
     hyphens: auto;
-     flex-grow: 1;
+    flex-grow: 1;
 
 }
 
@@ -626,22 +634,22 @@ textarea {
 .fenda-reg-box {
     display: flex !important;
     align-items: center !important;
-    background: rgba(255, 255, 255, 0.05) ;
-    border: 1px solid rgba(255, 255, 255, 0.2) ;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 12px !important;
     width: 100% !important;
     transition: all 0.3s ease;
-    overflow: hidden ;
+    overflow: hidden;
     /* Garante que nada vaze */
 }
 
 /* Ícone dentro da box - agora em fluxo normal */
 .fenda-reg-box i {
-    color: #f8c946ec ;
-    font-size: 1.2rem ;
-    margin-left: 15px ;
-    margin-right: 8px ;
-    width: 24px ;
+    color: #f8c946ec;
+    font-size: 1.2rem;
+    margin-left: 15px;
+    margin-right: 8px;
+    width: 24px;
     text-align: center !important;
     flex-shrink: 0 !important;
     /* Não encolhe */
@@ -654,11 +662,11 @@ textarea {
     flex: 1 !important;
     background: transparent !important;
     border: none !important;
-    color: white ;
-    font-size: 1rem ;
-    padding: 12px 12px 12px 6px ;
+    color: white;
+    font-size: 1rem;
+    padding: 12px 12px 12px 6px;
     outline: none !important;
-    width: 100% ;
+    width: 100%;
     align-content: center;
 }
 
@@ -678,8 +686,8 @@ textarea {
 .fenda-reg-box input[type="color"] {
     width: 50px !important;
     padding: 0 !important;
-    margin: 5px 0 5px 5px ;
-    height: 35px ;
+    margin: 5px 0 5px 5px;
+    height: 35px;
     cursor: pointer;
     border-radius: 10px;
 }
@@ -687,12 +695,12 @@ textarea {
 /* A caixinha do formulário */
 .container-cadastro-fenda {
     background: #4b397aba !important;
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.103);
     border-radius: 20px;
     max-width: 500px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     padding: 25px !important;
     width: 100% !important;
     height: auto !important;
@@ -814,12 +822,12 @@ section.sessao-publicar {
     border: 1px solid rgba(255, 255, 255, 0.007);
     padding: 15px;
     margin: 20px auto;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    max-width: clamp(280px, 90vw, 600px);
+    box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.37);
+    max-width: clamp(280px, 90vw, 550px);
     background-color: #49414121;
     background: rgba(0, 0, 0, 0.45);
-    border-radius: 20px ;
-    height: auto ;
+    border-radius: 20px;
+    height: auto;
 }
 
 .sessao-publicar h3,
@@ -845,23 +853,25 @@ section.sessao-publicar {
 .form-publicar {
     width: 100% !important;
     margin-top: 15px;
-    display: flex ;
+    display: flex;
     flex-direction: row !important;
-    flex-wrap: wrap !important;      
-    align-items: flex-end !important; /* CORREÇÃO: Alinha todos por baixo, impedindo de esticarem */
-    gap: 15px ;            
+    flex-wrap: wrap !important;
+    align-items: flex-end !important;
+    /* CORREÇÃO: Alinha todos por baixo, impedindo de esticarem */
+    gap: 15px;
 }
 
 /* Os blocos de embrulho (.input-group) se adaptando ao espaço */
 .form-publicar .input-group {
-    margin-bottom: 0 ;
-    flex: 1 1 calc(50% - 12px) ; 
-    min-width: 140px ;           
+    margin-bottom: 0;
+    flex: 1 1 calc(50% - 12px);
+    min-width: 140px;
 }
 
 /* CORREÇÃO: Aumentando a prioridade de espaço/width da Textarea no flexbox */
 .form-publicar .input-group:has(textarea) {
-    flex: 3 1 280px ; /* Peso maior (3) para esticar bem pros lados */
+    flex: 3 1 280px;
+    /* Peso maior (3) para esticar bem pros lados */
 }
 
 /* Estilo base dos seus inputs (Deixando mais magrelos e elegantes) */
@@ -871,17 +881,19 @@ section.sessao-publicar {
     display: block;
     width: auto;
     max-width: 100% !important;
-    padding: clamp(10px, 1.5vw, 15px) ; /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
-    border: 1px solid rgba(7, 4, 4, 0.2) ;
-    color: #fff ;
-    border-radius: 14px ;
-    margin-bottom: 0 ;
+    padding: clamp(10px, 1.5vw, 15px);
+    /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
+    border: 1px solid rgba(7, 4, 4, 0.2);
+    color: #fff;
+    border-radius: 14px;
+    margin-bottom: 0;
 }
 
 /* Tamanho de altura fixo para inputs normais (PC e Mobile) */
 .form-publicar select,
 .form-publicar .fenda-input {
-    height: 55px ; /* Altura magrela padrão ideal */
+    height: 55px;
+    /* Altura magrela padrão ideal */
 }
 
 #imagem.fenda-input {
@@ -891,10 +903,11 @@ section.sessao-publicar {
     color: #f0cd05e8;
     font-style: none;
     padding: 4px 8px;
-    align-content:center ;
+    align-content: center;
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 #file-upload-button {
     font-style: none;
     border-style: none;
@@ -902,11 +915,12 @@ section.sessao-publicar {
 
 /* CORREÇÃO: Altura específica apenas para a Textarea */
 .form-publicar textarea {
-    display: flex!important;
-    min-height: 80px; /* Menos espaço vertical, priorizando a largura */
+    display: flex !important;
+    min-height: 80px;
+    /* Menos espaço vertical, priorizando a largura */
     max-height: 150px;
     line-height: 1.4;
-    resize: vertical; 
+    resize: vertical;
 }
 
 .form-publicar select:focus,
@@ -934,11 +948,12 @@ section.sessao-publicar {
 }
 
 /* O Botão de Lançar se comportando na grade flex */
-.btn-lancar  { 
+.btn-lancar {
     background: #7cd632e8;
     color: black;
     border: none;
-    height: 44px; /* Casando com a altura dos inputs magrelos */
+    height: 44px;
+    /* Casando com a altura dos inputs magrelos */
     padding: 0 14px;
     border-radius: 8px;
     font-weight: 800;
@@ -1022,6 +1037,11 @@ section.sessao-publicar {
     padding: 10px 14px;
     width: 100%;
     transition: border-color 0.3s ease;
+    flex: 1 1 auto;
+    background: rgba(0, 0, 0, 0.25);
+    justify-content: space-between;
+    display: flex;
+    flex-direction: unset;
 }
 
 .area-perdidos-vivo:focus-within {
@@ -1040,7 +1060,7 @@ section.sessao-publicar {
     padding: 0;
     font-family: inherit;
     outline: none;
-     border: none;
+    border: none;
 }
 
 #mensagem-perdidos::placeholder {
@@ -1071,8 +1091,8 @@ section.sessao-publicar {
 
 /* Botão Publicar – versão específica para perdidos (verde) */
 .btn-lancar-perdidos {
-    background: #7cd632e8 ;
-    color: #000 ;
+    background: #7cd632e8;
+    color: #000;
     border: none;
     padding: 8px 24px;
     border-radius: 30px;
@@ -1082,7 +1102,7 @@ section.sessao-publicar {
     cursor: pointer;
     transition: 0.3s;
     height: auto;
-    max-width: 400px;
+    max-width:300px;
     margin-top: 0 !important;
     flex: 0 1 auto;
 }
@@ -1103,7 +1123,7 @@ section.sessao-publicar {
 
 .avatar-pequeno {
     gap: 20px;
-    justify-content: center ;
+    justify-content: center;
     display: flex;
 
 }
@@ -1114,13 +1134,13 @@ section.sessao-publicar {
     gap: 15px;
     object-fit: cover;
     position: relative;
-     align-content: center;
+    align-content: center;
     border-radius: 50%;
     border: none !important;
     /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
     -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
     mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
-        transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
 
 
 }
@@ -1163,38 +1183,38 @@ section.sessao-publicar {
 
 /* Container da Capa (O molde) */
 .capa-wrapper.viewer {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100% ;
+    max-width: 100% ;
     /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
-    aspect-ratio: 16 / 8 !important;
-    overflow: hidden !important;
-    border-radius: 15px 15px 0 0 ;
+    aspect-ratio: 16 / 8 ;
+    overflow: hidden ;
+    border-radius: 15px 15px 0 0;
     background: #1a1a1a;
-    display: flex ;
-    align-items: center ;
-    justify-content: center ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* A Imagem da Capa (O conteúdo) */
 .img-capa-preview {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: cover !important;
+    max-width: 100% ;
+    max-height: 100% ;
+    object-fit: cover ;
     object-position: center 25% !important;
     /* Foca um pouco acima do meio */
-    display: block !important;
-    aspect-ratio: 16/8 !important;
+    display: block ;
+    aspect-ratio: 16/8 ;
 }
 
 /* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
-    width: clamp(70px, 15vmin + 10px, 200px);
-    height: clamp(70px, 15vmin + 10px, 200px);
+    width: clamp(65px, 15vmin + 10px, 150px);
+    height: clamp(65px, 15vmin + 10px, 150px);
     aspect-ratio: 1/1;
-    margin: -30px auto 20px auto !important; 
+    margin: -30px auto 20px auto ;
     z-index: 10;
-    display: flex !important;
+    display: flex ;
     justify-content: center !important;
     align-items: center !important;
 }
@@ -1208,8 +1228,8 @@ section.sessao-publicar {
     bottom: 5px;
     background: var(--dourado);
     color: #000;
-    width: clamp(25px, 5vw, 45px);
-    height: clamp(25px, 5vw, 45px);
+    width: clamp(25px, 3.5vw, 45px);
+    height: clamp(25px, 3.5vw, 45px);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1287,31 +1307,29 @@ input[type="checkbox"]:focus {
 }
 
 
-
 /* 1. REGRAS GERAIS (Ajustadas para Flex) */
-
 .btn-editar-atalho {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
     justify-content: auto;
-    width: auto ;
-    min-width: 150px;
-    padding: 10px 20px ;
-    white-space: nowrap ;
+    width: auto;
+    min-width: 120px;
+    padding: 10px 20px;
+    white-space: nowrap;
     font-weight: 800;
     text-transform: uppercase;
-    text-decoration: none ;
-    background: var(--dourado) ;
-    color: #000 ;
-    border-radius: 50px !important;
+    text-decoration: none;
+    background: var(--dourado);
+    color: #000;
+    border-radius: 50px;
     border: none;
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
 .btn-editar-atalho:hover {
-    transform: scale(1.1) !important;
-    filter: brightness(1.1);
+    transform: scale(1.05) !important;
+    filter: brightness(1.05);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.4);
 }
 
@@ -1320,8 +1338,8 @@ input[type="checkbox"]:focus {
 .btn-seguir:hover,
 .btn-editar-atalho:hover,
 .btn-seguir-fenda:hover {
-    transform: scale(1.05) ;
-    filter: brightness(1.1);
+    transform: scale(1.05);
+    filter: brightness(1.05);
     box-shadow: 0 8px 20px rgba(255, 188, 0, 0.4);
 }
 
@@ -1385,8 +1403,8 @@ input[type="checkbox"]:focus {
 
 /* A Imagem prévia em si: redonda e centrada */
 .img-avatar-perfil {
-    width: 100% !important;  
-    height: 100% !important; 
+    width: 100% !important;
+    height: 100% !important;
     aspect-ratio: 1/1;
     object-fit: cover;
     border: 3px solid #fa7116b2;
@@ -1399,13 +1417,13 @@ input[type="checkbox"]:focus {
 
 .avatar-main {
     /* Quanto ocupa da capa */
-    width: 100% ;
-    height: 100% ;
+    width: 100%;
+    height: 100%;
     z-index: 16;
     object-fit: cover;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    
+
 }
 
 
@@ -1442,7 +1460,7 @@ input[type="checkbox"]:focus {
 }
 
 .perfil-gold .capa-container {
-    width: 97%;
+    max-width: 85%;
     border: none;
 }
 
@@ -1481,22 +1499,22 @@ input[type="checkbox"]:focus {
 
 /* 1. O Container Principal (Onde ficam as fotos e os campos) */
 form[action="confirma-login.php"] .container {
-    background: rgba(0, 0, 0, 0.4) !important;
+    background: rgba(0, 0, 0, 0.4);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
-    border-radius: 15px ;
-    padding: 25px ;
-    border: 1px solid rgba(255, 255, 255, 0.1) ;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) ;
-    margin-top: 20px !important;
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
 }
 
 /* 2. Os Labels (E-mail e Senha - Texto em cima) */
 form[action="confirma-login.php"] label b {
-    color: #dd7c0e ;
-    font-size: 0.95rem !important;
-    text-transform: uppercase !important;
-    letter-spacing: 1px !important;
+    color: #dd7c0e;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* 3. Estilizando os Inputs (E-mail e Senha) */
@@ -1511,12 +1529,12 @@ form[action="confirma-login.php"] input[type="email"],
 form[action="confirma-login.php"] input[type="password"] {
     width: 100% !important;
     background: rgba(255, 255, 255, 0.08) !important;
-    color: white ;
-    border: 2px solid rgba(255, 188, 0, 0.5) ;
-    border-radius: 10px ;
-    padding: 12px 15px ;
+    color: white;
+    border: 2px solid rgba(255, 188, 0, 0.5);
+    border-radius: 10px;
+    padding: 12px 15px;
     font-size: 1rem !important;
-    margin-top: 5px ;
+    margin-top: 5px;
     outline: none !important;
     box-sizing: border-box !important;
     transition: 0.3s ease;
@@ -1524,9 +1542,9 @@ form[action="confirma-login.php"] input[type="password"] {
 
 /* 4. Efeito de Foco */
 form[action="confirma-login.php"] input:focus {
-    border-color: #ddc80e ;
-    background: rgba(255, 255, 255, 0.027) ;
-    box-shadow: 0 0 12px rgba(221, 200, 14, 0.3) ;
+    border-color: #ddc80e;
+    background: rgba(255, 255, 255, 0.027);
+    box-shadow: 0 0 10px rgba(221, 200, 14, 0.3);
 }
 
 /* 5. Checkbox e Links Inferiores */
@@ -1547,13 +1565,13 @@ form[action="confirma-login.php"] a {
 
 /* 1. Reset de Centralização do Container Principal */
 .main-perfil-container-config {
-    flex-direction: column ;
-    align-items: center ;
-    width: 96% ;
+    flex-direction: column;
+    align-items: center;
+    width: 96%;
     margin: 25px auto;
     padding: 15px;
-    display: flex ;
-    float: none ;
+    display: flex;
+    float: none;
     border-radius: 25px;
     max-width: 900px;
     background-color: #0d0d0dd1;
@@ -1563,13 +1581,13 @@ form[action="confirma-login.php"] a {
 
 /* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
 .form-perfil-corpo {
-    display: flex ;
-    flex-direction: column ;
-    max-width: 100% ;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
     padding: 10px;
-    box-sizing: border-box ;
-    margin: 10px auto ;
-    gap: 20px ;
+    box-sizing: border-box;
+    margin: 10px auto;
+    gap: 20px;
 
 }
 
@@ -1588,8 +1606,8 @@ select,
 textarea {
     width: 100% !important;
     max-width: 100% !important;
-    box-sizing: border-box ;
-    padding: 8px ;
+    box-sizing: border-box;
+    padding: 8px;
 }
 
 
@@ -1612,20 +1630,24 @@ textarea {
     display: none;
     padding: 6px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    max-height: 150px; /* Limita a altura */
-    overflow-y: auto;  /* Habilita o scroll se passar disso */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    max-height: 150px;
+    /* Limita a altura */
+    overflow-y: auto;
+    /* Habilita o scroll se passar disso */
 }
 
 /* 2. Estilo dos Itens (Padrão) */
 .lista-mencoes-flutuante div {
     padding: 8px;
-    color: #333; /* Texto escuro no fundo branco */
+    color: #333;
+    /* Texto escuro no fundo branco */
     cursor: pointer;
 }
 
 .lista-mencoes-flutuante div:hover {
-    background: #f0f0f0; /* Cinza claro no hover padrão */
+    background: #f0f0f0;
+    /* Cinza claro no hover padrão */
     color: #000000f6;
 }
 
@@ -1636,7 +1658,8 @@ textarea {
 }
 
 .lista-mencoes-flutuante.modal-theme div {
-    color: #fff; /* Texto branco no fundo escuro */
+    color: #fff;
+    /* Texto branco no fundo escuro */
 }
 
 .lista-mencoes-flutuante.modal-theme div:hover {
@@ -1652,14 +1675,16 @@ textarea {
 
 .dropdown-busca {
     position: absolute;
-    top: 100%; /* Fica logo abaixo do input */
+    top: 100%;
+    /* Fica logo abaixo do input */
     left: 0;
     width: 100%;
     background: #1a1a1a77;
     border: 1px solid #444;
     border-radius: 0 0 10px 10px;
     z-index: 9999;
-    display: none; /* Escondido por padrão */
+    display: none;
+    /* Escondido por padrão */
     max-height: 300px;
     overflow-y: auto;
 }

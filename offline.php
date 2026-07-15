@@ -20,7 +20,7 @@
         }
         .offline-card {
             background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(6px);
             border: 1px solid #ffbc00;
             border-radius: 20px;
             padding: 30px;

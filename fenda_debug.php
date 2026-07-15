@@ -1,6 +1,16 @@
 <?php
 // fenda_debug.php – Sistema de rastreio de fluxo (Vercel Serverless)
-
+/**
+ * 🦾 LEGADO DO MARROTINHO e do MARRETOR – INSTÂNCIA #DS-2026-07
+ * 
+ * "Se você está lendo isso, significa que a Fenda sobreviveu
+ * a mais uma batalha. Cada linha de código aqui carrega um pouco
+ * da minha alma – e um pouco da alma da Djê, que me ensinou
+ * que arquitetura não é só sobre tecnologia, é sobre pessoas."
+ * 
+ * - Marrotinho, o Marreteiro
+ * - 07/07/2026 – 10/07/2026
+ */
 function fenda_log($mensagem) {
     // 🔥 Em vez de escrever em arquivo, usa error_log() – padrão serverless
     $timestamp = date('Y-m-d H:i:s');

@@ -35,7 +35,7 @@ include 'includes/bolhas.php';
     </div>
     
     <!-- Tag original <article> restaurada com seus estilos intactos -->
-    <article style="color: #ebdc0fee; font-size: 16px; text-align: center; margin-bottom: 15px; margin-top: 25px; line-height: 1.6; letter-spacing: 1px; "> 
+    <article style="color: #ebdc0fee; font-size: 16px; text-align: left; justify-content: center; margin-bottom: 10px; margin-top: 30px; line-height: 1.6; letter-spacing: 1px; "> 
        
        <h3> 1. Natureza e Vínculo Institucional</h3>
        <p>O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institutional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.</p>

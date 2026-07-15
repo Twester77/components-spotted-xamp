@@ -12,9 +12,19 @@
       ]
     },
     {
-      "source": "/(.*)",
+      "source": "/manifest.php",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
   ],
@@ -28,7 +38,8 @@
     { "src": "/comentarios/(.*)", "dest": "/comentarios/$1" },
     { "src": "/badges/(.*)", "dest": "/badges/$1" },
     { "src": "/sw.js", "dest": "/sw.js" },
-    { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/manifest.php", "dest": "/manifest.php" },
+    { "src": "/proxy.php", "dest": "/proxy.php" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }
