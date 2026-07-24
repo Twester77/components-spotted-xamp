@@ -31,8 +31,7 @@
     backdrop-filter: blur(6px);
     padding: 10px 10px 0 10px;
     transition: max-height 0.3s ease-out;
-    max-height: 35vh;
-    overflow-y: auto;
+    max-height: 15vh;
     display: flex;
     flex-direction: column;
     scrollbar-width: none;
@@ -41,41 +40,159 @@
 .sticky-header::-webkit-scrollbar {
     display: none;
 }
-/* Botão de Colapso (Lingueta) – Versão Minimalista */
+
+/* ==================================================
+   BARRA DE AÇÕES FIXA (NOVO HEADER)
+   ================================================== */
+.header-actions-fixo {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(20, 20, 30, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    padding: 6px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: flex-start;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    gap: 12px;
+    max-height: 50px;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+/* Miniatura dentro da barra */
+.header-miniatura {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    /* Miniatura – ocupa o espaço restante e corta o texto */
+    gap: 12px;
+    /* ocupa o espaço disponível */
+    min-width: 0;
+    /* permite encolher abaixo do conteúdo */
+    overflow: hidden;
+    /* corta o conteúdo excedente */
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+
+.header-miniatura .miniatura-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+  .header-miniatura .miniatura-info {
+    flex: 1;
+    min-width: 0;
+    /* essencial para o ellipsis */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+
+.header-miniatura .miniatura-nome {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffbc00;
+}
+
+.header-miniatura .miniatura-texto {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+.header-miniatura .miniatura-nome,
+.header-miniatura .miniatura-texto {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==================================================
+   GARANTE QUE O LIGHTBOX DE IMAGEM FIQUE ACIMA DO LIGHTBOX DO POST
+   ================================================== */
+ #modal-imagem .modal-lightbox-fenda {
+    z-index: 1000000 !important; /* Maior que 999999 */
+}
+
 .btn-toggle-collapse {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1001;
-    width: clamp(40px, 8vmin, 60px);  
-    height: clamp(20px, 3vmin, 40px); /* mais fino */
-    background: rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
+    position: fixed;
+    top: 30px;
+    right: 8px;
+    z-index: 1002;
+    width: clamp(30px, 6vmin, 48px);
+    height: clamp(30px, 6vmin, 48px);
+    background: rgba(20, 20, 30, 0.85);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: clamp(1rem, 2vmin, 1.4rem);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
-    margin: 5px auto;
-    padding: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: all 0.25s ease;
+    padding: 0;
+    margin: 0;
 }
 
 .btn-toggle-collapse:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 188, 0, 0.15);
+    border-color: rgba(255, 188, 0, 0.3);
     color: #fff;
-    border-color: rgba(255, 188, 0, 0.2);
+    transform: scale(1.05);
 }
 
 .btn-toggle-collapse:active {
-    transform: translateX(-50%) scale(0.92);
+    transform: scale(0.92);
 }
 
-.btn-toggle-collapse i {
-    font-size: clamp(0.6rem, 1.2vmin, 0.9rem);
+/* ==================================================
+   BOTÃO VOLTAR – DENTRO DA BARRA FIXA (INJETADO PELO HEADERMANAGER)
+   ================================================== */
+.header-action-btn.btn-voltar-fixo {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-radius: 30px;
+    padding: 4px 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: clamp(0.75rem, 1.4vw, 1.3rem);
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    /* não encolhe */
+    flex-grow: 0;
+    /* não cresce */
+    white-space: nowrap;
+    font-family: inherit;
+    transition: background 0.2s;
+
 }
+
+.header-action-btn.btn-voltar-fixo:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
 
 /* MAIN – área rolável */
 .lista-scrollavel {
@@ -88,58 +205,189 @@
 
 /* FOOTER fixo */
 .fixed-input {
+    background: transparent ;
     align-content: center;
     padding: 0;
-    background-color: #000;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* ==================================================
-   CARD PRINCIPAL (sem zumbis)
-   ================================================== */
-.spotted-card.card-focado {
-    border: 2px solid var(--cor-borda-glow);
-    position: relative;
-    animation: glowPulsar 3s infinite alternate;
-    min-width: 280px;
-    max-width: fit-content;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border: none;
     display: flex;
-    margin: 15px auto;
-    transform: none;
-    transition: none;
-    cursor: default;
-}
-.spotted-card.card-focado:hover {
-    cursor: default;
 }
 
-@keyframes glowPulsar {
-    from { box-shadow: 0 0 8px rgba(221, 200, 14, 0.1); }
-    to { box-shadow: 0 0 15px rgba(221, 200, 14, 0.4); }
+#lingoteContainer.minimizado .fixed-input {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    flex-shrink: 0;
+    max-height: none; /* Ajuste conforme a altura do formulário */
+    position: fixed;
+    display: flex;
+    bottom: 0;
 }
 
-.post-content-focado {
-    font-size: 18px;
-    line-height: 1.5;
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    margin: 10px 0;
-    padding: 0 10px;
+
+/* ---------- MINIATURA DO POST (ESTILO BARRINHA) – LEGADO, MANTIDO PARA COMPATIBILIDADE ---------- */
+.post-miniatura {
+    background: rgba(20, 20, 30, 0.92);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin: 8px 0 12px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
     width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
+.post-miniatura:hover {
+    border-color: rgba(255, 188, 0, 0.4);
+    box-shadow: 0 0 20px rgba(255, 188, 0, 0.05);
+}
+
+.miniatura-conteudo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.miniatura-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.miniatura-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.miniatura-nome {
+    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    font-weight: 600;
+    color: var(--cor-borda-glow, #ffbc00);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.miniatura-texto {
+    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    color: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* ==================================================
    MINIMIZAÇÃO DO HEADER VIA CONTROLLER
    ================================================== */
+/* ---------- LINGOTE MINIMIZADO: ESCONDE A MINIATURA ---------- */
+#lingoteContainer.minimizado .post-miniatura {
+    display: none;
+}
+
+/* O lingote minimizado esconde a barra de ações */
+#lingoteContainer.minimizado .header-actions-fixo {
+    display: none;
+}
+
 #lingoteContainer.minimizado .sticky-header {
     display: none;
 }
-#lingoteContainer.minimizado .card-body,
-#lingoteContainer.minimizado .spotted-card,
-#lingoteContainer.minimizado .container-img-post {
-    display: none;
+
+/* ---------- REAÇÕES ABAIXO DA MINIATURA ---------- */
+.fenda-estatica-context .reacoes-gravadas {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 5px 0;
+    margin-top: 4px;
+}
+
+.header-actions-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    max-height: 0;
+    transform: translateY(0);
+    overflow: hidden;
+    transition: opacity 0.25s ease, max-height 0.25s ease, transform 0.25s ease;
+}
+
+/* Estado de saída (fade-out) */
+.header-actions-container.fade-out {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+}
+
+/* Estado de entrada (fade-in) */
+.header-actions-container.fade-in {
+    animation: headerFadeIn 0.3s ease forwards;
+}
+
+@keyframes headerFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header-actions-container.ativo {
+    opacity: 1;
+    max-height: 100px;
+    /* suficiente para os botões */
+}
+
+.header-action-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 6px 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size:  clamp(0.7rem, 1.2vw, 1.2rem);
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+}
+
+.header-action-btn:hover {
+    background: rgba(255, 188, 0, 0.08);
+    border-color: #ffbc00;
+    color: #fff;
+}
+
+.header-action-btn.danger:hover {
+    background: rgba(255, 50, 50, 0.22);
+    border-color: #ff4757;
+    color: #ff6b6b;
 }
 
 /* ==================================================
@@ -152,6 +400,8 @@
     flex-direction: column;
     align-items: stretch;
     width: 100%;
+    position: relative; /* Necessário para o posicionamento dos comentários */
+    overflow-x: hidden;
     margin: 0 auto;
     gap: 10px;
     scroll-snap-type: y mandatory;
@@ -162,9 +412,19 @@
    ANIMAÇÃO DE ENTRADA DOS COMENTÁRIOS
    ================================================== */
 @keyframes surgirComentario {
-    from { opacity: 0; transform: translateY(15px) scale(0.9); opacity: 0.5; transform: translateY(10px) scale(0.98); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.9);
+        opacity: 0.5;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
+
 .comentario-entrou {
     animation: surgirComentario 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) ease-in-out forwards;
 }
@@ -188,6 +448,7 @@
    BOLHAS DE COMENTÁRIO
    ================================================== */
 .comentario-item {
+    gap: 4px;
     padding-bottom: 5px;
     padding-top: 6px;
     padding-inline-end: 8px;
@@ -196,9 +457,16 @@
     border-right: 3px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    scroll-snap-align: start;
+    scroll-margin-top: 50px;
+    -webkit-user-select: text;
+    -ms-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
     align-self: flex-start;
-    width: min-content;
-    min-width: 160px;
+    max-width: min-content;
+    min-width: 150px;
+    min-height: 55px;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -207,14 +475,13 @@
     hyphens: auto;
     margin-bottom: 20px;
     scroll-snap-align: start;
-    scroll-margin-top: 50px;
-    -moz-user-select: text;
-    user-select: text;
+    scroll-margin-top: 60px;
+    overflow: visible;
     will-change: transform;
 }
 
 .comentario-item.meu-comentario {
-    border-right: none;
+    border: none;
     border-radius: 15px 15px 5px 15px;
     align-self: flex-end;
     margin-left: auto;
@@ -224,13 +491,6 @@
 
 .lista-comentarios-social::-webkit-scrollbar {
     display: none;
-}
-
-.comentario-item .acoes-bolha, .comentario-data {
-    text-align: left;
-}
-.comentario-item.meu-comentario .acoes-bolha, .comentario-data {
-    text-align: right;
 }
 
 /* ==================================================
@@ -256,7 +516,6 @@
     color: oklch(from var(--cor-borda-glow) 0.30 c h);
     border-left: 3px solid oklch(from var(--cor-borda-glow) 0.30 c h);
     background: rgba(0, 0, 0, 0.06);
-    margin-bottom: 10px;
     border-radius: 10px;
 }
 
@@ -273,15 +532,33 @@
     animation: neon-ultra 5s infinite alternate ease-in-out;
     color: var(--cor-borda-glow);
 }
+
 .comentario-item.vibe-neon .comentario-data,
 .comentario-item.vibe-neon .comentario-autor {
     font-weight: bold;
     text-shadow: 0 0 6px var(--cor-borda-glow);
     opacity: 0.9;
 }
+
 @keyframes neon-ultra {
-    0%, 18%, 22%, 25%, 53%, 57%, 100% { filter: saturate(0.7); box-shadow: 0 0 10px var(--cor-borda-glow); }
-    20%, 24%, 55% { color: rgba(0,0,0,0.5); box-shadow: 0 0 20px var(--cor-borda-glow); }
+
+    0%,
+    18%,
+    22%,
+    25%,
+    53%,
+    57%,
+    100% {
+        filter: saturate(0.7);
+        box-shadow: 0 0 10px var(--cor-borda-glow);
+    }
+
+    20%,
+    24%,
+    55% {
+        color: rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 20px var(--cor-borda-glow);
+    }
 }
 
 .comentario-item.vibe-glass {
@@ -294,10 +571,19 @@
 }
 
 @keyframes pulsar-luz {
-    0% { box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow); }
-    50% { box-shadow: 0 0 25px var(--cor-borda-glow), inset 0 0 15px var(--cor-borda-glow); }
-    100% { box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow); }
+    0% {
+        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 25px var(--cor-borda-glow), inset 0 0 15px var(--cor-borda-glow);
+    }
+
+    100% {
+        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
+    }
 }
+
 .comentario-item.vibe-ads {
     background-color: #161625;
     border: 2px solid var(--cor-borda-glow);
@@ -307,11 +593,13 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
     background-size: 30px 30px;
 }
+
 .comentario-item.vibe-ads .comentario-texto {
     color: #fff;
     text-shadow: 0 0 8px var(--cor-borda-glow);
     font-weight: 500;
 }
+
 .comentario-item.vibe-ads .comentario-data {
     color: var(--cor-aura-user);
     text-shadow: 0 0 8px var(--cor-borda-glow);
@@ -321,7 +609,6 @@
 .comentario-item.vibe-glass:hover {
     transition: 0.3 ease;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
-    background: #b8b8b800;
 }
 
 /* META DADOS */
@@ -334,17 +621,19 @@
     gap: 8px;
     width: 100%;
 }
+
 .comentario-item .comentario-autor {
     color: var(--cor-borda-glow);
     font-size: clamp(0.85rem, 0.382vw + 0.625rem, 1rem);
     font-weight: bold;
     flex-grow: 1;
-    max-width: clamp(75px, 60vmax, 150px);
+    max-width: clamp(80px, 70vmax, 180px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: min-content;
 }
+
 .comentario-data {
     font-size: clamp(0.8rem, 0.382vw + 0.625rem, 0.95rem);
     opacity: 0.75;
@@ -357,7 +646,7 @@
 
 .comentario-texto {
     color: #ddd;
-    font-size: clamp(0.95rem, 0.382vw + 0.625rem, 1.3rem);
+    font-size: clamp(0.9rem, 0.382vw + 0.6rem, 1.2rem);
     line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -393,6 +682,7 @@
     opacity: 0.7;
     transition: all 0.15s ease-out;
 }
+
 .btn-responder-bolha:hover {
     opacity: 1;
     background: #e4e006;
@@ -407,9 +697,9 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    background-color: rgba(0, 0, 0, 0.75);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+    background: #00000d;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius:6px;
     padding: 8px 12px;
     position: relative;
     width: 100%;
@@ -418,7 +708,6 @@
     margin: 0 auto;
     z-index: 9999;
 }
-
 
 .textarea-wrapper {
     display: flex;
@@ -439,8 +728,9 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 16px;
     min-height: 40px;
-    max-height: 100px;
-    overflow: hidden; /* para manter as bordas arredondadas */
+    max-height: 120px;
+    resize: vertical;
+    overflow: hidden;
     transition: border-color 0.2s;
 }
 
@@ -452,66 +742,60 @@
    INDICADOR DE RESPOSTA – PÍLULA DENTRO DO TEXTAREA
    ================================================== */
 .resposta-indicador {
-    display: none; /* visível apenas quando ativo */
-    position: absolute; /* dentro do container, sobre o textarea */
-    top: 6px;
+    display: none;
+    position: absolute;
+    top: 4px;
     left: 8px;
-    z-index: 5; /* acima do textarea */
+    z-index: 5;
     align-items: center;
     gap: 4px;
     background: rgba(20, 20, 30, 0.92);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 188, 0, 0.25);
     border-radius: 20px;
-    padding: 2px 10px 2px 12px;
-    font-size: clamp(0.7rem, 1.5vmin, 0.85rem);
+    padding: 4px 10px 4px 12px;
+    font-size: clamp(0.7rem, 1.5vw, 1rem);
     color: #ffbc00;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    height: 24px;
+    max-height: 50px;
     box-sizing: border-box;
     pointer-events: auto;
-    /* 🔥 LARGURA DINÂMICA – se ajusta ao conteúdo */
     width: auto;
-    max-width: calc(100% - 16px); /* respeita as margens laterais */
-    min-width: 60px; /* largura mínima para não sumir */
+    max-width: calc(100% - 16px);
+    min-width: 60px;
 }
 
 .resposta-indicador.visivel {
     display: flex !important;
 }
 
-/* Ícone de reply – fixo */
 .resposta-indicador i {
     font-size: 0.7rem;
     opacity: 0.6;
     flex-shrink: 0;
 }
 
-/* 🔥 NOME DO USUÁRIO – DINÂMICO COM ELLIPSIS */
 .resposta-indicador strong {
     font-weight: 600;
     color: #ffbc00;
     font-size: clamp(0.65rem, 1.2vmin, 0.95rem);
-    /* 🔥 ESSENCIAL PARA ELLIPSIS EM FLEX ITEM */
-    min-width: 0; /* permite que o item encolha abaixo do conteúdo */
-    max-width: 100%; /* ocupa o espaço disponível, mas respeita o overflow */
+    min-width: 0;
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /* Isso faz com que o strong cresça até o limite e depois corte */
-    flex: 1; /* ocupa o espaço disponível entre o ícone e o botão */
+    flex: 1;
 }
 
-/* Botão cancelar (✕) – círculo pequeno, fixo */
 .resposta-indicador .cancelar-resposta {
     background: rgba(255, 255, 255, 0.08);
     border: none;
     border-radius: 50%;
     color: #ff8a8a;
     cursor: pointer;
-    font-size: 0.7rem;
-    width: 16px;
-    height: 16px;
+    font-size: 0.75rem;
+    width: 18px;
+    height: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -519,33 +803,44 @@
     line-height: 1;
     transition: 0.2s;
     flex-shrink: 0;
+    user-select: none;
 }
 
 .resposta-indicador .cancelar-resposta:hover {
-    background: rgba(255, 80, 80, 0.25);
+    background: rgba(253, 67, 67, 0.486);
     transform: scale(1.1);
 }
 
 /* ==================================================
-   TEXTAREA – com padding-top para acomodar a pílula
+   TEXTAREA – com padding-top para acomodar a pílula 
+   SEM MÁSCARA POR PADRÃO
    ================================================== */
 .textarea-chat {
     flex: 1;
-    padding: 8px 12px;
-    padding-top: 34px; /* 🔥 espaço suficiente para a pílula + folga */
-    padding-right: 35px; /* espaço para o contador */
-    background: transparent;
+    display: flex;
+    padding: 4px 10px;
+    padding-top: 8px;
+    padding-right: 35px;
+    background: transparent !important;
     border: none;
     color: #fff;
     font-family: inherit;
     resize: vertical;
-    min-height: 40px;
-    max-height: 100px;
+    min-height: 45px;
+    max-height: 200px;
     overflow-y: auto;
     scrollbar-width: none;
     width: 100%;
+    max-width: 100%;
     line-height: 1.4;
     box-sizing: border-box;
+    transition: padding-top 0.2s ease;
+}
+
+.textarea-container:has(.resposta-indicador.visivel) .textarea-chat {
+    padding-top: 30px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 30px, black 35px);
+    mask-image: linear-gradient(to bottom, transparent 30px, black 35px);
 }
 
 .textarea-chat:focus {
@@ -556,22 +851,23 @@
     display: none;
 }
 
-/* Contador – posicionado dentro do container */
 .char-counter-inline {
     position: absolute;
-    bottom: 6px;
-    right: 10px;
-    font-size: 0.7rem;
+    bottom: 5px;
+    right: 5px;
+    font-size: 0.75rem;
     color: #aaaaaa;
     pointer-events: none;
     background: rgba(0, 0, 0, 0.3);
-    padding: 2px 8px;
+    padding: 2px 4px;
     border-radius: 10px;
     z-index: 2;
 }
+
 .char-counter-inline.alerta {
     color: #ff8a00;
 }
+
 .char-counter-inline.critico {
     color: #ff4b4b;
 }
@@ -582,7 +878,7 @@
     border-radius: 50%;
     width: clamp(32px, 8vmin, 70px);
     height: clamp(32px, 8vmin, 70px);
-    font-size: clamp(1rem, 5vmin, 1.8rem);
+    font-size: clamp(1rem, 3vmin, 1.6rem);
     color: #fff;
     display: flex;
     align-items: center;
@@ -591,6 +887,7 @@
     flex-shrink: 0;
     transition: 0.2s;
 }
+
 .btn-attach-gaveta:hover {
     background: #77c9ddc5;
     filter: brightness(1.03);
@@ -617,13 +914,13 @@
 }
 
 .gaveta-opcoes {
-    display: none ;
+    display: none;
     position: absolute;
     bottom: calc(100% + 8px);
     left: 5px;
     right: 0;
     max-height: 50vh;
-    max-width: 200px;
+    max-width: 250px;
     background: rgba(0, 0, 0, 0.92);
     backdrop-filter: blur(4px);
     overflow-y: auto;
@@ -634,6 +931,7 @@
     flex-direction: column;
     gap: 8px;
 }
+
 .gaveta-opcoes.aberta {
     display: flex !important;
 }
@@ -648,6 +946,7 @@
     border-radius: 8px;
     transition: 0.2s;
 }
+
 .btn-toggle-gaveta:hover {
     background: rgba(255, 255, 255, 0.05);
 }
@@ -658,6 +957,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
 }
+
 .input-mini {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -666,6 +966,7 @@
     color: #fff;
     font-size: 0.85rem;
 }
+
 .color-mini {
     width: 35px;
     height: 35px;
@@ -673,6 +974,7 @@
     border: 1px solid #fff;
     cursor: pointer;
 }
+
 .btn-attach-opcao {
     background: rgba(255, 255, 255, 0.05);
     border: none;
@@ -686,11 +988,11 @@
     gap: 8px;
     transition: 0.2s;
 }
+
 .btn-attach-opcao:hover {
     background: rgba(255, 255, 255, 0.116);
 }
 
-/* Honeypot invisível */
 .honeypot {
     display: none !important;
     position: absolute;
@@ -709,7 +1011,7 @@
     text-decoration: none;
     font-size: clamp(1.1rem, 0.41vw + 1.018rem, 1.8rem);
     font-weight: bold;
-    margin-bottom: 15px;
+    margin: 10px auto;
     padding: 6px 10px;
     flex-shrink: 0;
     align-self: flex-start;
@@ -717,6 +1019,7 @@
     transition: background 0.2s;
     width: fit-content;
 }
+
 .btn-voltar-fenda:hover {
     color: var(--dourado);
     text-decoration: underline;
@@ -728,6 +1031,7 @@
     align-items: center;
     width: 100%;
 }
+
 .sem-comentarios {
     opacity: 0.6;
     font-size: 0.95rem;
@@ -740,43 +1044,57 @@
    ================================================== */
 @container feedComentarios (max-width: 360px) {
     .comentario-item {
-        max-width: 75%;
-        padding: 3px 6px;
-        font-size: 0.8rem;
+        max-width: 71%;
+        padding: 3px 5px;
+        font-size: 0.85rem;
     }
+
     .comentario-filho {
-        margin-left: 25px;
-        max-width: 72%;
+        margin-left: 20px;
+        max-width: 68%;
     }
+
     .comentario-item .comentario-autor {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
+
     .comentario-texto {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         line-height: 1.3;
     }
 }
+
 @container feedComentarios (min-width: 361px) and (max-width: 500px) {
     .comentario-item {
-        max-width: 73%;
+        max-width: 62%;
     }
+
     .comentario-filho {
         margin-left: 35px;
-        max-width: 70%;
+        max-width: 58%;
     }
 }
+
 @container feedComentarios (min-width: 501px) and (max-width: 800px) {
     .comentario-item {
-        max-width: 71%;
+        max-width: 68%;
+    }
+
+    .comentario-filho {
+        margin-left: 35px;
+        max-width: 63%;
     }
 }
+
 @container feedComentarios (min-width: 801px) {
     .comentario-item {
         max-width: 60%;
     }
+
     .comentario-item.meu-comentario {
         max-width: 55%;
     }
+
     .comentario-filho {
         margin-left: 40px;
         max-width: 52%;
@@ -794,36 +1112,67 @@
     overflow: hidden;
 }
 
-.comentario-img , .comentario-img.gif-externo {
+.comentario-img,
+.comentario-img.gif-externo {
     max-width: 100%;
     max-height: 100vh;
     aspect-ratio: auto;
     display: block;
     border: none;
-    border-radius: 12px;
+    border-radius: 6px;
     cursor: pointer;
     -webkit-user-drag: element;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
     cursor: zoom-in;
     transition: transform 0.3s ease;
 }
 
-
-@container foto-comentario (max-width: 200px) { .comentario-img { object-fit: cover; } }
-@container foto-comentario (min-width: 201px) and (max-width: 300px) { .comentario-img { object-fit: cover; } }
-@container foto-comentario (max-width: 350px) { .comentario-img { object-fit: cover; } }
-@container foto-comentario (max-height: 200px) { .comentario-img { object-fit: cover; } }
-@container foto-comentario (min-height: 201px) and (max-width: 250px) { .comentario-img { object-fit: cover; } }
-@container foto-comentario (max-height: 300px) { .comentario-img { object-fit: contain; } }
-.comentario-img:active {
-    transform: scale(1.05);
+@container foto-comentario (max-width: 150px) {
+    .comentario-img {
+        object-fit: cover;
+    }
 }
+
+@container foto-comentario (min-width: 201px) and (max-width: 300px) {
+    .comentario-img {
+        object-fit: cover;
+    }
+}
+
+@container foto-comentario (max-width: 350px) {
+    .comentario-img {
+        object-fit: cover;
+    }
+}
+
+@container foto-comentario (max-height: 200px) {
+    .comentario-img {
+        object-fit: cover;
+    }
+}
+
+@container foto-comentario (min-height: 201px) and (max-width: 250px) {
+    .comentario-img {
+        object-fit: cover;
+    }
+}
+
+@container foto-comentario (max-height: 300px) {
+    .comentario-img {
+        object-fit: contain;
+    }
+}
+
 
 /* LINGOTE */
 .lingote-container {
     display: block;
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
 .fenda-estatica-context {
@@ -833,23 +1182,18 @@
     width: 100%;
     padding: 0 10px 10px 10px;
 }
+
 .fenda-estatica-context .spotted-card:-webkit-scrollbar {
     display: none;
 }
-.fenda-estatica-context .reacoes-gravadas {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 0;
-}
+
 .fenda-estatica-context .spotted-card {
     max-height: none;
     max-width: 600px;
     overflow-y: visible;
     scrollbar-width: none;
-
 }
+
 .reacao-placeholder {
     justify-content: flex-end;
     order: 2;
@@ -857,6 +1201,7 @@
     text-align: center;
     margin-top: 8px;
 }
+
 .fenda-estatica-context {
     display: flex;
     justify-items: center;
@@ -868,9 +1213,15 @@ body.pagina-post .header-principal {
 
 /* Animação do brilho */
 @keyframes highlightFade {
-    0% { background-color: rgba(255, 193, 7, 0.4); }
-    100% { background-color: transparent; }
+    0% {
+        background-color: rgba(255, 193, 7, 0.4);
+    }
+
+    100% {
+        background-color: transparent;
+    }
 }
+
 .comentario-item.comentario-highlight {
     animation: highlightFade 3s ease-out forwards;
     border-radius: 8px;
@@ -879,25 +1230,30 @@ body.pagina-post .header-principal {
 
 .indicador-resposta {
     cursor: pointer;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     background: rgba(255, 255, 255, 0.10);
-    border-left: 3px solid var(--cor-borda-glow);
+    border-left: 2px solid var(--cor-borda-glow);
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     color: #ffffff;
     transition: background 0.3s;
     min-width: 60px;
     max-width: fit-content;
     word-break: break-all;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 0.382vw + 0.625rem, 1.1rem);
     font-weight: bold;
-    padding: 4px 8px;
+    padding: 3px 8px;
     opacity: 0.75;
 }
+
 .indicador-resposta:hover {
     background: rgba(255, 255, 255, 0.144);
 }
 
-.spotted-card.card-focado .spotted-card img {
+.spotted-card img {
     max-width: 100%;
     object-fit: contain;
     max-height: 100vh;
@@ -906,20 +1262,19 @@ body.pagina-post .header-principal {
     border-radius: 12px;
 }
 
-
-.comentario-media-item .gif-externo
- {
+.comentario-media-item .gif-externo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block; }
-    
+    display: block;
+}
 
 .comentario-deletado {
     background: rgba(128, 128, 128, 0.1);
     border-right: 5px solid #888;
     opacity: 0.7;
 }
+
 .comentario-deletado-msg {
     text-align: center;
     padding: 7px;
@@ -928,7 +1283,9 @@ body.pagina-post .header-principal {
     font-size: 0.9rem;
     background-color: rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+    min-width: 180px;
 }
+
 .comentario-deletado-msg i {
     margin-right: 6px;
 }
@@ -956,6 +1313,7 @@ body.pagina-post .header-principal {
         justify-content: center;
         background: #00000066;
     }
+
     .fenda-estatica-context .container-img-post img {
         max-height: 100%;
         max-width: 100%;
@@ -980,6 +1338,7 @@ body.pagina-post .header-principal {
     line-height: 1;
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
+
 .btn-excluir-comentario,
 .btn-excluir-comentario:focus {
     opacity: 1;
@@ -987,6 +1346,7 @@ body.pagina-post .header-principal {
     color: #cccccc;
     transform: scale(1.15);
 }
+
 @media (hover: none) {
     .btn-excluir-comentario {
         opacity: 0.6;
@@ -995,10 +1355,12 @@ body.pagina-post .header-principal {
         color: rgba(255, 255, 255, 0.8);
     }
 }
+
 .btn-excluir-comentario:hover {
     color: #ff4b2b;
     transform: scale(1.2);
 }
+
 .comentario-item.meu-comentario .btn-excluir-comentario {
     left: -32px;
 }
@@ -1018,37 +1380,45 @@ body.pagina-post .header-principal {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .dialog-confirmacao::backdrop {
     display: none;
 }
+
 .dialog-conteudo {
     background: rgba(20, 20, 32, 0.96);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(6px);
     border-radius: 16px;
     padding: 16px 20px 20px;
     text-align: center;
     border: 1px solid rgba(255, 140, 0, 0.3);
     pointer-events: auto;
     -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
 }
+
 .dialog-conteudo h3 {
     margin: 0 0 8px 0;
     color: #ffbc00;
     font-size: 1rem;
     font-weight: 600;
 }
+
 .dialog-conteudo p {
     margin: 0 0 16px 0;
     color: #fff;
     font-size: 0.9rem;
     line-height: 1.4;
 }
+
 .dialog-botoes {
     display: flex;
     justify-content: center;
     gap: 15px;
 }
+
 .dialog-btn {
     border: none;
     border-radius: 30px;
@@ -1059,19 +1429,23 @@ body.pagina-post .header-principal {
     font-size: 0.85rem;
     min-width: 80px;
 }
+
 .dialog-btn-sim {
     background: rgba(220, 53, 69, 0.2);
     border: 1px solid #ff4b2b;
     color: #ff8a8a;
 }
+
 .dialog-btn-sim:hover {
     background: rgba(220, 53, 69, 0.4);
 }
+
 .dialog-btn-nao {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid #666;
     color: #ccc;
 }
+
 .dialog-btn-nao:hover {
     background: rgba(255, 255, 255, 0.15);
 }
@@ -1082,52 +1456,106 @@ body.pagina-post .header-principal {
 @media (max-width: 480px) {
     .btn-excluir-comentario {
         left: -24px;
-        font-size: 0.85rem;
         top: 4px;
     }
+
     .dialog-confirmacao {
-        width: 220px;
+        width: 240px;
     }
+
     .dialog-conteudo {
         padding: 14px 16px 16px;
     }
+
     .dialog-conteudo h3 {
         font-size: 0.9rem;
     }
+
     .dialog-conteudo p {
         font-size: 0.8rem;
     }
+
     .dialog-btn {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         padding: 4px 10px;
         min-width: 60px;
     }
+
     .post-encerrado-banner {
         font-size: 0.8rem;
         padding: 8px 12px;
     }
+
     .comentarios-bloqueados-msg {
+        font-size: 0.85rem;
+    }
+
+    .container-cadastro-fenda {
+        padding: 20px;
+    }
+
+    .cadastro-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .grid-vibes {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .step-content {
+        padding: 0 10px;
+    }
+
+    .botoes-rodape {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .botoes-rodape .btn-step-prev {
+        width: 100%;
+        text-align: center;
+    }
+
+    .botoes-rodape .btn-finalizar-fenda {
+        width: 100%;
+    }
+
+    .preview-perfil {
+        height: 100px;
+    }
+
+    .preview-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .preview-info .nome {
         font-size: 0.85rem;
     }
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
     .dialog-confirmacao {
-        width: 240px;
+        width: 260px;
         top: 50%;
         transform: translate(-50%, -50%);
     }
+
     .dialog-conteudo {
         padding: 10px 14px 14px;
     }
+
     .dialog-conteudo h3 {
         font-size: 0.85rem;
         margin-bottom: 4px;
     }
+
     .dialog-conteudo p {
         font-size: 0.8rem;
         margin-bottom: 10px;
     }
+
     .dialog-btn {
         font-size: 0.75rem;
         padding: 4px 10px;
@@ -1148,15 +1576,18 @@ body.pagina-post .header-principal {
     gap: 10px;
     flex-wrap: wrap;
 }
+
 .post-encerrado-banner i {
     font-size: 1.1rem;
     flex-shrink: 0;
 }
+
 .fixed-input-bloqueado {
     background: rgba(255, 255, 255, 0.02);
     border-top: 1px solid rgba(255, 255, 255, 0.04);
     padding: 16px 20px;
 }
+
 .comentarios-bloqueados-msg {
     display: flex;
     align-items: center;
@@ -1169,13 +1600,13 @@ body.pagina-post .header-principal {
     flex-wrap: wrap;
     text-align: center;
 }
+
 .comentarios-bloqueados-msg i {
     font-size: 1.2rem;
     color: #ffffff;
     opacity: 0.7;
 }
 
-/* RODAPÉ DO COMENTÁRIO (DATA) – caso queira usar no futuro */
 .comentario-rodape {
     display: flex;
     justify-content: flex-end;
@@ -1185,18 +1616,16 @@ body.pagina-post .header-principal {
     color: #c4c4c4;
 }
 
-
 /* GRID DE ANEXOS MÚLTIPLOS (ESTILO WHATSAPP) */
 .comentario-media-wrapper-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 5px;
     padding: 4px 0;
     width: 100%;
-    /* sem borda externa – a borda fica nos itens */
+    animation: none;
 }
 
-/* Se houver apenas 1 item: vira flex centralizado */
 .comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
     display: flex;
     justify-content: center;
@@ -1211,14 +1640,12 @@ body.pagina-post .header-principal {
     transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Se houver apenas 1 item, ele não fica gigante */
 .comentario-media-item:only-child {
     max-width: 180px;
     width: 100%;
 }
 
 .comentario-media-item:hover {
-    transform: scale(1.02);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -1229,8 +1656,33 @@ body.pagina-post .header-principal {
     display: block;
 }
 
-/* GIFs – mantém a proporção original (não corta) */
 .comentario-media-item img.gif-externo {
     object-fit: contain;
     background: rgba(0, 0, 0, 0.3);
+}
+
+
+/* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
+.comentario-item.comentario-selecionado {
+    position: relative ;
+    z-index: 2 !important;
+    border: none!important ;
+    background: rgba(255, 187, 0, 0.075) !important;
+    transition: background 0.3s ease;
+}
+
+/* A faixa agora é um elemento real criado via JS */
+.faixa-destaque {
+    border: none;
+    left: 0;
+    width: 100vw;
+    pointer-events: none;
+    z-index: 1;
+    background: rgba(255, 187, 0, 0.08);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.faixa-destaque.ativo {
+    opacity: 1;
 }

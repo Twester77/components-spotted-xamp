@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
 // 🛡️ VERSÃO v1.1.2 – Com logs de depuração
-const CACHE_VERSION = 'fenda-v1.1.2';
+const CACHE_VERSION = 'fenda-v1.1.3';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -30,6 +30,7 @@ const STATIC_FILES = [
   '/uploads/ui/anonimo-default.webp',
   '/uploads/ui/default.webp',
   '/uploads/ui/favicon.png',
+  '/uploads/ui/default_comunidade.webp',
   '/uploads/ui/default_capa_masculino.webp',
   '/uploads/ui/default_capa_feminino.webp',
   '/uploads/ui/default_feminino.jpg', 

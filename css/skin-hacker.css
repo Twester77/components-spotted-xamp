@@ -17,7 +17,7 @@
     --hacker-green: #00ff41;
     --hacker-bg: #000000;
     --hacker-font: 'Courier New', 'Courier', monospace;
-    --boot-duration: 15s; /* Ajuste para tornar o boot mais lento */
+    --boot-duration: 10s; /* Ajuste para tornar o boot mais lento */
 }
 
 body.hacker-mode {
@@ -26,8 +26,10 @@ body.hacker-mode {
     font-family: var(--hacker-font) !important;
     -webkit-font-smoothing: antialiased;
     cursor: url('imagensfoto/crosshair.cur'), auto !important;
-    -webkit-user-select: none ;
-    user-select: none ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     transition: background 0.3s ease, color 0.3s ease !important;
     pointer-events: auto!important;
     
@@ -41,8 +43,10 @@ body.hacker-mode textarea,
 body.hacker-mode [contenteditable="true"],
 body.hacker-mode .bio-texto,
 body.hacker-mode .post-content {
-    -webkit-user-select: text ;
-    user-select: text ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;;
 }
 
 /* ---------------------------------------------------------------
@@ -61,6 +65,7 @@ body.hacker-mode *::after {
 
 /* Scanlines horizontais */
 body.hacker-mode::before {
+    content: " " !important;
     display: block !important;
     position: fixed !important;
     top: 0 !important;
@@ -76,6 +81,7 @@ body.hacker-mode::before {
 
 /* Flicker / brilho de tela CRT */
 body.hacker-mode::after {
+    content: " " !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
@@ -116,13 +122,12 @@ body.hacker-mode .bolha {
    --------------------------------------------------------------- */
 
 /* APLICANDO EM TUDO: Cards, Formulários, Modais e Perfis */
-body.hacker-mode .spotted-card,
 body.hacker-mode .container-principal,
 body.hacker-mode .formulario-caixa,
 body.hacker-mode .sessao-publicar,
 body.hacker-mode .main-perfil-container,
-body.hacker-mode .fenda-modal-content,
-body.hacker-mode .perfil-gold {
+body.hacker-mode .fenda-modal-content
+{
     position: relative ;
     background: #000 !important;
     /* LATERAIS: O duplo pipe "||" */
@@ -131,8 +136,18 @@ body.hacker-mode .perfil-gold {
     border-bottom: 2px double var(--hacker-green) ;
     border-top: 2px double var(--hacker-green) ;
     box-shadow: none ;
-    border-radius: 0 ;
 }
+
+body.hacker-mode .spotted-card {
+    background: #000 !important;
+    /* LATERAIS: O duplo pipe "||" */
+    border-bottom: 2px double var(--hacker-green) ;
+    border-top: 2px double var(--hacker-green) ;
+    border-right: 1px double var(--glass-bg) ;
+    border-left: 1px double var(--glass-bg) ;
+    box-shadow: none ;
+}
+
 
 body.hacker-mode .sessao-fofoca-focada {
     border: 1px solid var(--hacker-green);
@@ -147,6 +162,9 @@ body.hacker-mode .fixed-input::after , .footer {
 body.hacker-mode .fixed-input {
     border: none;
     background: transparent;
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 /* TOPO: Mantendo os títulos dinâmicos da Deep com cantos "+" */
@@ -157,8 +175,7 @@ body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
     content: "+==================================================================+==============================================================+" !important;
     position: absolute !important;
-    padding: 5px;
-    top: -30px ;
+    top: -28px ;
     left: -2px ; /* Ajuste para alinhar com o border-left double */
     right: -2px ;
     color: var(--hacker-green) ;
@@ -198,10 +215,9 @@ body.hacker-mode .sidebar-fenda,
 body.hacker-mode header,
 body.hacker-mode footer {
     background-color: rgba(0, 0, 0, 0.95) !important;
-    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
     background-size: 100% 4px ;
-    border-bottom: 2px solid #00ff00 ;
-    font-family: monospace !important;
+    font-family: monospace ;
 }
 
 /* Links do menu */
@@ -221,6 +237,7 @@ body.hacker-mode .submenu li a {
 }
 
 /* Hover dos menus: inversão total */
+
 body.hacker-mode .navbar-nav .nav-link:hover,
 body.hacker-mode .menu li a:hover,
 body.hacker-mode .dropdown-item:hover,
@@ -264,38 +281,45 @@ body.hacker-mode .submenu {
 }
 
 /* ---------------------------------------------------------------
-   9. INPUTS, TEXTAREAS, SELECTS (PROMPT DE COMANDO + TYPING)
+   9. INPUTS, TEXTAREAS, SELECTS (PROMPT DE COMANDO + TYPING) - MODO HACKER
    --------------------------------------------------------------- */
 
+/* Estilos de texto para os inputs nativos */
 body.hacker-mode input,
 body.hacker-mode textarea,
 body.hacker-mode select,
 body.hacker-mode .fenda-input,
 body.hacker-mode .textarea-fenda {
-    background: #000 ;
     color: #00ff00 ;
-    border-radius: 0 ;
     caret-color: #00ff00 ;
     font-family: monospace ;
 }
 
-/* Efeito de typing / cursor piscando em inputs (usando box-shadow) */
-body.hacker-mode input:focus,
-body.hacker-mode textarea:focus {
-    outline: none ;
-    animation: blink-cursor-input 1s step-end infinite ;
+/*  O SEGREDO: Aplicar o fundo preto e borda reta no CONTAINER do chat, não no textarea */
+body.hacker-mode .textarea-container {
+    background: #000000 !important; 
+    border: 1px solid #00ff00 ; 
+    border-radius: 0px ; /* Remove o arredondamento no modo hacker */
 }
 
-body.hacker-mode .area-texto-vivo:focus-within {
-    outline: none ;
-    box-shadow: 0 0 0 2px #00ff00, 0 0 0 2px #000 ;
+/* Mantém a pílula visível e estilizada no modo hacker se necessário */
+body.hacker-mode .resposta-indicador {
+    border-radius: 0px ;
     border-color: #00ff00 ;
+    background: rgba(0, 0, 0, 0.95) ;
+}
+
+/* Efeito de typing / cursor piscando focado no container do prompt */
+body.hacker-mode .textarea-container:focus-within {
+    outline: none !important;
+    animation: blink-cursor-input 1s step-end infinite !important;
 }
 
 @keyframes blink-cursor-input {
-    0%, 100% { box-shadow: 0 0 0 2px #00ff00, 0 0 0 2px #000; }
-    50% { box-shadow: 0 0 0 1px transparent, 0 0 0 2px #000; }
+    0%, 100% { box-shadow: 0 0 0 2px #00ff00; }
+    50% { box-shadow: 0 0 0 1px transparent; }
 }
+
 
 /* ---------------------------------------------------------------
    10. BOTÕES (INVERSÃO DE CORES NO HOVER + SETA)
@@ -332,7 +356,6 @@ body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atlétic
     overflow: visible ;
     letter-spacing: 1px ;
     text-decoration: none !important;
-    display: inline-block;
 }
 
 body.hacker-mode #btn-menu-hamburguer:hover {
@@ -341,6 +364,7 @@ body.hacker-mode #btn-menu-hamburguer:hover {
 }
 
 body.hacker-mode .perdidos-item .link-fofoca:hover,
+body.hacker-mode .btn-lancar:hover,
 body.hacker-mode .btn-voltar-fenda:hover {
     color:#000;
     background: #00ff00;
@@ -357,9 +381,7 @@ body.hacker-mode .btn-voltar-fenda {
 body.hacker-mode .btn:hover,
 body.hacker-mode .fenda-btn-glow:hover,
 body.hacker-mode #btn-load-more:hover,
-body.hacker-mode .filtro-btn:hover,
 body.hacker-mode .btn-sair-fenda:hover,
-body.hacker-mode .btn-lancar:hover,
 body.hacker-mode .btn-zarpar:hover,
 body.hacker-mode .btn-enviar-fenda:hover,
 body.hacker-mode .btn-ficar-terra:hover,
@@ -381,15 +403,14 @@ body.hacker-mode .nexus-trigger {
 
 
 body.hacker-mode .insignia-atletica-bottom:hover,
-body.hacker-mode .nexus-trigger:hover,
 body.hacker-mode .insignia-atletica-link:hover ,
 body.hacker-mode .img-comunidade-grande:hover {
-    background-color: #00ff00 ;
-    object-fit: contain !important;
-    color: #000000 !important;
-    border-style: none !important;
-    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) !important;
-    transform: scale(1.05) !important;
+    background-color: #00b304 ;
+    object-fit: contain ;
+    color: #000000 ;
+    border-style: none ;
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
+    transform: scale(1.03) ;
 }
 
 
@@ -487,17 +508,23 @@ body.hacker-mode .menu li a:hover i {
 body.hacker-mode .badge,
 body.hacker-mode .tag-categoria,
 body.hacker-mode .tag-link,
-body.hacker-mode .badge-perdido,
-body.hacker-mode .badge-achado,
 body.hacker-mode .badge-presenca,
 body.hacker-mode .badge-alertas {
-    background: #000 !important;
-    border: 1px solid #00ff00 !important;
-    color: #00ff00 !important;
-    border-radius: 0 !important;
-    padding: 5px 10px !important;
+    background: #000 ;
+    border: 1px solid #00ff00 ;
+    color: #00ff00 ;
+    border-radius: 0 ;
+    padding: 5px 10px ;
     text-transform: uppercase !important;
     font-family: monospace !important;
+}
+
+body.hacker-mode .badge-perdido,
+body.hacker-mode .badge-achado {
+    border: 1px solid #00ff00 ;
+    color: #0e1d0e ;
+    text-transform: uppercase ;
+    font-family: monospace ;
 }
 
 body.hacker-mode .badge-alertas {
@@ -596,9 +623,9 @@ body.hacker-mode .comentario-item.vibe-neon .comentario-autor {
 
 /* 4. VIBE LIGHT - Terminal Monocromático Vintage (verde-fósforo suave) */
 body.hacker-mode .comentario-item.vibe-light {
-    background: #8fc28f2e;  
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    background: #3a873a57;  
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     font-weight: normal;
     /* Aplica a cor verde e a grade por cima de todo o quadrado */
     
@@ -647,11 +674,13 @@ body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
     font-family: var(--hacker-font) ;
 }
 
-body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item {
+body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item,
+body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item  {
     border-color: #00ff41 ;
 }
-body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
-    background: rgba(0, 255, 64, 0.144) ;
+body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active,
+body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
+    background: rgba(0, 255, 64, 0.144)!important ;
     border-color: #00ff41 ;
     box-shadow: 0 0 10px #00ff41 ;
 }
@@ -697,10 +726,10 @@ body.hacker-mode h2,
 body.hacker-mode .titulo-fofoca,
 body.hacker-mode .nome-publico,
 body.hacker-mode .conselho-header {
-    font-family: monospace !important;
-    color: #00ff00 !important;
-    text-transform: uppercase !important;
-    border-bottom: 1px dashed #00ff00 !important;
+    font-family: monospace ;
+    color: #00ff00 ;
+    text-transform: uppercase ;
+    border-bottom: 1px dashed #00ff00 ;
     display: inline-block !important;
     padding-right: 15px;
 }
@@ -786,7 +815,7 @@ body.hacker-mode footer::after {
     content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
     display: block ;
     text-align: center !important;
-    font-size: 0.7rem ;
+    font-size: 0.65rem ;
     color: #0f0 !important;
     opacity: 0.6 !important;
 }
@@ -804,18 +833,16 @@ body.hacker-mode .post-content.tem-mais:not(.expandido)::after {
    --------------------------------------------------------------- */
 
 body.hacker-mode .reacao-item {
-    background: #000 !important;
-    border: 1px solid #0f0 !important;
-    color: #0f0 !important;
-    padding: 2px 8px !important;
-    font-family: monospace !important;
+    background: #000 ;
+    border: 1px solid #0f0 ;
+    color: #0f0 ;
+    font-family: monospace ;
 }
 
 body.hacker-mode .reacao-item.voted {
-    background: rgba(0,255,0,0.2) !important;
-    border-color: #0f0 !important;
-    box-shadow: 0 0 10px #0f0 !important;
-    transform: none!important;
+    background: rgba(0,255,0,0.2) ;
+    border-color: #0f0 ;
+    box-shadow: 0 0 10px #0f0 ;
 }
 
 /* Garante que o container dos emojis use flexbox e alinhe os itens em grade/linha */
@@ -834,7 +861,6 @@ body.hacker-mode .reacoes-popup {
     /* Configurações extras para o container */
     display: flex ;
     gap: 4px ; /* Espaço entre os quadradinhos dos emojis */
-    padding: 6px ; /* Margem interna do pop-up */
 }
 
 /* Modifica os elementos dos emojis para virarem quadradinhos perfeitos */
@@ -850,17 +876,7 @@ body.hacker-mode .reacoes-popup span {
 body.hacker-mode .reacoes-popup span:hover {
     transform: scale(1.1); /* Um leve zoom para destacar o quadradinho */
     filter: saturate(1.2) drop-shadow(0 0 2px #00ff00);
-    
-    /* Aplica a cor verde e a grade por cima de todo o quadrado */
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.5) 0px,
-        rgba(0, 0, 0, 0.5) 1px,
-        transparent 1px,
-        transparent 3px
-    ), #0dff0d !important;
-    
-    background-size: 100% 3px !important;
+    background: #00ff00b2;
 }
 
 
@@ -949,11 +965,11 @@ body.hacker-mode .bio-texto,
 body.hacker-mode p,
 body.hacker-mode .lista-conselhos,
 body.hacker-mode .article p {
-    overflow: hidden !important;
-    white-space: normal !important;
-    display: block !important;
-    width: auto !important;
-    animation: typing-global 3s steps(20, end) forwards ;
+    overflow: hidden ;
+    white-space: normal ;
+    display: block ;
+    width: auto ;
+    animation: typing-global 4s steps(20, end) forwards ;
 
 }
 
@@ -1124,13 +1140,13 @@ body.hacker-mode .pagination span {
 body.hacker-mode .btn-responder-bolha::before,
 body.hacker-mode .comentario-item.comentario-filho::before
 {
-    background: #000 !important;
+    background: #000 ;
     border: none !important;
-    color: #0f0 !important;
+    color: #0f0 ;
 }
 body.hacker-mode .btn-responder-bolha:hover {
-    color: #000 !important;
-    background: #0f0 !important;
+    color: #000 ;
+    background: #0f0 ;
 }
 
 body.hacker-mode .char-counter {
@@ -1163,7 +1179,7 @@ body.hacker-mode .char-counter {
     white-space: nowrap;
     font-size: 14px;
     border-right: .15em solid #0f0;
-    animation: typing 4s steps(20, end) forwards;
+    animation: typing 3s steps(20, end) forwards;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -1192,7 +1208,7 @@ body.hacker-mode .char-counter {
 }
 
 body.hacker-mode .hacker-booting {
-    animation: bootSystem var(--boot-duration) steps(10) forwards !important;
+    animation: bootSystem var(--boot-duration) steps(20) forwards !important;
 }
 
 @keyframes bootSystem {

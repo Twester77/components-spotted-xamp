@@ -47,8 +47,9 @@ Os bits continuarão intactos, esperando você voltar."*
 body.modo-swipe-ativo .spotted-card,
 body.modo-swipe-ativo .post-content,
 body.modo-swipe-ativo .article.spotted-card {
-    scrollbar-width: none !important;
+    scrollbar-width: none ;
     -webkit-user-select: none !important;
+    -ms-user-select: none !important;
     -moz-user-select: none !important;
     user-select: none !important;
     cursor: -moz-grab;
@@ -76,6 +77,8 @@ body.modo-swipe-ativo .feed-empilhado .card-body {
     touch-action: auto;
     pointer-events: none;
     -webkit-user-select: none !important;
+    -ms-user-select: none !important;
+    -moz-user-select: none !important;
     user-select: none !important;
 }
 
@@ -105,9 +108,17 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 }
 
 body.modo-swipe-ativo .container-feed {
+    display: block;
     height: 100dvh;
     min-height: 100vh;
     position: relative;
+    -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
+    user-select: none ;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ============================================================
@@ -162,12 +173,12 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     contain: paint;
     /* Força o hardware a usar camadas planas e limpas */
     transform-style: flat;
-    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     
     /* Remove o desfoque temporariamente durante o trajeto elástico de 0.2s */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 
@@ -200,8 +211,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
    5. Altura do texto no modo swipe
    ============================================================ */
 body.modo-swipe-ativo .post-content {
-    max-height: var(--text-max-height, clamp(4rem, 8vh, 18rem));
-    line-height: 1.5;
+    max-height: var(--text-max-height, clamp(3rem, 6vh, 17rem));
     margin-bottom: 8px;
     display: flex;
     flex-grow: 1;
@@ -262,7 +272,7 @@ body.modo-swipe-ativo .post-content {
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
-    background: rgba(10, 10, 10, 0.5);
+    background: rgba(10, 10, 10, 0.514);
     -webkit-backdrop-filter: none;
     backdrop-filter: none ;
 }
@@ -277,6 +287,8 @@ body.modo-swipe-ativo .post-content {
 .feed-empilhado .spotted-card:not(:first-child) {
     pointer-events: none ;
     -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
     user-select: none ;
 }
 
@@ -350,20 +362,21 @@ body.modo-swipe-ativo #btn-abrir-filtros {
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: block !important;
     position: absolute;
-    top: 30%;
-    background: rgba(0, 0, 0, 0.534);
+    background: rgba(0, 0, 0, 0.751);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     border-radius: 0 0 20px 20px;
     padding: 15px;
     z-index: 10000;
-    max-height: 55dvh;
+    max-height: 50dvh;
     overflow-y: auto !important;
     width: 100%;
-    border-bottom: 4px solid #ff8c00;
+    border-bottom: 3px solid #ff8c00;
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        max-height: 50vh;
+        max-height: 55vh;
     }
 }
 
@@ -484,6 +497,8 @@ body.modo-swipe-ativo .container-feed article {
     content-visibility: auto;
     touch-action: none;
     -webkit-user-select: none !important;
+    -ms-user-select: none !important;
+    -moz-user-select: none !important;
     user-select: none !important;
     transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
 
@@ -491,8 +506,10 @@ body.modo-swipe-ativo .container-feed article {
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .feed-anexo-item img,
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .user-info-post * {
     touch-action: none;
-    -webkit-user-select: none;
-    user-select: none;
+    -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
+    user-select: none ;
     pointer-events: none;
 }
 
@@ -509,13 +526,15 @@ body.fenda-arrastando .anonimo {
 /* 🔥 Grid de anexos no modo swipe (usando a mesma classe do feed) */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 6px;
-    margin: 8px 0;
-    border-radius: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 12px;
+    margin: 6px 0;
+    border-radius: 10px;
     overflow: hidden;
     pointer-events: none;
     touch-action: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
@@ -544,7 +563,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-
 }
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item:only-child img {
-    max-height: 250px;
+    max-height: 220px;
     object-fit: contain;
 }
 
@@ -582,6 +601,17 @@ body.modo-swipe-ativo .feed-empilhado  .spotted-card .container-img-post {
    
 }
 
+@media screen and (max-width: 350px) and (orientation: portrait),
+ (max-width: 480px) and (orientation: landscape)
+ {
+
+ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 4px;
+    margin: 4px 0;
+    border-radius: 8px; }
+ }
 
 /* ============================================================
    CORREÇÃO DE SOBREPOSIÇÃO NO MODO SWIPE (Z-INDEX)
@@ -632,8 +662,10 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     backdrop-filter: brightness(1.05) saturate(1.1);
     transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s;
     will-change: transition;
-    -webkit-user-select: none;
-    user-select: none;
+    -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
+    user-select: none ;
 }
 
 /* A animação: muda apenas a posição do gradiente (GPU Friendly) */

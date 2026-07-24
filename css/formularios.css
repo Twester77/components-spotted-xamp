@@ -22,13 +22,664 @@ option {
 
 select:focus {
     background-color: #00000071;
-    color: var(--laranja-fenda);
+    color: #ffbf0fec;
 }
 
 
-form {
+/* ============================================================
+       ESTILOS GERAIS DO CADASTRO (JÁ EXISTENTES)
+       ============================================================ */
+.main-form-cadastro {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 50%, #1a1a2e 0%, #0a0a0a 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.main-form-cadastro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(255, 188, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 188, 0, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.container-cadastro-fenda {
+    position: relative;
+    z-index: 1;
+    background: rgba(20, 20, 30, 0.85);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 28px;
+    max-width: 500px;
+    width: 100%;
     margin: 20px auto;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
+
+.container-cadastro-fenda.aura-glow {
+    border-color: var(--cor-aura, #70cde4);
+    box-shadow: 0 0 30px var(--cor-aura-alpha, rgba(112, 205, 228, 0.2));
+}
+
+/* ---------- PRÉVIA DO PERFIL (CARTÃO DE VISITA) ---------- */
+.preview-perfil-wrapper {
+    margin: 15px 0 25px 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease;
+}
+
+.preview-perfil {
+    width: 100%;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.4s ease;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 16px;
+}
+
+/* Conteúdo da prévia – um mini-card com avatar e nome fictícios */
+.preview-conteudo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    z-index: 2;
+    position: relative;
+}
+
+.preview-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.preview-info {
+    flex: 1;
+    color: #fff;
+}
+
+.preview-info .nome {
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 0 0 2px 0;
+    letter-spacing: 0.3px;
+}
+
+.preview-info .username {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin: 0;
+}
+
+.preview-info .bio-preview {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    margin: 4px 0 0 0;
+    font-style: italic;
+}
+
+/* ============================================================
+       ESTILOS DE CADA VIBE (FIEL AO VER-PERFIL)
+       ============================================================ */
+
+/* ---------- VIBE DARK ---------- */
+.preview-perfil.vibe-dark {
+    background: #16161d !important;
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    background-image:
+        radial-gradient(circle at 0% 0%, var(--cor-aura, #70cde4) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, var(--cor-aura, #70cde4) 0%, transparent 40%) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px;
+    transition: all 0.5s ease;
+}
+
+.preview-perfil.vibe-dark .preview-avatar {
+    border-color: var(--cor-aura, #70cde4);
+}
+
+/* ---------- VIBE NEON ---------- */
+.preview-perfil.vibe-neon {
+    background: linear-gradient(to bottom, transparent 0%, var(--cor-aura, #70cde4) 30%, #000000 60%) !important;
+    animation: neon-flicker-subtle 3s infinite alternate ease-in-out;
+    border: 1px solid var(--cor-aura, #70cde4);
+    border-radius: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.preview-perfil.vibe-neon .preview-avatar {
+    border-color: var(--cor-aura, #70cde4);
+    box-shadow: 0 0 15px var(--cor-aura, #70cde4);
+}
+
+@keyframes neon-flicker-subtle {
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+        filter: brightness(1) saturate(1);
+        box-shadow: 0 0 15px var(--cor-aura, #70cde4), 0 0 30px rgba(0, 0, 0, 0.5);
+    }
+
+    20%,
+    24%,
+    55% {
+        filter: brightness(0.85) saturate(0.8);
+        box-shadow: 0 0 5px var(--cor-aura, #70cde4), 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* ---------- VIBE GLASS ---------- */
+.preview-perfil.vibe-glass {
+    background: linear-gradient(135deg,
+            oklch(1 0 0 / 0.45) 0%,
+            oklch(1 0 0 / 0.05) 45%,
+            oklch(0 0 0 / 0.45) 100%), oklch(from var(--cor-aura, #70cde4) l c h / 0.3) !important;
+    background-blend-mode: soft-light;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid oklch(1 0 0 / 0.35) !important;
+    box-shadow: 0 16px 45px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.preview-perfil.vibe-glass .preview-avatar {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.preview-perfil.vibe-glass .preview-info .nome {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- VIBE LIGHT ---------- */
+.preview-perfil.vibe-light {
+    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) !important;
+    border: 2px solid rgba(139, 128, 100, 0.2);
+    border-top: 4px solid var(--cor-aura, #70cde4) !important;
+    box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border-radius: 16px;
+}
+
+.preview-perfil.vibe-light .preview-info .nome,
+.preview-perfil.vibe-light .preview-info .username,
+.preview-perfil.vibe-light .preview-info .bio-preview {
+    color: #3e382d !important;
+    text-shadow: none !important;
+}
+
+.preview-perfil.vibe-light .preview-avatar {
+    border-color: #be9a45;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ---------- VIBE ADS ---------- */
+.preview-perfil.vibe-ads {
+    position: relative;
+    overflow: hidden;
+    background-color: #0a0a12 !important;
+    backdrop-filter: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+    border-top: 4px solid var(--cor-aura, #70cde4) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    animation: ads-neon-glow-pulse 3.5s infinite ease-in-out alternate;
+    border-radius: 16px;
+}
+
+/* Fundo com hexágonos SVG (estáticos) */
+.preview-perfil.vibe-ads::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.2' stroke-opacity='0.15'/%3E%3C/svg%3E");
+    background-size: 40px 40px;
+    background-repeat: repeat;
+    mix-blend-mode: screen;
+    opacity: 0.6;
+    animation: static-pulse-opacity 4s infinite ease-in-out alternate;
+}
+
+.preview-perfil.vibe-ads .preview-conteudo {
+    z-index: 1;
+}
+
+.preview-perfil.vibe-ads .preview-avatar {
+    border-color: rgba(0, 240, 255, 0.6);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+@keyframes ads-neon-glow-pulse {
+    0% {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+        border-top-color: var(--cor-aura, #70cde4);
+        border-color: rgba(255, 255, 255, 0.03);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15);
+        border-color: var(--cor-aura, #70cde4);
+    }
+
+    100% {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.03);
+    }
+}
+
+@keyframes static-pulse-opacity {
+    0% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.3;
+    }
+}
+
+/* ============================================================
+       ESTILOS DAS ETAPAS E CAMPOS (MANTIDOS)
+       ============================================================ */
+.step-container {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.step-container.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.step-container.saindo {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.step-content {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+.cadastro-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cadastro-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
+    margin-bottom: 4px;
+}
+
+.cadastro-header p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+}
+
+.campo-grupo-fenda {
+    margin-bottom: 18px;
+}
+
+.campo-grupo-fenda label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.fenda-reg-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 4px 12px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    overflow: hidden;
+}
+
+.fenda-reg-box i {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: color 0.25s ease;
+}
+
+.fenda-reg-box input,
+.fenda-reg-box select {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.fenda-reg-box select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.fenda-reg-box select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+.fenda-reg-box input[type="color"] {
+    width: 50px;
+    padding: 0;
+    margin: 5px 0 5px 5px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+}
+
+.fenda-reg-box:focus-within {
+    border-color: var(--cor-aura, #70cde4) !important;
+    box-shadow: 0 0 15px var(--cor-aura-alpha, rgba(112, 205, 228, 0.15)) !important;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.fenda-reg-box:focus-within i {
+    color: var(--cor-aura, #70cde4) !important;
+}
+
+.checkbox-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    cursor: pointer;
+}
+
+.checkbox-custom input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: transparent;
+    flex-shrink: 0;
+    transition: 0.2s;
+    position: relative;
+    cursor: pointer;
+}
+
+.checkbox-custom input[type="checkbox"]:checked {
+    background: var(--cor-aura, #70cde4);
+    border-color: var(--cor-aura, #70cde4);
+}
+
+.checkbox-custom input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.checkbox-custom a {
+    color: #ffbc00;
+    text-decoration: none;
+}
+
+.checkbox-custom a:hover {
+    text-decoration: underline;
+}
+
+.btn-finalizar-fenda {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ffbc00, #ff8c00);
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-finalizar-fenda:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--cor-aura-alpha, rgba(255, 188, 0, 0.3));
+}
+
+.btn-finalizar-fenda:active {
+    transform: translateY(0);
+}
+
+.btn-step-next,
+.btn-step-prev {
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    font-size: 0.95rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+}
+
+.btn-step-next:hover,
+.btn-step-prev:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-step-next:active,
+.btn-step-prev:active {
+    transform: translateY(0px);
+}
+
+.btn-step-prev {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #aaa;
+}
+
+.btn-step-prev:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.btn-cor-sugestao {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #444;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-cor-sugestao:hover {
+    transform: scale(1.1);
+    border-color: #fff !important;
+}
+
+.btn-cor-sugestao:active {
+    transform: scale(0.95);
+}
+
+.grid-vibes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.vibe-option {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vibe-option:hover {
+    transform: scale(1.03);
+    border-color: #888;
+}
+
+.vibe-option.selecionado {
+    border-color: var(--dourado);
+    background: rgba(255, 188, 0, 0.08) !important;
+    box-shadow: 0 0 20px rgba(255, 188, 0, 0.15);
+}
+
+.vibe-option i {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.vibe-option p {
+    color: #ccc;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.aura-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    border: 3px solid #333;
+    transition: background 0.3s ease;
+}
+
+.termos-wrapper {
+    margin: 15px 0;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.termos-wrapper a {
+    color: #ffbb00d5;
+    text-decoration: none;
+}
+
+.termos-wrapper a:hover {
+    text-decoration: underline;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #ffbc00;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ---------- BOTÕES DA ETAPA 4 (AJUSTE) ---------- */
+.botoes-rodape {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.botoes-rodape .btn-step-prev {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+    white-space: nowrap;
+}
+
+.botoes-rodape .btn-finalizar-fenda {
+    flex: 1;
+    margin-top: 0;
+}
+
+
 
 
 /* --- AJUSTE PARA O MODAL VIRAR UM POP-UP COMPACTO (ESTILO AÇO) --- */
@@ -37,7 +688,7 @@ form {
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
     /* Padding dinâmico: menor em telas pequenas */
-    padding: clamp(10px, 5vw, 24px);
+    padding: clamp(8px, 3.5vw, 20px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
@@ -53,18 +704,22 @@ form {
     flex-direction: column;
     margin: 0 auto;
     max-width: clamp(250px, 85%, 650px);
-    max-height: clamp(200px, 65vh, 500px);
+    max-height: clamp(200px, 60vh, 600px);
 }
 
 .btn-fechar-modal {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: 8px;
+    right: 8px;
     background: none;
     border: none;
     color: #fff;
     font-size: 30px;
     cursor: pointer;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     padding: 0;
     line-height: 1;
 }
@@ -76,12 +731,12 @@ form {
 
 /* 2. Limpando o card de postagem para ele "fundir" com o modal */
 .modal-body-ajuste .main-novo-post {
-    display: flex !important;
+    display: flex;
     flex-direction: column;
-    margin: 0 auto !important;
-    background: transparent !important;
+    margin: 0 auto;
+    background: transparent;
     border: none;
-    box-shadow: none !important;
+    box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     max-width: 95%;
@@ -91,7 +746,7 @@ form {
 
 /* 3. Ajuste do formulário interno */
 .modal-body-ajuste .main-novo-post .form-container {
-    width: 100% !important;
+    width: 100%;
     padding: 15px 0;
 }
 
@@ -113,16 +768,15 @@ form {
     border: 1px solid #444;
     /* Cinza escuro */
     border-radius: 12px;
-    padding: 12px;
+    padding: 8px 12px;
     color: #fff;
     margin-bottom: 15px;
     transition: 0.3s;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .modal-body-ajuste .btn-lancar {
     padding: 8px 14px;
-    margin: 30px 0 0 0;
 }
 
 /* Foco do input acende em Branco/Prata */
@@ -167,15 +821,18 @@ form {
 }
 
 #mensagem-vivo {
+    display: flex;
     width: 100%;
     flex: 1 1 auto;
-    min-height: 60px;
-    max-height: 120px;
+    min-height: 50px;
+    max-height: 180px;
+    resize: vertical;
+    field-sizing: content;
     background: transparent;
     border: none;
     color: #eee;
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.4;
     padding: 4px;
     font-family: inherit;
     outline: none;
@@ -245,7 +902,8 @@ form {
     padding: 6px 16px;
     padding-right: 36px;
     color: #ccc;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 1.041vw, 1.1rem);
     font-weight: 500;
     cursor: pointer;
     outline: none;
@@ -271,7 +929,7 @@ form {
 .barra-acoes-vivo {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 10px;
     padding: 8px 0 4px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -310,7 +968,8 @@ form {
 
 /* Contador */
 .contador-caracteres {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1.2vw, 1rem);
     color: #aaaaaa;
     font-weight: 600;
 }
@@ -372,7 +1031,7 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 15px auto ;
+    margin: 15px auto;
     left: 50%;
     padding: 15px;
     border-radius: 30px;
@@ -385,20 +1044,20 @@ form {
 textarea[name="bio"] {
     width: 100% !important;
     /* Ocupa a largura disponível... */
-    max-width: 100% ;
+    max-width: 100%;
     /* ...mas não passa disso no Tablet/PC */
     margin: 0 auto !important;
     /* CENTRALIZA no meio do formulário */
-    display: block ;
-    box-sizing: border-box ;
+    display: block;
+    box-sizing: border-box;
     /* Garante que o padding não estique a caixa */
-    padding: 15px ;
-    background: rgba(255, 255, 255, 0.05) ;
-    color: #fff !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) ;
-    border-radius: 12px ;
-    line-height: 1.5 ;
-    resize: none ;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    line-height: 1.5;
+    resize: none;
 }
 
 
@@ -415,7 +1074,7 @@ textarea[name="bio"] {
 form[action="confirma-login.php"] {
     max-width: 500px;
     margin: 0 auto;
-    width: 100% !important;
+    width: 100%;
 }
 
 .capa-container {
@@ -434,6 +1093,7 @@ form[action="confirma-login.php"] {
 }
 
 .capa-img {
+    position: relative;
     z-index: 5;
     object-fit: contain;
     object-position: center;
@@ -443,15 +1103,13 @@ form[action="confirma-login.php"] {
     transition: max-width 0.4s ease-in-out;
 }
 
-
-.bio-texto,
 .post-content,
 .card-body p,
 .perfil-info-publica p {
-    word-wrap: break-word ;
-    overflow-wrap: anywhere ;
-    white-space: pre-wrap ;
-    width: 100% ;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    width: 100%;
     -webkit-hyphens: auto;
     /*Safari/Chrome*/
     -ms-hyphens: auto;
@@ -593,7 +1251,7 @@ textarea {
 .painel-sessao p {
     color: #fff;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
     font-weight: 500;
     line-height: 1.2;
 }
@@ -619,166 +1277,6 @@ textarea {
 
 
 
-/* CONTAINER PRINCIPAL - CADASTRO */
-
-.main-form-cadastro {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    min-height: 90dvh !important;
-    padding: 20px !important;
-}
-
-
-/* Container do campo com ícone */
-.fenda-reg-box {
-    display: flex !important;
-    align-items: center !important;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px !important;
-    width: 100% !important;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    /* Garante que nada vaze */
-}
-
-/* Ícone dentro da box - agora em fluxo normal */
-.fenda-reg-box i {
-    color: #f8c946ec;
-    font-size: 1.2rem;
-    margin-left: 15px;
-    margin-right: 8px;
-    width: 24px;
-    text-align: center !important;
-    flex-shrink: 0 !important;
-    /* Não encolhe */
-    pointer-events: none !important;
-}
-
-/* Inputs dentro da box - sem padding esquerdo enorme */
-.fenda-reg-box input,
-.fenda-reg-box select {
-    flex: 1 !important;
-    background: transparent !important;
-    border: none !important;
-    color: white;
-    font-size: 1rem;
-    padding: 12px 12px 12px 6px;
-    outline: none !important;
-    width: 100%;
-    align-content: center;
-}
-
-/* Para selects, mantém o mesmo estilo */
-.fenda-reg-box select {
-    cursor: pointer;
-}
-
-/* Efeito de foco na borda do container */
-.fenda-reg-box:focus-within {
-    border-color: #f8c946ec !important;
-    box-shadow: 0 0 8px rgba(248, 201, 70, 0.3) !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* Ajuste específico para o input color (aura) */
-.fenda-reg-box input[type="color"] {
-    width: 50px !important;
-    padding: 0 !important;
-    margin: 5px 0 5px 5px;
-    height: 35px;
-    cursor: pointer;
-    border-radius: 10px;
-}
-
-/* A caixinha do formulário */
-.container-cadastro-fenda {
-    background: #4b397aba !important;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.103);
-    border-radius: 20px;
-    max-width: 500px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-    padding: 25px !important;
-    width: 100% !important;
-    height: auto !important;
-    margin: 20px auto !important;
-}
-
-.cadastro-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.cadastro-header h2 {
-    color: #f8c946ce;
-    font-size: 1.6rem;
-    margin-bottom: 10px;
-}
-
-.cadastro-header p {
-    color: #ccc;
-    font-size: 0.9rem;
-}
-
-/* GRUPOS DE INPUT */
-.campo-grupo-fenda {
-    margin-bottom: 20px;
-}
-
-.campo-grupo-fenda label {
-    display: block;
-    color: #eee;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-}
-
-
-
-/* BOTÃO E LINKS */
-.btn-finalizar-fenda {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #cc420c 0%, #ff5e1a 100%);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 10px;
-}
-
-.btn-finalizar-fenda:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(204, 66, 12, 0.4);
-}
-
-.form-footer {
-    text-align: center;
-    margin-top: 20px;
-    color: #eee;
-    font-size: 0.9rem;
-}
-
-.form-footer a {
-    color: #08d888ab;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.termos-wrapper {
-    margin: 15px 0;
-    color: #ccc;
-    font-size: 0.9rem;
-}
-
-.termos-wrapper a {
-    color: #ffbb00d5;
-}
-
 /* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
 
 /* Blindagem absoluta contra estouros de padding */
@@ -787,7 +1285,7 @@ textarea {
 section.sessao-publicar,
 .form-publicar,
 .form-publicar * {
-    box-sizing: border-box !important;
+    box-sizing: border-box;
 }
 
 /* Container Principal */
@@ -808,7 +1306,8 @@ section.sessao-publicar,
 }
 
 /* Os Cards de Itens Perdidos */
-.card-perdido {
+.card-perdido,
+.card-achado {
     margin-bottom: 20px;
     padding: clamp(15px, 2vw, 25px);
     border-radius: 12px;
@@ -952,23 +1451,24 @@ section.sessao-publicar {
     background: #7cd632e8;
     color: black;
     border: none;
-    height: 44px;
+    height: 40px;
     /* Casando com a altura dos inputs magrelos */
-    padding: 0 14px;
+    padding: 0 12px;
     border-radius: 8px;
     font-weight: 800;
     align-content: center;
-    font-size: 0.95rem;
-    max-width: 300px;
+    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 1.041vw, 0.95rem);
+    max-width: 250px;
+    flex: 1;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.3s;
-    margin-top: 5px !important;
 }
 
 .btn-lancar :hover {
     background: #c8ff00d3;
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
 
@@ -1102,13 +1602,13 @@ section.sessao-publicar {
     cursor: pointer;
     transition: 0.3s;
     height: auto;
-    max-width:300px;
+    max-width: 300px;
     margin-top: 0 !important;
     flex: 0 1 auto;
 }
 
 .btn-lancar-perdidos:hover {
-    background: #c8ff00d3 !important;
+    background: #c8ff00d3;
     transform: scale(1.02);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
@@ -1141,8 +1641,6 @@ section.sessao-publicar {
     -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
     mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
     transition: transform 0.3s ease;
-
-
 }
 
 .avatar.de.inicio:hover {
@@ -1183,11 +1681,11 @@ section.sessao-publicar {
 
 /* Container da Capa (O molde) */
 .capa-wrapper.viewer {
-    width: 100% ;
-    max-width: 100% ;
+    width: 100%;
+    max-width: 100%;
     /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
-    aspect-ratio: 16 / 8 ;
-    overflow: hidden ;
+    aspect-ratio: 16 / 8;
+    overflow: hidden;
     border-radius: 15px 15px 0 0;
     background: #1a1a1a;
     display: flex;
@@ -1197,24 +1695,24 @@ section.sessao-publicar {
 
 /* A Imagem da Capa (O conteúdo) */
 .img-capa-preview {
-    max-width: 100% ;
-    max-height: 100% ;
-    object-fit: cover ;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
     object-position: center 25% !important;
     /* Foca um pouco acima do meio */
-    display: block ;
-    aspect-ratio: 16/8 ;
+    display: block;
+    aspect-ratio: 16/8;
 }
 
 /* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
-    width: clamp(65px, 15vmin + 10px, 150px);
-    height: clamp(65px, 15vmin + 10px, 150px);
+    width: clamp(65px, 15vw + 10px, 150px);
+    height: clamp(65px, 15vw + 10px, 150px);
     aspect-ratio: 1/1;
-    margin: -30px auto 20px auto ;
+    margin: -30px auto 20px auto;
     z-index: 10;
-    display: flex ;
+    display: flex;
     justify-content: center !important;
     align-items: center !important;
 }
@@ -1283,8 +1781,8 @@ section.sessao-publicar {
 
 /* Tira o azul chato do Checkbox no Mobile */
 input[type="checkbox"]:focus {
-    outline: none !important;
-    box-shadow: none !important;
+    outline: none;
+    box-shadow: none;
 }
 
 .btn-salvar-perfil {
@@ -1311,12 +1809,17 @@ input[type="checkbox"]:focus {
 .btn-editar-atalho {
     display: inline-flex;
     align-items: center;
-    justify-content: auto;
-    width: auto;
+    justify-content: center;
     min-width: 120px;
-    padding: 10px 20px;
+    width: auto;
+    padding: 10px 16px;
     white-space: nowrap;
-    font-weight: 800;
+    font-size: clamp(0.75rem, 2vw, 1.1rem);
+    font-weight: 600;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     text-transform: uppercase;
     text-decoration: none;
     background: var(--dourado);
@@ -1324,13 +1827,14 @@ input[type="checkbox"]:focus {
     border-radius: 50px;
     border: none;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.btn-editar-atalho:hover {
-    transform: scale(1.05) !important;
-    filter: brightness(1.05);
-    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.4);
+/* Ajuste nos botões para responderem ao container flex */
+.perfil-controles .btn-editar-atalho {
+    flex: 1 1 150px;
+    max-width: 100%;
+    text-align: center;
 }
 
 
@@ -1338,36 +1842,37 @@ input[type="checkbox"]:focus {
 .btn-seguir:hover,
 .btn-editar-atalho:hover,
 .btn-seguir-fenda:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
     filter: brightness(1.05);
-    box-shadow: 0 8px 20px rgba(255, 188, 0, 0.4);
+    box-shadow: 0 8px 15px rgba(255, 188, 0, 0.4);
 }
 
 
-
-/* 3. O CONTAINER PAI  */
-
+/* 3. O CONTAINER PAI (Atualizado para Row Responsivo) */
 .perfil-controles {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: flex-start !important;
-    gap: 30px !important;
-    margin: 20px auto !important;
-    clear: both !important;
-    /* Empurra para baixo de qualquer coisa que tenha float */
+    display: flex;
+    /* Mudado de inline-flex para flex puro */
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* Permite quebrar a linha (um embaixo do outro) no celular */
+    justify-content: space-between;
+    align-items: center;
+    /* Alinha os botões verticalmente no meio */
+    gap: 15px;
+    margin: 20px auto;
+    width: 100%;
+    clear: both;
 }
-
-
 
 /* 1. BOTÃO PADRÃO (ESTADO: SEGUIR) */
 .btn-seguir-fenda {
-    background-color: #28a745 !important;
-    color: white !important;
-    border: none !important;
-    padding: 8px 20px !important;
-    border-radius: 20px !important;
-    text-decoration: none !important;
-    font-weight: bold !important;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -1403,8 +1908,8 @@ input[type="checkbox"]:focus {
 
 /* A Imagem prévia em si: redonda e centrada */
 .img-avatar-perfil {
-    width: 100% !important;
-    height: 100% !important;
+    width: 100%;
+    height: 100%;
     aspect-ratio: 1/1;
     object-fit: cover;
     border: 3px solid #fa7116b2;
@@ -1423,30 +1928,26 @@ input[type="checkbox"]:focus {
     object-fit: cover;
     aspect-ratio: 1/1;
     border-radius: 50%;
-
 }
 
-
 /* Stats (Seguidores/Seguindo)*/
-
 .stats-perfil {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     /* vai para a esquerda */
-    gap: 35px;
     padding: 20px 0;
-    margin: 20px 30px;
+    margin: 15px 0;
     color: #fff;
     font-size: 0.9rem;
+    font-weight: 800;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     width: auto;
 }
 
-
 .stats-perfil span {
     color: #888;
     text-transform: uppercase;
-    font-size: 1rem;
+    font-size: clamp(0.95rem, 0.2vw + 0.5rem, 1.6rem);
     letter-spacing: 1px;
 }
 
@@ -1500,8 +2001,8 @@ input[type="checkbox"]:focus {
 /* 1. O Container Principal (Onde ficam as fotos e os campos) */
 form[action="confirma-login.php"] .container {
     background: rgba(0, 0, 0, 0.4);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     border-radius: 15px;
     padding: 25px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1519,24 +2020,24 @@ form[action="confirma-login.php"] label b {
 
 /* 3. Estilizando os Inputs (E-mail e Senha) */
 form[action="confirma-login.php"] .input-group {
-    border: none !important;
-    margin-bottom: 15px !important;
+    border: none;
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
 }
 
 form[action="confirma-login.php"] input[type="email"],
 form[action="confirma-login.php"] input[type="password"] {
-    width: 100% !important;
-    background: rgba(255, 255, 255, 0.08) !important;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
     color: white;
     border: 2px solid rgba(255, 188, 0, 0.5);
     border-radius: 10px;
     padding: 12px 15px;
-    font-size: 1rem !important;
+    font-size: 1rem;
     margin-top: 5px;
     outline: none !important;
-    box-sizing: border-box !important;
+    box-sizing: border-box;
     transition: 0.3s ease;
 }
 
@@ -1547,18 +2048,40 @@ form[action="confirma-login.php"] input:focus {
     box-shadow: 0 0 10px rgba(221, 200, 14, 0.3);
 }
 
+
 /* 5. Checkbox e Links Inferiores */
 #terms {
-    accent-color: #22af05b7 !important;
+    accent-color: #157b00cf;
 }
 
 /* Garante que o texto de "Cadastre-se" não suma no fundo escuro */
 form[action="confirma-login.php"] a {
-    color: #fc900c !important;
+    color: #fc900c;
     text-decoration: none;
     font-weight: bold;
 }
 
+/* input:-internal-autofill-selected {
+    appearance: menulist-button;
+    background-image: none !important;
+    background-color: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+    color: fieldtext !important;
+}
+folha de estilo do user agent
+input:not([type="image" i], [type="range" i], [type="checkbox" i], [type="radio" i]) {
+    overflow-clip-margin: 0px !important;
+    overflow: clip !important;
+}
+folha de estilo do user agent
+input[type="email" i] {
+    padding-block: 1px;
+    padding-inline: 2px;
+}
+folha de estilo do user agent
+input:not([type="file" i], [type="image" i], [type="checkbox" i], [type="radio" i])
+Especificidade: (0,1,1)
+ {
+} */
 
 
 /* A VINGANÇA CONTRA O IPHONE 4 E O CAPIROTO DA MARGEM ESQUERDA */
@@ -1567,16 +2090,16 @@ form[action="confirma-login.php"] a {
 .main-perfil-container-config {
     flex-direction: column;
     align-items: center;
-    width: 96%;
+    width: 98%;
     margin: 25px auto;
-    padding: 15px;
     display: flex;
+    padding: 8px;
     float: none;
-    border-radius: 25px;
-    max-width: 900px;
-    background-color: #0d0d0dd1;
+    border-radius: 16px;
+    border: 2px solid #cccccc7c;
+    max-width: 800px;
+    background: #0d0d0dd1;
 }
-
 
 
 /* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
@@ -1593,10 +2116,10 @@ form[action="confirma-login.php"] a {
 
 /* 3. Garantir que cada campo ocupe 100% da largura disponível */
 .campo-grupo {
-    width: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    grid-column: span 1 !important;/
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-column: span 1;/
 }
 
 /* 4. Estilo dos Inputs para não vazarem */
@@ -1604,19 +2127,12 @@ input[type="email"],
 input[type="password"],
 select,
 textarea {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
     padding: 8px;
 }
 
-
-/* 6. Botões de Ação (Respeitando seu inline, mas garantindo o centro) */
-.perfil-controles {
-    width: 100% !important;
-    justify-content: center !important;
-    margin-top: 20px !important;
-}
 
 
 /* SISTEMA DE MENÇÕES E FUNÇÃO DE AUTOCOMPLETE */
@@ -1646,7 +2162,6 @@ textarea {
 }
 
 .lista-mencoes-flutuante div:hover {
-    background: #f0f0f0;
     /* Cinza claro no hover padrão */
     color: #000000f6;
 }

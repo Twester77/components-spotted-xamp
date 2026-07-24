@@ -26,9 +26,9 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<main class="main-perdidos" style=" padding: 20px 0; overflow-x: hidden;" id="conteudo-principal"> 
+<main class="main-perdidos" id="conteudo-principal"> 
     <?php if (!$usuario_logado): ?>
-        <div class="sessao-login-top" style="margin-bottom: 40px;">
+        <div class="sessao-login-top" style="margin-bottom: 30px;">
             <?php include 'includes/login.php'; ?>
         </div>
     <?php else: ?>
@@ -45,12 +45,12 @@ include 'includes/bolhas.php';
         </h2>
 
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">
-            <picture style="width: 100%;">
+            <picture style="width: 100%; max-width: 800px">
                 <source srcset="imagensfoto/capa-achados-e-perdidos.avif" type="image/avif">
                 <source srcset="imagensfoto/capa-achados-e-perdidos.webp" type="image/webp">
                 <img src="imagensfoto/capa-achados-e-perdidos.jpg"
                      alt="Ilustração de um mural de achados e perdidos com chaves, óculos e objetos esquecidos"
-                     style="width: 100%; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"
+                     style="width: 100%; max-width: 800px; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"
                      loading="lazy">
             </picture>
 

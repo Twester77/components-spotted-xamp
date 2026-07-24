@@ -12,7 +12,7 @@
         <?php if (isset($_GET['msg']) && $_GET['msg'] == 'conta_ativada'): ?>
             <div role="status" aria-live="polite" style="background:linear-gradient(170deg, #27ce27bd 15%, #2e6ba5a2 100%); color: white; text-align: center; padding: 15px; margin: 10px 0 20px 0; border-radius: 10px; font-weight: bold; font-size: 15px; border: 1px solid #00c3ff; box-shadow: 0 4px 15px rgba(0, 195, 255, 0.2);">
                 <span style="display: block; font-size: 22px; margin-bottom: 5px;" aria-hidden="true">🫡</span>
-                CONTA ATIVADA! <br> <span style="font-weight: normal; font-size: 13px;">Bem-vindo à Fenda, mergulhe com tudo!</span>
+                CONTA ATIVADA! <br> <span style="font-weight: normal; font-size: 15px;">Bem-vindo à Fenda, mergulhe com tudo!</span>
             </div>
         <?php endif; ?>
         
@@ -20,14 +20,14 @@
             <div role="alert" aria-live="assertive" style="background: rgba(255, 165, 0, 0.2); color: #ffa500; text-align: center; padding: 15px; margin: 10px 0 20px 0; border-radius: 10px; font-weight: bold; font-size: 14px; border: 1px solid #ffa500; box-shadow: 0 4px 15px rgba(255, 165, 0, 0.1);">
                 <span style="display: block; font-size: 22px; margin-bottom: 5px;" aria-hidden="true">⏳</span>
                 QUASE LÁ! <br>
-                <span style="font-weight: normal; font-size: 13px;">Sua conta ainda não foi ativada. Dá uma olhadinha no seu e-mail para liberar o acesso!</span>
+                <span style="font-weight: normal; font-size: 15px;">Sua conta ainda não foi ativada. Dá uma olhadinha no seu e-mail para liberar o acesso Não se esqueça de conferir a caixa de spam/lixo eletrônico!</span>
             </div>
         <?php endif; ?>
 
         <?php if (isset($_GET['msg']) && $_GET['msg'] == 'validar_email'): ?>
             <div role="status" aria-live="polite" style="background: rgba(255, 152, 0, 0.9); color: white; text-align: center; padding: 15px; margin: 10px 0 20px 0; border-radius: 10px; font-weight: bold; font-size: 15px; border: 1px solid #ffcc80; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.2);">
                 <span style="display: block; font-size: 22px; margin-bottom: 5px;" aria-hidden="true">📧</span>
-                QUASE LÁ! <br> <span style="font-weight: normal; font-size: 13px;">Cheque seu e-mail institucional para liberar o acesso.</span>
+                QUASE LÁ! <br> <span style="font-weight: normal; font-size: 15px;">Cheque seu e-mail institucional para liberar o acesso.</span>
             </div>
         <?php endif; ?>
 

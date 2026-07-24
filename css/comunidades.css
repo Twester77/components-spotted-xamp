@@ -1,0 +1,715 @@
+/* ============================================================
+   COMUNIDADES – ESTILOS DEDICADOS (FASE 3)
+   ============================================================ */
+
+/* ==================================================
+   1. PÁGINA DE LISTAGEM (lista-comunidades.php)
+   ================================================== */
+.comunidades-header {
+    text-align: center;
+    padding: 30px 20px 10px 20px;
+}
+
+.comunidades-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    color: #ffbc00;
+    margin: 30px 0 10px 0;
+}
+
+.comunidades-header p {
+    color: #aaa;
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    margin-bottom: 30px;
+}
+
+.comunidades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 0 20px 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.comunidade-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.comunidade-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+.comunidade-card .capa-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #111;
+}
+
+.comunidade-card .capa-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.comunidade-card .capa-wrapper img:hover {
+    transform: scale(1.02);
+}
+
+.comunidade-card .badge-membros {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: clamp(0.7rem, 1vw, 0.85rem);
+    color: #ffbc00;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.comunidade-card .info-comunidade {
+    padding: 16px;
+}
+
+.comunidade-card .info-comunidade h3 {
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+    color: #fff;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.comunidade-card .info-comunidade .descricao {
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    color: #aaa;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 12px;
+}
+
+.comunidade-card .info-comunidade .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    color: #777;
+}
+
+.btn-entrar-comunidade {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 30px;
+    background: #ffbc00;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: clamp(0.85rem, 1.1vw, 1rem);
+}
+
+.btn-entrar-comunidade.membro {
+    background: rgba(255, 255, 255, 0.05);
+    color: #aaa;
+}
+
+.btn-entrar-comunidade:hover {
+    opacity: 0.85;
+    transform: scale(1.01);
+}
+
+/* ==================================================
+   2. PÁGINA INDIVIDUAL DA COMUNIDADE (comunidade.php)
+   ================================================== */
+.comunidade-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.comunidade-capa {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #111;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-content: center;
+}
+
+.comunidade-capa img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.comunidade-capa .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 20px 20px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+}
+
+.comunidade-capa .overlay h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.comunidade-capa .overlay .descricao {
+    color: #ccc;
+    font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+}
+
+/* Ações da comunidade (botões, membros, criador) */
+.comunidade-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.comunidade-actions .btn-entrar-comunidade {
+    width: auto;
+    padding: 8px 25px;
+}
+
+.comunidade-actions .contador-membros {
+    color: #aaa;
+    font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+}
+
+.comunidade-info-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.comunidade-info-actions .criador-info {
+    color: #aaa;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.btn-editar-comunidade {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 8px 20px;
+    color: #aaa;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.btn-editar-comunidade:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Feed da comunidade */
+.feed-comunidade {
+    margin-top: 20px;
+}
+
+/* ==================================================
+   3. FORMULÁRIO INLINE DE POST (card-postar adaptado)
+   ================================================== */
+.card-postar-inline {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 25px;
+}
+
+.card-postar-inline .btn-toggle-postar {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    transition: 0.3s;
+}
+
+.card-postar-inline .btn-toggle-postar:hover {
+    color: #ffbc00;
+}
+
+.card-postar-inline .postar-inline-conteudo {
+    margin-top: 12px;
+}
+
+/* ==================================================
+   4. RESPONSIVIDADE
+   ================================================== */
+@media (max-width: 600px) {
+    .comunidades-grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px 30px 10px;
+    }
+    
+    .comunidade-page {
+        padding: 10px;
+    }
+    
+    .comunidade-capa .overlay h1 {
+        font-size: 1.4rem;
+    }
+
+    .form-container {
+        padding: 0 10px 30px 10px;
+    }
+    
+    .btn-principal,
+    .btn-secundario {
+        flex: 1 1 100%;
+        text-align: center;
+    }
+    
+    .input-slug-wrapper {
+        flex-wrap: wrap;
+        padding: 8px 12px;
+    }
+    
+    .slug-prefixo {
+        font-size: 0.75rem;
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .comunidade-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .comunidade-actions .btn-entrar-comunidade {
+        width: 100%;
+    }
+}
+
+/* ============================================================
+   FORMULÁRIOS DE COMUNIDADE (criar / editar)
+   ============================================================ */
+
+.form-container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
+}
+
+/* --- Campos do formulário --- */
+.campo-grupo {
+    margin-bottom: 20px;
+}
+
+.campo-grupo label {
+    display: block;
+    color: #ccc;
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.campo-grupo input[type="text"],
+.campo-grupo textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.campo-grupo input[type="text"]:focus,
+.campo-grupo textarea:focus {
+    outline: none;
+    border-color: #ffbc00;
+}
+
+.campo-grupo textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.campo-ajuda {
+    display: block;
+    color: #777;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    margin-top: 4px;
+}
+
+/* --- Slug com prefixo --- */
+.input-slug-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0 12px;
+}
+
+.slug-prefixo {
+    color: #777;
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.input-slug-wrapper input[type="text"] {
+    background: transparent;
+    border: none;
+    padding: 12px 8px;
+    color: #ffbc00;
+    width: 100%;
+    outline: none;
+}
+
+/* --- Prévia da capa --- */
+.capa-preview-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.capa-preview-wrapper:hover {
+    border-color: rgba(255, 188, 0, 0.3);
+}
+
+.capa-preview-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.capa-overlay {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: clamp(0.85rem, 1.1vw, 1rem);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+}
+
+/* --- Sugestões de atléticas --- */
+.sugestao-atleticas {
+    margin-top: 10px;
+}
+
+.sugestoes-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.btn-sugestao {
+    background: rgba(255, 188, 0, 0.08);
+    border: 1px solid rgba(255, 188, 0, 0.15);
+    border-radius: 20px;
+    padding: 4px 14px;
+    color: #ffbc00;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-sugestao:hover {
+    background: rgba(255, 188, 0, 0.15);
+    border-color: rgba(255, 188, 0, 0.3);
+    transform: scale(1.02);
+}
+
+/* --- Botões do rodapé --- */
+.botoes-rodape {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.btn-principal {
+    background: #ffbc00;
+    color: #000;
+    padding: 12px 40px;
+    border-radius: 30px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    flex: 1;
+    min-width: 150px;
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    transition: 0.3s;
+}
+
+.btn-principal:hover {
+    background: #ffd44d;
+    transform: scale(1.01);
+}
+
+.btn-secundario {
+    background: transparent;
+    color: #aaa;
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    text-align: center;
+    transition: 0.3s;
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+}
+
+.btn-secundario:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+/* ==================================================
+   AJUSTES E COMPLEMENTOS (compatibilidade e fallback)
+   ================================================== */
+
+/* Container principal (usado em lista-comunidades.php) */
+.main-comunidades {
+    min-height: 60vh;
+}
+
+/* Subtítulo da página */
+.subtitle {
+    color: #aaa;
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    margin-bottom: 20px;
+}
+
+/* Wrapper do botão "Criar Comunidade" */
+.create-community-wrapper {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Botão "Criar Comunidade" (versão da listagem) */
+.btn-criar-comunidade {
+    display: inline-block;
+    background: #ffbc00;
+    color: #000;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: clamp(0.8rem, 1.1vw, 1.05rem);
+}
+
+.btn-criar-comunidade:hover {
+    background: #ffd44d;
+    transform: scale(1.01);
+}
+
+/* Área de ações do card (botão Entrar/Sair) */
+.card-actions {
+    padding: 0 16px 16px 16px;
+}
+
+/* Estado vazio (nenhuma comunidade) */
+.empty-state {
+    text-align: center;
+    color: #aaa;
+    grid-column: 1 / -1;
+    padding: 40px;
+}
+
+.empty-state .btn-criar-comunidade {
+    margin-top: 15px;
+}
+
+/* Subtítulo usado em criar-comunidade.php */
+.comunidades-subtitulo {
+    color: #aaa;
+    font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+    margin-bottom: 30px;
+}
+
+/* Mensagem de ajuda nos campos do formulário */
+.campo-ajuda {
+    display: block;
+    color: #777;
+    font-size: clamp(0.7rem, 1vw, 0.95rem);
+    margin-top: 4px;
+}
+
+
+/* ==================================================
+   CORREÇÕES DE LAYOUT E FUNDO (TRANSPARÊNCIA)
+   ================================================== */
+
+/* Fundo sólido para as páginas de comunidade */
+.comunidade-page,
+.main-comunidades {
+    background: #0a0a0a; /* fundo escuro sólido */
+    min-height: 100vh;
+    padding-top: 20px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+
+
+}
+
+/* Ajuste do header da comunidade para não ficar transparente */
+.comunidades-header {
+    background: rgba(10, 10, 10, 0.85);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    padding: 20px 20px 10px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+/* Formulários (criar/editar) – fundo escuro com leve vidro */
+.form-container {
+    background: rgba(20, 20, 30, 0.6);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 30px 25px;
+    margin: 0 auto 40px auto;
+}
+
+/* Campo de formulário – melhora a legibilidade */
+.campo-grupo input[type="text"],
+.campo-grupo textarea {
+    background: rgba(255, 255, 255, 0.07) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Área de post inline – fundo mais escuro */
+.card-postar-inline {
+    background: rgba(20, 20, 30, 0.8);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 16px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+}
+
+/* Botão toggle do post inline – cor de destaque */
+.card-postar-inline .btn-toggle-postar {
+    color: #ccc;
+    font-weight: 500;
+}
+
+.card-postar-inline .btn-toggle-postar:hover {
+    color: #ffbc00;
+}
+
+/* Ações da comunidade – alinhamento e espaçamento */
+.comunidade-actions {
+    background: rgba(20, 20, 30, 0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+}
+
+/* Botão "Criar Comunidade" na listagem – melhor visibilidade */
+.btn-criar-comunidade {
+    background: #ffbc00;
+    color: #000;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-criar-comunidade:hover {
+    background: #ffd44d;
+    transform: scale(1.02);
+}
+
+/* Ajuste no card de comunidade – borda e sombra mais visíveis */
+.comunidade-card {
+    background: rgba(20, 20, 30, 0.7);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.comunidade-card:hover {
+    border-color: rgba(255, 188, 0, 0.2);
+}
+
+/* Prévia da capa no formulário – fundo mais escuro */
+.capa-preview-wrapper {
+    background: rgba(0, 0, 0, 0.4);
+    border: 2px dashed rgba(255, 255, 255, 0.08);
+}
+
+.capa-preview-wrapper:hover {
+    border-color: rgba(255, 188, 0, 0.3);
+}
+
+/* Fallback da capa – centraliza o ícone/texto */
+.comunidade-capa img:not([src]), 
+.comunidade-capa img[src=""],
+.comunidade-capa img[src*="default_comunidade.webp"] {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 0.9rem;
+    position: relative;
+}
+
+/* Ícone ou texto de fallback via pseudo-elemento (se quiser) */
+.comunidade-capa img:not([src])::after,
+.comunidade-capa img[src=""]::after {
+    content: "🏛️ Comunidade";
+    position: absolute;
+    color: #ffbc00;
+    font-size: 1.2rem;
+    opacity: 0.3;
+    pointer-events: none;
+}
+

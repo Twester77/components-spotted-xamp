@@ -164,8 +164,6 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                         style="background: <?php echo $ja_segue ? 'transparent' : $cor_user; ?>; border-color: <?php echo $cor_user; ?>;">
                         <?php echo $ja_segue ? '<i class="fa-solid fa-check"></i> Seguindo' : '+ Seguir'; ?>
                     </a>
-                <?php else: ?>
-                    <a href="perfil.php" class="btn-editar-atalho">EDITAR MEU PERFIL</a>
                 <?php endif; ?>
             </div>
         </div>

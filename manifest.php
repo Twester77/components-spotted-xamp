@@ -1,16 +1,24 @@
 <?php
-$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
-
-// 🔥 FORÇA O NAVEGADOR A NÃO CACHEAR O MANIFESTO
 header('Content-Type: application/json');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');
 header('Expires: 0');
 
+// 🔥 BASE PATH SEGURO – NÃO DEPENDE DE $_SERVER['SCRIPT_NAME'] EM SERVERLESS
+$basePath = '';
+
+// Fallback: se estiver em um subdiretório local (ex: /spotted-unifev), detecta
+if (isset($_SERVER['SCRIPT_NAME'])) {
+    $dir = dirname($_SERVER['SCRIPT_NAME']);
+    if ($dir !== '/' && $dir !== '.') {
+        $basePath = rtrim($dir, '/');
+    }
+}
+
 $manifest = [
     'name' => 'A Fenda - Spotted Universitário',
     'short_name' => 'Fenda',
-    'description' => 'O feed mais doido da UNIFEV.',
+    'description' => 'O feed mais doido da UNIFEV, quiçá de Votuporanga.',
     'start_url' => $basePath . '/feed.php',
     'display' => 'standalone',
     'display_override' => ['window-controls-overlay'],
@@ -35,4 +43,5 @@ $manifest = [
     'screenshots' => [],
     'categories' => ['social', 'education']
 ];
+
 echo json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);

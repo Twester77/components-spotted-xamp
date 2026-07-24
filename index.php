@@ -90,7 +90,7 @@ include 'includes/bolhas.php';
         <article class="conteudo-principal">
             <p>Aqui nós falamos de música, ciência, artes, paquera, fofocas (muitas inclusive), cinema, séries, hobbys diversos, cultura pop e por que não, a cultura underground também ?!</p>
             <p>Falar mal do: coleguinha / fulano / beltrano / herculano / vida acadêmica / perrengues cotidianos / presidente / do papa / obsolescência programada / aquecimento global / segunda guerra mundial / apocalipse zumbi / político / ex BBB e subcelebridades em geral / guardinha / enfim QUASE tudo... Mãe não pode. </p>
-            <p>Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, barzinho de qualidade e procedência completamente duvidosa, talvez um churras com piscina (Votuporanga né, só por deus) no final de semana...</p>
+            <p>Marcar alguns rolês? Uma jogatina marota pelo Discord ou mesmo pra fechar a mesa do RPG no intervalo. Um futzinho, beach tênis, vôlei, barzinho de qualidade e procedência completamente duvidosa, talvez um churras com piscina no final de semana (Votuporanga né, só por deus nessa sauna)...</p>
             <p>E por que não, marcar um date e achar o amor da sua vida (ou um trauma e 6 meses de terapia, alô pessoal da Psico!).</p>
             <p class="aviso-legal"> * Lembrando que NÃO NOS RESPONSABILIZAMOS por quaisquer opiniões do usuário ou tomamos qualquer partido, somos somente mensageiros.</p>
 

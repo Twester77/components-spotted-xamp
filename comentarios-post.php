@@ -145,65 +145,39 @@ $total_reacoes = array_sum($reacoes_detalhes);
      ============================================================ -->
 <div class="lingote-container" id="lingoteContainer">
     <div class="layout-wrapper">
-        <header class="sticky-header">
-            <div class="box-post-central">
-                <div class="fenda-estatica-context">
-                    <a href="feed.php" class="btn-voltar-fenda">
-                        <i class="fas fa-arrow-left"></i> Voltar para o Feed
-                    </a>
 
-                    <!-- ============================================================
-                    CARD PRINCIPAL (com banner de post encerrado)
-                    ============================================================ -->
-                    <article id="card-post-header" class="spotted-card <?php echo $post['categoria']; ?> card-focado">
+        <!-- 🔥 BARRA DE AÇÕES FIXA (HEADER) – FORA DO STICKY HEADER -->
+        <?php
+        // Dados da miniatura (já calculados antes, mas reforçamos aqui)
+        $avatar_miniatura = !empty($post['foto'])
+            ? (obterUrlImagem($post['foto'], $b2, true) ?? 'uploads/ui/default.webp')
+            : 'uploads/ui/default.webp';
+        $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
+        $texto_miniatura = htmlspecialchars(mb_substr($post['mensagem'], 0, 80));
+        if (mb_strlen($post['mensagem']) > 80) $texto_miniatura .= '...';
+        ?>
+        <div id="header-actions"
+            class="header-actions-container header-actions-fixo"
+            data-post-id="<?php echo $id; ?>"
+            data-post-avatar="<?php echo htmlspecialchars($avatar_miniatura); ?>"
+            data-post-nome="<?php echo htmlspecialchars($nome_miniatura); ?>"
+            data-post-texto="<?php echo htmlspecialchars($texto_miniatura); ?>">
+            <!-- Os botões serão injetados pelo HeaderManager -->
+        </div>
 
-                        <!-- 🔥 BANNER DE POST ENCERRADO -->
-                        <?php if (!$post_esta_ativo): ?>
-                            <div class="post-encerrado-banner">
-                                <i class="fas fa-lock"></i>
-                                Este post foi encerrado pelo autor. Os comentários estão bloqueados.
-                            </div>
-                        <?php endif; ?>
+        <!-- ============================================================
+        CONTEÚDO ROLÁVEL (APENAS COMENTÁRIOS)
+        🔥 A MINIATURA, BOTÃO VOLTAR E COLLAPSE FORAM REMOVIDOS DAQUI
+        ELES AGORA SÃO GERENCIADOS PELO CSS E PELO HEADERMANAGER
+        ============================================================ -->
+        <main class="lista-scrollavel" id="conteudo-rolavel">
 
-                        <div class="card-header">
-                            <span class="category-tag">#<?php echo strtoupper($post['categoria']); ?></span>
-                            <span class="post-time"><?php echo date('d/m', strtotime($post['data_post'])); ?></span>
-                        </div>
-                        <div class="card-body">
-                            <p class="post-content-focado"><?php echo nl2br(htmlspecialchars($post['mensagem'])); ?></p>
-                            <?php if (!empty($post['imagem_url'])): ?>
-                                <div class="container-img-post">
-                                    <?php
-                                    $img_card = obterUrlImagem($post['imagem_url'], $b2, true) ?? htmlspecialchars($post['imagem_url']);
-                                    ?>
-                                    <img src="<?= htmlspecialchars($img_card) ?>" class="spotted-card-img" alt="Imagem do Post" onerror="this.src='uploads/ui/fallback-post.webp'">
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </article>
-
-                    <!-- SEÇÃO DE REAÇÕES -->
-                    <div id="reacoes-post-<?php echo $post_id_atual; ?>" class="reacoes-gravadas">
-                        <?php if (!empty($reacoes_detalhes)): ?>
-                            <?php foreach ($reacoes_detalhes as $tipo => $total): ?>
-                                <span class="reacao-item <?php echo in_array($tipo, $minhas_reacoes) ? 'voted' : ''; ?>">
-                                    <?php echo $tradutor[$tipo] ?? '👍'; ?> <?php echo $total; ?>
-                                </span>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <span class="reacao-placeholder"> Ninguém reagiu ainda. Seja o primeiro!</span>
-                        <?php endif; ?>
-                    </div>
-                </div>
+            <div class="fenda-estatica-context">
+                <!-- 🔥 O botão "Voltar" agora está na barra fixa (HeaderManager) -->
+                <!-- 🔥 O collapse agora é fixo via CSS (fora do fluxo) -->
             </div>
-        </header>
 
-        <button id="btn-toggle-collapse" class="btn-toggle-collapse" aria-label="Minimizar/Expandir post">
-            <i class="fas fa-chevron-up"></i>
-        </button>
-
-        <!-- ÁREA DE COMENTÁRIOS -->
-        <main class="lista-scrollavel">
+            <!-- ÁREA DE COMENTÁRIOS -->
             <div class="lista-comentarios-social">
                 <?php
                 $sql_c = "SELECT c.*, 
@@ -236,11 +210,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 ?>
                         <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
 
-                            <?php if ($sou_eu): ?>
-                                <button class="btn-excluir-comentario" data-id="<?php echo $c['id']; ?>" title="Excluir comentário">
-                                    <i class="fas fa-ellipsis-v"></i>
-                                </button>
-                            <?php endif; ?>
+                            <!-- 🔥 REMOVIDO: botão de ellipsis (⋯) – agora centralizado no header -->
+                            <!-- O ellipsis foi removido para centralizar a ação "Excluir" no HeaderManager -->
 
                             <div class="comentario-meta">
                                 <strong class="comentario-autor" style="color: var(--cor-borda-glow);">
@@ -301,11 +272,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 </div>
                             <?php endif; ?>
 
-                            <div class="acoes-bolha">
-                                <button onclick="prepararResposta(<?php echo intval($id_vincular); ?>, '<?php echo htmlspecialchars($nome_limpo_js); ?>')" class="btn-responder-bolha">
-                                    RESPONDER
-                                </button>
-                            </div>
+                            <!-- 🔥 REMOVIDO: botão "RESPONDER" do rodapé – agora centralizado no header -->
+                            <!-- A ação "Responder" agora é acionada pelo HeaderManager ao selecionar o comentário -->
+
                         </div>
                     <?php
                     endwhile;
@@ -313,6 +282,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     <p class="sem-comentarios">Ninguém fofocou nada ainda... Seja o primeiro!</p>
                 <?php endif; ?>
             </div>
+
         </main>
 
         <!-- ============================================================
@@ -399,131 +369,99 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 </div>
             </footer>
         <?php endif; ?>
+
     </div>
 </div>
+<!-- 🔥 BOTÃO DE COLLAPSE FLUTUANTE (FORA DO LINGOTE) -->
+<button id="btn-toggle-collapse" class="btn-toggle-collapse" aria-label="Minimizar/Expandir post">
+    <i class="fas fa-chevron-up"></i>
+</button>
 
 <script>
-    // ==================== CLIQUE NO BOTÃO ELLIPSIS ====================
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.btn-excluir-comentario');
-        if (!btn) return;
-        e.preventDefault();
-        e.stopPropagation();
-
-        const commentId = btn.dataset.id;
-        if (!commentId) return;
-
-        const dialog = document.getElementById('dialog-confirmacao');
-        if (!dialog) {
-            if (confirm('Deseja realmente excluir este comentário?')) {
-                window.location.href = 'includes/excluir-comentario.php?id=' + commentId;
-            }
-            return;
-        }
-
-        document.getElementById('dialog-titulo').textContent = '⚠️ Excluir Comentário';
-        document.getElementById('dialog-mensagem').textContent = 'Deseja realmente excluir este comentário?';
-
-        const btnSim = document.getElementById('dialog-btn-sim');
-        const btnNao = document.getElementById('dialog-btn-nao');
-        const newSim = btnSim.cloneNode(true);
-        const newNao = btnNao.cloneNode(true);
-        btnSim.parentNode.replaceChild(newSim, btnSim);
-        btnNao.parentNode.replaceChild(newNao, btnNao);
-
-        newSim.addEventListener('click', function() {
-            dialog.close();
-            if (typeof window.excluirComentario === 'function') {
-                window.excluirComentario(commentId, null);
-            } else {
-                window.location.href = 'includes/excluir-comentario.php?id=' + commentId;
-            }
-        });
-
-        newNao.addEventListener('click', function() {
-            dialog.close();
-        });
-
-        dialog.show();
-    });
+    // ==================== CLIQUE NO BOTÃO ELLIPSIS (REMOVIDO) ====================
+    // 🔥 O ellipsis foi removido dos comentários. A ação "Excluir" agora é centralizada no HeaderManager.
 
     // ==================== INICIALIZA O ANEXOS MANAGER ====================
-    // O AnexosManager já está definido no fenda-main.js, mas precisamos
-    // garantir que ele seja inicializado (caso o grid já exista no DOM).
     if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
         AnexosManager.init();
     }
 
     // ==================== LIGHTBOX PARA IMAGENS DOS COMENTÁRIOS ====================
-function initLightbox() {
-    const imagens = document.querySelectorAll('.comentario-img');
-    imagens.forEach(img => {
-        img.removeEventListener('click', abrirLightboxImagem);
-        img.addEventListener('click', abrirLightboxImagem);
-    });
-}
+    function initLightbox() {
+        const imagens = document.querySelectorAll('.comentario-img');
+        imagens.forEach(img => {
+            img.removeEventListener('click', abrirLightboxImagem);
+            img.addEventListener('click', abrirLightboxImagem);
+        });
+    }
 
-function abrirLightboxImagem(e) {
-    e.stopPropagation();
-    const imgSrc = e.currentTarget.src;
-    if (!imgSrc) return;
-    const modalExistente = document.getElementById('modal-lightbox-fenda');
-    if (modalExistente) modalExistente.remove();
-    const modal = document.createElement('div');
-    modal.id = 'modal-lightbox-fenda';
-    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; user-select:none; opacity:0; transition:opacity 0.2s ease;`;
-    const img = document.createElement('img');
-    img.src = imgSrc;
-    img.style.cssText = `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
-    const btn = document.createElement('button');
-    btn.innerHTML = '✖';
-    btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
-    btn.onclick = () => {
-        modal.style.opacity = '0';
-        setTimeout(() => modal.remove(), 200);
-    };
-    modal.appendChild(img);
-    modal.appendChild(btn);
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+    function abrirLightboxImagem(e) {
+        e.stopPropagation();
+        const imgSrc = e.currentTarget.src;
+        if (!imgSrc) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-bakcdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
             modal.style.opacity = '0';
             setTimeout(() => modal.remove(), 200);
-        }
-    });
-    modal.offsetHeight;
-    modal.style.opacity = '1';
-}
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    }
 
-window.abrirLightboxManual = function(src) {
-    if (!src) return;
-    const modalExistente = document.getElementById('modal-lightbox-fenda');
-    if (modalExistente) modalExistente.remove();
-    const modal = document.createElement('div');
-    modal.id = 'modal-lightbox-fenda';
-    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:100000; cursor:pointer; opacity:0; transition:opacity 0.2s ease;`;
-    const img = document.createElement('img');
-    img.src = src;
-    img.style.cssText = `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
-    const btn = document.createElement('button');
-    btn.innerHTML = '✖';
-    btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
-    btn.onclick = () => {
-        modal.style.opacity = '0';
-        setTimeout(() => modal.remove(), 200);
-    };
-    modal.appendChild(img);
-    modal.appendChild(btn);
-    document.body.appendChild(modal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+    window.abrirLightboxManual = function(src) {
+        if (!src) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-bakcdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
             modal.style.opacity = '0';
             setTimeout(() => modal.remove(), 200);
-        }
-    });
-    modal.offsetHeight;
-    modal.style.opacity = '1';
-};
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    };
 </script>
 
 <script src="js/fenda-giphy.js"></script>
@@ -551,15 +489,12 @@ window.abrirLightboxManual = function(src) {
 
         // ============================================================
         // 🔥 FUNÇÃO PARA CONTROLAR A VISIBILIDADE DO BOTÃO DE ENVIAR
-        // (Agora delegada ao AnexosManager, mas mantida local para compatibilidade)
         // ============================================================
         function verificarConteudo() {
-            // Se o AnexosManager estiver disponível, usamos ele
             if (typeof AnexosManager !== 'undefined' && AnexosManager.verificarConteudo) {
                 AnexosManager.verificarConteudo();
                 return;
             }
-            // Fallback (caso o manager não exista)
             const temTexto = campoTexto.value.trim().length > 0;
             const temImagem = inputFile && inputFile.files && inputFile.files.length > 0;
             const gifInput = document.querySelector('input[name="gif_url"]');
@@ -583,7 +518,7 @@ window.abrirLightboxManual = function(src) {
         }
 
         // ============================================================
-        // 🔥 ADICIONAR IMAGEM VIA INPUT FILE (usando AnexosManager)
+        // 🔥 ADICIONAR IMAGEM VIA INPUT FILE
         // ============================================================
         inputFile.addEventListener('change', function() {
             if (this.files.length > 0) {
@@ -645,7 +580,7 @@ window.abrirLightboxManual = function(src) {
         };
 
         // ============================================================
-        // 🔥 FUNÇÕES DE RESPOSTA (com classe CSS em vez de style inline)
+        // 🔥 FUNÇÕES DE RESPOSTA (com classe CSS)
         // ============================================================
         window.prepararResposta = function(id, username) {
             const inputParent = document.getElementById('input_parent_id');
@@ -688,7 +623,7 @@ window.abrirLightboxManual = function(src) {
         };
 
         // ============================================================
-        // 🔥 BOTÃO DE ANEXAR IMAGEM (abre o input file)
+        // 🔥 BOTÃO DE ANEXAR IMAGEM
         // ============================================================
         const btnAnexarImg = document.getElementById('btn-anexar-img');
         if (btnAnexarImg && inputFile) {
@@ -713,7 +648,7 @@ window.abrirLightboxManual = function(src) {
         }
 
         // ============================================================
-        // 🔥 ENVIO DO COMENTÁRIO (usando AnexosManager)
+        // 🔥 ENVIO DO COMENTÁRIO
         // ============================================================
         if (form && btnEnviar) {
             btnEnviar.addEventListener('click', function(e) {
@@ -857,5 +792,18 @@ window.abrirLightboxManual = function(src) {
         // ============================================================
         verificarConteudo();
 
-    <?php endif; ?> // fim do bloco de comentários ativos
+    <?php endif; // fim do bloco de comentários ativos 
+    ?>
+
+    // ============================================================
+    // 🔥 INICIALIZA O HEADER MANAGER (APÓS O DOM ESTAR PRONTO)
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof HeaderManager !== 'undefined' && HeaderManager.init) {
+            HeaderManager.init();
+            console.log('[HEADER] HeaderManager inicializado.');
+        } else {
+            console.warn('[HEADER] HeaderManager não encontrado – verifique o fenda-main.js');
+        }
+    });
 </script>

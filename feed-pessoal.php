@@ -29,7 +29,7 @@ echo "<script>window.prefSwipeAtivada = " . ($swipe_db == 1 ? 'true' : 'false') 
         </div>
 
         <nav class="menu-gaveta">
-            <a href="feed.pessoal.php" class="item-menu active"><i class="fas fa-comment-dots"></i> Meus Posts</a>
+            <a href="feed-pessoal.php" class="item-menu active"><i class="fas fa-comment-dots"></i> Meus Posts</a>
             <a href="ver-perfil.php?user=<?php echo $dados_user['username']; ?>" class="item-menu"><i class="fas fa-eye"></i> Ver meu Perfil</a>
             <a href="configuracoes.php" class="item-menu"><i class="fas fa-user-edit"></i> Editar Aura</a>
             <hr style="opacity: 0.1; margin: 15px 0;">

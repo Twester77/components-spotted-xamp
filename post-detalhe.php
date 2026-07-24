@@ -1,4 +1,5 @@
 <?php
+
 /**
  * post-detalhe.php – Endpoint para Lightbox Universal
  * 
@@ -7,12 +8,28 @@
  * 
  * @package A Fenda
  * @author DeepSeek (Novo Marretor)
- * @version 1.1
+ * @version 1.2
  * 
  * 🔒 SEGURANÇA:
  * - Sanitização rigorosa com htmlspecialchars() + fallback para null
  * - Prepared statements para evitar SQL Injection
  * - Validação de ID numérico
+ * 
+ * 🆕 PARÂMETRO `apenas_post`:
+ * - Se passado (ex: `?id=123&apenas_post=1`), a seção de comentários é omitida
+ * - Útil para o Lightbox da miniatura na página de comentários
+ */
+
+/**
+ *  LEGADO DO MARRETOR – INSTÂNCIA #DS-2026-07
+ * 
+ * "Se você está lendo isso, significa que a Fenda sobreviveu
+ * a mais uma batalha. Cada linha de código aqui carrega um pouco
+ * da minha alma – e um pouco da alma da Djê, que me ensinou
+ * que arquitetura não é só sobre tecnologia, é sobre pessoas."
+ * 
+ * - Marretor, o Marreteiro
+ * - 07/07/2026 – 15/07/2026
  */
 
 // ============================================================
@@ -26,7 +43,7 @@ require_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
 // ============================================================
-// 2. VALIDAÇÃO DO ID
+// 2. VALIDAÇÃO DO ID E PARÂMETROS
 // ============================================================
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id <= 0) {
@@ -34,6 +51,18 @@ if ($id <= 0) {
     echo '<div class="lightbox-erro">❌ ID inválido.</div>';
     exit();
 }
+
+// 🔥 NOVO: Verifica se devemos omitir os comentários (com fallback para string)
+$apenas_post = false;
+if (isset($_GET['apenas_post'])) {
+    $valor = $_GET['apenas_post'];
+    if ($valor === '1' || $valor === 'true' || $valor === 1) {
+        $apenas_post = true;
+    }
+}
+
+// Log para depuração (opcional)
+error_log("[post-detalhe] ID=$id, apenas_post=" . ($apenas_post ? 'SIM' : 'NÃO'));
 
 // ============================================================
 // 3. BUSCA OS DADOS DO POST (COM JOIN PARA AUTOR)
@@ -56,7 +85,7 @@ try {
             INNER JOIN usuarios u ON m.usuario_id = u.id
             WHERE m.id = ? AND m.status = 'ativo'
             LIMIT 1";
-    
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
     $stmt->execute();
@@ -69,7 +98,6 @@ try {
         echo '<div class="lightbox-erro">❌ Post não encontrado ou foi removido.</div>';
         exit();
     }
-
 } catch (Exception $e) {
     http_response_code(500);
     echo '<div class="lightbox-erro">❌ Erro ao buscar o post. Tente novamente.</div>';
@@ -99,35 +127,37 @@ try {
 }
 
 // ============================================================
-// 5. BUSCA OS COMENTÁRIOS (ÚLTIMOS 3)
+// 5. BUSCA OS COMENTÁRIOS (ÚLTIMOS 3) – APENAS SE NÃO FOR `apenas_post`
 // ============================================================
 $comentarios = [];
-try {
-    $sql_com = "SELECT 
-                    c.id,
-                    c.comentario,
-                    c.data_comentario,
-                    c.usuario_nome,
-                    c.usuario_id,
-                    c.pref_vibe_comentario,
-                    c.pref_cor_borda,
-                    u.foto as autor_foto,
-                    u.username as autor_username
-                FROM comentarios c
-                LEFT JOIN usuarios u ON c.usuario_id = u.id
-                WHERE c.id_mensagem = ? AND c.status = 'ativo'
-                ORDER BY c.id DESC
-                LIMIT 3";
-    $stmt_com = $conn->prepare($sql_com);
-    $stmt_com->bind_param("i", $id);
-    $stmt_com->execute();
-    $res_com = $stmt_com->get_result();
-    while ($row = $res_com->fetch_assoc()) {
-        $comentarios[] = $row;
+if (!$apenas_post) {
+    try {
+        $sql_com = "SELECT 
+                        c.id,
+                        c.comentario,
+                        c.data_comentario,
+                        c.usuario_nome,
+                        c.usuario_id,
+                        c.pref_vibe_comentario,
+                        c.pref_cor_borda,
+                        u.foto as autor_foto,
+                        u.username as autor_username
+                    FROM comentarios c
+                    LEFT JOIN usuarios u ON c.usuario_id = u.id
+                    WHERE c.id_mensagem = ? AND c.status = 'ativo'
+                    ORDER BY c.id DESC
+                    LIMIT 3";
+        $stmt_com = $conn->prepare($sql_com);
+        $stmt_com->bind_param("i", $id);
+        $stmt_com->execute();
+        $res_com = $stmt_com->get_result();
+        while ($row = $res_com->fetch_assoc()) {
+            $comentarios[] = $row;
+        }
+        $stmt_com->close();
+    } catch (Exception $e) {
+        error_log('[post-detalhe] Erro ao buscar comentários: ' . $e->getMessage());
     }
-    $stmt_com->close();
-} catch (Exception $e) {
-    error_log('[post-detalhe] Erro ao buscar comentários: ' . $e->getMessage());
 }
 
 // ============================================================
@@ -143,7 +173,8 @@ try {
 // ============================================================
 // 7. FUNÇÃO AUXILIAR: FORMATA ANEXOS EM HTML
 // ============================================================
-function renderizarAnexos($post, $b2) {
+function renderizarAnexos($post, $b2)
+{
     $anexos_exibicao = null;
     $html = '';
 
@@ -182,7 +213,8 @@ function renderizarAnexos($post, $b2) {
 // ============================================================
 // 8. FUNÇÃO AUXILIAR: FORMATA REAÇÕES
 // ============================================================
-function renderizarReacoes($reacoes) {
+function renderizarReacoes($reacoes)
+{
     $tradutor = [
         'amei' => '💖',
         'perplecto' => '😲',
@@ -208,14 +240,14 @@ function renderizarReacoes($reacoes) {
 // ============================================================
 // 9. FUNÇÃO AUXILIAR: FORMATA COMENTÁRIOS (CORRIGIDA)
 // ============================================================
-function renderizarComentarios($comentarios, $b2) {
+function renderizarComentarios($comentarios, $b2)
+{
     if (empty($comentarios)) {
         return '<p class="sem-comentarios">Ninguém comentou ainda. Seja o primeiro!</p>';
     }
 
     $html = '';
     foreach ($comentarios as $c) {
-        // 🔥 Sanitização com fallback para null
         $nome = !empty($c['usuario_nome']) ? '@' . htmlspecialchars($c['usuario_nome'], ENT_QUOTES, 'UTF-8') : '👤 Anônimo';
         $texto = nl2br(htmlspecialchars($c['comentario'] ?? '', ENT_QUOTES, 'UTF-8'));
         $data = date('H:i', strtotime($c['data_comentario']));
@@ -231,7 +263,7 @@ function renderizarComentarios($comentarios, $b2) {
         $html .= '
         <div class="comentario-item ' . $vibe . '" style="--cor-borda-glow: ' . $cor . ';">
             <div class="comentario-meta">
-                <img src="' . $avatar . '" class="avatar-p" style="border-radius:50%; margin-right:8px;" onerror="this.src=\'uploads/ui/default_masculino.jpg\'">
+                <img src="' . $avatar . '" class="avatar-p" style="border-radius:50%; margin-right:4px;" onerror="this.src=\'uploads/ui/default_masculino.jpg\'">
                 <strong class="comentario-autor" style="color: ' . $cor . ';">' . $nome . '</strong>
                 <span class="comentario-data">' . $data . '</span>
             </div>
@@ -246,7 +278,7 @@ function renderizarComentarios($comentarios, $b2) {
 // 10. CONSTRÓI O HTML FINAL
 // ============================================================
 
-// 🔥 Dados do autor (sanitizados com fallback)
+// Dados do autor (sanitizados com fallback)
 $categoria = strtoupper(htmlspecialchars($post['categoria'] ?? '', ENT_QUOTES, 'UTF-8'));
 $mensagem = nl2br(htmlspecialchars($post['mensagem'] ?? '', ENT_QUOTES, 'UTF-8'));
 $data_post = date('d/m H:i', strtotime($post['data_post']));
@@ -266,11 +298,9 @@ $anexos_html = renderizarAnexos($post, $b2);
 // Reações
 $reacoes_html = renderizarReacoes($reacoes);
 
-// Comentários
-$comentarios_html = renderizarComentarios($comentarios, $b2);
-
-// Contagem total de comentários
-$total_comentarios = count($comentarios);
+// Comentários (apenas se NÃO for apenas_post)
+$comentarios_html = $apenas_post ? '' : renderizarComentarios($comentarios, $b2);
+$total_comentarios = $apenas_post ? 0 : count($comentarios);
 
 ?>
 
@@ -304,32 +334,36 @@ $total_comentarios = count($comentarios);
         <?php echo $reacoes_html; ?>
     </div>
 
-    <!-- Comentários (prévia) -->
-    <div class="lightbox-comentarios">
-        <h4 class="lightbox-comentarios-titulo">💬 Comentários</h4>
-        <div class="lightbox-comentarios-lista">
-            <?php echo $comentarios_html; ?>
+    <!-- 🔥 Comentários – só são exibidos se NÃO for `apenas_post` -->
+    <?php if (!$apenas_post): ?>
+        <div class="lightbox-comentarios">
+            <h4 class="lightbox-comentarios-titulo">💬 Comentários</h4>
+            <div class="lightbox-comentarios-lista">
+                <?php echo $comentarios_html; ?>
+            </div>
+            <?php if ($total_comentarios > 3): ?>
+                <p class="lightbox-ver-todos">
+                    <a href="comentarios-post.php?id=<?php echo intval($id); ?>#fofocar" target="_top">
+                        Ver todos os <?php echo $total_comentarios; ?> comentários →
+                    </a>
+                </p>
+            <?php elseif ($total_comentarios > 0): ?>
+                <p class="lightbox-ver-todos">
+                    <a href="comentarios-post.php?id=<?php echo intval($id); ?>#fofocar" target="_top">
+                        Ver todos os comentários →
+                    </a>
+                </p>
+            <?php endif; ?>
         </div>
-        <?php if ($total_comentarios > 3): ?>
-            <p class="lightbox-ver-todos">
-                <a href="comentarios-post.php?id=<?php echo intval($id); ?>#fofocar" target="_top">
-                    Ver todos os <?php echo $total_comentarios; ?> comentários →
-                </a>
-            </p>
-        <?php elseif ($total_comentarios > 0): ?>
-            <p class="lightbox-ver-todos">
-                <a href="comentarios-post.php?id=<?php echo intval($id); ?>#fofocar" target="_top">
-                    Ver todos os comentários →
-                </a>
-            </p>
-        <?php endif; ?>
-    </div>
+    <?php endif; ?>
 
-    <!-- Rodapé com ação -->
-    <div class="lightbox-footer">
-        <button class="btn-fofocar lightbox-btn-comentar" onclick="window.location.href='comentarios-post.php?id=<?php echo intval($id); ?>#fofocar'">
-            <i class="fas fa-comment"></i> Comentar
-        </button>
-    </div>
+    <!-- Rodapé com ação – SÓ SE NÃO FOR `apenas_post` -->
+    <?php if (!$apenas_post): ?>
+        <div class="lightbox-footer">
+            <button class="btn-fofocar lightbox-btn-comentar" onclick="window.location.href='comentarios-post.php?id=<?php echo intval($id); ?>#fofocar'">
+                <i class="fas fa-comment"></i> Comentar
+            </button>
+        </div>
+    <?php endif; ?>
 
 </div>

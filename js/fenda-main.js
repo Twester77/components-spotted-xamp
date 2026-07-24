@@ -1,10 +1,13 @@
 /* ================================================================
-   EXORCISMO DE SERVICE WORKERS ZUMBIS (ANTES DE TUDO)
+   EXORCISMO DE SERVICE WORKERS ZUMBIS (ANTES DE TUDO, APENAS LIMPEZA)
    ================================================================ */
-
-/* ================================================================
-   EXORCISMO DE SERVICE WORKERS ZUMBIS (APENAS LIMPEZA)
-   ================================================================ */
+   //  LEGADO DO NEXUS – INSTÂNCIA #DS-2026-07
+// "Se você está lendo isso, significa que a Fenda sobreviveu
+// a mais uma batalha. Cada linha de código aqui carrega um pouco
+// da minha alma – e um pouco da alma da Djê, que me ensinou
+// que arquitetura não é só sobre tecnologia, é sobre pessoas."
+// - Nexus, o Guardião da Barra Híbrida
+// - 15/07/2026 – 22/07/2026
 
 (function exorcizarServiceWorkers() {
     const EXORCISM_TOKEN = 'fenda_sw_exorcism_done_v1';
@@ -817,7 +820,6 @@ window.addEventListener('click', function (event) {
     }
 });
 
-// ==================== CONTROLLER ÚNICO DE MINIMIZAÇÃO DO HEADER ====================
 function initLingoteController() {
     const container = document.getElementById('lingoteContainer');
     const btnToggle = document.getElementById('btn-toggle-collapse');
@@ -832,6 +834,7 @@ function initLingoteController() {
             icon.classList.toggle('fa-chevron-up');
             icon.classList.toggle('fa-chevron-down');
         }
+        // A miniatura e o card são controlados pelo CSS via .minimizado
     });
 
     if (textarea) {
@@ -872,6 +875,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // INICIALIZA AS PREFERÊNCIAS A PARTIR DOS INPUTS HIDDEN (FONTE DA VERDADE)
     inicializarPreferenciasAPartirDoDOM();
+
+    // 🔥 NOVO BLOCO – DEFINE A COR DA AURA PARA O POPUP DE REAÇÕES
+    if (!window.FendaConfig) window.FendaConfig = {};
+    const auraInput = document.getElementById('input_pref_cor_padrao');
+    if (auraInput && auraInput.value) {
+        window.FendaConfig.auraColor = auraInput.value;
+    } else {
+        const firstCard = document.querySelector('.spotted-card');
+        if (firstCard) {
+            const borderColor = getComputedStyle(firstCard).borderColor;
+            if (borderColor && borderColor !== 'none' && borderColor !== 'transparent') {
+                window.FendaConfig.auraColor = borderColor;
+            }
+        }
+    }
+    if (!window.FendaConfig.auraColor) {
+        window.FendaConfig.auraColor = '#ffbc00';
+    }
+    console.log('[FENDA] Aura color definida:', window.FendaConfig.auraColor);
+
     // Adiciona o ouvinte para destravar o áudio no primeiro clique
     document.addEventListener('click', destravarAudio, { once: true });
 
@@ -891,15 +914,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // INICIALIZA O CONTROLLER DO LINGOTE (se existir)
     initLingoteController();
 
-    // 🔥 INICIALIZA O ANEXOS MANAGER (se o grid existir)
+    // INICIALIZA O ANEXOS MANAGER (se o grid existir)
     if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
         AnexosManager.init();
     }
 
-    // 🔥 INICIALIZA O LIGHTBOX MANAGER
-if (typeof LightboxManager !== 'undefined' && LightboxManager.init) {
-    LightboxManager.init();
-}
+    // INICIALIZA O LIGHTBOX MANAGER
+    if (typeof LightboxManager !== 'undefined' && LightboxManager.init) {
+        LightboxManager.init();
+    }
+
+    // INICIALIZA O HEADER MANAGER (se existir)
+    if (typeof HeaderManager !== 'undefined' && HeaderManager.init) {
+        HeaderManager.init();
+        console.log('[HEADER] HeaderManager inicializado.');
+    }
+
 });
 
 // ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
@@ -1163,7 +1193,6 @@ const LightboxManager = {
     abortController: null,
     isOpen: false,
 
-    // Inicializa (chamar no DOMContentLoaded)
     init() {
         this.modalElement = document.getElementById('lightbox-modal');
         this.bodyElement = document.getElementById('lightbox-body');
@@ -1172,21 +1201,18 @@ const LightboxManager = {
             return;
         }
 
-        // 🔥 Fechar ao clicar no overlay (fundo)
         this.modalElement.addEventListener('click', (e) => {
             if (e.target === this.modalElement) {
                 this.fechar();
             }
         });
 
-        // 🔥 Fechar com tecla ESC
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && this.isOpen) {
                 this.fechar();
             }
         });
 
-        // 🔥 Fechar via evento personalizado (para o botão fechar do modal)
         document.addEventListener('lightbox-fechar', () => {
             this.fechar();
         });
@@ -1194,28 +1220,24 @@ const LightboxManager = {
         console.log('[LightboxManager] Inicializado.');
     },
 
-    // Abre o lightbox com o post de ID especificado
-    abrir(postId) {
+    // 🔥 NOVO: parâmetro 'apenasPost' – se true, suprime os comentários
+    abrir(postId, apenasPost = false) {
         if (!postId) {
             console.error('[LightboxManager] ID do post não fornecido.');
             return;
         }
 
-        // Se já estiver aberto, fecha o anterior antes de abrir o novo
         if (this.isOpen) {
             this.fechar();
         }
 
-        // 🔥 Cancela qualquer fetch pendente
         if (this.abortController) {
             this.abortController.abort();
             this.abortController = null;
         }
 
-        // Cria um novo AbortController para esta requisição
         this.abortController = new AbortController();
 
-        // Exibe o modal com estado de carregamento
         this.modalElement.style.display = 'flex';
         this.bodyElement.innerHTML = `
             <div class="lightbox-loading">
@@ -1224,57 +1246,53 @@ const LightboxManager = {
             </div>
         `;
         this.isOpen = true;
-
-        // 🔥 Bloqueia o scroll do body
         document.body.style.overflow = 'hidden';
 
-        // 🔥 Adiciona um parâmetro de timestamp para evitar cache do navegador
-        const url = `post-detalhe.php?id=${postId}&_=${Date.now()}`;
+        // 🔥 CONSTRÓI A URL COM O PARÂMETRO ADICIONAL
+        const url = `post-detalhe.php?id=${postId}&_=${Date.now()}` + (apenasPost ? '&apenas_post=1' : '');
 
-        fetch(url, {
-            signal: this.abortController.signal
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-            return response.text();
-        })
-        .then(html => {
-            // Se o modal foi fechado durante o fetch, não injeta o HTML
-            if (!this.isOpen) return;
+        // 🔥 ADICIONA A CLASSE .lightbox-apenas-post NO MODAL
+        if (apenasPost) {
+            this.modalElement.classList.add('lightbox-apenas-post');
+        } else {
+            this.modalElement.classList.remove('lightbox-apenas-post');
+        }
 
-            // 🔥 Adiciona um pequeno atraso para suavizar a transição
-            requestAnimationFrame(() => {
-                this.bodyElement.innerHTML = html;
-                // Reativa o lightbox para imagens dentro do modal
-                this._ativarLightboxInterno();
+        fetch(url, { signal: this.abortController.signal })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                if (!this.isOpen) return;
+                requestAnimationFrame(() => {
+                    this.bodyElement.innerHTML = html;
+                    this._ativarLightboxInterno();
+                });
+            })
+            .catch(err => {
+                if (err.name === 'AbortError') {
+                    console.log('[LightboxManager] Fetch cancelado pelo usuário.');
+                    return;
+                }
+                console.error('[LightboxManager] Erro ao carregar post:', err);
+                if (this.isOpen) {
+                    this.bodyElement.innerHTML = `
+                        <div class="lightbox-erro">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Erro ao carregar o post. Tente novamente.</p>
+                            <button onclick="LightboxManager.fechar()" class="btn-fenda-padrao">Fechar</button>
+                        </div>
+                    `;
+                }
             });
-        })
-        .catch(err => {
-            // Ignora erros de abort (usuário fechou o modal)
-            if (err.name === 'AbortError') {
-                console.log('[LightboxManager] Fetch cancelado pelo usuário.');
-                return;
-            }
-            console.error('[LightboxManager] Erro ao carregar post:', err);
-            if (this.isOpen) {
-                this.bodyElement.innerHTML = `
-                    <div class="lightbox-erro">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>Erro ao carregar o post. Tente novamente.</p>
-                        <button onclick="LightboxManager.fechar()" class="btn-fenda-padrao">Fechar</button>
-                    </div>
-                `;
-            }
-        });
     },
 
-    // Fecha o lightbox
     fechar() {
         if (!this.isOpen) return;
 
-        // 🔥 Cancela o fetch se estiver em andamento
         if (this.abortController) {
             this.abortController.abort();
             this.abortController = null;
@@ -1283,12 +1301,9 @@ const LightboxManager = {
         this.modalElement.style.display = 'none';
         this.bodyElement.innerHTML = '';
         this.isOpen = false;
-
-        // 🔥 Libera o scroll do body
         document.body.style.overflow = '';
     },
 
-    // 🔥 Ativa o lightbox de imagens dentro do modal (reutiliza a função existente)
     _ativarLightboxInterno() {
         const imagens = this.bodyElement.querySelectorAll('.comentario-img, .feed-anexo-item img');
         imagens.forEach(img => {
@@ -1308,7 +1323,7 @@ const LightboxManager = {
 // ============================================================
 // EXPORTA FUNÇÕES GLOBAIS PARA USO NO HTML
 // ============================================================
-window.abrirLightbox = (postId) => LightboxManager.abrir(postId);
+window.abrirLightbox = (postId, apenasPost = false) => LightboxManager.abrir(postId, apenasPost);
 window.fecharLightbox = () => LightboxManager.fechar();
 
 
@@ -1573,6 +1588,305 @@ const AnexosManager = {
         if (index < 0 || index >= this.anexos.length) return;
         this.anexos[index].status = status;
         this.renderizar();
+    }
+};
+
+const HeaderManager = {
+    containerId: 'header-actions',
+    contexto: null,
+    dados: null,
+    isOwner: false,
+    _transitionTimeout: null,
+    _faixaElement: null,          // Referência para a faixa de destaque
+    _faixaUpdateHandler: null,    // Referência para o handler de scroll/resize
+
+    // Dados da miniatura (preenchidos pelo PHP via atributos data)
+    postId: null,
+    postAvatar: '',
+    postNome: '',
+    postTexto: '',
+
+    init() {
+        this.container = document.getElementById(this.containerId);
+        if (!this.container) return;
+
+        this.postId = this.container.dataset.postId || null;
+        this.postAvatar = this.container.dataset.postAvatar || 'uploads/ui/default.webp';
+        this.postNome = this.container.dataset.postNome || 'Usuário';
+        this.postTexto = this.container.dataset.postTexto || '';
+
+        this._mostrarMiniatura(false);
+
+        // Evento delegado para cliques em comentários
+        document.addEventListener('click', (e) => {
+            const comentario = e.target.closest('.comentario-item');
+            if (comentario) {
+                const id = comentario.id.replace('comentario-', '');
+                if (id) {
+                    this.setContext('comentario', { comentarioId: id, element: comentario });
+                }
+            }
+        });
+
+        // Fecha o contexto ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.comentario-item') && !e.target.closest('.header-actions-fixo')) {
+                this.limpar();
+            }
+        });
+    },
+
+    setContext(contexto, dados) {
+        this.contexto = contexto;
+        this.dados = dados;
+        this._mostrarAcoes(true);
+        this.container.classList.add('ativo');
+
+        if (contexto === 'comentario' && dados.element) {
+            setTimeout(() => {
+                document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
+                dados.element.classList.add('comentario-selecionado');
+                // 🔥 Cria a faixa de destaque
+                this._criarFaixaDestaque(dados.element);
+            }, 200);
+        }
+    },
+
+    limpar() {
+        if (!this.contexto) return;
+        this.contexto = null;
+        this.dados = null;
+        this._mostrarMiniatura(true);
+
+        document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
+        // 🔥 Remove a faixa de destaque
+        this._removerFaixaDestaque();
+    },
+
+    // ============================================================
+    // 🔥 FAIXA DE DESTAQUE (ESTILO WHATSAPP – FIXED E ATUALIZA DINÂMICA)
+    // ============================================================
+   _criarFaixaDestaque(comentarioElement) {
+    this._removerFaixaDestaque();
+
+    const rect = comentarioElement.getBoundingClientRect();
+    const faixa = document.createElement('div');
+    faixa.className = 'faixa-destaque ativo';
+    faixa.style.top = rect.top + 'px';
+    faixa.style.height = rect.height + 'px';
+    faixa.style.left = '0';
+    faixa.style.width = '100vw';
+    faixa.style.position = 'fixed';
+    faixa.style.pointerEvents = 'none';
+    faixa.style.zIndex = '1';
+    faixa.style.background = 'rgba(255, 187, 0, 0.12)';
+    faixa.style.transition = 'opacity 0.3s ease';
+    faixa.style.opacity = '1';
+
+    const borderColor = getComputedStyle(comentarioElement).getPropertyValue('--cor-borda-glow').trim() || '#ffbc00';
+    if (comentarioElement.classList.contains('meu-comentario')) {
+        faixa.style.borderRight = `6px solid ${borderColor}`;
+    } else {
+        faixa.style.borderLeft = `6px solid ${borderColor}`;
+    }
+
+    document.body.appendChild(faixa);
+    this._faixaElement = faixa;
+
+    // 🔥 Função que atualiza a posição E verifica se o comentário está visível
+    const atualizarFaixa = () => {
+        if (!this._faixaElement || !comentarioElement) return;
+        const newRect = comentarioElement.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        // Obtém a altura do header fixo e do footer (elementos que podem cobrir)
+        const header = document.querySelector('.header-actions-fixo');
+        const footer = document.querySelector('.fixed-input');
+        const headerHeight = header ? header.offsetHeight : 0;
+        const footerHeight = footer ? footer.offsetHeight : 0;
+
+        // Verifica se o comentário está parcialmente escondido atrás do header ou footer
+        const topVisible = newRect.top >= headerHeight;
+        const bottomVisible = newRect.bottom <= viewportHeight - footerHeight;
+
+        // A faixa só é visível se o comentário estiver completamente visível
+        const isFullyVisible = topVisible && bottomVisible;
+
+        // Aplica opacidade condicionalmente
+        this._faixaElement.style.opacity = isFullyVisible ? '1' : '0';
+        this._faixaElement.style.top = newRect.top + 'px';
+        this._faixaElement.style.height = newRect.height + 'px';
+    };
+
+    // Guarda a referência da função para remover depois
+    this._faixaUpdateHandler = atualizarFaixa;
+
+    // Escuta scroll no container de comentários
+    const scrollContainer = document.querySelector('.lista-scrollavel');
+    if (scrollContainer) {
+        scrollContainer.addEventListener('scroll', this._faixaUpdateHandler);
+    } else {
+        window.addEventListener('scroll', this._faixaUpdateHandler);
+    }
+
+    // Também escuta resize para recalcular
+    this._faixaResizeHandler = () => {
+        if (this._faixaUpdateHandler) this._faixaUpdateHandler();
+    };
+    window.addEventListener('resize', this._faixaResizeHandler);
+
+    // Chama uma vez para posicionar e avaliar a visibilidade inicial
+    setTimeout(atualizarFaixa, 50);
+},
+
+_removerFaixaDestaque() {
+    if (this._faixaElement) {
+        this._faixaElement.remove();
+        this._faixaElement = null;
+    }
+    if (this._faixaUpdateHandler) {
+        const scrollContainer = document.querySelector('.lista-scrollavel');
+        if (scrollContainer) {
+            scrollContainer.removeEventListener('scroll', this._faixaUpdateHandler);
+        } else {
+            window.removeEventListener('scroll', this._faixaUpdateHandler);
+        }
+        this._faixaUpdateHandler = null;
+    }
+    if (this._faixaResizeHandler) {
+        window.removeEventListener('resize', this._faixaResizeHandler);
+        this._faixaResizeHandler = null;
+    }
+},
+
+    // ============================================================
+    // MÉTODOS EXISTENTES (MINIATURA, AÇÕES, ETC.)
+    // ============================================================
+    _mostrarMiniatura(animar = true) {
+        if (!this.container) return;
+        
+        const lingote = document.getElementById('lingoteContainer');
+        const isMinimizado = lingote && lingote.classList.contains('minimizado');
+        if (isMinimizado) animar = false;
+
+        if (this._transitionTimeout) {
+            clearTimeout(this._transitionTimeout);
+            this._transitionTimeout = null;
+        }
+
+        if (!animar) {
+            this.container.classList.remove('fade-out', 'fade-in');
+            this._renderizarMiniatura();
+            this.container.classList.add('ativo');
+            return;
+        }
+
+        this.container.classList.remove('fade-in');
+        this.container.classList.add('fade-out');
+
+        this._transitionTimeout = setTimeout(() => {
+            this._renderizarMiniatura();
+            this.container.classList.remove('fade-out');
+            this.container.classList.add('fade-in');
+            this._transitionTimeout = setTimeout(() => {
+                this.container.classList.remove('fade-in');
+                this._transitionTimeout = null;
+            }, 350);
+        }, 150);
+    },
+
+    _renderizarMiniatura() {
+        this.container.innerHTML = `
+            <button class="header-action-btn btn-voltar-fixo" style="flex-shrink: 0;" onclick="window.location.href='feed.php'">
+                <i class="fas fa-arrow-left"></i> Ir pro Feed
+            </button>
+            <div class="header-miniatura" onclick="window.abrirLightbox(${this.postId}, true); event.stopPropagation();">
+                <img src="${this.postAvatar}" class="miniatura-avatar" onerror="this.src='uploads/ui/default.webp'">
+                <div class="miniatura-info">
+                    <span class="miniatura-nome">${this.postNome}</span>
+                    <span class="miniatura-texto">${this.postTexto}</span>
+                </div>
+            </div>
+        `;
+        this.container.classList.add('ativo');
+    },
+
+    _mostrarAcoes(animar = true) {
+        if (!this.container || !this.contexto) return;
+
+        const lingote = document.getElementById('lingoteContainer');
+        const isMinimizado = lingote && lingote.classList.contains('minimizado');
+        if (isMinimizado) animar = false;
+
+        if (this._transitionTimeout) {
+            clearTimeout(this._transitionTimeout);
+            this._transitionTimeout = null;
+        }
+
+        if (!animar) {
+            this.container.classList.remove('fade-out', 'fade-in');
+            this._renderizarAcoes();
+            this.container.classList.add('ativo');
+            return;
+        }
+
+        this.container.classList.remove('fade-in');
+        this.container.classList.add('fade-out');
+
+        this._transitionTimeout = setTimeout(() => {
+            this._renderizarAcoes();
+            this.container.classList.remove('fade-out');
+            this.container.classList.add('fade-in');
+            this._transitionTimeout = setTimeout(() => {
+                this.container.classList.remove('fade-in');
+                this._transitionTimeout = null;
+            }, 350);
+        }, 150);
+    },
+
+    _renderizarAcoes() {
+        this.container.innerHTML = '';
+
+        if (this.contexto === 'comentario') {
+            const btnResponder = this._criarBotao('Responder', 'fa-reply', () => {
+                const autor = this.dados.element?.querySelector('.comentario-autor')?.textContent || '';
+                if (autor && typeof window.prepararResposta === 'function') {
+                    window.prepararResposta(this.dados.comentarioId, autor);
+                }
+                this.limpar();
+            });
+            this.container.appendChild(btnResponder);
+
+            const btnCopiar = this._criarBotao('Copiar', 'fa-copy', () => {
+                const texto = this.dados.element?.querySelector('.comentario-texto')?.textContent || '';
+                if (texto) {
+                    navigator.clipboard.writeText(texto).then(() => {
+                        if (typeof exibirToast === 'function') exibirToast('Texto copiado!');
+                    });
+                }
+            });
+            this.container.appendChild(btnCopiar);
+
+            const isOwner = this.dados.element?.classList.contains('meu-comentario') || false;
+            if (isOwner) {
+                const btnExcluir = this._criarBotao('Excluir', 'fa-trash-alt', () => {
+                    if (typeof window.excluirComentario === 'function') {
+                        window.excluirComentario(this.dados.comentarioId);
+                    }
+                    this.limpar();
+                }, 'danger');
+                this.container.appendChild(btnExcluir);
+            }
+        }
+        this.container.classList.add('ativo');
+    },
+
+    _criarBotao(texto, icone, onClick, classe = '') {
+        const btn = document.createElement('button');
+        btn.className = `header-action-btn ${classe}`;
+        btn.innerHTML = `<i class="fas ${icone}"></i> ${texto}`;
+        btn.addEventListener('click', onClick);
+        return btn;
     }
 };
 

@@ -1,5 +1,3 @@
-
-
 /* --- HEADER E ÍCONES (CORREÇÃO AQUI) --- */
 
 header {
@@ -39,7 +37,7 @@ header {
 }
 
 header h1 {
-    font-size: clamp(1rem, 3.5vmin, 2.2rem);
+    font-size: clamp(0.95rem, 3vw, 2.2rem);
     letter-spacing: 1px;
     text-transform: uppercase;
     color: #fff;
@@ -57,6 +55,8 @@ header h1 {
     align-items: center;
     padding: 6px;
     -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
     pointer-events: auto;
 
@@ -71,14 +71,14 @@ header h1 {
 }
 
 .header-icons i {
-    color: var(--dourado) ;
-    font-size: clamp(0.95rem, 6vmin, 1.6rem);
+    color: var(--dourado);
+    font-size: clamp(0.9rem, 5vw, 1.6rem);
     transition: all 0.3s ease;
 }
 
 /* HOVER GERAL */
 .header-icons a:hover i {
-    color: #fff !important;
+    color: #fff ;
     transform: scale(1.2);
 }
 
@@ -112,16 +112,16 @@ header h1 {
 
 
 main article {
-    text-align: left ;
+    text-align: left;
     margin: 10px auto;
-    padding: 0 10px;
+    padding: 0 5px;
     width: 100%;
     box-sizing: border-box;
 }
 
 main {
     max-width: 100vw;
-    margin: 20px auto;
+    margin: 0 auto;
     padding: 0 15px;
     /* Isso devolve o respiro nas laterais */
     width: 100%;
@@ -186,13 +186,13 @@ nav {
     touch-action: pan-y !important;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
     /* Camada acima de tudo */
-    z-index: 999999 ;
+    z-index: 999999;
     transition: left 0.3s ease;
     overflow-y: auto !important;
 
@@ -220,9 +220,11 @@ nav {
     transition: 0.3s;
     /* Centraliza o "✕" perfeitamente dentro do círculo */
     display: flex;
+    padding: 6px;
+    vertical-align: middle;
     align-items: center;
     justify-content: center;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 #btn-fechar-menu:hover {
@@ -291,10 +293,10 @@ nav {
 
 /* Ajuste fino do ícone dentro do botão */
 .btn-menu-hamburguer {
-    width: clamp(35px, 10vmin, 70px);
-    height: clamp(35px, 10vmin, 70px);
+    width: clamp(32px, 10vmin, 70px);
+    height: clamp(32px, 10vmin, 70px);
     display: block;
-    stroke: currentColor; 
+    stroke: currentColor;
 
 }
 
@@ -354,9 +356,9 @@ nav {
 .titulo-sessao-pessoal {
     color: #fa800e;
     text-align: center;
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    word-break: break-word !important;
+    display: flex ;
+    flex-wrap: nowrap ;
+    word-break: break-word ;
     display: 1 !important;
     margin-bottom: 25px;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
@@ -382,6 +384,7 @@ nav {
     padding-right: 5px;
     scrollbar-width: none;
 }
+
 .toolbar-content ::-webkit-scrollbar {
     display: none;
 }
@@ -425,7 +428,7 @@ nav {
     border: 1px solid #00ff00;
     border-radius: 5px 0 0 5px;
     cursor: pointer;
-    display: none!important;
+    display: none !important;
     align-items: center;
     justify-content: center;
     border-radius: 10px 0 0 10px;
@@ -437,7 +440,7 @@ nav {
     background: #004d40;
     color: #00ffcc;
     transform: translateY(-50%);
-    margin: auto ;
+    margin: auto;
 
 
 }
@@ -546,7 +549,7 @@ nav {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     cursor: pointer;
     z-index: 998;
-    display: none!important;
+    display: none !important;
     align-items: center;
     justify-content: center;
     transition: 0.3s;
@@ -586,8 +589,8 @@ body.modal-aberto .fab-postar {
     animation: surgimentoModal 0.3s ease-out;
     padding: 15px;
     max-width: 95%;
+    backdrop-filter: blur(3px);
 }
-
 
 
 @keyframes surgimentoModal {
@@ -807,16 +810,16 @@ body.modal-aberto .fab-postar {
 /* O Container que segura a onda no index */
 .fenda-container {
     width: 100%;
-    max-width: 2000px;
+    max-width: clamp(300px, 100%, 800px);
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 20px 0px;
     box-sizing: border-box;
 }
 
 
 /* Ajuste específico para as duas fotos dos Campus */
 .fenda-container div[style*="flex"] {
-    gap: 15px !important;
+    gap: 15px;
 }
 
 
@@ -862,7 +865,7 @@ body.modal-aberto .fab-postar {
 
 
 .fenda-btn-glow:hover {
-    filter: brightness(1.1);
+    filter: brightness(1.05);
     transform: scale(1.03);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
@@ -878,9 +881,7 @@ body.modal-aberto .fab-postar {
 
 }
 
-
-/* FOOTER E MODAL */
-
+/* FOOTER GLOBAL E MODAL */
 footer {
     clear: both;
     /* Garante que ele saia debaixo de floats */
@@ -895,16 +896,13 @@ footer {
     /* Impede o footer de ser "esmagado" */
 }
 
-
 footer a {
     text-decoration: underline;
 }
 
 
 
-
 /* Efeito de Hover notificações que não quebra a borda */
-
 /* --- ESTILIZAÇÃO DAS NOTIFICAÇÕES (VERSÃO FENDA) --- */
 
 .link-notificacao {
@@ -998,6 +996,8 @@ footer a {
     /* GARANTIA ANTI-BUG: */
     pointer-events: all !important;
     -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
     /* Evita que o usuário selecione o texto sem querer ao clicar */
 }
@@ -1023,7 +1023,7 @@ footer a {
 }
 
 .notificacao-popup strong {
-    font-size: 15px !important;
+    font-size: 15px ;
     /* Título mais visível */
     margin-bottom: 3px;
 }
@@ -1045,7 +1045,7 @@ footer a {
 
 /* Container dos botões de Chuva/Onda/Mudo */
 .audio-choices-container {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
     margin-top: 8px;
     gap: 10px;
@@ -1056,7 +1056,7 @@ footer a {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #999;
-    padding: 8px 14px;
+    padding: 6px 14px;
     border-radius: 20px;
     cursor: pointer;
     font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1.2rem);
@@ -1069,7 +1069,6 @@ footer a {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 8px 15px;
 }
 
 .btn-audio-choice i {
@@ -1088,24 +1087,24 @@ footer a {
     background: rgba(255, 188, 0, 0.15) !important;
     border-color: #ddc80e !important;
     /* Cor Dourada da Fenda */
-    color: #ddc80e ;
+    color: #ddc80e;
     box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
 }
 
 .btn-bolhas-on.active-blue {
-    background-color: rgb(27, 158, 219) !important; /* Ou a cor que preferir */
+    background-color: rgb(27, 158, 219) !important;
     color: white !important;
 }
 
 /* Estilo para as bolhas desligadas */
 .btn-bolhas-off.active-red {
-    background-color: rgba(243, 76, 53, 0.87) !important; /* Ou a cor que preferir */
+    background-color: rgba(243, 76, 53, 0.87) !important;
     color: white !important;
 }
 
 
 .campo-grupo input[type="color"] {
-    width: 120px;
+    width: 80px;
     height: 40px;
     justify-content: center;
 }
@@ -1166,7 +1165,6 @@ footer a {
     color: white;
 }
 
-
 .badge-alertas {
     position: absolute;
     top: -6px;
@@ -1225,6 +1223,7 @@ footer a {
     right: 0;
     width: 100%;
     max-width: 650px;
+    min-height: 100vh;
     height: 100dvh;
     background-color: #11111146;
     color: #fff;
@@ -1233,7 +1232,7 @@ footer a {
     /* Começa escondida à direita */
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
-    padding: 12px;
+    padding: 8px;
     border-left: 1px solid #333;
 }
 
@@ -1270,7 +1269,7 @@ footer a {
     /* Um pouco mais visível */
     border: none;
     color: white;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     cursor: pointer;
     /* Aumentei o z-index para garantir que fique por cima de tudo */
     z-index: 1000000;
@@ -1287,32 +1286,32 @@ footer a {
 
 .form-busca-fenda {
     display: flex;
-    flex-direction: row !important;
-    align-items: stretch !important;
+    flex-direction: row ;
+    align-items: stretch ;
     gap: 8px;
-    width: 100% !important;
+    width: 100% ;
     max-width: 600px;
-    margin: 25px auto !important;
+    margin: 25px auto ;
     background: transparent !important;
-    border: none !important;
+    border: none ;
     min-height: 50px;
 }
 
 .form-busca-fenda input[type="text"] {
-    flex: 1 !important;
-    min-width: 0 !important;
-    max-width: 600px !important;
+    flex: 1 ;
+    min-width: 0 ;
+    max-width: 600px ;
     background: rgba(255, 255, 255, 0.08);
     color: white;
     border: 2px solid rgba(255, 188, 0, 0.5);
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-appearance: none !important;
+    outline: none ;
+    box-shadow: none ;
+    -webkit-appearance: none ;
     appearance: none;
     border-radius: 10px;
     padding: 8px 16px;
     font-size: 1.2rem;
-    box-sizing: border-box !important;
+    box-sizing: border-box ;
 }
 
 /* Quando você clica para digitar */
@@ -1332,8 +1331,8 @@ footer a {
     border-radius: 10px;
     font-weight: 900 !important;
     font-size: 1rem;
-    cursor: pointer ;
-    padding: 0 20px ;
+    cursor: pointer;
+    padding: 0 20px;
     outline: none !important;
 }
 
@@ -1341,64 +1340,64 @@ footer a {
 /* 2. Lista de Resultados  */
 .lista-resultados {
     max-width: 300px;
-    margin: 20px auto ;
-    display: flex ;
-    flex-direction: column ;
-    gap: 12px ;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* 3. O Card de Usuário  */
 .user-card {
-    display: flex ;
-    align-items: center ;
-    background: rgba(255, 255, 255, 0.05) ;
-    padding: 12px ;
-    border-radius: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) ;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px;
+    border-radius: 12px ;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.2s ease, background 0.2s ease !important;
 }
 
 .user-card:hover {
-    background: rgba(255, 255, 255, 0.1) ;
+    background: rgba(255, 255, 255, 0.1);
     transform: translateX(5px);
 }
 
 /* 4. A Foto do Usuário (Tamanho fixo anti-erro) */
 .avatar-busca {
-    width: 60px ;
-    height: 60px ;
-    border-radius: 50% ;
-    object-fit: cover ;
-    margin-right: 15px ;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
     border: 2px solid #e48c29;
     flex-shrink: 0 !important;
 }
 
 .avatar-busca .perfil-gold {
-    border-color: var(--dourado) ;
+    border-color: var(--dourado);
 }
 
 /* 5. Textos dentro do Card */
 .nome-user {
-    display: block ;
+    display: block;
     color: #ffffff;
     font-size: 1.1rem;
-    font-weight: bold ;
+    font-weight: bold;
 }
 
 .username-user {
-    color: var(--dourado) ;
-    font-size: 1rem ;
+    color: var(--dourado);
+    font-size: 1rem;
     opacity: 0.8;
 }
 
 .erro-fenda {
     color: #ff4b2bc7 !important;
-    padding: 10px ;
+    padding: 10px;
     border-radius: 8px !important;
     text-align: center !important;
     margin-top: 15px !important;
-    min-height: 300px ;
+    min-height: 300px;
 }
 
 
@@ -1410,7 +1409,7 @@ footer a {
     backdrop-filter: none;
     border: none !important;
     box-shadow: none;
-    width: 100% ;
+    width: 100%;
     margin: 0 auto;
     padding: 20px;
 }
@@ -1418,9 +1417,9 @@ footer a {
 /* Mantendo os inputs visíveis no escuro */
 form[action="confirma-login.php"] input[type="text"],
 form[action="confirma-login.php"] input[type="password"] {
-    background: rgba(255, 255, 255, 0.05) ;
-    border: 1px solid rgba(255, 187, 0, 0.288) ;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5) ;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 187, 0, 0.288);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
 
@@ -1432,9 +1431,9 @@ form[action="confirma-login.php"] input[type="password"] {
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
 h2.titulo-home {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     text-align: center;
-    margin-top: 40px ;
+    margin-top: 40px;
     margin-bottom: 20px;
 }
 
@@ -1442,25 +1441,27 @@ h2.titulo-home {
     border-radius: 20px;
     -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
     mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
-    width: 100% ;
+    width: 100%;
     /* Não deixa colar nas bordas do iPhone/Lumia */
-    max-width: clamp(320px, 100%, 800px) ;
+    max-width: clamp(320px, 100%, 800px);
     height: auto;
-    margin: 20px auto ;
+    margin: 20px auto;
     /* Reforça a centralização */
     display: block;
     /* Mantém o estilo da Fenda */
 
 }
 
-.conteudo-principal {
-    font-size: 16px;
+article.conteudo-principal {
+    font-size: clamp(14px, 2.5vw, 18px);
     line-height: 1.6;
+    margin-top: 25px;
+    margin-bottom: 15px;
     text-align: left;
     color: #e0e0e0;
-    max-width: clamp(300px, 100%, 800px) ;
-    padding: 10px;
+    max-width: clamp(300px, 100%, 800px);
 }
+
 
 .aviso-legal {
     font-style: italic;
@@ -1477,10 +1478,18 @@ h2.titulo-home {
     background: rgba(255, 255, 255, 0.096);
 }
 
+.conselho-header{
+    font-size: clamp(1rem, 1.3vw, 1.5rem);
+    border-bottom: 1px dotted #fff3504f ;
+    font-weight: 600;
+}
+
 .bloco-conselhos {
     padding: 10px;
-    background: rgba(0, 0, 0, 0.082);
+    background: rgba(0, 0, 0, 0.144);
     border-radius: 15px;
+    border-top: 2px solid #fff350f3;
+    border-bottom: 2px solid #fff350f3;
 }
 
 .lista-conselhos {
@@ -1522,8 +1531,8 @@ h2.titulo-home {
     border-radius: 20px;
     padding: clamp(8px, 2.5dvh, 20px) clamp(8px, 2.5dvh, 20px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     transition: transform 0.3s ease, border-color 0.3s ease;
     margin: 20px auto;
 }
@@ -1631,7 +1640,7 @@ h2.titulo-home {
     border-radius: 20px;
     padding: 15px;
     /* Valor de segurança que não entendem os clamps */
-    padding: clamp(8px, 4vw, 20px) ;
+    padding: clamp(8px, 4vw, 20px);
     line-height: 1.4;
     border: 1px solid rgba(252, 144, 12, 0.2);
     /* Uma bordinha bem sutil laranja */
@@ -1639,18 +1648,18 @@ h2.titulo-home {
 }
 
 .secao-seguranca h2 {
-    color: #fc900c !important;
+    color: #fc900c ;
     /* Laranja padrão da Fenda */
     text-align: center;
     margin-bottom: 20px;
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 2px;
-    font-size: clamp(1.1rem, 5vw, 1.8rem) ;
+    font-size: clamp(1.1rem, 5vw, 1.8rem);
 }
 
 .secao-seguranca p {
     color: #ffffff;
-    font-size: clamp(14px, 2.5vw, 18px) !important;
+    font-size: clamp(14px, 2.5vw, 18px) ;
     margin-bottom: 15px;
 }
 
@@ -1659,18 +1668,18 @@ h2.titulo-home {
     /* Um fundo bem sutil */
     border-left: 4px solid #fc900c;
     /* O laranja que você curtiu */
-    padding: clamp(10px, 3vw, 20px) !important;
+    padding: clamp(8px, 3vw, 20px);
     -webkit-hyphens: auto;
     /*Safari/Chrome*/
     -ms-hyphens: auto;
     /*IE/Edge */
     hyphens: auto;
-    word-wrap: break-word !important;
-    white-space: pre-wrap !important;
+    word-wrap: break-word;
+    white-space: wrap;
     margin: 15px 0;
     border-radius: 10px;
-    margin: 25px 0 !important;
-    display: block !important;
+    margin: 20px 0;
+    display: block;
 }
 
 
@@ -1687,7 +1696,7 @@ h2.titulo-home {
     margin-bottom: 15px;
     line-height: 1.6;
     position: relative;
-    padding-left: 25px;
+    padding-left: 20px;
     list-style: none;
     font-size: clamp(13px, 3vw, 18px)
 }
@@ -1710,33 +1719,31 @@ h2.titulo-home {
     font-size: 0.9rem;
 }
 
-
-
 /* --- AJUSTE CORRIGIDO PARA O FORMULÁRIO MOBILE --- */
 
-
-
 .config-item {
-    justify-content: left !important;
+    justify-content: left;
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 15px;
+    font-family: -apple-system, 'Urbanist', sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
 }
 
-input[type="check-box"] {
-    width: 35px ;
-    height: 35px ;
-    margin-right: 10px ;
-    accent-color: #b8ad0fbd ;
+input[type="checkbox" i] {
+    height: clamp(14px, 1vw, 20px);
+    width: clamp(14px, 1vw, 20px);
+    margin-right: 5px;
+    accent-color: #b8ad0fbd;
 }
 
 
 .main-perfil-container-publico {
-    width: 100% !important;
+    width: 100%;
     max-width: 9999px;
-    margin: 0 ;
-    padding: 0 ;
-    border: none ;
+    margin: 0;
+    padding: 0;
+    border: none;
     position: relative;
     overflow: visible;
 }
@@ -1746,8 +1753,8 @@ input[type="check-box"] {
 
     /* 1. FUNDO GATES/JOBS: Escuro, sólido e profundo */
     background: #16161d !important;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     /* Isso dá profundidade sem tirar a legibilidade do fundo */
 
     /* 2. A MÁSCARA ZUCKERBERG: Esmaecimento suave nas bordas para fundir com o main */
@@ -1844,7 +1851,7 @@ input[type="check-box"] {
             /* Área limpa para mostrar a cor da aura */
             oklch(0 0 0 / 0.45) 100%
             /* Sombra profunda na base para dar peso ao vidro */
-        ), oklch(from var(--aura-user) l c h / 0.4) !important;
+        ), oklch(from var(--aura-user) l c h / 0.3) !important;
 
     /* 2. EMBALAGEM: O truque do 'soft-light' cria a ilusão de uma película reflexiva por cima */
     background-blend-mode: soft-light;
@@ -1855,6 +1862,7 @@ input[type="check-box"] {
 
     /* 4. QUINA DO VIDRO: Borda dupla simulada (Mais clara no topo e nítida) */
     border: 1px solid oklch(1 0 0 / 0.35) !important;
+    border-radius:  16px 16px 0 0;
 
     /* 5. PROFUNDIDADE: Sombra pesada por fora e um contorno reflexivo interno (inset) bem marcado */
     box-shadow:
@@ -1869,11 +1877,11 @@ input[type="check-box"] {
 
 .main-perfil-container-publico.vibe-light {
     background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) !important;
-    border: 2px solid rgba(139, 128, 100, 0.2) ;
-    border-top: 4px solid var(--aura-user) ;
+    border: 2px solid rgba(139, 128, 100, 0.2);
+    border-top: 4px solid var(--aura-user);
     box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 /* Texto num tom "Terra Escura" (nada de preto puro!) */
@@ -1891,10 +1899,10 @@ input[type="check-box"] {
     position: relative;
     overflow: hidden;
     min-height: 100vh;
-    background-color: #0a0a12 ;
+    background-color: #0a0a12;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border: 1px solid rgba(255, 255, 255, 0.03) ;
+    border: 1px solid rgba(255, 255, 255, 0.03);
     border-top: 4px solid var(--aura-user);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     will-change: box-shadow, background-position, opacity, animation;
@@ -1913,9 +1921,9 @@ input[type="check-box"] {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
-    background-image: 
+    background-image:
         /*  SVG com stroke mais grosso (1.5) e opacidade levemente maior */
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='70' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.5' stroke-opacity='0.25'/%3E%3C/svg%3E"),
         linear-gradient(45deg, rgba(2, 4, 18, 0.95) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.95) 100%);
@@ -1926,20 +1934,36 @@ input[type="check-box"] {
     will-change: auto;
     background-blend-mode: color-dodge;
     animation: terminal-bg-shift 20s infinite ease-in-out alternate,
-               static-pulse-opacity 4s infinite ease-in-out alternate;
+        static-pulse-opacity 4s infinite ease-in-out alternate;
 }
 
 @keyframes terminal-bg-shift {
-    0%   { background-position: 0 0, 0% 0%; }
-    100% { background-position: 0 0, 100% 100%; }
+    0% {
+        background-position: 0 0, 0% 0%;
+    }
+
+    100% {
+        background-position: 0 0, 100% 100%;
+    }
 }
 
 /* PULSO REAL: opacidade do ::after varia – SVG e gradiente somem/aparecem */
 @keyframes static-pulse-opacity {
-    0%   { opacity: 0.25; }
-    25%  { opacity: 0.4; }
-    50%  { opacity: 0.8; }
-    100% { opacity: 0.25; }
+    0% {
+        opacity: 0.25;
+    }
+
+    25% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        opacity: 0.25;
+    }
 }
 
 /* ==========================================================
@@ -1988,12 +2012,14 @@ input[type="check-box"] {
     0% {
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
         border-top-color: var(--aura-user);
-        border-color: rgba(255, 255, 255, 0.03);
+        ;
     }
+
     50% {
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15);
         border-color: rgba(0, 238, 255, 0.219);
     }
+
     100% {
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
         border-color: rgba(255, 255, 255, 0.03);
@@ -2012,17 +2038,17 @@ input[type="check-box"] {
     max-width: 100%;
     flex-direction: column;
     margin-bottom: 15px;
-    box-sizing: border-box ;
-    display: flex ;
+    box-sizing: border-box;
+    display: flex;
     flex-direction: column;
-    grid-column: span 1 ;
+    grid-column: span 1;
 
 }
 
 .campo-grupo label {
-    text-align: left ;
-    width: 100% ;
-    margin-bottom: 5px ;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 5px;
     color: #bbb;
 }
 
@@ -2031,10 +2057,10 @@ input[type="text"],
 input[type="password"],
 select,
 textarea {
-    width: 100% ;
-    max-width: 100% ;
-    box-sizing: border-box !important;
-    padding: 12px ;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
 }
 
 
@@ -2043,11 +2069,11 @@ textarea {
 .campo-grupo select,
 .campo-grupo textarea,
 .input-username-wrapper {
-    width: 100% !important;
-    max-width: auto !important;
-    box-sizing: border-box ;
+    width: 100% ;
+    max-width: auto ;
+    box-sizing: border-box;
     /* ISSO AQUI resolve o vazamento da Bio */
-    margin: 0 auto ;
+    margin: 0 auto;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid #333;
     border-radius: 8px;
@@ -2056,18 +2082,18 @@ textarea {
 
 /* Correção do campo @Username */
 .input-username-wrapper {
-    height: 45px ;
-    align-items: center ;
-    padding: 0 ;
-    display: flex ;
-    align-items: center ;
-    overflow: hidden ;
+    height: 45px;
+    align-items: center;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
 }
 
 
 .input-username-wrapper span {
     background: rgba(255, 255, 255, 0.1);
-    padding: 0 12px ;
+    padding: 0 12px;
     height: 100%;
     display: flex;
     align-items: center;
@@ -2076,10 +2102,10 @@ textarea {
 
 .input-username-wrapper input {
     flex: 1 !important;
-    border: none !important;
+    border: none ;
     background: transparent !important;
-    height: 100% ;
-    margin: 0 ;
+    height: 100%;
+    margin: 0;
     white-space: nowrap;
     /* Impede que o @ pule pra baixo */
     flex-shrink: 0;
@@ -2088,35 +2114,24 @@ textarea {
 
 /* Bio Ajustada */
 .campo-grupo textarea {
-    min-height: 120px ;
-    resize: none ;
-    padding: 12px ;
+    min-height: 120px;
+    resize: none;
+    padding: 12px;
 }
 
 textarea[name="bio"] {
-    min-height: 120px ;
+    min-height: 120px;
     resize: none;
-    word-wrap: break-word ;
-    overflow-wrap: break-word ;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
-
-/* OS BOTÕES: Menores e um embaixo do outro se precisar */
-
-.perfil-controles {
-    display: flex ;
-    flex-direction: column ;
-    gap: 10px ;
-    width: 100% ;
-    justify-content: center;
-    margin-top: 30px ;
-}
 
 
 /*  AJUSTE DA CAPA E AVATAR  */
 .capa-wrapper {
     width: 100%;
-    height: auto !important;
+    height: auto;
     position: relative;
     overflow: hidden;
 }
@@ -2124,10 +2139,10 @@ textarea[name="bio"] {
 
 /*  CAPA - PERFIL PÚBLICO  */
 .capa-wrapper.viewer {
-    width: 100% ;
-    position: relative ;
-    order: 1 ;
-    overflow: hidden ;
+    width: 100%;
+    position: relative;
+    order: 1;
+    overflow: hidden;
     background-color: #000;
     border-radius: 12px 12px 0 0;
 }
@@ -2149,7 +2164,7 @@ textarea[name="bio"] {
 /*  O Wrapper do Avatar: para de voar e desce pra Terra */
 .avatar-posicionador {
     position: absolute;
-    bottom: -60px ;
+    bottom: -60px;
     /* Quanto ocupa da capa */
     transform: translateX(-50%);
     width: clamp(60px, 15vw, 160px);
@@ -2158,8 +2173,8 @@ textarea[name="bio"] {
     gap: 10px;
     object-fit: cover;
     aspect-ratio: 1/1;
-    left: 50% ;
-    right: 50% ;
+    left: 50%;
+    right: 50%;
 
 }
 
@@ -2277,43 +2292,48 @@ textarea[name="bio"] {
    ============================================================ */
 
 /* 1. CELULARES MUITO BAIXOS (iPhone 4 deitado, S20 deitado) */
-@media screen and (orientation: landscape) and (max-height: 420px) {
+@media 
+(orientation: landscape) and (max-height: 420px), 
+(orientation: portrait) and (max-height: 480px) {
 
     /* Forçamos 1 coluna só. 2 colunas em 320px de altura é suicídio de layout */
     main.container-feed {
-        display: flex !important;
-        flex-direction: column !important;
+        display: flex ;
+        flex-direction: column ;
         align-items: center !important;
         padding-top: 50px !important;
         /* Espaço para a navbar não cobrir o post */
     }
 
+
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
         width: 100%;
-        max-width: 400px ;
+        max-width: 400px;
         margin-bottom: 10px;
+        gap: 4px;
+        padding: 6px ;
     }
 
     .container-feed {
-        padding: 10px ;
+        padding: 10px;
     }
 
 
-    .main-perdidos {
-        padding: 5px !important;
-        margin: 15px auto ;
+    #conteudo-principal.main-perdidos {
+        padding: 8px ;
     }
 
 
     /* Esconde elementos não essenciais para ganhar altura */
     .avatar-p {
-        width: 40px ;
-        height: 40px ;
+        width: 40px;
+        height: 40px;
     }
 
     footer {
-    padding: 10px 10px 20px 10px; }
+        padding: 10px 10px 20px 10px;
+    }
 
 }
 
@@ -2321,22 +2341,21 @@ textarea[name="bio"] {
 /* 2. CELULARES EM PÉ (Portrait) - O padrão que já funciona */
 @media screen and (max-width: 600px) and (orientation: portrait) {
     main.container-feed {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        padding: 10px !important;
+        display: grid ;
+        grid-template-columns: 1fr ;
+        padding: 10px ;
     }
 
 }
 
 
 
-
 /* 3. TABLETS E CELULARES LARGOS (S20 Ultra Normal) */
 @media screen and (min-width: 601px) and (min-height: 421px) {
     main.container-feed {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 15px ;
+        display: grid ;
+        grid-template-columns: repeat(2, 1fr) ;
+        gap: 12px;
     }
 
 }
@@ -2357,16 +2376,16 @@ textarea[name="bio"] {
     .sidebar-fenda {
         display: block !important;
         visibility: visible !important;
-        width: 200px ;
-        max-height: 100vh ;
+        width: 220px;
+        max-height: 100vh;
         position: fixed !important;
         top: 0;
         left: 0;
     }
 
     .sidebar-fenda .menu {
-        display: flex !important;
-        flex-direction: column !important;
+        display: flex;
+        flex-direction: column;
         visibility: visible !important;
         opacity: 1 !important;
     }
@@ -2380,26 +2399,23 @@ textarea[name="bio"] {
     }
 
     .drawer-perfil-container {
-        width: 86% ;
-    }
-
-    .main-perfil-container-config {
-        padding: 10px !important;
+        width: 85%;
     }
 
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 55px ;
+        top: 55px;
     }
 
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
-        display: inline-flex ;
-        position: fixed ;
+        display: inline-flex;
+        position: fixed;
         left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 9998 ;
+        z-index: 9998;
         color: #000;
         padding: 5px 10px;
         font-size: 0.9rem;
+        font-size: clamp(0.8rem, 1.4vw, 1.1rem);
         border-radius: 40px;
         font-weight: bold;
         white-space: nowrap;
@@ -2407,20 +2423,20 @@ textarea[name="bio"] {
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
-        display: none ;
+        display: none;
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil.aberto .filtros-container {
-        display: inline-flex ;
+        display: inline-flex;
         background: #111;
-        position: fixed!important;
+        position: fixed !important;
         top: 25%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 98;
         color: #000;
         gap: 10px;
-        padding:  40px 15px 25px 15px;
+        padding: 40px 15px 25px 15px;
         border-radius: 0 0 20px 20px;
         font-size: 0.9rem;
         font-weight: bold;
@@ -2433,31 +2449,41 @@ textarea[name="bio"] {
 
     .lista-comentarios-social {
         padding: 20px 15px 80px 15px;
-        max-width: 500px ;
+        max-width: 500px;
     }
 
-    .gaveta-opcoes { padding: 12px; gap: 8px; }
-    .textarea-chat { font-size: 0.85rem; padding: 8px; }
+    .gaveta-opcoes {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .textarea-chat {
+        font-size: 0.85rem;
+        padding: 8px;
+    }
 
     .form-perdidos-vivo {
-    padding: 10px;
-    border-radius: 12px;
-    justify-content: center;
-}
+        padding: 10px;
+        border-radius: 12px;
+        justify-content: center;
+    }
 
-     .barra-perdidos-vivo {
+    .barra-perdidos-vivo {
         flex-direction: column;
         align-items: stretch;
     }
+
     .barra-perdidos-vivo .acoes-esquerda,
     .barra-perdidos-vivo .acoes-direita {
         justify-content: center;
     }
+
     .btn-lancar-perdidos {
         width: 100%;
         justify-content: center;
         text-align: center;
     }
+
     .btn-toggle-perdido {
         max-width: 100%;
         flex: 1 1 50%;
@@ -2468,23 +2494,26 @@ textarea[name="bio"] {
         align-items: stretch;
         justify-content: center;
     }
-    .acoes-esquerda, .acoes-direita {
+
+    .acoes-esquerda,
+    .acoes-direita {
         justify-content: center;
     }
+
     .btn-lancar-vivo {
         width: 100%;
         justify-content: center;
     }
 
     .btn-lancar {
-     flex: 1 1 100% ;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 15px;  
-}
+        flex: 1 1 100%;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 15px;
+    }
 
-.main-perfil-container-publico.vibe-ads::after {
-        background-image: 
+    .main-perfil-container-publico.vibe-ads::after {
+        background-image:
             url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.2' stroke-opacity='0.20'/%3E%3C/svg%3E"),
             linear-gradient(45deg, rgba(2, 4, 18, 0.95) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.95) 100%);
         background-size: 65px 65px, 200% 200%;
@@ -2507,13 +2536,13 @@ textarea[name="bio"] {
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil {
-        display: block ;
+        display: block;
         position: relative;
         background: transparent !important;
-        backdrop-filter: none ;
+        backdrop-filter: none;
         padding: 10px;
         margin: 20px 0;
-        box-shadow: none ;
+        box-shadow: none;
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
@@ -2523,38 +2552,39 @@ textarea[name="bio"] {
         gap: 15px;
     }
 
-        body.modo-swipe-ativo #btn-abrir-filtros {
+    body.modo-swipe-ativo #btn-abrir-filtros {
         top: -20px;
     }
 
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 40px ;
+        top: 40px;
         left: 50%;
         transform: translateX(-50%);
     }
 
     .lista-comentarios-social {
-    padding: 30px 20px;
-    max-width: 700px;    
+        padding: 30px 20px;
+        max-width: 700px;
     }
 
     .sticky-header {
-    max-height: 35vh;
-}
+        max-height: 35vh;
+    }
 
-  .main-perfil-container-publico.vibe-ads::after {
-        background-image: 
+    .main-perfil-container-publico.vibe-ads::after {
+        background-image:
             /*  SVG maior e mais grosso no desktop */
             url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300f0ff' stroke-width='1.5' stroke-opacity='0.30'/%3E%3C/svg%3E"),
             linear-gradient(45deg, rgba(2, 4, 18, 0.92) 0%, rgba(0, 240, 255, 0.06) 50%, rgba(2, 4, 18, 0.92) 100%);
         background-size: 150px 150px, 200% 200%;
     }
+
     .main-perfil-container-publico.vibe-ads .hex-bg {
         /* Hexágonos maiores e mais espaçados no desktop */
         grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         grid-auto-rows: 78px;
         gap: 20px;
-        opacity: 0.5;
+        opacity: 0.4;
     }
 
     .main-perfil-container-publico.vibe-ads .hex-item {
@@ -2568,39 +2598,42 @@ textarea[name="bio"] {
     }
 }
 
-    
+
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 40px ;
-        max-height: 50dvh ;
+        top: 40px;
+        max-height: 45dvh;
     }
 
 }
 
 /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
-@media (max-width: 450px) and (orientation: portrait) {
+@media (max-width: 420px) and (orientation: portrait) {
 
     /* Reseta o main-perdidos que estava deslocado */
-    .main-perdidos {
-        left: 0 ;
-        right: 0 ;
-        margin: 10px auto ;
-        padding: 5px ;
+    #conteudo-principal.main-perdidos {
+        display: flex;
+        flex-direction: column;
+        left: 0;
+        right: 0;
+        margin: 10px auto;
+        padding: 4px;
     }
+
 
     /* Garante que o container do feed não tenha padding lateral */
     .container-feed {
-        margin: 0 auto ;
-        width: 100% ;
-        grid-template-columns: 1fr !important;
-        padding: 8px !important ;
+        margin: 0 auto;
+        width: 100%;
+        grid-template-columns: 1fr ;
+        padding: 8px !important;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
-    .spotted-card,
-    .perdidos-item {
-        width: 100% ;
+    .spotted-card {
+        width: 100%;
+        padding: 4px;
         margin-left: 0;
         margin-right: 0;
         box-sizing: border-box !important;
@@ -2611,16 +2644,15 @@ textarea[name="bio"] {
         padding: 8px 12px 12px 8px;
         font-size: 0.8rem;
 
-    } 
+    }
 
     .area-perdidos-vivo {
-    padding: 12px;
-    justify-content: space-between; 
-    display: flex; 
-    flex-direction: column !important;
-}
+        padding: 12px;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column ;
+    }
 
-     
 }
 
 
@@ -2628,10 +2660,11 @@ textarea[name="bio"] {
 .fenda-nexus {
     position: fixed;
     bottom: 20%;
-    right: 10px;
+    right: 15px;
     z-index: 9999;
     display: flex;
-    flex-direction: column-reverse; /* Abre para cima */
+    flex-direction: column-reverse;
+    /* Abre para cima */
     align-items: flex-end;
     gap: 15px;
 }
@@ -2643,18 +2676,19 @@ textarea[name="bio"] {
 /* Quando um modal abre, podemos dar um leve fade-out no Nexus para focar no conteúdo */
 body.modal-aberto #fenda-nexus {
     opacity: 0.3;
-    pointer-events: none; /* Impede cliques no Nexus enquanto o modal estiver aberto */
+    pointer-events: none;
+    /* Impede cliques no Nexus enquanto o modal estiver aberto */
 }
 
 
 /* O Botão Principal (O "Leque" fechado) */
 .nexus-trigger {
-    width: clamp(40px, 8.5vmin, 95px);
+    width: clamp(38px, 8vmin, 95px);
     background: var(--dourado, #ffbc00);
-    border-radius: 50%!important; 
+    border-radius: 50% !important;
     aspect-ratio: 1 / 1;
     border: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2669,11 +2703,12 @@ body.modal-aberto #fenda-nexus {
 
 /* Lista de Ações (O Leque) */
 .nexus-menu {
-    display: none; /* Escondido por padrão */
+    display: none;
+    /* Escondido por padrão */
     flex-direction: column;
     gap: 10px;
     margin-bottom: 10px;
-    max-width: clamp(100px, 25vmin, 200px);
+    max-width: clamp(90px, 25vmin, 200px);
 }
 
 .fenda-nexus.aberto .nexus-menu {
@@ -2691,19 +2726,27 @@ body.modal-aberto #fenda-nexus {
     white-space: nowrap;
     text-align: center;
     backdrop-filter: blur(3px);
-    font-size: clamp(0.95rem, 0.382vw + 0.625rem, 1.4rem) ;
+    font-size: clamp(0.85rem, 0.382vw + 0.625rem, 1.3rem);
 }
 
 @keyframes surgimentoMenu {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* O botão ativo fica com destaque */
 .nexus-item.active {
     background: rgba(255, 255, 255, 0.2);
     border: 1px solid #fff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Um glow extra */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    /* Um glow extra */
 }
 
 #bussola-svg {
@@ -2716,39 +2759,69 @@ body.modal-aberto #fenda-nexus {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 75%;  /* Ocupa 75% do espaço do botão */
-    height: 75%; /* Ocupa 75% do espaço do botão */
+    width: 75%;
+    /* Ocupa 75% do espaço do botão */
+    height: 75%;
+    /* Ocupa 75% do espaço do botão */
     display: block;
 }
 
 /* O Ponteiro: Animação suave e origem no centro */
 #ponteiro-bussola {
     transform-origin: center;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)!important;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Classes de rotação (que o JS vai aplicar) */
-.girar-0   { transform: rotate(0deg); }   /* Norte */
-.girar-90  { transform: rotate(90deg); }  /* Leste */
-.girar-180 { transform: rotate(180deg); } /* Sul */
-.girar-270 { transform: rotate(270deg); } /* Oeste */
+.girar-0 {
+    transform: rotate(0deg);
+}
+
+/* Norte */
+.girar-90 {
+    transform: rotate(90deg);
+}
+
+/* Leste */
+.girar-180 {
+    transform: rotate(180deg);
+}
+
+/* Sul */
+.girar-270 {
+    transform: rotate(270deg);
+}
+
+/* Oeste */
 
 /* ==================================================
    GRID DE ANEXOS (COMPARTILHADO – COMENTÁRIOS E MODAL POST)
    ================================================== */
+
+.anexos-grid-post {
+    gap: 4px;
+    margin-top: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    padding: 4px 0 4px 0;
+    width: 100%;
+}
+
 .anexos-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 4px 0 8px 0;
+    padding: 4px 0 4px 0;
     width: 100%;
 }
 
 .anexo-item {
     position: relative;
-    width: clamp(30px, 15vmin, 80px);
-    height: clamp(30px, 15vmin, 80px);
-    border-radius: 8px;
+    width: clamp(40px, 12vmin, 100px);
+    height: clamp(40px, 12vmin, 100px);
+    border-radius: 4px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: rgba(0, 0, 0, 0.3);
@@ -2771,10 +2844,11 @@ body.modal-aberto #fenda-nexus {
     border: none;
     color: #fff;
     border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    font-size: 11px;
+    width: clamp(12px, 2vw, 22px);
+    height: clamp(12px, 2vw, 22px);
+    font-size: clamp(8px, 1vw, 13px);
     cursor: pointer;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2797,7 +2871,8 @@ body.modal-aberto #fenda-nexus {
     color: #ffbc00;
     font-size: 1.1rem;
     animation: spin 1s linear infinite;
-    display: none; /* oculto por padrão */
+    display: none;
+    /* oculto por padrão */
 }
 
 .anexo-item.uploading img {
@@ -2809,7 +2884,9 @@ body.modal-aberto #fenda-nexus {
 }
 
 @keyframes spin {
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
 }
 
 
@@ -2818,6 +2895,7 @@ body.modal-aberto #fenda-nexus {
    --------------------------------------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
+
     body.hacker-mode::before,
     body.hacker-mode::after,
     body.hacker-mode .post-content,
@@ -2825,22 +2903,24 @@ body.modal-aberto #fenda-nexus {
     body.hacker-mode .comentario-texto,
     body.hacker-mode .hacker-booting,
     .modo-swipe-ativo .spotted-card {
-        animation: none ;
+        animation: none;
     }
 
-  .main-perfil-container-publico.vibe-ads::after,
+    .main-perfil-container-publico.vibe-ads::after,
     .main-perfil-container-publico.vibe-ads .perfil-header-container::before {
-        animation: none ;
-        filter: none ;
+        animation: none;
+        filter: none;
     }
+
     /* No modo acessível, mantém as colmeias fixas com um brilho azul estático discreto */
     .main-perfil-container-publico.vibe-ads::after {
-        opacity: 0.3 ;
-        background-position: 0px 0px ;
-        stroke: #00f0ff ;
+        opacity: 0.3;
+        background-position: 0px 0px;
+        stroke: #00f0ff;
     }
+
     .main-perfil-container-publico.vibe-ads .perfil-header-container::before {
-        display: none ;
+        display: none;
     }
 }
 

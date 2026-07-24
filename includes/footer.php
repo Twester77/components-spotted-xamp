@@ -87,12 +87,11 @@ if (!function_exists('asset_versao')) {
 </div>
 
 <!-- Áudio de background -->
-<audio id="som-oceano" loop preload="auto" aria-hidden="true">
+<audio id="som-oceano" loop preload="none" aria-hidden="true">
     <source src="sons/oceano.opus" type="audio/opus">
     <source src="sons/oceano.m4a" type="audio/mp4">
     <source src="sons/oceano.mp3" type="audio/mpeg">
 </audio>
-
 
 
 <?php if (isset($_SESSION['usuario_id'])):

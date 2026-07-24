@@ -36,7 +36,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
             z-index: 40000;
             display: flex;
             align-items: center;
@@ -64,7 +64,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px;
+            padding: 12px 14px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         `;
         const title = document.createElement('h3');
@@ -138,7 +138,7 @@
 
         // Barra de busca
         const searchBar = document.createElement('div');
-        searchBar.style.cssText = 'padding: 16px;';
+        searchBar.style.cssText = 'padding: 10px;';
         searchInput = document.createElement('input');
         searchInput.type = 'text';
         searchInput.placeholder = 'Buscar...';
@@ -162,7 +162,7 @@
         resultsContainer = document.createElement('div');
         resultsContainer.style.cssText = `
             overflow-y: auto;
-            padding: 12px;
+            padding: 8px;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 10px;
@@ -221,6 +221,7 @@
                 cursor: pointer;
                 border-radius: 12px;
                 overflow: hidden;
+                align-content:center;
                 transition: transform 0.2s;
                 background: rgba(0,0,0,0.3);
             `;
@@ -300,7 +301,7 @@
             previewAnexo.style.display = 'inline-flex';
             previewAnexo.style.position = 'relative';
             previewAnexo.innerHTML = `
-                <img src="${url}" alt="Prévia do GIF" style="max-height:70px; max-width:70px; border-radius:4px; object-fit:contain;">
+                <img src="${url}" alt="Prévia do GIF" style="max-height:60px; max-width:60px; border-radius:4px; object-fit:contain;">
                 <button type="button" onclick="window.removerMidia()" style="
                     position: absolute; top: -6px; right: -6px; 
                     background: rgba(0,0,0,0.7); border: none; 

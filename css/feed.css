@@ -3,21 +3,23 @@
 
 
 .filtros-container {
-    display: flex;
-    flex-wrap: wrap;
     border: none;
     justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
     padding: 15px;
-    width: 100% !important;
+    width: 100%;
     margin-top: 30px;
     margin-bottom: 20px;
     padding: 20px 10px 30px 10px;
+    font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+
 }
 
 .filtro-btn {
     text-decoration: none;
-    font-size: clamp (13px, 5vw, 18px);
+    font-size: clamp (13px, 1.5vw, 18px);
     font-weight: 800;
     padding: clamp(6px, 8px, 12px) 12px;
     max-width: fit-content;
@@ -54,71 +56,84 @@
     width: 100% !important;
     box-sizing: border-box;
     height: auto !important;
-     /* Deixa o card crescer com o conteúdo */
+    /* Deixa o card crescer com o conteúdo */
 }
 
 .main-fenda-total {
-    max-width: 100% ;
-    padding: 0 ;
+    max-width: 100%;
+    padding: 0;
     /* Zera o padding que estava empurrando o feed */
-    margin: 20px auto ;
+    margin: 10px auto;
 }
 
 .main-fenda-total article {
-    width: 100% ;
-    margin: 0 ;
+    width: 100%;
+    margin: 0;
     box-sizing: border-box;
 }
 
 .container-feed {
+    max-width: 9999px;
+    padding: 12px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    align-items: flex-start !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    align-items: flex-start;
     /* Mantém cada card no seu tamanho real */
-    gap: 20px;
+    gap: 15px;
     max-width: 9999px;
     /* Limita a largura total do feed no PC */
-    margin: 20px auto ;
-    padding: 15px;
-    column-count: auto ;
+    margin: 20px auto;
+    column-count: auto;
 
 }
 
 /* O CARD - vai respeitar o espaço */
 .container-feed article {
-    display: flex ;
+    display: flex;
     flex-direction: column;
-    width: 100% ;
+    width: 100%;
     /* Deixa o Grid controlar a largura */
-    flex-shrink: 0 ;
-    position: relative ;
-    margin: 20px auto ;
-    top: auto ;
-    left: auto ;
+    flex-shrink: 0;
+    position: relative;
+    margin: 20px auto;
+    top: auto;
+    left: auto;
 }
 
 
 /* --- SISTEMA DE EXPANSÃO (ESTÁVEL PARA O TRABALHO) --- */
 .post-content {
-    display: block;
+    display: flex;
     position: relative;
     word-break: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
     color: #fff;
     transition: max-height 0.4s ease-in-out;
-    margin: 10px 0;
     z-index: 2;
-
     /* 🔥 Altura máxima para ativar o "Ler Mais" no modo grid */
-    max-height: 4rem; 
     overflow: hidden;
     pointer-events: auto;
 }
 
+body:not(.modo-swipe-ativo) .post-content {
+    display: flex;
+    transition: max-height 0.4s ease-in-out;
+    margin: 5px 0;
+    font-size: 0.95rem;
+    font-size: clamp(0.9rem, 1.041vw, 1.25rem);
+    max-height: 4rem;
+    overflow: hidden;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    -webkit-user-select: text;
+    user-select: text;
+}
+
 /* Quando expandido, mostra todo o conteúdo */
 .post-content.expandido {
-    max-height: 2000px; /* valor alto para caber todo o texto */
+    max-height: 2000px;
+    /* valor alto para caber todo o texto */
     overflow: visible;
 }
 
@@ -141,66 +156,41 @@
     pointer-events: auto;
 }
 
-/* ==================================================
-   BOTÃO "VER MAIS" NO FEED
-   ================================================== */
-.btn-ver-mais {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
-    color: #aaa;
-    padding: 4px 12px;
-    font-size: clamp(0.7rem, 0.2vw + 0.5rem, 0.85rem);
-    cursor: pointer;
-    transition: 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-weight: 500;
-    white-space: nowrap;
-}
-
-.btn-ver-mais:hover {
-    background: rgba(255, 188, 0, 0.1);
-    border-color: rgba(255, 188, 0, 0.3);
-    color: #ffbc00;
-    transform: translateY(-1px);
-}
-
-.btn-ver-mais i {
-    font-size: 0.85rem;
-}
-
 .spotted-card {
-    background:var(--glass-bg);
+    background: var(--glass-bg);
     border-radius: 10px;
-    padding: 12px;
+    padding: 10px;
     break-inside: avoid;
     /* Impede que o card quebre no meio entre colunas */
     margin-bottom: 30px;
     margin-left: auto;
     margin-right: auto;
-    display: flex ;
+    display: flex;
     /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
-    max-width: 400px ;
-    gap: 8px;
+    max-width: 450px;
+    gap: 6px;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
     /* Limita a largura máxima do card */
     height: auto;
-    scrollbar-width: none ;
+    scrollbar-width: none;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
     will-change: transform, opacity;
+
 
 }
 
 
-.spotted-card::-webkit-scrollbar{
+.spotted-card::-webkit-scrollbar {
     display: none;
 }
 
 body.modo-swipe-ativo .spotted-card * {
-    pointer-events: none ;
+    pointer-events: none;
 }
 
 
@@ -242,13 +232,14 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 }
 
 .btn-fenda-padrao {
-    padding: 12px 30px;
+    padding: 10px 24px;
     background: var(--dourado);
     color: #000;
     border: none;
     border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
+    font-size:  clamp(0.9rem, 1.5vw, 1.3rem);
     transition: 0.3s;
 }
 
@@ -307,7 +298,6 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 }
 
 
-
 /* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
 .spotted-card.desapego {
     border-left: 5px solid #00bfff !important;
@@ -320,9 +310,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 .spotted-card .user-info-post::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    position: absolute;
     right: 10px;
-    font-size: clamp(16px, 1.5vmin, 24px) !important;
+    font-size: clamp(16px, 1.5vw, 24px) ;
     opacity: 0.6;
     position: absolute;
     padding: 5px;
@@ -389,6 +378,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     flex-wrap: wrap;
     padding: 8px 0;
     -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
 }
 
@@ -400,17 +391,21 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     letter-spacing: 1px;
     margin-bottom: auto;
     pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 
 .spotted-card .card-body {
-    overflow: visible !important;
+    overflow: visible;
 }
 
 .spotted-card .feed-anexos-grid,
 .spotted-card .container-img-post {
     position: relative;
-    z-index: 1; /* imagem abaixo do texto */
+    z-index: 1;
+    /* imagem abaixo do texto */
 }
 
 /* Garante que a imagem não fique atrás de nada */
@@ -424,7 +419,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 /* BOTÃO FILTRO PERDIDOS */
 
 .btn-filtro {
-    padding: 5px 15px;
+    padding: 5px 14px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
@@ -471,26 +466,26 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: clamp(120px, 5vw, 160px) !important;
+    max-width: clamp(120px, 5vw, 160px);
 }
 
 .badge-achado {
     background-color: #10e268a8 !important;
     color: white;
-    padding: 3px 12px;
+    padding: 3px 8px;
     border-radius: 20px;
     font-size: 14px;
     margin-right: 10px;
-    max-width: clamp(120px, 5vw, 160px) !important;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-weight: bold;
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
     box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    gap: 4px;
+     max-width: clamp(120px, 5vw, 160px);
 }
 
 .badge-perdido,
@@ -503,12 +498,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     width: 100%;
     display: block;
     text-align: center;
-    background: var(--dourado) ;
-    color: #000 ;
-    padding: 12px;
+    background: var(--dourado);
+    color: #000;
+    padding: 8px;
     border-radius: 10px;
     text-decoration: none;
-    font-size: clamp(0.75rem, 0.2vw + 0.6rem, 1.1rem);
+    font-size: clamp(0.7rem, 1.5vw, 1rem);
     font-weight: 800;
     text-transform: uppercase;
     transition: 0.3s ease-in-out;
@@ -523,10 +518,10 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     padding-top: 10px;
     margin-top: auto;
 }
- 
+
 
 .link-fofoca:hover {
-    color: #fff ;
+    color: #fff;
     transform: translateX(2px);
     /* Efeito de setinha andando */
 }
@@ -537,17 +532,13 @@ span.data-post {
     order: 2;
 }
 
-.category-tag small {
-   font-size: clamp(0.95rem, 0.5vw + 0.5rem, 1.2rem);
-  color: #dfdfdf; 
-  vertical-align: middle; 
-}
 
 /* --- COMPONENTES DO CARD/PERFIL --- */
 
 span.category-tag {
-    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.2rem);
+    font-size: clamp(0.8rem, 0.2vw + 0.5rem, 1.1rem);
     color: #ff9f0f;
+    vertical-align: middle;
     font-weight: bold;
     flex-shrink: 0;
     flex: 1;
@@ -557,13 +548,12 @@ span.category-tag {
     margin-right: 6px;
     display: inline-block !important;
     border: none;
-    max-width: clamp(150, 5vw, 300);
     /* Limita a largura da tag */
-    white-space: nowrap !important;
+    white-space: nowrap ;
     /* Impede que ela quebre em duas linhas */
-    overflow: hidden !important;
+    overflow: hidden ;
     /* Esconde o que sobrar */
-    text-overflow: ellipsis !important;
+    text-overflow: ellipsis ;
     hyphens: auto;
     /* Coloca os "..." se o nome for gigante */
     vertical-align: middle;
@@ -573,13 +563,12 @@ span.category-tag {
 
 
 .post-time {
-    font-size: clamp(0.85rem, 0.2vw + 0.6rem, 1.5rem);
+    font-size: clamp(0.75rem, 0.8vw, 1.05rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
-    margin-right: 10px;
     order: 2;
-    padding: 8px;
+    padding: 6px;
     font-weight: bold;
 
 }
@@ -606,25 +595,32 @@ span.category-tag {
     left: 60%;
     bottom: 100%;
     background: #252542;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-    z-index: 9999!important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    z-index: 9999 !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
     white-space: nowrap;
     /* A MÁGICA: Escondemos assim */
     opacity: 0;
     transform: translateX(-30%) scale(1);
-    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;  
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
-    webkit-user-select: none;  
-    
+}
+
+.reacoes-gravadas {
+    display: flex;
+    flex-shrink: 0;
 }
 
 /* 1. O Wrapper deve ser relativo para segurar o popup absoluta */
 .reacao-wrapper {
     position: relative;
-    display: inline-block; /* Garante que o wrapper não colapse */
+    display: inline-block;
+    /* Garante que o wrapper não colapse */
 }
 
 /* 3. A classe que o JS ativa */
@@ -632,7 +628,8 @@ span.category-tag {
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
-    transform: translateX(-30%) translateY(0px); /* Ele "sobe" para a posição zero */
+    transform: translateX(-30%) translateY(0px);
+    /* Ele "sobe" para a posição zero */
 }
 
 /*  Aumente a ponte para o menu não sumir */
@@ -640,7 +637,8 @@ span.category-tag {
     content: '';
     position: absolute;
     width: 100%;
-    height: 40px; /* Dobramos a altura da ponte para dar mais margem de erro */
+    height: 40px;
+    /* Dobramos a altura da ponte para dar mais margem de erro */
     bottom: -30px;
     left: 0;
 }
@@ -648,46 +646,51 @@ span.category-tag {
 /* --- ITEMS DO POPUP (EMOJIS) --- */
 .reacoes-popup span {
     cursor: pointer;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
+    font-size: clamp(0.9rem, 5vw, 1.3rem);
     display: inline-block;
 }
 
-.reacoes-popup span:hover{
-    transform: scale(1.3);
-    transition: transform 0.2s ;
+.reacoes-popup span:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s;
 
 }
 
 /* --- PÍLULAS DE REAÇÃO (NO FEED) --- */
 .reacao-item {
-    display: inline-flex!important;
+    display: inline-flex !important;
     opacity: 1 !important;
     visibility: visible !important;
     position: relative;
     align-items: center;
+    align-content: center;
     justify-content: center;
-    min-width: 30px;
-    height: 30px;
     background: rgba(255, 255, 255, 0.08);
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: 15px;
-    font-size: clamp(0.85rem, 0.2vw + 0.4rem, 1rem);
+    font-size: clamp(0.75rem, 3vw, 1.05rem);
+    min-width: clamp(24px, 2vh, 32px);
+    height: clamp(24px, 2vh, 32px);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
     cursor: pointer;
     margin: 0 4px;
     transition: transform 0.2s ease, background 0.2s ease;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
     user-select: none;
     pointer-events: auto;
 }
 
 /* Quando já votou */
 .reacao-item.voted {
-    background: rgba(255, 188, 0, 0.2) !important;
-    border: 1px solid #ffbb00d5 ;
+    background: rgba(255, 188, 0, 0.2);
+    border: 1px solid #ffbb00d5;
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
     font-weight: bold;
-    margin: 8px auto;
+    margin: 5px auto;
 }
 
 
@@ -700,23 +703,27 @@ span.category-tag {
 /* --- AJUSTE ESPECÍFICO DO ANÔNIMO --- */
 /* Se a popup estiver dentro de um card anônimo, forçamos o tamanho */
 .spotted-card-anonimo .reacoes-popup span {
-    font-size: 1.2rem ; 
+    font-size: 1.2rem;
 }
 
 
 .footer-links {
+    text-transform: uppercase;
+    padding: clamp(4px, 1vw, 10px) clamp(8px, 1vw, 12px);
     display: flex;
-    gap: 6px ;
-    padding: 4px;
-    justify-content: space-between;
+    flex-shrink: 0;
+    justify-content: center;
     align-items: center;
+    white-space: none;
     bottom: 0;
     border-top: 2px solid rgba(255, 255, 255, 0.199);
+    gap: 10px;
 }
 
 
-
-.btn-reagir, .btn-fofocar, .reacao-wrapper {
+.btn-reagir,
+.btn-fofocar,
+.reacao-wrapper {
     pointer-events: auto !important;
 }
 
@@ -728,13 +735,13 @@ span.category-tag {
     flex-direction: column;
     align-items: center;
     order: 2;
-    margin-top: 80px !important;
+    margin-top: 80px ;
     /* Aumente esse valor se precisar de mais gap */
-    display: flex ;
-    flex-direction: column ;
-    align-items: center !important;
-    width: 100% !important;
-    padding: 0 15px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+    width: 100% ;
+    padding: 0 15px ;
 }
 
 .nome-publico {
@@ -745,31 +752,31 @@ span.category-tag {
     gap: 15px;
     font-size: clamp(1.3rem, 0.9rem + 0.5vw, 2.2rem);
     text-transform: uppercase;
-    margin: 20px 0 20px 0 ;
-     word-break: break-word;
+    margin: 20px 0 20px 0;
+    word-break: break-word;
     /* Evita que nomes enormes explodam o layout */
     overflow-wrap: break-word;
     white-space: pre-wrap;
     /* Margem apenas embaixo para afastar do username/bio */
-    justify-content: center ;
-    align-content: center ;
+    justify-content: center;
+    align-content: center;
 }
 
 
 /* Isso garante que os controles do viewer (ver-perfil.php) se centralizem */
 .info-usuario-section .perfil-controles {
-    display: flex !important;
-    justify-content: center !important;
+    display: flex;
+    justify-content: center;
     /* Centraliza horizontalmente */
-    width: 100% !important;
-    margin-top: 20px !important;
+    width: 100%;
+    margin-top: 20px;
 }
 
 /* Garante que o botão em si tenha um tamanho legal */
 .info-usuario-section .btn-editar-atalho {
-    width: auto !important;
+    width: fit-content;
     /* Não deixa ele ocupar a tela toda */
-    padding: 10px 20px !important;
+    padding: 10px 20px;
     /* Respiro interno */
 }
 
@@ -778,9 +785,9 @@ span.category-tag {
 /* INSÍGNIA DA ATLÉTICA  */
 .insignia-atletica-bottom {
     /* Mínimo de 40px para não sumir, escala com 5% da tela, e trava em 90px no máximo */
-    width: clamp(40px, 10vmin, 80px) ;
-    height: clamp(40px, 10vmin, 80px) ;
-    object-fit: contain ;
+    width: clamp(40px, 10vmin, 80px);
+    height: clamp(40px, 10vmin, 80px);
+    object-fit: contain;
     transition: all 0.3s ease-in-out !important;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
     cursor: pointer;
@@ -805,40 +812,39 @@ span.category-tag {
 
 /* A caixa que envolve a logo no classificados */
 .atletica-item {
-    display: flex !important;
+    display: flex ;
     align-items: center;
     justify-content: center;
-    width: 140px !important;
-    height: 140px !important;
-    margin: 0 auto !important;
-    overflow: visible !important;
+    width: 140px ;
+    height: 140px ;
+    margin: 0 auto ;
+    overflow: visible ;
     /* Mude para visible para o brilho não cortar */
-    background: none !important;
-    border: none !important;
+    background: none ;
+    border: none ;
 }
 
 .atletica-item:hover .insignia-atletica-link {
     transform: scale(1.05) !important;
-    filter: brightness(1.1) drop-shadow(0 0 15px var(--dourado)) ;
+    filter: brightness(1.1) drop-shadow(0 0 15px var(--dourado));
 }
 
 /* A logo */
 .insignia-atletica-link {
-    max-width: 100% !important;
-    max-height: 100% !important;
-    object-fit: contain ;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) ;
+    max-width: 100% ;
+    max-height: 100% ;
+    object-fit: contain;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
 
 
 /*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
 
 .avatar-p {
-    border: 1px solid var(--dourado);
+    border: 1px solid #ff9f0f;
     gap: 10px;
-    width: clamp(45px, 5vw, 60px) ;
-    height: clamp(45px, 5vw, 60px) ;
+    width: clamp(36px, 5vw, 60px);
+    height: clamp(36px, 5vw, 60px);
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -848,21 +854,24 @@ span.category-tag {
 
 .user-info-post {
     display: flex;
-    font-size: clamp(0.8rem, 0.2vw + 0.6rem, 1.2rem);
+    font-size: clamp(0.85rem, 1.5vw, 1.3rem);
     margin-bottom: auto;
-    align-items: flex-start !important;
+    font-weight: bold;
+    align-items: flex-start;
 }
 
-.user-anonimo{
+.user-anonimo {
     color: #cccccc;
     text-decoration: none;
     font-weight: bold;
-    font-size: 0.9rem;
+    align-self: center;
+    margin-left: 8px;
+    width: fit-content;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    align-self: center;
-    margin-left: 10px;
+    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 1.3vw, 1.1rem);
     width: fit-content;
 }
 
@@ -870,40 +879,56 @@ span.category-tag {
     color: var(--dourado);
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(0.9rem, 0.2vw + 0.6rem, 1.2rem);
+    align-self: center;
+    margin-left: 8px;
+    width: auto;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    align-self: center;
-    margin-left: 10px;
-    width: auto;
+    font-size: clamp(0.75rem, 0.8vw + 0.2rem, 1.15rem);
     pointer-events: auto;
+
 
 }
 
 /* Definição base dos botões */
 .btn-reagir,
-.btn-fofocar {
+.btn-fofocar,
+.btn-ver-mais {
     color: #ccc;
     text-decoration: none;
-    font-size: clamp(12px, 2.5vw, 16px);
-    font-weight: bold;
-    cursor: pointer; /* MUDANÇA: Agora o navegador mostra a mãozinha */
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    cursor: pointer;
+    /* MUDANÇA: Agora o navegador mostra a mãozinha */
     transition: all 0.3s ease-in-out;
-    display: flex;
-    padding: 4px 10px;
-    background: transparent; /* Garante que não tenha cor de fundo estranha */
-    border: none; 
+    display: inline-flex;
+    align-items: center;
+    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    background: transparent;
+    /* Garante que não tenha cor de fundo estranha */
+    border: none;
     -webkit-user-select: none;
-    user-select: none; /* Evita selecionar o texto sem querer */         
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    /* Evita selecionar o texto sem querer */
 }
 
+
+
 .btn-reagir:hover,
-.btn-fofocar:hover {
+.btn-fofocar:hover,
+.btn-ver-mais:hover {
     filter: brightness(1.1);
     transform: scale(1.02);
-    color: #cc900e; 
+    background: rgba(255, 188, 0, 0.1);
+    border-color: rgba(255, 188, 0, 0.3);
+    color: #cc900e;
 }
+
 
 
 /*  AJUSTES DO PERFIL (HABITANTE)*/
@@ -1012,11 +1037,11 @@ span.category-tag {
 .bio-box {
     width: 100% !important;
     max-width: auto;
-    margin: 20px 0 ;
+    margin: 20px 0;
     text-align: center;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    display: block ;
+    display: block;
     /* Garante que não vire flex e quebre */
     line-height: 1.5;
     font-style: italic;
@@ -1024,12 +1049,14 @@ span.category-tag {
 
 .bio-texto {
     /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
-    font-size: clamp(0.95rem, 0.2vw + 0.9rem, 1.6rem) ;
-    width: 100% ;
-    margin: 20px 0 ;
+    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.5rem);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
     text-align: center;
-    word-wrap: break-word ;
-    overflow-wrap: break-word ;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     -webkit-hyphens: auto;
     /*Safari/Chrome*/
     -ms-hyphens: auto;
@@ -1042,28 +1069,14 @@ span.category-tag {
 }
 
 
-/* STATS (Seguidores) */
-.stats-perfil {
-    justify-content: center !important;
-    margin: 15px 0 ;
-    gap: 20px ;
-    font-weight: 800;
-}
-
-.stats-perfil span {
-    font-size: clamp(1.2rem, 0.2vw + 0.8rem, 1.6rem) !important;
-    letter-spacing: 1px;
-}
-
-
 .form-busca-fenda input[type="text"] {
-    padding: 12px 15px ;
-    font-size: 1rem !important;
+    padding: 12px 15px;
+    font-size: 1rem ;
 }
 
 .form-busca-fenda button {
-    padding: 0 15px ;
-    font-size: 1rem ;
+    padding: 0 15px;
+    font-size: 1rem;
 }
 
 
@@ -1083,12 +1096,6 @@ span.category-tag {
     display: inline-block;
 }
 
-.perfil-controles {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
 
 /* ==================================================
    GRID DE ANEXOS NO FEED (ESTILO INSTAGRAM/FACEBOOK)
@@ -1096,13 +1103,13 @@ span.category-tag {
 .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 4px; 
-    margin-top: 8px;
+    gap: 4px;
+    margin-top: 5px;
     border-radius: 12px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
     border: 2px solid rgba(255, 255, 255, 0.06);
-    padding: 6px;
+    padding: 4px 0;
 }
 
 .feed-anexo-item {
@@ -1120,7 +1127,7 @@ span.category-tag {
     height: 100%;
     object-fit: cover;
     display: block;
-    
+
 }
 
 /* Se houver apenas 1 item, centraliza e limita tamanho */
@@ -1154,7 +1161,7 @@ span.category-tag {
 
 /*  Imagens no grid (feed e perfil) */
 
- .spotted-card .container-img-post img {
+.spotted-card .container-img-post img {
     display: block;
     width: 100%;
     border-radius: 8px;
@@ -1162,32 +1169,33 @@ span.category-tag {
     object-fit: contain;
     align-items: center;
     justify-content: center;
-    background: #0a0a0a;
     max-height: calc(var(--card-max-height, 500px) * 0.6);
     /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
-    height: var(--img-max-height, auto); 
+    height: var(--img-max-height, auto);
     max-height: 200px;
     object-fit: var(--img-fit, contain);
-    background-color: var(--img-bg, transparent);
+    background: #0a0a0a;
+
 
     /* Garante suavidade no redimensionamento */
     image-rendering: auto;
-    
+
     /* Remove heranças pesadas */
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
-    will-change: transform; /* Ajuda o WebKit a não re-renderizar a imagem do zero no resize/swipe */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    will-change: transform;
+    /* Ajuda o WebKit a não re-renderizar a imagem do zero no resize/swipe */
 }
 
 
 /* Garante que o container da imagem não ultrapasse o card */
 .spotted-card .container-img-post {
-    position: relative ;
+    position: relative;
     max-height: 100dvh;
-    width: 100% ;
+    width: 100%;
     border-radius: 4px;
     object-fit: cover;
-     display: flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;

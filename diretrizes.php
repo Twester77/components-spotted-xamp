@@ -20,11 +20,11 @@ include 'includes/bolhas.php';
 <main style="max-width: 1000px; margin: auto;" id="conteudo-principal">
   
   <section aria-labelledby="titulo-termos">
-    <h2 id="titulo-termos" style="font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: center; color: #fc900c; letter-spacing: 1px; margin-bottom: 15px; margin-top: 25px;">
+    <h2 id="titulo-termos" style="font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; text-align: center; color: #fc900c; letter-spacing: 1px; margin-bottom:20px; margin-top:40px;">
        TERMOS E DIRETRIZES DE SEGURANÇA
     </h2>
     <div style="display: flex; gap: 8px; justify-content:center;">
-       <picture style="width: 100%;">
+       <picture style="width: 100%; justify-content:center; max-width: 800px;">
           <source srcset="imagensfoto/capa-termos-de-seguranca.avif" type="image/avif">
           <source srcset="imagensfoto/capa-termos-de-seguranca.webp" type="image/webp">
           <img src="imagensfoto/capa-termos-de-seguranca.jpg" 
@@ -80,7 +80,7 @@ include 'includes/bolhas.php';
     <p> Sabendo que o <strong>Spotted UNIFEV</strong> facilita conexões entre alunos, recomendamos cautela ao marcar encontros presenciais originados na plataforma: </p>
     
     <div class="box-diretrizes">
-    <ul style="padding-left: 25px;">
+    <ul>
         <li><strong>Locais Públicos:</strong> Sempre marque o primeiro encontro em locais movimentados (como a própria praça de alimentação da UNIFEV ou cafeterias/lanchonetes/praças no centro).</li>
         <li><strong>Informe um Amigo:</strong> Avise alguém de sua confiança sobre onde você está indo e com quem, que hora você vai chegar, etc. Sempre é bom relembrar, se por ventura você não é maior de idade, NÃO SAIA sem autorização prévia dos seus pais e/ou responsáveis.</li>
         <li><strong>Transporte Próprio:</strong> Se possível, utilize seu próprio meio de transporte ou aplicativos de mobilidade conhecidos.</li>

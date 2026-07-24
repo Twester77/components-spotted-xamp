@@ -59,18 +59,30 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     ?>
     <link rel="manifest" href="<?= $basePath ?>/manifest.php">
 
-    <!-- CSS com Cache Busting Automático -->
+        <!-- CSS com Cache Busting Automático -->
     <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/layout.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/formularios.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/animacoes.css') ?>">
-    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'feed.pessoal.php'): ?>
+    
+    <!-- 🔥 COMUNIDADES – carregado em todas as páginas relacionadas -->
+    <?php if (in_array($pagina_atual, ['lista-comunidades.php', 'comunidade.php', 'criar-comunidade.php', 'editar-comunidade.php'])): ?>
+        <link rel="stylesheet" href="<?= asset_versao('css/comunidades.css') ?>">
+    <?php endif; ?>
+    
+    <!-- Lightbox -->
+    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'feed.pessoal.php' || $pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/lightbox.css') ?>">
     <?php endif; ?>
+    
     <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
+    
+    <!-- Comentários -->
     <?php if ($pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
     <?php endif; ?>
+    
+    <!-- Swipe -->
     <?php if ($pagina_atual == 'feed.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/swipe.css') ?>">
     <?php endif; ?>

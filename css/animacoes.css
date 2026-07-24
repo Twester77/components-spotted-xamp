@@ -16,8 +16,8 @@
 }
 
 .bubbles-container {
-    position: fixed !important;
-    top: 0 !important;
+    position: fixed ;
+    top: 0 ;
     width: 100vw ;
     height: 100vh ;
     z-index: 5000; /* Fica a frente do conteúdo porém atrás dos menus e notificações */
@@ -219,11 +219,11 @@
 }
 
 .swipe-distribuicao {
-    animation: swipe-distribuicao-keyframes 0.5s cubic-bezier(0.25, 1.2, 0.5, 1) forwards;
+    animation: swipe-distribuicao-keyframes 0.3s cubic-bezier(0.25, 1.2, 0.5, 1) forwards;
 }
 
 body.modo-swipe-ativo .swipe-distribuicao {
-    animation: swipe-distribuicao-keyframes 0.5s cubic-bezier(0.25, 1.2, 0.5, 1) forwards !important;
+    animation: swipe-distribuicao-keyframes 0.4s cubic-bezier(0.25, 1.2, 0.5, 1) forwards !important;
 }
 
 

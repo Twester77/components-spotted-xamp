@@ -129,61 +129,42 @@ $cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
 // ============================================================
 // 🔥 2.8 PROCESSAMENTO DE ANEXOS (MÚLTIPLOS + GIFs)
 // ============================================================
-$imagem_url = null;      // Mantido para compatibilidade (primeiro anexo)
-$anexos_json = null;     // JSON com todos os anexos (novo formato)
-$caminhosEnviados = [];  // Para rollback atômico
-$anexosArray = [];       // Array que será convertido para JSON
-$contadorItens = 0;      // Contador para limitar a 3 itens no total
-const MAX_ANEXOS = 3;    // Limite máximo de anexos por comentário
+$imagem_url = null;
+$anexos_json = null;
+$caminhosEnviados = [];
+$anexosArray = [];
+$contadorItens = 0;
+const MAX_ANEXOS = 3;
 
-// ============================================================
-// 🔥 2.8.1 - Processa GIFs externos (GIPHY) – AGORA ACEITA MÚLTIPLOS
-// ============================================================
+// 2.8.1 - Processa GIFs externos (GIPHY)
 if (!empty($_POST['gif_urls']) && is_array($_POST['gif_urls'])) {
     foreach ($_POST['gif_urls'] as $gif_url) {
         $gif_url = trim($gif_url);
-        
-        // 🔥 LIMITE DE 3 ITENS (MESMO QUE O FRONT)
-        if ($contadorItens >= MAX_ANEXOS) {
-            break;
-        }
-        
-        if (filter_var($gif_url, FILTER_VALIDATE_URL)) {
-            if (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false) {
-                // Se for o primeiro, define como imagem_url (compatibilidade)
-                if (empty($imagem_url)) {
-                    $imagem_url = $gif_url;
-                }
-                $anexosArray[] = [
-                    'id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)),
-                    'tipo' => 'gif',
-                    'url' => $gif_url
-                ];
-                $contadorItens++;
+        if ($contadorItens >= MAX_ANEXOS) break;
+        if (filter_var($gif_url, FILTER_VALIDATE_URL) &&
+            (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false)) {
+            if (empty($imagem_url)) {
+                $imagem_url = $gif_url;
             }
+            $anexosArray[] = [
+                'id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)),
+                'tipo' => 'gif',
+                'url' => $gif_url
+            ];
+            $contadorItens++;
         }
     }
 }
 
-// ============================================================
-// 🔥 2.8.2 - Processa múltiplos arquivos (campo 'anexos[]')
-// ============================================================
+// 2.8.2 - Processa múltiplos arquivos (campo 'anexos[]')
 if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
     $erroUpload = false;
-    
     foreach ($_FILES['anexos']['tmp_name'] as $key => $tmp_name) {
-        // 🔥 LIMITE DE 3 ITENS (MESMO QUE O FRONT)
-        if ($contadorItens >= MAX_ANEXOS) {
-            break;
-        }
-        
-        // Verifica se o arquivo foi enviado sem erros
+        if ($contadorItens >= MAX_ANEXOS) break;
         if ($_FILES['anexos']['error'][$key] !== 0) {
             $erroUpload = true;
             break;
         }
-
-        // Monta o array compatível com processarUploadSeguro()
         $file_data = [
             'name'     => $_FILES['anexos']['name'][$key],
             'type'     => $_FILES['anexos']['type'][$key],
@@ -191,19 +172,12 @@ if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
             'error'    => $_FILES['anexos']['error'][$key],
             'size'     => $_FILES['anexos']['size'][$key]
         ];
-
-        // Upload para B2 com validação (tamanho, tipo, polyglot)
         $nome = processarUploadSeguro($file_data, 'comentarios', 'coment', 2 * 1024 * 1024, $usuario_id);
-        
         if ($nome === false) {
             $erroUpload = true;
             break;
         }
-
-        // Guarda o caminho para rollback
         $caminhosEnviados[] = $nome;
-        
-        // Adiciona ao array de anexos
         $anexosArray[] = [
             'id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)),
             'tipo' => 'imagem',
@@ -211,23 +185,18 @@ if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
         ];
         $contadorItens++;
     }
-
-    // Se houve erro em algum upload, faz rollback total
     if ($erroUpload) {
         foreach ($caminhosEnviados as $caminho) {
             deleteFromB2($caminho, $usuario_id);
             error_log("[enviar-comentario] Rollback: arquivo deletado do B2: $caminho");
         }
-        
         http_response_code(500);
         echo json_encode(['status' => 'error', 'message' => 'Erro ao enviar um ou mais anexos. Tente novamente.']);
         exit();
     }
 }
 
-// ============================================================
-// 🔥 2.8.3 - Fallback para campo único (imagem_comentario) – compatibilidade
-// ============================================================
+// 2.8.3 - Fallback para campo único (imagem_comentario)
 if (empty($anexosArray) && isset($_FILES['imagem_comentario']) && $_FILES['imagem_comentario']['error'] === 0) {
     $pasta = 'comentarios';
     if (!is_dir($pasta)) {
@@ -247,9 +216,7 @@ if (empty($anexosArray) && isset($_FILES['imagem_comentario']) && $_FILES['image
     }
 }
 
-// ============================================================
-// 🔥 2.8.4 - Define o primeiro anexo como 'imagem_url' (compatibilidade)
-// ============================================================
+// 2.8.4 - Define o primeiro anexo como 'imagem_url' (compatibilidade)
 if (!empty($anexosArray)) {
     $primeiro = $anexosArray[0];
     if ($primeiro['tipo'] === 'imagem') {
@@ -259,15 +226,10 @@ if (!empty($anexosArray)) {
     }
 }
 
-// ============================================================
-// 🔥 2.8.5 - Converte para JSON com validação defensiva
-// ============================================================
+// 2.8.5 - Converte para JSON
 if (!empty($anexosArray)) {
     $anexos_json = json_encode($anexosArray);
-    
-    // Valida se o JSON foi gerado corretamente
     if (json_last_error() !== JSON_ERROR_NONE) {
-        // Erro na codificação JSON: faz rollback
         error_log("[enviar-comentario] Erro ao codificar JSON: " . json_last_error_msg());
         foreach ($caminhosEnviados as $caminho) {
             deleteFromB2($caminho, $usuario_id);
@@ -278,13 +240,10 @@ if (!empty($anexosArray)) {
     }
 }
 
-// ============================================================
-// 🔥 2.8.6 - Verifica se há conteúdo (texto ou anexos)
-// ============================================================
+// 2.8.6 - Verifica se há conteúdo
 $temImagem = !empty($anexosArray);
 $validacao = validarConteudo($comentario_raw, $temImagem);
 if (!$validacao['valido']) {
-    // Se a validação falhou e houve uploads, faz rollback
     if (!empty($caminhosEnviados)) {
         foreach ($caminhosEnviados as $caminho) {
             deleteFromB2($caminho, $usuario_id);
@@ -378,7 +337,7 @@ if ($stmt->execute()) {
     }
 
     // ============================================================
-    // 🚀 RENDERIZAÇÃO DO HTML DO COMENTÁRIO
+    // 🚀 RENDERIZAÇÃO DO HTML DO COMENTÁRIO (SEM ELLIPSIS E SEM BOTÃO "RESPONDER")
     // ============================================================
     $nomeExibicao = $usuario_nome ? '@' . htmlspecialchars($usuario_nome, ENT_QUOTES, 'UTF-8') : '👤 Anônimo';
 
@@ -388,12 +347,9 @@ if ($stmt->execute()) {
         $textoHtml = '<div class="comentario-texto">' . $textoRenderizado . '</div>';
     }
 
-    // ============================================================
-    // 🔥 RENDERIZAÇÃO DOS ANEXOS (USANDO JSON)
-    // ============================================================
+    // Renderização dos anexos
     $mediaHtml = '';
     if (!empty($anexosArray)) {
-        // Se houver múltiplos anexos, renderiza em grid (usando o JSON)
         $mediaHtml .= '<div class="comentario-media-wrapper-grid">';
         foreach ($anexosArray as $anexo) {
             if ($anexo['tipo'] === 'imagem') {
@@ -410,7 +366,6 @@ if ($stmt->execute()) {
         }
         $mediaHtml .= '</div>';
     } else if ($imagem_url) {
-        // Fallback: se não tiver JSON mas tiver imagem_url (compatibilidade)
         if (filter_var($imagem_url, FILTER_VALIDATE_URL)) {
             $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($imagem_url) . '" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy"></div>';
         } else {
@@ -443,16 +398,9 @@ if ($stmt->execute()) {
                             </div>';
     }
 
-    $ellipsisHtml = '';
-    if ($usuario_id) {
-        $ellipsisHtml = '<button class="btn-excluir-comentario" data-id="' . $novo_id . '" title="Excluir comentário">
-                            <i class="fas fa-ellipsis-v"></i>
-                         </button>';
-    }
-
+    // 🔥 NOVO HTML: SEM ellipsis, SEM botão "RESPONDER"
     $comentarioHtml = '
     <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" id="comentario-' . $novo_id . '" style="--cor-borda-glow: ' . $cor_borda . ';">
-        ' . $ellipsisHtml . '
         <div class="comentario-meta">
             <strong class="comentario-autor" style="color: ' . $cor_borda . ';">' . $nomeExibicao . '</strong>
         </div>
@@ -461,9 +409,6 @@ if ($stmt->execute()) {
         ' . $mediaHtml . '
         <div class="comentario-rodape">
             <span class="comentario-data">' . date('H:i') . '</span>
-        </div>
-        <div class="acoes-bolha">
-            <button onclick="prepararResposta(' . $novo_id . ', \'' . addslashes($usuario_nome) . '\')" class="btn-responder-bolha">RESPONDER</button>
         </div>
     </div>
 ';

@@ -5,10 +5,11 @@ include_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php'; // Inclui a função obterUrlImagem()
 
 /* MOTOR UNIVERSAL DA FENDA - OTIMIZADO (SEM N+1) */
-$offset    = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
-$categoria = isset($_GET['categoria']) ? $_GET['categoria'] : '';
-$tipo_feed = isset($_GET['tipo']) ? $_GET['tipo'] : 'geral';
-$user_alvo = isset($_GET['user']) ? $_GET['user'] : '';
+$offset        = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+$categoria     = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+$tipo_feed     = isset($_GET['tipo']) ? $_GET['tipo'] : 'geral';
+$user_alvo     = isset($_GET['user']) ? $_GET['user'] : '';
+$comunidade_id = isset($_GET['comunidade_id']) ? (int)$_GET['comunidade_id'] : 0;
 
 // ==================================================
 // 1. QUERY PRINCIPAL (COM SUBQUERIES PARA CONTAGENS)
@@ -38,6 +39,12 @@ if ($tipo_feed === 'perfil' && !empty($user_alvo)) {
     $filtros[] = "m.usuario_id = ?";
     $tipos .= "i";
     $params[] = $meu_id;
+}
+// 🔥 NOVO: FILTRO POR COMUNIDADE
+if ($comunidade_id > 0) {
+    $filtros[] = "m.comunidade_id = ?";
+    $tipos .= "i";
+    $params[] = $comunidade_id;
 }
 if (count($filtros) > 0) {
     $sql .= " AND " . implode(' AND ', $filtros);
@@ -220,7 +227,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             </div>
             <div class="footer-links">
                 <div class="reacao-wrapper">
-                    <span class="btn-reagir">👍 Reagir</span>
+                    <span class="btn-reagir">👍Reagir</span>
                     <div class="reacoes-popup">
                         <?php foreach ($tradutor as $tipo => $emoji): ?>
                             <span onclick="window.enviarReacao(<?php echo $post_id_atual; ?>, '<?php echo $tipo; ?>')"><?php echo $emoji; ?></span>
@@ -230,7 +237,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 <a href="comentarios-post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar"><i class="fas fa-comments"></i> Fofocar</a>
                 <!-- 🔥 BOTÃO "VER MAIS" PARA ABRIR O LIGHTBOX -->
                 <button class="btn-ver-mais" onclick="window.abrirLightbox(<?php echo $post_id_atual; ?>)" title="Ver detalhes do post">
-                    <i class="fas fa-expand"></i> Ver mais
+                    <i class="fas fa-expand"></i>Expandir 
                 </button>
             </div>
         </div>
