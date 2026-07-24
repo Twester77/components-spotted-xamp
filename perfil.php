@@ -110,7 +110,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <input type="text"
                     id="nome"
                     name="nome"
-                    value="<?php echo htmlspecialchars($dados['nome']); ?>"
+                    value="<?php echo htmlspecialchars($dados['nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                     placeholder="Como quer ser chamado no feed?"
                     pattern="[a-zA-ZÀ-ÿ\s]{2,25}"
                     minlength="2"
@@ -126,7 +126,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="text"
                         id="username"
                         name="username"
-                        value="<?php echo htmlspecialchars($dados['username']); ?>"
+                        value="<?php echo htmlspecialchars($dados['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                         pattern="[a-z0-9_\.]{5,18}"
                         minlength="5"
                         maxlength="18"
@@ -262,7 +262,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="perfil-controles">
                 <button type="submit" class="btn-editar-atalho">SALVAR ALTERAÇÕES</button>
-                <a href="ver-perfil.php?user=<?php echo $dados['username']; ?>" class="btn-editar-atalho">
+                <a href="ver-perfil.php?user=<?php echo htmlspecialchars($dados['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" class="btn-editar-atalho">
                     VER PERFIL PÚBLICO
                 </a>
             </div>

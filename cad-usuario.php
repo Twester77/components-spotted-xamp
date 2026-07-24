@@ -10,6 +10,10 @@ $erro = isset($_GET['erro']) ? $_GET['erro'] : '';
 $mensagem_erro = '';
 if ($erro === 'ja_existe') {
     $mensagem_erro = '⚠️ Este e-mail já está cadastrado. Tente fazer login.';
+} elseif ($erro === 'username_duplicado') {
+    $mensagem_erro = '⚠️ Este nome de usuário já está em uso. Escolha outro.';
+} elseif ($erro === 'username_invalido') {
+    $mensagem_erro = '⚠️ O nome de usuário deve ter entre 3 e 18 caracteres, apenas letras minúsculas, números, underscore (_) ou ponto (.).';
 } elseif ($erro === 'turnstile') {
     $mensagem_erro = '⚠️ Falha na verificação de segurança. Tente novamente.';
 }
@@ -139,6 +143,27 @@ if ($erro === 'ja_existe') {
                 <div class="step-content">
                     <h3 style="color:#fff; text-align:center;">📝 Quase lá</h3>
                     <p style="color:#aaa; text-align:center; margin-bottom:20px;">Preencha seus dados para finalizar.</p>
+
+                    <!-- 🔥 CAMPO USERNAME (NOVO) -->
+                    <div class="campo-grupo-fenda">
+                        <label for="username"><i class="fas fa-at"></i> Seu Username (@ para menções)</label>
+                        <div class="fenda-reg-box">
+                            <span style="color:#ffbc00; padding:0 8px; font-weight:bold;">@</span>
+                            <input type="text" 
+                                id="username" 
+                                name="username" 
+                                placeholder="ex: fulano_2024" 
+                                required 
+                                minlength="3" 
+                                maxlength="18"
+                                pattern="[a-z0-9_\.]{3,18}"
+                                title="Apenas letras minúsculas, números, underscore (_) ou ponto (.). Sem espaços! (3 a 18 caracteres)"
+                                oninput="this.value = this.value.toLowerCase().replace(/\s/g, '').replace(/[^a-z0-9_\.]/g, '')">
+                        </div>
+                        <small style="color:#777; font-size:0.75rem; display:block; margin-top:4px;">
+                            Apenas letras minúsculas, números, underscore (_) ou ponto (.). Sem espaços! (3 a 18 caracteres)
+                        </small>
+                    </div>
 
                     <!-- Campo Nome -->
                     <div class="campo-grupo-fenda">

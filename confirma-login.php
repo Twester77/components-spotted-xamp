@@ -8,14 +8,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
     
     fenda_log('🔵 POST recebido para login: ' . $_POST['email']);
     
-    $email_bruto = trim($_POST['email']);
-    $email = mysqli_real_escape_string($conn, $email_bruto);
+    $email = $_POST['email']; // sem escape, o bind_param cuida
     $senha = $_POST['senha']; 
 
-    $sql = "SELECT * FROM usuarios WHERE email = '$email'";
-    $resultado = mysqli_query($conn, $sql);
+    // 🔥 PREPARED STATEMENT
+    $sql = "SELECT * FROM usuarios WHERE email = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        fenda_log('🔴 Erro ao preparar SELECT: ' . mysqli_error($conn));
+        header("Location: index.php?erro=usuario");
+        exit();
+    }
+    mysqli_stmt_bind_param($stmt, "s", $email);
+    mysqli_stmt_execute($stmt);
+    $resultado = mysqli_stmt_get_result($stmt);
+    $usuario = mysqli_fetch_assoc($resultado);
+    mysqli_stmt_close($stmt);
 
-    if ($usuario = mysqli_fetch_assoc($resultado)) {
+    if ($usuario) {
         fenda_log('🔵 Usuário encontrado: ID ' . $usuario['id']);
         
         if ($usuario['ativo'] == 0) {
@@ -30,17 +40,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             $_SESSION['usuario_username'] = $usuario['username'];
             
             // 🛡️ GERAÇÃO DO TOKEN DE ESTADO PERSISTENTE (30 DIAS) COM EXPIRAÇÃO INTERNA
-            $expires_in = time() + (86400 * 30); // 30 dias a partir de agora
+            $expires_in = time() + (86400 * 30);
             $cookie_payload = json_encode([
                 'id' => $usuario['id'],
                 'nome' => $usuario['nome'],
                 'username' => $usuario['username'],
-                'exp' => $expires_in // 🔥 Campo de expiração para validação no servidor
+                'exp' => $expires_in
             ]);
             
             $encrypted_payload = fenda_encrypt_state($cookie_payload);
             
-            // Define o domínio do cookie baseado no ambiente
             $cookieDomain = $is_production ? '.fendauniversity.com.br' : null;
             
             setcookie('fenda_state_token', $encrypted_payload, [

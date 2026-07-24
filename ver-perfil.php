@@ -124,13 +124,13 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     <div class="perfil-header-container">
         <div class="capa-container">
             <?php if (!empty($dados['capa'])): ?>
-                <img src="<?= htmlspecialchars($capa_user) ?>" class="capa-img" alt="Sua capa" onerror="this.src='uploads/ui/default_capa_masculino.webp';">
+                <img src="<?= htmlspecialchars($capa_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="capa-img" alt="Sua capa" onerror="this.src='uploads/ui/default_capa_masculino.webp';">
             <?php else: ?>
                 <div class="capa-default" style="background: linear-gradient(135deg, <?php echo $cor_user; ?>88 0%, #000 100%); width: 100%; height: 100%;"></div>
             <?php endif; ?>
 
             <div class="avatar-posicionador">
-                <img src="<?= htmlspecialchars($foto_user) ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.jpg';">
+                <img src="<?= htmlspecialchars($foto_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.jpg';">
                 <?php if ($is_presenca): ?>
                     <div class="badge-presenca-bottom"><i class="fa-solid fa-crown"></i></div>
                 <?php endif; ?>
@@ -139,10 +139,10 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 
         <div class="info-usuario-section">
             <div class="nome-linha">
-                <h1 class="nome-publico"><?php echo htmlspecialchars($dados['nome']); ?></h1>
+                <h1 class="nome-publico"><?php echo htmlspecialchars($dados['nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?></h1>
                 <?php if (!empty($dados['atletica_id'])): ?>
-                    <a href="atleticas.php?id=<?php echo urlencode($dados['atletica_id']); ?>">
-                        <img src="badges/<?php echo htmlspecialchars($dados['atletica_id']); ?>.webp" class="insignia-atletica-bottom" alt="Seu bottom de atlética - link para comunidade">
+                    <a href="atleticas.php?id=<?php echo urlencode($dados['atletica_id'] ?? ''); ?>">
+                        <img src="badges/<?php echo htmlspecialchars($dados['atletica_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>.webp" class="insignia-atletica-bottom" alt="Seu bottom de atlética - link para comunidade">
                     </a>
                 <?php endif; ?>
             </div>
@@ -154,7 +154,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             </div>
 
             <div class="bio-texto">
-                <?php echo !empty($dados['bio']) ? nl2br(htmlspecialchars($dados['bio'])) : "Habitante da Fenda..."; ?>
+                <?php echo !empty($dados['bio']) ? nl2br(htmlspecialchars($dados['bio'] ?? '', ENT_QUOTES, 'UTF-8')) : "Habitante da Fenda..."; ?>
             </div>
 
             <div class="perfil-controles">

@@ -149,8 +149,10 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 $avatar = 'uploads/ui/default.webp';
             }
         }
-        $nome_autor = '@' . htmlspecialchars($linha['username']);
-        $link_autor = 'ver-perfil.php?user=' . urlencode($linha['username']);
+        // 🔥 CORREÇÃO: evitar null em htmlspecialchars e urlencode
+        $username = $linha['username'] ?? '';
+        $nome_autor = !empty($username) ? '@' . htmlspecialchars($username) : 'Usuário';
+        $link_autor = !empty($username) ? 'ver-perfil.php?user=' . urlencode($username) : '#';
     }
     $mensagem_corpo = nl2br(formatarMencoes($linha['mensagem']));
 

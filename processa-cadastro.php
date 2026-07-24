@@ -2,15 +2,48 @@
 include_once __DIR__ . '/conexao.php';
 
 // ============================================================
-// 🔒 VALIDAÇÃO DA CHAVE TURNSTILE (Vercel ou .env.php já carregado)
+// 🔒 DETECÇÃO DE AMBIENTE LOCAL (DOMÍNIO + IP)
 // ============================================================
-$turnstile_secret_key = getenv('TURNSTILE_SECRET_KEY');
+$host = $_SERVER['HTTP_HOST'] ?? '';
+$ip = $_SERVER['REMOTE_ADDR'] ?? '';
 
-// Se não tiver chave, interrompe com erro seguro (sem expor detalhes)
-if (empty($turnstile_secret_key)) {
-    error_log('[TURNSTILE] Chave secreta não configurada.');
-    http_response_code(500);
-    die('Erro interno de configuração. Contate o administrador.');
+$is_localhost = (
+    $host === 'localhost' ||
+    $host === '127.0.0.1' ||
+    strpos($host, '.test') !== false ||
+    strpos($host, '.local') !== false ||
+    strpos($ip, '192.168.') === 0 ||
+    strpos($ip, '10.') === 0 ||
+    strpos($ip, '172.16.') === 0 ||
+    strpos($ip, '172.17.') === 0 ||
+    strpos($ip, '172.18.') === 0 ||
+    strpos($ip, '172.19.') === 0 ||
+    strpos($ip, '172.20.') === 0 ||
+    strpos($ip, '172.21.') === 0 ||
+    strpos($ip, '172.22.') === 0 ||
+    strpos($ip, '172.23.') === 0 ||
+    strpos($ip, '172.24.') === 0 ||
+    strpos($ip, '172.25.') === 0 ||
+    strpos($ip, '172.26.') === 0 ||
+    strpos($ip, '172.27.') === 0 ||
+    strpos($ip, '172.28.') === 0 ||
+    strpos($ip, '172.29.') === 0 ||
+    strpos($ip, '172.30.') === 0 ||
+    strpos($ip, '172.31.') === 0
+);
+
+// ============================================================
+// 🔒 VALIDAÇÃO DA CHAVE TURNSTILE (APENAS SE NÃO FOR LOCAL)
+// ============================================================
+if (!$is_localhost) {
+    $turnstile_secret_key = getenv('TURNSTILE_SECRET_KEY');
+    if (empty($turnstile_secret_key)) {
+        error_log('[TURNSTILE] Chave secreta não configurada em produção.');
+        http_response_code(500);
+        die('Erro interno de configuração. Contate o administrador.');
+    }
+} else {
+    error_log('[TURNSTILE] 🔥 Modo local ativado – Turnstile ignorado.');
 }
 
 // ============================================================
@@ -21,67 +54,78 @@ if (
     isset($_POST['field_verification_backup']) &&
     !empty($_POST['field_verification_backup'])
 ) {
-    // Bot preencheu o campo oculto → aborta silenciosamente
     error_log('[HONEYPOT] Tentativa de bot bloqueada.');
     http_response_code(403);
     die('Acesso negado.');
 }
 
 // ============================================================
-// 🛡️ TRAVA 2: VALIDAÇÃO DO TURNSTILE
+// 🛡️ TRAVA 2: VALIDAÇÃO DO TURNSTILE (SOMENTE SE NÃO FOR LOCAL)
 // ============================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $turnstile_token = $_POST['cf-turnstile-response'] ?? '';
+    error_log('[CADASTRO] Token recebido: ' . ($turnstile_token ? 'SIM (tamanho: ' . strlen($turnstile_token) . ')' : 'NÃO'));
 
-    // Se token não veio, já barra (pode ser requisição direta)
-    if (empty($turnstile_token)) {
-        error_log('[TURNSTILE] Token não enviado.');
-        header('Location: cad-usuario.php?erro=turnstile');
-        exit();
+    if (!$is_localhost) {
+        if (empty($turnstile_token)) {
+            error_log('[CADASTRO] Token vazio.');
+            header('Location: cad-usuario.php?erro=turnstile');
+            exit();
+        }
+
+        $ch = curl_init('https://challenges.cloudflare.com/turnstile/v0/siteverify');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+            'secret' => $turnstile_secret_key,
+            'response' => $turnstile_token,
+            'remoteip' => $ip
+        ]));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
+            error_log("[TURNSTILE] Falha na API (HTTP $httpCode)");
+            header('Location: cad-usuario.php?erro=turnstile');
+            exit();
+        }
+
+        $result = json_decode($response, true);
+        if (!$result || $result['success'] !== true) {
+            error_log('[TURNSTILE] Token inválido: ' . ($result['error-codes'][0] ?? 'unknown'));
+            header('Location: cad-usuario.php?erro=turnstile');
+            exit();
+        }
+    } else {
+        error_log('[TURNSTILE] 🔥 MODO LOCAL – Turnstile ignorado.');
     }
-
-    // Verifica o token com a API da Cloudflare
-    $ch = curl_init('https://challenges.cloudflare.com/turnstile/v0/siteverify');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
-        'secret' => $turnstile_secret_key,
-        'response' => $turnstile_token,
-        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? ''
-    ]));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($httpCode !== 200) {
-        error_log("[TURNSTILE] Falha na API (HTTP $httpCode)");
-        header('Location: cad-usuario.php?erro=turnstile');
-        exit();
-    }
-
-    $result = json_decode($response, true);
-    if (!$result || $result['success'] !== true) {
-        error_log('[TURNSTILE] Token inválido: ' . ($result['error-codes'][0] ?? 'unknown'));
-        header('Location: cad-usuario.php?erro=turnstile');
-        exit();
-    }
-
-    //  Se passou, continua com o cadastro...
 }
 
 // ============================================================
-// 🧹 LIMPEZA E VALIDAÇÃO DOS DADOS
+// 🧹 LIMPEZA E VALIDAÇÃO DOS DADOS (COM PREPARED STATEMENTS)
 // ============================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email            = mysqli_real_escape_string($conn, $_POST['email']);
-    $nome             = mysqli_real_escape_string($conn, $_POST['nome']);
-    $atletica_id      = mysqli_real_escape_string($conn, $_POST['atletica_id']);
-    $pref_cor_padrao  = mysqli_real_escape_string($conn, $_POST['pref_cor_padrao']);
-    $pref_vibe_padrao = mysqli_real_escape_string($conn, $_POST['pref_vibe_padrao']);
-    $senha            = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-    $token            = bin2hex(random_bytes(32));
+    // 🔥 Captura os dados sem escape (o bind_param fará a segurança)
+    $nome             = $_POST['nome'] ?? '';
+    $username         = $_POST['username'] ?? '';
+    $email            = $_POST['email'] ?? '';
+    $senha_raw        = $_POST['senha'] ?? '';
+    $atletica_id      = $_POST['atletica_id'] ?? '';
+    $pref_cor_padrao  = $_POST['pref_cor_padrao'] ?? '#70cde4';
+    $pref_vibe_padrao = $_POST['pref_vibe_padrao'] ?? 'vibe-glass';
 
-    $aura_inicial     = $_POST['aura_inicial'] ?? 'masculino';
+    // 🔥 Validação básica do username
+    if (empty($username) || !preg_match('/^[a-z0-9_\.]{3,18}$/', $username)) {
+        header('Location: cad-usuario.php?erro=username_invalido');
+        exit();
+    }
+
+    $senha = password_hash($senha_raw, PASSWORD_DEFAULT);
+    $token = bin2hex(random_bytes(32));
+    $ativo = 0; // Conta inativa até ativação via e-mail
+
+    $aura_inicial = $_POST['aura_inicial'] ?? 'masculino';
     if ($aura_inicial === 'feminino') {
         $foto_perfil_final = 'default_feminino.jpg';
         $foto_capa_final   = 'default_capa_feminino.webp';
@@ -90,35 +134,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $foto_capa_final   = 'default_capa_masculino.webp';
     }
 
-    // Verifica se e-mail já existe
-    $check_sql = "SELECT id FROM usuarios WHERE email = '$email'";
-    $check_res = mysqli_query($conn, $check_sql);
-    if (mysqli_num_rows($check_res) > 0) {
+    // 🔥 Verifica se e-mail já existe
+    $check_sql = "SELECT id FROM usuarios WHERE email = ?";
+    $stmt_check = mysqli_prepare($conn, $check_sql);
+    if (!$stmt_check) {
+        error_log('[CADASTRO] Erro ao preparar SELECT: ' . mysqli_error($conn));
+        die('Erro interno do servidor.');
+    }
+    mysqli_stmt_bind_param($stmt_check, "s", $email);
+    mysqli_stmt_execute($stmt_check);
+    mysqli_stmt_store_result($stmt_check);
+    if (mysqli_stmt_num_rows($stmt_check) > 0) {
+        mysqli_stmt_close($stmt_check);
         header("Location: cad-usuario.php?erro=ja_existe");
         exit();
     }
+    mysqli_stmt_close($stmt_check);
 
-    // Insere no banco
-    $sql = "INSERT INTO usuarios (nome, email, senha, token, ativo, atletica_id, pref_cor_padrao, pref_vibe_padrao, foto, capa) 
-            VALUES ('$nome', '$email', '$senha', '$token', 0, '$atletica_id', '$pref_cor_padrao', '$pref_vibe_padrao', '$foto_perfil_final', '$foto_capa_final')";
+    // 🔥 Verifica se username já existe
+    $check_sql_username = "SELECT id FROM usuarios WHERE username = ?";
+    $stmt_check_username = mysqli_prepare($conn, $check_sql_username);
+    if (!$stmt_check_username) {
+        error_log('[CADASTRO] Erro ao preparar SELECT username: ' . mysqli_error($conn));
+        die('Erro interno do servidor.');
+    }
+    mysqli_stmt_bind_param($stmt_check_username, "s", $username);
+    mysqli_stmt_execute($stmt_check_username);
+    mysqli_stmt_store_result($stmt_check_username);
+    if (mysqli_stmt_num_rows($stmt_check_username) > 0) {
+        mysqli_stmt_close($stmt_check_username);
+        header("Location: cad-usuario.php?erro=username_duplicado");
+        exit();
+    }
+    mysqli_stmt_close($stmt_check_username);
 
-    if (mysqli_query($conn, $sql)) {
+    // 🔥 Insere no banco (PREPARED STATEMENT) – 11 colunas
+    $sql = "INSERT INTO usuarios (nome, username, email, senha, token, ativo, atletica_id, pref_cor_padrao, pref_vibe_padrao, foto, capa) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt_insert = mysqli_prepare($conn, $sql);
+    if (!$stmt_insert) {
+        error_log('[CADASTRO] Erro ao preparar INSERT: ' . mysqli_error($conn));
+        die('Erro interno do servidor.');
+    }
+
+    // 🔥 BIND: 11 variáveis na ordem correta
+    mysqli_stmt_bind_param(
+        $stmt_insert,
+        "sssssssssss",
+        $nome,
+        $username,
+        $email,
+        $senha,
+        $token,
+        $ativo,
+        $atletica_id,
+        $pref_cor_padrao,
+        $pref_vibe_padrao,
+        $foto_perfil_final,
+        $foto_capa_final
+    );
+
+    if (mysqli_stmt_execute($stmt_insert)) {
+        mysqli_stmt_close($stmt_insert);
         $apiKey = RESEND_KEY;
 
-        //  Verifica se a chave do Resend está configurada
         if (empty($apiKey)) {
             error_log('[RESEND] Chave API do Resend não configurada.');
             echo "Erro ao enviar e-mail de confirmação. Contate o administrador.";
             exit();
         }
 
-        // Dispara e-mail
+        // Dispara e-mail (mantido igual)
         $email_payload = [
             'from' => 'Spotted - A Fenda <hello@fendauniversity.com.br>',
             'to' => [$email],
             'reply_to' => 'contato-spotted.fev@outlook.com.br',
             'subject' => 'Sua jornada na Fenda começou!',
-            'html' => "
+            'html' => " 
 <div style='font-family: sans-serif; background: #0a0a0a; color: #fff; padding: 0; border-radius: 15px; overflow: hidden; border: 1px solid #70cde4; max-width: 500px; margin: 20px auto;'>
     <div style='width: 100%; background: #000; text-align: center;'>
         <img src='https://fendauniversity.com.br/imagensfoto/banner-email.png' alt='Banner do A Fenda' style='width: 100%; max-width: 500px; display: block; justify-content: center; margin: auto; '>
@@ -158,19 +250,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($resend_http_code !== 200) {
             error_log('[RESEND] Falha ao enviar e-mail: ' . $resend_response);
-            // Mesmo se o e-mail falhar, o cadastro foi feito. Redireciona com aviso?
-            // Por enquanto, redireciona normalmente.
         }
 
         header("Location: sucesso.php?email=" . urlencode($email));
         exit();
     } else {
-        error_log("[CADASTRO] Erro no MySQL: " . mysqli_error($conn));
+        error_log("[CADASTRO] Erro no INSERT: " . mysqli_stmt_error($stmt_insert));
+        mysqli_stmt_close($stmt_insert);
         echo "Erro ao cadastrar. Tente novamente mais tarde.";
         exit();
     }
 } else {
-    // Acesso direto sem POST
     header("Location: cad-usuario.php");
     exit();
 }
