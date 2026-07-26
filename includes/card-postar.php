@@ -67,7 +67,6 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                         <option value="comunidade" selected>👥 Comunidade</option>
                     <?php else: ?>
                         <option value="anonimo">🕵️ Anônimo</option>
-                        <option value="comunidade">👥 Comunidade</option>
                         <option value="academico">❓ Dúvidas Acadêmicas</option>
                         <option value="elogio">💖 Correio Elegante</option>
                         <option value="tenho-ranco">👌 Ranço</option>

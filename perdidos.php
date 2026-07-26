@@ -41,7 +41,7 @@ include 'includes/bolhas.php';
     <!-- Adicionado aria-labelledby vinculando ao título h2 -->
     <article class="conteudo-principal" aria-labelledby="titulo-achados-perdidos">
         <h2 id="titulo-achados-perdidos" style="font-family: 'Bebas Neue', sans-serif; font-size: 2rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 10px; margin-top: 30px;">
-            Achados & Perdidos
+            Perdidos porém Achados
         </h2>
 
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">

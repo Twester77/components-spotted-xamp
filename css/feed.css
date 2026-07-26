@@ -74,12 +74,12 @@
 
 .container-feed {
     max-width: 9999px;
-    padding: 12px;
+    padding: 15px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     align-items: flex-start;
     /* Mantém cada card no seu tamanho real */
-    gap: 15px;
+    gap: 20px;
     max-width: 9999px;
     /* Limita a largura total do feed no PC */
     margin: 20px auto;
@@ -121,7 +121,7 @@ body:not(.modo-swipe-ativo) .post-content {
     transition: max-height 0.4s ease-in-out;
     margin: 5px 0;
     font-size: 0.95rem;
-    font-size: clamp(0.9rem, 1.041vw, 1.25rem);
+    font-size: clamp(0.85rem, 1.041vw, 1.1rem);
     max-height: 4rem;
     overflow: hidden;
     -moz-user-select: text;
@@ -157,7 +157,7 @@ body:not(.modo-swipe-ativo) .post-content {
 }
 
 .spotted-card {
-    background: var(--glass-bg);
+    background: rgba(17, 17, 17, 0.23);
     border-radius: 10px;
     padding: 10px;
     break-inside: avoid;
@@ -171,13 +171,10 @@ body:not(.modo-swipe-ativo) .post-content {
     width: 100%;
     max-width: 450px;
     gap: 6px;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
     /* Limita a largura máxima do card */
     height: auto;
     scrollbar-width: none;
+    container-type: inline-size;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
     will-change: transform, opacity;
 
@@ -208,9 +205,9 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 @supports (backdrop-filter: blur(6px)) {
     body:not(.modo-swipe-ativo) .spotted-card:hover {
-        background: rgba(0, 0, 0, 0.445);
-        -webkit-backdrop-filter: blur(6px);
-        backdrop-filter: blur(6px);
+        background: rgba(0, 0, 0, 0.534);
+        -webkit-backdrop-filter: blur(4px);
+        backdrop-filter: blur(4px);
         border-color: rgba(255, 255, 255, 0.144);
         transform: translateY(-8px);
         transition: 0.3s ease;
@@ -239,7 +236,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
-    font-size:  clamp(0.9rem, 1.5vw, 1.3rem);
+    font-size:  clamp(0.85rem, 1.3vw, 1.2rem);
     transition: 0.3s;
 }
 
@@ -264,45 +261,42 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 /*  ELOGIOS - Correio Elegante */
 .spotted-card.elogio {
-    border-left: 5px solid #e05586 !important;
-    background: linear-gradient(145deg, rgba(228, 83, 134, 0.514), rgba(10, 10, 10, 0.247)) !important;
-    position: relative;
+    border-left: 5px solid #ff55c9 !important;
+    background: linear-gradient(145deg, rgba(228, 83, 134, 0.514), rgba(10, 10, 10, 0.247)) ;
 }
 
 /*  ESPORTES  */
 .spotted-card.esportes {
     border-left: 5px solid #0fc44bd0 !important;
-    background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.082)) !important;
-    position: relative;
+    background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.082)) ;
 }
 
 
 /*  GAMES -  */
 .spotted-card.games {
     border-left: 5px solid #01e6e6 !important;
-    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.267)) !important;
+    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.267)) ;
 }
 
 
 /* CARONAS */
 .spotted-card.caronas {
     border-left: 5px solid #263e4dee !important;
-    background: linear-gradient(145deg, rgba(38, 62, 77, 0.3), rgba(10, 10, 10, 0.664)) !important;
+    background: linear-gradient(145deg, rgba(38, 62, 77, 0.3), rgba(10, 10, 10, 0.664)) ;
 }
 
 
 /*  ESTUDOS */
 .spotted-card.academico {
     border-left: 5px solid #873baa9c !important;
-    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(61, 6, 78, 0.281)) !important;
+    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(61, 6, 78, 0.281)) ;
 }
 
 
 /* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
 .spotted-card.desapego {
     border-left: 5px solid #00bfff !important;
-    background: linear-gradient(145deg, rgba(0, 191, 255, 0.247), rgba(10, 10, 10, 0.3)) !important;
-    position: relative;
+    background: linear-gradient(145deg, rgba(0, 191, 255, 0.247), rgba(10, 10, 10, 0.3)) ;
 }
 
 
@@ -311,10 +305,9 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     right: 10px;
-    font-size: clamp(16px, 1.5vw, 24px) ;
-    opacity: 0.6;
+    font-size: clamp(16px, 6.5cqw, 24px) ;
+    opacity: 0.5;
     position: absolute;
-    padding: 5px;
     display: flex;
 }
 
@@ -323,6 +316,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 .spotted-card.comunidade .user-info-post::after {
     content: '\f0c0';
     color: #ffffffb6;
+    font-size: clamp(14px, 6cqw, 20px)
 }
 
 .spotted-card.ranco .user-info-post::after {
@@ -614,6 +608,9 @@ span.category-tag {
 .reacoes-gravadas {
     display: flex;
     flex-shrink: 0;
+    justify-content: center;
+    margin: 5px auto;
+    align-content: center;
 }
 
 /* 1. O Wrapper deve ser relativo para segurar o popup absoluta */
@@ -646,8 +643,8 @@ span.category-tag {
 /* --- ITEMS DO POPUP (EMOJIS) --- */
 .reacoes-popup span {
     cursor: pointer;
-    font-size: 1.1rem;
-    font-size: clamp(0.9rem, 5vw, 1.3rem);
+    font-size: 1rem;
+    font-size: clamp(0.85rem, 5vw, 1.2rem);
     display: inline-block;
 }
 
@@ -659,7 +656,7 @@ span.category-tag {
 
 /* --- PÍLULAS DE REAÇÃO (NO FEED) --- */
 .reacao-item {
-    display: inline-flex !important;
+    display: inline-flex ;
     opacity: 1 !important;
     visibility: visible !important;
     position: relative;
@@ -667,15 +664,14 @@ span.category-tag {
     align-content: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.08);
-    padding: 4px 8px;
-    border-radius: 15px;
-    font-size: clamp(0.75rem, 3vw, 1.05rem);
-    min-width: clamp(24px, 2vh, 32px);
-    height: clamp(24px, 2vh, 32px);
+    padding: 4px 6px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 3cqw, 1.2rem);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
     cursor: pointer;
-    margin: 0 4px;
+    margin: 0 6px;
     transition: transform 0.2s ease, background 0.2s ease;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -690,7 +686,6 @@ span.category-tag {
     border: 1px solid #ffbb00d5;
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
     font-weight: bold;
-    margin: 5px auto;
 }
 
 
@@ -709,12 +704,12 @@ span.category-tag {
 
 .footer-links {
     text-transform: uppercase;
-    padding: clamp(4px, 1vw, 10px) clamp(8px, 1vw, 12px);
+     padding: clamp(4px, 3cqw, 10px) clamp(8px, 4cqw, 12px);
     display: flex;
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
-    white-space: none;
+    white-space: nowrap;
     bottom: 0;
     border-top: 2px solid rgba(255, 255, 255, 0.199);
     gap: 10px;
@@ -843,8 +838,8 @@ span.category-tag {
 .avatar-p {
     border: 1px solid #ff9f0f;
     gap: 10px;
-    width: clamp(36px, 5vw, 60px);
-    height: clamp(36px, 5vw, 60px);
+    width: clamp(36px, 3.5vw, 55px);
+    height: clamp(36px, 3.5vw, 55px);
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -885,7 +880,7 @@ span.category-tag {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: clamp(0.75rem, 0.8vw + 0.2rem, 1.15rem);
+    font-size: clamp(0.75rem, 0.6vw + 0.2rem, 1.05rem);
     pointer-events: auto;
 
 
@@ -902,9 +897,10 @@ span.category-tag {
     cursor: pointer;
     /* MUDANÇA: Agora o navegador mostra a mãozinha */
     transition: all 0.3s ease-in-out;
+    gap: 8px;
     display: inline-flex;
     align-items: center;
-    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
+    font-size: clamp(0.75rem, 3.5cqw, 0.975rem);
     font-weight: 600;
     text-transform: uppercase;
     background: transparent;

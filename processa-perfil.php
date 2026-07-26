@@ -6,192 +6,183 @@ include_once __DIR__ . '/fenda_debug.php';
 
 fenda_log('🔵 INÍCIO processa-perfil.php');
 
-// Se veio do feed.php, vira feed.php. Se veio do perfil.php, vira perfil.php...
 $url_origem = isset($_SERVER['HTTP_REFERER']) ? strtok($_SERVER['HTTP_REFERER'], '?') : 'perfil.php';
 
-// 1. Segurança: Só processa se for POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . ' (método não POST)');
     header("Location: $url_origem");
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['usuario_id'])) {
-    $usuario_id = $_SESSION['usuario_id'];
-    fenda_log('🔵 Usuário ID ' . $usuario_id . ' processando perfil');
+if (!isset($_SESSION['usuario_id'])) {
+    fenda_log('🔴 REDIRECIONANDO para perfil.php (sem sessão)');
+    header("Location: perfil.php");
+    exit();
+}
 
-    $novo_nome     = strip_tags($_POST['nome'] ?? '');
-    $nova_bio      = strip_tags($_POST['bio'] ?? '');
-    $novo_username = strip_tags($_POST['username'] ?? '');
+$usuario_id = $_SESSION['usuario_id'];
+fenda_log('🔵 Usuário ID ' . $usuario_id . ' processando perfil');
 
-    // Validação de espaços
-    if (preg_match('/\s/', $novo_username)) {
-        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_espaco');
-        header("Location: " . $url_origem . "?erro=username_espaco");
-        exit();
-    }
+// --- Captura dos dados textuais ---
+$novo_nome     = strip_tags($_POST['nome'] ?? '');
+$nova_bio      = strip_tags($_POST['bio'] ?? '');
+$novo_username = strip_tags($_POST['username'] ?? '');
 
-    $novo_username = strtolower(preg_replace('/[^a-zA-Z0-9\._]/', '', $novo_username));
+// Validação de espaços
+if (preg_match('/\s/', $novo_username)) {
+    fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_espaco');
+    header("Location: " . $url_origem . "?erro=username_espaco");
+    exit();
+}
 
-    if (empty($novo_username) || strlen($novo_username) < 5) {
-        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_curto');
-        header("Location: " . $url_origem . "?erro=username_curto");
-        exit();
-    }
+$novo_username = strtolower(preg_replace('/[^a-zA-Z0-9\._]/', '', $novo_username));
+if (empty($novo_username) || strlen($novo_username) < 5) {
+    fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_curto');
+    header("Location: " . $url_origem . "?erro=username_curto");
+    exit();
+}
 
-    // Checagem de duplicidade
-    $sql_check = "SELECT id FROM usuarios WHERE username = ? AND id != ?";
-    $stmt_check = mysqli_prepare($conn, $sql_check);
-    if ($stmt_check) {
-        mysqli_stmt_bind_param($stmt_check, "si", $novo_username, $usuario_id);
-        mysqli_stmt_execute($stmt_check);
-        mysqli_stmt_store_result($stmt_check);
-        if (mysqli_stmt_num_rows($stmt_check) > 0) {
-            mysqli_stmt_close($stmt_check);
-            fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_duplicado');
-            header("Location: " . $url_origem . "?erro=username_duplicado");
-            exit();
-        }
+// Checagem de duplicidade
+$sql_check = "SELECT id FROM usuarios WHERE username = ? AND id != ?";
+$stmt_check = mysqli_prepare($conn, $sql_check);
+if ($stmt_check) {
+    mysqli_stmt_bind_param($stmt_check, "si", $novo_username, $usuario_id);
+    mysqli_stmt_execute($stmt_check);
+    mysqli_stmt_store_result($stmt_check);
+    if (mysqli_stmt_num_rows($stmt_check) > 0) {
         mysqli_stmt_close($stmt_check);
+        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_duplicado');
+        header("Location: " . $url_origem . "?erro=username_duplicado");
+        exit();
+    }
+    mysqli_stmt_close($stmt_check);
+}
+
+$nova_atletica = $_POST['atletica_id'] ?? 'ads';
+$nova_vibe     = $_POST['pref_vibe_padrao'] ?? 'vibe-glass';
+$nova_cor      = $_POST['pref_cor_padrao'] ?? '#70cde4';
+$novo_swipe    = isset($_POST['pref_swipe']) ? (int)$_POST['pref_swipe'] : 0;
+$nova_bolha    = isset($_POST['pref_bolhas']) ? (int)$_POST['pref_bolhas'] : 0;
+$nova_trilha   = $_POST['pref_som_trilha'] ?? 'off';
+$nova_notif    = $_POST['pref_som_notif'] ?? 'padrao';
+$novo_pip      = isset($_POST['pref_pip']) ? (int)$_POST['pref_pip'] : 0;
+$novo_badge    = isset($_POST['pref_badge']) ? (int)$_POST['pref_badge'] : 1;
+$nova_notif_comunidade = isset($_POST['pref_notif_comunidade']) ? (int)$_POST['pref_notif_comunidade'] : 1;
+
+// ============================================================
+// 🚀 UPLOAD DE FOTO E CAPA (se enviados)
+// ============================================================
+$caminhosEnviados = [];
+$foto_nome = null;
+$capa_nome = null;
+
+if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
+    $foto_nome = processarUploadSeguro($_FILES['foto'], './uploads', 'user', 2 * 1024 * 1024, $usuario_id);
+    if ($foto_nome) {
+        $caminhosEnviados[] = $foto_nome;
+    }
+}
+
+if (isset($_FILES['capa']) && $_FILES['capa']['error'] == 0) {
+    $capa_nome = processarUploadSeguro($_FILES['capa'], './uploads', 'capa', 2 * 1024 * 1024, $usuario_id);
+    if ($capa_nome) {
+        $caminhosEnviados[] = $capa_nome;
+    }
+}
+
+// ============================================================
+// 🔥 BUSCA OS NOMES ANTIGOS (para deletar após sucesso)
+// ============================================================
+$stmt_busca = mysqli_prepare($conn, "SELECT foto, capa FROM usuarios WHERE id = ?");
+mysqli_stmt_bind_param($stmt_busca, "i", $usuario_id);
+mysqli_stmt_execute($stmt_busca);
+$res_busca = mysqli_stmt_get_result($stmt_busca);
+$usuario_atual = mysqli_fetch_assoc($res_busca);
+mysqli_stmt_close($stmt_busca);
+
+$foto_antiga = $usuario_atual['foto'] ?? null;
+$capa_antiga = $usuario_atual['capa'] ?? null;
+
+// ============================================================
+// 🔥 UPDATE DINÂMICO (só atualiza campos enviados)
+// ============================================================
+try {
+    // Campos sempre atualizados
+    $fields = [
+        'nome' => $novo_nome,
+        'bio' => $nova_bio,
+        'username' => $novo_username,
+        'atletica_id' => $nova_atletica,
+        'pref_vibe_padrao' => $nova_vibe,
+        'pref_cor_padrao' => $nova_cor,
+        'pref_swipe' => $novo_swipe,
+        'pref_bolhas' => $nova_bolha,
+        'pref_som_trilha' => $nova_trilha,
+        'pref_som_notif' => $nova_notif,
+        'pref_pip' => $novo_pip,
+        'pref_badge' => $novo_badge,
+        'pref_notif_comunidade' => $nova_notif_comunidade,
+    ];
+
+    // Só adiciona foto e capa se foram enviados (não são null)
+    if ($foto_nome !== null) {
+        $fields['foto'] = $foto_nome;
+    }
+    if ($capa_nome !== null) {
+        $fields['capa'] = $capa_nome;
     }
 
-    $nova_atletica = $_POST['atletica_id'] ?? 'ads';
-    $nova_vibe     = $_POST['pref_vibe_padrao'] ?? 'vibe-glass';
-    $nova_cor      = $_POST['pref_cor_padrao'] ?? '#70cde4';
-    $novo_swipe    = isset($_POST['pref_swipe']) ? (int)$_POST['pref_swipe'] : 0;
-    $nova_bolha    = isset($_POST['pref_bolhas']) ? (int)$_POST['pref_bolhas'] : 0;
-    $nova_trilha   = $_POST['pref_som_trilha'] ?? 'off';
-    $nova_notif    = $_POST['pref_som_notif'] ?? 'padrao';
-    $novo_pip      = isset($_POST['pref_pip']) ? (int)$_POST['pref_pip'] : 0;
-    // 🔥 NOVO: Badge no ícone do app
-    $novo_badge    = isset($_POST['pref_badge']) ? (int)$_POST['pref_badge'] : 1;
-
-    fenda_log('🔵 Atualizando perfil: nome=' . $novo_nome . ', username=' . $novo_username);
-
-    // Atualização dos dados textuais
-    $sql = "UPDATE usuarios SET 
-            nome = ?, 
-            bio = ?, 
-            username = ?, 
-            atletica_id = ?, 
-            pref_vibe_padrao = ?, 
-            pref_cor_padrao = ?, 
-            pref_swipe = ?, 
-            pref_bolhas = ?, 
-            pref_som_trilha = ?, 
-            pref_som_notif = ?,
-            pref_pip = ?,
-            pref_badge = ? 
-        WHERE id = ?";
-    
-    $stmt = mysqli_prepare($conn, $sql);
-    if ($stmt) {
-        // 🔥 BIND: "ssssssiissiii"
-        // 1  s  nome
-        // 2  s  bio
-        // 3  s  username
-        // 4  s  atletica_id
-        // 5  s  pref_vibe_padrao
-        // 6  s  pref_cor_padrao
-        // 7  i  pref_swipe
-        // 8  i  pref_bolhas
-        // 9  s  pref_som_trilha
-        // 10 s  pref_som_notif
-        // 11 i  pref_pip
-        // 12 i  pref_badge
-        // 13 i  id (WHERE)
-        mysqli_stmt_bind_param(
-            $stmt,
-            "ssssssiissiii",
-            $novo_nome,
-            $nova_bio,
-            $novo_username,
-            $nova_atletica,
-            $nova_vibe,
-            $nova_cor,
-            $novo_swipe,
-            $nova_bolha,
-            $nova_trilha,
-            $nova_notif,
-            $novo_pip,
-            $novo_badge,
-            $usuario_id
-        );
-        if (!mysqli_stmt_execute($stmt)) {
-            fenda_log('🔴 ERRO no banco de dados: ' . mysqli_stmt_error($stmt));
-            die("Erro no banco de dados: " . mysqli_stmt_error($stmt));
+    // Constrói a query
+    $set_parts = [];
+    $values = [];
+    $types = '';
+    foreach ($fields as $campo => $valor) {
+        $set_parts[] = "$campo = ?";
+        $values[] = $valor;
+        if (is_int($valor)) {
+            $types .= 'i';
+        } else {
+            $types .= 's';
         }
-        mysqli_stmt_close($stmt);
-        fenda_log('🟢 Perfil atualizado com sucesso para usuário ' . $usuario_id);
+    }
+    $sql = "UPDATE usuarios SET " . implode(', ', $set_parts) . " WHERE id = ?";
+    $values[] = $usuario_id;
+    $types .= 'i';
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        throw new Exception("Erro ao preparar UPDATE: " . mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($stmt, $types, ...$values);
+    if (!mysqli_stmt_execute($stmt)) {
+        throw new Exception("Erro no UPDATE: " . mysqli_stmt_error($stmt));
+    }
+    mysqli_stmt_close($stmt);
+
+    // Se chegou aqui, a atualização foi bem-sucedida → deleta arquivos antigos (locais e B2)
+    if ($foto_antiga && $foto_antiga != $foto_nome) {
+        if (file_exists("./uploads/" . $foto_antiga)) unlink("./uploads/" . $foto_antiga);
+        deleteFromB2($foto_antiga, $usuario_id);
+    }
+    if ($capa_antiga && $capa_antiga != $capa_nome) {
+        if (file_exists("./uploads/" . $capa_antiga)) unlink("./uploads/" . $capa_antiga);
+        deleteFromB2($capa_antiga, $usuario_id);
     }
 
     $_SESSION['usuario_nome'] = $novo_nome;
-    $limite_bytes = 2 * 1024 * 1024; // 2MB
-
-    // ============================================================
-    // 🚀 UPLOAD DE FOTO (AVATAR) – usando motor oficial
-    // ============================================================
-    if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
-        // Busca a foto antiga para deletar depois
-        $stmt_busca = mysqli_prepare($conn, "SELECT foto FROM usuarios WHERE id = ?");
-        mysqli_stmt_bind_param($stmt_busca, "i", $usuario_id);
-        mysqli_stmt_execute($stmt_busca);
-        $res_busca = mysqli_stmt_get_result($stmt_busca);
-        $usuario_atual = mysqli_fetch_assoc($res_busca);
-        mysqli_stmt_close($stmt_busca);
-
-        $foto_nome = processarUploadSeguro($_FILES['foto'], './uploads', 'user', $limite_bytes);
-        if ($foto_nome) {
-            $stmt_f = mysqli_prepare($conn, "UPDATE usuarios SET foto = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt_f, "si", $foto_nome, $usuario_id);
-            if (mysqli_stmt_execute($stmt_f)) {
-                // Deleta a foto antiga se existir e for diferente da nova
-                if (!empty($usuario_atual['foto']) && file_exists("./uploads/" . $usuario_atual['foto'])) {
-                    unlink("./uploads/" . $usuario_atual['foto']);
-                }
-            }
-            mysqli_stmt_close($stmt_f);
-        }
-    }
-
-    // ============================================================
-    // 🚀 UPLOAD DE CAPA – usando motor oficial
-    // ============================================================
-    if (isset($_FILES['capa']) && $_FILES['capa']['error'] == 0) {
-        $stmt_busca_c = mysqli_prepare($conn, "SELECT capa FROM usuarios WHERE id = ?");
-        mysqli_stmt_bind_param($stmt_busca_c, "i", $usuario_id);
-        mysqli_stmt_execute($stmt_busca_c);
-        $res_busca_c = mysqli_stmt_get_result($stmt_busca_c);
-        $usuario_atual_c = mysqli_fetch_assoc($res_busca_c);
-        mysqli_stmt_close($stmt_busca_c);
-
-        $capa_nome = processarUploadSeguro($_FILES['capa'], './uploads', 'capa', $limite_bytes);
-        if ($capa_nome) {
-            $stmt_c = mysqli_prepare($conn, "UPDATE usuarios SET capa = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt_c, "si", $capa_nome, $usuario_id);
-            if (mysqli_stmt_execute($stmt_c)) {
-                if (!empty($usuario_atual_c['capa']) && file_exists("./uploads/" . $usuario_atual_c['capa'])) {
-                    unlink("./uploads/" . $usuario_atual_c['capa']);
-                }
-            }
-            mysqli_stmt_close($stmt_c);
-        }
-    }
-
-    // Redirecionamento final
-    if (isset($_SERVER['HTTP_REFERER'])) {
-        // Limpa qualquer parâmetro de URL antigo que possa ter vindo
-        $url_origem = strtok($_SERVER['HTTP_REFERER'], '?');
-        fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?sucesso=1');
-        header("Location: " . $url_origem . "?sucesso=1");
-    } else {
-        fenda_log('🔴 REDIRECIONANDO para perfil.php?sucesso=1');
-        header("Location: perfil.php?sucesso=1");
-    }
+    fenda_log('🟢 Perfil atualizado com sucesso para usuário ' . $usuario_id);
+    header("Location: " . $url_origem . "?sucesso=1");
     exit();
-} else {
-    fenda_log('🔴 REDIRECIONANDO para perfil.php (sem sessão)');
-    header("Location: perfil.php");
+
+} catch (Exception $e) {
+    fenda_log('🔴 ERRO no UPDATE: ' . $e->getMessage());
+    // 🔥 ROLLBACK: deleta TODOS os arquivos enviados do B2
+    foreach ($caminhosEnviados as $caminho) {
+        deleteFromB2($caminho, $usuario_id);
+        fenda_log('🔴 [ROLLBACK] Arquivo removido do B2: ' . $caminho);
+    }
+    header("Location: " . $url_origem . "?erro=update_falhou");
     exit();
 }
 ?>

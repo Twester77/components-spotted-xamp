@@ -14,7 +14,7 @@
             <?php endif; ?>
 
             <!-- Comunidades -->
-            <li class="menu-item"><a href="lista-comunidades.php">🌐 Comunidades</a></li>
+            <li class="menu-item"><a href="lista-comunidades.php">Comunidades</a></li>
             
             <li class="menu-item dropdown">
                 <a href="#" aria-haspopup="true" aria-expanded="false">Utilidade</a>

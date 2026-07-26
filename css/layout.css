@@ -852,7 +852,7 @@ body.modal-aberto .fab-postar {
 .fenda-primary {
     background: #ffbc00;
     color: #000;
-    padding: 12px 25px;
+    padding: 12px 20px;
 }
 
 
@@ -860,7 +860,7 @@ body.modal-aberto .fab-postar {
     background: rgba(204, 66, 12, 0.1);
     color: #fa593d;
     border: 1px solid #cc420c !important;
-    padding: 10px 22px;
+    padding: 10px 20px;
 }
 
 
@@ -1857,8 +1857,8 @@ input[type="checkbox" i] {
     background-blend-mode: soft-light;
 
     /* 3. JATEADO: Desfoque limpo, puxando os tons de fundo sem distorcer as cores */
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 
     /* 4. QUINA DO VIDRO: Borda dupla simulada (Mais clara no topo e nítida) */
     border: 1px solid oklch(1 0 0 / 0.35) !important;
@@ -1872,6 +1872,7 @@ input[type="checkbox" i] {
     /* Garante que o reflexo interno respeite os cantos arredondados */
     position: relative;
     overflow: hidden;
+    will-change: opacity, backdrop-filter;
 }
 
 
@@ -2290,6 +2291,8 @@ textarea[name="bio"] {
 /* ============================================================
    SISTEMA DE RESPONSIVIDADE "A FENDA" - CORREÇÃO LANDSCAPE
    ============================================================ */
+   /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
+
 
 /* 1. CELULARES MUITO BAIXOS (iPhone 4 deitado, S20 deitado) */
 @media 
@@ -2301,7 +2304,7 @@ textarea[name="bio"] {
         display: flex ;
         flex-direction: column ;
         align-items: center !important;
-        padding-top: 50px !important;
+        padding-top: 50px ;
         /* Espaço para a navbar não cobrir o post */
     }
 
@@ -2311,29 +2314,62 @@ textarea[name="bio"] {
         width: 100%;
         max-width: 400px;
         margin-bottom: 10px;
-        gap: 4px;
-        padding: 6px ;
-    }
-
-    .container-feed {
-        padding: 10px;
+        gap: 5px;
+        padding: 5px ;
     }
 
 
     #conteudo-principal.main-perdidos {
-        padding: 8px ;
+        padding: 10px ;
     }
 
 
     /* Esconde elementos não essenciais para ganhar altura */
     .avatar-p {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
+    }
+
+       /* Reseta o main-perdidos que estava deslocado */
+    #conteudo-principal.main-perdidos {
+        display: flex;
+        flex-direction: column;
+        left: 0;
+        right: 0;
+        margin: 10px auto;
+        padding: 4px;
+    }
+
+
+    /* Garante que o container do feed não tenha padding lateral */
+    .container-feed {
+        margin: 0 auto;
+        width: 100%;
+        grid-template-columns: 1fr ;
+        padding: 8px !important;
+    }
+
+    /* Os cards ocupam a largura total sem margem extra */
+    .spotted-card {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        box-sizing: border-box !important;
     }
 
     footer {
-        padding: 10px 10px 20px 10px;
+        /* Garante que ele saia debaixo de floats */
+        padding: 8px 12px 12px 8px;
+        font-size: 0.8rem;
+
     }
+
+    .area-perdidos-vivo {
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column ;
+    }
+
 
 }
 
@@ -2604,53 +2640,6 @@ textarea[name="bio"] {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         top: 40px;
         max-height: 45dvh;
-    }
-
-}
-
-/* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
-@media (max-width: 420px) and (orientation: portrait) {
-
-    /* Reseta o main-perdidos que estava deslocado */
-    #conteudo-principal.main-perdidos {
-        display: flex;
-        flex-direction: column;
-        left: 0;
-        right: 0;
-        margin: 10px auto;
-        padding: 4px;
-    }
-
-
-    /* Garante que o container do feed não tenha padding lateral */
-    .container-feed {
-        margin: 0 auto;
-        width: 100%;
-        grid-template-columns: 1fr ;
-        padding: 8px !important;
-    }
-
-    /* Os cards ocupam a largura total sem margem extra */
-    .spotted-card {
-        width: 100%;
-        padding: 4px;
-        margin-left: 0;
-        margin-right: 0;
-        box-sizing: border-box !important;
-    }
-
-    footer {
-        /* Garante que ele saia debaixo de floats */
-        padding: 8px 12px 12px 8px;
-        font-size: 0.8rem;
-
-    }
-
-    .area-perdidos-vivo {
-        padding: 12px;
-        justify-content: space-between;
-        display: flex;
-        flex-direction: column ;
     }
 
 }

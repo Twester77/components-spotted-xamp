@@ -229,8 +229,8 @@
 /* ---------- MINIATURA DO POST (ESTILO BARRINHA) – LEGADO, MANTIDO PARA COMPATIBILIDADE ---------- */
 .post-miniatura {
     background: rgba(20, 20, 30, 0.92);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 188, 0, 0.2);
     border-radius: 12px;
     padding: 10px 16px;
@@ -324,7 +324,7 @@
 
 .header-actions-container {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     align-items: center;
     justify-content: center;
     opacity: 1;
@@ -441,11 +441,11 @@
     padding: 6px;
     margin-bottom: 10px;
     border-radius: 6px;
-    font-size: clamp(0.85rem, 2vw, 1.1rem);
+    font-size: clamp(0.8rem, 2cqw, 1.1rem);
 }
 
 /* ==================================================
-   BOLHAS DE COMENTÁRIO
+   BOLHAS DE COMENTÁRIO (CORRIGIDO)
    ================================================== */
 .comentario-item {
     gap: 4px;
@@ -457,22 +457,25 @@
     border-right: 3px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    scroll-snap-align: start;
-    scroll-margin-top: 50px;
-    -webkit-user-select: text;
-    -ms-user-select: text;
-    -moz-user-select: text;
-    user-select: text;
     align-self: flex-start;
-    max-width: min-content;
+    
+    /* MUDANÇA CHAVE: O balão agora se ajusta ao texto de forma inteligente */
+    width: fit-content; 
+    /* Removemos o max-width: min-content; pois o @container já dita o limite real */
+    
     min-width: 150px;
     min-height: 55px;
     box-sizing: border-box;
     position: relative;
     display: flex;
     flex-direction: column;
+    
+    /* MUDANÇA CHAVE: Permitimos que o balão quebre linhas internamente */
+    white-space: normal; 
+    overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
+    
     margin-bottom: 20px;
     scroll-snap-align: start;
     scroll-margin-top: 60px;
@@ -486,8 +489,11 @@
     align-self: flex-end;
     margin-left: auto;
     margin-right: 0;
-    width: min-content;
+    
+    /* MUDANÇA CHAVE: Igualado ao comportamento do comentário padrão */
+    width: fit-content; 
 }
+
 
 .lista-comentarios-social::-webkit-scrollbar {
     display: none;
@@ -521,7 +527,8 @@
 
 .comentario-item.vibe-dark {
     background: rgba(22, 22, 29, 0.911);
-    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     color: #eeeeee;
 }
 
@@ -597,7 +604,7 @@
 .comentario-item.vibe-ads .comentario-texto {
     color: #fff;
     text-shadow: 0 0 8px var(--cor-borda-glow);
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .comentario-item.vibe-ads .comentario-data {
@@ -624,18 +631,17 @@
 
 .comentario-item .comentario-autor {
     color: var(--cor-borda-glow);
-    font-size: clamp(0.85rem, 0.382vw + 0.625rem, 1rem);
+    font-size: clamp(0.85rem, 4cqw , 1rem);
     font-weight: bold;
     flex-grow: 1;
     max-width: clamp(80px, 70vmax, 180px);
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     width: min-content;
 }
 
 .comentario-data {
-    font-size: clamp(0.8rem, 0.382vw + 0.625rem, 0.95rem);
+    font-size: clamp(0.7rem, 3.5cqw, 0.95rem);
     opacity: 0.75;
     font-weight: bold;
     white-space: nowrap;
@@ -646,7 +652,7 @@
 
 .comentario-texto {
     color: #ddd;
-    font-size: clamp(0.9rem, 0.382vw + 0.6rem, 1.2rem);
+    font-size: clamp(0.85rem, 5cqw, 1.1rem);
     line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -754,7 +760,7 @@
     border: 1px solid rgba(255, 188, 0, 0.25);
     border-radius: 20px;
     padding: 4px 10px 4px 12px;
-    font-size: clamp(0.7rem, 1.5vw, 1rem);
+    font-size: clamp(0.7rem, 2.5cqw, 1rem);
     color: #ffbc00;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     max-height: 50px;
@@ -1277,6 +1283,22 @@ body.pagina-post .header-principal {
 
 .comentario-deletado-msg {
     text-align: center;
+    word-break: break-word;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+     -webkit-user-select: text;
+    -ms-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+    align-self: flex-start;
+    max-width: min-content;
+    container-type: inline-size;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    word-break: break-word;
+    hyphens: auto;
     padding: 7px;
     color: #c4c4c4;
     font-style: italic;
@@ -1284,6 +1306,7 @@ body.pagina-post .header-principal {
     background-color: rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
     min-width: 180px;
+    min-height: 50px;
 }
 
 .comentario-deletado-msg i {
@@ -1619,34 +1642,51 @@ body.pagina-post .header-principal {
 /* GRID DE ANEXOS MÚLTIPLOS (ESTILO WHATSAPP) */
 .comentario-media-wrapper-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 5px;
-    padding: 4px 0;
-    width: 100%;
-    animation: none;
+    /* Força sempre 2 colunas dinâmicas (50% do espaço disponível cada) */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 6px;
+    padding: 6px 0;
+    
+    /* SOLUÇÃO CHAVE: O container abraça estritamente o tamanho das imagens */
+    width: max-content; 
+    max-width: 100%; /* Nunca deixa o bloco estourar para fora do balão */
 }
 
+/* Comportamento específico para quando houver apenas 1 foto */
 .comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
-    display: flex;
-    justify-content: center;
+    display: block;
+    width: max-content;
+    max-width: 100%;
 }
 
 .comentario-media-item {
-    aspect-ratio: 1 / 1;
+    /* O tamanho agora é totalmente dinâmico */
+    width: 100%; 
+    aspect-ratio: 1 / 1; /* Mantém o quadrado perfeito */
+    
+    /* LIMITADORES INTELIGENTES (Para landscape e telas grandes) */
+    /* A foto cresce com o balão, mas para de crescer ao atingir 140px de largura */
+    max-width: 140px; 
+    /* Garante que duas linhas de fotos + gap nunca passem da sua meta (~220px/250px) */
+    max-height: 25vh; 
+
     border-radius: 12px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.06);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
 }
 
+/* Quando for uma foto única, ela pode expandir um pouco mais para dar destaque */
 .comentario-media-item:only-child {
-    max-width: 180px;
-    width: 100%;
+    max-width: 200px;
+    max-height: 35vh;
 }
 
 .comentario-media-item:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
 }
 
 .comentario-media-item img {
@@ -1660,6 +1700,8 @@ body.pagina-post .header-principal {
     object-fit: contain;
     background: rgba(0, 0, 0, 0.3);
 }
+
+
 
 
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */

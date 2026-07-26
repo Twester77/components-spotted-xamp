@@ -1300,18 +1300,19 @@ section.sessao-publicar,
 .form-perdidos {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: clamp(15px, 4vw, 25px);
+    padding: clamp(12px, 4vw, 25px);
     margin-bottom: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Os Cards de Itens Perdidos */
-.card-perdido,
-.card-achado {
+.perdidos-item.card-perdido,
+.perdidos-item.card-achado {
     margin-bottom: 20px;
-    padding: clamp(15px, 2vw, 25px);
-    border-radius: 12px;
+    padding: clamp(8px, 2cqw, 14px);
+    border-radius:clamp(8px, 2vw, 16px);
     font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+    background: var(--glass-bg);
 }
 
 /* O container que envolve o formulário de postagem */
@@ -1335,7 +1336,7 @@ section.sessao-publicar {
     color: var(--dourado);
     margin-bottom: 20px;
     text-align: center;
-    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.75rem);
 }
 
 .nota-seguranca {
@@ -1789,7 +1790,7 @@ input[type="checkbox"]:focus {
     background: linear-gradient(135deg, #08d888, #05a870);
     color: white;
     border: none;
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;

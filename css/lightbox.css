@@ -29,10 +29,11 @@
     max-height: 70vh;
     max-height: 80dvh;
     background: rgba(20, 20, 30, 0.92);
-    border-radius: clamp(16px, 2.5vmin, 28px);
+    border-radius: clamp(12px, 2.5cqw, 28px);
     border: 1px solid rgb(255 188 0 / 13%);;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-    padding: clamp(14px, 3vmin, 32px);
+    padding: clamp(14px, 2cqw, 32px);
+    container-type: inline-size;
     overflow-y: auto;
     scrollbar-width: none;
     animation: lightboxEntrada 0.25s ease-out;
@@ -137,7 +138,7 @@
 
 .lightbox-autor-nome {
     font-weight: 600;
-    font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+    font-size: clamp(0.9rem, 4cqw, 1.2rem);
     color: #fff;
     white-space: nowrap;
     overflow: hidden;
@@ -160,7 +161,7 @@
     flex: 1;
 }
 .lightbox-autor-data {
-    font-size: clamp(0.75rem, 1.5vw, 1.05rem);
+    font-size: clamp(0.75rem, 3cqw, 1.05rem);
     opacity: 0.65;
     color: #aaa;
 }
@@ -200,7 +201,7 @@
 /* 7.1 Texto do post – centralizado com boa legibilidade */
 .lightbox-post-texto {
     font-size: 0.95rem;
-    font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+    font-size: clamp(0.9rem, 4cqw, 1.3rem);
     line-height: 1.6;
     color: #eee;
     white-space: pre-wrap;
@@ -217,7 +218,7 @@
     max-width: 100%;
     max-height: 80dvh;
     object-fit: contain;
-    border-radius: clamp(8px, 1.5vmin, 16px);
+    border-radius: clamp(8px, 2cqw, 16px);
     display: block;
     margin: 0 auto;
     background: rgba(0, 0, 0, 0.2);
@@ -235,7 +236,7 @@
 
 .lightbox-reacoes .reacao-placeholder {
     justify-content: center;
-    font-size: clamp(0.75rem, 2.5vw, 1rem);
+    font-size: clamp(0.75rem, 3cqw, 1rem);
     width: 100%;
     text-align: center;
     margin-top: 15px;
@@ -255,7 +256,7 @@
     min-width:(26px, 2vh, 36px);
     height: (26px, 2vh, 36px);
     border-radius: 20px;
-    font-size: clamp(0.85rem, 3vw, 1.2rem);
+    font-size: clamp(0.85rem, 3.5cqw, 1.2rem);
     color: #ddd;
     border: 1px solid rgba(255, 255, 255, 0.04);
 }
@@ -271,7 +272,7 @@
 
 
 .lightbox-comentarios-titulo {
-    font-size: clamp(0.95rem, 5vw, 1.2rem);
+    font-size: clamp(0.95rem, 3.5cqw, 1.3rem);
     color: #aaa;
     margin: 15px 0;
     margin: clamp(15px, 5vw, 30px) 0 clamp(8px, 2.5vw, 20px) 0;
@@ -308,15 +309,15 @@
 
 
 .lightbox-comentarios-lista  .comentario-item .comentario-meta .avatar-p {
-    width: clamp(28px, 3.5vw, 70px);
-    height: clamp(28px, 3.5vw, 70px);
+    width: clamp(30px, 2cqw, 70px);
+    height: clamp(30px, 2cqw, 70px);
     border-radius: 50%;
     object-fit: cover;
 }
 
 
 .lightbox-comentarios-lista .comentario-item .comentario-texto {
-    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    font-size: clamp(0.9rem, 2cqw, 1.2rem);
     line-height: 1.4;
     color: #ddd;
     white-space: pre-wrap;
@@ -327,7 +328,7 @@
 
 .lightbox-comentarios-lista .comentario-item .comentario-meta .comentario-autor {
     font-weight: 600;
-    font-size: clamp(0.8rem, 1.3vw, 1.2rem);
+    font-size: clamp(0.8rem, 3cqw, 1.2rem);
     color: var(--cor-borda-glow, #70cde4);
     white-space: nowrap;
     overflow: hidden;
@@ -335,7 +336,7 @@
 }
 
 .lightbox-comentarios-lista  .comentario-item  .comentario-meta .comentario-data {
-    font-size: clamp(0.75rem, 1.3vw, 1rem);
+    font-size: clamp(0.75rem, 2cqw, 1rem);
     opacity: 0.7;
     color: #cccc;
 }
@@ -344,7 +345,7 @@
 .lightbox-ver-todos {
     text-align: center;
     margin-top: 10px;
-    margin-top: clamp(8px, 1.5vmin, 14px);
+    margin-top: clamp(8px, 2cqh, 18px);
 
 }
 
@@ -352,7 +353,7 @@
     color: #ffbc00;
     text-decoration: none;
     font-weight: 600;
-    font-size: clamp(0.75rem, 1.2vh, 1rem);
+    font-size: clamp(0.75rem, 2.5cqw, 1rem);
     transition: 0.2s;
 }
 

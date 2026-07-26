@@ -22,8 +22,8 @@ if (!$isAjax) {
 //QUINTO: Sua lógica de consulta ao banco (O motor de dados)
 $id_meu = $_SESSION['usuario_id'];
 
-// 🔥 ADICIONADO: pref_pip na lista de campos
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, pref_som_trilha, pref_som_notif, pref_pip, pref_badge FROM usuarios WHERE id = '$id_meu'";
+// 🔥 ADICIONADO: pref_pip, pref_badge, pref_notif_comunidade na lista de campos
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, pref_som_trilha, pref_som_notif, pref_pip, pref_badge, pref_notif_comunidade FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
@@ -226,7 +226,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 </select>
             </div>
 
-            <!-- 🔥 NOVO: Toggle do PiP -->
+            <!-- 🔥 Toggle: Notificações Flutuantes (PiP) -->
             <div class="config-item">
                 <span>Notificações Flutuantes (PiP):</span>
                 <label class="switch">
@@ -236,7 +236,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <small>Receba notificações em janela flutuante (experimental, disponível apenas em desktop Chrome/Edge)</small>
             </div>
 
-            <!-- 🔥 NOVO: Toggle do Badge -->
+            <!-- 🔥 Toggle: Badge no Ícone -->
             <div class="config-item">
                 <span>Badge no Ícone:</span>
                 <label class="switch">
@@ -246,6 +246,18 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <small>Exibe o número de notificações no ícone do app (desktop/Android)</small>
             </div>
 
+            <!-- 🔥 NOVO: Toggle de Notificações da Comunidade -->
+            <div class="config-item">
+                <span>Notificações da Comunidade:</span>
+                <label class="switch">
+                    <input type="checkbox" name="pref_notif_comunidade" value="1" 
+                           <?php echo (isset($dados['pref_notif_comunidade']) && $dados['pref_notif_comunidade'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round"></span>
+                </label>
+                <small>Receba notificações de novos posts nas comunidades que você participa</small>
+            </div>
+
+            <!-- 🔥 Toggle: Modo Swipe (Beta) -->
             <div class="config-item">
                 <span>Modo Swipe (Beta):</span>
                 <label class="switch">

@@ -4,26 +4,21 @@
 // Que a Aurora continue essa viagem com o mesmo coração."
 // - Nautilus, o Guardião das Comunidades
 // - 22/07/2026 – 24/07/2026
-require_once __DIR__ . '/auth_check.php';
-include_once __DIR__ . '/fenda_debug.php';
-// 🔥 ADICIONADO: inclui o motor de upload (B2 e funções de imagem)
-require_once __DIR__ . '/includes/upload_engine.php';
-include 'includes/header.php';
-include 'includes/navbar.php';
-include 'includes/bolhas.php';
 
 // ============================================================
-// 1. VALIDAÇÃO DO ID DA COMUNIDADE
+// 🔥 1. VALIDAÇÃO E REDIRECIONAMENTOS (ANTES DE QUALQUER SAÍDA)
 // ============================================================
+require_once __DIR__ . '/auth_check.php';
+include_once __DIR__ . '/fenda_debug.php';
+require_once __DIR__ . '/includes/upload_engine.php';
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
     header("Location: lista-comunidades.php");
     exit();
 }
 
-// ============================================================
-// 2. BUSCA DADOS DA COMUNIDADE
-// ============================================================
+// Busca dados da comunidade (já precisamos para validar se existe)
 $sql = "SELECT c.*, 
         (SELECT COUNT(*) FROM comunidade_membros WHERE comunidade_id = c.id) as total_membros,
         u.username as criador_username,
@@ -44,7 +39,14 @@ if (!$comunidade) {
 }
 
 // ============================================================
-// 3. VERIFICA SE O USUÁRIO É MEMBRO
+// 🔥 2. AGORA SIM, INCLUIMOS OS ARQUIVOS QUE GERAM HTML
+// ============================================================
+include 'includes/header.php';
+include 'includes/navbar.php';
+include 'includes/bolhas.php';
+
+// ============================================================
+// 3. VERIFICA SE O USUÁRIO É MEMBRO (já com os dados carregados)
 // ============================================================
 $is_membro = false;
 $is_admin = false;
@@ -71,9 +73,7 @@ try {
 
 $total_membros = $comunidade['total_membros'] ?? 0;
 
-// ============================================================
-// 4. DADOS PARA O FORMULÁRIO (via GET para o card-postar)
-// ============================================================
+// DADOS PARA O FORMULÁRIO (via GET para o card-postar)
 $comunidade_slug = $comunidade['slug'];
 $comunidade_nome = htmlspecialchars($comunidade['nome']);
 ?>

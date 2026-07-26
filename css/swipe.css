@@ -138,7 +138,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     overflow-x: hidden;
     overscroll-behavior: none;
     border-radius: 12px;
-    background: rgba(10, 10, 10, 0.247);
     border: 1px solid rgba(255, 255, 255, 0.15);
     --pos-x: 0px;
     --pos-y: 0px;
@@ -272,7 +271,7 @@ body.modo-swipe-ativo .post-content {
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
-    background: rgba(10, 10, 10, 0.514);
+    background: rgba(10, 10, 10, 0.541);
     -webkit-backdrop-filter: none;
     backdrop-filter: none ;
 }

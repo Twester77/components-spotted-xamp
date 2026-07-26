@@ -12,7 +12,7 @@
 
 .comunidades-header h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
     color: #ffbc00;
     margin: 30px 0 10px 0;
 }
@@ -34,7 +34,8 @@
 
 .comunidade-card {
     background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     overflow: hidden;
@@ -70,6 +71,7 @@
     top: 10px;
     right: 10px;
     background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border-radius: 20px;
     padding: 4px 12px;
@@ -96,7 +98,9 @@
     color: #aaa;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
+    box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 12px;
@@ -208,7 +212,7 @@
 
 .comunidade-info-actions .criador-info {
     color: #aaa;
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
 }
 
 .btn-editar-comunidade {
@@ -216,10 +220,12 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
     padding: 8px 20px;
+    justify-content: center;
+    align-content: center;
     color: #aaa;
     text-decoration: none;
     transition: 0.3s;
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
 }
 
 .btn-editar-comunidade:hover {
@@ -341,7 +347,7 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     color: #fff;
     font-size: clamp(0.9rem, 1.1vw, 1rem);
     transition: border-color 0.3s ease;
@@ -526,12 +532,14 @@
 
 /* Botão "Criar Comunidade" (versão da listagem) */
 .btn-criar-comunidade {
-    display: inline-block;
+    display: inline-flex;
     background: #ffbc00;
     color: #000;
-    padding: 12px 24px;
+    padding: clamp(6px, 0.8vw, 12px) clamp(10px, 1vw, 16px);
     border-radius: 30px;
     font-weight: bold;
+    align-items: center;
+    align-content: center;
     text-decoration: none;
     transition: 0.3s;
     font-size: clamp(0.8rem, 1.1vw, 1.05rem);
@@ -648,24 +656,7 @@
     margin-bottom: 20px;
 }
 
-/* Botão "Criar Comunidade" na listagem – melhor visibilidade */
-.btn-criar-comunidade {
-    background: #ffbc00;
-    color: #000;
-    padding: 12px 28px;
-    border-radius: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: clamp(1rem, 1.2vw, 1.1rem);
-    border: none;
-    cursor: pointer;
-}
 
-.btn-criar-comunidade:hover {
-    background: #ffd44d;
-    transform: scale(1.02);
-}
 
 /* Ajuste no card de comunidade – borda e sombra mais visíveis */
 .comunidade-card {

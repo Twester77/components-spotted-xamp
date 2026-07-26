@@ -173,14 +173,13 @@ window.abrirPerfilDrawer = function (e) {
 
     if (!drawer || !containerPerfil) return;
 
-    fetch('perfil.php?modo=gaveta')
+    fetch('perfil.php?modo=gaveta&_=' + Date.now())
         .then(res => res.text())
         .then(html => {
             containerPerfil.innerHTML = html;
             if (typeof window.configurarFormularioPerfil === 'function') {
                 window.configurarFormularioPerfil();
             }
-            // Reaplica a sincronização após carregar a gaveta
             inicializarPreferenciasAPartirDoDOM();
 
             drawer.classList.add('ativa');

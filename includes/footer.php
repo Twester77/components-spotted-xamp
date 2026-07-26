@@ -55,7 +55,14 @@ if (!function_exists('asset_versao')) {
 
 
 <?php include_once 'toolbar.php'; ?>
-<?php include 'nexus.php'; ?>
+<?php
+// Inclui o Nexus apenas se NÃO estiver em páginas de comunidade
+$paginas_comunidade = ['comunidade.php', 'lista-comunidades.php', 'criar-comunidade.php', 'editar-comunidade.php'];
+$pagina_atual = basename($_SERVER['PHP_SELF']);
+if (!in_array($pagina_atual, $paginas_comunidade)) {
+    include 'nexus.php';
+}
+?>
 
 <?php if (isset($_SESSION['usuario_id'])): ?>
     <button type="button" class="fab-postar" onclick="abrirModalPost()" title="Sussurrar para a Fenda" aria-label="Sussurrar para a Fenda (Criar nova publicação)">
@@ -95,7 +102,7 @@ if (!function_exists('asset_versao')) {
 
 
 <?php if (isset($_SESSION['usuario_id'])):
-   $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas, pref_pip, pref_badge FROM usuarios WHERE id = ?");
+   $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas, pref_pip, pref_badge, pref_notif_comunidade FROM usuarios WHERE id = ?");
     $stmt_footer->bind_param("i", $_SESSION['usuario_id']);
     $stmt_footer->execute();
     $res_pref = $stmt_footer->get_result()->fetch_assoc();
@@ -105,6 +112,8 @@ if (!function_exists('asset_versao')) {
     <input type="hidden" name="pref_bolhas" id="input_pref_bolhas" value="<?php echo $res_pref['pref_bolhas'] ?? 1; ?>">
     <input type="hidden" name="pref_pip" id="input_pref_pip" value="<?php echo $res_pref['pref_pip'] ?? 0; ?>">
     <input type="hidden" name="pref_badge" id="input_pref_badge" value="<?php echo $res_pref['pref_badge'] ?? 1; ?>">
+    <!-- 🔥 NOVO: Input hidden para preferência de notificações da comunidade -->
+    <input type="hidden" name="pref_notif_comunidade" id="input_pref_notif_comunidade" value="<?php echo $res_pref['pref_notif_comunidade'] ?? 1; ?>">
 <?php endif; ?>
 
 <!-- ==================== DIALOG DE CONFIRMAÇÃO (NATIVO - GLOBAL) ==================== -->
