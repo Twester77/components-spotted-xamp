@@ -57,7 +57,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     // Define o caminho base do projeto (ex: /spotted-unifev ou vazio)
     $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
     ?>
-    <link rel="manifest" href="<?= $basePath ?>/manifest.php">
+    <link rel="manifest" href="/manifest.json">
 
         <!-- CSS com Cache Busting Automático -->
     <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">
