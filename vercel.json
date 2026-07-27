@@ -38,7 +38,7 @@
     { "src": "/comentarios/(.*)", "dest": "/comentarios/$1" },
     { "src": "/badges/(.*)", "dest": "/badges/$1" },
     { "src": "/sw.js", "dest": "/sw.js" },
-    { "src": "/manifest.php", "dest": "/manifest.php" },
+    { "src": "/api/manifest.php", "dest": "api/manifest.php" },
     { "src": "/proxy.php", "dest": "/proxy.php" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
