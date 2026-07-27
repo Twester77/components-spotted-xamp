@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO v1.1.5 – Com logs de depuração
-const CACHE_VERSION = 'fenda-v1.1.5';
+// 🛡️ VERSÃO v1.1.4 – Cache busting para proxy.php
+const CACHE_VERSION = 'fenda-v1.1.4';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -126,18 +126,13 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Log de todas as requisições interceptadas (opcional, descomente se quiser)
-  // console.log('[SW] 🌐 Interceptando:', url.pathname);
-
   if (event.request.method !== 'GET') return;
 
   if (EXTERNAL_DOMAINS.some(domain => url.hostname.includes(domain))) {
-    // console.log('[SW] ⏭️ Ignorando domínio externo:', url.hostname);
     return;
   }
 
   if (AUTH_ROUTES.some(route => url.pathname === route || url.pathname.startsWith(route))) {
-    // console.log('[SW] ⏭️ Ignorando rota de autenticação:', url.pathname);
     return;
   }
 
@@ -155,22 +150,26 @@ self.addEventListener('fetch', (event) => {
 
   // ============================================================
   // 🔥 REGRA 1: Cache-first para proxy.php (com SWR e limite)
+  // 🔥 CORREÇÃO: Usa a URL COMPLETA (com parâmetro v) como chave de cache
   // ============================================================
   if (url.pathname.includes('/proxy.php')) {
     console.log('[SW] 🖼️ Interceptando proxy.php:', url.pathname + url.search);
     event.respondWith(
       caches.open(CACHE_DYNAMIC).then((cache) => {
-        return cache.match(event.request).then((cachedResponse) => {
+        // 🔥 Usa a URL completa (com parâmetros) como chave de cache
+        const cacheKey = event.request.url;
+        return cache.match(cacheKey).then((cachedResponse) => {
           if (cachedResponse) {
-            console.log('[SW] ✅ Servindo imagem do CACHE:', url.pathname);
+            console.log('[SW] ✅ Servindo imagem do CACHE (com busting):', url.pathname);
           } else {
             console.log('[SW] 🌍 Buscando imagem da REDE (primeira vez):', url.pathname);
           }
 
           const fetchPromise = fetch(event.request).then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
-              console.log('[SW] 💾 Armazenando imagem no cache:', url.pathname);
-              cache.put(event.request, networkResponse.clone());
+              console.log('[SW] 💾 Armazenando imagem no cache (com busting):', url.pathname);
+              // 🔥 Armazena usando a URL completa como chave
+              cache.put(cacheKey, networkResponse.clone());
               // Limpeza LRU: remove os mais antigos se exceder 100
               cache.keys().then(keys => {
                 if (keys.length > 100) {
@@ -185,7 +184,6 @@ self.addEventListener('fetch', (event) => {
             return networkResponse;
           });
 
-          // Se tiver cache, entrega ele e depois atualiza em background (SWR)
           return cachedResponse || fetchPromise;
         });
       })
@@ -220,11 +218,9 @@ self.addEventListener('fetch', (event) => {
   // REGRA 3: Arquivos estáticos → cache-first
   // ============================================================
   if (STATIC_FILES.some(staticPath => url.pathname === staticPath || url.pathname.endsWith(staticPath))) {
-    // console.log('[SW] 📁 Arquivo estático:', url.pathname);
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         if (cachedResponse) {
-          // console.log('[SW] ✅ Servindo estático do CACHE:', url.pathname);
           return cachedResponse;
         }
         console.log('[SW] 🌍 Buscando estático da REDE:', url.pathname);
@@ -238,7 +234,6 @@ self.addEventListener('fetch', (event) => {
   // REGRA 4: Opcionais → stale-while-revalidate
   // ============================================================
   if (OPTIONAL_FILES.some(optPath => url.pathname.endsWith(optPath))) {
-    // console.log('[SW] 🔄 Opcional (stale-while-revalidate):', url.pathname);
     event.respondWith(
       caches.open(CACHE_STATIC).then((cache) => {
         return cache.match(event.request).then((cachedResponse) => {
@@ -254,10 +249,9 @@ self.addEventListener('fetch', (event) => {
   }
 
   // ============================================================
-  // REGRA 5: Outros PHP (exceto proxy.php, já interceptado) → rede pura
+  // REGRA 5: Outros PHP → rede pura
   // ============================================================
   if (url.pathname.endsWith('.php')) {
-    // console.log('[SW] 🔄 PHP (rede pura):', url.pathname);
     event.respondWith(
       fetch(event.request).catch(() => {
         console.warn('[SW] ⚠️ Falha ao carregar PHP:', url.pathname);
@@ -270,7 +264,6 @@ self.addEventListener('fetch', (event) => {
   // ============================================================
   // REGRA 6: Todo o resto → rede primeiro
   // ============================================================
-  // console.log('[SW] 🌍 Todo o resto (rede):', url.pathname);
   event.respondWith(
     fetch(event.request).catch(() => {
       console.warn('[SW] ⚠️ Recurso não disponível offline:', url.pathname);
