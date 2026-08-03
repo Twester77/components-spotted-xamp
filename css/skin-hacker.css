@@ -17,7 +17,7 @@
     --hacker-green: #00ff41;
     --hacker-bg: #000000;
     --hacker-font: 'Courier New', 'Courier', monospace;
-    --boot-duration: 10s; /* Ajuste para tornar o boot mais lento */
+    --boot-duration: 3.5s; /* Ajuste para tornar o boot mais lento */
 }
 
 body.hacker-mode {
@@ -140,6 +140,7 @@ body.hacker-mode .fenda-modal-content
 
 body.hacker-mode .spotted-card {
     background: #000 !important;
+    border: none !important;
     /* LATERAIS: O duplo pipe "||" */
     border-bottom: 2px double var(--hacker-green) ;
     border-top: 2px double var(--hacker-green) ;
@@ -173,10 +174,10 @@ body.hacker-mode .fenda-glass-container::before,
 body.hacker-mode .main-perfil-container::before,
 body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
-    content: "+==================================================================+==============================================================+" !important;
+    content: "+==================================================================+==============================================================+" ;
     position: absolute !important;
-    top: -28px ;
-    left: -2px ; /* Ajuste para alinhar com o border-left double */
+    top: -22px ;
+    left: -2px ; 
     right: -2px ;
     color: var(--hacker-green) ;
     font-family: monospace ;
@@ -288,11 +289,12 @@ body.hacker-mode .submenu {
 body.hacker-mode input,
 body.hacker-mode textarea,
 body.hacker-mode select,
+body.hacker-mode .config-item,
 body.hacker-mode .fenda-input,
 body.hacker-mode .textarea-fenda {
     color: #00ff00 ;
     caret-color: #00ff00 ;
-    font-family: monospace ;
+    font-family: 'Courier New', 'Courier', monospace ;
 }
 
 /*  O SEGREDO: Aplicar o fundo preto e borda reta no CONTAINER do chat, não no textarea */
@@ -443,6 +445,23 @@ body.hacker-mode #btn-load-more[disabled]::after { content: " [ EOF_REACHED ]" !
    11. AVATARES E IMAGENS (SEPIA + HOVER COM BRILHO)
    --------------------------------------------------------------- */
 
+   /* 1. SELETOR DOS CONTAINERS (Adicione os seletores dos pais aqui) */
+body.hacker-mode .avatar-posicionador, 
+body.hacker-mode .comentario-media-wrapper,
+body.hacker-mode .container-img-post,
+body.hacker-mode .feed-anexos-grid,
+body.hacker-mode .anexos-grid,
+body.hacker-mode .anexos-grid-post,
+body.hacker-mode .avatar-p,
+body.hacker-mode .capa-wrapper,
+body.hacker-mode .avatar-central,
+body.hacker-mode .comentario-media-wrapper-grid,
+body.hacker-mode .avatar-wrapper,
+body.hacker-mode .link-do-avatar,
+body.hacker-mode .insignia-atletica-link {
+    border-radius: 0;
+}
+
 body.hacker-mode img,
 body.hacker-mode .foto-perfil,
 body.hacker-mode .comentario-avatar,
@@ -452,18 +471,17 @@ body.hacker-mode .avatar-busca,
 body.hacker-mode .img-avatar-perfil,
 body.hacker-mode .capa-img,
 body.hacker-mode .insignia-atletica-link img {
-    filter: sepia(0.2) brightness(0.9) contrast(1.1) grayscale(0.2) !important;
+    filter: sepia(0.25) brightness(0.9) contrast(1) grayscale(0.2) !important;
     transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out !important;
+    border-radius: 0;
 }
 
 body.hacker-mode img:hover,
 body.hacker-mode .foto-perfil:hover,
 body.hacker-mode .avatar-p:hover,
 body.hacker-mode .insignia-atletica-link:hover img {
-    filter: sepia(0.3) brightness(1.1) contrast(1.05) grayscale(0) !important;
-    box-shadow: 0 0 10px #00ff00 !important;
-    transform: scale(1.02) ;
-    overflow: hidden ;
+    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) !important;
+    transform: scale(1.01);
 }
 
 
@@ -660,7 +678,7 @@ body.hacker-mode .comentario-item.vibe-light .comentario-texto {
 body.hacker-mode .comentario-item.vibe-ads {
     background-color: #000000 ; /* Fundo breu total do terminal */
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
-    
+    animation: pulsar-luz 3s infinite ease-in-out ;
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") ;
     background-size: 40px 40px ;
@@ -962,7 +980,6 @@ body.hacker-mode .hacker-cursor {
 
 /* Aplica a animação de digitação a todos os textos longos */
 body.hacker-mode .bio-texto,
-body.hacker-mode p,
 body.hacker-mode .lista-conselhos,
 body.hacker-mode .article p {
     overflow: hidden ;
@@ -1161,8 +1178,8 @@ body.hacker-mode .char-counter {
 .hacker-boot-screen {
     position: absolute;
     top: 50%!important; left: 50%!important; transform: translate(-50%, -50%); width:100%; height: 100%;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     background: #000;
     color: #0f0;
     z-index: 100000;
@@ -1200,7 +1217,7 @@ body.hacker-mode .char-counter {
     max-width: 600px;
     background: #0f0;
     width: 0;
-    animation: load-bar 10s ease-in-out forwards;
+    animation: load-bar 4s ease-in-out forwards;
 }
 
 @keyframes load-bar {

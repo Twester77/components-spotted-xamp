@@ -1,7 +1,11 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
 /* --- ESTILIZAÇÃO DOS NOVOS FILTROS --- */
-
-
-
 .filtros-container {
     border: none;
     justify-content: center;
@@ -73,16 +77,16 @@
 }
 
 .container-feed {
-    max-width: 9999px;
-    padding: 15px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     align-items: flex-start;
     /* Mantém cada card no seu tamanho real */
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 20px;
-    max-width: 9999px;
-    /* Limita a largura total do feed no PC */
+    max-width: 1600px; /* LIMITE MÁXIMO para telas grandes */
     margin: 20px auto;
+    width: 100%;
+    box-sizing: border-box;
     column-count: auto;
 
 }
@@ -109,6 +113,7 @@
     overflow-wrap: break-word;
     white-space: pre-wrap;
     color: #fff;
+    color: oklch(95.815% 0.00011 271.152);
     transition: max-height 0.4s ease-in-out;
     z-index: 2;
     /* 🔥 Altura máxima para ativar o "Ler Mais" no modo grid */
@@ -121,7 +126,7 @@ body:not(.modo-swipe-ativo) .post-content {
     transition: max-height 0.4s ease-in-out;
     margin: 5px 0;
     font-size: 0.95rem;
-    font-size: clamp(0.85rem, 1.041vw, 1.1rem);
+    font-size: clamp(0.85rem, 1.041vw, 1.05rem);
     max-height: 4rem;
     overflow: hidden;
     -moz-user-select: text;
@@ -157,27 +162,24 @@ body:not(.modo-swipe-ativo) .post-content {
 }
 
 .spotted-card {
-    background: rgba(17, 17, 17, 0.23);
+    background: rgba(17, 17, 17, 0.32);
     border-radius: 10px;
     padding: 10px;
     break-inside: avoid;
-    /* Impede que o card quebre no meio entre colunas */
     margin-bottom: 30px;
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    /* Deixa o card crescer com o texto */
     flex-direction: column;
     width: 100%;
     max-width: 450px;
-    gap: 6px;
-    /* Limita a largura máxima do card */
+     /* Suaviza as bordas do card em movimento de forma contínua */
+    -webkit-font-smoothing: antialiased;
     height: auto;
     scrollbar-width: none;
     container-type: inline-size;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
     will-change: transform, opacity;
-
 
 }
 
@@ -242,62 +244,62 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 
 /* Cores das Categorias */
-.spotted-card.ranco {
-    border-left: 5px solid #ce0f0f !important;
+
+/* ==========================================================================
+   CORES HARMONIZADAS, FLUIDAS E MAIS TRANSPARENTES
+   ========================================================================== */
+
+/* SPOTTED / RANCO - Vermelho/coral mais suave, sem forçar muito */
+.spotted-card.ranco { 
+  background: linear-gradient(145deg, rgba(255, 103, 65, 0.45), rgba(126, 47, 47, 0.2)); 
 }
 
-.spotted-card.comunidade {
-    border-left: 5px solid #ffffffbe !important;
+/* COMUNIDADE - Efeito leitoso, translúcido e esbranquiçado (Glassmorphism limpo) */
+.spotted-card.comunidade { 
+  background: linear-gradient(145deg, rgba(206, 206, 206, 0.28), rgb(93, 93, 93, 0.12)); 
 }
 
-.spotted-card.acaba-pelo-amor-de-deus {
-    border-left: 5px solid #f78605 !important;
+/* ACABA PELO AMOR DE DEUS - Laranja âmbar bem dissolvido */
+.spotted-card.acaba-pelo-amor-de-deus { 
+  background: linear-gradient(145deg, rgba(201, 120, 14, 0.7), rgba(145, 68, 37, 0.42)); 
 }
 
-.spotted-card.perdidos {
-    border-left: 5px solid #ece80ffa !important;
+/* PERDIDOS - Amarelo suave que não queima os olhos e nem apaga a tag amarela */
+.spotted-card.perdidos { 
+  background: linear-gradient(145deg, rgb(153, 160, 9), rgba(58, 54, 11, 0.52)); 
+}
+
+/* ELOGIOS - Rosa/magenta mais escuro e bem transparente para contrastar bem com a tag */
+.spotted-card.elogio { 
+  background: linear-gradient(145deg, rgba(210, 90, 130, 0.75), rgba(80, 20, 40, 0.15)); 
+}
+
+/* ESPORTES - Verde folha translúcido */
+.spotted-card.esportes { 
+  background: linear-gradient(145deg, rgba(19, 252, 97, 0.288), rgba(53, 85, 45, 0.315)); 
+}
+
+/* GAMES - Ciano/Aqua místico e suave */
+.spotted-card.games { 
+  background: linear-gradient(145deg, rgba(39, 163, 173, 0.64), rgba(8, 45, 57, 0.22)); 
+}
+
+/* CARONAS - Azul acinzentado bem sutil e discreto */
+.spotted-card.caronas { 
+  background: linear-gradient(145deg, rgba(38, 62, 77, 0.25), rgba(10, 10, 10, 0.2)); 
+}
+
+/* ESTUDOS / ACADÊMICO - Roxo/violeta profundo e transparente */
+.spotted-card.academico { 
+  background: linear-gradient(145deg, rgba(135, 26, 179, 0.22), rgba(61, 6, 78, 0.12)); 
+}
+
+/* DESAPEGO / MARKETPLACE - Azul céu suave */
+.spotted-card.desapego { 
+  background: linear-gradient(145deg, rgba(0, 191, 255, 0.22), rgba(10, 40, 60, 0.12)); 
 }
 
 
-/*  ELOGIOS - Correio Elegante */
-.spotted-card.elogio {
-    border-left: 5px solid #ff55c9 !important;
-    background: linear-gradient(145deg, rgba(228, 83, 134, 0.514), rgba(10, 10, 10, 0.247)) ;
-}
-
-/*  ESPORTES  */
-.spotted-card.esportes {
-    border-left: 5px solid #0fc44bd0 !important;
-    background: linear-gradient(145deg, rgba(13, 179, 68, 0.384), rgba(10, 10, 10, 0.082)) ;
-}
-
-
-/*  GAMES -  */
-.spotted-card.games {
-    border-left: 5px solid #01e6e6 !important;
-    background: linear-gradient(145deg, rgb(6, 134, 156), rgba(8, 134, 173, 0.267)) ;
-}
-
-
-/* CARONAS */
-.spotted-card.caronas {
-    border-left: 5px solid #263e4dee !important;
-    background: linear-gradient(145deg, rgba(38, 62, 77, 0.3), rgba(10, 10, 10, 0.664)) ;
-}
-
-
-/*  ESTUDOS */
-.spotted-card.academico {
-    border-left: 5px solid #873baa9c !important;
-    background: linear-gradient(145deg, rgba(135, 26, 179, 0.158), rgba(61, 6, 78, 0.281)) ;
-}
-
-
-/* DESAPEGO / MARKETPLACE (O futuro da Fenda) */
-.spotted-card.desapego {
-    border-left: 5px solid #00bfff !important;
-    background: linear-gradient(145deg, rgba(0, 191, 255, 0.247), rgba(10, 10, 10, 0.3)) ;
-}
 
 
 /* Ícones no canto do Card */
@@ -326,12 +328,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 .spotted-card.elogio .user-info-post::after {
     content: "\f004";
-    color: #ee2b6fd7;
+    color: #ff4fd0;
 }
 
 .spotted-card.games .user-info-post::after {
     content: "\f11b";
-    color: #0daac5;
+    color: #08ccef;
 }
 
 .spotted-card.academico .user-info-post::after {
@@ -399,6 +401,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 .spotted-card .container-img-post {
     position: relative;
     z-index: 1;
+    
     /* imagem abaixo do texto */
 }
 
@@ -438,8 +441,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     border-color: var(--dourado);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     justify-content: center;
-    font-size: clamp(1rem, 0.2vw + 0.8rem, 1.4rem);
-    padding: clamp(6px, 0.5vw + 2px, 10px) 16px;
+    font-size: clamp(0.95rem, 0.2vw + 0.5rem, 1.4rem);
+    padding: clamp(4px, 0.5vw + 2px, 10px) 14px;
     align-content: center;
 }
 
@@ -530,17 +533,17 @@ span.data-post {
 /* --- COMPONENTES DO CARD/PERFIL --- */
 
 span.category-tag {
-    font-size: clamp(0.8rem, 0.2vw + 0.5rem, 1.1rem);
-    color: #ff9f0f;
-    vertical-align: middle;
+    font-size: clamp(0.8rem, 0.2vw + 0.3rem, 1.1rem);
+    color: #ffbc00;
+    color: oklch(85.748% 0.17506 88.476 / 0.925);
     font-weight: bold;
     flex-shrink: 0;
     flex: 1;
     min-width: 0;
-    align-items: center;
+    align-content: center;
     min-height: 30px;
     margin-right: 6px;
-    display: inline-block !important;
+    display: inline-block ;
     border: none;
     /* Limita a largura da tag */
     white-space: nowrap ;
@@ -557,7 +560,10 @@ span.category-tag {
 
 
 .post-time {
-    font-size: clamp(0.75rem, 0.8vw, 1.05rem);
+    color: #ffff;
+    color: oklch(95.815% 0.00011 271.152);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 3cqw, 1.05rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.7;
@@ -644,7 +650,7 @@ span.category-tag {
 .reacoes-popup span {
     cursor: pointer;
     font-size: 1rem;
-    font-size: clamp(0.85rem, 5vw, 1.2rem);
+    font-size: clamp(0.85rem, 5vw, 1.4rem);
     display: inline-block;
 }
 
@@ -666,8 +672,8 @@ span.category-tag {
     background: rgba(255, 255, 255, 0.08);
     padding: 4px 6px;
     border-radius: 10px;
-    font-size: 0.85rem;
-    font-size: clamp(0.75rem, 3cqw, 1.2rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 3cqw, 1.2rem);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
     cursor: pointer;
@@ -704,8 +710,8 @@ span.category-tag {
 
 .footer-links {
     text-transform: uppercase;
-     padding: clamp(4px, 3cqw, 10px) clamp(8px, 4cqw, 12px);
-    display: flex;
+     padding: clamp(4px, 3cqw, 10px) clamp(6px, 3cqw, 12px);
+    display: inline-flex;
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
@@ -722,87 +728,7 @@ span.category-tag {
     pointer-events: auto !important;
 }
 
-/*  TEXTOS (NOME E USERNAME) */
 
-.perfil-info-publica {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    order: 2;
-    margin-top: 80px ;
-    /* Aumente esse valor se precisar de mais gap */
-    display: flex;
-    flex-direction: column;
-    align-items: center ;
-    width: 100% ;
-    padding: 0 15px ;
-}
-
-.nome-publico {
-    color: var(--cor-glow);
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: clamp(1.3rem, 0.9rem + 0.5vw, 2.2rem);
-    text-transform: uppercase;
-    margin: 20px 0 20px 0;
-    word-break: break-word;
-    /* Evita que nomes enormes explodam o layout */
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    /* Margem apenas embaixo para afastar do username/bio */
-    justify-content: center;
-    align-content: center;
-}
-
-
-/* Isso garante que os controles do viewer (ver-perfil.php) se centralizem */
-.info-usuario-section .perfil-controles {
-    display: flex;
-    justify-content: center;
-    /* Centraliza horizontalmente */
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* Garante que o botão em si tenha um tamanho legal */
-.info-usuario-section .btn-editar-atalho {
-    width: fit-content;
-    /* Não deixa ele ocupar a tela toda */
-    padding: 10px 20px;
-    /* Respiro interno */
-}
-
-
-
-/* INSÍGNIA DA ATLÉTICA  */
-.insignia-atletica-bottom {
-    /* Mínimo de 40px para não sumir, escala com 5% da tela, e trava em 90px no máximo */
-    width: clamp(40px, 10vmin, 80px);
-    height: clamp(40px, 10vmin, 80px);
-    object-fit: contain;
-    transition: all 0.3s ease-in-out !important;
-    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
-    cursor: pointer;
-    flex-shrink: 0;
-    padding: 4px;
-    /* Impede que a imagem seja espremida se o nome for grande */
-}
-
-.insignia-atletica-bottom:hover {
-    transform: scale(1.1) !important;
-    filter: drop-shadow(0 0 12px var(--dourado)) !important;
-}
-
-.nome-linha {
-    display: flex;
-    align-items: space-between;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-}
 
 
 /* A caixa que envolve a logo no classificados */
@@ -838,9 +764,15 @@ span.category-tag {
 .avatar-p {
     border: 1px solid #ff9f0f;
     gap: 10px;
-    width: clamp(36px, 3.5vw, 55px);
-    height: clamp(36px, 3.5vw, 55px);
+    width: clamp(35px, 3vw, 50px);
+    height: clamp(35px, 3vw, 50px);
     border-radius: 50%;
+    -moz-background-clip: padding-box;
+    /* Firefox 3.6 and earlier */
+    -webkit-background-clip: padding-box;
+    /* Safari 3-4, iOS 3-4 */
+    background-clip: padding-box;
+    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
     object-fit: cover;
     flex-shrink: 0;
     display: flex;
@@ -857,6 +789,7 @@ span.category-tag {
 
 .user-anonimo {
     color: #cccccc;
+    color: oklch(90.068% 0.00434 15.941 / 0.874);
     text-decoration: none;
     font-weight: bold;
     align-self: center;
@@ -866,12 +799,13 @@ span.category-tag {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.9rem;
-    font-size: clamp(0.75rem, 1.3vw, 1.1rem);
+    font-size: clamp(0.75rem, 1.3vw, 1.05rem);
     width: fit-content;
 }
 
 .user-mention {
-    color: var(--dourado);
+    color:#ff9d0b;
+    color: oklch(83.276% 0.17139 82.036);
     text-decoration: none;
     font-weight: bold;
     align-self: center;
@@ -900,7 +834,7 @@ span.category-tag {
     gap: 8px;
     display: inline-flex;
     align-items: center;
-    font-size: clamp(0.75rem, 3.5cqw, 0.975rem);
+    font-size: clamp(0.6rem, 4cqw, 1rem);
     font-weight: 600;
     text-transform: uppercase;
     background: transparent;
@@ -914,7 +848,6 @@ span.category-tag {
 }
 
 
-
 .btn-reagir:hover,
 .btn-fofocar:hover,
 .btn-ver-mais:hover {
@@ -924,36 +857,6 @@ span.category-tag {
     border-color: rgba(255, 188, 0, 0.3);
     color: #cc900e;
 }
-
-
-
-/*  AJUSTES DO PERFIL (HABITANTE)*/
-
-/* Badge da Coroa (Presença) */
-.badge-presenca-bottom {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background: var(--dourado);
-    color: #000;
-    width: clamp(20px, 5vmin, 35px);
-    height: clamp(20px, 5vmin, 35px);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    border: 2px solid #000;
-    box-shadow: 0 0 10px rgba(255, 188, 0, 0.6);
-    z-index: 15;
-}
-
-
-.perfil-gold .capa-img {
-    border: 2px solid var(--dourado);
-    border-radius: 12px;
-}
-
 
 /* PÁGINA DE COMUNIDADES (ATLÉTICAS) */
 
@@ -1043,27 +946,6 @@ span.category-tag {
     font-style: italic;
 }
 
-.bio-texto {
-    /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
-    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.5rem);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-    text-align: center;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    -webkit-hyphens: auto;
-    /*Safari/Chrome*/
-    -ms-hyphens: auto;
-    /*IE/Edge */
-    hyphens: auto;
-    line-height: 1.4;
-    /* Melhora a leitura quando a fonte cresce */
-    color: rgba(255, 255, 255, 0.8);
-    /* Sugestão para manter o estilo Fenda */
-}
-
 
 .form-busca-fenda input[type="text"] {
     padding: 12px 15px;
@@ -1075,33 +957,14 @@ span.category-tag {
     font-size: 1rem;
 }
 
-
-/* --- SEÇÃO DE INFORMAÇÕES E BOTÃO --- */
-.info-usuario-section {
-    margin-top: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    padding: 0 15px;
-}
-
-.info-usuario-section h1.nome-publico {
-    margin: 0;
-    display: inline-block;
-}
-
-
 /* ==================================================
    GRID DE ANEXOS NO FEED (ESTILO INSTAGRAM/FACEBOOK)
    ================================================== */
 .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 4px;
+    gap: 6px;
     margin-top: 5px;
-    border-radius: 12px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
     border: 2px solid rgba(255, 255, 255, 0.06);
@@ -1128,32 +991,28 @@ span.category-tag {
 
 /* Se houver apenas 1 item, centraliza e limita tamanho */
 .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-    display: flex;
     justify-content: center;
     background: transparent;
     border: none;
     padding: 0;
 }
 
-.feed-anexo-item:only-child {
+.feed-anexo-item:only-child  {
     aspect-ratio: auto;
-    max-width: 100%;
-    max-height: 250px;
+    object-fit: cover;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent;
     border: none;
     box-shadow: none;
+    max-width: 100%;
 }
 
 .feed-anexo-item:only-child img {
+    max-height: 220px;
     object-fit: contain;
-    max-height: 250px;
-    max-width: 100%;
-    width: auto;
-    height: auto;
 }
+
 
 /*  Imagens no grid (feed e perfil) */
 
@@ -1167,8 +1026,8 @@ span.category-tag {
     justify-content: center;
     max-height: calc(var(--card-max-height, 500px) * 0.6);
     /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
-    height: var(--img-max-height, auto);
     max-height: 200px;
+    height: var(--img-max-height, auto);
     object-fit: var(--img-fit, contain);
     background: #0a0a0a;
 

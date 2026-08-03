@@ -28,7 +28,8 @@
     position: relative;
     z-index: 100000;
     background: #1a1a1a86;
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     padding: 10px 10px 0 10px;
     transition: max-height 0.3s ease-out;
     max-height: 15vh;
@@ -49,8 +50,8 @@
     top: 0;
     z-index: 1000;
     background: rgba(20, 20, 30, 0.92);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     padding: 6px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
@@ -135,8 +136,8 @@
     width: clamp(30px, 6vmin, 48px);
     height: clamp(30px, 6vmin, 48px);
     background: rgba(20, 20, 30, 0.85);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     color: rgba(255, 255, 255, 0.7);
@@ -608,7 +609,7 @@
 }
 
 .comentario-item.vibe-ads .comentario-data {
-    color: var(--cor-aura-user);
+    color: var(--cor-borda-glow);
     text-shadow: 0 0 8px var(--cor-borda-glow);
     font-weight: bold;
 }
@@ -619,26 +620,6 @@
 }
 
 /* META DADOS */
-.comentario-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-    letter-spacing: 1px;
-    gap: 8px;
-    width: 100%;
-}
-
-.comentario-item .comentario-autor {
-    color: var(--cor-borda-glow);
-    font-size: clamp(0.85rem, 4cqw , 1rem);
-    font-weight: bold;
-    flex-grow: 1;
-    max-width: clamp(80px, 70vmax, 180px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: min-content;
-}
 
 .comentario-data {
     font-size: clamp(0.7rem, 3.5cqw, 0.95rem);
@@ -652,7 +633,7 @@
 
 .comentario-texto {
     color: #ddd;
-    font-size: clamp(0.85rem, 5cqw, 1.1rem);
+    font-size: clamp(0.85rem, 5cqw, 1.05rem);
     line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -1286,13 +1267,8 @@ body.pagina-post .header-principal {
     word-break: break-word;
     letter-spacing: 0.5px;
     overflow: hidden;
-     -webkit-user-select: text;
-    -ms-user-select: text;
-    -moz-user-select: text;
-    user-select: text;
     align-self: flex-start;
     max-width: min-content;
-    container-type: inline-size;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -1630,13 +1606,40 @@ body.pagina-post .header-principal {
     opacity: 0.7;
 }
 
+/* ==================================================
+   RODAPÉ DO COMENTÁRIO (com data alinhada à direita)
+   ================================================== */
 .comentario-rodape {
     display: flex;
     justify-content: flex-end;
     margin-top: 6px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     opacity: 0.6;
     color: #c4c4c4;
+}
+
+/* META: agora sem o nowrap, para o nome não esticar a bolha */
+.comentario-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+    gap: 8px;
+    width: 100%;
+    /* REMOVIDO: white-space: nowrap; */
+}
+
+.comentario-autor {
+    color: var(--cor-borda-glow);
+    font-size: clamp(0.85rem, 4cqw, 1.05rem);
+    font-weight: bold;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Removemos o max-width fixo para permitir que o nome se expanda até o limite da bolha */
+    max-width: 100%;
+    word-break: break-word;
 }
 
 /* GRID DE ANEXOS MÚLTIPLOS (ESTILO WHATSAPP) */
@@ -1645,11 +1648,13 @@ body.pagina-post .header-principal {
     /* Força sempre 2 colunas dinâmicas (50% do espaço disponível cada) */
     grid-template-columns: repeat(2, 1fr); 
     gap: 6px;
-    padding: 6px 0;
-    
+    padding: 4px 0;
     /* SOLUÇÃO CHAVE: O container abraça estritamente o tamanho das imagens */
-    width: max-content; 
-    max-width: 100%; /* Nunca deixa o bloco estourar para fora do balão */
+    max-width: 100%;
+    width: 100%; /* Nunca deixa o bloco estourar para fora do balão */
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }
 
 /* Comportamento específico para quando houver apenas 1 foto */
@@ -1680,8 +1685,7 @@ body.pagina-post .header-principal {
 
 /* Quando for uma foto única, ela pode expandir um pouco mais para dar destaque */
 .comentario-media-item:only-child {
-    max-width: 200px;
-    max-height: 35vh;
+    max-width: 220px;
 }
 
 .comentario-media-item:hover {

@@ -138,7 +138,7 @@
 
 .lightbox-autor-nome {
     font-weight: 600;
-    font-size: clamp(0.9rem, 4cqw, 1.2rem);
+    font-size: clamp(0.9rem, 4cqw, 1.15rem);
     color: #fff;
     white-space: nowrap;
     overflow: hidden;
@@ -147,8 +147,8 @@
 
 
 .lightbox-autor .avatar-p {
-    width: clamp(40px, 5vw, 80px);
-    height: clamp(40px, 5vw, 80px);
+    width: clamp(40px, 5vw, 75px);
+    height: clamp(40px, 5vw, 75px);
     border-radius: 50%;
     flex-shrink: 0;
     object-fit: cover;
@@ -161,19 +161,22 @@
     flex: 1;
 }
 .lightbox-autor-data {
-    font-size: clamp(0.75rem, 3cqw, 1.05rem);
+    font-size: clamp(0.75rem, 3cqw, 1rem);
     opacity: 0.65;
     color: #aaa;
 }
 
 
 .lightbox-categoria {
-    font-size: 0.9rem;
-    font-size: clamp(0.75rem, 1.1vw, 1.1rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 1vw, 1.1rem);
     background: rgba(255, 188, 0, 0.1);
     padding: 4px clamp(8px, 1.5vmin, 12px);
     border-radius: 20px;
     color: #ffbc00;
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border: 1px solid rgba(255, 188, 0, 0.15);
     flex-shrink: 0;
     white-space: nowrap;
@@ -186,10 +189,11 @@
     flex-direction: column;
     justify-content: center;
     gap: clamp(10px, 2vmin, 20px);
-    padding: 4px 0;
+    padding: 16px 8px;
     overflow-y: auto;
     scrollbar-width: thin;
 }
+
 .lightbox-post-body {
     width: 100%;
     margin: 10px auto;
@@ -204,9 +208,11 @@
     font-size: clamp(0.9rem, 4cqw, 1.3rem);
     line-height: 1.6;
     color: #eee;
+    display: flex;
     white-space: pre-wrap;
     word-break: break-word;
-    text-align: center;
+    justify-content: center;
+    text-align: left;
     max-width: 100%;
     width: 100%;
     margin: 0 auto 15px auto;
@@ -214,22 +220,42 @@
 }
 
 /* 7.2 Imagens individuais (fallback) */
-.lightbox-post-body img {
+body:not(.modo-swipe-ativo) .lightbox-post-body img,
+body.modo-swipe-ativo .lightbox-post-body img {
     max-width: 100%;
-    max-height: 80dvh;
+    max-height: 300px;
     object-fit: contain;
     border-radius: clamp(8px, 2cqw, 16px);
     display: block;
     margin: 0 auto;
     background: rgba(0, 0, 0, 0.2);
+    
+}
+body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
+body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+    max-width: 100%;
+    max-height: 80dvh;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
 }
 
+
 /* 7.3 Grid de anexos (reutiliza a classe do feed) */
-.lightbox-post-body .feed-anexos-grid {
+body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexos-grid,
+body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     max-width: 100%;
     margin: 0 auto;
     width: 100%;
-    gap: clamp(4px, 1vmin, 10px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    color-scheme: light dark;
+    image-rendering: auto;
 }
 
 /* 8. REAÇÕES */
@@ -253,8 +279,8 @@
 .lightbox-reacoes .reacao-item {
     background: rgba(255, 255, 255, 0.05);
     padding: 4px clamp(10px, 1.5vmin, 16px);
-    min-width:(26px, 2vh, 36px);
-    height: (26px, 2vh, 36px);
+    min-width: clamp(26px, 2vh, 36px);
+    height: clamp(26px, 2vh, 36px);
     border-radius: 20px;
     font-size: clamp(0.85rem, 3.5cqw, 1.2rem);
     color: #ddd;
@@ -393,21 +419,21 @@
 }
 
 .lightbox-apenas-post {
-    background: #000000f5;
+    background: #000000;
     -webkit-backdrop-filter: none;
     backdrop-filter: none ;
+    border: none;
 
 }
 
 .lightbox-apenas-post .lightbox-content ,
 .lightbox-apenas-post .lightbox-post-body {
-    background: #000000f5;
+    background: #000000;
     border: none ;
-    box-shadow: 0 0 25px rgba(0,0,0,0.9) ;
-    max-width: 650px;
-    max-height: 85vh;
-    max-height: 85dvh;
-    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.9) ;
+    max-width: auto;
+    max-height: 90vh;
+    max-height: 90dvh;
 }
 
 
@@ -435,6 +461,6 @@
 @media (min-width: 1200px) {
     .lightbox-content {
         max-width: 600px;
-        padding: 30px;
+        padding: 28px;
     }
 }

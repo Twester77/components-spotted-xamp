@@ -1,10 +1,21 @@
 /* ============================================================
-   COMUNIDADES – ESTILOS DEDICADOS (FASE 3)
+   COMUNIDADES – ESTILOS DEDICADOS (FASE 4 – REFORMULADO)
+   ============================================================ 
+   Tema escuro (eigengrau) com inspiração em Facebook/Instagram/Orkut
+   Cards estilo fórum (bordas superior/inferior, sem laterais)
+   Formulário inline integrado e minimalista
+   Todos os valores com clamp() e fallback para navegadores antigos
    ============================================================ */
 
 /* ==================================================
    1. PÁGINA DE LISTAGEM (lista-comunidades.php)
    ================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 .comunidades-header {
     text-align: center;
     padding: 30px 20px 10px 20px;
@@ -14,11 +25,13 @@
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(1.6rem, 3vw, 2.4rem);
     color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
     margin: 30px 0 10px 0;
 }
 
 .comunidades-header p {
     color: #aaa;
+    color: oklch(68% 0 0);
     font-size: clamp(1rem, 1.5vw, 1.2rem);
     margin-bottom: 30px;
 }
@@ -34,10 +47,12 @@
 
 .comunidade-card {
     background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0 0 / 0.04);
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid oklch(100% 0 0 / 0.06);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -53,6 +68,7 @@
     aspect-ratio: 16 / 9;
     overflow: hidden;
     background: #111;
+    background: oklch(10% 0 0);
 }
 
 .comunidade-card .capa-wrapper img {
@@ -71,12 +87,14 @@
     top: 10px;
     right: 10px;
     background: rgba(0, 0, 0, 0.6);
+    background: oklch(0% 0 0 / 0.6);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border-radius: 20px;
     padding: 4px 12px;
     font-size: clamp(0.7rem, 1vw, 0.85rem);
     color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
     display: flex;
     align-items: center;
     gap: 4px;
@@ -87,8 +105,9 @@
 }
 
 .comunidade-card .info-comunidade h3 {
-    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+    font-size: clamp(1.05rem, 1.5vw, 1.4rem);
     color: #fff;
+    color: oklch(100% 0 0);
     margin-bottom: 6px;
     font-weight: 600;
 }
@@ -96,6 +115,7 @@
 .comunidade-card .info-comunidade .descricao {
     font-size: clamp(0.85rem, 1.2vw, 1rem);
     color: #aaa;
+    color: oklch(68% 0 0);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -112,6 +132,7 @@
     align-items: center;
     font-size: clamp(0.75rem, 1vw, 0.9rem);
     color: #777;
+    color: oklch(58% 0 0);
 }
 
 .btn-entrar-comunidade {
@@ -120,7 +141,9 @@
     border: none;
     border-radius: 30px;
     background: #ffbc00;
+    background: oklch(83.276% 0.17139 82.036);
     color: #000;
+    color: oklch(0% 0 0);
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
@@ -129,7 +152,9 @@
 
 .btn-entrar-comunidade.membro {
     background: rgba(255, 255, 255, 0.05);
+    background: oklch(100% 0 0 / 0.05);
     color: #aaa;
+    color: oklch(68% 0 0);
 }
 
 .btn-entrar-comunidade:hover {
@@ -152,6 +177,7 @@
     overflow: hidden;
     border-radius: 16px;
     background: #111;
+    background: oklch(10% 0 0);
     margin-bottom: 20px;
     justify-content: center;
     align-content: center;
@@ -170,27 +196,36 @@
     right: 0;
     padding: 30px 20px 20px 20px;
     background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    background: linear-gradient(to top, oklch(0% 0 0 / 0.8) 0%, transparent 100%);
 }
 
 .comunidade-capa .overlay h1 {
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     color: #fff;
+    color: oklch(100% 0 0);
     font-weight: 700;
     margin-bottom: 4px;
 }
 
 .comunidade-capa .overlay .descricao {
     color: #ccc;
+    color: oklch(80% 0 0);
     font-size: clamp(0.95rem, 1.2vw, 1.2rem);
 }
 
-/* Ações da comunidade (botões, membros, criador) */
+/* Ações da comunidade */
 .comunidade-actions {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
     flex-wrap: wrap;
+    background: rgba(20, 20, 30, 0.5);
+    background: oklch(15% 0 0 / 0.5);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border-radius: 12px;
+    padding: 12px 18px;
 }
 
 .comunidade-actions .btn-entrar-comunidade {
@@ -200,6 +235,7 @@
 
 .comunidade-actions .contador-membros {
     color: #aaa;
+    color: oklch(68% 0 0);
     font-size: clamp(0.9rem, 1.1vw, 1.1rem);
 }
 
@@ -212,17 +248,21 @@
 
 .comunidade-info-actions .criador-info {
     color: #aaa;
+    color: oklch(68% 0 0);
     font-size: clamp(0.85rem, 1vw, 1.05rem);
 }
 
 .btn-editar-comunidade {
     background: rgba(255, 255, 255, 0.05);
+    background: oklch(100% 0 0 / 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid oklch(100% 0 0 / 0.1);
     border-radius: 30px;
     padding: 8px 20px;
     justify-content: center;
     align-content: center;
     color: #aaa;
+    color: oklch(68% 0 0);
     text-decoration: none;
     transition: 0.3s;
     font-size: clamp(0.85rem, 1vw, 1.05rem);
@@ -230,160 +270,967 @@
 
 .btn-editar-comunidade:hover {
     background: rgba(255, 255, 255, 0.1);
+    background: oklch(100% 0 0 / 0.1);
     color: #fff;
+    color: oklch(100% 0 0);
 }
 
-/* Feed da comunidade */
 .feed-comunidade {
     margin-top: 20px;
 }
 
-/* ==================================================
-   3. FORMULÁRIO INLINE DE POST (card-postar adaptado)
-   ================================================== */
-.card-postar-inline {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+/* ============================================================
+   3. FORMULÁRIO INLINE DE POST – ESTILO FACEBOOK DARK
+   ============================================================ */
+
+.comunidade-page .card-postar-inline-wrapper {
+    background: #16161d; /* eigengrau */
+    background: oklch(15% 0 0);
     border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid oklch(100% 0 0 / 0.06);
+    margin-bottom: 24px;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.card-postar-inline .btn-toggle-postar {
+.comunidade-page .card-postar-inline-wrapper:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    border-color: oklch(100% 0 0 / 0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* Botão toggle – texto sempre à esquerda */
+.comunidade-page .btn-toggle-postar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
     background: transparent;
     border: none;
-    color: #aaa;
-    font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+    color: #ccc;
+    color: oklch(80% 0 0);
+    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease ;
+    font-family: inherit;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid oklch(100% 0 0 / 0.04);
+    text-align: left;
+}
+
+.comunidade-page .btn-toggle-postar:hover {
+    background: rgba(255, 255, 255, 0.03);
+    background: oklch(100% 0 0 / 0.03);
+    color: #fff;
+    color: oklch(100% 0 0);
+}
+
+.comunidade-page .btn-toggle-postar i {
+    color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.comunidade-page .btn-toggle-postar .fa-chevron-down {
+    margin-left: auto;
+    color: #666;
+    color: oklch(50% 0 0);
+}
+
+.comunidade-page .btn-toggle-postar[aria-expanded="true"] .fa-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* Conteúdo expandido */
+.comunidade-page .postar-inline-conteudo {
+    background: rgba(255, 255, 255, 0.02);
+    background: oklch(100% 0 0 / 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid oklch(100% 0 0 / 0.04);
+}
+
+/* Área de texto – estilo Facebook dark */
+.comunidade-page .postar-inline-conteudo .area-texto-vivo {
+    background: rgba(207, 207, 207, 0.65);
+    background: oklch(0.87 0 0 / 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid oklch(100% 0 0 / 0.08);
+    border-radius: 12px;
+    padding: clamp(10px, 1.5vw, 14px);
+    margin-bottom: 12px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.comunidade-page .postar-inline-conteudo .area-texto-vivo:focus-within {
+    border-color: #ffbc00;
+    border-color: oklch(83.276% 0.17139 82.036);
+    background: rgba(255, 255, 255, 0.06);
+    background: oklch(100% 0 0 / 0.06);
+}
+
+.comunidade-page .postar-inline-conteudo #mensagem-vivo {
+    width: 100%;
+    min-height: clamp(60px, 10vh, 90px);
+    max-height: 180px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: vertical;
+    color: #0f0f0f;
+    color: oklch(0 0 0 / 0.94);
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    padding: 4px 12px;
+}
+
+.comunidade-page .postar-inline-conteudo #mensagem-vivo::placeholder {
+    color: #777;
+    color: oklch(58% 0 0);
+    font-style: italic;
+}
+
+/* Grid de anexos */
+.comunidade-page .postar-inline-conteudo .anexos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(6px, 1vw, 10px);
+    margin-top: 8px;
+    padding: 4px 0;
+}
+
+.comunidade-page .postar-inline-conteudo .anexo-item {
+    position: relative;
+    width: clamp(60px, 10vw, 90px);
+    height: clamp(60px, 10vw, 90px);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid oklch(100% 0 0 / 0.08);
+    background: rgba(0, 0, 0, 0.3);
+    background: oklch(0% 0 0 / 0.3);
+    flex-shrink: 0;
+}
+
+.comunidade-page .postar-inline-conteudo .anexo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.comunidade-page .postar-inline-conteudo .btn-remover-anexo {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.7);
+    background: oklch(0% 0 0 / 0.7);
+    border: none;
+    color: #fff;
+    color: oklch(100% 0 0);
+    border-radius: 50%;
+    width: clamp(18px, 2.5vw, 24px);
+    height: clamp(18px, 2.5vw, 24px);
+    font-size: clamp(10px, 1.2vw, 13px);
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 0;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.comunidade-page .postar-inline-conteudo .btn-remover-anexo:hover {
+    background: rgba(200, 40, 40, 0.85);
+    background: oklch(40% 0.15 30 / 0.85);
+}
+
+/* Barra de ações – ícones, contador, botão publicar */
+.comunidade-page .postar-inline-conteudo .barra-acoes-vivo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(8px, 1.5vw, 16px);
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid oklch(100% 0 0 / 0.06);
+}
+
+.comunidade-page .postar-inline-conteudo .acoes-esquerda {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.comunidade-page .postar-inline-conteudo .btn-acao-vivo {
+    width: clamp(34px, 4.5vw, 42px);
+    height: clamp(34px, 4.5vw, 42px);
+    background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0 0 / 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid oklch(100% 0 0 / 0.06);
+    border-radius: 50%;
+    color: #aaa;
+    color: oklch(68% 0 0);
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.comunidade-page .postar-inline-conteudo .btn-acao-vivo:hover {
+    background: rgba(255, 188, 0, 0.08);
+    background: oklch(83.276% 0.17139 82.036 / 0.08);
+    border-color: #ffbc00;
+    border-color: oklch(83.276% 0.17139 82.036);
+    color: #fff;
+    color: oklch(100% 0 0);
+}
+
+.comunidade-page .postar-inline-conteudo .contador-caracteres {
+    font-size: clamp(0.75rem, 0.9vw, 1rem);
+    color: #717171;
+    color: oklch(0.56 0 0);
+    font-weight: 500;
+    padding: 0 4px;
+}
+
+.comunidade-page .postar-inline-conteudo .btn-lancar-vivo {
+    background: #7cd632e8;
+    background: oklch(75% 0.15 130 / 0.9);
+    color: #000;
+    color: oklch(0% 0 0);
+    border: none;
+    border-radius: 30px;
+    padding: clamp(6px, 1vw, 10px) clamp(16px, 2vw, 28px);
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    cursor: pointer;
     transition: 0.3s;
+    height: auto;
+    min-height: 36px;
+    white-space: nowrap;
 }
 
-.card-postar-inline .btn-toggle-postar:hover {
+.comunidade-page .postar-inline-conteudo .btn-lancar-vivo:hover {
+    background: #c8ff00d3;
+    background: oklch(90% 0.2 120 / 0.85);
+    transform: scale(1.02);
+}
+
+.comunidade-page .postar-inline-conteudo .btn-lancar-vivo:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    background:#7cd632e8;
+}
+
+/* Seletor de categoria (caso apareça) */
+.comunidade-page .postar-inline-conteudo .campo-categoria-vivo select {
+    background: rgba(255, 255, 255, 0.06);
+    background: oklch(100% 0 0 / 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid oklch(100% 0 0 / 0.08);
+    border-radius: 6px;
+    padding: 6px 28px 6px 12px;
+    font-size: clamp(0.85rem, 0.9vw, 0.95rem);
+    color: #eee;
+    color: oklch(95% 0 0);
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2365676b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    width: auto;
+    min-width: 140px;
+    max-width: 100%;
+}
+
+.comunidade-page .postar-inline-conteudo .campo-categoria-vivo select:focus {
+    border-color: #ffbc00;
+    border-color: oklch(83.276% 0.17139 82.036);
+}
+
+/* Mensagem "Faça login para postar" */
+.comunidade-page .card-postar-inline {
+    /* fallback para quando não há wrapper */
+    background: #16161d;
+    background: oklch(15% 0 0);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid oklch(100% 0 0 / 0.06);
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 24px;
+    text-align: center;
+    color: #aaa;
+    color: oklch(68% 0 0);
+}
+
+.comunidade-page .card-postar-inline i {
     color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
 }
 
-.card-postar-inline .postar-inline-conteudo {
-    margin-top: 12px;
+/* Link para Página Especializada ( Achados & Perdidos) */
+.comunidade-page .card-postar-inline .link-pagina-especializada {
+    margin-top: 8px;
+    text-align: center;
+    opacity: 0.75;
+    color: #1e1e1e;
+    color: oklch(0.2 0 0 / 0.7);
+    font-weight: bold;
+    font-size: clamp(0.7rem, 2vw, 0.95rem);
+}
+.comunidade-page .card-postar-inline .link-pagina-especializada a {
+    color: var(--dourado);
+    text-decoration: none;
+}
+.link-pagina-especializada a:hover {
+    text-decoration: underline;
+}
+
+
+/* ============================================================
+   4. CARDS DO FEED NA COMUNIDADE – ESTILO INSTAGRAM/FÓRUM
+   ============================================================ */
+
+/* Container do feed – ocupando toda largura */
+    body:not(.modo-swipe-ativo) .comunidade-page .container-feed {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    padding: 0;
+    max-width: 100%;
+    margin: 15px auto;
+    background: transparent;
+}
+
+/* Cada card – sem bordas laterais, apenas superior e inferior, fundo escuro */
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
+    background: #16161d;
+    background: oklch(15% 0 0);
+    border: none !important;
+    border-left: 6px solid var(--aura-user);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid oklch(100% 0 0 / 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid oklch(100% 0 0 / 0.06);
+    border-radius: 0;
+    display: flex;
+    justify-content: center;
+    padding: 25px 0px;
+    margin: 0;
+    max-width: 700px;
+    width: 100%;
+    box-shadow: none;
+    transition: background 0.2s ease;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card:hover {
+    background: rgba(255, 255, 255, 0.02);
+    background: oklch(100% 0 0 / 0.02);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Avatar e cabeçalho */
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-info-post {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .avatar-p {
+    width: clamp(36px, 4vw, 48px);
+    height: clamp(36px, 4vw, 48px);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid oklch(100% 0 0 / 0.1);
+    flex-shrink: 0;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-mention,
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-anonimo {
+    font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+    font-weight: 600;
+    color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
+    text-decoration: none;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-time {
+    font-size: clamp(0.7rem, 0.8vw, 0.9rem);
+    color: #888;
+    color: oklch(60% 0 0);
+    margin-left: auto;
+}
+
+/* Conteúdo do post – texto e imagens */
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
+    font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+    line-height: 1.6;
+    color: #eee;
+    color: oklch(95% 0 0);
+    margin: 8px 0;
+    max-height: none;
+    overflow: visible;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content.tem-mais:not(.expandido) {
+    max-height: 4.5rem;
+    overflow: hidden;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content.tem-mais:not(.expandido)::after {
+    content: '... ler mais';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(to left, #16161d 70%, transparent);
+    background: linear-gradient(to left, oklch(15% 0 0) 70%, transparent);
+    padding-left: 30px;
+    color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* Elementos de texto ganham padding horizontal para não colarem na borda */
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-info-post,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacoes-gravadas,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* ============================================================
+   CARROSSEL COM SCROLL-SNAP (ESTILO INSTAGRAM)
+   ============================================================ */
+.comunidade-page .spotted-card .carrossel-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    margin: 10px 0;
+    background: #0a0a0a;
+    background: oklch(5% 0 0);
+}
+
+.comunidade-page .spotted-card .carrossel-wrapper::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Edge */
+}
+
+.comunidade-page .spotted-card .carrossel-item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    aspect-ratio: 16 / 9;
+    min-height: 200px;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.comunidade-page .spotted-card .carrossel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #0a0a0a;
+}
+
+/* ============================================================
+   INDICADORES (BOLINHAS) – estáticas por enquanto
+   ============================================================ */
+.comunidade-page .spotted-card .carrossel-indicadores {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 0 4px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.comunidade-page .spotted-card .carrossel-indicadores .indicador {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: background 0.3s, transform 0.3s;
+    flex-shrink: 0;
+}
+/* ============================================================
+   INDICADORES COM NÚMERO
+   ============================================================ */
+.carrossel-indicadores {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0 4px 0;
+    position: relative;
+    z-index: 2;
+}
+
+.carrossel-numero {
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 1vw, 1.05rem);
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    margin-right: 8px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.indicador {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+.indicador.ativo {
+    background: #ff7300;
+    transform: scale(1.3);
+}
+
+/* ============================================================
+   SETAS DE NAVEGAÇÃO DO CARROSSEL
+   ============================================================ */
+.carrossel-nav {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-top: -40px; /* sobrepõe o carrossel */
+    padding: 0 8px;
+    pointer-events: none; /* permite clicar através do container */
+}
+.carrossel-nav button {
+    pointer-events: auto; /* os botões recebem eventos */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.8rem;
+    width: 44px;
+    height: 44px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    z-index: 3;
+}
+.carrossel-nav button:hover {
+    background: rgba(255, 188, 0, 0.8);
+    transform: scale(1.05);
+}
+.carrossel-nav button:active {
+    transform: scale(0.9);
+}
+
+
+/* Footer do card – reações e comentários */
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
+    display: flex;
+    gap: 20px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid oklch(100% 0 0 / 0.06);
+    margin-top: 6px;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir,
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar {
+    background: transparent;
+    border: none;
+    color: #aaa;
+    color: oklch(68% 0 0);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir:hover,
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar:hover {
+    background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0 0 / 0.04);
+    color: #fff;
+    color: oklch(100% 0 0);
+}
+
+/* Reações (emojis) */
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacoes-gravadas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 6px 0;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0 0 / 0.04);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    color: #ddd;
+    color: oklch(88% 0 0);
+    border: 1px solid transparent;
+}
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item.voted {
+    background: rgba(255, 188, 0, 0.15);
+    background: oklch(83.276% 0.17139 82.036 / 0.15);
+    border-color: #ffbc00;
+    border-color: oklch(83.276% 0.17139 82.036);
 }
 
 /* ==================================================
-   4. RESPONSIVIDADE
+   5. FALLBACKS PARA NAVEGADORES ANTIGOS
+   ================================================== */
+@supports not (backdrop-filter: blur(4px)) {
+    .comunidade-page .comunidade-actions,
+    .comunidade-page .card-postar-inline-wrapper,
+    .comunidades-header {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+@supports not (clamp(1rem, 1vw, 2rem)) {
+    .comunidade-page .btn-toggle-postar {
+        font-size: 1rem;
+    }
+    .comunidade-page .postar-inline-conteudo .btn-acao-vivo {
+        width: 38px;
+        height: 38px;
+        font-size: 1.1rem;
+    }
+    .comunidade-page .postar-inline-conteudo .btn-lancar-vivo {
+        font-size: 0.9rem;
+        padding: 8px 20px;
+    }
+    .comunidade-page .postar-inline-conteudo .anexo-item {
+        width: 75px;
+        height: 75px;
+    }
+    .comunidade-page .postar-inline-conteudo #mensagem-vivo {
+        min-height: 70px;
+        font-size: 1rem;
+    }
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .avatar-p {
+        width: 40px;
+        height: 40px;
+    }
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
+        font-size: 1rem;
+    }
+}
+
+@supports not (oklch(0% 0 0)) {
+    .comunidade-page .card-postar-inline-wrapper {
+        background: #16161d;
+    }
+    .comunidade-page .btn-toggle-postar {
+        color: #ccc;
+    }
+    .comunidade-page .postar-inline-conteudo .btn-lancar-vivo {
+        background: #7cd632e8;
+    }
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
+        background: #16161d;
+    }
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-mention {
+        color: #ffbc00;
+    }
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
+        color: #eee;
+    }
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item.voted {
+        background: rgba(255, 188, 0, 0.15);
+    }
+}
+
+/* ==================================================
+   6. RESPONSIVIDADE – UNIFICADA
    ================================================== */
 @media (max-width: 600px) {
+    /* Listagem */
     .comunidades-grid {
         grid-template-columns: 1fr;
         padding: 0 10px 30px 10px;
     }
-    
+
     .comunidade-page {
         padding: 10px;
     }
-    
+
     .comunidade-capa .overlay h1 {
         font-size: 1.4rem;
-    }
-
-    .form-container {
-        padding: 0 10px 30px 10px;
-    }
-    
-    .btn-principal,
-    .btn-secundario {
-        flex: 1 1 100%;
-        text-align: center;
-    }
-    
-    .input-slug-wrapper {
-        flex-wrap: wrap;
-        padding: 8px 12px;
-    }
-    
-    .slug-prefixo {
-        font-size: 0.75rem;
-        width: 100%;
-        margin-bottom: 4px;
     }
 
     .comunidade-actions {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .comunidade-actions .btn-entrar-comunidade {
         width: 100%;
     }
+
+    /* Formulário inline */
+    .comunidade-page .postar-inline-conteudo .barra-acoes-vivo {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .comunidade-page .postar-inline-conteudo .acoes-esquerda {
+        justify-content: center;
+    }
+
+    .comunidade-page .postar-inline-conteudo .acoes-direita {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .comunidade-page .postar-inline-conteudo .btn-lancar-vivo {
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
+        min-width: 0;
+    }
+
+    .comunidade-page .postar-inline-conteudo .campo-categoria-vivo select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .comunidade-page .btn-toggle-postar {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .comunidade-page .comunidade-actions {
+        padding: 10px 14px;
+    }
 }
 
-/* ============================================================
-   FORMULÁRIOS DE COMUNIDADE (criar / editar)
-   ============================================================ */
-
-.form-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 0 20px 40px 20px;
+@media (min-width: 601px) and (max-width: 900px) {
+     .comunidades-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+   
 }
 
-/* --- Campos do formulário --- */
-.campo-grupo {
+@media (min-width: 901px) {
+     .comunidades-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+   
+}
+
+/* ==================================================
+   7. AJUSTES E COMPLEMENTOS (FORMULÁRIOS DE CRIAÇÃO/EDIÇÃO)
+   ================================================== */
+.main-comunidades {
+    min-height: 60vh;
+}
+
+.subtitle {
+    color: #aaa;
+    color: oklch(68% 0 0);
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
     margin-bottom: 20px;
 }
 
-.campo-grupo label {
-    display: block;
-    color: #ccc;
-    font-size: clamp(0.9rem, 1.1vw, 1rem);
-    margin-bottom: 6px;
-    font-weight: 500;
+.create-community-wrapper {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
-.campo-grupo input[type="text"],
-.campo-grupo textarea {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 10px;
-    color: #fff;
-    font-size: clamp(0.9rem, 1.1vw, 1rem);
-    transition: border-color 0.3s ease;
-    box-sizing: border-box;
+.btn-criar-comunidade {
+    display: inline-flex;
+    background: #ffbc00;
+    background: oklch(83.276% 0.17139 82.036);
+    color: #000;
+    color: oklch(0% 0 0);
+    padding: clamp(6px, 0.8vw, 12px) clamp(10px, 1vw, 16px);
+    border-radius: 30px;
+    gap: 6px;
+    font-weight: bold;
+    align-items: center;
+    align-content: center;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: clamp(0.8rem, 1.1vw, 1.05rem);
 }
 
-.campo-grupo input[type="text"]:focus,
-.campo-grupo textarea:focus {
-    outline: none;
-    border-color: #ffbc00;
+.btn-criar-comunidade:hover {
+    background: #ffd44d;
+    background: oklch(88% 0.15 80);
+    transform: scale(1.01);
 }
 
-.campo-grupo textarea {
-    resize: vertical;
-    min-height: 120px;
+.card-actions {
+    padding: 0 16px 16px 16px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #a5a5a5;
+    color: oklch(68% 0 0);
+    grid-column: 1 / -1;
+    padding: 40px;
+}
+
+.empty-state .btn-criar-comunidade {
+    margin-top: 15px;
+}
+
+.comunidades-subtitulo {
+    color: #a5a5a5e1;
+    color: oklch(64.341% 0.00007 271.152);
+    font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+    margin-bottom: 25px;
 }
 
 .campo-ajuda {
     display: block;
     color: #777;
-    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    color: oklch(58% 0 0);
+    font-size: clamp(0.7rem, 1vw, 0.95rem);
     margin-top: 4px;
 }
 
-/* --- Slug com prefixo --- */
+.comunidade-page,
+.main-comunidades {
+    background: #0a0a0a;
+    background: oklch(5% 0 0);
+    min-height: 100vh;
+    padding-top: 20px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.comunidades-header {
+    background: rgba(10, 10, 10, 0.85);
+    background: oklch(5% 0 0 / 0.85);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    padding: 20px 20px 10px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+/* Formulários de criar/editar comunidade (mantido) */
+.card-postar-inline .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 25px 5px;
+    max-width: 750px;
+    margin: 0 auto;
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid oklch(100% 0 0 / 0.05);
+    border-radius: 10px;
+    background: oklch(0.94 0 5);
+    margin-bottom: 15px;
+}
+
+
+.card-postar-inline .campo-grupo {
+    margin-bottom: 20px;
+}
+
+.card-postar-inline .campo-grupo label {
+    display: block;
+    color: #ccc;
+    color: oklch(80% 0 0);
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.card-postar-inline .campo-grupo input[type="text"],
+.card-postar-inline .campo-grupo textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    background: oklch(100% 0 0 / 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid oklch(100% 0 0 / 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    color: #fff;
+    color: oklch(100% 0 0);
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.card-postar-inline .campo-grupo input[type="text"]:focus,
+.card-postar-inline .campo-grupo textarea:focus {
+    outline: none;
+    border-color: #ffbc00;
+    border-color: oklch(83.276% 0.17139 82.036);
+}
+
+.card-postar-inline .campo-grupo textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
 .input-slug-wrapper {
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.03);
+    background: oklch(100% 0 0 / 0.03);
     border-radius: 8px;
     border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid oklch(100% 0 0 / 0.06);
     padding: 0 12px;
 }
 
 .slug-prefixo {
     color: #777;
+    color: oklch(58% 0 0);
     font-size: clamp(0.8rem, 1vw, 0.9rem);
     white-space: nowrap;
     flex-shrink: 0;
@@ -394,16 +1241,18 @@
     border: none;
     padding: 12px 8px;
     color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
     width: 100%;
     outline: none;
 }
 
-/* --- Prévia da capa --- */
 .capa-preview-wrapper {
     position: relative;
     aspect-ratio: 16 / 9;
     background: rgba(255, 255, 255, 0.03);
+    background: oklch(100% 0 0 / 0.03);
     border: 2px dashed rgba(255, 255, 255, 0.1);
+    border: 2px dashed oklch(100% 0 0 / 0.1);
     border-radius: 12px;
     overflow: hidden;
     display: flex;
@@ -415,6 +1264,7 @@
 
 .capa-preview-wrapper:hover {
     border-color: rgba(255, 188, 0, 0.3);
+    border-color: oklch(83.276% 0.17139 82.036 / 0.3);
 }
 
 .capa-preview-wrapper img {
@@ -427,15 +1277,17 @@
 .capa-overlay {
     position: absolute;
     background: rgba(0, 0, 0, 0.6);
+    background: oklch(0% 0 0 / 0.6);
     padding: 8px 16px;
     border-radius: 20px;
     color: #fff;
+    color: oklch(100% 0 0);
     font-size: clamp(0.85rem, 1.1vw, 1rem);
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     pointer-events: none;
 }
 
-/* --- Sugestões de atléticas --- */
 .sugestao-atleticas {
     margin-top: 10px;
 }
@@ -449,10 +1301,13 @@
 
 .btn-sugestao {
     background: rgba(255, 188, 0, 0.08);
+    background: oklch(83.276% 0.17139 82.036 / 0.08);
     border: 1px solid rgba(255, 188, 0, 0.15);
+    border: 1px solid oklch(83.276% 0.17139 82.036 / 0.15);
     border-radius: 20px;
     padding: 4px 14px;
     color: #ffbc00;
+    color: oklch(83.276% 0.17139 82.036);
     font-size: clamp(0.75rem, 1vw, 0.85rem);
     cursor: pointer;
     transition: 0.3s;
@@ -460,11 +1315,12 @@
 
 .btn-sugestao:hover {
     background: rgba(255, 188, 0, 0.15);
+    background: oklch(83.276% 0.17139 82.036 / 0.15);
     border-color: rgba(255, 188, 0, 0.3);
+    border-color: oklch(83.276% 0.17139 82.036 / 0.3);
     transform: scale(1.02);
 }
 
-/* --- Botões do rodapé --- */
 .botoes-rodape {
     display: flex;
     gap: 15px;
@@ -474,7 +1330,9 @@
 
 .btn-principal {
     background: #ffbc00;
+    background: oklch(83.276% 0.17139 82.036);
     color: #000;
+    color: oklch(0% 0 0);
     padding: 12px 40px;
     border-radius: 30px;
     font-weight: bold;
@@ -488,15 +1346,18 @@
 
 .btn-principal:hover {
     background: #ffd44d;
+    background: oklch(88% 0.15 80);
     transform: scale(1.01);
 }
 
 .btn-secundario {
     background: transparent;
     color: #aaa;
+    color: oklch(68% 0 0);
     padding: 12px 30px;
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid oklch(100% 0 0 / 0.1);
     text-decoration: none;
     text-align: center;
     transition: 0.3s;
@@ -505,202 +1366,38 @@
 
 .btn-secundario:hover {
     background: rgba(255, 255, 255, 0.05);
+    background: oklch(100% 0 0 / 0.05);
     color: #fff;
+    color: oklch(100% 0 0);
 }
 
 /* ==================================================
-   AJUSTES E COMPLEMENTOS (compatibilidade e fallback)
+   8. CORREÇÃO PARA O MODAL DE POST (EMOJIS ALINHADOS)
    ================================================== */
-
-/* Container principal (usado em lista-comunidades.php) */
-.main-comunidades {
-    min-height: 60vh;
-}
-
-/* Subtítulo da página */
-.subtitle {
-    color: #aaa;
-    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
-    margin-bottom: 20px;
-}
-
-/* Wrapper do botão "Criar Comunidade" */
-.create-community-wrapper {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* Botão "Criar Comunidade" (versão da listagem) */
-.btn-criar-comunidade {
-    display: inline-flex;
-    background: #ffbc00;
-    color: #000;
-    padding: clamp(6px, 0.8vw, 12px) clamp(10px, 1vw, 16px);
-    border-radius: 30px;
-    font-weight: bold;
-    align-items: center;
-    align-content: center;
-    text-decoration: none;
-    transition: 0.3s;
-    font-size: clamp(0.8rem, 1.1vw, 1.05rem);
-}
-
-.btn-criar-comunidade:hover {
-    background: #ffd44d;
-    transform: scale(1.01);
-}
-
-/* Área de ações do card (botão Entrar/Sair) */
-.card-actions {
-    padding: 0 16px 16px 16px;
-}
-
-/* Estado vazio (nenhuma comunidade) */
-.empty-state {
-    text-align: center;
-    color: #aaa;
-    grid-column: 1 / -1;
-    padding: 40px;
-}
-
-.empty-state .btn-criar-comunidade {
-    margin-top: 15px;
-}
-
-/* Subtítulo usado em criar-comunidade.php */
-.comunidades-subtitulo {
-    color: #aaa;
-    font-size: clamp(0.95rem, 1.5vw, 1.3rem);
-    margin-bottom: 30px;
-}
-
-/* Mensagem de ajuda nos campos do formulário */
-.campo-ajuda {
-    display: block;
-    color: #777;
-    font-size: clamp(0.7rem, 1vw, 0.95rem);
-    margin-top: 4px;
-}
-
-
-/* ==================================================
-   CORREÇÕES DE LAYOUT E FUNDO (TRANSPARÊNCIA)
-   ================================================== */
-
-/* Fundo sólido para as páginas de comunidade */
-.comunidade-page,
-.main-comunidades {
-    background: #0a0a0a; /* fundo escuro sólido */
-    min-height: 100vh;
-    padding-top: 20px;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-
-
-}
-
-/* Ajuste do header da comunidade para não ficar transparente */
-.comunidades-header {
-    background: rgba(10, 10, 10, 0.85);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    padding: 20px 20px 10px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-}
-
-/* Formulários (criar/editar) – fundo escuro com leve vidro */
-.form-container {
-    background: rgba(20, 20, 30, 0.6);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 30px 25px;
-    margin: 0 auto 40px auto;
-}
-
-/* Campo de formulário – melhora a legibilidade */
-.campo-grupo input[type="text"],
-.campo-grupo textarea {
-    background: rgba(255, 255, 255, 0.07) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Área de post inline – fundo mais escuro */
-.card-postar-inline {
-    background: rgba(20, 20, 30, 0.8);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 16px;
-    margin-bottom: 25px;
-    border-radius: 16px;
-}
-
-/* Botão toggle do post inline – cor de destaque */
-.card-postar-inline .btn-toggle-postar {
-    color: #ccc;
-    font-weight: 500;
-}
-
-.card-postar-inline .btn-toggle-postar:hover {
-    color: #ffbc00;
-}
-
-/* Ações da comunidade – alinhamento e espaçamento */
-.comunidade-actions {
-    background: rgba(20, 20, 30, 0.5);
-    backdrop-filter: blur(4px);
-    border-radius: 12px;
-    padding: 12px 18px;
-    margin-bottom: 20px;
-}
-
-
-
-/* Ajuste no card de comunidade – borda e sombra mais visíveis */
-.comunidade-card {
-    background: rgba(20, 20, 30, 0.7);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.comunidade-card:hover {
-    border-color: rgba(255, 188, 0, 0.2);
-}
-
-/* Prévia da capa no formulário – fundo mais escuro */
-.capa-preview-wrapper {
-    background: rgba(0, 0, 0, 0.4);
-    border: 2px dashed rgba(255, 255, 255, 0.08);
-}
-
-.capa-preview-wrapper:hover {
-    border-color: rgba(255, 188, 0, 0.3);
-}
-
-/* Fallback da capa – centraliza o ícone/texto */
-.comunidade-capa img:not([src]), 
-.comunidade-capa img[src=""],
-.comunidade-capa img[src*="default_comunidade.webp"] {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    min-height: 200px;
+.comunidade-page .modal-body-ajuste .main-novo-post .reacoes-gravadas {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
     justify-content: center;
-    color: #666;
-    font-size: 0.9rem;
-    position: relative;
 }
 
-/* Ícone ou texto de fallback via pseudo-elemento (se quiser) */
-.comunidade-capa img:not([src])::after,
-.comunidade-capa img[src=""]::after {
-    content: "🏛️ Comunidade";
-    position: absolute;
-    color: #ffbc00;
-    font-size: 1.2rem;
-    opacity: 0.3;
-    pointer-events: none;
+.comunidade-page .modal-body-ajuste .reacao-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0 0 / 0.04);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    color: #ddd;
+    color: oklch(88% 0 0);
+    border: 1px solid transparent;
 }
 
+.comunidade-page .modal-body-ajuste .reacao-item.voted {
+    background: rgba(255, 188, 0, 0.15);
+    background: oklch(83.276% 0.17139 82.036 / 0.15);
+    border-color: #ffbc00;
+    border-color: oklch(83.276% 0.17139 82.036);
+}

@@ -3,6 +3,11 @@ include_once 'conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
+// 🔥 GARANTE CSRF TOKEN (se não existir, cria)
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 fenda_log('🟢 INÍCIO comentarios-post.php');
 /* ==========================================================================
    Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir.
@@ -217,7 +222,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 <strong class="comentario-autor" style="color: var(--cor-borda-glow);">
                                     <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
                                 </strong>
-                                <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
+                                <!-- 🔥 DATA REMOVIDA DAQUI (agora no rodapé) -->
                             </div>
 
                             <?php if (!empty($c['parent_id'])): ?>
@@ -274,6 +279,11 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
                             <!-- 🔥 REMOVIDO: botão "RESPONDER" do rodapé – agora centralizado no header -->
                             <!-- A ação "Responder" agora é acionada pelo HeaderManager ao selecionar o comentário -->
+
+                            <!-- 🔥 RODAPÉ COM DATA (AGORA AQUI, ABAIXO DE TUDO) -->
+                            <div class="comentario-rodape">
+                                <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
+                            </div>
 
                         </div>
                     <?php
@@ -352,6 +362,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         <input type="hidden" name="pref_vibe_comentario" id="hidden-vibe" value="">
                         <input type="hidden" name="pref_cor_borda" id="hidden-cor" value="">
                         <textarea name="comentario" id="hidden-textarea"></textarea>
+                        <!-- 🔥 CSRF TOKEN ADICIONADO -->
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                     </form>
 
                     <!-- Honeypot -->
@@ -469,7 +481,163 @@ $total_reacoes = array_sum($reacoes_detalhes);
 <script src="js/fenda-mencoes.js"></script>
 
 <script>
-    // ==================== LÓGICA DE COMENTÁRIOS (APENAS SE POST ESTIVER ATIVO) ====================
+    // ============================================================
+    // 🔥 BALÃO DE FALA – DEFINIDO GLOBALMENTE (COM FALLBACK)
+    // ============================================================
+    window.exibirBalao = function(mensagem, tipo, elementoRef, duracao = 2500) {
+        try {
+            const balaoAntigo = document.querySelector('.balao-fenda');
+            if (balaoAntigo) balaoAntigo.remove();
+
+            const balao = document.createElement('div');
+            balao.className = 'balao-fenda ' + tipo;
+
+            const icones = {
+                sucesso: '✅',
+                erro: '❌',
+                info: 'ℹ️'
+            };
+            const icone = document.createElement('span');
+            icone.className = 'balao-icone';
+            icone.textContent = icones[tipo] || '💬';
+            balao.appendChild(icone);
+
+            const texto = document.createElement('span');
+            texto.textContent = mensagem;
+            balao.appendChild(texto);
+
+            // Posicionamento inteligente
+            if (elementoRef) {
+                const rect = elementoRef.getBoundingClientRect();
+                let top = rect.top - 10;
+                let left = rect.left + rect.width / 2 - 50; // centraliza horizontalmente
+
+                // 🔥 Reposiciona se estiver muito perto da borda direita
+                const balaoWidth = Math.min(300, window.innerWidth * 0.8);
+                if (left + balaoWidth > window.innerWidth - 20) {
+                    left = window.innerWidth - balaoWidth - 20;
+                }
+                if (left < 20) left = 20;
+
+                // Se o elemento estiver no topo da tela, coloca o balão abaixo
+                if (rect.top < 60) {
+                    top = rect.bottom + 10;
+                } else {
+                    top = rect.top - 60;
+                }
+
+                balao.style.top = top + 'px';
+                balao.style.left = left + 'px';
+                balao.style.maxWidth = balaoWidth + 'px';
+            } else {
+                // Fallback: centralizado
+                balao.style.top = '50%';
+                balao.style.left = '50%';
+                balao.style.transform = 'translate(-50%, -50%)';
+            }
+
+            document.body.appendChild(balao);
+
+            setTimeout(() => {
+                if (balao.parentNode) {
+                    balao.style.opacity = '0';
+                    setTimeout(() => balao.remove(), 300);
+                }
+            }, duracao);
+        } catch (e) {
+            console.warn('[BALAO] Falha ao exibir balão, usando fallback alert:', e);
+            alert(mensagem);
+        }
+    };
+
+    // ==================== CLIQUE NO BOTÃO ELLIPSIS (REMOVIDO) ====================
+    // 🔥 O ellipsis foi removido dos comentários. A ação "Excluir" agora é centralizada no HeaderManager.
+
+    // ==================== INICIALIZA O ANEXOS MANAGER ====================
+    if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
+        AnexosManager.init();
+    }
+
+    // ==================== LIGHTBOX PARA IMAGENS DOS COMENTÁRIOS ====================
+    function initLightbox() {
+        const imagens = document.querySelectorAll('.comentario-img');
+        imagens.forEach(img => {
+            img.removeEventListener('click', abrirLightboxImagem);
+            img.addEventListener('click', abrirLightboxImagem);
+        });
+    }
+
+    function abrirLightboxImagem(e) {
+        e.stopPropagation();
+        const imgSrc = e.currentTarget.src;
+        if (!imgSrc) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    }
+
+    window.abrirLightboxManual = function(src) {
+        if (!src) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    };
+
+    // ============================================================
+    // 🔥 LÓGICA DE COMENTÁRIOS (APENAS SE POST ESTIVER ATIVO)
+    // ============================================================
     <?php if ($post_esta_ativo): ?>
         const barraFofoca = document.querySelector('.sessao-fofoca-focada');
         const campoTexto = document.querySelector('.textarea-chat');
@@ -522,12 +690,50 @@ $total_reacoes = array_sum($reacoes_detalhes);
         // ============================================================
         inputFile.addEventListener('change', function() {
             if (this.files.length > 0) {
-                if (typeof window.adicionarAnexo === 'function') {
-                    window.adicionarAnexo(this.files[0]);
-                } else {
-                    console.warn('[comentarios-post] AnexosManager não disponível para adicionar imagem.');
+                // 🔥 VALIDA CADA ARQUIVO SELECIONADO
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    const maxSize = 2 * 1024 * 1024; // 2MB
+                    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+                    // Valida tamanho
+                    if (file.size > maxSize) {
+                        window.exibirBalao(
+                            `❌ Arquivo excede 2MB (${(file.size / 1024 / 1024).toFixed(1)}MB)`,
+                            'erro',
+                            btnEnviar
+                        );
+                        this.value = ''; // limpa o input
+                        return; // interrompe o loop
+                    }
+
+                    // Valida tipo
+                    if (!tiposPermitidos.includes(file.type)) {
+                        window.exibirBalao(
+                            '❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
+                            'erro',
+                            btnEnviar
+                        );
+                        this.value = '';
+                        return;
+                    }
+
+                    // Sucesso: exibe o balão com o tamanho
+                    const tamanhoKB = Math.round(file.size / 1024);
+                    window.exibirBalao(
+                        `✅ Arquivo aceito (${tamanhoKB} KB)`,
+                        'sucesso',
+                        btnEnviar
+                    );
+
+                    // Adiciona ao AnexosManager
+                    if (typeof window.adicionarAnexo === 'function') {
+                        window.adicionarAnexo(file);
+                    } else {
+                        console.warn('[comentarios-post] AnexosManager não disponível para adicionar imagem.');
+                    }
                 }
-                this.value = '';
+                this.value = ''; // limpa o input após processar
             }
         });
 
@@ -648,11 +854,12 @@ $total_reacoes = array_sum($reacoes_detalhes);
         }
 
         // ============================================================
-        // 🔥 ENVIO DO COMENTÁRIO
+        // 🔥 ENVIO DO COMENTÁRIO (COM CSRF E BALÃO)
         // ============================================================
         if (form && btnEnviar) {
             btnEnviar.addEventListener('click', function(e) {
                 e.preventDefault();
+
                 const textoAtual = campoTexto ? campoTexto.value.trim() : '';
 
                 let temAnexo = false;
@@ -665,11 +872,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 }
 
                 if (textoAtual === '' && !temAnexo) {
-                    if (typeof mostrarFeedback === 'function') {
-                        mostrarFeedback("⚠️ Escreva algo ou adicione uma imagem antes de enviar.", 'erro');
-                    } else {
-                        alert("Escreva algo ou adicione uma imagem antes de enviar.");
-                    }
+                    window.exibirBalao('Escreva algo ou adicione uma imagem/GIF.', 'info', btnEnviar);
                     return;
                 }
 
@@ -689,12 +892,26 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     }
                 }
 
+                // 🔥 GARANTE QUE O CSRF TOKEN ESTEJA NO FORMDATA
+                const csrfInput = document.getElementById('csrf_token');
+                if (csrfInput && csrfInput.value) {
+                    formData.set('csrf_token', csrfInput.value);
+                    console.log('[CSRF] Token adicionado:', csrfInput.value);
+                } else {
+                    console.error('[CSRF] Token não encontrado no DOM!');
+                    window.exibirBalao('Erro de segurança. Recarregue a página.', 'erro', btnEnviar);
+                    return;
+                }
+
                 const btn = btnEnviar;
                 const originalIcon = btn.innerHTML;
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-                if (typeof limparFeedback === 'function') limparFeedback();
+                // 🔥 DESABILITA OS BOTÕES DE REMOVER ANEXO DURANTE O ENVIO
+                document.querySelectorAll('.btn-remover-anexo').forEach(b => b.disabled = true);
+
+                window.exibirBalao('Enviando comentário...', 'info', btn, 1500);
 
                 fetch('enviar-comentario.php', {
                         method: 'POST',
@@ -714,6 +931,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     })
                     .then(data => {
                         if (data.status === 'success') {
+                            window.exibirBalao('Comentário enviado! 🎉', 'sucesso', btn);
                             cancelarResposta();
                             const container = document.querySelector('.lista-comentarios-social');
                             container.insertAdjacentHTML('beforeend', data.html);
@@ -733,35 +951,28 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 if (gifInput) gifInput.value = '';
                             }
 
-                            if (typeof limparFeedback === 'function') limparFeedback();
                             gaveta.style.display = 'none';
                             gavetaAberta = false;
                             verificarConteudo();
                         } else {
-                            if (typeof mostrarFeedback === 'function') {
-                                mostrarFeedback("Erro: " + data.message, 'erro');
-                            } else {
-                                alert("Erro: " + data.message);
-                            }
+                            window.exibirBalao('Erro: ' + (data.message || 'Falha ao enviar.'), 'erro', btn);
                         }
                     })
                     .catch(err => {
                         console.error(err);
-                        if (typeof mostrarFeedback === 'function') {
-                            mostrarFeedback("ERRO: " + err.message, 'erro');
-                        } else {
-                            alert("ERRO: " + err.message);
-                        }
+                        window.exibirBalao('ERRO: ' + err.message, 'erro', btn);
                     })
                     .finally(() => {
                         btn.innerHTML = originalIcon;
                         btn.disabled = false;
+                        // 🔥 REABILITA OS BOTÕES DE REMOVER ANEXO
+                        document.querySelectorAll('.btn-remover-anexo').forEach(b => b.disabled = false);
                     });
             });
         }
 
         // ============================================================
-        // 🔥 CONTADOR DE CARACTERES E AUTO-ALTURA
+        // CONTADOR DE CARACTERES E AUTO-ALTURA
         // ============================================================
         if (campoTexto) {
             campoTexto.addEventListener('input', function() {
@@ -776,9 +987,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
             });
         }
 
-        // ============================================================
-        // 🔥 OBSERVER PARA LIGHTBOX (comentários existentes)
-        // ============================================================
+        // OBSERVER PARA LIGHTBOX
         const observerLightbox = new MutationObserver(() => initLightbox());
         const listaComentarios = document.querySelector('.lista-comentarios-social');
         if (listaComentarios) observerLightbox.observe(listaComentarios, {
@@ -787,9 +996,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
         });
         document.addEventListener('DOMContentLoaded', initLightbox);
 
-        // ============================================================
-        // 🔥 INICIALIZA O ESTADO DO BOTÃO DE ENVIAR
-        // ============================================================
         verificarConteudo();
 
     <?php endif; // fim do bloco de comentários ativos 

@@ -108,7 +108,7 @@ if (isset($_SESSION['usuario_id'])) {
 }
 
 // ==================================================
-// 3. LOOP DE EXIBIÇÃO (COM B2 INTEGRADO E GRID DE ANEXOS)
+// 3. LOOP DE EXIBIÇÃO (COM B2 INTEGRADO E GRID/CARROSSEL)
 // ==================================================
 $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
 
@@ -129,7 +129,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $usuario_logado = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;
     $sou_eu = ($linha['usuario_id'] == $usuario_logado);
 
-    $cor_post = $sou_eu ? '#FFD700' : ($linha['pref_cor_padrao'] ?? '#70cde4');
+    $cor_post = $sou_eu ? '#ffbb00' : ($linha['pref_cor_padrao'] ?? '#70cde4');
     $vibe_post = $linha['pref_vibe_padrao'] ?? 'vibe-glass';
     $classe_admin = $sou_eu ? 'post-admin-gold' : '';
 
@@ -140,7 +140,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         $link_autor = '#';
     } else {
         $avatar = !empty($linha['foto']) ? $linha['foto'] : 'uploads/ui/default.webp';
-        // 🔥 Normaliza o caminho do avatar com a função centralizada
         if ($b2 !== null && !empty($avatar) && !filter_var($avatar, FILTER_VALIDATE_URL)) {
             try {
                 $avatar = obterUrlImagem($avatar, $b2, true);
@@ -149,7 +148,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 $avatar = 'uploads/ui/default.webp';
             }
         }
-        // 🔥 CORREÇÃO: evitar null em htmlspecialchars e urlencode
         $username = $linha['username'] ?? '';
         $nome_autor = !empty($username) ? '@' . htmlspecialchars($username) : 'Usuário';
         $link_autor = !empty($username) ? 'ver-perfil.php?user=' . urlencode($username) : '#';
@@ -158,11 +156,12 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 
     // ============================================================
     // 🔥 EXIBIÇÃO DOS ANEXOS (MÚLTIPLOS VIA JSON OU FALLBACK)
+    // 🔥 MODO CARROSSEL ATIVADO APENAS EM COMUNIDADES (comunidade_id > 0)
     // ============================================================
     $anexos_html = '';
     $anexos_exibicao = null;
+    $is_comunidade = ($comunidade_id > 0);
 
-    // Tenta decodificar o campo anexos (JSON)
     if (!empty($linha['anexos'])) {
         $anexos_exibicao = json_decode($linha['anexos'], true);
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($anexos_exibicao)) {
@@ -171,19 +170,49 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     }
 
     if (!empty($anexos_exibicao) && is_array($anexos_exibicao)) {
-        // 🔥 Renderiza o grid com múltiplos anexos
-        $anexos_html = '<div class="feed-anexos-grid">';
-        foreach ($anexos_exibicao as $anexo) {
-            if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
-                $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
-            } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
-                $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
+        // 🔥 CARROSSEL (apenas em comunidade com mais de 1 anexo)
+        if ($is_comunidade && count($anexos_exibicao) > 1) {
+            $anexos_html = '<div class="carrossel-wrapper">';
+            foreach ($anexos_exibicao as $anexo) {
+                if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
+                    $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
+                    $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
+                } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
+                    $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
+                }
             }
+            $anexos_html .= '</div>';
+            
+            // 🔥 INDICADORES (bolinhas + número)
+            if (count($anexos_exibicao) > 1) {
+                $anexos_html .= '<div class="carrossel-indicadores">';
+                $anexos_html .= '  <span class="carrossel-numero" id="carrossel-numero-' . $post_id_atual . '">1/' . count($anexos_exibicao) . '</span>';
+                for ($i = 0; $i < count($anexos_exibicao); $i++) {
+                    $anexos_html .= '<span class="indicador" data-index="' . $i . '"></span>';
+                }
+                $anexos_html .= '</div>';
+            }
+
+            // 🔥 SETAS DE NAVEGAÇÃO (PC)
+            $anexos_html .= '<div class="carrossel-nav">';
+            $anexos_html .= '  <button class="carrossel-prev" data-post="' . $post_id_atual . '" aria-label="Anterior">‹</button>';
+            $anexos_html .= '  <button class="carrossel-next" data-post="' . $post_id_atual . '" aria-label="Próximo">›</button>';
+            $anexos_html .= '</div>';
+        } else {
+            // 🔥 GRID (padrão para outros contextos ou comunidade com 1 anexo)
+            $anexos_html = '<div class="feed-anexos-grid">';
+            foreach ($anexos_exibicao as $anexo) {
+                if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
+                    $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
+                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
+                } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
+                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
+                }
+            }
+            $anexos_html .= '</div>';
         }
-        $anexos_html .= '</div>';
     } elseif (!empty($linha['imagem_url'])) {
-        // 🔥 Fallback: imagem única (compatibilidade)
+        // Fallback: imagem única (compatibilidade)
         $nome_imagem = $linha['imagem_url'];
         $defaults = ['default_feminino.jpg', 'default_masculino.jpg', 'default_capa_feminino.webp', 'default_capa_masculino.webp'];
         if (in_array($nome_imagem, $defaults)) {
@@ -198,7 +227,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 ?>
     <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>"
         data-id="<?php echo $post_id_atual; ?>"
-        style="border: 2px solid <?php echo $cor_post; ?> !important;">
+        style="border: 2px solid <?php echo $cor_post; ?>">
         <div class="card-header">
             <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
             <span class="post-time"><?php echo $data_post; ?></span>
@@ -245,6 +274,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         </div>
         </div>
     </article>
-<?php //Fim do loop de exibição de posts
+<?php
 }
 ?>

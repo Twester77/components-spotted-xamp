@@ -1,41 +1,43 @@
 <?php
 // 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
 require_once __DIR__ . '/auth_check.php';
-
 require_once __DIR__ . '/includes/upload_engine.php';
+
+// 🔥 GARANTE CSRF TOKEN
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 // 🚨 CURTO-CIRCUITO DE SEGURANÇA MÁXIMA (Sem confiar em username de sessão)
 if (!isset($_GET['user'])) {
     if (isset($_SESSION['usuario_id'])) {
         $meu_id_fallback = $_SESSION['usuario_id'];
-
-        // Vamos direto na Fonte da Verdade (O Banco de Dados) pelo ID que NUNCA muda!
         $busca_nome = mysqli_query($conn, "SELECT username FROM usuarios WHERE id = '$meu_id_fallback'");
-
         if ($busca_nome && $dados_nome = mysqli_fetch_assoc($busca_nome)) {
-            // Redireciona com o username mais atualizado do universo
             header("Location: ver-perfil.php?user=" . $dados_nome['username']);
             exit();
         }
     }
-
-    // Se não achar nada ou não estiver logado, feed nele
     header("Location: feed.php");
     exit();
 }
 
-//  SÓ DAQUI PRA BAIXO O PHP PODE CUSPIR LAYOUT NA TELA
+// SÓ DAQUI PRA BAIXO O PHP PODE CUSPIR LAYOUT NA TELA
 include 'includes/header.php';
 include 'includes/navbar.php';
 
-$user_get = mysqli_real_escape_string($conn, $_GET['user']);
-// BUSCA COMPLETA: Agora pegamos as preferências de visual
-$sql = "SELECT * FROM usuarios WHERE username = '$user_get'";
-$res = mysqli_query($conn, $sql);
-$dados = mysqli_fetch_assoc($res);
+// 🔥 Usa prepared statement em vez de mysqli_real_escape_string
+$user_get = $_GET['user'];
+$sql = "SELECT * FROM usuarios WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_get);
+$stmt->execute();
+$res = $stmt->get_result();
+$dados = $res->fetch_assoc();
+$stmt->close();
 
 if (!$dados) {
-    echo "<main class= 'erro-fenda'><h2>Habitante não localizado, tente outro nome por favor! </h2></main>";
+    echo "<main class='erro-fenda'><h2>Habitante não localizado, tente outro nome por favor!</h2></main>";
     include 'includes/footer.php';
     exit();
 }
@@ -46,81 +48,63 @@ $ja_segue = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM seguidores WHERE
 
 // PREFERÊNCIAS DE AURA
 $vibe_user = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
-$cor_user  = $dados['pref_cor_padrao'] ?? '#ffffff';
+$cor_user  = $dados['pref_cor_padrao'] ?? '#08f7ff';
 
-// 1. Limpa os dados vindos do banco para evitar erros
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
-// ============================================================
-// 🔥 CORREÇÃO: OBTÉM AS URLs VIA PROXY (B2)
-// ============================================================
+// OBTÉM AS URLs VIA PROXY (B2)
 try {
     $b2 = B2Client::getInstance();
 } catch (Exception $e) {
     $b2 = null;
 }
 
-// Foto (avatar) – usa proxy se existir, fallback local
-if (!empty($foto_limpa)) {
-    $foto_user = obterUrlImagem($foto_limpa, $b2, true) ?? 'uploads/ui/default_masculino.jpg';
-} else {
-    $foto_user = 'uploads/ui/default_masculino.jpg';
-}
-
-// Capa – usa proxy se existir, fallback local
-if (!empty($capa_limpa)) {
-    $capa_user = obterUrlImagem($capa_limpa, $b2, true) ?? 'uploads/ui/default_capa_masculino.webp';
-} else {
-    $capa_user = 'uploads/ui/default_capa_masculino.webp';
-}
+$foto_user = !empty($foto_limpa) ? (obterUrlImagem($foto_limpa, $b2, true) ?? 'uploads/ui/default_masculino.jpg') : 'uploads/ui/default_masculino.jpg';
+$capa_user = !empty($capa_limpa) ? (obterUrlImagem($capa_limpa, $b2, true) ?? 'uploads/ui/default_capa_masculino.webp') : 'uploads/ui/default_capa_masculino.webp';
 
 $is_presenca = ($id_visto == 1);
-
 $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM seguidores WHERE id_seguido = '$id_visto'"))['total'];
 ?>
 
 <style>
-    /* Aplicando a cor e brilho dinâmico no Avatar */
     .avatar-main {
         border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>;
         box-shadow: 0 0 8px <?php echo $cor_user; ?>55;
-        /* Cor com transparência */
     }
-
     <?php if ($is_presenca): ?>.avatar-main {
         box-shadow: 0 0 5px rgba(255, 188, 0, 0.7);
     }
-
     <?php endif; ?>
 </style>
 
-<!-- Adicionamos a classe da Vibe e variavel de cor diretamente no container principal -->
-<main class="main-perfil-container-publico <?php echo $vibe_user; ?> <?php echo $is_presenca ? 'perfil-gold' : ''; ?>"
-    style="--aura-user: <?php echo $cor_user; ?>;">
+<main class="main-perfil-container-publico <?php echo $vibe_user; ?> <?php echo $is_presenca ? 'perfil-gold' : ''; ?>" style="--aura-user: <?php echo $cor_user; ?>;">
 
-    <!-- <?php if ($vibe_user === 'vibe-ads'): ?> -->
+    <!-- CSRF Token (para as avaliações) -->
+    <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+
+    <!-- HEXÁGONOS (ADS) -->
+    <?php if ($vibe_user === 'vibe-ads'): ?>
         <div class="hex-bg">
             <?php
-            // Total de hexágonos para cobrir a tela (ajuste conforme necessário)
             $total = 30;
             for ($i = 0; $i < $total; $i++):
-                // Define se é estático ou dinâmico (proporção ~70% estático, 30% dinâmico)
                 $tipo = ($i % 3 === 0) ? 'dynamic' : 'static';
-                // Delay aleatório para a flutuação (entre 0s e 8s)
                 $floatDelay = number_format(mt_rand(0, 80) / 10, 1);
-                // Se for dinâmico, o delay da ativação será controlado pelo JS
             ?>
                 <div class="hex-item <?php echo $tipo; ?>"
                     style="animation-delay: <?php echo $floatDelay; ?>s;
                     <?php if ($tipo === 'dynamic'): ?>
-                    data-index=" <?php echo $i; ?>"
+                    data-index="<?php echo $i; ?>"
                     <?php endif; ?>">
                 </div>
             <?php endfor; ?>
         </div>
-    <!-- <?php endif; ?> -->
+    <?php endif; ?>
 
+    <!-- ============================================================
+    CAPA + AVATAR + BIO
+    ============================================================ -->
     <div class="perfil-header-container">
         <div class="capa-container">
             <?php if (!empty($dados['capa'])): ?>
@@ -128,7 +112,6 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             <?php else: ?>
                 <div class="capa-default" style="background: linear-gradient(135deg, <?php echo $cor_user; ?>88 0%, #000 100%); width: 100%; height: 100%;"></div>
             <?php endif; ?>
-
             <div class="avatar-posicionador">
                 <img src="<?= htmlspecialchars($foto_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.jpg';">
                 <?php if ($is_presenca): ?>
@@ -157,7 +140,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 <?php echo !empty($dados['bio']) ? nl2br(htmlspecialchars($dados['bio'] ?? '', ENT_QUOTES, 'UTF-8')) : "Habitante da Fenda..."; ?>
             </div>
 
-            <div class="perfil-controles">
+            <div class="perfil-controles-publico">
                 <?php if ($_SESSION['usuario_id'] != $id_visto): ?>
                     <a href="seguir.php?id=<?php echo $id_visto; ?>&user=<?php echo $user_get; ?>"
                         class="btn-seguir-fenda <?php echo $ja_segue ? 'seguindo' : ''; ?>"
@@ -169,153 +152,587 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
         </div>
     </div>
 
-    <!-- ÁREA DO FEED PESSOAL -->
-    <section class="feed-usuario-fenda" style="margin-top: 30px;">
-        <h3 style="text-align: center; color: #ccc; margin-bottom: 20px;">ÚLTIMAS POSTAGENS DE @<?php echo strtoupper($user_get); ?></h3>
-        <div class="container-feed">
-            <!-- O Motor Universal vai preencher aqui -->
-        </div>
+    <!-- ============================================================
+    SOCIAL COLLAPSE (DEPOIMENTOS + AVALIAÇÕES)
+    ============================================================ -->
+    <div class="social-collapse-container">
+        <button class="btn-toggle-social" id="btn-toggle-social" aria-expanded="false">
+            <i class="fas fa-chevron-down"></i>
+            <span>Ver depoimentos e avaliações</span>
+        </button>
+        <div class="social-collapse" id="social-collapse">
+            <!-- DEPOIMENTOS -->
+            <section class="depoimentos-section">
+                <div class="depoimentos-header">
+                    <h3><i class="fas fa-quote-left"></i> Depoimentos</h3>
+                    <div class="depoimentos-actions">
+                        <?php if (isset($_SESSION['usuario_id']) && $_SESSION['usuario_id'] != $id_visto): ?>
+                            <button type="button" class="btn-escrever-depoimento" id="btn-abrir-modal-depoimento" data-destinatario="<?= $id_visto ?>" data-username="<?= htmlspecialchars($dados['username']) ?>">
+                                <i class="fas fa-pen"></i> Escrever
+                            </button>
+                        <?php endif; ?>
+                        <button id="btn-toggle-depoimentos" class="btn-toggle-depoimentos" aria-expanded="false">
+                            <i class="fas fa-chevron-down"></i> <span id="depoimentos-toggle-texto">Ver mais</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="depoimentos-container" data-usuario="<?= $id_visto ?>">
+                    <div class="loading-depoimentos">Carregando depoimentos...</div>
+                </div>
+            </section>
 
+            <!-- AVALIAÇÕES -->
+            <section class="avaliacoes-section">
+                <div class="avaliacoes-header">
+                    <h3><i class="fas fa-star"></i> Avaliações</h3>
+                </div>
+                <div id="avaliacoes-container" data-usuario="<?= $id_visto ?>">
+                    <div class="loading-avaliacoes">Carregando avaliações...</div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    MODAL DE ESCREVER DEPOIMENTO
+    ============================================================ -->
+    <div id="modal-depoimento" class="modal-depoimento-overlay" style="display: none;">
+        <div class="modal-depoimento-content">
+            <button type="button" class="modal-depoimento-fechar" id="btn-fechar-modal-depoimento">&times;</button>
+            <div id="modal-depoimento-body">
+                <div class="loading-depoimentos">Carregando formulário...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    FEED PESSOAL
+    ============================================================ -->
+    <section class="feed-usuario-fenda" style="margin-top: 30px;">
+        <h3 style="text-align: center; margin-bottom: 20px;">ÚLTIMAS POSTAGENS DE @<?php echo strtoupper($user_get); ?></h3>
+        <div class="container-feed"><!-- O Motor Universal vai preencher aqui --></div>
         <div class="container-load-more" style="text-align: center; margin-top: 20px;">
             <button id="btn-load-more" class="btn-fenda-padrao">Exibir Mais</button>
         </div>
     </section>
-
-    <script>
-        (function() {
-            'use strict';
-
-            // Só executa se a vibe for ADS
-            const container = document.querySelector('.main-perfil-container-publico.vibe-ads');
-            if (!container) return;
-
-            // Busca APENAS os hexágonos dinâmicos (com a classe .dynamic)
-            const hexItems = container.querySelectorAll('.hex-item.dynamic');
-            if (!hexItems.length) return;
-
-            // Configurações
-            const config = {
-                waveInterval: 1600, // intervalo entre ondas (ms)
-                maxActive: Math.min(10, hexItems.length), // máximo acesos por vez
-                minActive: 3,
-                activeHexes: new Set()
-            };
-
-            // Função para ativar/desativar um hexágono dinâmico
-            function toggleHex(index, state) {
-                const hex = hexItems[index];
-                if (!hex) return;
-                if (state) {
-                    hex.classList.add('active');
-                } else {
-                    hex.classList.remove('active');
-                }
-            }
-
-            // Função que gera uma "onda" aleatória
-            function wave() {
-                // Remove alguns hexágonos ativos (apaga ~60% deles)
-                const toRemove = Math.floor(config.activeHexes.size * 0.6);
-                const removeList = Array.from(config.activeHexes);
-                for (let i = 0; i < Math.min(toRemove, removeList.length); i++) {
-                    const idx = removeList[i];
-                    toggleHex(idx, false);
-                    config.activeHexes.delete(idx);
-                }
-
-                // Escolhe novos hexágonos para ativar (entre minActive e maxActive)
-                const available = [];
-                for (let i = 0; i < hexItems.length; i++) {
-                    if (!config.activeHexes.has(i)) available.push(i);
-                }
-
-                // Embaralha e seleciona alguns
-                const shuffled = available.sort(() => Math.random() - 0.5);
-                const targetCount = Math.floor(Math.random() * (config.maxActive - config.minActive + 1)) + config.minActive;
-                const toActivate = shuffled.slice(0, Math.min(targetCount, shuffled.length));
-
-                toActivate.forEach(idx => {
-                    toggleHex(idx, true);
-                    config.activeHexes.add(idx);
-                });
-
-                // Agenda a próxima onda com variação aleatória
-                const nextDelay = config.waveInterval + (Math.random() * 800) - 400;
-                setTimeout(wave, nextDelay);
-            }
-
-            // Inicia o ciclo
-            setTimeout(wave, 500);
-
-            // (Opcional) Pausar quando a página não estiver visível – melhora performance
-            document.addEventListener('visibilitychange', function() {
-                // Se quiser pausar, pode adicionar lógica aqui
-            });
-
-        })();
-    </script>
 </main>
 
 <script>
-    let offset = 0;
-    const urlParams = new URLSearchParams(window.location.search);
-    const usuarioAlvo = urlParams.get('user');
-    const btnLoad = document.getElementById('btn-load-more');
-    const feedContainer = document.querySelector('.container-feed');
+    // ============================================================
+    // LOG DE INICIALIZAÇÃO
+    // ============================================================
+    console.log('[VER-PERFIL] 🟢 Página carregada. Inicializando módulos...');
 
-    function carregarFeedPerfil() {
-        if (btnLoad) btnLoad.innerText = "BUSCANDO NA FENDA...";
+    // ============================================================
+    // TOGGLE SOCIAL COLLAPSE
+    // ============================================================
+    (function() {
+        const btn = document.getElementById('btn-toggle-social');
+        const collapse = document.getElementById('social-collapse');
+        if (!btn || !collapse) return;
 
-        // Chamada ao Motor Universal com filtro de perfil
-        fetch(`motor-feed.php?offset=${offset}&tipo=perfil&user=${usuarioAlvo}`)
-            .then(response => response.text())
-            .then(data => {
-                if (data.trim() === "FIM_DADOS") {
-                    if (btnLoad) btnLoad.style.display = "none";
-                } else {
-                    // Insere os novos posts
-                    feedContainer.insertAdjacentHTML('beforeend', data);
-
-                    // 🔥 RECONFIGURA OS POSTS PARA ATIVAR O "LER MAIS" (SE NÃO ESTIVER NO MODO SWIPE)
-                    if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
-                        configurarPosts();
-                    }
-
-                    offset += 10;
-                    if (btnLoad) btnLoad.innerText = "EXIBIR MAIS";
-                }
-            })
-            .catch(err => {
-                console.error("[AJAX] Erro ao carregar feed do perfil:", err);
-                if (btnLoad) btnLoad.innerText = "ERRO AO CARREGAR";
-            });
-    }
-
-    // ==================== 🔥 OBSERVADOR PARA ALTERNÂNCIA DE MODOS ====================
-    // Reconfigura os posts quando o usuário sai do modo swipe
-    const observerModoSwipe = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'class') {
-                // Verifica se a classe 'modo-swipe-ativo' foi removida
-                if (!document.body.classList.contains('modo-swipe-ativo')) {
-                    // Saiu do modo swipe → reconfigura os posts para ativar "Ler Mais"
-                    if (typeof configurarPosts === 'function') {
-                        configurarPosts();
-                    }
-                }
+        btn.addEventListener('click', function() {
+            const isOpen = collapse.classList.toggle('aberto');
+            this.classList.toggle('aberto');
+            this.setAttribute('aria-expanded', isOpen);
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-chevron-down', !isOpen);
+                icon.classList.toggle('fa-chevron-up', isOpen);
+            }
+            const span = this.querySelector('span');
+            if (span) {
+                span.textContent = isOpen ? 'Esconder depoimentos e avaliações' : 'Ver depoimentos e avaliações';
             }
         });
-    });
+    })();
 
-    // Inicia a observação no body
-    observerModoSwipe.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    // ============================================================
+    // MODAL DE ESCREVER DEPOIMENTO
+    // ============================================================
+    (function() {
+        const btnAbrir = document.getElementById('btn-abrir-modal-depoimento');
+        const modal = document.getElementById('modal-depoimento');
+        const btnFechar = document.getElementById('btn-fechar-modal-depoimento');
+        const body = document.getElementById('modal-depoimento-body');
 
-    // ==================== INICIALIZAÇÃO ====================
-    carregarFeedPerfil();
+        if (!btnAbrir || !modal) return;
 
-    if (btnLoad) {
-        btnLoad.addEventListener('click', carregarFeedPerfil);
+        function abrirModal() {
+            const destinatarioId = btnAbrir.dataset.destinatario;
+            modal.style.display = 'flex';
+            body.innerHTML = '<div class="loading-depoimentos">Carregando formulário...</div>';
+
+            fetch(`escrever-depoimento-modal.php?destinatario=${destinatarioId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    body.innerHTML = html;
+                    const csrfInput = body.querySelector('input[name="csrf_token"]');
+                    if (csrfInput) {
+                        const token = document.getElementById('csrf_token')?.value || '';
+                        csrfInput.value = token;
+                    }
+                    configurarEnvioDepoimento();
+                })
+                .catch(err => {
+                    console.error('[MODAL DEPOIMENTO] Erro ao carregar:', err);
+                    body.innerHTML = '<p style="text-align:center; color:#ff6b6b; padding:20px;">Erro ao carregar formulário. Tente novamente.</p>';
+                });
+        }
+
+        function fecharModal() {
+            modal.style.display = 'none';
+            body.innerHTML = '';
+        }
+
+        btnAbrir.addEventListener('click', abrirModal);
+        btnFechar.addEventListener('click', fecharModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) fecharModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                fecharModal();
+            }
+        });
+
+        function configurarEnvioDepoimento() {
+            const form = body.querySelector('#form-depoimento');
+            if (!form) return;
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const btnSubmit = form.querySelector('button[type="submit"]');
+                const originalText = btnSubmit.innerHTML;
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+                const formData = new FormData(form);
+
+                fetch('processa-depoimento.php', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('✅ Depoimento enviado com sucesso! Aguarde a aprovação.');
+                        fecharModal();
+                        // 🔥 CORREÇÃO: Recarrega a lista de depoimentos do zero
+                        const container = document.getElementById('depoimentos-container');
+                        if (container) {
+                            // Reseta o estado de carregamento para recarregar do início
+                            const btnToggle = document.getElementById('btn-toggle-depoimentos');
+                            // Chama a função de recarga com substituição total
+                            if (typeof carregarDepoimentos === 'function') {
+                                carregarDepoimentos(3, true);
+                            } else {
+                                // Fallback: recarrega a página
+                                location.reload();
+                            }
+                        }
+                    } else {
+                        alert('❌ ' + (data.message || 'Erro ao enviar depoimento.'));
+                        btnSubmit.disabled = false;
+                        btnSubmit.innerHTML = originalText;
+                    }
+                })
+                .catch(err => {
+                    console.error('[MODAL DEPOIMENTO] Erro no envio:', err);
+                    alert('Erro de conexão. Tente novamente.');
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = originalText;
+                });
+            });
+        }
+    })();
+
+    // ============================================================
+// DEPOIMENTOS (AJAX + BOTÃO "VER MAIS" COM OFFSET)
+// ============================================================
+(function() {
+    console.log('[DEPOIMENTOS] Inicializando módulo...');
+
+    const container = document.getElementById('depoimentos-container');
+    const btnToggle = document.getElementById('btn-toggle-depoimentos');
+    const textoBtn = document.getElementById('depoimentos-toggle-texto');
+
+    if (!container) {
+        console.error('[DEPOIMENTOS] ❌ Container #depoimentos-container não encontrado!');
+        return;
     }
+
+    let limite = 3;
+    let carregando = false;
+    let todosCarregados = false;
+    let usuarioId = container.dataset.usuario;
+
+    console.log('[DEPOIMENTOS] Usuário ID:', usuarioId);
+
+    // 🔥 EXPORTA A FUNÇÃO PARA O ESCOPO GLOBAL
+    window.carregarDepoimentos = function(novoLimite, substituir = true) {
+        if (carregando) {
+            console.log('[DEPOIMENTOS] ⏳ Já está carregando, ignorando...');
+            return;
+        }
+        carregando = true;
+        console.log(`[DEPOIMENTOS] 🔄 Carregando depoimentos (limite: ${novoLimite}, substituir: ${substituir})...`);
+
+        if (substituir) {
+            container.innerHTML = '<div class="loading-depoimentos">Carregando...</div>';
+        }
+
+        const url = `motor-depoimentos.php?usuario_id=${usuarioId}&status=aprovado&limite=${novoLimite}`;
+        console.log('[DEPOIMENTOS] 📡 URL:', url);
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                console.log('[DEPOIMENTOS] ✅ Resposta recebida (tamanho:', html.length, 'bytes)');
+                if (substituir) {
+                    container.innerHTML = html;
+                } else {
+                    container.insertAdjacentHTML('beforeend', html);
+                }
+
+                // Verifica se acabaram os depoimentos
+                if (html.includes('sem-depoimentos') || html.trim() === '') {
+                    todosCarregados = true;
+                    if (btnToggle) btnToggle.style.display = 'none';
+                    console.log('[DEPOIMENTOS] 📭 Nenhum depoimento restante.');
+                } else {
+                    const totalDepoimentos = container.querySelectorAll('.depoimento-item').length;
+                    if (totalDepoimentos < novoLimite) {
+                        todosCarregados = true;
+                        if (btnToggle) btnToggle.style.display = 'none';
+                        console.log('[DEPOIMENTOS] 📭 Todos os depoimentos carregados.');
+                    } else {
+                        todosCarregados = false;
+                        if (btnToggle) {
+                            btnToggle.style.display = 'flex';
+                            textoBtn.textContent = 'Ver mais';
+                            btnToggle.disabled = false;
+                        }
+                        console.log('[DEPOIMENTOS] ✅ Mais depoimentos disponíveis.');
+                    }
+                }
+                carregando = false;
+            })
+            .catch(err => {
+                console.error('[DEPOIMENTOS] ❌ Erro no fetch:', err);
+                container.innerHTML = `<p class="sem-depoimentos">Erro ao carregar depoimentos: ${err.message}</p>`;
+                carregando = false;
+            });
+    };
+
+    // ============================================================
+    // BOTÃO "VER MAIS" – AUMENTA O LIMITE E RECARREGA A LISTA
+    // ============================================================
+    if (btnToggle) {
+        btnToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('[DEPOIMENTOS] 🖱️ Botão "Ver mais" clicado.');
+            if (todosCarregados || carregando) {
+                console.log('[DEPOIMENTOS] ⏳ Já carregado ou em andamento.');
+                return;
+            }
+            // 🔥 AUMENTA O LIMITE EM 3 E RECARREGA A LISTA INTEIRA
+            const novoLimite = limite + 3;
+            textoBtn.textContent = 'Carregando...';
+            this.disabled = true;
+            window.carregarDepoimentos(novoLimite, true); // substitui a lista
+            limite = novoLimite; // atualiza o limite para o próximo clique
+        });
+    }
+
+    // Carrega os primeiros depoimentos (3)
+    window.carregarDepoimentos(limite, true);
+})();
+
+    // ============================================================
+    // AVALIAÇÕES (CARREGAR E VOTAR)
+    // ============================================================
+    (function() {
+        console.log('[AVALIACOES] Inicializando módulo...');
+
+        const container = document.getElementById('avaliacoes-container');
+        if (!container) {
+            console.error('[AVALIACOES] ❌ Container #avaliacoes-container não encontrado!');
+            return;
+        }
+
+        const usuarioId = container.dataset.usuario;
+        console.log('[AVALIACOES] Usuário ID:', usuarioId);
+
+        function carregarAvaliacoes() {
+            console.log('[AVALIACOES] 🔄 Carregando avaliações...');
+            container.innerHTML = '<div class="loading-avaliacoes">Carregando...</div>';
+
+            const url = `motor-avaliacoes.php?usuario_id=${usuarioId}`;
+            console.log('[AVALIACOES] 📡 URL:', url);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    console.log('[AVALIACOES] ✅ Resposta recebida (tamanho:', html.length, 'bytes)');
+                    container.innerHTML = html;
+                    iniciarEventosEstrelas();
+                })
+                .catch(err => {
+                    console.error('[AVALIACOES] ❌ Erro no fetch:', err);
+                    container.innerHTML = `<p class="sem-avaliacoes">Erro ao carregar avaliações: ${err.message}</p>`;
+                });
+        }
+
+        function iniciarEventosEstrelas() {
+            console.log('[AVALIACOES] ⭐ Ativando eventos das estrelas...');
+
+            document.querySelectorAll('.estrela').forEach(estrela => {
+                estrela.removeEventListener('click', handlerVoto);
+                estrela.addEventListener('click', handlerVoto);
+            });
+
+            document.querySelectorAll('.btn-votar-estrela').forEach(btn => {
+                btn.removeEventListener('click', handlerVotoBtn);
+                btn.addEventListener('click', handlerVotoBtn);
+            });
+
+            console.log('[AVALIACOES] ✅ Eventos ativados.');
+        }
+
+        function handlerVoto(e) {
+            const estrela = e.currentTarget;
+            const tipo = estrela.dataset.tipo;
+            const nota = parseInt(estrela.dataset.nota);
+            const usuarioId = document.getElementById('avaliacoes-container').dataset.usuario;
+            console.log(`[AVALIACOES] ⭐ Voto: tipo=${tipo}, nota=${nota}, usuarioId=${usuarioId}`);
+            enviarVoto(tipo, nota, usuarioId);
+        }
+
+        function handlerVotoBtn(e) {
+            const btn = e.currentTarget;
+            const tipo = btn.dataset.tipo;
+            const estrelas = document.querySelectorAll(`.estrela[data-tipo="${tipo}"]`);
+            let nota = 0;
+            estrelas.forEach(el => {
+                if (el.classList.contains('cheia') || el.classList.contains('meia')) {
+                    nota = parseInt(el.dataset.nota);
+                }
+            });
+            if (nota === 0) {
+                alert('Selecione uma nota clicando nas estrelas primeiro.');
+                return;
+            }
+            const usuarioId = document.getElementById('avaliacoes-container').dataset.usuario;
+            console.log(`[AVALIACOES] ⭐ Voto via botão: tipo=${tipo}, nota=${nota}, usuarioId=${usuarioId}`);
+            enviarVoto(tipo, nota, usuarioId);
+        }
+
+        function enviarVoto(tipo, nota, usuarioId) {
+            const csrfToken = document.getElementById('csrf_token')?.value || '';
+            const formData = new FormData();
+            formData.append('csrf_token', csrfToken);
+            formData.append('honeypot', '');
+            formData.append('usuario_id', usuarioId);
+            formData.append('tipo', tipo);
+            formData.append('nota', nota);
+
+            console.log('[AVALIACOES] 📤 Enviando voto...', { tipo, nota, usuarioId });
+
+            fetch('motor-avaliacoes.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        console.log('[AVALIACOES] ✅ Voto registrado com sucesso!');
+                        alert('✅ Voto registrado com sucesso!');
+                        carregarAvaliacoes();
+                    } else {
+                        console.error('[AVALIACOES] ❌ Erro no voto:', data.erro);
+                        alert('❌ ' + (data.erro || 'Erro ao votar.'));
+                    }
+                })
+                .catch(err => {
+                    console.error('[AVALIACOES] ❌ Erro de rede:', err);
+                    alert('Erro de conexão. Tente novamente.');
+                });
+        }
+
+        carregarAvaliacoes();
+    })();
+
+    // ============================================================
+    // HEXÁGONOS (ADS)
+    // ============================================================
+    (function() {
+        console.log('[HEXAGONOS] Inicializando módulo...');
+
+        const container = document.querySelector('.main-perfil-container-publico.vibe-ads');
+        if (!container) {
+            console.log('[HEXAGONOS] ⏭️ Vibe ADS não ativa. Pulando.');
+            return;
+        }
+        const hexItems = container.querySelectorAll('.hex-item.dynamic');
+        if (!hexItems.length) {
+            console.log('[HEXAGONOS] ⏭️ Nenhum hexágono dinâmico encontrado.');
+            return;
+        }
+
+        console.log('[HEXAGONOS] ✅', hexItems.length, 'hexágonos dinâmicos encontrados.');
+
+        const config = {
+            waveInterval: 1600,
+            maxActive: Math.min(12, hexItems.length),
+            minActive: 4,
+            activeHexes: new Set()
+        };
+
+        function toggleHex(index, state) {
+            const hex = hexItems[index];
+            if (!hex) return;
+            state ? hex.classList.add('active') : hex.classList.remove('active');
+        }
+
+        function wave() {
+            const toRemove = Math.floor(config.activeHexes.size * 0.6);
+            const removeList = Array.from(config.activeHexes);
+            for (let i = 0; i < Math.min(toRemove, removeList.length); i++) {
+                const idx = removeList[i];
+                toggleHex(idx, false);
+                config.activeHexes.delete(idx);
+            }
+            const available = [];
+            for (let i = 0; i < hexItems.length; i++) {
+                if (!config.activeHexes.has(i)) available.push(i);
+            }
+            const shuffled = available.sort(() => Math.random() - 0.5);
+            const targetCount = Math.floor(Math.random() * (config.maxActive - config.minActive + 1)) + config.minActive;
+            const toActivate = shuffled.slice(0, Math.min(targetCount, shuffled.length));
+            toActivate.forEach(idx => {
+                toggleHex(idx, true);
+                config.activeHexes.add(idx);
+            });
+            setTimeout(wave, config.waveInterval + (Math.random() * 800) - 400);
+        }
+        setTimeout(wave, 500);
+        console.log('[HEXAGONOS] 🎬 Ondas iniciadas.');
+    })();
+
+    // ============================================================
+    // FEED PESSOAL
+    // ============================================================
+    (function() {
+        console.log('[FEED] Inicializando módulo...');
+
+        let offset = 0;
+        const urlParams = new URLSearchParams(window.location.search);
+        const usuarioAlvo = urlParams.get('user');
+        const btnLoad = document.getElementById('btn-load-more');
+        const feedContainer = document.querySelector('.container-feed');
+
+        if (!feedContainer) {
+            console.error('[FEED] ❌ Container .container-feed não encontrado!');
+            return;
+        }
+
+        console.log('[FEED] Usuário alvo:', usuarioAlvo);
+
+        function carregarFeedPerfil() {
+            console.log('[FEED] 🔄 Carregando feed (offset:', offset, ')...');
+            if (btnLoad) {
+                btnLoad.innerText = "BUSCANDO NA FENDA...";
+                btnLoad.disabled = true;
+            }
+
+            const url = `motor-feed.php?offset=${offset}&tipo=perfil&user=${usuarioAlvo}`;
+            console.log('[FEED] 📡 URL:', url);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    if (data.trim() === "FIM_DADOS") {
+                        console.log('[FEED] 📭 Fim do feed.');
+                        if (btnLoad) {
+                            btnLoad.style.display = "none";
+                            btnLoad.disabled = false;
+                        }
+                    } else {
+                        console.log('[FEED] ✅ Dados recebidos (tamanho:', data.length, 'bytes)');
+                        feedContainer.insertAdjacentHTML('beforeend', data);
+                        if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+                            configurarPosts();
+                        }
+                        offset += 10;
+                        if (btnLoad) {
+                            btnLoad.innerText = "EXIBIR MAIS";
+                            btnLoad.disabled = false;
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error('[FEED] ❌ Erro no fetch:', err);
+                    if (btnLoad) {
+                        btnLoad.innerText = "ERRO AO CARREGAR";
+                        btnLoad.disabled = false;
+                    }
+                });
+        }
+
+        carregarFeedPerfil();
+
+        if (btnLoad) {
+            btnLoad.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('[FEED] 🖱️ Botão "Exibir Mais" clicado.');
+                if (this.disabled) return;
+                carregarFeedPerfil();
+            });
+        }
+
+        const observerModoSwipe = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.attributeName === 'class') {
+                    if (!document.body.classList.contains('modo-swipe-ativo')) {
+                        if (typeof configurarPosts === 'function') {
+                            console.log('[FEED] 🔄 Saindo do modo swipe, reconfigurando posts...');
+                            configurarPosts();
+                        }
+                    }
+                }
+            });
+        });
+        observerModoSwipe.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    })();
+
+    console.log('[VER-PERFIL] ✅ Todos os módulos inicializados.');
 </script>
 
 <?php include 'includes/footer.php'; ?>

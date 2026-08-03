@@ -68,7 +68,7 @@
 
     let onPointerMoveHandler, onPointerUpHandler, onPointerCancelHandler;
 
-    function onPointerDown(e) {
+        function onPointerDown(e) {
         if (swipeLock) return;
         const card = e.target.closest('.spotted-card');
         if (!card) return;
@@ -86,9 +86,17 @@
         moveDetected = false;
         activeCard = card;
         isDragging = true;
+        
+        // 🛠️ PREPARAÇÃO DO TOQUE: Desliga transições antigas para o arrasto ser síncrono
         activeCard.classList.remove('com-transicao');
         activeCard.style.transition = 'none';
+        
+        // 🔥 Mantém o ponto de partida original limpo
         activeCard.style.transform = 'translate(-50%, -50%)';
+        activeCard.style.setProperty('--pos-x', '0px');
+        activeCard.style.setProperty('--pos-y', '0px');
+        activeCard.style.setProperty('--swipe-rot', '0deg');
+        
         activeCard.style.cursor = 'grabbing';
         activeCard.classList.add('dragging');
         startX = e.clientX; startY = e.clientY;
@@ -104,7 +112,6 @@
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
                 activeCard.style.cursor = 'grab';
                 activeCard.classList.remove('dragging');
-                // 🔥 CHAMA A FUNÇÃO GLOBAL DO MODAL
                 if (typeof window.mostrarMenuAcoes === 'function') {
                     window.mostrarMenuAcoes(activeCard.dataset.id, activeCard.classList.contains('post-admin-gold'), activeCard);
                 } else {
@@ -122,17 +129,26 @@
         if (!isDragging || !activeCard || swipeLock) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+        if (Math.abs(dx) < 15 && Math.abs(dy) < 15) return; 
         if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
         moveDetected = true;
         document.body.classList.add('fenda-arrastando');
         e.preventDefault(); e.stopPropagation();
-        currentX = dx; currentY = dy;
+
+        currentX = Math.round(dx);
+        currentY = Math.round(dy);
+
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         animationFrameId = requestAnimationFrame(() => {
             if (!isDragging || !activeCard) return;
-            const rotate = currentX / 30;
+            const rotate = Number((currentX / 25).toFixed(1)); 
+            
+            // Abordagem Híbrida: Move o principal síncrono e alimenta os filhos na GPU
             activeCard.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) rotate(${rotate}deg) scale(1.02)`;
+            activeCard.style.setProperty('--pos-x', `${currentX}px`);
+            activeCard.style.setProperty('--pos-y', `${currentY}px`);
+            activeCard.style.setProperty('--swipe-rot', `${rotate}deg`);
+
             const feedbackDir = document.querySelector('.feedback-direita');
             const feedbackEsq = document.querySelector('.feedback-esquerda');
             const feedbackCima = document.querySelector('.feedback-cima');
@@ -169,6 +185,8 @@
         card.classList.remove('dragging');
         resetFeedback();
         const threshold = 120;
+        
+        // Ativa a classe de mola para o retorno ou saída suave
         card.classList.add('com-transicao');
 
         if (dx < -threshold) {
@@ -206,7 +224,16 @@
         } else if (dy < -threshold && Math.abs(dx) < 80) {
             window.location.href = `comentarios-post.php?id=${idPost}#fofocar`;
         } else {
-            card.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
+            // 🛠️ O LUGAR CORRETO DO RESET DA MOLA VISUAL É AQUI!
+            
+            // 1. Zera as variáveis CSS para os cards secundários voltarem ao centro na GPU
+            card.style.setProperty('--pos-x', '0px');
+            card.style.setProperty('--pos-y', '0px');
+            card.style.setProperty('--swipe-rot', '0deg');
+
+            // 2. Remove o transform inline para a classe CSS (.com-transicao) executar a animação de mola nativa
+            card.style.transform = '';
+            
             setTimeout(() => { if (card) card.style.transition = 'none'; }, 300);
             resumeObserverLogs();
         }
@@ -214,6 +241,7 @@
         activeCard = null;
         startX = startY = currentX = currentY = 0;
     }
+
 
     function onPointerCancel(e) {
         if (activeCard) removerEfeitoPrisma(activeCard);

@@ -185,7 +185,7 @@ select:focus {
 
 .preview-perfil.vibe-neon .preview-avatar {
     border-color: var(--cor-aura, #70cde4);
-    box-shadow: 0 0 15px var(--cor-aura, #70cde4);
+    box-shadow: 0 0 10px var(--cor-aura, #70cde4);
 }
 
 @keyframes neon-flicker-subtle {
@@ -198,14 +198,14 @@ select:focus {
     54%,
     56%,
     100% {
-        filter: brightness(1) saturate(1);
-        box-shadow: 0 0 15px var(--cor-aura, #70cde4), 0 0 30px rgba(0, 0, 0, 0.5);
+        filter: brightness(0.95) saturate(0.95);
+        box-shadow: 0 0 10px var(--cor-aura, #70cde4), 0 0 15px rgba(0, 0, 0, 0.5);
     }
 
     20%,
     24%,
     55% {
-        filter: brightness(0.85) saturate(0.8);
+        filter: brightness(0.75) saturate(0.75);
         box-shadow: 0 0 5px var(--cor-aura, #70cde4), 0 0 10px rgba(0, 0, 0, 0.5);
     }
 }
@@ -268,7 +268,7 @@ select:focus {
     border: 1px solid rgba(255, 255, 255, 0.03) !important;
     border-top: 4px solid var(--cor-aura, #70cde4) !important;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    animation: ads-neon-glow-pulse 3.5s infinite ease-in-out alternate;
+    animation: ads-neon-glow-pulse-preview 3.5s infinite ease-in-out alternate;
     border-radius: 16px;
 }
 
@@ -299,7 +299,7 @@ select:focus {
     box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
 }
 
-@keyframes ads-neon-glow-pulse {
+@keyframes ads-neon-glow-pulse-preview {
     0% {
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
         border-top-color: var(--cor-aura, #70cde4);
@@ -692,6 +692,8 @@ select:focus {
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
     background: #00000094;
     position: relative;
     /* Garante que o 'X' de fechar se posicione certo */
@@ -1026,18 +1028,6 @@ select:focus {
 }
 
 
-/* AJUSTE FINAL: CAPA E BIO (UNIFICADO) */
-.main-perfil-container .perfil-gold {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 15px auto;
-    left: 50%;
-    padding: 15px;
-    border-radius: 30px;
-}
-
-
 
 /* Bio: Centralizada e com limite de largura */
 .campo-grupo textarea#bio,
@@ -1077,31 +1067,6 @@ form[action="confirma-login.php"] {
     width: 100%;
 }
 
-.capa-container {
-    width: 100%;
-    max-width: 1000px;
-    max-height: 380px;
-    aspect-ratio: 1000 / 380;
-    /* Mantém a proporção exata da capa */
-    overflow: visible;
-    position: relative;
-    /* Vital para o avatar aparecer */
-    background: #0a0a0a;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
-    border: 2px solid #9f49a7c0;
-    border-radius: 10px;
-}
-
-.capa-img {
-    position: relative;
-    z-index: 5;
-    object-fit: contain;
-    object-position: center;
-    display: block;
-    width: 100%;
-    height: 100%;
-    transition: max-width 0.4s ease-in-out;
-}
 
 .post-content,
 .card-body p,
@@ -1351,12 +1316,12 @@ section.sessao-publicar {
 
 /* --- O FORMULÁRIO EM ROW INTELIGENTE (FLEX WRAP) --- */
 .form-publicar {
-    width: 100% !important;
+    width: 100% ;
     margin-top: 15px;
     display: flex;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    align-items: flex-end !important;
+    flex-direction: row ;
+    flex-wrap: wrap ;
+    align-items: flex-end ;
     /* CORREÇÃO: Alinha todos por baixo, impedindo de esticarem */
     gap: 15px;
 }
@@ -1380,7 +1345,7 @@ section.sessao-publicar {
 .form-publicar .fenda-input {
     display: block;
     width: auto;
-    max-width: 100% !important;
+    max-width: 100% ;
     padding: clamp(10px, 1.5vw, 15px);
     /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
     border: 1px solid rgba(7, 4, 4, 0.2);
@@ -1542,7 +1507,7 @@ section.sessao-publicar {
     background: rgba(0, 0, 0, 0.25);
     justify-content: space-between;
     display: flex;
-    flex-direction: unset;
+    flex-direction: column;
 }
 
 .area-perdidos-vivo:focus-within {
@@ -1649,37 +1614,6 @@ section.sessao-publicar {
 }
 
 
-/* 1. Botão da Câmera (Capa) */
-
-.btn-mudar-capa {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    width: clamp(32px, 4vw + 8px, 48px);
-    height: clamp(32px, 4vw + 8px, 48px);
-    right: clamp(10px, 2vw, 25px);
-    /* Margem lateral fluida */
-    bottom: clamp(10px, 2vw, 25px);
-    /* Margem inferior fluida */
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    z-index: 10;
-}
-
-.btn-mudar-capa:hover {
-    background: var(--laranja-fenda);
-    transform: scale(1.2);
-}
-
-
-
 /* Container da Capa (O molde) */
 .capa-wrapper.viewer {
     width: 100%;
@@ -1698,7 +1632,7 @@ section.sessao-publicar {
 .img-capa-preview {
     max-width: 100%;
     max-height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center 25% !important;
     /* Foca um pouco acima do meio */
     display: block;
@@ -1708,14 +1642,46 @@ section.sessao-publicar {
 /* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
-    width: clamp(65px, 15vw + 10px, 150px);
-    height: clamp(65px, 15vw + 10px, 150px);
+    width: clamp(60px, 15vw + 5px, 145px);
+    height: clamp(60px, 15vw + 5px, 145px);
     aspect-ratio: 1/1;
     margin: -30px auto 20px auto;
     z-index: 10;
     display: flex;
-    justify-content: center !important;
-    align-items: center !important;
+    justify-content: center ;
+    align-items: center ;
+}
+
+/* 1. Botão da Câmera (Capa) */
+
+.btn-mudar-capa {
+    
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    width: clamp(30px, 4vw + 6px, 48px);
+    height: clamp(30px, 4vw + 6px, 48px);
+    right: 20px;
+    bottom: 20px;
+    right: clamp(15px, 2vw, 40px);
+    /* Margem lateral fluida */
+    bottom: clamp(15px, 2vw, 40px);
+    font-size: clamp(14px, 2vw, 20px);
+    /* Margem inferior fluida */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.btn-mudar-capa:hover {
+    background: rgba(255, 188, 0, 0.2);
+    background: var(--laranja-fenda);
+    transform: scale(1.2);
 }
 
 /* 2. Botão do Lápis (Trocar Avatar) */
@@ -1750,7 +1716,17 @@ section.sessao-publicar {
     /* Efeito de inclinação no lápis */
 }
 
+/*  AVATAR (CAPIVARA) */
 
+.perfil-header-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
 
 
 .login-btn {
@@ -1801,15 +1777,14 @@ input[type="checkbox"]:focus {
 
 .btn-salvar-perfil:hover {
     background-color: #fff;
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
 }
 
 
 /* 1. REGRAS GERAIS (Ajustadas para Flex) */
-.btn-editar-atalho {
+.perfil-controles .btn-editar-atalho {
     display: inline-flex;
-    align-items: center;
     justify-content: center;
     min-width: 120px;
     width: auto;
@@ -1836,6 +1811,8 @@ input[type="checkbox"]:focus {
     flex: 1 1 150px;
     max-width: 100%;
     text-align: center;
+    align-items: center;
+    
 }
 
 
@@ -1846,62 +1823,6 @@ input[type="checkbox"]:focus {
     transform: scale(1.03);
     filter: brightness(1.05);
     box-shadow: 0 8px 15px rgba(255, 188, 0, 0.4);
-}
-
-
-/* 3. O CONTAINER PAI (Atualizado para Row Responsivo) */
-.perfil-controles {
-    display: flex;
-    /* Mudado de inline-flex para flex puro */
-    flex-direction: row;
-    flex-wrap: wrap;
-    /* Permite quebrar a linha (um embaixo do outro) no celular */
-    justify-content: space-between;
-    align-items: center;
-    /* Alinha os botões verticalmente no meio */
-    gap: 15px;
-    margin: 20px auto;
-    width: 100%;
-    clear: both;
-}
-
-/* 1. BOTÃO PADRÃO (ESTADO: SEGUIR) */
-.btn-seguir-fenda {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
-
-/* 2. ESTADO: JÁ ESTOU SEGUINDO (Verde suave com borda) */
-.btn-seguir-fenda.seguindo {
-    background: rgba(38, 211, 110, 0.15) !important;
-    border: 2px solid #26d36e !important;
-    color: #26d36e !important;
-    box-shadow: none !important;
-}
-
-/* 3. HOVER DO SEGUIR (Feedback ao passar o mouse para seguir) */
-.btn-seguir-fenda:hover:not(.seguindo) {
-    opacity: 0.9;
-    transform: scale(1.05);
-    background-color: #218838 !important;
-}
-
-/* 4. HOVER DO SEGUINDO (Efeito "Deixar de Seguir" em Vermelho) */
-.btn-seguir-fenda.seguindo:hover {
-    background: rgba(255, 71, 87, 0.2) !important;
-    border-color: #ff4757 !important;
-    color: #ff4757 !important;
-    box-shadow: 0 0 15px rgba(255, 71, 87, 0.4) !important;
-    transform: scale(1.02);
 }
 
 
@@ -1921,39 +1842,6 @@ input[type="checkbox"]:focus {
     box-sizing: border-box;
 }
 
-.avatar-main {
-    /* Quanto ocupa da capa */
-    width: 100%;
-    height: 100%;
-    z-index: 16;
-    object-fit: cover;
-    aspect-ratio: 1/1;
-    border-radius: 50%;
-}
-
-/* Stats (Seguidores/Seguindo)*/
-.stats-perfil {
-    display: flex;
-    justify-content: center;
-    /* vai para a esquerda */
-    padding: 20px 0;
-    margin: 15px 0;
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 800;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    width: auto;
-}
-
-.stats-perfil span {
-    color: #888;
-    text-transform: uppercase;
-    font-size: clamp(0.95rem, 0.2vw + 0.5rem, 1.6rem);
-    letter-spacing: 1px;
-}
-
-
-
 /* --- EASTER EGG: A PRESENÇA (ID 1) --- */
 
 .perfil-gold .img-avatar-perfil {
@@ -1962,8 +1850,7 @@ input[type="checkbox"]:focus {
 }
 
 .perfil-gold .capa-container {
-    max-width: 85%;
-    border: none;
+    padding: 6px;
 }
 
 .perfil-gold .img-capa-preview {
@@ -1974,24 +1861,6 @@ input[type="checkbox"]:focus {
 .perfil-gold .img-capa-viewer {
     border: 2px solid var(--dourado);
     border-radius: 20px;
-}
-
-
-.badge-presenca {
-    display: block;
-    width: fit-content;
-    margin: 25px 40px 0 auto;
-    background: linear-gradient(45deg, var(--dourado), #ffee00e0);
-    color: #000;
-    padding: 4px 12px;
-    border-radius: 4px;
-    font-weight: 900;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    border: 2px solid #fff;
-    box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
-    position: relative;
-    z-index: 10;
 }
 
 
@@ -2091,7 +1960,7 @@ Especificidade: (0,1,1)
 .main-perfil-container-config {
     flex-direction: column;
     align-items: center;
-    width: 98%;
+    width: 97%;
     margin: 25px auto;
     display: flex;
     padding: 8px;
@@ -2100,6 +1969,23 @@ Especificidade: (0,1,1)
     border: 2px solid #cccccc7c;
     max-width: 800px;
     background: #0d0d0dd1;
+}
+
+
+/*  O CONTAINER PAI (Atualizado para Row Responsivo) */
+.perfil-controles {
+    display: flex;
+    /* Mudado de inline-flex para flex puro */
+    flex-direction: row;
+    flex-wrap: wrap;
+    /* Permite quebrar a linha (um embaixo do outro) no celular */
+    justify-content: space-between;
+    align-items: center;
+    /* Alinha os botões verticalmente no meio */
+    gap: 15px;
+    margin: 20px auto;
+    width: 100%;
+    clear: both;
 }
 
 
@@ -2216,4 +2102,108 @@ textarea {
 
 .item-sugestao:hover {
     background: #333;
+}
+
+/* ============================================================
+   BALÃO DE FALA – FENDA VERSION
+   ============================================================ */
+.balao-fenda {
+    position: fixed;
+    background: rgba(10, 10, 10, 0.92);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: #f0f0f0;
+    padding: 12px 20px 12px 16px;
+    border-radius: 16px 16px 16px 4px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    font-size: 0.95rem;
+    font-weight: 500;
+    max-width: 300px;
+    z-index: 99999;
+    pointer-events: none;
+    animation: balaoEntrada 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Inter', system-ui, sans-serif;
+    transition: opacity 0.2s ease;
+}
+
+/* Rabinho (triângulo) */
+.balao-fenda::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 24px;
+    border-width: 10px 10px 0 10px;
+    border-style: solid;
+    border-color: rgba(10, 10, 10, 0.92) transparent transparent transparent;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Ícone animado */
+.balao-fenda .balao-icone {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    animation: balaoPulse 0.5s ease 2;
+}
+
+/* Cores por tipo */
+.balao-fenda.sucesso .balao-icone {
+    color: #4caf50;
+}
+.balao-fenda.erro .balao-icone {
+    color: #ff6b6b;
+}
+.balao-fenda.info .balao-icone {
+    color: #ffbc00;
+}
+
+/* Rabinho com cor de borda sutil */
+.balao-fenda.sucesso::after {
+    border-color: rgba(76, 175, 80, 0.3) transparent transparent transparent;
+}
+.balao-fenda.erro::after {
+    border-color: rgba(255, 107, 107, 0.3) transparent transparent transparent;
+}
+.balao-fenda.info::after {
+    border-color: rgba(255, 188, 0, 0.3) transparent transparent transparent;
+}
+
+/* Animações */
+@keyframes balaoEntrada {
+    from {
+        opacity: 0;
+        transform: scale(0.85) translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes balaoPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.25) rotate(-5deg);
+    }
+}
+
+/* Responsivo – em telas pequenas, fica mais compacto */
+@media (max-width: 480px) {
+    .balao-fenda {
+        font-size: 0.85rem;
+        padding: 10px 14px 10px 12px;
+        max-width: 240px;
+        border-radius: 12px 12px 12px 2px;
+    }
+    .balao-fenda .balao-icone {
+        font-size: 1.1rem;
+    }
+    .balao-fenda::after {
+        left: 16px;
+        border-width: 8px 8px 0 8px;
+    }
 }

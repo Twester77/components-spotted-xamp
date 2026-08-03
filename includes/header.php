@@ -57,31 +57,41 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     // Define o caminho base do projeto (ex: /spotted-unifev ou vazio)
     $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
     ?>
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="<?= $basePath ?>/manifest.php">
 
-        <!-- CSS com Cache Busting Automático -->
+    <!-- CSS com Cache Busting Automático -->
     <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/layout.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/formularios.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/animacoes.css') ?>">
-    
-    <!-- 🔥 COMUNIDADES – carregado em todas as páginas relacionadas -->
+
+    <!-- Central do Habitante (feed-pessoal.php) -->
+    <?php if ($pagina_atual == 'central.php'): ?>
+        <link rel="stylesheet" href="<?= asset_versao('css/central.css') ?>">
+    <?php endif; ?>
+
+    <!-- 🔥 PERFIL PÚBLICO (ver-perfil.php, gerenciar-depoimentos.php, escrever-depoimento.php) -->
+    <?php if (in_array($pagina_atual, ['ver-perfil.php', 'gerenciar-depoimentos.php', 'escrever-depoimento.php'])): ?>
+        <link rel="stylesheet" href="<?= asset_versao('css/perfil-publico.css') ?>">
+    <?php endif; ?>
+
+    <!-- 🔥 COMUNIDADES -->
     <?php if (in_array($pagina_atual, ['lista-comunidades.php', 'comunidade.php', 'criar-comunidade.php', 'editar-comunidade.php'])): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/comunidades.css') ?>">
     <?php endif; ?>
-    
+
     <!-- Lightbox -->
     <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'feed.pessoal.php' || $pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/lightbox.css') ?>">
     <?php endif; ?>
-    
+
     <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
-    
+
     <!-- Comentários -->
     <?php if ($pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
     <?php endif; ?>
-    
+
     <!-- Swipe -->
     <?php if ($pagina_atual == 'feed.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/swipe.css') ?>">

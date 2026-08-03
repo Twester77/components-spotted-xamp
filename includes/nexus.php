@@ -1,9 +1,9 @@
 <div id="fenda-nexus" class="fenda-nexus">
     <div class="nexus-menu" id="nexus-menu">
         
-        <button type="button" class="nexus-item" onclick="executarAcao(this, 0, abrirModalPost)">Novo Post</button>
+        <button type="button" class="nexus-item" onclick="executarAcao(this, 0, abrirModalPost)">Criar Post</button>
 
-        <button type="button" class="nexus-item" onclick="executarAcao(this, 90, toggleToolbar)">Toolbar</button>
+        <button type="button" class="nexus-item" onclick="executarAcao(this, 90, toggleToolbar)">Config.Rápidas</button>
 
         <button type="button" class="nexus-item" onclick="executarAcao(this, 180, function(){ window.location.href='index.php'; })">Início</button>
         

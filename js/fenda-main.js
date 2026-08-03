@@ -720,19 +720,19 @@ function mostrarPopup(mensagem) {
 // ==================== LIMPEZA DO BADGE EM INTERAÇÕES ====================
 // Quando o usuário abre o dropdown de notificações
 window.toggleJanelaNotificacoes = function () {
-    // Limpa o badge ao abrir as notificações
-    window.limparBadge();
+    // 🔥 REMOVIDO: limpeza automática do badge – agora só limpa quando o usuário clica em uma notificação ou acessa a página.
 
     const box = document.getElementById('dropdown-notificacoes');
     if (box.style.display === 'none' || box.style.display === '') {
-        fetch('notificacoes-rapidas.php')
+        // 🔥 Usa o motor-notificacoes.php via notificacoes-rapidas.php (com timestamp para evitar cache)
+        fetch('notificacoes-rapidas.php?t=' + Date.now())
             .then(res => res.text())
             .then(html => {
                 box.innerHTML = html;
                 box.style.display = 'block';
-                const badge = document.getElementById('badge-alertas');
-                if (badge) badge.style.display = 'none';
-            });
+                // 🔥 O badge NÃO é mais limpo aqui – mantemos até que o usuário interaja.
+            })
+            .catch(err => console.error('[NOTIF] Erro ao carregar:', err));
     } else {
         box.style.display = 'none';
     }
@@ -1137,12 +1137,10 @@ window.excluirComentario = async function (commentId, btnElement) {
     if (btnElement) {
         btnElement.disabled = true;
         btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        console.log('[excluirComentario] 🔄 Feedback visual aplicado no botão.');
     }
     comentarioDiv.classList.add('is-loading');
 
     try {
-        console.log('[excluirComentario] 📤 Enviando requisição para excluir-comentario.php...');
         const response = await fetch('includes/excluir-comentario.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1353,7 +1351,7 @@ function initViewportTracker() {
 
 const AnexosManager = {
     anexos: [],
-    maxItems: 3,
+    maxItems: 4,
     gridElement: null,
 
     // Inicializa (chamar no DOMContentLoaded)
@@ -1897,6 +1895,126 @@ window.adicionarGif = (url) => AnexosManager.adicionar(null, 'gif', url);
 window.removerAnexo = (index) => AnexosManager.remover(index);
 window.limparTodosAnexos = () => AnexosManager.limparTodos();
 window.prepararFormDataAnexos = (form) => AnexosManager.prepararFormData(form);
+//  EXPORTA O HEADERMANAGER PARA USO GLOBAL (seguro – ele só age se o container existir)
+window.HeaderManager = HeaderManager;
+// ============================================================
+// 🔥 CARROSSEL – GERENCIADOR DE INDICADORES (OTIMIZADO)
+// ============================================================
+window.iniciarCarrossel = function(wrapper) {
+    if (!wrapper) return;
+
+    const card = wrapper.closest('.spotted-card');
+    if (!card) return;
+    const postId = card.dataset.id;
+    if (!postId) return;
+
+    const indicadores = wrapper.parentElement.querySelectorAll('.indicador');
+    const numeroEl = document.getElementById('carrossel-numero-' + postId);
+    if (!indicadores.length || !numeroEl) return;
+
+    const total = indicadores.length;
+    let itemWidth = 0;
+    let timeoutId = null;
+    let isVisible = true; // será atualizado pelo IntersectionObserver
+
+    // Função que calcula a largura do item (cacheada)
+    function obterItemWidth() {
+        const item = wrapper.querySelector('.carrossel-item');
+        if (item) {
+            itemWidth = item.offsetWidth || 1;
+        } else {
+            itemWidth = 1;
+        }
+        return itemWidth;
+    }
+
+    // Função principal de atualização (agora com cache)
+    function atualizar() {
+        // Se o carrossel não estiver visível, não processa
+        if (!isVisible) return;
+
+        const width = itemWidth || obterItemWidth();
+        if (width === 0) return; // segurança extra
+
+        const scrollLeft = wrapper.scrollLeft;
+        const index = Math.round(scrollLeft / width);
+        const idx = Math.min(Math.max(index, 0), total - 1);
+
+        // Atualiza bolinhas (apenas se mudar)
+        indicadores.forEach((el, i) => {
+            el.classList.toggle('ativo', i === idx);
+        });
+
+        // Atualiza número
+        const novoTexto = (idx + 1) + '/' + total;
+        if (numeroEl.textContent !== novoTexto) {
+            numeroEl.textContent = novoTexto;
+        }
+    }
+
+    // Throttle (limita a execução a cada 100ms)
+    const throttle = (func, delay) => {
+        let lastCall = 0;
+        return function(...args) {
+            const now = Date.now();
+            if (now - lastCall >= delay) {
+                lastCall = now;
+                func.apply(this, args);
+            }
+        };
+    };
+
+    // Versão com throttle da atualização
+    const atualizarThrottled = throttle(atualizar, 100);
+
+    // Evento de scroll (com throttle)
+    wrapper.addEventListener('scroll', atualizarThrottled);
+
+    // Recalcula largura ao redimensionar (com debounce)
+    let resizeTimeout = null;
+    const recalcularLargura = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            obterItemWidth();
+            atualizar();
+        }, 200);
+    };
+    window.addEventListener('resize', recalcularLargura);
+
+    // IntersectionObserver para pausar quando invisível (otimização)
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isVisible = entry.isIntersecting;
+                if (isVisible) {
+                    // Se ficou visível, atualiza imediatamente
+                    atualizar();
+                }
+            });
+        }, { threshold: 0.1 });
+        observer.observe(wrapper);
+        // Armazena o observer para limpar depois (opcional)
+        wrapper._carrosselObserver = observer;
+    }
+
+    // Atualização inicial (após carregamento)
+    setTimeout(() => {
+        obterItemWidth();
+        atualizar();
+    }, 200);
+};
+
+/**
+ * Inicializa todos os carrosséis da página.
+ */
+window.iniciarTodosCarrosseis = function() {
+    document.querySelectorAll('.carrossel-wrapper').forEach(wrapper => {
+        // Evita duplicar eventos
+        if (wrapper._carrosselIniciado) return;
+        wrapper._carrosselIniciado = true;
+        window.iniciarCarrossel(wrapper);
+    });
+};
 
 // ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
 window.deslogarUsuario = async function () {

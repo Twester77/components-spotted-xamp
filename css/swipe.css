@@ -30,16 +30,12 @@ Os bits continuarão intactos, esperando você voltar."*
    ============================================================ */
 
 /* ============================================================
-   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP) - V8.1
+   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP) - V8.1 HÍBRIDO
    ============================================================ */
 
-/* Variável para altura real da viewport (mobile) – mantida como fallback */
 :root {
     --vh: 1vh;
-    /* Variáveis de tamanho – valores padrão (fallback) */
 }
-
-
 
 /* ============================================================
    1. CONFIGURAÇÃO BASE DO MODO SWIPE
@@ -57,22 +53,18 @@ body.modo-swipe-ativo .article.spotted-card {
     cursor: grab;
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
+    
+    /* 🛠️ KIT ANTI-TREMORES: Estabiliza subpixels na GPU durante o arrasto */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     will-change: transform, opacity;
 }
-
-
-/* Isso só afeta o modo swipe, não toca no grid */
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card {
     display: flex;
     flex-direction: column;
 }
 
-/* ============================================================
-   AJUSTE DE ORELHINHA: Card Body no Modo Swipe
-   ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .card-body {
     touch-action: auto;
     pointer-events: none;
@@ -87,12 +79,14 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 }
 
 /* ============================================================
-   2. CONTAINER DO FEED – ALTURA DINÂMICA
+   2. CONTAINER DO FEED – CONTEXTO DE ALTURA E LARGURA DINÂMICA
    ============================================================ */
 .main-fenda-total {
     container-type: inline-size;
     container-name: feed-area;
     position: relative;
+    /* Isola o empilhamento para evitar reflows globais na página */
+    isolation: isolate; 
 }
 
 .container-feed.feed-empilhado {
@@ -104,7 +98,6 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     margin: 0 !important;
     padding: 0 !important;
     background: transparent;
-    perspective: 2000px ;
 }
 
 body.modo-swipe-ativo .container-feed {
@@ -112,6 +105,7 @@ body.modo-swipe-ativo .container-feed {
     height: 100dvh;
     min-height: 100vh;
     position: relative;
+    max-width: none;
     -webkit-user-select: none ;
     -ms-user-select: none ;
     -moz-user-select: none ;
@@ -122,10 +116,11 @@ body.modo-swipe-ativo .container-feed {
 }
 
 /* ============================================================
-   3. CARD PRINCIPAL – ESTRUTURA + TAMANHO VIA VARIÁVEIS CSS
+   3. CARD PRINCIPAL – ESTRUTURA + FALLBACK HÍBRIDO (JS 🤝 CQW)
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .spotted-card {
-    /* Posicionamento e estrutura */
+        /* Posicionamento e estrutura */
+
     position: absolute !important;
     left: 50% !important;
     top: 50% !important;
@@ -137,48 +132,63 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     overflow-y: hidden;
     overflow-x: hidden;
     overscroll-behavior: none;
+    background-clip: padding-box;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
+    
     --pos-x: 0px;
     --pos-y: 0px;
     --swipe-rot: 0deg;
-    container-type: inline-size;
-    container-name: feed-area;
 
-    /* TAMANHO – com !important para vencer o grid */
-    max-width: 250px;
-    /* Fallback para navegadores sem var() */
+    /* Define o card também como container para elementos internos menores (ex: textos, avatares) */
+    container-type: inline-size;
+    container-name: card-container;
+
+    /* ==========================================
+       ESTRATÉGIA DE FALLBACK (MELHORIA PROGRESSIVA)
+       ========================================== */
+    
+    /* LARGURA: Controlada de forma síncrona pelo seu Motor JS */
     width: var(--card-width, 250px) !important;
     max-width: var(--card-width, 250px) !important;
-    padding: 12px;
+    
+    /* PADDING: 1º Linha (Antigos via JS) -> 2º Linha (Modernos via cqw na GPU) */
     padding: var(--card-padding, 12px) !important;
-    font-size: 0.95rem;
+    padding: clamp(12px, 4cqw, 24px) !important; 
+    
+    /* TAMANHO DA FONTE: 1º Linha (JS) -> 2º Linha (cqw) */
     font-size: var(--card-font-size, 0.95rem) !important;
-    max-height: 500px;
+    font-size: clamp(0.9rem, 2.5cqw, 1.6rem) !important;
+    
+    /* ALTURA MÁXIMA: Preserva o cálculo preciso do JS baseado na Viewport */
     max-height: var(--card-max-height, 500px) !important;
     height: auto;
     box-sizing: border-box;
-    
+
+    /* Suaviza as bordas do card em movimento e previne distorção das quinas */
+    -webkit-font-smoothing: antialiased;
+    transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
 }
 
-/* 2. O COMBO PERFEITO: Quando o card NÃO está sendo arrastado (momento da mola) */
+/* Quando o card NÃO está sendo arrastado (momento do rebote elástico) */
 .container-feed.feed-empilhado .spotted-card:not(.dragging) {
-    /* Reduzido para 0.2s na mola elástica + adicionado backdrop-filter na transição */
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                 opacity 0.2s, 
                 backdrop-filter 0.2s linear !important;
-    
-    /* Isola o contexto de renderização durante o rebote */
+        /* Isola o contexto de renderização durante o rebote */
     contain: paint;
-    /* Força o hardware a usar camadas planas e limpas */
+        /* Força o hardware a usar camadas planas e limpas */
     transform-style: flat;
+    /* Adicione isso para garantir que ele crie um contexto de empilhamento isolado */
+    isolation: isolate;
+    /* Garante que o efeito ignore vazamentos de subpixels dos cards inferiores */
+    will-change: transform, opacity; 
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    
-    /* Remove o desfoque temporariamente durante o trajeto elástico de 0.2s */
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
 }
+
 
 
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
@@ -191,79 +201,122 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     }
 }
 
-
 /* ============================================================
-   4. RESPONSIVIDADE (SÓ AJUSTES DE FONTE/AVATAR – NADA DE LARGURA FIXA)
+   4. RESPONSIVIDADE INTERNA (AVATAR E TEXTO COM HÍBRIDO)
    ============================================================ */
 
-/*  AVATAR NO MODO SWIPE (VARIÁVEL CSS) */
-
-.feed-empilhado .spotted-card .avatar-p,
-.feed-empilhado .spotted-card .avatar {
+body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar-p,
+body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
+    /* Fallback JS */
     width: var(--avatar-size, 40px);
     height: var(--avatar-size, 40px);
+    /* Modernos: Escala com base na largura interna do card */
+    width: clamp(34px, 12cqw, 54px);
+    height: clamp(34px, 12cqw, 54px);
     flex-shrink: 0;
 }
 
-
-/* ============================================================
-   5. Altura do texto no modo swipe
-   ============================================================ */
+/* 5. Altura e limites do texto no modo swipe */
 body.modo-swipe-ativo .post-content {
+    /* Fallback JS */
     max-height: var(--text-max-height, clamp(3rem, 6vh, 17rem));
-    margin-bottom: 8px;
+    /* Modernos: Baseia o limite dinamicamente na largura do próprio card */
+    max-height: clamp(60px, 25cqw, 160px);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    margin: 5px auto;
     display: flex;
     flex-grow: 1;
 }
 
+/* ============================================================
+   6. PROTEÇÃO TOTAL DA IMAGEM DO BUCKET (ANTI-ONDAS)
+   ============================================================ */
+body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
+    /* Estilos estruturais dinâmicos mantidos pelo seu JS (Portrait vs Landscape) */
+    max-height: calc(var(--card-max-height, 500px) * 0.5);
+    /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
+    height: var(--img-max-height, auto); 
+    object-fit: var(--img-fit, contain);
+    background-color: var(--img-bg, transparent);
+    align-items: center;
+    justify-content: center; 
+    width: 100%;
+    border-radius: 8px;
+    animation: none;
+    image-rendering: auto;
+    /* 🛠️ ANCORAGEM RIGIDA DE PIXEL NA GPU: Acaba com efeito de ondas em GIFs e fotos */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+body.modo-swipe-ativo .spotted-card img {
+    /* Força o navegador a tratar a renderização de forma estática na GPU, eliminando artefatos */
+    transform: translateZ(0); 
+    /* Evita que as bordas da imagem tentem se reajustar aos subpixels durante o movimento */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+
+}
 
 /* ============================================================
-   6. EFEITO DE EMPILHAMENTO VISUAL (CASCATA)
+   6. EFEITO DE EMPILHAMENTO VISUAL COM PERSPECTIVA ISOLADA (V4 VISÍVEL)
    ============================================================ */
-/* 2º CARD (Escondido atrás) */
-.feed-empilhado .spotted-card:nth-child(2) {
-    transform: translate(-54%, -42%) rotate(-2deg) scale(0.95);
-    opacity: 0.75 !important;
-    z-index: 9;
 
-    /* Força a remoção do desfoque pesado */
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none ;
-}
-
-/* 3º CARD (Mais ao fundo) */
-.feed-empilhado .spotted-card:nth-child(3) {
-    transform: translate(-58%, -39%) rotate(-4deg) scale(0.9);
-    opacity: 0.45 !important;
-    z-index: 8;
-
-    /* Força a remoção do desfoque pesado */
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
-    will-change: auto;
-}
-
-/* 4º CARD EM DIANTE (Totalmente ocultos ou estáticos até subirem na pilha) */
-.feed-empilhado .spotted-card:nth-child(n+4) {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    -webkit-backdrop-filter: none !important;
-    ;
-    backdrop-filter: none !important;
-    will-change: auto;
-    /* Economiza VRAM nos cards que aguardam na fila */
-}
-
+/* 1º CARD (Ativo na Frente) - NÍTIDO E SEM 3D COMPLEXO */
 .feed-empilhado .spotted-card:first-child {
     z-index: 100;
     opacity: 1;
 }
 
+/* 2º CARD (Escondido atrás) - Leve profundidade + desfoque sutil */
+.feed-empilhado .spotted-card:nth-child(2) {
+    transform: perspective(1000px) translate(-54%, -42%) rotate(-2deg) scale(0.95);
+    opacity: 0.75 !important;
+    z-index: 9;
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+      will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+}
+
+/* 3º CARD (Mais ao fundo) - Profundidade acentuada (Zero desfoque para poupar GPU) */
+.feed-empilhado .spotted-card:nth-child(3) {
+    transform: perspective(600px) translate(-58%, -39%) rotate(-4deg) scale(0.9);
+    opacity: 0.45 !important;
+    z-index: 8;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+}
+
+/* 🔥 4º CARD (A base da pilha que você adicionou) - Mais profundo, menor e bem suave */
+.feed-empilhado .spotted-card:nth-child(4) {
+    transform: perspective(400px) translate(-62%, -36%) rotate(-6deg) scale(0.85);
+    opacity: 0.2 !important;
+    z-index: 7;
+    pointer-events: none !important; /* Segurança contra cliques fantasmas lá no fundo */
+    
+    /* Proteção extrema de performance */
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+}
+
+/* 5º CARD EM DIANTE (Totalmente Ocultos na fila de espera) */
+.feed-empilhado .spotted-card:nth-child(n+5) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    
+    /* Remove totalmente da árvore de renderização visual (Zera custo de VRAM) */
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    will-change: auto;
+}
+
+
 /* ============================================================
-   7. OVERLAY DE FOCO E DRAGGING
+   8. OVERLAY DE FOCO E DRAGGING
    ============================================================ */
-
-
 .container-feed.feed-empilhado .spotted-card.dragging {
     transition: none;
     will-change: transform, opacity;
@@ -271,17 +324,16 @@ body.modo-swipe-ativo .post-content {
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
+    -webkit-font-smoothing: antialiased;
     background: rgba(10, 10, 10, 0.541);
     -webkit-backdrop-filter: none;
     backdrop-filter: none ;
 }
 
-/*  Remove hover durante o arrasto */
 .container-feed.feed-empilhado .spotted-card.dragging:hover {
     box-shadow: none ;
     border-color: rgba(255, 255, 255, 0.15) ;
 }
-
 
 .feed-empilhado .spotted-card:not(:first-child) {
     pointer-events: none ;
@@ -290,7 +342,6 @@ body.modo-swipe-ativo .post-content {
     -moz-user-select: none ;
     user-select: none ;
 }
-
 
 
 /* ============================================================
@@ -409,10 +460,10 @@ body.modo-swipe-ativo .container-load-more {
     font-weight: bold;
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
-    z-index: 9999;
+    z-index: 10000;
     pointer-events: none;
     white-space: nowrap;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
 }
 
 .feedback-direita {
@@ -519,10 +570,10 @@ body.fenda-arrastando .anonimo {
 
 
 /* ============================================================
-   PREPARAÇÃO PARA MÚLTIPLAS IMAGENS (GRID) – FUTURO
+   PREPARAÇÃO PARA MÚLTIPLAS IMAGENS (GRID) – FUTURO OTIMIZADO
    ============================================================ */
 
-/* 🔥 Grid de anexos no modo swipe (usando a mesma classe do feed) */
+/* 🔥 Grid de anexos no modo swipe */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -530,21 +581,19 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     margin: 6px 0;
     border-radius: 10px;
     overflow: hidden;
+    color-scheme: light dark;
+    image-rendering: auto;
     pointer-events: none;
     touch-action: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
 }
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.38);
     border-radius: 8px;
-    align-items: center;
 
 }
-
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item img {
     width: 100%;
@@ -562,28 +611,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-
 }
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item:only-child img {
-    max-height: 220px;
+    max-height: 300px;
     object-fit: contain;
-}
-
-body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
-    width: 100%;
-    border-radius: 8px;
-    align-items: center;
-    justify-content: center;
-    max-height: calc(var(--card-max-height, 500px) * 0.5);
-    /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
-    height: var(--img-max-height, auto); 
-    object-fit: var(--img-fit, contain);
-    background-color: var(--img-bg, transparent);
-
-    /* Garante suavidade no redimensionamento */
-    image-rendering: auto;
-    
-    /* Remove heranças pesadas */
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
-    will-change: transform; /* Ajuda o WebKit a não re-renderizar a imagem do zero no resize/swipe */
 }
 
 
@@ -593,7 +622,6 @@ body.modo-swipe-ativo .feed-empilhado  .spotted-card .container-img-post {
     max-height: 100dvh;
     max-width: 100% ;
     border-radius: 4px;
-    object-fit: cover;
     display: flex;
     align-items: center;
     justify-content: center;

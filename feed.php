@@ -46,50 +46,58 @@ include 'includes/bolhas.php';
 <script src="js/fenda-init.js"></script>
 
 <script>
-    // ==================== MOTOR DE LAYOUT UNIVERSAL (COM LOGS) ====================
-    function recalcFeedLayout() {
-        if (!document.body.classList.contains('modo-swipe-ativo')) return;
+     // ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
+function recalcFeedLayout() {
+    if (!document.body.classList.contains('modo-swipe-ativo')) return;
 
-        var vw = window.innerWidth;
-        var vh = window.innerHeight;
-        var isLandscape = vw > vh;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var isLandscape = vw > vh;
 
-        var cardWidth = isLandscape ?
-            Math.max(320, Math.min(vw * 0.60, 600)) :
-            Math.max(250, Math.min(vw * 0.70, 550));
+    // 🔥 ARREDONDAMENTO DE PIXEL (ACABA COM O EFEITO ONDULATÓRIO)
+    var cardWidth = isLandscape ?
+        Math.round(Math.max(320, Math.min(vw * 0.60, 600))) :
+        Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
-        var maxCardHeight = Math.min(vh * 0.8);
-        var cardPadding = Math.max(12, cardWidth * 0.05);
-        var fontSize = Math.max(0.85, Math.min(cardWidth / 230, 1.5));
-        var textMaxHeight = Math.max(60, cardWidth * 0.25);
-        var avatarSize = Math.max(34, cardWidth * 0.12);
+    var maxCardHeight = Math.round(Math.min(vh * 0.8));
+    var cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
+    var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
+    var textMaxHeight = Math.round(Math.max(60, cardWidth * 0.25));
+    var avatarSize = Math.round(Math.max(36, cardWidth * 0.12));
 
-        var root = document.documentElement;
-        root.style.setProperty('--card-width', cardWidth + 'px');
-        root.style.setProperty('--card-padding', cardPadding + 'px');
-        root.style.setProperty('--card-font-size', fontSize + 'rem');
-        root.style.setProperty('--text-max-height', textMaxHeight + 'px');
-        root.style.setProperty('--card-max-height', maxCardHeight + 'px');
-        root.style.setProperty('--avatar-size', avatarSize + 'px');
-        root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
-        root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
-        root.style.setProperty('--img-max-height', isLandscape ? (maxCardHeight * 0.5) + 'px' : 'none');
-    }
+    // 🔥 NOVA VARIÁVEL: altura dinâmica para imagens em landscape
+    var innerDynamicHeight = Math.round(maxCardHeight * 0.5);
 
-    var layoutTimeout;
+    var root = document.documentElement;
+    root.style.setProperty('--card-width', cardWidth + 'px');
+    root.style.setProperty('--card-padding', cardPadding + 'px');
+    root.style.setProperty('--card-font-size', fontSize + 'rem');
+    root.style.setProperty('--text-max-height', textMaxHeight + 'px');
+    root.style.setProperty('--card-max-height', maxCardHeight + 'px');
+    root.style.setProperty('--avatar-size', avatarSize + 'px');
+    root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
+    root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
 
-    function debounceLayout() {
-        clearTimeout(layoutTimeout);
-        layoutTimeout = setTimeout(recalcFeedLayout, 150);
-    }
-    window.addEventListener('load', recalcFeedLayout);
-    window.addEventListener('resize', debounceLayout);
-    window.addEventListener('orientationchange', debounceLayout);
+    // 🔥 Alimenta o CSS com a altura dinâmica tratada (fallback híbrido)
+    root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
+    root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
+}
 
-    function reforcarLayoutNosCards() {
-        console.log('[RECALC] 🔄 reforcarLayoutNosCards chamado.');
-        recalcFeedLayout();
-    }
+var layoutTimeout;
+
+function debounceLayout() {
+    clearTimeout(layoutTimeout);
+    layoutTimeout = setTimeout(recalcFeedLayout, 120); // 120ms para melhor resposta
+}
+
+// 🔥 Eventos que disparam o recálculo
+window.addEventListener('load', recalcFeedLayout);
+window.addEventListener('resize', debounceLayout);
+window.addEventListener('orientationchange', debounceLayout);
+
+function reforcarLayoutNosCards() {
+    recalcFeedLayout();
+}
 
     // ==================== TOGGLE FILTROS ====================
     window.toggleFiltrosMobile = function() {
@@ -219,14 +227,14 @@ include 'includes/bolhas.php';
                 color: rgba(255, 100, 100, 0.6);
             }
             .reactions-actions .action-btn.danger:hover {
-                background: rgba(255, 50, 50, 0.21);
+                background: rgba(255, 50, 50, 0.18);
                 color: #ff6b6b;
             }
             .reactions-actions .action-btn.primary {
                 color: #6af;
             }
             .reactions-actions .action-btn.primary:hover {
-                background: rgba(0, 150, 255, 0.08);
+                background: rgba(0, 150, 255, 0.12);
                 color: #8bf;
             }
             .reactions-actions .action-btn.bookmark {

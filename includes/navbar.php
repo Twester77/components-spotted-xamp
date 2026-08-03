@@ -9,7 +9,7 @@
             <li class="menu-item"><a href="feed.php">Feed Geral</a></li>
             
             <?php if (isset($_SESSION['usuario_id'])): ?>
-                <li class="menu-item"><a href="feed-pessoal.php">Feed Pessoal</a></li>
+                <li class="menu-item"><a href="central.php">Perfil Pessoal</a></li>
                 <li class="menu-item"><a href="ver-perfil.php?user=<?php echo $_SESSION['usuario_username'] ?? ''; ?>">Meu Perfil</a></li>
             <?php endif; ?>
 

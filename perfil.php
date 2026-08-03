@@ -77,6 +77,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
             <div class="capa-wrapper">
+                
                 <?php if (!empty($dados['capa'])): ?>
                     <img src="<?php echo $capa_atual; ?>" class="img-capa-preview" alt="Sua imagem de capa de perfil"
                          onerror="this.src='uploads/ui/default_capa_masculino.webp';">
@@ -90,6 +91,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <i class="fas fa-camera" aria-hidden="true"></i>
                     <input type="file" name="capa" style="display:none;" aria-labelledby="label-capa">
                 </label>
+
             </div>
         </div>
 

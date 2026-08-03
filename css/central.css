@@ -1,0 +1,854 @@
+/* ================================================================
+   CENTRAL DO HABITANTE (antigo feed-pessoal.php)
+   ================================================================ */
+
+/* 🔥 Garante que TODOS os elementos respeitem o box-sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+.central-usuario-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px 15px;
+    min-height: 100dvh;
+    min-height: 100vh;
+    width: 100%;
+    flex: 1 0 auto;
+    
+    /* O BRANCO GELO DA PÁGINA (SÓLIDO E LIMPO) */
+    background-color: oklch(0.96 0 0 / 1); 
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+
+/* ----------------------------------------------------------------
+   SIDEBAR / MENU DE ABAS
+   ---------------------------------------------------------------- */
+.central-sidebar {
+    flex: 0 0 240px;
+    
+    /* 
+       O EIGENGRAU DESBOTADO COM OKLCH
+       Usamos uma luminosidade baixa (0.16) com matiz azul/roxa (250) 
+       misturada com opacidade suave.
+    */
+    background: oklch(0.16 0.02 250 / 0.85);
+    
+    /* 
+     MIX-BLEND-MODE APLICADO
+       Como o container de fundo agora é um branco-gelo palpável via OKLCH, 
+       o "plus-darker" ou o "multiply" na sidebar vai fazer esse Eigengrau desbotado 
+       sugar o tom do fundo de maneira impecável, dando o visual de "App clássico sofisticado".
+    */
+    -moz-background-clip: padding-box;
+    /* Firefox 3.6 and earlier */
+    -webkit-background-clip: padding-box;
+    /* Safari 3-4, iOS 3-4 */
+    background-clip: padding-box;
+    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */ 
+    mix-blend-mode: plus-darker; 
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px 0;
+    margin: 25px auto;
+    height: fit-content;
+    position: sticky;
+    top: 80px;
+}
+
+
+.perfil-resumo-central {
+    padding: 0 20px 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-central {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    -moz-background-clip: padding-box;
+    /* Firefox 3.6 and earlier */
+    -webkit-background-clip: padding-box;
+    /* Safari 3-4, iOS 3-4 */
+    background-clip: padding-box;
+    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
+}
+
+.perfil-resumo-central span {
+    font-weight: 600;
+    font-size: 0.95rem;
+    word-break: break-all;
+}
+
+.menu-central-abas {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+}
+
+.aba-central,
+.aba-central-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+
+.aba-central i,
+.aba-central-link i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.aba-central:hover,
+.aba-central-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.aba-central.ativa {
+    background: rgba(255, 188, 0, 0.12);
+    color: #ffbc00;
+    box-shadow: inset 3px 0 0 #ffbc00;
+}
+
+.aba-central-link {
+    color: #777;
+}
+
+.aba-central-link:hover {
+    color: #fff;
+}
+
+.aba-central-link i {
+    opacity: 0.7;
+}
+
+/* Separador no menu */
+.menu-central-abas hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin: 12px 0;
+}
+
+/* ----------------------------------------------------------------
+   CONTEÚDO PRINCIPAL (ÁREA DE CADA ABA)
+   ---------------------------------------------------------------- */
+.central-conteudo {
+    background: oklch(0.7 0 0 / 0.24);
+    border: 1px solid oklch(0.91 0 0 / 0.15);
+    
+    /* ✨ Impede que a cor de fundo invada a área da borda transparente */
+    background-clip: padding-box; 
+    
+    border-radius: 20px;
+    padding: 30px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    flex: 1;
+    margin: 30px auto;
+    min-height: 200px;
+    width: 100%;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);  
+}
+
+/* ================================================================
+   LOADING DA CENTRAL (spinner laranja com clamp e fallback)
+   ================================================================ */
+#central-loading {
+    display: none; /* controlado pelo JS */
+    text-align: center;
+    padding: 40px;
+    padding: clamp(30px, 20vw, 60px);
+}
+
+#central-loading i {
+    font-size: 2rem;
+    font-size: clamp(2rem, 15vw, 3.5rem);
+    color: #ffbc00;
+    animation: spin 1s linear infinite;
+}
+
+/* Fallback para navegadores que não suportam clamp */
+@supports not (font-size: clamp(1rem, 1vw, 2rem)) {
+    #central-loading i {
+        font-size: 2.5rem;
+    }
+    #central-loading {
+        padding: 40px;
+    }
+}
+
+/* Animação do spinner (já existe no Font Awesome, mas garantimos) */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+           
+/* ============================================================
+   SNAP MAGNÉTICO PARA OS CARDS NA CENTRAL
+   ============================================================ */
+.central-conteudo .container-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    max-width: 100%;
+    overflow: hidden;
+    width: 100%;
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+    max-height: 70vh;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #ffbc00;
+    scroll-behavior: smooth;
+}
+
+.central-conteudo .container-feed::-webkit-scrollbar {
+    width: 4px;
+}
+
+.central-conteudo .container-feed::-webkit-scrollbar-track {
+    background: #1a1a2e;
+    border-radius: 4px;
+}
+
+.central-conteudo .container-feed::-webkit-scrollbar-thumb {
+    background: #ffbc00;
+    border-radius: 4px;
+}
+
+.central-conteudo .container-feed::-webkit-scrollbar {
+    width: 4px;
+}
+
+
+.central-conteudo .spotted-card {
+    word-wrap: break-word;
+    overflow: hidden;
+    max-width: 500px;
+    scroll-snap-align: start;
+    scroll-margin-top: 20px;
+    border-radius: 10px; 
+    padding: 15px; /* Aumentado um pouco para dar mais elegância */
+    position: relative; 
+    /* 
+       ✨ BASE DOS CARDS EM OKLCH (GRAFITE FOSCO PREMIUM):
+       Luminosidade baixa (0.24) para dar contraste contra o fundo gelo, 
+       croma zerado para não ter azul, 100% opaco para os gradientes assentarem bem.
+    */
+    background: oklch(0.24 0 0 / 1); 
+    /* Uma sombra cirúrgica que faz o card escuro flutuar no fundo branco-gelo */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    break-inside: avoid;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    container-type: inline-size;
+    will-change: transform, opacity;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/*  Efeito de Hover Sutil no Card (Estilo App de 2026) */
+    body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
+    /* Ilumina o grafite do card de leve ao passar o mouse */
+    background: oklch(0.31 0 0 / 1); 
+    transform: translateY(-8px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+/* Garante legibilidade máxima dos textos sobre o card grafite */
+.central-conteudo .user-anonimo {
+    color: oklch(0.92 0 0) ; /* Branco fosco perfeito */
+}
+
+.central-conteudo .post-time {
+    color: oklch(0.82 0 0) ; /* Cinza claro elegante */
+}
+
+
+/* ----------------------------------------------------------------
+   ESTILOS PARA A ABA DE COMUNIDADES (GRID)
+   ---------------------------------------------------------------- */
+.central-comunidades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 20px;
+    max-width: 100%;
+}
+
+.central-comunidade-card {
+    background:oklch(34.014% 0.12158 29.883 / 0.6);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.central-comunidade-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    text-decoration: underline;
+}
+
+.central-comunidade-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #111;
+}
+
+
+.central-comunidade-card h4 {
+    padding: 0 12px;
+    margin: 10px 0 4px 0;
+    font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+    color: #fff;
+}
+
+.central-comunidade-card p {
+    padding: 0 12px;
+    margin: 0 0 8px 0;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    color: oklch(0.95 0 0 / 0.8);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    box-orient: vertical;
+    overflow: hidden;
+}
+
+.central-comunidade-card small {
+    display: block;
+    padding: 0 12px 12px 12px;
+    color: oklch(0.89 0 0 / 0.75);
+    font-size: 0.75rem;
+}
+
+/* ================================================================
+   CORREÇÕES PARA O FEED DENTRO DA CENTRAL
+   ================================================================ */
+.central-conteudo .container-img-post img,
+.central-conteudo .feed-anexo-item img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.central-conteudo .feed-anexos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.central-conteudo .avatar-p {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ================================================================
+   PÁGINA DE GERENCIAR DEPOIMENTOS
+   ================================================================ */
+.gerenciar-depoimentos-page {
+    max-width: 900px;
+    margin: clamp(20px, 4vw, 60px) auto;
+    padding: 0 clamp(12px, 3vw, 30px);
+}
+
+.gerenciar-depoimentos-container {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: clamp(14px, 2vw, 22px);
+    padding: clamp(20px, 3vw, 42px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.gerenciar-depoimentos-container h1 {
+    color: var(--dourado, #ffbc00);
+    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.subtitulo {
+    color: #aaa;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    margin-bottom: clamp(20px, 3vw, 35px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 12px;
+}
+
+.sem-depoimentos-msg {
+    text-align: center;
+    padding: clamp(30px, 5vw, 60px) 10px;
+    color: #888;
+}
+
+.sem-depoimentos-msg p {
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+}
+
+/* Lista de depoimentos pendentes */
+.depoimentos-pendentes-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(15px, 2vw, 25px);
+}
+
+.depoimento-pendente-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: clamp(10px, 1.2vw, 16px);
+    padding: clamp(12px, 1.5vw, 20px);
+    border-left: 4px solid var(--dourado, #ffbc00);
+    transition: 0.2s;
+}
+
+.depoimento-pendente-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.depoimento-pendente-autor {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    margin-bottom: 10px;
+}
+
+.depoimento-pendente-autor .depoimento-avatar {
+    width: clamp(36px, 4vw, 50px);
+    height: clamp(36px, 4vw, 50px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--dourado, #ffbc00);
+}
+
+.depoimento-pendente-autor strong {
+    color: #fff;
+    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+}
+
+.depoimento-pendente-autor .depoimento-data {
+    color: #888;
+    font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+    display: block;
+}
+
+.depoimento-pendente-texto {
+    color: #ccc;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.5;
+    margin: 0 0 14px 0;
+    padding-left: clamp(0, 2vw, 20px);
+    word-wrap: break-word;
+}
+
+.depoimento-pendente-acoes {
+    display: flex;
+    gap: clamp(8px, 1vw, 14px);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.depoimento-pendente-acoes button {
+    padding: clamp(6px, 0.8vw, 10px) clamp(14px, 1.5vw, 22px);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-aprovar-depoimento {
+    background: #4caf50;
+    color: #fff;
+}
+
+.btn-aprovar-depoimento:hover {
+    background: #66bb6a;
+    transform: scale(1.02);
+}
+
+.btn-rejeitar-depoimento {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.btn-rejeitar-depoimento:hover {
+    background: rgba(255, 60, 60, 0.15);
+    color: #ff6b6b;
+    border-color: #ff6b6b !important;
+}
+
+.depoimento-pendente-acoes button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ================================================================
+   NOTIFICAÇÕES NA CENTRAL (motor-notificacoes.php)
+   ================================================================ */
+
+/* Container das notificações (já existe no motor, mas garantimos espaçamento) */
+#central-body .item-notif-rapida {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.5vw, 16px);
+    padding: clamp(10px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px);
+    background: oklch(0.18 0 0 / 0.7); /* fundo escuro translúcido para contraste */
+    border-radius: 12px;
+    margin-bottom: clamp(8px, 1vw, 14px);
+    text-decoration: none;
+    color: oklch(0.95 0 0); /* texto branco fosco */
+    transition: background 0.2s ease, transform 0.15s ease;
+    border-left: 3px solid transparent;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Hover estilo dropdown rápido */
+#central-body .item-notif-rapida:hover {
+    background: oklch(0.25 0 0 / 0.85);
+    transform: translateX(4px);
+    border-left-color: #ffbc00;
+}
+
+/* Ícone da notificação (avatar) */
+#central-body .item-notif-rapida .notif-avatar {
+    flex-shrink: 0;
+    width: clamp(32px, 4vw, 44px);
+    height: clamp(32px, 4vw, 44px);
+    border-radius: 50%;
+    background: oklch(0.32 0.02 250 / 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffbc00;
+    font-size: clamp(1rem, 1.4vw, 1.4rem);
+}
+
+/* Texto da notificação */
+#central-body .item-notif-rapida .notif-txt {
+    flex: 1;
+    min-width: 0;
+}
+
+#central-body .item-notif-rapida .notif-txt span {
+    display: block;
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
+    font-weight: 500;
+    color: oklch(0.95 0 0);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+#central-body .item-notif-rapida .notif-txt small {
+    display: block;
+    font-size: clamp(0.65rem, 0.8vw, 0.8rem);
+    color: oklch(0.7 0 0);
+    margin-top: 2px;
+}
+
+/* Notificação não lida (destaque) */
+#central-body .item-notif-rapida.notif-nova {
+    border-left-color: #ffbc00;
+    background: oklch(0.22 0.08 85 / 0.5); /* leve tom dourado */
+}
+
+#central-body .item-notif-rapida.notif-nova .notif-txt span {
+    color: #ffbc00;
+}
+
+/* Botão "Ver todo o oceano" */
+#central-body .ver-todas-notif {
+    display: block;
+    text-align: center;
+    padding: clamp(8px, 1vw, 14px);
+    background: oklch(0.18 0 0 / 0.5);
+    border-radius: 30px;
+    color: #ffbc00;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    text-decoration: none;
+    transition: 0.2s;
+    margin-top: 10px;
+    border: 1px solid rgba(255,188,0,0.15);
+}
+
+#central-body .ver-todas-notif:hover {
+    background: oklch(0.25 0 0 / 0.7);
+    transform: scale(1.01);
+}
+
+/* ================================================================
+   DEPOIMENTOS PENDENTES NA CENTRAL (motor-central.php?aba=depoimentos)
+   ================================================================ */
+
+.central-depoimento-pendente-item {
+    background: oklch(0.18 0 0 / 0.6);
+    border-radius: clamp(10px, 1.2vw, 16px);
+    padding: clamp(12px, 1.5vw, 20px);
+    margin-bottom: clamp(12px, 1.5vw, 20px);
+    border-left: 4px solid #ffbc00;
+    transition: 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.central-depoimento-pendente-item:hover {
+    background: oklch(0.25 0 0 / 0.75);
+    transform: translateX(4px);
+}
+
+/* Autor do depoimento */
+.central-depoimento-pendente-autor {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    margin-bottom: 8px;
+}
+
+.central-depoimento-pendente-autor .depoimento-avatar {
+    width: clamp(36px, 4vw, 48px);
+    height: clamp(36px, 4vw, 48px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffbc00;
+}
+
+.central-depoimento-pendente-autor strong {
+    color: #fff;
+    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+}
+
+.central-depoimento-pendente-autor .depoimento-pendente-data {
+    color: oklch(0.7 0 0);
+    font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+    display: block;
+}
+
+/* Texto do depoimento */
+.central-depoimento-pendente-texto {
+    color: oklch(0.92 0 0);
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.5;
+    margin: 0 0 14px 0;
+    padding-left: clamp(0, 2vw, 20px);
+    word-wrap: break-word;
+}
+
+/* Ações (botões aprovar/rejeitar) */
+.central-depoimento-pendente-item .depoimento-pendente-acoes {
+    display: flex;
+    gap: clamp(8px, 1vw, 14px);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.central-depoimento-pendente-item .depoimento-pendente-acoes button {
+    padding: clamp(6px, 0.8vw, 10px) clamp(14px, 1.5vw, 22px);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    cursor: pointer;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.central-depoimento-pendente-item .btn-aprovar-depoimento {
+    background: #4caf50;
+    color: #fff;
+}
+
+.central-depoimento-pendente-item .btn-aprovar-depoimento:hover {
+    background: #66bb6a;
+    transform: scale(1.02);
+}
+
+.central-depoimento-pendente-item .btn-rejeitar-depoimento {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.central-depoimento-pendente-item .btn-rejeitar-depoimento:hover {
+    background: rgba(255, 60, 60, 0.15);
+    color: #ff6b6b;
+    border-color: #ff6b6b !important;
+}
+
+.central-depoimento-pendente-item .depoimento-pendente-acoes button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Estado vazio (nenhum depoimento pendente) */
+.central-empty-state {
+    text-align: center;
+    padding: clamp(30px, 5vw, 60px) 10px;
+}
+
+.central-empty-state i {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: #4caf50;
+    margin-bottom: 15px;
+}
+
+.central-empty-state p {
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    color: #a5a5a5;
+    color: oklch(0.68 0 0);
+
+}
+
+
+/* ================================================================
+   ESCONDER BOTÕES DE INTERAÇÃO NO FEED-PESSOAL (CENTRAL)
+   ================================================================ */
+.central-conteudo .footer-links {
+    display: none !important;
+}
+
+/* ================================================================
+   RESPONSIVIDADE – TELAS PEQUENAS
+   ================================================================ */
+@media (max-width: 768px) {
+    .central-usuario-container {
+        flex-direction: column;
+        padding: 0 8px;
+        gap: 15px;
+    }
+
+    .central-sidebar {
+        flex: none;
+        width: 100%;
+        position: static;
+        padding: 12px 0;
+        border-radius: 12px;
+    }
+
+    .perfil-resumo-central {
+        justify-content: center;
+        padding-bottom: 10px;
+    }
+
+    .menu-central-abas {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+        padding: 4px 8px;
+        width: 100%;
+    }
+
+    .aba-central,
+    .aba-central-link {
+        flex: 0 1 auto;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        width: auto;
+    }
+
+    .central-conteudo {
+        padding: 15px;
+        max-height: calc(70vh - 80px);
+    }
+
+    .central-comunidades-grid {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr));
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .central-comunidades-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .aba-central,
+    .aba-central-link {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+    }
+
+    .aba-central i,
+    .aba-central-link i {
+        font-size: 0.9rem;
+    }
+
+    .central-conteudo .feed-anexos-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .perfil-resumo-central {
+        display: none;
+    }
+
+     #central-body .item-notif-rapida {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+    .central-depoimento-pendente-item {
+        padding: 10px 14px;
+    }
+    .central-depoimento-pendente-item .depoimento-pendente-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .central-depoimento-pendente-item .depoimento-pendente-acoes button {
+        justify-content: center;
+    }
+}
+
+    

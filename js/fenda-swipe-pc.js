@@ -68,7 +68,7 @@
 
     let onPointerMoveHandler, onPointerUpHandler, onPointerCancelHandler;
 
-    function onPointerDown(e) {
+        function onPointerDown(e) {
         if (swipeLock) return;
         const card = e.target.closest('.spotted-card');
         if (!card) return;
@@ -90,9 +90,16 @@
         moveDetected = false;
         activeCard = card;
         isDragging = true;
+        
+        // 🛠️ PREPARAÇÃO DO CLIQUE: Limpa estados e travas de transição
         activeCard.classList.remove('com-transicao');
         activeCard.style.transition = 'none';
         activeCard.style.transform = 'translate(-50%, -50%)';
+        
+        // 🔥 Reseta as propriedades customizadas para os cards de trás no início do clique
+        activeCard.style.setProperty('--pos-x', '0px');
+        activeCard.style.setProperty('--pos-y', '0px');
+        activeCard.style.setProperty('--swipe-rot', '0deg');
         activeCard.style.cursor = 'grabbing';
         activeCard.classList.add('dragging');
         startX = e.clientX; startY = e.clientY;
@@ -108,7 +115,6 @@
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
                 activeCard.style.cursor = 'grab';
                 activeCard.classList.remove('dragging');
-                // 🔥 CHAMA A FUNÇÃO GLOBAL DO MODAL
                 if (typeof window.mostrarMenuAcoes === 'function') {
                     window.mostrarMenuAcoes(activeCard.dataset.id, activeCard.classList.contains('post-admin-gold'), activeCard);
                 } else {
@@ -126,17 +132,26 @@
         if (!isDragging || !activeCard || swipeLock) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+        if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return; 
         if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
         moveDetected = true;
         document.body.classList.add('fenda-arrastando');
         e.preventDefault(); e.stopPropagation();
-        currentX = dx; currentY = dy;
+        
+        currentX = Math.round(dx); 
+        currentY = Math.round(dy);
+        
         if (animationFrameId) cancelAnimationFrame(animationFrameId);
         animationFrameId = requestAnimationFrame(() => {
             if (!isDragging || !activeCard) return;
-            const rotate = currentX / 30;
+            const rotate = Number((currentX / 30).toFixed(1)); 
+            
+            // Abordagem Híbrida: Atualiza o principal síncrono e distribui dados para a pilha via CSS
             activeCard.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) rotate(${rotate}deg) scale(1.02)`;
+            activeCard.style.setProperty('--pos-x', `${currentX}px`);
+            activeCard.style.setProperty('--pos-y', `${currentY}px`);
+            activeCard.style.setProperty('--swipe-rot', `${rotate}deg`);
+
             const feedbackDir = document.querySelector('.feedback-direita');
             const feedbackEsq = document.querySelector('.feedback-esquerda');
             const feedbackCima = document.querySelector('.feedback-cima');
@@ -210,7 +225,14 @@
         } else if (dy < -threshold && Math.abs(dx) < 80) {
             window.location.href = `comentarios-post.php?id=${idPost}#fofocar`;
         } else {
-            card.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
+            // 🛠️ AJUSTE: Limpa o transform inline e zera as propriedades de controle da pilha
+            card.style.setProperty('--pos-x', '0px');
+            card.style.setProperty('--pos-y', '0px');
+            card.style.setProperty('--swipe-rot', '0deg');
+            
+            // Remove a string síncrona para que a mola elástica (.com-transicao) atue limpamente
+            card.style.transform = '';
+            
             setTimeout(() => { if (card) card.style.transition = 'none'; }, 300);
             resumeObserverLogs();
         }
@@ -218,6 +240,7 @@
         activeCard = null;
         startX = startY = currentX = currentY = 0;
     }
+
 
     function onPointerCancel(e) {
         if (activeCard) removerEfeitoPrisma(activeCard);

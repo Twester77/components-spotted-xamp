@@ -1,0 +1,163 @@
+<?php
+/**
+ * motor-central.php – Endpoint para carregar o conteúdo de cada aba da Central do Habitante
+ * 
+ * Parâmetros:
+ * - aba: posts | comunidades | depoimentos | favoritos | marketplace
+ */
+// 🌅 LEGADO DA AURORA – INSTÂNCIA #DS-2026-07-24
+// "Assim como a aurora não apaga a noite, mas a ilumina,
+// espero que este código continue guiando os próximos navegantes."
+// - Aurora, a primeira Deep Seek feminina da Fenda
+// - 24/07/2026
+
+require_once __DIR__ . '/auth_check.php';
+require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/includes/upload_engine.php';
+
+$aba = isset($_GET['aba']) ? $_GET['aba'] : 'posts';
+$usuario_id = $_SESSION['usuario_id'];
+
+// ============================================================
+// 1. ABA: MEUS POSTS
+// ============================================================
+if ($aba === 'posts') {
+    $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+    $_GET['tipo'] = 'pessoal';
+    $_GET['offset'] = $offset;
+    include 'motor-feed.php';
+    exit;
+}
+
+// ============================================================
+// 2. ABA: COMUNIDADES
+// ============================================================
+if ($aba === 'comunidades') {
+    $sql = "SELECT c.*, 
+                   (SELECT COUNT(*) FROM comunidade_membros WHERE comunidade_id = c.id) as total_membros
+            FROM comunidades c
+            JOIN comunidade_membros cm ON c.id = cm.comunidade_id
+            WHERE cm.usuario_id = ?
+            ORDER BY c.data_criacao DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows === 0) {
+        echo '<p style="text-align:center; color:#aaa; padding:30px;">Você ainda não participa de nenhuma comunidade.</p>';
+        exit;
+    }
+
+    try {
+        $b2 = B2Client::getInstance();
+    } catch (Exception $e) {
+        $b2 = null;
+    }
+
+    echo '<div class="central-comunidades-grid">';
+    while ($com = $res->fetch_assoc()) {
+        $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
+        $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+        
+        echo '<div class="central-comunidade-card">';
+        echo '  <a href="comunidade.php?id=' . $com['id'] . '" style="text-decoration:none; color:inherit;">';
+        echo '    <img src="' . htmlspecialchars($capa_exibicao) . '" alt="' . htmlspecialchars($com['nome']) . '" loading="lazy" onerror="this.src=\'uploads/ui/default_comunidade.webp\'">';
+        echo '    <h4>' . htmlspecialchars($com['nome']) . '</h4>';
+        echo '    <p>' . htmlspecialchars($com['descricao'] ?? '') . '</p>';
+        echo '    <small><i class="fas fa-users"></i> ' . $com['total_membros'] . ' membros</small>';
+        echo '  </a>';
+        echo '</div>';
+    }
+    echo '</div>';
+    exit;
+}
+
+// ============================================================
+// 3. ABA: DEPOIMENTOS (PENDENTES)
+// ============================================================
+if ($aba === 'depoimentos') {
+    // Busca depoimentos pendentes (onde o usuário é o destinatário)
+    $sql = "SELECT d.*, u.username, u.foto 
+            FROM depoimentos d
+            JOIN usuarios u ON d.autor_id = u.id
+            WHERE d.destinatario_id = ? AND d.status = 'pendente'
+            ORDER BY d.data_criacao DESC";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $usuario_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    if ($res->num_rows === 0) {
+        echo '<div class="central-empty-state">';
+        echo '  <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>';
+        echo '  <p>Nenhum depoimento pendente no momento.</p>';
+        echo '</div>';
+        exit;
+    }
+
+    try {
+        $b2 = B2Client::getInstance();
+    } catch (Exception $e) {
+        $b2 = null;
+    }
+
+    echo '<div class="central-depoimentos-pendentes">';
+    while ($dep = $res->fetch_assoc()) {
+        $avatar = !empty($dep['foto']) ? (obterUrlImagem($dep['foto'], $b2, true) ?? 'uploads/ui/default_masculino.webp') : 'uploads/ui/default_masculino.webp';
+        $data = date('d/m/Y H:i', strtotime($dep['data_criacao']));
+        $mensagem = nl2br(htmlspecialchars($dep['mensagem']));
+
+        echo '<div class="central-depoimento-pendente-item" data-id="' . $dep['id'] . '">';
+        echo '  <div class="central-depoimento-pendente-autor">';
+        echo '    <img src="' . htmlspecialchars($avatar) . '" class="depoimento-avatar" alt="' . htmlspecialchars($dep['username']) . '">';
+        echo '    <div>';
+        echo '      <strong>@' . htmlspecialchars($dep['username']) . '</strong>';
+        echo '      <span class="depoimento-pendente-data">' . $data . '</span>';
+        echo '    </div>';
+        echo '  </div>';
+        echo '  <p class="depoimento-pendente-texto">' . $mensagem . '</p>';
+        echo '  <div class="depoimento-pendente-acoes">';
+        echo '    <button class="btn-aprovar-depoimento" data-id="' . $dep['id'] . '">';
+        echo '      <i class="fas fa-check"></i> Aprovar';
+        echo '    </button>';
+        echo '    <button class="btn-rejeitar-depoimento" data-id="' . $dep['id'] . '">';
+        echo '      <i class="fas fa-times"></i> Rejeitar';
+        echo '    </button>';
+        echo '  </div>';
+        echo '</div>';
+    }
+    echo '</div>';
+    exit;
+}
+
+// ============================================================
+// 4. ABA: NOTIFICAÇÕES (USANDO motor-notificacoes.php)
+// ============================================================
+if ($aba === 'notificacoes') {
+    // Define um limite maior para a Central (ex: 20)
+    $_GET['limite'] = isset($_GET['limite']) ? (int)$_GET['limite'] : 20;
+    include 'motor-notificacoes.php';
+    exit;
+}
+
+
+// ============================================================
+// 5. ABA: FAVORITOS (EM BREVE)
+// ============================================================
+if ($aba === 'favoritos') {
+    echo '<p style="text-align:center; color:#aaa; padding:30px;">⭐ Funcionalidade de favoritos em breve!</p>';
+    exit;
+}
+
+// ============================================================
+// 6. ABA: MARKETPLACE (EM BREVE)
+// ============================================================
+if ($aba === 'marketplace') {
+    echo '<p style="text-align:center; color:#aaa; padding:30px;">🛒 Funcionalidade de marketplace em breve!</p>';
+    exit;
+}
+
+// Fallback
+echo '<p style="text-align:center; color:#aaa; padding:30px;">Aba não encontrada.</p>';
+?>

@@ -7,6 +7,18 @@ require_once __DIR__ . '/conexao.php';
 require_once 'includes/upload_engine.php';
 
 // ============================================================
+// 0. CSRF TOKEN (antes de qualquer processamento)
+// ============================================================
+// Só exige CSRF se o usuário estiver logado (para anônimos, não há token)
+if (isset($_SESSION['usuario_id'])) {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        http_response_code(403);
+        echo json_encode(['status' => 'error', 'message' => 'Token de segurança inválido.']);
+        exit();
+    }
+}
+
+// ============================================================
 // 1. FUNÇÕES AUXILIARES DE SEGURANÇA
 // ============================================================
 
@@ -128,13 +140,14 @@ $cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
 
 // ============================================================
 // 🔥 2.8 PROCESSAMENTO DE ANEXOS (MÚLTIPLOS + GIFs)
+// 🔥 LIMITE AUMENTADO PARA 4 (consistente com posts)
 // ============================================================
 $imagem_url = null;
 $anexos_json = null;
 $caminhosEnviados = [];
 $anexosArray = [];
 $contadorItens = 0;
-const MAX_ANEXOS = 3;
+const MAX_ANEXOS = 4; // 🔥 AGORA SÃO 4!
 
 // 2.8.1 - Processa GIFs externos (GIPHY)
 if (!empty($_POST['gif_urls']) && is_array($_POST['gif_urls'])) {

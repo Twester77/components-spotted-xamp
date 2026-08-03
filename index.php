@@ -36,22 +36,6 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
-<?php if ($tema_classe === "tema-hacker"): ?>
-    <audio id="hackerAudio" loop>
-        <source src="sons/hacker_theme.mp3" type="audio/mpeg">
-    </audio>
-    <script>
-        document.addEventListener('click', () => {
-            const audio = document.getElementById('hackerAudio');
-            if (audio) {
-                audio.volume = 0.005;
-                audio.play();
-            }
-        }, {
-            once: true
-        });
-    </script>
-<?php endif; ?>
 
 <main class="<?php echo $tema_classe; ?>">
     

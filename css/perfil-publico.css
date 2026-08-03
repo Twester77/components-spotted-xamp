@@ -1,0 +1,1564 @@
+/* ================================================================
+   PERFIL PÚBLICO (ver-perfil.php)
+   ================================================================
+   Estrutura: Capa | Avatar | Bio | Depoimentos | Avaliações | Feed
+   Tudo com clamp(), fallback para legados e glassmorphism.
+   ================================================================ */
+
+/* ================================================================
+   1. CONTAINER PRINCIPAL
+   ================================================================ */
+.main-perfil-container-publico {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    border: none;
+    position: relative;
+    overflow: visible;
+}
+
+/* ================================================================
+   2. CAPA + AVATAR (UNIFICADO)
+   ================================================================ */
+.perfil-header-container {
+    width: 100%;
+    max-width: 100%;
+    margin: clamp(10px, 2vw, 30px) auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.capa-container {
+    width: 100%;
+    max-width: 1000px;
+    max-height: 380px;
+    aspect-ratio: 1000 / 380;
+    overflow: visible;
+    position: relative;
+    background: #0a0a0a;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--aura-user, #b00cfc3f);
+    border-radius: clamp(8px, 1.2vw, 16px);
+}
+
+.capa-img {
+    position: relative;
+    z-index: 5;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: max-width 0.4s ease;
+}
+
+/* Avatar posicionado sobre a capa */
+.avatar-posicionador {
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(80px, 15vw, 150px);
+    height: clamp(80px, 15vw, 150px);
+    z-index: 15;
+    aspect-ratio: 1 / 1;
+}
+
+.avatar-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 3px solid var(--aura-user, #ffbc00);
+    box-shadow: 0 0 8px var(--aura-user, #ffbc00)55;
+    background: #0a0a0a;
+}
+
+/* Badge de presença (coroa) */
+.badge-presenca-bottom {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: var(--dourado, #ffbc00);
+    color: #000;
+    width: clamp(20px, 5vmin, 35px);
+    height: clamp(20px, 5vmin, 35px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(10px, 2cqw, 16px);
+    border: 2px solid #000;
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.6);
+    z-index: 16;
+}
+
+/* ================================================================
+   3. INFORMAÇÕES DO USUÁRIO (NOME, ATLÉTICA, BIO, SEGUIDORES)
+   ================================================================ */
+.info-usuario-section {
+    margin-top: clamp(80px, 12vw, 120px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    width: 100%;
+    padding: 12px clamp(10px, 2vw, 30px);
+    overflow-y: auto;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+}
+
+.nome-linha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 30px);
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.nome-publico {
+
+    color: #ffffffe5;
+    /* Fallback para navegadores antigos */
+    color: var(--aura-user, #fff);
+    color: oklch(from var(--aura-user, #ffffff) l c h / 0.6);
+    /* Navegadores modernos */
+    letter-spacing: 1px;
+    font-size: clamp(1.15rem, 2.5vw, 2.5rem);
+    text-transform: uppercase;
+    margin: 10px 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Insígnia da atlética */
+.insignia-atletica-bottom {
+    width: clamp(32px, 8vmin, 60px);
+    height: clamp(32px, 8vmin, 60px);
+    object-fit: contain;
+    transition: all 0.3s ease-in-out;
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 4px;
+}
+
+.insignia-atletica-bottom:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px var(--dourado, #ff8800));
+}
+
+/* Stats (seguidores) */
+.stats-perfil {
+    display: flex;
+    justify-content: center;
+    padding: clamp(8px, 1.5vw, 20px) 0;
+    margin: clamp(8px, 1vw, 16px) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
+}
+
+.stats-perfil span {
+    color: #ffffffab;
+    /* Fallback para navegadores antigos */
+    color: var(--aura-user, #ffffffce);
+    color: oklch(from var(--aura-user, #ffffff) l c h / 0.6);
+    /* Navegadores modernos */
+    text-transform: uppercase;
+    font-size: clamp(0.9rem, 1.4vw, 1.5rem);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* Bio */
+.bio-texto {
+    /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
+    font-size: clamp(0.9rem, 0.2vw + 0.5rem, 1.5rem);
+    width: 100%;
+    max-width: 800px;
+    margin: clamp(8px, 1.5vw, 20px) auto;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    /*Safari/Chrome*/
+    -ms-hyphens: auto;
+    /*IE/Edge */
+    hyphens: auto;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
+    color: oklch(96.115% 0.00011 271.152 / 0.85)
+}
+
+
+/* ================================================================
+   4. BOTÃO SEGUIR
+   ================================================================ */
+.perfil-controles-publico {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(10px, 1.5vw, 20px);
+    margin: clamp(12px, 2vw, 24px) auto;
+    width: 100%;
+}
+
+.btn-seguir-fenda {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: clamp(6px, 0.8vw, 10px) clamp(16px, 2vw, 28px);
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
+}
+
+.btn-seguir-fenda.seguindo {
+    background: rgba(38, 211, 110, 0.12) !important;
+    border: 2px solid #26d36e !important;
+    color: #26d36e !important;
+}
+
+.btn-seguir-fenda:hover:not(.seguindo) {
+    opacity: 0.9;
+    transform: scale(1.03);
+    background: #218838 !important;
+}
+
+.btn-seguir-fenda.seguindo:hover {
+    background: rgba(255, 71, 87, 0.15) !important;
+    border-color: #ff4757 !important;
+    color: #ff4757 !important;
+    transform: scale(1.02);
+}
+
+/* ================================================================
+   5. DEPOIMENTOS E AVALIAÇÕES (SOCIAL COLLAPSE)
+   ================================================================ */
+.depoimentos-section,
+.avaliacoes-section {
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+    margin: clamp(20px, 2vw, 60px) auto;
+    padding: 0 15px;
+    padding: 0 clamp(12px, 3vw, 30px);
+}
+
+.depoimentos-header,
+.avaliacoes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(10px, 1.5vw, 18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: clamp(6px, 1vw, 12px);
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.depoimentos-header h3,
+.avaliacoes-header h3 {
+    color: #ffbb00c0;
+    color: oklch(79.64% 0.16302 84.414 / 0.879);
+    font-size: clamp(1.1rem, 1.6vw, 1.6rem);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.depoimentos-actions,
+.avaliacoes-actions {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1vw, 14px);
+    flex-wrap: wrap;
+}
+
+/* ================================================================
+   BOTÃO TOGGLE SOCIAL (COLLAPSE)
+   ================================================================ */
+.btn-toggle-social {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
+    color: oklch(0.9 0 0 / 0.85);
+    font-size: clamp(0.8rem, 0.9vw, 1.05rem);
+    cursor: pointer;
+    transition: 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-toggle-social:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+}
+
+.btn-toggle-social i {
+    transition: transform 0.3s ease;
+}
+
+.btn-toggle-social.aberto i {
+    transform: rotate(180deg);
+}
+
+/* ================================================================
+   COLLAPSE SOCIAL (conteúdo colapsável)
+   ================================================================ */
+.social-collapse {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #0a0a1202;
+    background: oklch(0.35 0 0 / 0.5);
+    border-radius: 20px;
+    -moz-background-clip: padding-box;
+    /* Firefox 3.6 and earlier */
+    -webkit-background-clip: padding-box;
+    /* Safari 3-4, iOS 3-4 */
+    background-clip: padding-box;
+    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
+}
+
+
+.social-collapse.aberto {
+    max-height: 9999px;
+    /* valor alto para caber todo o conteúdo */
+}
+
+/* ================================================================
+   DEPOIMENTOS (ESTILO ORKUT)
+   ================================================================ */
+.depoimento-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: clamp(10px, 1.2vw, 14px);
+    padding: clamp(12px, 1.5vw, 18px);
+    margin-bottom: clamp(10px, 1.2vw, 16px);
+    border-left: 3px solid var(--dourado, #ffbc00);
+    transition: 0.2s;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+
+}
+
+.avaliacao-item:hover, .depoimento-item:hover {
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.depoimento-autor {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 20px);
+    margin-bottom: 6px;
+}
+
+.depoimento-avatar {
+    width: clamp(32px, 4vw, 46px);
+    height: clamp(32px, 4vw, 46px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--dourado, #ffbc00);
+}
+
+.depoimento-autor strong {
+    color: oklch(0.96 0 0 / 1);
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+}
+
+.depoimento-data {
+    color: oklch(0.96 0 0 / 1);
+    ;
+    font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+    display: block;
+}
+
+.depoimento-texto {
+    color: oklch(0.96 0 0 / 1);
+    font-size: clamp(0.85rem, 1.1vw, 1.05rem);
+    line-height: 1.5;
+    margin: 6px 0 0 0;
+    padding-left: 5px;
+    padding-left: clamp(5px, 2vw, 20px);
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.sem-depoimentos {
+    color: oklch(96.115% 0.00011 271.152 / 0.712);
+    text-align: center;
+    font-style: italic;
+    padding: clamp(16px, 3vw, 30px);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+.loading-depoimentos {
+    text-align: center;
+    color: #888;
+    padding: clamp(16px, 3vw, 30px);
+    font-style: italic;
+}
+
+/* ================================================================
+   AVALIAÇÕES (ESTRELAS ORKUT)
+   ================================================================ */
+.avaliacoes-container {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 1.5vw, 20px);
+}
+
+.avaliacao-aviso {
+    text-align: center;
+    margin: 10px auto;
+}
+
+.avaliacao-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: clamp(10px, 1.2vw, 14px);
+    padding: clamp(10px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.avaliacao-header {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1vw, 12px);
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.avaliacao-emoji {
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.avaliacao-nome {
+    font-weight: bold;
+    color: #fff;
+    font-size: clamp(0.85rem, 1.2vw, 1.1rem);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.avaliacao-media {
+    margin-left: auto;
+    color: var(--dourado, #ffbc00);
+    font-weight: 700;
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    background: rgba(255, 188, 0, 0.08);
+    padding: clamp(2px, 0.3vw, 6px) clamp(8px, 1vw, 14px);
+    border-radius: 30px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.estrelas-container {
+    display: flex;
+    gap: clamp(2px, 0.5vw, 6px);
+    margin: clamp(4px, 0.5vw, 8px) 0;
+    flex-wrap: wrap;
+}
+
+.estrela {
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+    line-height: 1;
+    color: #555;
+    cursor: pointer;
+    transition: transform 0.15s ease, color 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    display: inline-block;
+    font-size: 1.4rem;
+    /* fallback para navegadores sem clamp */
+}
+
+.estrela.cheia {
+    color: var(--dourado, #ffbc00);
+}
+
+.estrela.meia {
+    color: var(--dourado, #ffbc00);
+    background: linear-gradient(90deg, var(--dourado, #ffbc00) 50%, #555 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Fallback para navegadores sem background-clip: text */
+@supports not (background-clip: text) {
+    .estrela.meia {
+        color: var(--dourado, #ffbc00);
+        background: none;
+        -webkit-text-fill-color: initial;
+    }
+}
+
+.estrela.vazia {
+    color: #555;
+}
+
+.estrela:hover {
+    transform: scale(1.15);
+    color: #ffd700;
+}
+
+.estrela.vazia:hover {
+    color: #ffd700;
+}
+
+.avaliacao-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+    font-weight: bold;
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    color: #999999;
+    color: oklch(96.115% 0.00011 271.152 / 0.534);
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.avaliacao-total {
+    color:#c4c4c4;
+    color: oklch(0.96 0 0 / 0.56);
+}
+
+.btn-votar-estrela {
+    background: rgba(255, 188, 0, 0.10);
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    border-radius: 30px;
+    padding: clamp(4px, 0.5vw, 8px) clamp(12px, 1.5vw, 20px);
+    color: var(--dourado, #ffbc00);
+    font-size: clamp(0.75rem, 1vw, 1.05rem);
+    cursor: pointer;
+    transition: 0.25s ease;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.btn-votar-estrela:hover {
+    background: rgba(255, 188, 0, 0.20);
+    border-color: var(--dourado, #ffbc00);
+    transform: scale(1.02);
+}
+
+.ja-votou {
+    color: #4caf50;
+    font-weight: 500;
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    background: rgba(76, 175, 80, 0.08);
+    padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 14px);
+    border-radius: 30px;
+    border: 1px solid rgba(76, 175, 80, 0.15);
+    white-space: nowrap;
+}
+
+.sem-avaliacoes {
+    color: oklch(96.115% 0.00011 271.152 / 0.651);
+    text-align: center;
+    font-style: italic;
+    padding: clamp(12px, 2vw, 24px);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.06);
+}
+
+.loading-avaliacoes {
+    text-align: center;
+    color: #d1d1d1;
+    font-style: italic;
+    padding: clamp(16px, 3vw, 30px);
+}
+
+/* ================================================================
+   BOTÃO ESCREVER DEPOIMENTO (LINK)
+   ================================================================ */
+.btn-escrever-depoimento {
+    background: rgba(255, 188, 0, 0.10);
+    border: 1px solid rgba(255, 188, 0, 0.15);
+    border-radius: 30px;
+    padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
+    color: var(--dourado, #ffbc00);
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    text-decoration: none;
+    transition: 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-escrever-depoimento:hover {
+    background: rgba(255, 188, 0, 0.20);
+    transform: scale(1.02);
+}
+
+/* ================================================================
+   FEED PESSOAL (DENTRO DO PERFIL)
+   ================================================================ */
+.feed-usuario-fenda {
+    width: 100%;
+    max-width: 1400px;
+    margin: clamp(20px, 3vw, 40px) auto;
+    padding: 0 clamp(12px, 3vw, 30px);
+}
+
+.feed-usuario-fenda h3 {
+    border-bottom: 2px solid var(--aura-user, #ffa530);
+    display: inline-block;
+    padding: 0 0 clamp(6px, 1vw, 12px) 0;
+    font-size: clamp(1.2rem, 1.8vw, 2.4rem);
+    margin: 0 0 clamp(16px, 2vw, 28px) 0;
+    color: oklch(1 0 0 / 0.75);
+}
+
+/* ================================================================
+   BOTÃO TOGGLE DEPOIMENTOS (legado – manter para compatibilidade)
+   ================================================================ */
+.btn-toggle-depoimentos {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
+    color: #aaa;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    cursor: pointer;
+    transition: 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-toggle-depoimentos:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+}
+
+.btn-toggle-depoimentos:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ================================================================
+   PÁGINA DE ESCREVER DEPOIMENTO (FORMULÁRIO)
+   ================================================================ */
+.escrever-depoimento-page {
+    max-width: 580px;
+    margin: clamp(20px, 4vw, 60px) auto;
+    padding: 0 clamp(12px, 3vw, 30px);
+}
+
+.depoimento-form-container {
+    background: rgba(20, 20, 30, 0.75);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-radius: clamp(14px, 2vw, 24px);
+    padding: clamp(24px, 4vw, 42px) clamp(18px, 3vw, 34px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.depoimento-form-container h1 {
+    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.depoimento-form-container h1 i {
+    color: var(--dourado, #ffbc00);
+}
+
+.depoimento-destinatario {
+    color: #aaa;
+    font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+    margin-bottom: clamp(16px, 2.5vw, 28px);
+    padding-bottom: clamp(10px, 1.5vw, 18px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.depoimento-destinatario strong {
+    color: var(--dourado, #ffbc00);
+    font-weight: 500;
+}
+
+/* Campos */
+.depoimento-form-container .campo-grupo {
+    margin-bottom: clamp(16px, 2vw, 26px);
+}
+
+.depoimento-form-container label {
+    display: block;
+    color: #ddd;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.depoimento-form-container textarea {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: clamp(10px, 1.2vw, 14px);
+    padding: clamp(12px, 1.5vw, 18px) clamp(14px, 1.8vw, 20px);
+    color: #f0f0f0;
+    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+    transition: border 0.25s ease, box-shadow 0.25s ease;
+    resize: vertical;
+    box-sizing: border-box;
+    min-height: 140px;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+}
+
+.depoimento-form-container textarea:focus {
+    outline: none;
+    border-color: var(--dourado, #ffbc00);
+    box-shadow: 0 0 0 3px rgba(255, 188, 0, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.depoimento-form-container .campo-ajuda {
+    display: block;
+    color: #777;
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    margin-top: 6px;
+    padding-left: 4px;
+}
+
+/* Botões do formulário */
+.depoimento-form-container .botoes-rodape {
+    display: flex;
+    gap: clamp(10px, 1.5vw, 18px);
+    margin-top: clamp(20px, 3vw, 34px);
+    flex-wrap: wrap;
+}
+
+.depoimento-form-container .btn-principal {
+    background: var(--laranja-fenda, linear-gradient(165deg, #fc5f21, #9b5ab9d2));
+    color: #000;
+    padding: clamp(10px, 1.2vw, 14px) clamp(24px, 3vw, 40px);
+    border-radius: 40px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    flex: 1;
+    min-width: 140px;
+    font-size: clamp(1rem, 1.1vw, 1.1rem);
+    transition: 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.depoimento-form-container .btn-principal:hover {
+    background: #ffc13a;
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba(255, 188, 0, 0.25);
+}
+
+.depoimento-form-container .btn-secundario {
+    background: transparent;
+    color: #aaa;
+    padding: clamp(10px, 1.2vw, 14px) clamp(18px, 2vw, 28px);
+    border-radius: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    text-decoration: none;
+    text-align: center;
+    transition: 0.25s ease;
+    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    flex: 0 1 auto;
+}
+
+.depoimento-form-container .btn-secundario:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ================================================================
+   PÁGINA DE GERENCIAR DEPOIMENTOS
+   ================================================================ */
+.gerenciar-depoimentos-page {
+    max-width: 900px;
+    margin: clamp(20px, 4vw, 60px) auto;
+    padding: 0 clamp(12px, 3vw, 30px);
+}
+
+.gerenciar-depoimentos-container {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: clamp(14px, 2vw, 22px);
+    padding: clamp(20px, 3vw, 42px);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.gerenciar-depoimentos-container h1 {
+    color: var(--dourado, #ffbc00);
+    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.subtitulo {
+    color: #aaa;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    margin-bottom: clamp(20px, 3vw, 35px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 12px;
+}
+
+.sem-depoimentos-msg {
+    text-align: center;
+    padding: clamp(30px, 5vw, 60px) 10px;
+    color: #888;
+}
+
+.sem-depoimentos-msg p {
+    font-size: clamp(1rem, 1.2vw, 1.2rem);
+}
+
+/* Lista de depoimentos pendentes */
+.depoimentos-pendentes-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(15px, 2vw, 25px);
+}
+
+.depoimento-pendente-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: clamp(10px, 1.2vw, 16px);
+    padding: clamp(12px, 1.5vw, 20px);
+    border-left: 4px solid var(--dourado, #ffbc00);
+    transition: 0.2s;
+}
+
+.depoimento-pendente-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.depoimento-pendente-autor {
+    display: flex;
+    align-items: center;
+    gap: clamp(10px, 1.2vw, 16px);
+    margin-bottom: 10px;
+}
+
+.depoimento-pendente-autor .depoimento-avatar {
+    width: clamp(36px, 4vw, 50px);
+    height: clamp(36px, 4vw, 50px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--dourado, #ffbc00);
+}
+
+.depoimento-pendente-autor strong {
+    color: #fff;
+    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+}
+
+.depoimento-pendente-autor .depoimento-data {
+    color: #888;
+    font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+    display: block;
+}
+
+.depoimento-pendente-texto {
+    color: #ccc;
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
+    line-height: 1.5;
+    margin: 0 0 14px 0;
+    padding-left: clamp(0, 2vw, 20px);
+    word-wrap: break-word;
+}
+
+.depoimento-pendente-acoes {
+    display: flex;
+    gap: clamp(8px, 1vw, 14px);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.depoimento-pendente-acoes button {
+    padding: clamp(6px, 0.8vw, 10px) clamp(14px, 1.5vw, 22px);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-aprovar-depoimento {
+    background: #4caf50;
+    color: #fff;
+}
+
+.btn-aprovar-depoimento:hover {
+    background: #66bb6a;
+    transform: scale(1.02);
+}
+
+.btn-rejeitar-depoimento {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ccc;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.btn-rejeitar-depoimento:hover {
+    background: rgba(255, 60, 60, 0.15);
+    color: #ff6b6b;
+    border-color: #ff6b6b !important;
+}
+
+.depoimento-pendente-acoes button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ================================================================
+   VIBES (ADS, DARK, GLASS, NEON, LIGHT)
+   ================================================================ */
+
+/* ==========================================================
+   VIBE ADS - BASE DO CONTAINER (FUNDO E GRADIENTE)
+   ========================================================== */
+.main-perfil-container-publico.vibe-ads {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    background-color: #0a0a12 !important;
+
+    /* Gradiente original de fundo isolado */
+    background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.95) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.95) 100%) !important;
+    background-size: 200% 200%;
+    background-repeat: no-repeat;
+    background-position: 0% 0%;
+
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-top: 4px solid var(--aura-user) !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    will-change: box-shadow, background-position, opacity, animation;
+    animation: ads-neon-glow-pulse 3.5s infinite ease-in-out alternate;
+}
+
+/* ==========================================================
+   FUNDO ESTÁTICO: APENAS O SVG (CÓPIA IDÊNTICA AOS COMENTÁRIOS)
+   ========================================================== */
+.main-perfil-container-publico.vibe-ads::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+
+    /* Força o SVG a herdar a variável através do currentColor */
+    color: var(--aura-user) !important;
+
+    /* 🌟 CÓPIA IDÊNTICA DOS COMENTÁRIOS: Sem stroke-opacity interno para o navegador não bugar */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='currentColor' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 70px 70px;
+    background-repeat: repeat;
+    background-position: 0 0;
+
+    mix-blend-mode: screen;
+    will-change: opacity;
+    animation: static-pulse-opacity 4s infinite ease-in-out alternate;
+}
+
+@keyframes static-pulse-opacity {
+    0% {
+        opacity: 0.15;
+    }
+
+    50% {
+        opacity: 0.80;
+    }
+
+    /* Pulsa até o brilho alto que você pediu */
+    100% {
+        opacity: 0.15;
+    }
+}
+
+/* ==========================================================
+   HEXÁGONOS DINÂMICOS (GRADE DO DOM)
+   ========================================================== */
+.main-perfil-container-publico.vibe-ads .hex-bg {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 100px);
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-auto-rows: 56px;
+    gap: 10px;
+    padding: 0;
+    opacity: 0.5;
+    mix-blend-mode: screen;
+}
+
+.main-perfil-container-publico.vibe-ads .hex-item {
+    width: 100%;
+    aspect-ratio: 1/1.15;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: rgba(0, 240, 255, 0.02);
+    border: 1px solid var(--aura-user);
+    opacity: 0.3;
+    transform: scale(0.85);
+    transition: all 0.6s ease;
+    will-change: transform, background, border-color, box-shadow;
+}
+
+.main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
+    background: var(--aura-user) !important;
+    border-color: var(--aura-user) !important;
+    box-shadow: 0 0 15px var(--aura-user) !important;
+    transform: scale(1.0);
+    opacity: 1;
+}
+
+@keyframes ads-neon-glow-pulse {
+    0% {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user);
+        border-top-color: var(--aura-user);
+    }
+
+    50% {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px var(--aura-user);
+        border-color: var(--aura-user);
+    }
+
+    100% {
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user);
+        border-top-color: var(--aura-user);
+    }
+}
+
+
+
+
+/* --- VIBE DARK (Gótico Contido / Versão Estrutura Blindada) --- */
+.main-perfil-container-publico.vibe-dark {
+    position: relative;
+    overflow: hidden;
+    background: #141416 !important;
+    /* Cinza muito escuro integrado */
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.main-perfil-container-publico.vibe-dark::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    /* Sutil nas sombras do fundo */
+    mix-blend-mode: screen;
+
+    /* Injeta a cor da aura para o fill='currentColor' ler nativamente */
+    color: var(--aura-user, #000000);
+
+    /* 🦇 ESTRUTURA HEXAGONAL REESCRITA: Usei exatamente o mesmo cabeçalho XML do seu hexágono que roda liso.
+       O primeiro desenha um morcego de asas abertas pontiagudas e o segundo uma silhueta de corvo pousado */
+    background-image:
+        /* Morcego Estilo Batman/Castlevania */
+        url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 15c-3 4-10 6-18 2 2 8 8 12 14 12h8c6 0 12-4 14-12-8 4-15 2-18-2z' fill='currentColor' fill-opacity='0.4'/%3E%3C/svg%3E"),
+        /* Corvo Sombrio nas Sombras */
+        url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M10 45c6-2 12-8 16-15l18-3c-8-4-18-1-24 5l-10 13z' fill='currentColor' fill-opacity='0.3'/%3E%3C/svg%3E");
+
+    background-size: 200px 200px;
+    /* Bem espaçados e discretos */
+    background-repeat: repeat;
+    background-position: 0 0, 100px 100px;
+    /* Intercala os dois perfeitamente no mosaico */
+    animation: revoadaDasSombras 45s linear infinite;
+}
+
+@keyframes revoadaDasSombras {
+    0% {
+        background-position: 0 0, 100px 100px;
+    }
+
+    100% {
+        background-position: 800px -800px, 900px -700px;
+    }
+}
+
+
+/* --- VIBE NEON (Flicker) --- */
+.main-perfil-container-publico.vibe-neon {
+    background: linear-gradient(to bottom, transparent 10%, var(--aura-user, #ff9100) 25%, #000 50%) !important;
+    animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
+    border: 1px solid var(--aura-user, #ff9100);
+}
+
+@keyframes neon-flicker-subtle {
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+        filter: brightness(1) saturate(1);
+        box-shadow: 0 0 8px var(--aura-user, #ff9100), 0 0 15px rgba(0, 0, 0, 0.5);
+    }
+
+    20%,
+    24%,
+    55% {
+        filter: brightness(0.85) saturate(0.8);
+        box-shadow: 0 0 5px var(--aura-user, #ff9100), 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* --- VIBE GLASS (Vidro) --- */
+.main-perfil-container-publico.vibe-glass {
+    background: linear-gradient(135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #ffbc00) l c h / 0.3) !important;
+    background-blend-mode: soft-light;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: 1px solid oklch(1 0 0 / 0.35) !important;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 16px 45px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+    overflow: hidden;
+    position: relative;
+}
+
+/* --- VIBE LIGHT (Claro, sóbrio) --- */
+.main-perfil-container-publico.vibe-light {
+    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) !important;
+    border: 2px solid rgba(139, 128, 100, 0.2);
+    border-top: 4px solid var(--aura-user, #ffbc00);
+    box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+}
+
+.main-perfil-container-publico.vibe-light h3,
+.main-perfil-container-publico.vibe-light p {
+    color: #3e382d !important;
+    text-shadow: none !important;
+}
+
+/* ================================================================
+   FALLBACKS GERAIS (CLAMP, BACKDROP-FILTER, LEGADOS)
+   ================================================================ */
+
+/* Fallback para navegadores sem backdrop-filter */
+@supports not (backdrop-filter: blur(2px)) {
+
+    .depoimento-item,
+    .avaliacao-item,
+    .depoimento-form-container,
+    .gerenciar-depoimentos-container,
+    .main-perfil-container-publico.vibe-glass {
+        background: rgba(10, 10, 10, 0.85);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+/* Fallback para navegadores sem clamp() */
+@supports not (font-size: clamp(1rem, 1vw, 2rem)) {
+    .estrela {
+        font-size: 1.5rem;
+    }
+
+    .avaliacao-nome {
+        font-size: 1rem;
+    }
+
+    .avaliacao-media {
+        font-size: 0.9rem;
+    }
+
+    .btn-votar-estrela {
+        font-size: 0.8rem;
+        padding: 6px 16px;
+    }
+
+    .depoimento-item {
+        padding: 14px 18px;
+    }
+
+    .nome-publico {
+        font-size: 2rem;
+    }
+
+    .avatar-posicionador {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* ================================================================
+   RESPONSIVIDADE COMPLEMENTAR
+   ================================================================ */
+@media (max-width: 768px) {
+    .main-perfil-container-publico.vibe-ads .hex-bg {
+        top: 50px;
+        height: calc(100vh - 50px);
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+        grid-auto-rows: 44px;
+        gap: 10px;
+        opacity: 0.4;
+    }
+
+    .main-perfil-container-publico.vibe-ads::after {
+        color: var(--aura-user, #00f0ff);
+        background-size: 65px 65px, 200% 200%;
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='currentColor' stroke-width='1.2' stroke-opacity='0.20'/%3E%3C/svg%3E"),
+            linear-gradient(45deg, rgba(2, 4, 18, 0.95) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.95) 100%);
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-item {
+        border-color: var(--aura-user, #ff9100);
+    }
+
+    .depoimentos-header,
+    .avaliacoes-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .depoimentos-actions,
+    .avaliacoes-actions {
+        justify-content: space-between;
+    }
+
+    .depoimento-pendente-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .depoimento-pendente-acoes button {
+        justify-content: center;
+    }
+
+    .depoimento-pendente-texto {
+        padding-left: 0;
+        margin-top: 6px;
+    }
+
+    .gerenciar-depoimentos-container {
+        padding: clamp(12px, 2.5vw, 20px);
+    }
+
+    .depoimento-form-container .botoes-rodape {
+        flex-direction: column;
+    }
+
+    .depoimento-form-container .btn-principal,
+    .depoimento-form-container .btn-secundario {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+}
+
+
+@media (min-width: 769px) {
+    .main-perfil-container-publico.vibe-ads::after {
+        color: var(--aura-user, #00f0ff);
+        background-size: 150px 150px, 200% 200%;
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='currentColor' stroke-width='1.5' stroke-opacity='0.30'/%3E%3C/svg%3E"),
+            linear-gradient(45deg, rgba(2, 4, 18, 0.92) 0%, rgba(0, 240, 255, 0.06) 50%, rgba(2, 4, 18, 0.92) 100%);
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-bg {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        grid-auto-rows: 78px;
+        gap: 20px;
+        opacity: 0.4;
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-item {
+        border-width: 1.5px;
+        border-style: solid;
+        border-color: var(--aura-user, #ff9100);
+    }
+
+    .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
+        background: var(--aura-user, #ff9100) !important;
+        border-color: var(--aura-user, #ff9100) !important;
+        box-shadow: 0 0 15px var(--aura-user, #ff9100) !important;
+        opacity: 0.7;
+    }
+
+    @keyframes ads-neon-glow-pulse {
+        0% {
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+            border-top-color: var(--aura-user);
+        }
+
+        50% {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15);
+            border-color: var(--aura-user);
+        }
+
+        100% {
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
+            border-top-color: var(--aura-user);
+        }
+    }
+
+}
+
+@supports not (backdrop-filter: blur(2px)) {
+
+    .depoimento-item,
+    .avaliacao-item,
+    .depoimento-form-container,
+    .main-perfil-container-publico.vibe-glass {
+        background: rgba(10, 10, 10, 0.85);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .estrela {
+        font-size: 1.3rem;
+    }
+
+    .avaliacao-nome {
+        font-size: 0.75rem;
+    }
+
+    .avaliacao-media {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+    }
+
+    .btn-votar-estrela {
+        font-size: 0.65rem;
+        padding: 3px 10px;
+    }
+
+    .depoimento-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .nome-linha {
+        gap: 8px;
+    }
+
+    .modal-depoimento-content {
+        padding: 20px 16px 20px 16px;
+        max-height: 85vh;
+    }
+
+    .modal-depoimento-content .depoimento-form-container .botoes-rodape {
+        flex-direction: column;
+    }
+
+    .modal-depoimento-content .depoimento-form-container .btn-principal,
+    .modal-depoimento-content .depoimento-form-container .btn-secundario {
+        width: 100%;
+        flex: none;
+    }
+
+    .modal-depoimento-overlay {
+        padding-top: 8%;
+    }
+}
+
+@media (orientation: portrait) and (max-height: 500px) {
+
+    .avatar-posicionador {
+        bottom: -72px;
+        width: 72px;
+        height: 72px;
+    }
+
+    .capa-container {
+        max-height: 200px;
+    }
+
+    .perfil-header-container {
+        margin: 15px auto;
+    }
+}
+
+
+/* ================================================================
+   MODAL DE ESCREVER DEPOIMENTO (OVERLAY + CONTEÚDO)
+   ================================================================ */
+
+.modal-depoimento-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    z-index: 99999;
+    display: none;
+    /* 🔥 CORREÇÃO: Alinha no topo com padding para não ficar colado no topo */
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: clamp(15%, 15vh, 40%);
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.modal-depoimento-content {
+    background: rgba(20, 20, 30, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    max-width: 550px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 30px 28px 28px 28px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: modalDepoimentoIn 0.25s ease-out;
+    /*  CORREÇÃO: Não deixa o modal esticar verticalmente */
+    align-self: flex-start;
+    margin: 0 auto;
+}
+
+/*  CORREÇÃO: Scroll interno só se o conteúdo for muito grande */
+.modal-depoimento-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-depoimento-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+}
+
+.modal-depoimento-content::-webkit-scrollbar-thumb {
+    background: #ffbc00;
+    border-radius: 4px;
+}
+
+@keyframes modalDepoimentoIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-depoimento-fechar {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+    line-height: 1;
+}
+
+.modal-depoimento-fechar:hover {
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+/* Estilos internos do formulário (reforço) */
+.modal-depoimento-content .depoimento-form-container {
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+}
+
+.modal-depoimento-content .depoimento-form-container h1 {
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.modal-depoimento-content .depoimento-form-container .botoes-rodape {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.modal-depoimento-content .depoimento-form-container .btn-principal,
+.modal-depoimento-content .depoimento-form-container .btn-secundario {
+    flex: 1;
+    min-width: 120px;
+}
