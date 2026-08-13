@@ -79,11 +79,11 @@
 .container-feed {
     align-items: flex-start;
     /* Mantém cada card no seu tamanho real */
-    padding: 12px;
+    padding: 15px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 20px;
-    max-width: 1600px; /* LIMITE MÁXIMO para telas grandes */
+    max-width: 1800px; /* LIMITE MÁXIMO para telas grandes */
     margin: 20px auto;
     width: 100%;
     box-sizing: border-box;
@@ -250,13 +250,13 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
    ========================================================================== */
 
 /* SPOTTED / RANCO - Vermelho/coral mais suave, sem forçar muito */
-.spotted-card.ranco { 
-  background: linear-gradient(145deg, rgba(255, 103, 65, 0.45), rgba(126, 47, 47, 0.2)); 
+.spotted-card.tenho-ranco { 
+  background: linear-gradient(145deg, rgba(207, 60, 60, 0.85), rgba(126, 47, 47, 0.233)); 
 }
 
 /* COMUNIDADE - Efeito leitoso, translúcido e esbranquiçado (Glassmorphism limpo) */
 .spotted-card.comunidade { 
-  background: linear-gradient(145deg, rgba(206, 206, 206, 0.28), rgb(93, 93, 93, 0.12)); 
+  background: linear-gradient(145deg, rgba(179, 179, 179, 0.35), rgba(137, 137, 137, 0.14)); 
 }
 
 /* ACABA PELO AMOR DE DEUS - Laranja âmbar bem dissolvido */
@@ -266,7 +266,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 /* PERDIDOS - Amarelo suave que não queima os olhos e nem apaga a tag amarela */
 .spotted-card.perdidos { 
-  background: linear-gradient(145deg, rgb(153, 160, 9), rgba(58, 54, 11, 0.52)); 
+  background: linear-gradient(275deg, rgba(221, 203, 38, 0.68), rgb(255, 235, 59, 0.12)); 
 }
 
 /* ELOGIOS - Rosa/magenta mais escuro e bem transparente para contrastar bem com a tag */
@@ -281,12 +281,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 /* GAMES - Ciano/Aqua místico e suave */
 .spotted-card.games { 
-  background: linear-gradient(145deg, rgba(39, 163, 173, 0.64), rgba(8, 45, 57, 0.22)); 
+  background: linear-gradient(145deg, rgb(27, 155, 165, 0.85), rgba(8, 45, 57, 0.22)); 
 }
 
 /* CARONAS - Azul acinzentado bem sutil e discreto */
 .spotted-card.caronas { 
-  background: linear-gradient(145deg, rgba(38, 62, 77, 0.25), rgba(10, 10, 10, 0.2)); 
+  background: linear-gradient(145deg, rgba(214, 214, 214, 0.63), rgba(10, 10, 10, 0.62)); 
 }
 
 /* ESTUDOS / ACADÊMICO - Roxo/violeta profundo e transparente */
@@ -300,14 +300,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 }
 
 
-
-
 /* Ícones no canto do Card */
 .spotted-card .user-info-post::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     right: 10px;
-    font-size: clamp(16px, 6.5cqw, 24px) ;
+    font-size: clamp(15px, 8cqw, 24px) ;
     opacity: 0.5;
     position: absolute;
     display: flex;
@@ -318,12 +316,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 .spotted-card.comunidade .user-info-post::after {
     content: '\f0c0';
     color: #ffffffb6;
-    font-size: clamp(14px, 6cqw, 20px)
+    font-size: clamp(14px, 4.5cqw, 20px)
 }
 
-.spotted-card.ranco .user-info-post::after {
+.spotted-card.tenho-ranco .user-info-post::after {
     content: "\f071";
-    color: #ee4a22;
+    color: #ff6417;
 }
 
 .spotted-card.elogio .user-info-post::after {
@@ -343,12 +341,12 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 
 .spotted-card.caronas .user-info-post::after {
     content: "\f1b9";
-    color: #cccccca8;
+    color: #000000cc;
 }
 
 .spotted-card.perdidos .user-info-post::after {
     content: "\f002";
-    color: #f3ef07ee;
+    color: #504f05ee;
 }
 
 .spotted-card.esportes .user-info-post::after {
@@ -372,7 +370,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     align-items: center;
     width: 100%;
     flex-wrap: wrap;
-    padding: 8px 0;
+    padding: 10px 0;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
@@ -500,7 +498,9 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     padding: 8px;
     border-radius: 10px;
     text-decoration: none;
+    font-size: 0.8rem;
     font-size: clamp(0.7rem, 1.5vw, 1rem);
+    font-size: clamp(0.7rem, 3cqw, 1rem);
     font-weight: 800;
     text-transform: uppercase;
     transition: 0.3s ease-in-out;
@@ -533,7 +533,6 @@ span.data-post {
 /* --- COMPONENTES DO CARD/PERFIL --- */
 
 span.category-tag {
-    font-size: clamp(0.8rem, 0.2vw + 0.3rem, 1.1rem);
     color: #ffbc00;
     color: oklch(85.748% 0.17506 88.476 / 0.925);
     font-weight: bold;
@@ -546,6 +545,8 @@ span.category-tag {
     display: inline-block ;
     border: none;
     /* Limita a largura da tag */
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 0.8cqw, 1.1rem);
     white-space: nowrap ;
     /* Impede que ela quebre em duas linhas */
     overflow: hidden ;
@@ -673,7 +674,7 @@ span.category-tag {
     padding: 4px 6px;
     border-radius: 10px;
     font-size: 0.8rem;
-    font-size: clamp(0.7rem, 3cqw, 1.2rem);
+    font-size: clamp(0.75rem, 3cqw, 1.2rem);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
     cursor: pointer;
@@ -710,7 +711,7 @@ span.category-tag {
 
 .footer-links {
     text-transform: uppercase;
-     padding: clamp(4px, 3cqw, 10px) clamp(6px, 3cqw, 12px);
+     padding: clamp(3px, 3cqw, 10px) clamp(6px, 3cqw, 10px);
     display: inline-flex;
     flex-shrink: 0;
     justify-content: center;
@@ -728,44 +729,13 @@ span.category-tag {
     pointer-events: auto !important;
 }
 
-
-
-
-/* A caixa que envolve a logo no classificados */
-.atletica-item {
-    display: flex ;
-    align-items: center;
-    justify-content: center;
-    width: 140px ;
-    height: 140px ;
-    margin: 0 auto ;
-    overflow: visible ;
-    /* Mude para visible para o brilho não cortar */
-    background: none ;
-    border: none ;
-}
-
-.atletica-item:hover .insignia-atletica-link {
-    transform: scale(1.05) !important;
-    filter: brightness(1.1) drop-shadow(0 0 15px var(--dourado));
-}
-
-/* A logo */
-.insignia-atletica-link {
-    max-width: 100% ;
-    max-height: 100% ;
-    object-fit: contain;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-
 /*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
 
 .avatar-p {
     border: 1px solid #ff9f0f;
     gap: 10px;
-    width: clamp(35px, 3vw, 50px);
-    height: clamp(35px, 3vw, 50px);
+    width: clamp(30px, 3vw, 48px);
+    height: clamp(30px, 3vw, 48px);
     border-radius: 50%;
     -moz-background-clip: padding-box;
     /* Firefox 3.6 and earlier */
@@ -834,7 +804,7 @@ span.category-tag {
     gap: 8px;
     display: inline-flex;
     align-items: center;
-    font-size: clamp(0.6rem, 4cqw, 1rem);
+    font-size: clamp(0.65rem, 4cqw, 1rem);
     font-weight: 600;
     text-transform: uppercase;
     background: transparent;
@@ -932,7 +902,6 @@ span.category-tag {
     font-size: 0.85rem;
 }
 
-
 .bio-box {
     width: 100% !important;
     max-width: auto;
@@ -947,16 +916,6 @@ span.category-tag {
 }
 
 
-.form-busca-fenda input[type="text"] {
-    padding: 12px 15px;
-    font-size: 1rem ;
-}
-
-.form-busca-fenda button {
-    padding: 0 15px;
-    font-size: 1rem;
-}
-
 /* ==================================================
    GRID DE ANEXOS NO FEED (ESTILO INSTAGRAM/FACEBOOK)
    ================================================== */
@@ -970,6 +929,20 @@ span.category-tag {
     border: 2px solid rgba(255, 255, 255, 0.06);
     padding: 4px 0;
 }
+
+
+.main-perdidos .feed-anexos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.096);
+    padding: 8px 0;
+}
+
 
 .feed-anexo-item {
     aspect-ratio: 1 / 1;

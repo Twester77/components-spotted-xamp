@@ -335,10 +335,36 @@
 /* ================================================================
    COLLAPSE SOCIAL (conteúdo colapsável)
    ================================================================ */
+
+   /* Fallback para navegadores antigos */
 .social-collapse {
-    overflow: hidden;
     max-height: 0;
+    overflow: hidden;
     transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.social-collapse.aberto {
+    max-height: 9999px; /* valor alto, mas raramente usado */
+}
+
+/* Navegadores modernos: sobrescreve com grid */
+@supports (grid-template-rows: 0fr) {
+    .social-collapse {
+        max-height: none; /* desativa o fallback */
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .social-collapse.aberto {
+        grid-template-rows: 1fr;
+    }
+}
+
+.social-collapse {
+    display: grid;
+    grid-template-rows: 0fr; /* Começa fechado */
+    transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    background-clip: padding-box;
     background: #0a0a1202;
     background: oklch(0.35 0 0 / 0.5);
     border-radius: 20px;
@@ -350,11 +376,16 @@
     /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
 }
 
+/* O elemento filho direto precisa de overflow hidden para o truque funcionar */
+.social-collapse > div {
+    overflow: hidden;
+}
 
 .social-collapse.aberto {
-    max-height: 9999px;
-    /* valor alto para caber todo o conteúdo */
+     grid-template-rows: 1fr; /* Abre no tamanho exato do conteúdo */
 }
+
+
 
 /* ================================================================
    DEPOIMENTOS (ESTILO ORKUT)
@@ -362,7 +393,9 @@
 .depoimento-item {
     background: rgba(255, 255, 255, 0.03);
     border-radius: clamp(10px, 1.2vw, 14px);
+    padding: 10px;
     padding: clamp(12px, 1.5vw, 18px);
+    margin-bottom: 8px;
     margin-bottom: clamp(10px, 1.2vw, 16px);
     border-left: 3px solid var(--dourado, #ffbc00);
     transition: 0.2s;
@@ -378,11 +411,16 @@
 .depoimento-autor {
     display: flex;
     align-items: center;
+    gap: 8px;
     gap: clamp(8px, 1vw, 20px);
     margin-bottom: 6px;
+    word-break: break-word;
+    white-space: nowrap;
 }
 
 .depoimento-avatar {
+    width: 32px;
+    height: 32px;
     width: clamp(32px, 4vw, 46px);
     height: clamp(32px, 4vw, 46px);
     border-radius: 50%;
@@ -392,18 +430,24 @@
 
 .depoimento-autor strong {
     color: oklch(0.96 0 0 / 1);
+    font-size: 0.85rem;
     font-size: clamp(0.9rem, 1vw, 1.05rem);
 }
 
 .depoimento-data {
+    word-break: break-word;
+    white-space: nowrap;
+    color: #f3f3f3;
     color: oklch(0.96 0 0 / 1);
-    ;
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+    opacity: 0.7;
     display: block;
 }
 
 .depoimento-texto {
     color: oklch(0.96 0 0 / 1);
+    font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.1vw, 1.05rem);
     line-height: 1.5;
     margin: 6px 0 0 0;
@@ -417,6 +461,7 @@
     color: oklch(96.115% 0.00011 271.152 / 0.712);
     text-align: center;
     font-style: italic;
+    padding: 12px;
     padding: clamp(16px, 3vw, 30px);
     background: rgba(255, 255, 255, 0.02);
     border-radius: 12px;
@@ -426,6 +471,7 @@
 .loading-depoimentos {
     text-align: center;
     color: #888;
+    padding: 12px;
     padding: clamp(16px, 3vw, 30px);
     font-style: italic;
 }
@@ -436,6 +482,7 @@
 .avaliacoes-container {
     display: flex;
     flex-direction: column;
+    gap: 12px;
     gap: clamp(12px, 1.5vw, 20px);
 }
 
@@ -446,7 +493,9 @@
 
 .avaliacao-item {
     background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
     border-radius: clamp(10px, 1.2vw, 14px);
+    padding: 10px 12px;
     padding: clamp(10px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     -webkit-backdrop-filter: blur(2px);
@@ -456,12 +505,14 @@
 .avaliacao-header {
     display: flex;
     align-items: center;
+    gap: 6px;
     gap: clamp(6px, 1vw, 12px);
     margin-bottom: 4px;
     flex-wrap: wrap;
 }
 
 .avaliacao-emoji {
+    font-size: 1.2rem;
     font-size: clamp(1rem, 1.8vw, 1.4rem);
     line-height: 1;
     flex-shrink: 0;
@@ -470,6 +521,7 @@
 .avaliacao-nome {
     font-weight: bold;
     color: #fff;
+    font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.2vw, 1.1rem);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -482,6 +534,7 @@
     font-weight: 700;
     font-size: clamp(0.8rem, 1vw, 1rem);
     background: rgba(255, 188, 0, 0.08);
+    padding: 2px 8px;
     padding: clamp(2px, 0.3vw, 6px) clamp(8px, 1vw, 14px);
     border-radius: 30px;
     white-space: nowrap;
@@ -490,13 +543,14 @@
 
 .estrelas-container {
     display: flex;
+    gap: 3px;
     gap: clamp(2px, 0.5vw, 6px);
+    margin: 5px 0;
     margin: clamp(4px, 0.5vw, 8px) 0;
     flex-wrap: wrap;
 }
 
 .estrela {
-    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
     line-height: 1;
     color: #555;
     cursor: pointer;
@@ -505,7 +559,21 @@
     user-select: none;
     display: inline-block;
     font-size: 1.4rem;
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
     /* fallback para navegadores sem clamp */
+}
+
+/* Estrelas selecionáveis (cursor pointer já existe) */
+.estrela.selecionada {
+    color: var(--dourado, #ffbc00);
+    transform: scale(1.1);
+}
+
+/* Botão Votar desabilitado */
+.btn-votar-estrela:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .estrela.cheia {
@@ -548,6 +616,7 @@
     align-items: center;
     margin-top: 4px;
     font-weight: bold;
+    font-size: 0.8rem;
     font-size: clamp(0.7rem, 0.9vw, 0.85rem);
     color: #999999;
     color: oklch(96.115% 0.00011 271.152 / 0.534);
@@ -566,6 +635,7 @@
     border-radius: 30px;
     padding: clamp(4px, 0.5vw, 8px) clamp(12px, 1.5vw, 20px);
     color: var(--dourado, #ffbc00);
+    font: size 0.8rem;;
     font-size: clamp(0.75rem, 1vw, 1.05rem);
     cursor: pointer;
     transition: 0.25s ease;
@@ -582,8 +652,10 @@
 .ja-votou {
     color: #4caf50;
     font-weight: 500;
-    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
     background: rgba(76, 175, 80, 0.08);
+    padding: 2px 8px;
     padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 14px);
     border-radius: 30px;
     border: 1px solid rgba(76, 175, 80, 0.15);
@@ -594,6 +666,7 @@
     color: oklch(96.115% 0.00011 271.152 / 0.651);
     text-align: center;
     font-style: italic;
+    padding: 10px;
     padding: clamp(12px, 2vw, 24px);
     background: rgba(255, 255, 255, 0.02);
     border-radius: 12px;
@@ -604,6 +677,7 @@
     text-align: center;
     color: #d1d1d1;
     font-style: italic;
+    padding: 12px;
     padding: clamp(16px, 3vw, 30px);
 }
 
@@ -1386,20 +1460,20 @@
 
 @media (max-width: 480px) {
     .estrela {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
     }
 
     .avaliacao-nome {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
     }
 
     .avaliacao-media {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
         padding: 2px 8px;
     }
 
     .btn-votar-estrela {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
         padding: 3px 10px;
     }
 

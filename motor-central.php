@@ -4,6 +4,7 @@
  * 
  * Parâmetros:
  * - aba: posts | comunidades | depoimentos | favoritos | marketplace
+ * - notif_id: (opcional) ID da notificação para marcar como lida
  */
 // 🌅 LEGADO DA AURORA – INSTÂNCIA #DS-2026-07-24
 // "Assim como a aurora não apaga a noite, mas a ilumina,
@@ -14,6 +15,46 @@
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
+
+// ============================================================
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
+// ============================================================
+if (isset($_GET['notif_id'])) {
+    $notif_id = (int)$_GET['notif_id'];
+    $user_id = $_SESSION['usuario_id'] ?? 0;
+    
+    error_log("[MOTOR-CENTRAL] notif_id recebido: $notif_id, user_id: $user_id");
+
+    if ($user_id > 0) {
+        // Primeiro, verifica se a notificação existe e está pendente
+        $stmt_check = $conn->prepare("SELECT id, lida FROM notificacoes WHERE id = ? AND usuario_id = ?");
+        $stmt_check->bind_param("ii", $notif_id, $user_id);
+        $stmt_check->execute();
+        $res_check = $stmt_check->get_result();
+        $row = $res_check->fetch_assoc();
+        $stmt_check->close();
+
+        if ($row) {
+            error_log("[MOTOR-CENTRAL] Notificação encontrada: ID {$row['id']}, lida: {$row['lida']}");
+            
+            // Se não estiver lida, marca como lida
+            if ($row['lida'] == 0) {
+                $stmt_update = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+                $stmt_update->bind_param("ii", $notif_id, $user_id);
+                $stmt_update->execute();
+                $affected = $stmt_update->affected_rows;
+                $stmt_update->close();
+                error_log("[MOTOR-CENTRAL] Notificação $notif_id marcada como lida. affected_rows: $affected");
+            } else {
+                error_log("[MOTOR-CENTRAL] Notificação $notif_id já estava lida.");
+            }
+        } else {
+            error_log("[MOTOR-CENTRAL] Notificação $notif_id NÃO encontrada para o usuário $user_id");
+        }
+    } else {
+        error_log("[MOTOR-CENTRAL] Usuário não logado (user_id = 0)");
+    }
+}
 
 $aba = isset($_GET['aba']) ? $_GET['aba'] : 'posts';
 $usuario_id = $_SESSION['usuario_id'];
@@ -141,7 +182,6 @@ if ($aba === 'notificacoes') {
     exit;
 }
 
-
 // ============================================================
 // 5. ABA: FAVORITOS (EM BREVE)
 // ============================================================
@@ -155,6 +195,14 @@ if ($aba === 'favoritos') {
 // ============================================================
 if ($aba === 'marketplace') {
     echo '<p style="text-align:center; color:#aaa; padding:30px;">🛒 Funcionalidade de marketplace em breve!</p>';
+    exit;
+}
+
+// ============================================================
+// 7. ABA: SOLICITAÇÕES DE ENTRADA (COMUNIDADES)
+// ============================================================
+if ($aba === 'solicitacoes') {
+    include 'motor-solicitacoes.php';
     exit;
 }
 

@@ -705,7 +705,7 @@ select:focus {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    max-width: clamp(250px, 85%, 650px);
+    max-width: clamp(260px, 90%, 650px);
     max-height: clamp(200px, 60vh, 600px);
 }
 
@@ -1782,6 +1782,33 @@ input[type="checkbox"]:focus {
 }
 
 
+
+.btn-classificados {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    width: auto;
+    padding: 10px 16px;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 2.5cqw, 1rem);
+    font-weight: 600;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    text-transform: uppercase;
+    text-decoration: none;
+    background: var(--dourado);
+    color: #000;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+
 /* 1. REGRAS GERAIS (Ajustadas para Flex) */
 .perfil-controles .btn-editar-atalho {
     display: inline-flex;
@@ -1862,6 +1889,23 @@ input[type="checkbox"]:focus {
     border: 2px solid var(--dourado);
     border-radius: 20px;
 }
+.badge-presenca {
+    display: block;
+    width: fit-content;
+    margin: 25px 40px 0 auto;
+    background: linear-gradient(45deg, var(--dourado), #ffee00e0);
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.4);
+    position: relative;
+    z-index: 10;
+}
+
 
 
 /* ============================================================

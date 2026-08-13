@@ -172,7 +172,7 @@
     border-radius: 30px;
     padding: 4px 12px;
     color: rgba(255, 255, 255, 0.6);
-    font-size: clamp(0.75rem, 1.4vw, 1.3rem);
+    font-size: clamp(0.75rem, 1.3vw, 1.3rem);
     cursor: pointer;
     transition: 0.2s;
     display: flex;
@@ -1031,22 +1031,22 @@
    ================================================== */
 @container feedComentarios (max-width: 360px) {
     .comentario-item {
-        max-width: 71%;
+        max-width: 68%;
         padding: 3px 5px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .comentario-filho {
         margin-left: 20px;
-        max-width: 68%;
+        max-width: 63%;
     }
 
     .comentario-item .comentario-autor {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
 
     .comentario-texto {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         line-height: 1.3;
     }
 }
@@ -1064,12 +1064,12 @@
 
 @container feedComentarios (min-width: 501px) and (max-width: 800px) {
     .comentario-item {
-        max-width: 68%;
+        max-width: 65%;
     }
 
     .comentario-filho {
         margin-left: 35px;
-        max-width: 63%;
+        max-width: 60%;
     }
 }
 
@@ -1278,10 +1278,11 @@ body.pagina-post .header-principal {
     padding: 7px;
     color: #c4c4c4;
     font-style: italic;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 0.382vw + 0.625rem, 1.1rem);
     background-color: rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-    min-width: 180px;
+    min-width: 160px;
     min-height: 50px;
 }
 
@@ -1612,8 +1613,9 @@ body.pagina-post .header-principal {
 .comentario-rodape {
     display: flex;
     justify-content: flex-end;
-    margin-top: 6px;
     font-size: 0.7rem;
+    font-size: clamp(0.75rem, 3.5cqw, 0.95rem);
+    gap: 4px;
     opacity: 0.6;
     color: #c4c4c4;
 }
@@ -1625,14 +1627,15 @@ body.pagina-post .header-principal {
     align-items: center;
     margin-bottom: 4px;
     letter-spacing: 0.5px;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
     /* REMOVIDO: white-space: nowrap; */
 }
 
 .comentario-autor {
     color: var(--cor-borda-glow);
-    font-size: clamp(0.85rem, 4cqw, 1.05rem);
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 3.5cqw, 1rem);
     font-weight: bold;
     flex: 1;
     overflow: hidden;

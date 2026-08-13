@@ -254,6 +254,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 15px;
+    align-items: center;
     color-scheme: light dark;
     image-rendering: auto;
 }

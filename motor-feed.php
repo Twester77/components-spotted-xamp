@@ -156,11 +156,12 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 
     // ============================================================
     // 🔥 EXIBIÇÃO DOS ANEXOS (MÚLTIPLOS VIA JSON OU FALLBACK)
-    // 🔥 MODO CARROSSEL ATIVADO APENAS EM COMUNIDADES (comunidade_id > 0)
+    // 🔥 MODO CARROSSEL ATIVADO EM COMUNIDADES OU NA CENTRAL (tipo_feed === 'pessoal')
     // ============================================================
     $anexos_html = '';
     $anexos_exibicao = null;
     $is_comunidade = ($comunidade_id > 0);
+    $is_central = ($tipo_feed === 'pessoal'); // 🔥 NOVO: detecta se estamos na Central
 
     if (!empty($linha['anexos'])) {
         $anexos_exibicao = json_decode($linha['anexos'], true);
@@ -170,8 +171,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     }
 
     if (!empty($anexos_exibicao) && is_array($anexos_exibicao)) {
-        // 🔥 CARROSSEL (apenas em comunidade com mais de 1 anexo)
-        if ($is_comunidade && count($anexos_exibicao) > 1) {
+        // 🔥 CARROSSEL (se for comunidade OU central e tiver mais de 1 anexo)
+        if ( ($is_comunidade || $is_central) && count($anexos_exibicao) > 1) {
             $anexos_html = '<div class="carrossel-wrapper">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
@@ -199,7 +200,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             $anexos_html .= '  <button class="carrossel-next" data-post="' . $post_id_atual . '" aria-label="Próximo">›</button>';
             $anexos_html .= '</div>';
         } else {
-            // 🔥 GRID (padrão para outros contextos ou comunidade com 1 anexo)
+            // 🔥 GRID (padrão para outros contextos ou comunidade/central com 1 anexo)
             $anexos_html = '<div class="feed-anexos-grid">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {

@@ -169,7 +169,7 @@ include 'includes/navbar.php';
 
         <div style="margin-top: 40px;">
             <!-- Adicionado aria-label invisível para o leitor de tela detalhar o destino do botão de voltar -->
-            <a href="index.php" class="btn-editar-atalho" style="text-decoration: none;" aria-label="Voltar para a página inicial da Fenda">
+            <a href="index.php" class="btn-classificados" style="text-decoration: none;" aria-label="Voltar para a página inicial da Fenda">
                 <i class="fa-solid fa-arrow-left"></i> Voltar para o Home
             </a>
         </div>

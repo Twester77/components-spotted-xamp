@@ -1,6 +1,6 @@
 <?php
 /**
- * marcar-todas-lidas.php – Marca todas as notificações do usuário como lidas (AJAX)
+ * marcar-como-lidas.php – Marca todas as notificações do usuário como lidas (AJAX)
  * 
  * Método: POST
  * Parâmetros: csrf_token (para segurança)

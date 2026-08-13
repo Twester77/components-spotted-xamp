@@ -1169,13 +1169,13 @@ footer a {
 .badge-alertas {
     position: absolute;
     top: -6px;
-    right: -8px;
+    right: -6px;
     background: linear-gradient(45deg, #ff4b2b, #ff416c);
     color: white;
     font-size: 10px;
     font-weight: 800;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -1283,10 +1283,43 @@ footer a {
     /* Garante que o clique funcione */
 }
 
+/* A caixa que envolve a logo no classificados */
+.atletica-item {
+    display: flex ;
+    align-items: center;
+    justify-content: center;
+    width: 140px ;
+    height: 140px ;
+    margin: 0 auto ;
+    overflow: visible ;
+    /* Mude para visible para o brilho não cortar */
+    background: none ;
+    border: none ;
+}
+
+.atletica-item:hover .insignia-atletica-link {
+    transform: scale(1.05) !important;
+    filter: brightness(1.1) drop-shadow(0 0 15px var(--dourado));
+}
+
+/* A logo */
+.insignia-atletica-link {
+    max-width: 100% ;
+    max-height: 100% ;
+    object-fit: contain;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
 
 /*  SESSÃO DE BUSCA - FORMULÁRIO E RESULTADOS  */
 
 /* 1. O Formulário (Tamanho Desktop e Mobile) */
+.container-busca.container-fenda-flex { 
+    height: 100dvh;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column; 
+}
 
 .form-busca-fenda {
     display: flex;
@@ -1298,10 +1331,10 @@ footer a {
     margin: 25px auto ;
     background: transparent !important;
     border: none ;
-    min-height: 50px;
 }
 
 .form-busca-fenda input[type="text"] {
+    display: flex;
     flex: 1 ;
     min-width: 0 ;
     max-width: 600px ;
@@ -1328,16 +1361,27 @@ footer a {
 
 .form-busca-fenda button {
     flex: 0 0 auto !important;
-    min-width: 65px;
+    min-width: 50px;
+    min-height: 50px;
     background: #fc900c;
     color: #000;
-    border: none !important;
+    border: none ;
     border-radius: 10px;
-    font-weight: 900 !important;
+    font-weight: 900 ;
     font-size: 1rem;
     cursor: pointer;
     padding: 0 20px;
-    outline: none !important;
+    outline: none ;
+}
+
+.form-busca-fenda input[type="text"] {
+    padding: 12px 15px;
+    font-size: 1rem ;
+}
+
+.form-busca-fenda button {
+    padding: 0 15px;
+    font-size: 1rem;
 }
 
 
@@ -1795,7 +1839,7 @@ textarea {
     background: #00000094;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
-    padding: 28px 22px;
+    padding: 24px 20px;
     margin: 0 auto 20px auto;
 }
 
@@ -1952,7 +1996,7 @@ textarea[name="bio"] {
     top: 4px;
     right: 30px;
     /* Ajuste conforme o menu de opções */
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: bold;
     color: #FFD700;
     letter-spacing: 2px;
@@ -2014,11 +2058,11 @@ textarea[name="bio"] {
 
 
     /* Garante que o container do feed não tenha padding lateral */
-    .container-feed {
+    body:not(.modo-swipe-ativo) .container-feed {
         margin: 0 auto;
         width: 100%;
         grid-template-columns: 1fr ;
-        padding: 8px !important;
+        padding: 8px ;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2542,7 +2586,228 @@ section.sessao-publicar .form-publicar .anexos-grid {
     }
 }
 
-    
+/* ============================================================
+   NOTIFICAÇÕES – PÁGINA DEDICADA (CSS PURO, SEM INLINE)
+   ============================================================ */
+
+/* Container principal */
+.notificacoes-page {
+    max-width: clamp(300px, 90%, 600px);
+    margin: clamp(15px, 4vh, 40px) auto;
+    padding: clamp(6px, 2vw, 15px);
+    box-sizing: border-box;
+}
+
+/* Cabeçalho com título e botão */
+.notificacoes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(12px, 3vw, 24px);
+    flex-wrap: wrap;
+    gap: clamp(6px, 1.5vw, 14px);
+}
+
+.notificacoes-header h2 {
+    color: var(--dourado, #ffbc00);
+    margin: 0;
+    font-size: clamp(1.1rem, 3vw, 1.8rem);
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 1vw, 10px);
+}
+
+.notificacoes-header h2 i {
+    color: inherit;
+}
+
+/* Botão "Marcar todas" – sem inline */
+.btn-marcar-todas {
+    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    padding: clamp(4px, 0.6vw, 8px) clamp(10px, 1.5vw, 18px);
+    background: rgba(255, 188, 0, 0.12);
+    color: var(--dourado, #ffbc00);
+    border: 1px solid rgba(255, 188, 0, 0.15);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 600;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.btn-marcar-todas:hover {
+    background: rgba(255, 188, 0, 0.2);
+    border-color: var(--dourado, #ffbc00);
+    transform: scale(1.02);
+}
+
+.btn-marcar-todas:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Lista de notificações */
+.notificacoes-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 1.5vw, 14px);
+}
+
+/* Link que envolve o card */
+.notificacao-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.15s ease;
+}
+
+.notificacao-link:hover .notificacao-card {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(clamp(2px, 0.5vw, 6px));
+}
+
+/* Card individual */
+.notificacao-card {
+    background: rgba(255, 255, 255, 0.05);
+    background: oklch(1 0 0 / 0.05);
+    padding: clamp(10px, 2vw, 18px);
+    border-radius: clamp(8px, 1.2vw, 14px);
+    border-left: clamp(3px, 0.5vw, 6px) solid var(--borda-esquerda, transparent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s, transform 0.15s;
+    box-sizing: border-box;
+}
+
+/* Destaque para não lidas */
+.notificacao-card.nova {
+    border-left-color: var(--dourado, #ffbc00);
+    background: rgba(255, 188, 0, 0.04);
+    background: oklch(83.276% 0.17139 82.036 / 0.04);
+}
+
+/* Conteúdo textual */
+.notificacao-conteudo {
+    flex: 1;
+    min-width: 0;
+}
+
+.notificacao-conteudo p {
+    margin: 0;
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
+    color: #fff;
+    color: oklch(1 0 0);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.notificacao-data {
+    font-size: clamp(0.65rem, 1.4vw, 0.9rem);
+    color: rgba(255, 255, 255, 0.6);
+    color: oklch(1 0 0 / 0.6);
+    display: inline-block;
+    margin-top: clamp(2px, 0.4vw, 6px);
+}
+
+.notificacao-data i {
+    margin-right: 4px;
+}
+
+/* Indicador de não lida (bolinha dourada) */
+.notificacao-indicador {
+    display: inline-block;
+    width: clamp(6px, 1vw, 10px);
+    height: clamp(6px, 1vw, 10px);
+    border-radius: 50%;
+    background: var(--dourado, #ffbc00);
+    flex-shrink: 0;
+    margin-left: clamp(6px, 1.5vw, 14px);
+}
+
+/* Estado vazio */
+.notificacao-empty {
+    text-align: center;
+    color: #666;
+    color: oklch(0.6 0 0);
+    margin-top: clamp(20px, 5vh, 50px);
+    padding: clamp(10px, 2vw, 30px);
+    font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+}
+
+/* ============================================================
+   FALLBACKS PARA NAVEGADORES ANTIGOS
+   ============================================================ */
+@supports not (font-size: clamp(1rem, 1vw, 2rem)) {
+    .notificacoes-header h2 {
+        font-size: 1.5rem;
+    }
+    .notificacao-conteudo p {
+        font-size: 1rem;
+    }
+    .notificacao-data {
+        font-size: 0.8rem;
+    }
+    .btn-marcar-todas {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+    }
+    .notificacao-card {
+        padding: 14px;
+        border-left-width: 4px;
+    }
+    .notificacao-indicador {
+        width: 8px;
+        height: 8px;
+    }
+    .notificacoes-page {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 15px;
+    }
+}
+
+@supports not (background: oklch(1 0 0 / 0.05)) {
+    .notificacao-card {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .notificacao-card.nova {
+        background: rgba(255, 188, 0, 0.04);
+    }
+    .notificacao-conteudo p {
+        color: #fff;
+    }
+    .notificacao-data {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    .notificacao-empty {
+        color: #666;
+    }
+}
+
+/* ============================================================
+   RESPONSIVIDADE (APENAS UMA MEDIA QUERY ESSENCIAL)
+   ============================================================ */
+@media (max-width: 480px) {
+    .notificacoes-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .btn-marcar-todas {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+    .notificacao-card {
+        padding: 12px;
+    }
+}
+
 
 
 /* ---------------------------------------------------------------

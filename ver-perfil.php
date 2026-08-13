@@ -72,9 +72,11 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
         border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>;
         box-shadow: 0 0 8px <?php echo $cor_user; ?>55;
     }
+
     <?php if ($is_presenca): ?>.avatar-main {
         box-shadow: 0 0 5px rgba(255, 188, 0, 0.7);
     }
+
     <?php endif; ?>
 </style>
 
@@ -95,7 +97,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 <div class="hex-item <?php echo $tipo; ?>"
                     style="animation-delay: <?php echo $floatDelay; ?>s;
                     <?php if ($tipo === 'dynamic'): ?>
-                    data-index="<?php echo $i; ?>"
+                    data-index=" <?php echo $i; ?>"
                     <?php endif; ?>">
                 </div>
             <?php endfor; ?>
@@ -153,43 +155,47 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     </div>
 
     <!-- ============================================================
-    SOCIAL COLLAPSE (DEPOIMENTOS + AVALIAÇÕES)
+    SOCIAL COLLAPSE (DEPOIMENTOS + AVALIAÇÕES) – ESTRUTURA OTIMIZADA
     ============================================================ -->
     <div class="social-collapse-container">
         <button class="btn-toggle-social" id="btn-toggle-social" aria-expanded="false">
             <i class="fas fa-chevron-down"></i>
             <span>Ver depoimentos e avaliações</span>
         </button>
-        <div class="social-collapse" id="social-collapse">
-            <!-- DEPOIMENTOS -->
-            <section class="depoimentos-section">
-                <div class="depoimentos-header">
-                    <h3><i class="fas fa-quote-left"></i> Depoimentos</h3>
-                    <div class="depoimentos-actions">
-                        <?php if (isset($_SESSION['usuario_id']) && $_SESSION['usuario_id'] != $id_visto): ?>
-                            <button type="button" class="btn-escrever-depoimento" id="btn-abrir-modal-depoimento" data-destinatario="<?= $id_visto ?>" data-username="<?= htmlspecialchars($dados['username']) ?>">
-                                <i class="fas fa-pen"></i> Escrever
-                            </button>
-                        <?php endif; ?>
-                        <button id="btn-toggle-depoimentos" class="btn-toggle-depoimentos" aria-expanded="false">
-                            <i class="fas fa-chevron-down"></i> <span id="depoimentos-toggle-texto">Ver mais</span>
-                        </button>
-                    </div>
-                </div>
-                <div id="depoimentos-container" data-usuario="<?= $id_visto ?>">
-                    <div class="loading-depoimentos">Carregando depoimentos...</div>
-                </div>
-            </section>
 
-            <!-- AVALIAÇÕES -->
-            <section class="avaliacoes-section">
-                <div class="avaliacoes-header">
-                    <h3><i class="fas fa-star"></i> Avaliações</h3>
-                </div>
-                <div id="avaliacoes-container" data-usuario="<?= $id_visto ?>">
-                    <div class="loading-avaliacoes">Carregando avaliações...</div>
-                </div>
-            </section>
+        <!-- 🔥 NOVA ESTRUTURA: uma div filha exclusiva do .social-collapse com overflow hidden -->
+        <div class="social-collapse" id="social-collapse">
+            <div> <!-- esta div garante que o truque do grid funcione -->
+                <!-- DEPOIMENTOS -->
+                <section class="depoimentos-section">
+                    <div class="depoimentos-header">
+                        <h3><i class="fas fa-quote-left"></i> Depoimentos</h3>
+                        <div class="depoimentos-actions">
+                            <?php if (isset($_SESSION['usuario_id']) && $_SESSION['usuario_id'] != $id_visto): ?>
+                                <button type="button" class="btn-escrever-depoimento" id="btn-abrir-modal-depoimento" data-destinatario="<?= $id_visto ?>" data-username="<?= htmlspecialchars($dados['username']) ?>">
+                                    <i class="fas fa-pen"></i> Escrever
+                                </button>
+                            <?php endif; ?>
+                            <button id="btn-toggle-depoimentos" class="btn-toggle-depoimentos" aria-expanded="false">
+                                <i class="fas fa-chevron-down"></i> <span id="depoimentos-toggle-texto">Ver mais</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="depoimentos-container" data-usuario="<?= $id_visto ?>">
+                        <div class="loading-depoimentos">Carregando depoimentos...</div>
+                    </div>
+                </section>
+
+                <!-- AVALIAÇÕES -->
+                <section class="avaliacoes-section">
+                    <div class="avaliacoes-header">
+                        <h3><i class="fas fa-star"></i> Avaliações</h3>
+                    </div>
+                    <div id="avaliacoes-container" data-usuario="<?= $id_visto ?>">
+                        <div class="loading-avaliacoes">Carregando avaliações...</div>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -224,7 +230,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     console.log('[VER-PERFIL] 🟢 Página carregada. Inicializando módulos...');
 
     // ============================================================
-    // TOGGLE SOCIAL COLLAPSE
+    // TOGGLE SOCIAL COLLAPSE (com a nova estrutura)
     // ============================================================
     (function() {
         const btn = document.getElementById('btn-toggle-social');
@@ -315,155 +321,155 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 const formData = new FormData(form);
 
                 fetch('processa-depoimento.php', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('✅ Depoimento enviado com sucesso! Aguarde a aprovação.');
-                        fecharModal();
-                        // 🔥 CORREÇÃO: Recarrega a lista de depoimentos do zero
-                        const container = document.getElementById('depoimentos-container');
-                        if (container) {
-                            // Reseta o estado de carregamento para recarregar do início
-                            const btnToggle = document.getElementById('btn-toggle-depoimentos');
-                            // Chama a função de recarga com substituição total
-                            if (typeof carregarDepoimentos === 'function') {
-                                carregarDepoimentos(3, true);
-                            } else {
-                                // Fallback: recarrega a página
-                                location.reload();
-                            }
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
                         }
-                    } else {
-                        alert('❌ ' + (data.message || 'Erro ao enviar depoimento.'));
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('✅ Depoimento enviado com sucesso! Aguarde a aprovação.');
+                            fecharModal();
+                            // 🔥 CORREÇÃO: Recarrega a lista de depoimentos do zero
+                            const container = document.getElementById('depoimentos-container');
+                            if (container) {
+                                // Reseta o estado de carregamento para recarregar do início
+                                const btnToggle = document.getElementById('btn-toggle-depoimentos');
+                                // Chama a função de recarga com substituição total
+                                if (typeof carregarDepoimentos === 'function') {
+                                    carregarDepoimentos(3, true);
+                                } else {
+                                    // Fallback: recarrega a página
+                                    location.reload();
+                                }
+                            }
+                        } else {
+                            alert('❌ ' + (data.message || 'Erro ao enviar depoimento.'));
+                            btnSubmit.disabled = false;
+                            btnSubmit.innerHTML = originalText;
+                        }
+                    })
+                    .catch(err => {
+                        console.error('[MODAL DEPOIMENTO] Erro no envio:', err);
+                        alert('Erro de conexão. Tente novamente.');
                         btnSubmit.disabled = false;
                         btnSubmit.innerHTML = originalText;
-                    }
-                })
-                .catch(err => {
-                    console.error('[MODAL DEPOIMENTO] Erro no envio:', err);
-                    alert('Erro de conexão. Tente novamente.');
-                    btnSubmit.disabled = false;
-                    btnSubmit.innerHTML = originalText;
-                });
+                    });
             });
         }
     })();
 
     // ============================================================
-// DEPOIMENTOS (AJAX + BOTÃO "VER MAIS" COM OFFSET)
-// ============================================================
-(function() {
-    console.log('[DEPOIMENTOS] Inicializando módulo...');
+    // DEPOIMENTOS (AJAX + BOTÃO "VER MAIS" COM OFFSET)
+    // ============================================================
+    (function() {
+        console.log('[DEPOIMENTOS] Inicializando módulo...');
 
-    const container = document.getElementById('depoimentos-container');
-    const btnToggle = document.getElementById('btn-toggle-depoimentos');
-    const textoBtn = document.getElementById('depoimentos-toggle-texto');
+        const container = document.getElementById('depoimentos-container');
+        const btnToggle = document.getElementById('btn-toggle-depoimentos');
+        const textoBtn = document.getElementById('depoimentos-toggle-texto');
 
-    if (!container) {
-        console.error('[DEPOIMENTOS] ❌ Container #depoimentos-container não encontrado!');
-        return;
-    }
-
-    let limite = 3;
-    let carregando = false;
-    let todosCarregados = false;
-    let usuarioId = container.dataset.usuario;
-
-    console.log('[DEPOIMENTOS] Usuário ID:', usuarioId);
-
-    // 🔥 EXPORTA A FUNÇÃO PARA O ESCOPO GLOBAL
-    window.carregarDepoimentos = function(novoLimite, substituir = true) {
-        if (carregando) {
-            console.log('[DEPOIMENTOS] ⏳ Já está carregando, ignorando...');
+        if (!container) {
+            console.error('[DEPOIMENTOS] ❌ Container #depoimentos-container não encontrado!');
             return;
         }
-        carregando = true;
-        console.log(`[DEPOIMENTOS] 🔄 Carregando depoimentos (limite: ${novoLimite}, substituir: ${substituir})...`);
 
-        if (substituir) {
-            container.innerHTML = '<div class="loading-depoimentos">Carregando...</div>';
-        }
+        let limite = 3;
+        let carregando = false;
+        let todosCarregados = false;
+        let usuarioId = container.dataset.usuario;
 
-        const url = `motor-depoimentos.php?usuario_id=${usuarioId}&status=aprovado&limite=${novoLimite}`;
-        console.log('[DEPOIMENTOS] 📡 URL:', url);
+        console.log('[DEPOIMENTOS] Usuário ID:', usuarioId);
 
-        fetch(url)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-                }
-                return response.text();
-            })
-            .then(html => {
-                console.log('[DEPOIMENTOS] ✅ Resposta recebida (tamanho:', html.length, 'bytes)');
-                if (substituir) {
-                    container.innerHTML = html;
-                } else {
-                    container.insertAdjacentHTML('beforeend', html);
-                }
-
-                // Verifica se acabaram os depoimentos
-                if (html.includes('sem-depoimentos') || html.trim() === '') {
-                    todosCarregados = true;
-                    if (btnToggle) btnToggle.style.display = 'none';
-                    console.log('[DEPOIMENTOS] 📭 Nenhum depoimento restante.');
-                } else {
-                    const totalDepoimentos = container.querySelectorAll('.depoimento-item').length;
-                    if (totalDepoimentos < novoLimite) {
-                        todosCarregados = true;
-                        if (btnToggle) btnToggle.style.display = 'none';
-                        console.log('[DEPOIMENTOS] 📭 Todos os depoimentos carregados.');
-                    } else {
-                        todosCarregados = false;
-                        if (btnToggle) {
-                            btnToggle.style.display = 'flex';
-                            textoBtn.textContent = 'Ver mais';
-                            btnToggle.disabled = false;
-                        }
-                        console.log('[DEPOIMENTOS] ✅ Mais depoimentos disponíveis.');
-                    }
-                }
-                carregando = false;
-            })
-            .catch(err => {
-                console.error('[DEPOIMENTOS] ❌ Erro no fetch:', err);
-                container.innerHTML = `<p class="sem-depoimentos">Erro ao carregar depoimentos: ${err.message}</p>`;
-                carregando = false;
-            });
-    };
-
-    // ============================================================
-    // BOTÃO "VER MAIS" – AUMENTA O LIMITE E RECARREGA A LISTA
-    // ============================================================
-    if (btnToggle) {
-        btnToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('[DEPOIMENTOS] 🖱️ Botão "Ver mais" clicado.');
-            if (todosCarregados || carregando) {
-                console.log('[DEPOIMENTOS] ⏳ Já carregado ou em andamento.');
+        // 🔥 EXPORTA A FUNÇÃO PARA O ESCOPO GLOBAL
+        window.carregarDepoimentos = function(novoLimite, substituir = true) {
+            if (carregando) {
+                console.log('[DEPOIMENTOS] ⏳ Já está carregando, ignorando...');
                 return;
             }
-            // 🔥 AUMENTA O LIMITE EM 3 E RECARREGA A LISTA INTEIRA
-            const novoLimite = limite + 3;
-            textoBtn.textContent = 'Carregando...';
-            this.disabled = true;
-            window.carregarDepoimentos(novoLimite, true); // substitui a lista
-            limite = novoLimite; // atualiza o limite para o próximo clique
-        });
-    }
+            carregando = true;
+            console.log(`[DEPOIMENTOS] 🔄 Carregando depoimentos (limite: ${novoLimite}, substituir: ${substituir})...`);
 
-    // Carrega os primeiros depoimentos (3)
-    window.carregarDepoimentos(limite, true);
-})();
+            if (substituir) {
+                container.innerHTML = '<div class="loading-depoimentos">Carregando...</div>';
+            }
+
+            const url = `motor-depoimentos.php?usuario_id=${usuarioId}&status=aprovado&limite=${novoLimite}`;
+            console.log('[DEPOIMENTOS] 📡 URL:', url);
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    console.log('[DEPOIMENTOS] ✅ Resposta recebida (tamanho:', html.length, 'bytes)');
+                    if (substituir) {
+                        container.innerHTML = html;
+                    } else {
+                        container.insertAdjacentHTML('beforeend', html);
+                    }
+
+                    // Verifica se acabaram os depoimentos
+                    if (html.includes('sem-depoimentos') || html.trim() === '') {
+                        todosCarregados = true;
+                        if (btnToggle) btnToggle.style.display = 'none';
+                        console.log('[DEPOIMENTOS] 📭 Nenhum depoimento restante.');
+                    } else {
+                        const totalDepoimentos = container.querySelectorAll('.depoimento-item').length;
+                        if (totalDepoimentos < novoLimite) {
+                            todosCarregados = true;
+                            if (btnToggle) btnToggle.style.display = 'none';
+                            console.log('[DEPOIMENTOS] 📭 Todos os depoimentos carregados.');
+                        } else {
+                            todosCarregados = false;
+                            if (btnToggle) {
+                                btnToggle.style.display = 'flex';
+                                textoBtn.textContent = 'Ver mais';
+                                btnToggle.disabled = false;
+                            }
+                            console.log('[DEPOIMENTOS] ✅ Mais depoimentos disponíveis.');
+                        }
+                    }
+                    carregando = false;
+                })
+                .catch(err => {
+                    console.error('[DEPOIMENTOS] ❌ Erro no fetch:', err);
+                    container.innerHTML = `<p class="sem-depoimentos">Erro ao carregar depoimentos: ${err.message}</p>`;
+                    carregando = false;
+                });
+        };
+
+        // ============================================================
+        // BOTÃO "VER MAIS" – AUMENTA O LIMITE E RECARREGA A LISTA
+        // ============================================================
+        if (btnToggle) {
+            btnToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('[DEPOIMENTOS] 🖱️ Botão "Ver mais" clicado.');
+                if (todosCarregados || carregando) {
+                    console.log('[DEPOIMENTOS] ⏳ Já carregado ou em andamento.');
+                    return;
+                }
+                // 🔥 AUMENTA O LIMITE EM 3 E RECARREGA A LISTA INTEIRA
+                const novoLimite = limite + 3;
+                textoBtn.textContent = 'Carregando...';
+                this.disabled = true;
+                window.carregarDepoimentos(novoLimite, true); // substitui a lista
+                limite = novoLimite; // atualiza o limite para o próximo clique
+            });
+        }
+
+        // Carrega os primeiros depoimentos (3)
+        window.carregarDepoimentos(limite, true);
+    })();
 
     // ============================================================
-    // AVALIAÇÕES (CARREGAR E VOTAR)
+    // AVALIAÇÕES (CARREGAR E VOTAR) – COM CONFIRMAÇÃO
     // ============================================================
     (function() {
         console.log('[AVALIACOES] Inicializando módulo...');
@@ -477,6 +483,9 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
         const usuarioId = container.dataset.usuario;
         console.log('[AVALIACOES] Usuário ID:', usuarioId);
 
+        // Estado para armazenar a nota selecionada por categoria
+        let notasSelecionadas = {};
+
         function carregarAvaliacoes() {
             console.log('[AVALIACOES] 🔄 Carregando avaliações...');
             container.innerHTML = '<div class="loading-avaliacoes">Carregando...</div>';
@@ -486,18 +495,16 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 
             fetch(url)
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     return response.text();
                 })
                 .then(html => {
-                    console.log('[AVALIACOES] ✅ Resposta recebida (tamanho:', html.length, 'bytes)');
+                    console.log('[AVALIACOES] ✅ Resposta recebida');
                     container.innerHTML = html;
                     iniciarEventosEstrelas();
                 })
                 .catch(err => {
-                    console.error('[AVALIACOES] ❌ Erro no fetch:', err);
+                    console.error('[AVALIACOES] ❌ Erro:', err);
                     container.innerHTML = `<p class="sem-avaliacoes">Erro ao carregar avaliações: ${err.message}</p>`;
                 });
         }
@@ -505,48 +512,83 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
         function iniciarEventosEstrelas() {
             console.log('[AVALIACOES] ⭐ Ativando eventos das estrelas...');
 
+            // Reseta estado de seleção
+            notasSelecionadas = {};
+
+            // Para cada estrela, ao clicar, seleciona a nota (não envia voto)
             document.querySelectorAll('.estrela').forEach(estrela => {
-                estrela.removeEventListener('click', handlerVoto);
-                estrela.addEventListener('click', handlerVoto);
+                estrela.removeEventListener('click', handlerSelecionarEstrela);
+                estrela.addEventListener('click', handlerSelecionarEstrela);
             });
 
+            // Botão "Votar" agora envia o voto com a nota selecionada
             document.querySelectorAll('.btn-votar-estrela').forEach(btn => {
-                btn.removeEventListener('click', handlerVotoBtn);
-                btn.addEventListener('click', handlerVotoBtn);
+                btn.removeEventListener('click', handlerVotar);
+                btn.addEventListener('click', handlerVotar);
+            });
+
+            // Atualiza visualmente as estrelas com base na seleção
+            // (se já houver uma nota selecionada para a categoria)
+            Object.keys(notasSelecionadas).forEach(tipo => {
+                atualizarEstrelas(tipo, notasSelecionadas[tipo]);
             });
 
             console.log('[AVALIACOES] ✅ Eventos ativados.');
         }
 
-        function handlerVoto(e) {
+        function handlerSelecionarEstrela(e) {
             const estrela = e.currentTarget;
             const tipo = estrela.dataset.tipo;
             const nota = parseInt(estrela.dataset.nota);
-            const usuarioId = document.getElementById('avaliacoes-container').dataset.usuario;
-            console.log(`[AVALIACOES] ⭐ Voto: tipo=${tipo}, nota=${nota}, usuarioId=${usuarioId}`);
-            enviarVoto(tipo, nota, usuarioId);
+
+            // Armazena a nota selecionada para esta categoria
+            notasSelecionadas[tipo] = nota;
+
+            // Atualiza visualmente as estrelas da categoria
+            atualizarEstrelas(tipo, nota);
+
+            // Habilita o botão "Votar" da categoria
+            const btnVotar = document.querySelector(`.btn-votar-estrela[data-tipo="${tipo}"]`);
+            if (btnVotar) {
+                btnVotar.disabled = false;
+                btnVotar.style.opacity = '1';
+                btnVotar.textContent = '✅ Votar com ' + nota + ' ★';
+            }
+
+            // Feedback visual temporário (opcional)
+            if (typeof exibirBalao === 'function') {
+                exibirBalao(`Nota ${nota} selecionada para ${tipo}. Clique em "Votar" para confirmar.`, 'info', btnVotar, 2000);
+            }
         }
 
-        function handlerVotoBtn(e) {
-            const btn = e.currentTarget;
-            const tipo = btn.dataset.tipo;
+        function atualizarEstrelas(tipo, notaSelecionada) {
             const estrelas = document.querySelectorAll(`.estrela[data-tipo="${tipo}"]`);
-            let nota = 0;
-            estrelas.forEach(el => {
-                if (el.classList.contains('cheia') || el.classList.contains('meia')) {
-                    nota = parseInt(el.dataset.nota);
+            estrelas.forEach((el, index) => {
+                const nota = index + 1;
+                // Remove classes antigas
+                el.classList.remove('cheia', 'meia', 'vazia');
+                if (nota <= notaSelecionada) {
+                    el.classList.add('cheia');
+                } else {
+                    el.classList.add('vazia');
                 }
             });
-            if (nota === 0) {
+        }
+
+        function handlerVotar(e) {
+            const btn = e.currentTarget;
+            const tipo = btn.dataset.tipo;
+            const nota = notasSelecionadas[tipo];
+
+            if (!nota) {
                 alert('Selecione uma nota clicando nas estrelas primeiro.');
                 return;
             }
-            const usuarioId = document.getElementById('avaliacoes-container').dataset.usuario;
-            console.log(`[AVALIACOES] ⭐ Voto via botão: tipo=${tipo}, nota=${nota}, usuarioId=${usuarioId}`);
-            enviarVoto(tipo, nota, usuarioId);
-        }
 
-        function enviarVoto(tipo, nota, usuarioId) {
+            // Desabilita o botão para evitar duplo clique
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
             const csrfToken = document.getElementById('csrf_token')?.value || '';
             const formData = new FormData();
             formData.append('csrf_token', csrfToken);
@@ -555,7 +597,11 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             formData.append('tipo', tipo);
             formData.append('nota', nota);
 
-            console.log('[AVALIACOES] 📤 Enviando voto...', { tipo, nota, usuarioId });
+            console.log('[AVALIACOES] 📤 Enviando voto...', {
+                tipo,
+                nota,
+                usuarioId
+            });
 
             fetch('motor-avaliacoes.php', {
                     method: 'POST',
@@ -564,20 +610,38 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 .then(response => response.json())
                 .then(data => {
                     if (data.sucesso) {
-                        console.log('[AVALIACOES] ✅ Voto registrado com sucesso!');
-                        alert('✅ Voto registrado com sucesso!');
+                        console.log('[AVALIACOES] ✅ Voto registrado!');
+                        if (typeof exibirBalao === 'function') {
+                            exibirBalao('✅ Voto registrado com sucesso!', 'sucesso', btn);
+                        } else {
+                            alert('✅ Voto registrado com sucesso!');
+                        }
+                        // Recarrega as avaliações para mostrar a nova média
                         carregarAvaliacoes();
                     } else {
-                        console.error('[AVALIACOES] ❌ Erro no voto:', data.erro);
-                        alert('❌ ' + (data.erro || 'Erro ao votar.'));
+                        console.error('[AVALIACOES] ❌ Erro:', data.erro);
+                        if (typeof exibirBalao === 'function') {
+                            exibirBalao('❌ ' + (data.erro || 'Erro ao votar.'), 'erro', btn);
+                        } else {
+                            alert('❌ ' + (data.erro || 'Erro ao votar.'));
+                        }
+                        btn.disabled = false;
+                        btn.innerHTML = 'Votar';
                     }
                 })
                 .catch(err => {
                     console.error('[AVALIACOES] ❌ Erro de rede:', err);
-                    alert('Erro de conexão. Tente novamente.');
+                    if (typeof exibirBalao === 'function') {
+                        exibirBalao('❌ Erro de conexão. Tente novamente.', 'erro', btn);
+                    } else {
+                        alert('Erro de conexão. Tente novamente.');
+                    }
+                    btn.disabled = false;
+                    btn.innerHTML = 'Votar';
                 });
         }
 
+        // Inicializa
         carregarAvaliacoes();
     })();
 
@@ -731,6 +795,30 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             attributeFilter: ['class']
         });
     })();
+
+    // ============================================================
+    // 🔥 REAÇÕES – POPUP E CLIQUE (adaptado para o perfil)
+    // ============================================================
+    document.addEventListener('click', function(e) {
+        // Abrir/fechar popup de reações
+        const btnReagir = e.target.closest('.btn-reagir');
+        if (btnReagir) {
+            e.stopPropagation();
+            const wrapper = btnReagir.closest('.reacao-wrapper');
+            // Fecha outros popups abertos
+            document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
+                if (w !== wrapper) w.classList.remove('popup-ativo');
+            });
+            wrapper.classList.toggle('popup-ativo');
+            return;
+        }
+        // Fecha popup se clicar fora
+        if (!e.target.closest('.reacoes-popup')) {
+            document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
+                w.classList.remove('popup-ativo');
+            });
+        }
+    });
 
     console.log('[VER-PERFIL] ✅ Todos os módulos inicializados.');
 </script>

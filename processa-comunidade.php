@@ -3,8 +3,11 @@
  * processa-comunidade.php – Cria ou edita uma comunidade
  * 
  * Ações:
- * - Criar: POST com nome, slug, descricao, capa
- * - Editar: POST com id, nome, slug, descricao, capa
+ * - Criar: POST com nome, slug, descricao, capa, tipo
+ * - Editar: POST com id, nome, slug, descricao, capa, tipo
+ * 
+ * 🔥 Transição privada → pública: aprova automaticamente todas as solicitações pendentes,
+ *    carimba a data de entrada como NOW() para identificar recém-aprovados e envia notificações em massa.
  * 
  * Redireciona para lista-comunidades.php ou comunidade.php?id=X
  */
@@ -30,6 +33,7 @@ $id = $modo === 'editar' ? (int)$_POST['id'] : 0;
 $nome = trim($_POST['nome'] ?? '');
 $slug = trim($_POST['slug'] ?? '');
 $descricao = trim($_POST['descricao'] ?? '');
+$tipo = isset($_POST['tipo']) && in_array($_POST['tipo'], ['publica', 'privada']) ? $_POST['tipo'] : 'publica';
 
 // Validação básica
 if (empty($nome) || strlen($nome) < 3) {
@@ -71,14 +75,11 @@ $stmt_check->close();
 // ============================================================
 $capa_nome = null;
 
-// 🔥 LOG: exibe o que foi enviado
 fenda_log('🔵 [UPLOAD] FILES recebidos: ' . print_r($_FILES, true));
 
 if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
     fenda_log('🔵 [UPLOAD] Arquivo capa recebido: ' . $_FILES['capa']['name'] . ' (' . $_FILES['capa']['size'] . ' bytes)');
     
-    // 🔥 Usa a função processarUploadSeguro (que já faz upload para B2)
-    // Retorna apenas o nome do arquivo (ex: comunidade_123_abc.webp)
     $capa_nome = processarUploadSeguro($_FILES['capa'], 'uploads', 'comunidade', 2 * 1024 * 1024, $usuario_id);
     
     if ($capa_nome === false) {
@@ -88,8 +89,6 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
         exit();
     } else {
         fenda_log('🟢 [UPLOAD] Capa enviada com sucesso para B2: ' . $capa_nome);
-        // 🔥 IMPORTANTE: Salvar APENAS o nome do arquivo (sem prefixo)
-        // A exibição usará obterUrlImagem() para gerar a URL assinada
     }
 } else {
     fenda_log('🔵 [UPLOAD] Nenhuma capa enviada ou erro no upload (código: ' . ($_FILES['capa']['error'] ?? 'N/A') . ')');
@@ -99,21 +98,20 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
 // 4. INSERÇÃO OU ATUALIZAÇÃO
 // ============================================================
 if ($modo === 'criar') {
-    // Busca a capa padrão se não enviou (nome do arquivo padrão, sem caminho)
     if ($capa_nome === null) {
         $capa_nome = 'default_comunidade.webp';
         fenda_log('🔵 [UPLOAD] Usando capa padrão: ' . $capa_nome);
     }
     
-    $sql = "INSERT INTO comunidades (nome, slug, descricao, capa, criador_id) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO comunidades (nome, slug, descricao, capa, tipo, criador_id) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssi", $nome, $slug, $descricao, $capa_nome, $usuario_id);
+    $stmt->bind_param("sssssi", $nome, $slug, $descricao, $capa_nome, $tipo, $usuario_id);
     
     if ($stmt->execute()) {
         $nova_id = $conn->insert_id;
         
         // Adiciona o criador como membro (admin)
-        $stmt_membro = $conn->prepare("INSERT INTO comunidade_membros (comunidade_id, usuario_id, papel) VALUES (?, ?, 'admin')");
+        $stmt_membro = $conn->prepare("INSERT INTO comunidade_membros (comunidade_id, usuario_id, papel) VALUES (?, ?, 'criador')");
         $stmt_membro->bind_param("ii", $nova_id, $usuario_id);
         $stmt_membro->execute();
         $stmt_membro->close();
@@ -132,7 +130,7 @@ if ($modo === 'criar') {
     
 } else { // Editar
     // Verifica se o usuário é admin/criador da comunidade
-    $stmt_check = $conn->prepare("SELECT criador_id FROM comunidades WHERE id = ?");
+    $stmt_check = $conn->prepare("SELECT criador_id, tipo, nome FROM comunidades WHERE id = ?");
     $stmt_check->bind_param("i", $id);
     $stmt_check->execute();
     $res_check = $stmt_check->get_result();
@@ -153,10 +151,36 @@ if ($modo === 'criar') {
         $stmt_mod->close();
     }
     
-    // Monta a query de atualização
-    $sql = "UPDATE comunidades SET nome = ?, slug = ?, descricao = ?";
-    $params = [$nome, $slug, $descricao];
-    $types = "sss";
+    // 🔥 Transição: se mudou de privada para pública, aprova todas as solicitações pendentes
+    //    e carimba data_entrada = NOW() para identificar recém-aprovados
+    if ($com['tipo'] === 'privada' && $tipo === 'publica') {
+        $stmt_aprovar = $conn->prepare("UPDATE comunidade_membros 
+                                         SET status = 'ativo', papel = 'membro', data_entrada = NOW() 
+                                         WHERE comunidade_id = ? AND status = 'pendente'");
+        $stmt_aprovar->bind_param("i", $id);
+        $stmt_aprovar->execute();
+        $afetados = $stmt_aprovar->affected_rows;
+        $stmt_aprovar->close();
+        fenda_log("🟢 Transição privada → pública: $afetados solicitações pendentes foram aprovadas automaticamente.");
+        
+        // 🔥 Notificações em massa (apenas para os recém-aprovados, baseado na data_entrada carimbada)
+        if ($afetados > 0) {
+            $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, mensagem, lida, data_criacao) 
+                                           SELECT usuario_id, NULL, CONCAT('Sua solicitação para entrar em \"', ?, '\" foi aprovada automaticamente! A comunidade agora é pública.'), 0, NOW()
+                                           FROM comunidade_membros 
+                                           WHERE comunidade_id = ? AND status = 'ativo' AND papel = 'membro' AND data_entrada >= DATE_SUB(NOW(), INTERVAL 1 MINUTE)");
+            $stmt_notif->bind_param("si", $com['nome'], $id);
+            $stmt_notif->execute();
+            $notificacoes_enviadas = $stmt_notif->affected_rows;
+            $stmt_notif->close();
+            fenda_log("🟢 Notificações em massa: $notificacoes_enviadas usuários avisados sobre aprovação automática.");
+        }
+    }
+    
+    // Monta a query de atualização (inclui o campo tipo)
+    $sql = "UPDATE comunidades SET nome = ?, slug = ?, descricao = ?, tipo = ?";
+    $params = [$nome, $slug, $descricao, $tipo];
+    $types = "ssss";
     
     if ($capa_nome !== null) {
         $sql .= ", capa = ?";

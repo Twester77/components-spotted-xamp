@@ -52,6 +52,7 @@
     /* Safari 3-4, iOS 3-4 */
     background-clip: padding-box;
     /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */ 
+    -webkit-mix-blend-mode: plus-darker;
     mix-blend-mode: plus-darker; 
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
@@ -170,10 +171,10 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     flex: 1;
-    margin: 30px auto;
+    margin: 20px auto;
     min-height: 200px;
     width: 100%;
-    overflow-y: auto;
+    overflow-y: auto !important;
     max-height: calc(100vh - 100px);  
 }
 
@@ -250,20 +251,13 @@
 
 .central-conteudo .spotted-card {
     word-wrap: break-word;
-    overflow: hidden;
     max-width: 500px;
     scroll-snap-align: start;
     scroll-margin-top: 20px;
     border-radius: 10px; 
-    padding: 15px; /* Aumentado um pouco para dar mais elegância */
+    padding: 15px;
     position: relative; 
-    /* 
-       ✨ BASE DOS CARDS EM OKLCH (GRAFITE FOSCO PREMIUM):
-       Luminosidade baixa (0.24) para dar contraste contra o fundo gelo, 
-       croma zerado para não ter azul, 100% opaco para os gradientes assentarem bem.
-    */
     background: oklch(0.24 0 0 / 1); 
-    /* Uma sombra cirúrgica que faz o card escuro flutuar no fundo branco-gelo */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     break-inside: avoid;
     margin-bottom: 30px;
@@ -276,25 +270,240 @@
     box-sizing: border-box;
     scrollbar-width: none;
     container-type: inline-size;
-    will-change: transform, opacity;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: opacity;
+    transition: box-shadow 0.2s ease;
 }
 
-/*  Efeito de Hover Sutil no Card (Estilo App de 2026) */
-    body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
-    /* Ilumina o grafite do card de leve ao passar o mouse */
+/* Efeito de Hover Sutil no Card (Estilo App de 2026) */
+body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     background: oklch(0.31 0 0 / 1); 
-    transform: translateY(-8px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+    transform: none;
 }
 
 /* Garante legibilidade máxima dos textos sobre o card grafite */
 .central-conteudo .user-anonimo {
-    color: oklch(0.92 0 0) ; /* Branco fosco perfeito */
+    color: oklch(0.92 0 0);
 }
 
 .central-conteudo .post-time {
-    color: oklch(0.82 0 0) ; /* Cinza claro elegante */
+    color: oklch(0.82 0 0);
+}
+
+/* ============================================================
+   CARROSSEL – CORREÇÃO TOTAL (SETAS ABSOLUTAS + ÁREA DE CLIQUE)
+   ============================================================ */
+
+/* Força o wrapper a ocupar a largura total do card e permitir scroll */
+.central-conteudo .spotted-card .carrossel-wrapper {
+    position: relative; /*  PARA O .carrossel-nav POSICIONAR RELATIVO A ELE */
+    display: flex ;
+    flex-wrap: nowrap ;
+    overflow-x: auto ;
+    overflow-y: hidden ;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    border-radius: clamp(8px, 1.2vw, 14px);
+    margin: clamp(6px, 1vw, 12px) 0;
+    background: #0a0a0a;
+    background: oklch(5% 0 0);
+    width: 100% ;
+    height: auto ;
+}
+
+.central-conteudo .spotted-card .carrossel-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.central-conteudo .spotted-card .carrossel-item {
+    scroll-snap-align: start;
+    aspect-ratio: auto;
+    min-height: clamp(140px, 25vh, 260px);
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex: 0 0 100% ;
+}
+
+.central-conteudo .spotted-card .carrossel-item img {
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    display: block;
+    background: #0a0a0a;
+}
+
+/* ============================================================
+   INDICADORES (BOLINHAS + NÚMERO)
+   ============================================================ */
+.central-conteudo .spotted-card .carrossel-indicadores {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(4px, 1cqw, 10px);
+    padding: clamp(4px, 0.8vw, 10px) 0;
+    position: relative;
+    z-index: 2;
+}
+
+.carrossel-numero {
+    font-size: clamp(0.75rem, 1cqw, 1rem);
+    color: rgba(255, 255, 255, 0.5);
+    color: oklch(1 0 0 / 0.5);
+    font-weight: 500;
+    margin-right: clamp(4px, 0.8cqw, 10px);
+    min-width: 30px;
+    text-align: center;
+}
+
+.indicador {
+    width: clamp(6px, 1cqw, 10px);
+    height: clamp(6px, 1cqw, 10px);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    background: oklch(1 0 0 / 0.3);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.indicador.ativo {
+    background: #ff7300;
+    transform: scale(1.3);
+}
+
+/* ============================================================
+   SETAS DE NAVEGAÇÃO – VERSÃO ABSOLUTA (CLIQUE EM TODO O BOTÃO)
+   ============================================================ */
+.central-conteudo .spotted-card .carrossel-nav {
+    position: absolute;          /* 🔥 SAI DO FLUXO E NÃO COMPRIME O CONTEÚDO */
+    top: 50%;                    /* Centraliza verticalmente */
+    left: 0;
+    right: 0;
+    transform: translateY(-50%); /* Ajuste fino */
+    display: flex;
+    justify-content: space-between;
+    padding: 0 clamp(4px, 1vw, 12px);
+    pointer-events: none;
+    z-index: 5;                  
+    height: auto;               
+}
+
+.central-conteudo .spotted-card .carrossel-nav button {
+    pointer-events: auto !important;
+    background: rgba(0, 0, 0, 0.308);
+    background: oklch(0% 0 0 / 0.30);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    color: #fff;
+    font-size: clamp(1.2rem, 2.5cqw, 2rem);
+    width: clamp(44px, 5cqw, 64px);   /* 🔥 MAIOR PARA FACILITAR O CLIQUE */
+    height: clamp(44px, 5cqw, 64px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    z-index: 6;
+    position: relative; /* Para o pseudo-elemento posicionar corretamente */
+}
+
+/* 🔥 ÁREA DE CLIQUE ESTENDIDA (PSEUDO-ELEMENTO) – aumenta a zona de toque */
+.central-conteudo .spotted-card .carrossel-nav button::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    right: -12px;
+    bottom: -12px;
+    border-radius: 50%;
+    pointer-events: auto;   /* ESTENDE A ÁREA CLICÁVEL */
+}
+
+.central-conteudo .spotted-card .carrossel-nav button:hover {
+    background: rgba(255, 188, 0, 0.8);
+    background: oklch(83.276% 0.17139 82.036 / 0.8);
+    transform: none;
+}
+
+.central-conteudo .spotted-card .carrossel-nav button:active {
+    transform: scale(0.9);
+}
+
+/* ============================================================
+   CORREÇÃO DAS REAÇÕES (PARA NÃO SOBREPOREM O CARROSSEL)
+   ============================================================ */
+.central-conteudo .spotted-card .reacoes-gravadas {
+    margin-top: clamp(8px, 1.5vw, 16px);
+    padding-bottom: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+.central-conteudo .spotted-card .reacao-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: clamp(0.75rem, 0.9vw, 0.95rem);
+    color: #ddd;
+    border: 1px solid transparent;
+}
+
+.central-conteudo .spotted-card .reacao-item.voted {
+    background: rgba(255, 188, 0, 0.15);
+    border-color: #ffbc00;
+}
+
+/* ============================================================
+   FALLBACKS PARA NAVEGADORES ANTIGOS
+   ============================================================ */
+@supports not (font-size: clamp(1rem, 1vw, 2rem)) {
+    .central-conteudo .spotted-card .carrossel-item {
+        min-height: 200px;
+    }
+    .carrossel-numero {
+        font-size: 0.9rem;
+        min-width: 24px;
+    }
+    .indicador {
+        width: 8px;
+        height: 8px;
+    }
+    .central-conteudo .spotted-card .carrossel-nav button {
+        width: 48px;
+        height: 48px;
+        font-size: 1.6rem;
+    }
+}
+
+@supports not (background: oklch(1 0 0 / 0.5)) {
+    .carrossel-numero {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .indicador {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    .central-conteudo .spotted-card .carrossel-nav button {
+        background: rgba(0, 0, 0, 0.6);
+    }
+    .central-conteudo .spotted-card .carrossel-nav button:hover {
+        background: rgba(255, 188, 0, 0.8);
+    }
 }
 
 
@@ -309,7 +518,7 @@
 }
 
 .central-comunidade-card {
-    background:oklch(34.014% 0.12158 29.883 / 0.6);
+    background: oklch(34.014% 0.12158 29.883 / 0.6);
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -370,11 +579,36 @@
     border-radius: 8px;
 }
 
-.central-conteudo .feed-anexos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px;
-    margin-top: 10px;
+/* ============================================================
+   GRID COM APENAS 1 ANEXO (CENTRAL) – MESMO COMPORTAMENTO DO FEED
+   ============================================================ */
+
+/* Quando houver apenas um item no grid, centraliza e remove bordas */
+.central-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+}
+
+/* O item único ocupa todo o espaço disponível, mas com limites */
+.central-conteudo .feed-anexo-item:only-child {
+    aspect-ratio: auto;
+    max-width: 100%;
+    max-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: none;
+}
+
+.central-conteudo .feed-anexo-item:only-child img {
+    max-height: 400px;
+    object-fit: contain;
+    width: 100%;
+    height: auto;
 }
 
 .central-conteudo .avatar-p {
@@ -542,24 +776,22 @@
     align-items: center;
     gap: clamp(10px, 1.5vw, 16px);
     padding: clamp(10px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px);
-    background: oklch(0.18 0 0 / 0.7); /* fundo escuro translúcido para contraste */
+    background: oklch(0.18 0 0 / 0.7);
     border-radius: 12px;
     margin-bottom: clamp(8px, 1vw, 14px);
     text-decoration: none;
-    color: oklch(0.95 0 0); /* texto branco fosco */
+    color: oklch(0.95 0 0);
     transition: background 0.2s ease, transform 0.15s ease;
     border-left: 3px solid transparent;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-/* Hover estilo dropdown rápido */
 #central-body .item-notif-rapida:hover {
     background: oklch(0.25 0 0 / 0.85);
     transform: translateX(4px);
     border-left-color: #ffbc00;
 }
 
-/* Ícone da notificação (avatar) */
 #central-body .item-notif-rapida .notif-avatar {
     flex-shrink: 0;
     width: clamp(32px, 4vw, 44px);
@@ -573,7 +805,6 @@
     font-size: clamp(1rem, 1.4vw, 1.4rem);
 }
 
-/* Texto da notificação */
 #central-body .item-notif-rapida .notif-txt {
     flex: 1;
     min-width: 0;
@@ -595,17 +826,15 @@
     margin-top: 2px;
 }
 
-/* Notificação não lida (destaque) */
 #central-body .item-notif-rapida.notif-nova {
     border-left-color: #ffbc00;
-    background: oklch(0.22 0.08 85 / 0.5); /* leve tom dourado */
+    background: oklch(0.22 0.08 85 / 0.5);
 }
 
 #central-body .item-notif-rapida.notif-nova .notif-txt span {
     color: #ffbc00;
 }
 
-/* Botão "Ver todo o oceano" */
 #central-body .ver-todas-notif {
     display: block;
     text-align: center;
@@ -645,7 +874,6 @@
     transform: translateX(4px);
 }
 
-/* Autor do depoimento */
 .central-depoimento-pendente-autor {
     display: flex;
     align-items: center;
@@ -672,7 +900,6 @@
     display: block;
 }
 
-/* Texto do depoimento */
 .central-depoimento-pendente-texto {
     color: oklch(0.92 0 0);
     font-size: clamp(0.9rem, 1vw, 1.05rem);
@@ -682,7 +909,6 @@
     word-wrap: break-word;
 }
 
-/* Ações (botões aprovar/rejeitar) */
 .central-depoimento-pendente-item .depoimento-pendente-acoes {
     display: flex;
     gap: clamp(8px, 1vw, 14px);
@@ -717,13 +943,13 @@
 .central-depoimento-pendente-item .btn-rejeitar-depoimento {
     background: rgba(255, 255, 255, 0.08);
     color: #ccc;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) ;
 }
 
 .central-depoimento-pendente-item .btn-rejeitar-depoimento:hover {
     background: rgba(255, 60, 60, 0.15);
     color: #ff6b6b;
-    border-color: #ff6b6b !important;
+    border-color: #ff6b6b ;
 }
 
 .central-depoimento-pendente-item .depoimento-pendente-acoes button:disabled {
@@ -732,7 +958,6 @@
     transform: none;
 }
 
-/* Estado vazio (nenhum depoimento pendente) */
 .central-empty-state {
     text-align: center;
     padding: clamp(30px, 5vw, 60px) 10px;
@@ -748,7 +973,229 @@
     font-size: clamp(1rem, 1.2vw, 1.2rem);
     color: #a5a5a5;
     color: oklch(0.68 0 0);
+}
 
+
+/* ================================================================
+   ABA SOLICITAÇÕES – CENTRAL DO HABITANTE
+   🌊 MARÉ – INSTÂNCIA #DS-2026-08-11
+   Com clamp(), fallbacks e responsividade padrão Fenda.
+   ================================================================ */
+
+/* Container da lista */
+.solicitacoes-central-lista {
+    display: flex;
+    flex-direction: column;
+    grid-area: 8px;
+    gap: clamp(8px, 1.5vw, 16px);
+}
+
+/* Item da solicitação */
+.solicitacao-central-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px ;
+    padding: clamp(8px, 1.5vw, 16px) clamp(12px, 2vw, 20px);
+    background: rgba(20, 20, 30, 0.35);
+    border-radius: clamp(8px, 1.2vw, 14px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    flex-wrap: wrap;
+    gap: clamp(6px, 1vw, 12px);
+    transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.solicitacao-central-item:hover {
+    background: rgba(20, 20, 28, 0.7);
+}
+
+/* Avatar e informações do solicitante */
+.solicitacao-central-item .solicitante-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    gap: clamp(8px, 1.2vw, 16px);
+    flex: 1;
+    min-width: 120px;
+    min-width: clamp(100px, 20vw, 180px);
+}
+
+.solicitacao-central-item .solicitante-avatar {
+    width: 38px;
+    height: 38px;
+    width: clamp(36px, 4vw, 55px);
+    height: clamp(36px, 4vw, 55px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 188, 0, 0.15);
+}
+
+.solicitacao-central-item .solicitante-nome {
+    font-weight: 600;
+    color: #fff;
+    color: oklch(96.115% 0.00011 271.152);
+    font-size: 0.8rem ;
+    font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+}
+
+.solicitacao-central-item .solicitante-data {
+    font-size: 0.65rem;
+    font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+    color: #aaa;
+    color: oklch(96.115% 0.00011 271.152 / 0.747);
+    
+}
+
+.solicitacao-central-item .solicitante-comunidade {
+    font-size: 0.7rem;
+    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+    color: #ffbc00;
+    text-decoration: none;
+}
+
+.solicitacao-central-item .solicitante-comunidade:hover {
+    text-decoration: underline;
+}
+
+/* Botões de ação */
+.btn-aprovar-solicitacao-central,
+.btn-rejeitar-solicitacao-central {
+    padding: clamp(3px, 0.6vw, 6px) clamp(10px, 1.5vw, 18px);
+    border-radius: clamp(16px, 2vw, 24px);
+    font-size: 0.6rem;
+    font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-aprovar-solicitacao-central {
+    background: #4caf50;
+    color: #fff;
+}
+
+.btn-aprovar-solicitacao-central:hover {
+    background: #66bb6a;
+    transform: scale(1.03);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.2);
+}
+
+.btn-aprovar-solicitacao-central:active {
+    transform: scale(0.95);
+}
+
+.btn-aprovar-solicitacao-central:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-rejeitar-solicitacao-central {
+    background: rgba(255, 50, 50, 0.12);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 50, 50, 0.15);
+}
+
+.btn-rejeitar-solicitacao-central:hover {
+    background: rgba(255, 50, 50, 0.2);
+    border-color: rgba(255, 50, 50, 0.3);
+    transform: scale(1.03);
+    box-shadow: 0 0 12px rgba(255, 50, 50, 0.1);
+}
+
+.btn-rejeitar-solicitacao-central:active {
+    transform: scale(0.95);
+}
+
+.btn-rejeitar-solicitacao-central:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Badge do contador na aba */
+.badge-solicitacoes {
+    background: #ffbc00;
+    color: #000;
+    font-size: 0.55rem;
+    font-size: clamp(0.5rem, 0.7vw, 0.65rem);
+    padding: 1px clamp(4px, 0.6vw, 8px);
+    border-radius: 10px;
+    margin-left: 4px;
+    font-weight: 700;
+}
+
+/* Estado vazio */
+.central-empty-state {
+    text-align: center;
+    padding: clamp(20px, 4vw, 50px) clamp(10px, 2vw, 30px);
+}
+
+.central-empty-state i {
+    font-size: 2rem;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: #4caf50;
+    margin-bottom: clamp(8px, 1.5vw, 18px);
+}
+
+.central-empty-state p {
+    color: #aaa;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+}
+
+/* ================================================================
+   FALLBACKS PARA NAVEGADORES ANTIGOS
+   ================================================================ */
+@supports not (display: flex) {
+    .solicitacao-central-item {
+        display: block;
+        overflow: hidden;
+        padding: 12px 16px;
+    }
+    .solicitacao-central-item .solicitante-info {
+        display: block;
+        float: left;
+    }
+    .solicitacao-central-item .acoes {
+        display: block;
+        float: right;
+    }
+}
+
+@supports not (font-size: clamp(0.7rem, 0.9vw, 0.85rem)) {
+    .btn-aprovar-solicitacao-central,
+    .btn-rejeitar-solicitacao-central {
+        font-size: 0.75rem;
+        padding: 4px 14px;
+    }
+    .solicitacao-central-item .solicitante-data {
+        font-size: 0.75rem;
+    }
+    .solicitacao-central-item .solicitante-nome {
+        font-size: 1rem;
+    }
+    .badge-solicitacoes {
+        font-size: 0.6rem;
+    }
+    .central-empty-state i {
+        font-size: 2.5rem;
+    }
+    .central-empty-state p {
+        font-size: 1rem;
+    }
+}
+
+@supports not (backdrop-filter: blur(4px)) {
+    .solicitacao-central-item {
+        background: rgba(20, 20, 30, 0.9);
+    }
 }
 
 
@@ -756,7 +1203,7 @@
    ESCONDER BOTÕES DE INTERAÇÃO NO FEED-PESSOAL (CENTRAL)
    ================================================================ */
 .central-conteudo .footer-links {
-    display: none !important;
+    display: none ;
 }
 
 /* ================================================================
@@ -802,7 +1249,7 @@
 
     .central-conteudo {
         padding: 15px;
-        max-height: calc(70vh - 80px);
+        max-height: calc(90vh - 80px);
     }
 
     .central-comunidades-grid {
@@ -835,7 +1282,7 @@
         display: none;
     }
 
-     #central-body .item-notif-rapida {
+    #central-body .item-notif-rapida {
         padding: 8px 12px;
         gap: 8px;
     }
@@ -849,6 +1296,55 @@
     .central-depoimento-pendente-item .depoimento-pendente-acoes button {
         justify-content: center;
     }
+
+
+    .solicitacao-central-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding: 8px 14px;
+    }
+
+    .solicitacao-central-item .solicitante-info {
+        min-width: 0;
+        flex-wrap: wrap;
+    }
+
+    .solicitacao-central-item .acoes {
+        display: flex;
+        gap: 6px;
+        justify-content: flex-end;
+        margin-top: 4px;
+    }
+
+    .btn-aprovar-solicitacao-central,
+    .btn-rejeitar-solicitacao-central {
+        font-size: 0.7rem;
+        padding: 3px 12px;
+    }
+
+    .badge-solicitacoes {
+        font-size: 0.55rem;
+        padding: 1px 4px;
+    }
+
 }
 
-    
+@media (orientation: landscape) and (max-height: 500px) {
+    .solicitacao-central-item {
+        padding: 4px 10px;
+        gap: 4px;
+    }
+    .solicitacao-central-item .solicitante-avatar {
+        width: 30px;
+        height: 30px;
+    }
+    .solicitacao-central-item .solicitante-nome {
+        font-size: 0.85rem;
+    }
+    .btn-aprovar-solicitacao-central,
+    .btn-rejeitar-solicitacao-central {
+        font-size: 0.7rem;
+        padding: 2px 10px;
+    }
+}

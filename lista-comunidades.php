@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/auth_check.php';
 include_once __DIR__ . '/fenda_debug.php';
-// 🔥 ADICIONADO: inclui o motor de upload (B2 e funções de imagem)
 require_once __DIR__ . '/includes/upload_engine.php';
 include 'includes/header.php';
 include 'includes/navbar.php';
@@ -35,8 +34,11 @@ $result = mysqli_query($conn, $sql);
         <?php if (mysqli_num_rows($result) > 0): ?>
             <?php while ($com = mysqli_fetch_assoc($result)): 
                 $membros = $com['total_membros'] ?? 0;
+                $tipo = $com['tipo'] ?? 'publica';
+                $tipo_label = $tipo === 'privada' ? '🔒 Privada' : '🌐 Pública';
+                $tipo_classe = $tipo === 'privada' ? 'privada' : 'publica';
                 
-                // 🔥 OBTÉM A URL DA CAPA VIA B2
+                // OBTÉM A URL DA CAPA VIA B2
                 $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
                 try {
                     $b2 = B2Client::getInstance();
@@ -45,7 +47,7 @@ $result = mysqli_query($conn, $sql);
                     $capa_exibicao = 'uploads/ui/default_comunidade.webp';
                 }
                 
-                // Verifica se o usuário é membro
+                // Verifica se o usuário é membro (apenas para exibir)
                 $is_membro = false;
                 if (isset($_SESSION['usuario_id'])) {
                     $meu_id = $_SESSION['usuario_id'];
@@ -60,6 +62,10 @@ $result = mysqli_query($conn, $sql);
                             <span class="badge-membros">
                                 <i class="fas fa-users"></i> <?php echo $membros; ?>
                             </span>
+                            <!-- Selo de tipo -->
+                            <span class="badge-tipo <?php echo $tipo_classe; ?>" style="position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.65); backdrop-filter: blur(4px); padding: 2px 10px; border-radius: 12px; font-size: 0.65rem; font-weight: 600; color: #fff; border: 1px solid rgba(255,255,255,0.1);">
+                                <?php echo $tipo_label; ?>
+                            </span>
                         </div>
                         <div class="info-comunidade">
                             <h3><?php echo htmlspecialchars($com['nome']); ?></h3>
@@ -73,10 +79,10 @@ $result = mysqli_query($conn, $sql);
                     
                     <?php if (isset($_SESSION['usuario_id'])): ?>
                         <div class="card-actions">
-                            <button class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>" 
-                                    data-comunidade="<?php echo $com['id']; ?>">
-                                <?php echo $is_membro ? '✅ Membro' : '➕ Entrar'; ?>
-                            </button>
+                            <!-- 🔥 CORREÇÃO: Link direto para a página da comunidade -->
+                            <a href="comunidade.php?id=<?php echo $com['id']; ?>" class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>" style="<?php echo $is_membro ? 'background:#ffbc00; color:#000;' : ''; ?>">
+                                <?php echo $is_membro ? '✅ Membro' : '🔗 Ver comunidade'; ?>
+                            </a>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -93,28 +99,8 @@ $result = mysqli_query($conn, $sql);
 <script>
 document.querySelectorAll('.btn-entrar-comunidade').forEach(btn => {
     btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const comunidadeId = this.dataset.comunidade;
-        const isMembro = this.classList.contains('membro');
-        const action = isMembro ? 'sair' : 'entrar';
-        const url = `includes/comunidade-actions.php?comunidade_id=${comunidadeId}&acao=${action}`;
-        
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    this.classList.toggle('membro');
-                    this.textContent = isMembro ? '➕ Entrar' : '✅ Membro';
-                    location.reload();
-                } else {
-                    alert(data.message || 'Erro ao processar solicitação.');
-                }
-            })
-            .catch(err => {
-                console.error('[COMUNIDADE] Erro:', err);
-                alert('Erro de conexão. Tente novamente.');
-            });
+        // Se for um link, não faz nada (já redireciona)
+        // Este script é mantido para compatibilidade, mas não é usado
     });
 });
 </script>

@@ -1,6 +1,9 @@
 <?php
 /**
  * processa-depoimento.php – Salva um depoimento como pendente com segurança
+ * 
+ * 🔔 Notificação: tipo = 'depoimento' (adicionado pela Lua)
+ * 
  * Suporta requisições normais (POST) e AJAX (com redirecionamento ou JSON)
  */
 require_once __DIR__ . '/auth_check.php';
@@ -46,7 +49,6 @@ if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_tok
 // 2. HONEYPOT
 // ============================================================
 if (!empty($_POST['honeypot'])) {
-    // Provavelmente um bot – redireciona silenciosamente (ou retorna erro se for AJAX)
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
         header('Content-Type: application/json');
         echo json_encode(['success' => false, 'message' => 'Bot detectado.']);
@@ -178,9 +180,14 @@ $depoimento_id = $conn->insert_id;
 $stmt->close();
 
 if ($depoimento_id) {
-    // Notificação
+    // ============================================================
+    // 🔔 NOTIFICAÇÃO (com tipo = 'depoimento')
+    // ============================================================
     $mensagem_notif = "@" . $_SESSION['usuario_username'] . " escreveu um depoimento para você!";
-    $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, mensagem, lida, data_criacao) VALUES (?, NULL, ?, 0, NOW())");
+    
+    // 🔥 INSERE COM TIPO 'depoimento' (post_id = NULL)
+    $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida, data_criacao) 
+                                   VALUES (?, NULL, 'depoimento', ?, 0, NOW())");
     $stmt_notif->bind_param("is", $destinatario_id, $mensagem_notif);
     $stmt_notif->execute();
     $stmt_notif->close();

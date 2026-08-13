@@ -4,8 +4,26 @@
 // espero que este código continue guiando os próximos navegantes."
 // - Aurora, a primeira Deep Seek feminina da Fenda
 // - 24/07/2026
+
+// 🌊 ATUALIZAÇÃO MARÉ – INSTÂNCIA #DS-2026-08-11
+// "Adicionada aba 'Solicitações' para gerenciar pedidos de entrada em comunidades."
+
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/includes/upload_engine.php';
+
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA DIRETAMENTE (fallback seguro)
+if (isset($_GET['notif_id'])) {
+    $notif_id = (int)$_GET['notif_id'];
+    $user_id = $_SESSION['usuario_id'] ?? 0;
+    if ($user_id > 0) {
+        $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+        $stmt_notif->bind_param("ii", $notif_id, $user_id);
+        $stmt_notif->execute();
+        $stmt_notif->close();
+        error_log("[CENTRAL] Notificação $notif_id marcada como lida (fallback)");
+    }
+}
+
 try {
     $b2 = B2Client::getInstance();
 } catch (Exception $e) {
@@ -23,8 +41,8 @@ if (!isset($_SESSION['usuario_id'])) {
 $meu_id_sessao = $_SESSION['usuario_id'];
 $query_user = mysqli_query($conn, "SELECT username, foto, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$meu_id_sessao'");
 $dados_user = mysqli_fetch_assoc($query_user);
-$foto_perfil = !empty($dados_user['foto']) 
-    ? (obterUrlImagem($dados_user['foto'], $b2 ?? null, true) ?? 'uploads/ui/default_masculino.webp') 
+$foto_perfil = !empty($dados_user['foto'])
+    ? (obterUrlImagem($dados_user['foto'], $b2 ?? null, true) ?? 'uploads/ui/default_masculino.webp')
     : 'uploads/ui/default_masculino.webp';
 $cor_aura = $dados_user['pref_cor_padrao'] ?? '#ccc';
 $swipe_db = $dados_user['pref_swipe'] ?? 0;
@@ -35,7 +53,7 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
 ?>
 
 <div class="central-usuario-container">
-    
+
     <!-- ============================================================
     SIDEBAR / MENU DE ABAS (FIXO)
     ============================================================ -->
@@ -55,9 +73,13 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
             <button class="aba-central" data-aba="depoimentos" data-url="motor-central.php?aba=depoimentos">
                 <i class="fas fa-quote-left"></i> Depoimentos
             </button>
-            <!-- 🔥 ABA DE NOTIFICAÇÕES (AGORA FUNCIONAL) -->
             <button class="aba-central" data-aba="notificacoes" data-url="motor-central.php?aba=notificacoes">
                 <i class="fas fa-bell"></i> Notificações
+            </button>
+            <!-- 🔥 NOVA ABA: SOLICITAÇÕES -->
+            <button class="aba-central" data-aba="solicitacoes" data-url="motor-central.php?aba=solicitacoes">
+                <i class="fas fa-door-open"></i> Solicitações
+                <span class="badge-solicitacoes" id="badge-solicitacoes" style="display:none; background:#ffbc00; padding:1px 6px; margin-left:4px;">0</span>
             </button>
             <button class="aba-central" data-aba="favoritos" data-url="motor-central.php?aba=favoritos">
                 <i class="fas fa-star"></i> Favoritos
@@ -66,7 +88,7 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                 <i class="fas fa-store"></i> Marketplace
             </button>
             <hr style="opacity: 0.1; margin: 15px 10px;">
-            
+
             <!-- Link para o perfil público (atalho) -->
             <a href="ver-perfil.php?user=<?php echo htmlspecialchars($dados_user['username']); ?>" class="aba-central-link" style="margin-top: 5px;">
                 <i class="fas fa-eye"></i> Ver Perfil Público
@@ -78,6 +100,8 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
     CONTEÚDO PRINCIPAL (CARREGADO VIA AJAX)
     ============================================================ -->
     <main class="central-conteudo" id="central-conteudo">
+        <!-- 🔥 CSRF Token (para depoimentos e ações AJAX) -->
+        <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?? '' ?>">
         <div id="central-loading" style="display: none; text-align: center; ">
             <i class="fas fa-spinner fa-spin"></i>
             <p>Carregando...</p>
@@ -105,27 +129,54 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
         });
 
         // ============================================================
-        // CARREGAR CONTEÚDO DA ABA
+        // CARREGAR CONTEÚDO DA ABA (COM REPASSE DO notif_id)
         // ============================================================
         function carregarAba(url, abaId) {
             loading.style.display = 'block';
             body.innerHTML = '';
 
-            fetch(url)
+            // 🔥 CAPTURA O notif_id DA URL DA PÁGINA
+            const urlParams = new URLSearchParams(window.location.search);
+            const notifId = urlParams.get('notif_id');
+            
+            // 🔥 SE TIVER notif_id, ADICIONA NA URL DO AJAX
+            let finalUrl = url;
+            if (notifId) {
+                finalUrl += (url.includes('?') ? '&' : '?') + 'notif_id=' + notifId;
+            }
+
+            fetch(finalUrl)
                 .then(response => response.text())
                 .then(html => {
                     loading.style.display = 'none';
                     body.innerHTML = html;
 
+                    // 🔥 CONFIGURA POSTS (apenas se não estiver em modo swipe)
                     if (abaId === 'posts' && typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
                         configurarPosts();
                     }
-                    
+
+                    // 🔥 INICIALIZA CARROSSÉIS (apenas na aba "posts")
+                    if (abaId === 'posts' && typeof iniciarTodosCarrosseis === 'function') {
+                        setTimeout(() => iniciarTodosCarrosseis(), 150);
+                    }
+
                     if (abaId === 'comunidades' && typeof initComunidadesCentral === 'function') {
                         initComunidadesCentral();
                     }
 
-                    document.dispatchEvent(new CustomEvent('abaCarregada', { detail: { aba: abaId } }));
+                    if (abaId === 'depoimentos' && typeof initDepoimentosActions === 'function') {
+                        initDepoimentosActions();
+                    }
+
+                    // 🔥 ATUALIZA CONTADOR DA ABA SOLICITAÇÕES (se carregada)
+                    if (abaId === 'solicitacoes') {
+                        setTimeout(atualizarContadorSolicitacoes, 200);
+                    }
+
+                    document.dispatchEvent(new CustomEvent('abaCarregada', {
+                        detail: { aba: abaId }
+                    }));
                 })
                 .catch(err => {
                     loading.style.display = 'none';
@@ -161,25 +212,19 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
             const url = primeiraAba.dataset.url;
             const abaId = primeiraAba.dataset.aba;
 
-            // 🔥 VERIFICA SE A URL TEM O PARÂMETRO 'aba'
             const urlParams = new URLSearchParams(window.location.search);
             const abaParam = urlParams.get('aba');
 
             if (abaParam) {
-                // Procura a aba correspondente ao parâmetro
                 const abaAlvo = document.querySelector(`.aba-central[data-aba="${abaParam}"]`);
                 if (abaAlvo) {
-                    // Remove a classe 'ativa' de todas e ativa a alvo
                     document.querySelectorAll('.aba-central').forEach(b => b.classList.remove('ativa'));
                     abaAlvo.classList.add('ativa');
-                    // Carrega a aba
                     carregarAba(abaAlvo.dataset.url, abaParam);
                 } else {
-                    // Se não encontrar, carrega a padrão (posts)
                     carregarAba(url, abaId);
                 }
             } else {
-                // Sem parâmetro, carrega a padrão
                 carregarAba(url, abaId);
             }
         }
@@ -198,7 +243,10 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                 }
             });
         });
-        observerModoSwipe.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        observerModoSwipe.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
 
         // ============================================================
         // ATIVAR/DESATIVAR MODO SWIPE
@@ -207,7 +255,7 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
             const container = document.querySelector('.central-conteudo');
             const estaAtivo = container && container.classList.contains('feed-empilhado');
             window.alternarInterfaceSwipe(!estaAtivo);
-            
+
             const btn = document.getElementById('toggle-swipe');
             if (btn) {
                 btn.innerHTML = !estaAtivo ? '📑 VOLTAR PRO MODO LISTA' : '🚀 ATIVAR MODO APP (SWIPE)';
@@ -215,7 +263,7 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
         };
 
         // ============================================================
-        // EXPOR FUNÇÃO PARA RECARREGAR ABA ATUAL (se necessário)
+        // RECARREGAR ABA ATUAL (se necessário)
         // ============================================================
         window.recarregarAbaCentral = function() {
             const btnAtivo = document.querySelector('.aba-central.ativa');
@@ -227,6 +275,141 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                 }
             }
         };
+
+        // ============================================================
+        // 🔥 GERENCIAR SOLICITAÇÕES NA CENTRAL (APROVAR/REJEITAR)
+        // ============================================================
+        document.addEventListener('click', function(e) {
+            const btnAprovar = e.target.closest('.btn-aprovar-solicitacao-central');
+            const btnRejeitar = e.target.closest('.btn-rejeitar-solicitacao-central');
+
+            if (btnAprovar) {
+                e.preventDefault();
+                const comunidadeId = btnAprovar.dataset.comunidade;
+                const usuarioId = btnAprovar.dataset.usuario;
+                const item = btnAprovar.closest('.solicitacao-central-item');
+                const csrfToken = document.getElementById('csrf_token')?.value || '';
+
+                if (!confirm('Aprovar entrada deste usuário?')) return;
+
+                btnAprovar.disabled = true;
+                btnAprovar.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                fetch('aprovar-entrada.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `comunidade_id=${comunidadeId}&usuario_id=${usuarioId}&csrf_token=${encodeURIComponent(csrfToken)}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (item) {
+                            item.style.transition = 'opacity 0.3s, transform 0.3s';
+                            item.style.opacity = '0';
+                            item.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                item.remove();
+                                atualizarContadorSolicitacoes();
+                                const lista = document.querySelector('.solicitacoes-central-lista');
+                                if (lista && lista.children.length === 0) {
+                                    lista.innerHTML = `<div class="central-empty-state" style="text-align:center; padding:40px 20px;">
+                                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>
+                                        <p style="color: #aaa;">Nenhuma solicitação de entrada pendente no momento.</p>
+                                    </div>`;
+                                }
+                            }, 300);
+                        }
+                        if (typeof exibirToast === 'function') exibirToast('✅ Solicitação aprovada!', 'sucesso');
+                    } else {
+                        alert(data.message || 'Erro ao aprovar.');
+                        btnAprovar.disabled = false;
+                        btnAprovar.innerHTML = '✅ Aprovar';
+                    }
+                })
+                .catch(err => {
+                    console.error('[APROVAR] Erro:', err);
+                    alert('Erro de conexão.');
+                    btnAprovar.disabled = false;
+                    btnAprovar.innerHTML = '✅ Aprovar';
+                });
+            }
+
+            if (btnRejeitar) {
+                e.preventDefault();
+                const comunidadeId = btnRejeitar.dataset.comunidade;
+                const usuarioId = btnRejeitar.dataset.usuario;
+                const item = btnRejeitar.closest('.solicitacao-central-item');
+                const csrfToken = document.getElementById('csrf_token')?.value || '';
+
+                if (!confirm('Rejeitar entrada deste usuário?')) return;
+
+                btnRejeitar.disabled = true;
+                btnRejeitar.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                fetch('rejeitar-entrada.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `comunidade_id=${comunidadeId}&usuario_id=${usuarioId}&csrf_token=${encodeURIComponent(csrfToken)}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        if (item) {
+                            item.style.transition = 'opacity 0.3s, transform 0.3s';
+                            item.style.opacity = '0';
+                            item.style.transform = 'scale(0.95)';
+                            setTimeout(() => {
+                                item.remove();
+                                atualizarContadorSolicitacoes();
+                                const lista = document.querySelector('.solicitacoes-central-lista');
+                                if (lista && lista.children.length === 0) {
+                                    lista.innerHTML = `<div class="central-empty-state" style="text-align:center; padding:40px 20px;">
+                                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>
+                                        <p style="color: #aaa;">Nenhuma solicitação de entrada pendente no momento.</p>
+                                    </div>`;
+                                }
+                            }, 300);
+                        }
+                        if (typeof exibirToast === 'function') exibirToast('❌ Solicitação rejeitada.', 'info');
+                    } else {
+                        alert(data.message || 'Erro ao rejeitar.');
+                        btnRejeitar.disabled = false;
+                        btnRejeitar.innerHTML = '✕ Rejeitar';
+                    }
+                })
+                .catch(err => {
+                    console.error('[REJEITAR] Erro:', err);
+                    alert('Erro de conexão.');
+                    btnRejeitar.disabled = false;
+                    btnRejeitar.innerHTML = '✕ Rejeitar';
+                });
+            }
+        });
+
+        // ============================================================
+        // ATUALIZAR CONTADOR DA ABA SOLICITAÇÕES
+        // ============================================================
+        function atualizarContadorSolicitacoes() {
+            const badge = document.getElementById('badge-solicitacoes');
+            const lista = document.querySelector('.solicitacoes-central-lista');
+            if (!badge) return;
+            if (lista) {
+                const total = lista.querySelectorAll('.solicitacao-central-item').length;
+                if (total > 0) {
+                    badge.textContent = total;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // ============================================================
+        // EXPORTA FUNÇÕES GLOBAIS (para uso no console ou outros scripts)
+        // ============================================================
+        window.atualizarContadorSolicitacoes = atualizarContadorSolicitacoes;
 
     })();
 </script>

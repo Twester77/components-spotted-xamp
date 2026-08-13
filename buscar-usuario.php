@@ -18,7 +18,7 @@ include 'includes/header.php';
 include 'includes/navbar.php';
 ?>
 
-<main class="container-busca container-fenda-flex" style="height: 100dvh; margin: 30px auto;">
+<main class="container-busca container-fenda-flex" style="height: 100dvh;">
     <h2>🔍 Buscar Estudantes</h2>
     
     <form action="buscar-usuario.php" method="GET" class="form-busca-fenda">

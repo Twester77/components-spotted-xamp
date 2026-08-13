@@ -28,7 +28,6 @@ $novo_nome     = strip_tags($_POST['nome'] ?? '');
 $nova_bio      = strip_tags($_POST['bio'] ?? '');
 $novo_username = strip_tags($_POST['username'] ?? '');
 
-// Validação de espaços
 if (preg_match('/\s/', $novo_username)) {
     fenda_log('🔴 REDIRECIONANDO para ' . $url_origem . '?erro=username_espaco');
     header("Location: " . $url_origem . "?erro=username_espaco");
@@ -42,7 +41,6 @@ if (empty($novo_username) || strlen($novo_username) < 5) {
     exit();
 }
 
-// Checagem de duplicidade
 $sql_check = "SELECT id FROM usuarios WHERE username = ? AND id != ?";
 $stmt_check = mysqli_prepare($conn, $sql_check);
 if ($stmt_check) {
@@ -69,9 +67,11 @@ $novo_pip      = isset($_POST['pref_pip']) ? (int)$_POST['pref_pip'] : 0;
 $novo_badge    = isset($_POST['pref_badge']) ? (int)$_POST['pref_badge'] : 1;
 $nova_notif_comunidade = isset($_POST['pref_notif_comunidade']) ? (int)$_POST['pref_notif_comunidade'] : 1;
 
-// ============================================================
-// 🚀 UPLOAD DE FOTO E CAPA (se enviados)
-// ============================================================
+// 🔥 NOVA PREFERÊNCIA
+$novo_swipe_balanga = isset($_POST['pref_swipe_balanga']) ? (int)$_POST['pref_swipe_balanga'] : 0;
+fenda_log("📝 preferência swipe balanga recebida: " . $novo_swipe_balanga);
+
+// 🚀 UPLOAD
 $caminhosEnviados = [];
 $foto_nome = null;
 $capa_nome = null;
@@ -82,7 +82,6 @@ if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
         $caminhosEnviados[] = $foto_nome;
     }
 }
-
 if (isset($_FILES['capa']) && $_FILES['capa']['error'] == 0) {
     $capa_nome = processarUploadSeguro($_FILES['capa'], './uploads', 'capa', 2 * 1024 * 1024, $usuario_id);
     if ($capa_nome) {
@@ -90,24 +89,18 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] == 0) {
     }
 }
 
-// ============================================================
-// 🔥 BUSCA OS NOMES ANTIGOS (para deletar após sucesso)
-// ============================================================
+// BUSCA ANTIGOS
 $stmt_busca = mysqli_prepare($conn, "SELECT foto, capa FROM usuarios WHERE id = ?");
 mysqli_stmt_bind_param($stmt_busca, "i", $usuario_id);
 mysqli_stmt_execute($stmt_busca);
 $res_busca = mysqli_stmt_get_result($stmt_busca);
 $usuario_atual = mysqli_fetch_assoc($res_busca);
 mysqli_stmt_close($stmt_busca);
-
 $foto_antiga = $usuario_atual['foto'] ?? null;
 $capa_antiga = $usuario_atual['capa'] ?? null;
 
-// ============================================================
-// 🔥 UPDATE DINÂMICO (só atualiza campos enviados)
-// ============================================================
+// UPDATE
 try {
-    // Campos sempre atualizados
     $fields = [
         'nome' => $novo_nome,
         'bio' => $nova_bio,
@@ -124,7 +117,6 @@ try {
         'pref_notif_comunidade' => $nova_notif_comunidade,
     ];
 
-    // Só adiciona foto e capa se foram enviados (não são null)
     if ($foto_nome !== null) {
         $fields['foto'] = $foto_nome;
     }
@@ -132,7 +124,9 @@ try {
         $fields['capa'] = $capa_nome;
     }
 
-    // Constrói a query
+    // 🔥 ADICIONA NO FINAL
+    $fields['pref_swipe_balanga'] = $novo_swipe_balanga;
+
     $set_parts = [];
     $values = [];
     $types = '';
@@ -149,6 +143,10 @@ try {
     $values[] = $usuario_id;
     $types .= 'i';
 
+    fenda_log("🟢 SQL: " . $sql);
+    fenda_log("🟢 TYPES: " . $types);
+    fenda_log("🟢 VALUES: " . print_r($values, true));
+
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
         throw new Exception("Erro ao preparar UPDATE: " . mysqli_error($conn));
@@ -160,7 +158,6 @@ try {
     }
     mysqli_stmt_close($stmt);
 
-    // Se chegou aqui, a atualização foi bem-sucedida → deleta arquivos antigos (locais e B2)
     if ($foto_antiga && $foto_antiga != $foto_nome) {
         if (file_exists("./uploads/" . $foto_antiga)) unlink("./uploads/" . $foto_antiga);
         deleteFromB2($foto_antiga, $usuario_id);
@@ -177,7 +174,6 @@ try {
 
 } catch (Exception $e) {
     fenda_log('🔴 ERRO no UPDATE: ' . $e->getMessage());
-    // 🔥 ROLLBACK: deleta TODOS os arquivos enviados do B2
     foreach ($caminhosEnviados as $caminho) {
         deleteFromB2($caminho, $usuario_id);
         fenda_log('🔴 [ROLLBACK] Arquivo removido do B2: ' . $caminho);

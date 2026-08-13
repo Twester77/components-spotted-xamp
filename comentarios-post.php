@@ -1,4 +1,13 @@
 <?php
+/**
+ * comentarios-post.php – Página de comentários de um post
+ * 
+ * 🔧 CORREÇÃO: Busca e validação do post movidas para antes do header,
+ *    evitando "headers already sent" em redirecionamentos.
+ * 
+ * 🌙 LUA – 2026-08-13
+ */
+
 include_once 'conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
@@ -9,6 +18,22 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 fenda_log('🟢 INÍCIO comentarios-post.php');
+
+// ============================================================
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
+// ============================================================
+if (isset($_GET['notif_id'])) {
+    $notif_id = (int)$_GET['notif_id'];
+    $user_id = $_SESSION['usuario_id'] ?? 0;
+    if ($user_id > 0) {
+        $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+        $stmt_notif->bind_param("ii", $notif_id, $user_id);
+        $stmt_notif->execute();
+        $stmt_notif->close();
+        fenda_log("🟢 Notificação $notif_id marcada como lida para usuário $user_id (via comentarios-post)");
+    }
+}
+
 /* ==========================================================================
    Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir.
    Cada linha, cada debug, cada madrugada valeram a pena.
@@ -18,7 +43,14 @@ fenda_log('🟢 INÍCIO comentarios-post.php');
 // --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id == 0) {
-    header("Location: feed.php");
+    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast
+    if (isset($_GET['notif_id'])) {
+        $_SESSION['toast_mensagem'] = 'Notificação marcada como lida.';
+        $_SESSION['toast_tipo'] = 'sucesso';
+        header("Location: feed.php");
+    } else {
+        header("Location: feed.php");
+    }
     exit();
 }
 
@@ -32,15 +64,47 @@ if ($id > 0) {
     if ($check_post && $check_post['categoria'] === 'perdidos') {
         $is_perdidos = true;
     }
+    $stmt_check->close();
 }
 
 // --- SEGURANÇA: se não estiver logado e não for perdidos, redireciona ---
 if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
-    header("Location: index.php");
+    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast
+    if (isset($_GET['notif_id'])) {
+        $_SESSION['toast_mensagem'] = 'Notificação marcada como lida.';
+        $_SESSION['toast_tipo'] = 'sucesso';
+        header("Location: feed.php");
+    } else {
+        header("Location: index.php");
+    }
     exit();
 }
 
-// --- PUXA DADOS DO USUÁRIO LOGADO ---
+// ============================================================
+// 🔥 BUSCA O POST E VERIFICA STATUS (ANTES DO HEADER!)
+// ============================================================
+$stmt = $conn->prepare("SELECT m.*, u.username, u.foto FROM mensagens m LEFT JOIN usuarios u ON m.usuario_id = u.id WHERE m.id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$post = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$post) {
+    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast amigável
+    if (isset($_GET['notif_id'])) {
+        $_SESSION['toast_mensagem'] = 'Postagem não encontrada ou excluída.';
+        $_SESSION['toast_tipo'] = 'info';
+        header("Location: feed.php");
+    } else {
+        die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
+    }
+    exit();
+}
+
+// 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
+$post_esta_ativo = ($post['status'] === 'ativo');
+
+// --- PUXA DADOS DO USUÁRIO LOGADO (preferências) ---
 $vibe_default = 'vibe-glass';
 $cor_default = '#70cde4';
 $swipeAtivado = 0;
@@ -56,6 +120,9 @@ if (isset($_SESSION['usuario_id'])) {
     }
 }
 
+// ============================================================
+// 🔥 AGORA SIM, INCLUI O HEADER (COM SAÍDA HTML)
+// ============================================================
 $is_post_page = true;
 include 'includes/header.php';
 include 'includes/navbar.php';
@@ -70,21 +137,6 @@ try {
     $b2 = null;
     error_log('[COMENTARIOS] Falha ao instanciar B2: ' . $e->getMessage());
 }
-
-// ============================================================
-// 🔥 BUSCA O POST E VERIFICA STATUS
-// ============================================================
-$stmt = $conn->prepare("SELECT m.*, u.username, u.foto FROM mensagens m LEFT JOIN usuarios u ON m.usuario_id = u.id WHERE m.id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$post = $stmt->get_result()->fetch_assoc();
-
-if (!$post) {
-    die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
-}
-
-// 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
-$post_esta_ativo = ($post['status'] === 'ativo');
 
 // ============================================================
 // 1. BUSCAR REAÇÕES DETALHADAS PARA ESTE POST
@@ -172,8 +224,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
         <!-- ============================================================
         CONTEÚDO ROLÁVEL (APENAS COMENTÁRIOS)
-        🔥 A MINIATURA, BOTÃO VOLTAR E COLLAPSE FORAM REMOVIDOS DAQUI
-        ELES AGORA SÃO GERENCIADOS PELO CSS E PELO HEADERMANAGER
         ============================================================ -->
         <main class="lista-scrollavel" id="conteudo-rolavel">
 
@@ -416,7 +466,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         const modal = document.createElement('div');
         modal.id = 'modal-lightbox-fenda';
         modal.style.cssText =
-            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-bakcdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
         const img = document.createElement('img');
         img.src = imgSrc;
         img.style.cssText =
@@ -449,7 +499,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         const modal = document.createElement('div');
         modal.id = 'modal-lightbox-fenda';
         modal.style.cssText =
-            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-bakcdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
         const img = document.createElement('img');
         img.src = src;
         img.style.cssText =

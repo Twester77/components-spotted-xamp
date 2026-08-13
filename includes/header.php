@@ -1,38 +1,54 @@
 <?php
 include_once __DIR__ . '/../conexao.php';
 
-// ==================== SENSOR DE ASSETS AUTOMÁTICO (ANTI-ESQUECIMENTO) ====================
+// ==================== SENSOR DE ASSETS AUTOMÁTICO ====================
 // Gera URL com timestamp da última modificação do arquivo para quebrar cache do navegador
+
 function asset_versao($path)
 {
-    // Converte caminho relativo para absoluto a partir da raiz do projeto
     $fullPath = __DIR__ . '/../' . $path;
     if (file_exists($fullPath)) {
         return $path . '?v=' . filemtime($fullPath);
     }
-    // Fallback seguro (caso o arquivo não exista no sistema de arquivos)
     return $path . '?v=1.0.0';
 }
 
 $is_post_page = true;
 $u_id = $_SESSION['usuario_id'] ?? 0;
 $pref_swipe_real = 0;
+$pref_swipe_balanga = 0;
 $pagina_atual = basename($_SERVER['PHP_SELF']);
 
 if ($u_id > 0 && isset($conn)) {
+    // Preferência de swipe do feed
     $stmt_pref = $conn->prepare("SELECT pref_swipe FROM usuarios WHERE id = ?");
     $stmt_pref->bind_param("i", $u_id);
     $stmt_pref->execute();
     $resultado_header_pessoal = $stmt_pref->get_result()->fetch_assoc();
     $pref_swipe_real = $resultado_header_pessoal['pref_swipe'] ?? 0;
+    $stmt_pref->close();
+
+    // Preferência de swipe do Balanga Teras (apenas se estiver na página)
+    if ($pagina_atual == 'balanga-teras.php') {
+        $stmt_balanga = $conn->prepare("SELECT pref_swipe_balanga FROM usuarios WHERE id = ?");
+        $stmt_balanga->bind_param("i", $u_id);
+        $stmt_balanga->execute();
+        $resultado_balanga = $stmt_balanga->get_result()->fetch_assoc();
+        $pref_swipe_balanga = $resultado_balanga['pref_swipe_balanga'] ?? 0;
+        $stmt_balanga->close();
+    }
 }
 
 $ativar_modo_app = ($pref_swipe_real == 1 && $pagina_atual == 'feed.php');
+$ativar_modo_tinder = ($pref_swipe_balanga == 1 && $pagina_atual == 'balanga-teras.php');
 
 $classe_tema = $tema_classe ?? '';
 $classe_pref = ($ativar_modo_app) ? 'modo-swipe-ativo feed-empilhado' : 'allow-hover';
-$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema is-touch-device");
+$classe_tinder = $ativar_modo_tinder ? 'modo-tinder-ativo' : '';
+
+$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema $classe_tinder is-touch-device");
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -65,7 +81,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <link rel="stylesheet" href="<?= asset_versao('css/formularios.css') ?>">
     <link rel="stylesheet" href="<?= asset_versao('css/animacoes.css') ?>">
 
-    <!-- Central do Habitante (feed-pessoal.php) -->
+    <!-- Central do Habitante ( antigo feed-pessoal.php) -->
     <?php if ($pagina_atual == 'central.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/central.css') ?>">
     <?php endif; ?>
@@ -81,11 +97,13 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <?php endif; ?>
 
     <!-- Lightbox -->
-    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'feed.pessoal.php' || $pagina_atual == 'comentarios-post.php'): ?>
+    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'balanga-teras.php' || $pagina_atual == 'comentarios-post.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/lightbox.css') ?>">
     <?php endif; ?>
 
+    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'perdidos.php' || $pagina_atual == 'comunidade.php' || $pagina_atual == 'central.php'): ?>
     <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
+    <?php endif; ?>
 
     <!-- Comentários -->
     <?php if ($pagina_atual == 'comentarios-post.php'): ?>
@@ -95,6 +113,11 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <!-- Swipe -->
     <?php if ($pagina_atual == 'feed.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/swipe.css') ?>">
+    <?php endif; ?>
+
+    <!-- Eventos -->
+    <?php if (in_array($pagina_atual, ['balanga-teras.php', 'evento.php', 'criar-evento.php', 'swipe-eventos.php', 'editar-evento.php'])): ?>
+        <link rel="stylesheet" href="<?= asset_versao('css/eventos.css') ?>">
     <?php endif; ?>
 
     <!-- Ícones e favicon -->

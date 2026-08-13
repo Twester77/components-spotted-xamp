@@ -5,7 +5,8 @@ $u_id = $_SESSION['usuario_id'] ?? 0;
 // ==================== SENSOR DE ASSETS AUTOMÁTICO (FALLBACK) ====================
 // A função asset_versao() já deve estar definida no header.php, mas garantimos fallback seguro
 if (!function_exists('asset_versao')) {
-    function asset_versao($path) {
+    function asset_versao($path)
+    {
         $fullPath = __DIR__ . '/../' . $path;
         if (file_exists($fullPath)) {
             return $path . '?v=' . filemtime($fullPath);
@@ -102,7 +103,7 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
 
 
 <?php if (isset($_SESSION['usuario_id'])):
-   $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas, pref_pip, pref_badge, pref_notif_comunidade FROM usuarios WHERE id = ?");
+    $stmt_footer = $conn->prepare("SELECT pref_som_trilha, pref_som_notif, pref_bolhas, pref_pip, pref_badge, pref_notif_comunidade FROM usuarios WHERE id = ?");
     $stmt_footer->bind_param("i", $_SESSION['usuario_id']);
     $stmt_footer->execute();
     $res_pref = $stmt_footer->get_result()->fetch_assoc();
@@ -112,8 +113,13 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
     <input type="hidden" name="pref_bolhas" id="input_pref_bolhas" value="<?php echo $res_pref['pref_bolhas'] ?? 1; ?>">
     <input type="hidden" name="pref_pip" id="input_pref_pip" value="<?php echo $res_pref['pref_pip'] ?? 0; ?>">
     <input type="hidden" name="pref_badge" id="input_pref_badge" value="<?php echo $res_pref['pref_badge'] ?? 1; ?>">
-    <!-- 🔥 NOVO: Input hidden para preferência de notificações da comunidade -->
+    <!--  NOVO: Input hidden para preferência de swipe do Balanga Teras -->
+    <input type="hidden" name="pref_swipe_balanga" id="input_pref_swipe_balanga" value="<?php echo $res_pref['pref_swipe_balanga'] ?? 0; ?>">
+    <!--  NOVO: Input hidden para preferência de notificações da comunidade -->
     <input type="hidden" name="pref_notif_comunidade" id="input_pref_notif_comunidade" value="<?php echo $res_pref['pref_notif_comunidade'] ?? 1; ?>">
+
+    <!--  CSRF Token (global) - adicionado aqui -->
+    <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 <?php endif; ?>
 
 <!-- ==================== DIALOG DE CONFIRMAÇÃO (NATIVO - GLOBAL) ==================== -->
@@ -129,15 +135,15 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
 </dialog>
 
 <!-- CONFIGURAÇÕES GLOBAIS PARA O JAVASCRIPT    -->
-<?php if (isset($_SESSION['usuario_id'])): 
+<?php if (isset($_SESSION['usuario_id'])):
     // Tenta pegar da query do footer, se não existir, tenta da sessão, se não, assume 1 (ativo)
-    $pref_badge = $res_pref['pref_badge'] ?? $_SESSION['pref_badge'] ?? 1; 
+    $pref_badge = $res_pref['pref_badge'] ?? $_SESSION['pref_badge'] ?? 1;
 ?>
-<script>
-    window.FendaConfig = window.FendaConfig || {};
-    window.FendaConfig.badgeAtivo = <?php echo ($pref_badge == 1) ? 'true' : 'false'; ?>;
-    console.log('[FendaConfig] badgeAtivo =', window.FendaConfig.badgeAtivo);
-</script>
+    <script>
+        window.FendaConfig = window.FendaConfig || {};
+        window.FendaConfig.badgeAtivo = <?php echo ($pref_badge == 1) ? 'true' : 'false'; ?>;
+        console.log('[FendaConfig] badgeAtivo =', window.FendaConfig.badgeAtivo);
+    </script>
 <?php endif; ?>
 
 <!-- ============================================================
@@ -163,7 +169,7 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
         if ('serviceWorker' in navigator) {
             // Usa a mesma variável $basePath definida no header
             const basePath = '<?= $basePath ?>';
-            
+
             navigator.serviceWorker.addEventListener('controllerchange', function() {
                 console.log('[PWA] Service Worker atualizou. Recarregando página.');
                 window.location.reload();
@@ -185,4 +191,5 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
 </script>
 
 </body>
+
 </html>

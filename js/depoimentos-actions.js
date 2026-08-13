@@ -1,22 +1,20 @@
 /**
  * depoimentos-actions.js – Funções unificadas para aprovar/rejeitar depoimentos
- * Usado tanto na Central (central.php) quanto na página avulsa (gerenciar-depoimentos.php)
- * 
- * Depende do CSRF token (elemento #csrf_token)
+ * 🔥 VERSÃO COM LOGS E REENTRÂNCIA (pode ser chamada múltiplas vezes)
  */
-
 (function() {
     'use strict';
 
     // ============================================================
     // PROCESSAR AÇÃO (APROVAR/REJEITAR)
     // ============================================================
-    function processarDepoimento(id, acao, botao) {
+    window.processarDepoimento = function(id, acao, botao) {
         if (botao.disabled) return;
         botao.disabled = true;
         botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
 
         const csrfToken = document.getElementById('csrf_token')?.value || '';
+        console.log('[DEPOIMENTOS] Processando depoimento ID:', id, 'Ação:', acao, 'CSRF:', csrfToken);
 
         fetch('processa-aprovacao-depoimento.php', {
             method: 'POST',
@@ -25,8 +23,14 @@
             },
             body: `id=${id}&acao=${acao}&csrf_token=${encodeURIComponent(csrfToken)}`
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('[DEPOIMENTOS] Resposta:', data);
             if (data.success) {
                 // Remove o item com animação
                 const item = botao.closest('.depoimento-pendente-item') || 
@@ -61,28 +65,40 @@
             }
         })
         .catch(err => {
-            console.error('[DEPOIMENTOS] Erro:', err);
-            alert('Erro de conexão. Tente novamente.');
+            console.error('[DEPOIMENTOS] Erro na requisição:', err);
+            if (typeof exibirBalao === 'function') {
+                exibirBalao('❌ ' + err.message, 'erro', botao);
+            } else {
+                alert('Erro de conexão: ' + err.message);
+            }
             botao.disabled = false;
             botao.innerHTML = acao === 'aprovar' 
                 ? '<i class="fas fa-check"></i> Aprovar' 
                 : '<i class="fas fa-times"></i> Rejeitar';
         });
-    }
+    };
 
     // ============================================================
-    // INICIALIZAR (DELEGAÇÃO DE EVENTOS)
+    // INICIALIZAR (DELEGAÇÃO DE EVENTOS) – COM REENTRÂNCIA
     // ============================================================
-    function initDepoimentosActions() {
-        // Usa delegação de eventos no documento para capturar cliques
-        document.addEventListener('click', function(e) {
+    window.initDepoimentosActions = function() {
+        console.log('[DEPOIMENTOS] Inicializando eventos (ou reativando)');
+
+        // Remove listeners antigos (se houver) para evitar duplicação
+        // Como usamos delegação no documento, só precisamos adicionar uma vez.
+        // Se já tiver sido adicionado, o removeEventListener não fará nada se não houver.
+        document.removeEventListener('click', window._depoimentosClickHandler);
+        
+        // Define o handler e o armazena para poder remover depois
+        window._depoimentosClickHandler = function(e) {
             // Botão Aprovar
             const btnAprovar = e.target.closest('.btn-aprovar-depoimento');
             if (btnAprovar) {
                 e.preventDefault();
                 const id = btnAprovar.dataset.id;
                 if (!id) return;
-                processarDepoimento(id, 'aprovar', btnAprovar);
+                console.log('[DEPOIMENTOS] Clique em Aprovar para ID:', id);
+                window.processarDepoimento(id, 'aprovar', btnAprovar);
                 return;
             }
 
@@ -92,20 +108,23 @@
                 e.preventDefault();
                 const id = btnRejeitar.dataset.id;
                 if (!id) return;
-                processarDepoimento(id, 'rejeitar', btnRejeitar);
+                console.log('[DEPOIMENTOS] Clique em Rejeitar para ID:', id);
+                window.processarDepoimento(id, 'rejeitar', btnRejeitar);
                 return;
             }
-        });
-    }
+        };
+
+        document.addEventListener('click', window._depoimentosClickHandler);
+    };
 
     // ============================================================
-    // EXPORTA PARA USO GLOBAL (se necessário)
+    // EXPORTA PARA USO GLOBAL
     // ============================================================
-    window.processarDepoimento = processarDepoimento;
-    window.initDepoimentosActions = initDepoimentosActions;
+    window.processarDepoimento = window.processarDepoimento || processarDepoimento;
+    window.initDepoimentosActions = window.initDepoimentosActions || initDepoimentosActions;
 
     // ============================================================
-    // INICIALIZA AUTOMATICAMENTE
+    // INICIALIZA AUTOMATICAMENTE (se o DOM já estiver pronto)
     // ============================================================
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initDepoimentosActions);

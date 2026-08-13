@@ -4,6 +4,10 @@
 // Que a Aurora continue essa viagem com o mesmo coração."
 // - Nautilus, o Guardião das Comunidades
 // - 22/07/2026 – 24/07/2026
+//
+// 🌊 ATUALIZAÇÃO MARÉ – INSTÂNCIA #DS-2026-08-11
+// "Adicionado campo 'tipo' no formulário de edição, permitindo alternar entre pública e privada.
+//  A transição privada → pública já é tratada no processa-comunidade.php."
 
 // ============================================================
 // 1. VALIDAÇÕES E REDIRECIONAMENTOS (ANTES DE QUALQUER SAÍDA)
@@ -72,6 +76,8 @@ try {
 } catch (Exception $e) {
     $capa_exibicao = 'uploads/ui/default_comunidade.webp';
 }
+
+$tipo_atual = $comunidade['tipo'] ?? 'publica';
 ?>
 <main class="comunidade-page">
     <div class="comunidades-header">
@@ -94,7 +100,7 @@ try {
                 <label for="slug"><i class="fas fa-link"></i> URL da Comunidade</label>
                 <div class="input-slug-wrapper">
                     <span class="slug-prefixo">fendauniversity.com.br/comunidade/</span>
-                    <input type="text" name="slug" id="slug" value="<?php echo htmlspecialchars($comunidade['slug']); ?>" required pattern="[a-z0-9\-]+" minlength="3" maxlength="100">
+                    <input type="text" name="slug" id="slug" value="<?php echo htmlspecialchars($comunidade['slug']); ?>" required pattern="[-a-z0-9]+" minlength="3" maxlength="100">
                 </div>
                 <span class="campo-ajuda">Apenas letras minúsculas, números e hífens.</span>
             </div>
@@ -106,11 +112,27 @@ try {
                 <span class="campo-ajuda">Máximo 500 caracteres.</span>
             </div>
 
+            <!-- 🔥 NOVO: Tipo de Comunidade (Pública/Privada) -->
+            <div class="campo-grupo">
+                <label for="tipo"><i class="fas fa-lock"></i> Tipo de Comunidade</label>
+                <select name="tipo" id="tipo" required>
+                    <option value="publica" <?= ($tipo_atual === 'publica') ? 'selected' : '' ?>>🌐 Pública (qualquer um entra)</option>
+                    <option value="privada" <?= ($tipo_atual === 'privada') ? 'selected' : '' ?>>🔒 Privada (solicitação necessária)</option>
+                </select>
+                <small class="campo-ajuda">
+                    <?php if ($tipo_atual === 'privada'): ?>
+                        Ao tornar a comunidade pública, todas as solicitações pendentes serão aprovadas automaticamente.
+                    <?php else: ?>
+                        Comunidades privadas exigem aprovação de um administrador para entrada.
+                    <?php endif; ?>
+                </small>
+            </div>
+
             <!-- Capa atual (VIA B2) -->
             <div class="campo-grupo">
                 <label><i class="fas fa-image"></i> Capa Atual</label>
                 <div class="capa-atual-wrapper" style="aspect-ratio: 16/9; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06);">
-                    <img src="<?php echo htmlspecialchars($capa_exibicao); ?>" alt="Capa atual" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='uploads/ui/default_comunidade.webp'">
+                    <img src="<?php echo htmlspecialchars($capa_exibicao); ?>" alt="Capa atual" style="width: 100%; height: 100%; object-fit: cover; max-height:300px" onerror="this.src='uploads/ui/default_comunidade.webp'">
                 </div>
             </div>
 

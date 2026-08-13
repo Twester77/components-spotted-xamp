@@ -4,6 +4,8 @@
  * 
  * GET: Retorna o HTML das estrelas e médias para um perfil.
  * POST: Processa um voto (requer CSRF e rate limiting).
+ * 
+ * 🔥 VERSÃO COM RATE LIMITING INTELIGENTE – conta apenas tentativas falhas
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -61,11 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt_check->close();
     }
 
-    // 🔥 SEMPRE GERA O HTML DAS ESTRELAS, MESMO COM ZERO VOTOS
+    // Gera o HTML das estrelas (sempre)
     $html = '';
     $total_votos = array_sum(array_column($avaliacoes, 'total'));
 
-    // Mensagem amigável se não houver votos (mas NÃO substitui o HTML)
     if ($total_votos === 0) {
         if (isset($_SESSION['usuario_id']) && $_SESSION['usuario_id'] == $usuario_id) {
             $html .= '<p class="avaliacao-aviso">✨ Você ainda não recebeu avaliações. Compartilhe seu perfil com a galera!</p>';
@@ -74,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 
-    // Gera o HTML das estrelas (sempre)
     $html .= '<div class="avaliacoes-container">';
     foreach ($tipos as $tipo => $emoji) {
         $media = $avaliacoes[$tipo]['media'];
@@ -120,33 +120,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 // ============================================================
-// 2. POST – PROCESSAR VOTO
+// 2. POST – PROCESSAR VOTO (COM RATE LIMITING INTELIGENTE)
 // ============================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // ============================================================
+    // 2.0 FUNÇÃO AUXILIAR PARA REGISTRAR TENTATIVA FALHA
+    // ============================================================
+    function registrarTentativaFalha($ip, $conn) {
+        static $tabelaCriada = false;
+        if (!$tabelaCriada) {
+            $conn->query("CREATE TABLE IF NOT EXISTS rate_limiter_avaliacoes (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                ip_address VARCHAR(45) NOT NULL,
+                tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_ip (ip_address),
+                INDEX idx_tentativa (tentativa)
+            )");
+            $tabelaCriada = true;
+        }
+        $stmt_log = $conn->prepare("INSERT IGNORE INTO rate_limiter_avaliacoes (ip_address) VALUES (?)");
+        $stmt_log->bind_param("s", $ip);
+        $stmt_log->execute();
+        $stmt_log->close();
+    }
+
+    // ============================================================
     // 2.1 Verifica login
+    // ============================================================
     if (!isset($_SESSION['usuario_id'])) {
         http_response_code(401);
         echo json_encode(['erro' => 'Faça login para votar.']);
         exit;
     }
 
-    // 2.2 CSRF Token
+    // ============================================================
+    // 2.2 CSRF Token (falha → registra tentativa)
+    // ============================================================
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        registrarTentativaFalha($ip, $conn);
         http_response_code(403);
         echo json_encode(['erro' => 'Token de segurança inválido.']);
         exit;
     }
 
-    // 2.3 Honeypot
+    // ============================================================
+    // 2.3 Honeypot (falha → registra tentativa)
+    // ============================================================
     if (!empty($_POST['honeypot'])) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        registrarTentativaFalha($ip, $conn);
         http_response_code(400);
         echo json_encode(['erro' => 'Bot detectado.']);
         exit;
     }
 
-    // 2.4 Rate Limiting (por IP) – com INSERT IGNORE para evitar race condition
+    // ============================================================
+    // 2.4 Verifica rate limit (APENAS para tentativas falhas)
+    // ============================================================
     $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-    $rate_limit = 5; // 5 votos por hora
+    $rate_limit = 20; // 🔥 AUMENTADO PARA 20 VOTOS POR HORA
+
     $conn->query("CREATE TABLE IF NOT EXISTS rate_limiter_avaliacoes (
         id INT AUTO_INCREMENT PRIMARY KEY,
         ip_address VARCHAR(45) NOT NULL,
@@ -154,6 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         INDEX idx_ip (ip_address),
         INDEX idx_tentativa (tentativa)
     )");
+
     $sql_rate = "SELECT COUNT(*) as total FROM rate_limiter_avaliacoes WHERE ip_address = ? AND tentativa > NOW() - INTERVAL 1 HOUR";
     $stmt_rate = $conn->prepare($sql_rate);
     $stmt_rate->bind_param("s", $ip);
@@ -161,36 +197,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $res_rate = $stmt_rate->get_result();
     $row_rate = $res_rate->fetch_assoc();
     $stmt_rate->close();
+
     if ($row_rate['total'] >= $rate_limit) {
         http_response_code(429);
-        echo json_encode(['erro' => 'Você já votou muitas vezes recentemente. Aguarde um pouco.']);
+        echo json_encode(['erro' => 'Você já teve muitas tentativas inválidas recentemente. Aguarde um pouco.']);
         exit;
     }
 
-    // 🔥 CORREÇÃO: Usa INSERT IGNORE para evitar race condition
-    $stmt_log = $conn->prepare("INSERT IGNORE INTO rate_limiter_avaliacoes (ip_address) VALUES (?)");
-    $stmt_log->bind_param("s", $ip);
-    $stmt_log->execute();
-    $stmt_log->close();
-
-    // 2.5 Valida dos dados
+    // ============================================================
+    // 2.5 Valida os dados (se falhar, registra tentativa)
+    // ============================================================
     $usuario_avaliado_id = isset($_POST['usuario_id']) ? (int)$_POST['usuario_id'] : 0;
     $tipo = isset($_POST['tipo']) ? $_POST['tipo'] : '';
     $nota = isset($_POST['nota']) ? (int)$_POST['nota'] : 0;
     $usuario_avaliador_id = $_SESSION['usuario_id'];
 
     if ($usuario_avaliado_id <= 0 || !in_array($tipo, ['legal', 'confiavel', 'sexy']) || $nota < 1 || $nota > 5) {
+        registrarTentativaFalha($ip, $conn);
         http_response_code(400);
         echo json_encode(['erro' => 'Dados inválidos.']);
         exit;
     }
+
     if ($usuario_avaliador_id == $usuario_avaliado_id) {
+        registrarTentativaFalha($ip, $conn);
         http_response_code(403);
         echo json_encode(['erro' => 'Você não pode se autoavaliar.']);
         exit;
     }
 
-    // 2.6 Verifica se já votou
+    // ============================================================
+    // 2.6 Verifica se já votou (não registra como falha, pois é uma tentativa legítima)
+    // ============================================================
     $sql_check = "SELECT id FROM avaliacoes_perfil 
                   WHERE usuario_avaliado_id = ? AND usuario_avaliador_id = ? AND tipo = ?";
     $stmt_check = $conn->prepare($sql_check);
@@ -204,14 +242,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt_check->close();
 
-    // 2.7 Insere o voto
+    // ============================================================
+    // 2.7 Insere o voto (sucesso → NÃO registra no rate limit)
+    // ============================================================
     $sql = "INSERT INTO avaliacoes_perfil (usuario_avaliado_id, usuario_avaliador_id, tipo, nota, data_avaliacao) 
             VALUES (?, ?, ?, ?, NOW())";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("iisi", $usuario_avaliado_id, $usuario_avaliador_id, $tipo, $nota);
+
     if ($stmt->execute()) {
         echo json_encode(['sucesso' => true, 'mensagem' => 'Voto registrado com sucesso!']);
     } else {
+        // Se houve erro na inserção (ex: violação de chave única), pode ser uma tentativa de spam
+        // Nesse caso, registra como tentativa falha também
+        registrarTentativaFalha($ip, $conn);
         http_response_code(500);
         echo json_encode(['erro' => 'Erro ao salvar voto.']);
     }

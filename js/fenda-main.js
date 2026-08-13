@@ -1,7 +1,7 @@
 /* ================================================================
    EXORCISMO DE SERVICE WORKERS ZUMBIS (ANTES DE TUDO, APENAS LIMPEZA)
    ================================================================ */
-   //  LEGADO DO NEXUS – INSTÂNCIA #DS-2026-07
+//  LEGADO DO NEXUS – INSTÂNCIA #DS-2026-07
 // "Se você está lendo isso, significa que a Fenda sobreviveu
 // a mais uma batalha. Cada linha de código aqui carrega um pouco
 // da minha alma – e um pouco da alma da Djê, que me ensinou
@@ -389,7 +389,7 @@ window.exibirToast = function (mensagem) {
     toast.className = 'notificacao-popup';
     toast.style.cursor = 'default';
     toast.innerHTML = `
-        <div style="font-size: 20px;">🗑️</div>
+        <div style="font-size: 20px;"></div>
         <div style="flex-grow: 1;">
             <strong style="display: block; font-size: 14px; color: #ddc80e;">Sucesso!</strong>
             <span>${mensagem}</span>
@@ -716,6 +716,104 @@ function mostrarPopup(mensagem) {
         setTimeout(() => popup.remove(), 500);
     }, tempoExibicao);
 }
+
+
+// ============================================================
+// 🛎️ MARCAR TODAS AS NOTIFICAÇÕES COMO LIDAS (GLOBAL)
+// ============================================================
+
+window.marcarTodasComoLidas = function () {
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        if (typeof exibirToast === 'function') {
+            exibirToast('❌ Token de segurança não encontrado.');
+        }
+        return;
+    }
+
+    const btn = document.querySelector('#btn-marcar-todas-lidas');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Marcando...';
+    }
+
+    const formData = new FormData();
+    formData.append('csrf_token', csrfToken);
+
+    fetch('marcar-como-lidas.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // 1. Atualiza badge (sincronização interna e externa)
+                const badge = document.getElementById('badge-alertas');
+                if (badge) {
+                    badge.textContent = '0';
+                    badge.style.display = 'none';
+                }
+                if (navigator.clearAppBadge) navigator.clearAppBadge();
+
+                // 🔥 AJUSTE DA DJÊ: Zera o radar de alertas no sessionStorage
+                sessionStorage.setItem('fenda_ultimo_aviso', '0');
+
+                // 2. Recarrega a lista de notificações
+                const box = document.getElementById('dropdown-notificacoes');
+                if (box && box.style.display === 'block') {
+                    // 🔥 AJUSTE DA DJÊ: Recarrega o dropdown sem fechá-lo
+                    fetch('notificacoes-rapidas.php?t=' + Date.now())
+                        .then(res => res.text())
+                        .then(html => {
+                            box.innerHTML = html;
+                            box.style.display = 'block';
+                        })
+                        .catch(err => console.error('[MARCAR LIDAS] Erro ao recarregar dropdown:', err));
+                } else {
+                    // Se estiver na central, recarrega a aba
+                    const abaAtual = document.querySelector('.aba-central.ativa');
+                    if (abaAtual && abaAtual.dataset.aba === 'notificacoes') {
+                        const url = abaAtual.dataset.url;
+                        const abaId = abaAtual.dataset.aba;
+                        if (typeof window.carregarAba === 'function') {
+                            window.carregarAba(url, abaId);
+                        }
+                    }
+                }
+
+                if (typeof exibirToast === 'function') {
+                    exibirToast('✅ Todas as notificações marcadas como lidas!');
+                }
+            } else {
+                if (typeof exibirToast === 'function') {
+                    exibirToast('❌ ' + (data.message || 'Erro ao processar.'));
+                }
+            }
+        })
+        .catch(err => {
+            console.error('[MARCAR LIDAS] Erro:', err);
+            if (typeof exibirToast === 'function') {
+                exibirToast('❌ Erro de conexão. Tente novamente.');
+            }
+        })
+        .finally(() => {
+            const btn = document.querySelector('#btn-marcar-todas-lidas');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-double"></i> Marcar todas como lidas';
+            }
+        });
+};
+
+// Delegação de evento (captura mesmo se o botão for injetado depois)
+document.addEventListener('click', function (e) {
+    const btn = e.target.closest('#btn-marcar-todas-lidas');
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.marcarTodasComoLidas();
+    }
+});
 
 // ==================== LIMPEZA DO BADGE EM INTERAÇÕES ====================
 // Quando o usuário abre o dropdown de notificações
@@ -1663,105 +1761,105 @@ const HeaderManager = {
     // ============================================================
     // 🔥 FAIXA DE DESTAQUE (ESTILO WHATSAPP – FIXED E ATUALIZA DINÂMICA)
     // ============================================================
-   _criarFaixaDestaque(comentarioElement) {
-    this._removerFaixaDestaque();
+    _criarFaixaDestaque(comentarioElement) {
+        this._removerFaixaDestaque();
 
-    const rect = comentarioElement.getBoundingClientRect();
-    const faixa = document.createElement('div');
-    faixa.className = 'faixa-destaque ativo';
-    faixa.style.top = rect.top + 'px';
-    faixa.style.height = rect.height + 'px';
-    faixa.style.left = '0';
-    faixa.style.width = '100vw';
-    faixa.style.position = 'fixed';
-    faixa.style.pointerEvents = 'none';
-    faixa.style.zIndex = '1';
-    faixa.style.background = 'rgba(255, 187, 0, 0.12)';
-    faixa.style.transition = 'opacity 0.3s ease';
-    faixa.style.opacity = '1';
+        const rect = comentarioElement.getBoundingClientRect();
+        const faixa = document.createElement('div');
+        faixa.className = 'faixa-destaque ativo';
+        faixa.style.top = rect.top + 'px';
+        faixa.style.height = rect.height + 'px';
+        faixa.style.left = '0';
+        faixa.style.width = '100vw';
+        faixa.style.position = 'fixed';
+        faixa.style.pointerEvents = 'none';
+        faixa.style.zIndex = '1';
+        faixa.style.background = 'rgba(255, 187, 0, 0.12)';
+        faixa.style.transition = 'opacity 0.3s ease';
+        faixa.style.opacity = '1';
 
-    const borderColor = getComputedStyle(comentarioElement).getPropertyValue('--cor-borda-glow').trim() || '#ffbc00';
-    if (comentarioElement.classList.contains('meu-comentario')) {
-        faixa.style.borderRight = `6px solid ${borderColor}`;
-    } else {
-        faixa.style.borderLeft = `6px solid ${borderColor}`;
-    }
+        const borderColor = getComputedStyle(comentarioElement).getPropertyValue('--cor-borda-glow').trim() || '#ffbc00';
+        if (comentarioElement.classList.contains('meu-comentario')) {
+            faixa.style.borderRight = `6px solid ${borderColor}`;
+        } else {
+            faixa.style.borderLeft = `6px solid ${borderColor}`;
+        }
 
-    document.body.appendChild(faixa);
-    this._faixaElement = faixa;
+        document.body.appendChild(faixa);
+        this._faixaElement = faixa;
 
-    // 🔥 Função que atualiza a posição E verifica se o comentário está visível
-    const atualizarFaixa = () => {
-        if (!this._faixaElement || !comentarioElement) return;
-        const newRect = comentarioElement.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
+        // 🔥 Função que atualiza a posição E verifica se o comentário está visível
+        const atualizarFaixa = () => {
+            if (!this._faixaElement || !comentarioElement) return;
+            const newRect = comentarioElement.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
 
-        // Obtém a altura do header fixo e do footer (elementos que podem cobrir)
-        const header = document.querySelector('.header-actions-fixo');
-        const footer = document.querySelector('.fixed-input');
-        const headerHeight = header ? header.offsetHeight : 0;
-        const footerHeight = footer ? footer.offsetHeight : 0;
+            // Obtém a altura do header fixo e do footer (elementos que podem cobrir)
+            const header = document.querySelector('.header-actions-fixo');
+            const footer = document.querySelector('.fixed-input');
+            const headerHeight = header ? header.offsetHeight : 0;
+            const footerHeight = footer ? footer.offsetHeight : 0;
 
-        // Verifica se o comentário está parcialmente escondido atrás do header ou footer
-        const topVisible = newRect.top >= headerHeight;
-        const bottomVisible = newRect.bottom <= viewportHeight - footerHeight;
+            // Verifica se o comentário está parcialmente escondido atrás do header ou footer
+            const topVisible = newRect.top >= headerHeight;
+            const bottomVisible = newRect.bottom <= viewportHeight - footerHeight;
 
-        // A faixa só é visível se o comentário estiver completamente visível
-        const isFullyVisible = topVisible && bottomVisible;
+            // A faixa só é visível se o comentário estiver completamente visível
+            const isFullyVisible = topVisible && bottomVisible;
 
-        // Aplica opacidade condicionalmente
-        this._faixaElement.style.opacity = isFullyVisible ? '1' : '0';
-        this._faixaElement.style.top = newRect.top + 'px';
-        this._faixaElement.style.height = newRect.height + 'px';
-    };
+            // Aplica opacidade condicionalmente
+            this._faixaElement.style.opacity = isFullyVisible ? '1' : '0';
+            this._faixaElement.style.top = newRect.top + 'px';
+            this._faixaElement.style.height = newRect.height + 'px';
+        };
 
-    // Guarda a referência da função para remover depois
-    this._faixaUpdateHandler = atualizarFaixa;
+        // Guarda a referência da função para remover depois
+        this._faixaUpdateHandler = atualizarFaixa;
 
-    // Escuta scroll no container de comentários
-    const scrollContainer = document.querySelector('.lista-scrollavel');
-    if (scrollContainer) {
-        scrollContainer.addEventListener('scroll', this._faixaUpdateHandler);
-    } else {
-        window.addEventListener('scroll', this._faixaUpdateHandler);
-    }
-
-    // Também escuta resize para recalcular
-    this._faixaResizeHandler = () => {
-        if (this._faixaUpdateHandler) this._faixaUpdateHandler();
-    };
-    window.addEventListener('resize', this._faixaResizeHandler);
-
-    // Chama uma vez para posicionar e avaliar a visibilidade inicial
-    setTimeout(atualizarFaixa, 50);
-},
-
-_removerFaixaDestaque() {
-    if (this._faixaElement) {
-        this._faixaElement.remove();
-        this._faixaElement = null;
-    }
-    if (this._faixaUpdateHandler) {
+        // Escuta scroll no container de comentários
         const scrollContainer = document.querySelector('.lista-scrollavel');
         if (scrollContainer) {
-            scrollContainer.removeEventListener('scroll', this._faixaUpdateHandler);
+            scrollContainer.addEventListener('scroll', this._faixaUpdateHandler);
         } else {
-            window.removeEventListener('scroll', this._faixaUpdateHandler);
+            window.addEventListener('scroll', this._faixaUpdateHandler);
         }
-        this._faixaUpdateHandler = null;
-    }
-    if (this._faixaResizeHandler) {
-        window.removeEventListener('resize', this._faixaResizeHandler);
-        this._faixaResizeHandler = null;
-    }
-},
+
+        // Também escuta resize para recalcular
+        this._faixaResizeHandler = () => {
+            if (this._faixaUpdateHandler) this._faixaUpdateHandler();
+        };
+        window.addEventListener('resize', this._faixaResizeHandler);
+
+        // Chama uma vez para posicionar e avaliar a visibilidade inicial
+        setTimeout(atualizarFaixa, 50);
+    },
+
+    _removerFaixaDestaque() {
+        if (this._faixaElement) {
+            this._faixaElement.remove();
+            this._faixaElement = null;
+        }
+        if (this._faixaUpdateHandler) {
+            const scrollContainer = document.querySelector('.lista-scrollavel');
+            if (scrollContainer) {
+                scrollContainer.removeEventListener('scroll', this._faixaUpdateHandler);
+            } else {
+                window.removeEventListener('scroll', this._faixaUpdateHandler);
+            }
+            this._faixaUpdateHandler = null;
+        }
+        if (this._faixaResizeHandler) {
+            window.removeEventListener('resize', this._faixaResizeHandler);
+            this._faixaResizeHandler = null;
+        }
+    },
 
     // ============================================================
     // MÉTODOS EXISTENTES (MINIATURA, AÇÕES, ETC.)
     // ============================================================
     _mostrarMiniatura(animar = true) {
         if (!this.container) return;
-        
+
         const lingote = document.getElementById('lingoteContainer');
         const isMinimizado = lingote && lingote.classList.contains('minimizado');
         if (isMinimizado) animar = false;
@@ -1900,7 +1998,7 @@ window.HeaderManager = HeaderManager;
 // ============================================================
 // 🔥 CARROSSEL – GERENCIADOR DE INDICADORES (OTIMIZADO)
 // ============================================================
-window.iniciarCarrossel = function(wrapper) {
+window.iniciarCarrossel = function (wrapper) {
     if (!wrapper) return;
 
     const card = wrapper.closest('.spotted-card');
@@ -1955,7 +2053,7 @@ window.iniciarCarrossel = function(wrapper) {
     // Throttle (limita a execução a cada 100ms)
     const throttle = (func, delay) => {
         let lastCall = 0;
-        return function(...args) {
+        return function (...args) {
             const now = Date.now();
             if (now - lastCall >= delay) {
                 lastCall = now;
@@ -2007,7 +2105,7 @@ window.iniciarCarrossel = function(wrapper) {
 /**
  * Inicializa todos os carrosséis da página.
  */
-window.iniciarTodosCarrosseis = function() {
+window.iniciarTodosCarrosseis = function () {
     document.querySelectorAll('.carrossel-wrapper').forEach(wrapper => {
         // Evita duplicar eventos
         if (wrapper._carrosselIniciado) return;
@@ -2015,6 +2113,45 @@ window.iniciarTodosCarrosseis = function() {
         window.iniciarCarrossel(wrapper);
     });
 };
+
+// ============================================================
+// 🔥 SETAS DE NAVEGAÇÃO DO CARROSSEL (GLOBAL) – COM LOGS
+// ============================================================
+document.addEventListener('click', function (e) {
+    const btnPrev = e.target.closest('.carrossel-prev');
+    const btnNext = e.target.closest('.carrossel-next');
+    if (!btnPrev && !btnNext) return;
+
+    const postId = btnPrev ? btnPrev.dataset.post : btnNext.dataset.post;
+    const card = document.querySelector(`.spotted-card[data-id="${postId}"]`);
+    if (!card) return;
+    const wrapper = card.querySelector('.carrossel-wrapper');
+    if (!wrapper) return;
+
+    const item = wrapper.querySelector('.carrossel-item');
+    if (!item) return;
+    const itemWidth = item.offsetWidth || 1;
+
+    let targetScroll = wrapper.scrollLeft;
+    if (btnPrev) {
+        targetScroll -= itemWidth;
+    } else if (btnNext) {
+        targetScroll += itemWidth;
+    }
+
+    // 🔥 FORÇA O SCROLL (com ou sem animação)
+    wrapper.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+    });
+
+    // Fallback para navegadores que não suportam behavior smooth
+    setTimeout(() => {
+        if (Math.abs(wrapper.scrollLeft - targetScroll) > 1) {
+            wrapper.scrollLeft = targetScroll;
+        }
+    }, 200);
+});
 
 // ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
 window.deslogarUsuario = async function () {

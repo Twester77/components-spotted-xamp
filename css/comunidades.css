@@ -39,7 +39,7 @@
 .comunidades-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    gap: 20px;
     padding: 0 20px 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
@@ -139,6 +139,7 @@
     width: 100%;
     padding: 8px;
     border: none;
+    text-decoration: none;
     border-radius: 30px;
     background: #ffbc00;
     background: oklch(83.276% 0.17139 82.036);
@@ -261,6 +262,7 @@
     padding: 8px 20px;
     justify-content: center;
     align-content: center;
+    text-align: center;
     color: #aaa;
     color: oklch(68% 0 0);
     text-decoration: none;
@@ -278,6 +280,986 @@
 .feed-comunidade {
     margin-top: 20px;
 }
+
+/* Formulários (criar/editar posts) – fundo escuro com leve vidro */
+.form-container.form-comunidade {
+    background: #1c1c25;
+    background-clip: padding-box;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px 15px;
+    margin: 0 auto 20px auto;
+}
+
+
+/* ================================================================
+   BOTÕES E INTERFACE DE GERENCIAMENTO DE COMUNIDADES
+   ================================================================
+   🌊 MARÉ – INSTÂNCIA #DS-2026-08-11
+   Estilos para solicitação, aprovação, rejeição e banimento.
+   ================================================================ */
+
+/* ---------- BOTÃO SOLICITAR ENTRADA ---------- */
+.btn-solicitar-entrada {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 188, 0, 0.12);
+    color: #ffbc00;
+    border: 1px solid rgba(255, 188, 0, 0.25);
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-decoration: none;
+}
+
+.btn-solicitar-entrada:hover {
+    background: rgba(255, 188, 0, 0.2);
+    border-color: rgba(255, 188, 0, 0.4);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
+}
+
+.btn-solicitar-entrada:active {
+    transform: scale(0.95);
+}
+
+/* ---------- ESTADO PENDENTE (desabilitado) ---------- */
+.btn-pendente {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 188, 0, 0.08);
+    color: #ffbc00;
+    border: 1px solid rgba(255, 188, 0, 0.15);
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    cursor: default;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* ---------- ESTADO BANIDO ---------- */
+.btn-banido {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 50, 50, 0.12);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 50, 50, 0.2);
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 600;
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    cursor: default;
+}
+
+/* ---------- BOTÕES APROVAR / REJEITAR (na lista de solicitações) ---------- */
+.btn-aprovar-solicitacao {
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-aprovar-solicitacao:hover {
+    background: #66bb6a;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+}
+
+.btn-aprovar-solicitacao:active {
+    transform: scale(0.95);
+}
+
+.btn-aprovar-solicitacao:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-rejeitar-solicitacao {
+    background: rgba(255, 50, 50, 0.12);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 50, 50, 0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: clamp(0.7rem, 0.9vw, 0.8rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-rejeitar-solicitacao:hover {
+    background: rgba(255, 50, 50, 0.2);
+    border-color: rgba(255, 50, 50, 0.4);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(255, 50, 50, 0.15);
+}
+
+.btn-rejeitar-solicitacao:active {
+    transform: scale(0.95);
+}
+
+.btn-rejeitar-solicitacao:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ---------- SEÇÃO DE SOLICITAÇÕES PENDENTES ---------- */
+.solicitacoes-section {
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 188, 0, 0.1);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.solicitacoes-section h4 {
+    color: #ffbc00;
+    margin: 0 0 12px 0;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.solicitacoes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.solicitacao-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+    transition: background 0.2s ease;
+}
+
+.solicitacao-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.solicitacao-item img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 188, 0, 0.15);
+}
+
+.solicitacao-item .solicitante-nome {
+    font-weight: 500;
+    color: #fff;
+}
+
+.solicitacao-item .solicitante-data {
+    color: #888;
+    font-size: 0.7rem;
+}
+
+/* ---------- BADGE DE PRIVADA (na capa da comunidade) ---------- */
+.badge-privada {
+    display: inline-block;
+    background: rgba(255, 188, 0, 0.2);
+    color: #ffbc00;
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-size: clamp(0.65rem, 0.8vw, 0.75rem);
+    font-weight: 600;
+    margin-top: 6px;
+    border: 1px solid rgba(255, 188, 0, 0.15);
+}
+
+/* ---------- BADGE DE SOLICITAÇÕES (contador) ---------- */
+.solicitacoes-badge {
+    background: rgba(255, 188, 0, 0.15);
+    color: #ffbc00;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid rgba(255, 188, 0, 0.1);
+}
+
+/* ---------- SELO DE TIPO NA LISTA DE COMUNIDADES ---------- */
+.badge-tipo {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(0, 0, 0, 0.65);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: clamp(0.6rem, 0.7vw, 0.7rem);
+    font-weight: 600;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-tipo.publica {
+    border-color: rgba(76, 175, 80, 0.3);
+    color: #81c784;
+}
+
+.badge-tipo.privada {
+    border-color: rgba(255, 188, 0, 0.3);
+    color: #ffbc00;
+}
+
+/* ================================================================
+   FALLBACKS PARA NAVEGADORES ANTIGOS
+   ================================================================ */
+@supports not (backdrop-filter: blur(4px)) {
+    .solicitacoes-section {
+        background: rgba(20, 20, 30, 0.9);
+    }
+    .badge-tipo {
+        background: rgba(0, 0, 0, 0.85);
+    }
+}
+
+@supports not (font-size: clamp(0.8rem, 1vw, 0.95rem)) {
+    .btn-solicitar-entrada,
+    .btn-pendente,
+    .btn-banido {
+        font-size: 0.9rem;
+    }
+    .btn-aprovar-solicitacao,
+    .btn-rejeitar-solicitacao {
+        font-size: 0.75rem;
+    }
+    .badge-privada {
+        font-size: 0.7rem;
+    }
+    .badge-tipo {
+        font-size: 0.65rem;
+    }
+}
+
+/* ================================================================
+   RESPONSIVIDADE
+   ================================================================ */
+@media (max-width: 480px) {
+    .solicitacao-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .solicitacao-item .solicitante-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .solicitacao-item .acoes {
+        display: flex;
+        gap: 6px;
+        justify-content: flex-end;
+    }
+
+    .btn-aprovar-solicitacao,
+    .btn-rejeitar-solicitacao {
+        padding: 4px 12px;
+        font-size: 0.7rem;
+    }
+
+    .solicitacoes-section {
+        padding: 12px;
+        margin: 12px 0;
+    }
+
+    .badge-tipo {
+        font-size: 0.55rem;
+        padding: 1px 8px;
+    }
+
+    .modal-container {
+        max-height: 90vh;
+        max-height: 90dvh;
+        border-radius: 12px;
+    }
+
+    .modal-header {
+        padding: 10px 14px;
+    }
+    .modal-body {
+        padding: 6px 10px;
+    }
+    .modal-footer {
+        padding: 8px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .membro-item {
+        padding: 6px 8px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .membro-item .info-membro {
+        min-width: 0;
+        gap: 6px;
+    }
+
+    .membro-item .acoes-membro {
+        justify-content: flex-end;
+        gap: 4px;
+    }
+
+    .btn-acao-membro {
+        font-size: 0.85rem;
+        padding: 2px 4px;
+    }
+
+    .modal-fechar {
+        font-size: 1.4rem;
+    }
+
+    .contador-membros-modal {
+        text-align: center;
+    }
+
+    .btn-fechar-modal {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .btn-gerenciar-membros {
+        width: 100%;
+        justify-content: center;
+    }
+
+
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .solicitacoes-section {
+        padding: 10px;
+        margin: 8px 0;
+    }
+
+    .solicitacao-item {
+        padding: 4px 8px;
+    }
+
+    .solicitacao-item img {
+        width: 24px;
+        height: 24px;
+    }
+
+     .modal-container {
+        max-height: 85vh;
+        max-height: 85dvh;
+    }
+
+    .modal-header {
+        padding: 6px 12px;
+    }
+    .modal-body {
+        padding: 4px 8px;
+    }
+    .modal-footer {
+        padding: 4px 12px;
+    }
+
+    .membro-item {
+        padding: 4px 6px;
+    }
+
+    .membro-item .avatar-membro {
+        width: 28px;
+        height: 28px;
+    }
+
+    .membro-item .nome-membro {
+        font-size: 0.8rem;
+    }
+
+    .membro-item .data-membro {
+        font-size: 0.6rem;
+    }
+
+    .btn-acao-membro {
+        font-size: 0.75rem;
+    }
+
+    .papel-badge {
+        font-size: 0.5rem;
+        padding: 1px 6px;
+    }
+}
+
+/* ================================================================
+   GERENCIAMENTO DE MEMBROS – MODAL E COMPONENTES
+   🌊 MARÉ – INSTÂNCIA #DS-2026-08-12
+   ================================================================ */
+
+/* ---------- BOTÃO "GERENCIAR MEMBROS" (no comunidade.php) ---------- */
+.btn-gerenciar-membros {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(4px, 0.6vw, 8px);
+    background: rgba(255, 188, 0, 0.12);
+    color: #ffbc00;
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    border-radius: clamp(20px, 3vw, 30px);
+    padding: clamp(6px, 0.8vw, 10px) clamp(12px, 1.5vw, 20px);
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-gerenciar-membros:hover {
+    background: rgba(255, 188, 0, 0.2);
+    border-color: rgba(255, 188, 0, 0.4);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 188, 0, 0.05);
+}
+
+.btn-gerenciar-membros:active {
+    transform: scale(0.95);
+}
+
+/* ---------- OVERLAY DO MODAL ---------- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    background: oklch(0% 0 0 / 0.5); /* fallback: rgba */
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(10px, 2vw, 30px);
+    box-sizing: border-box;
+}
+
+/* ---------- CONTAINER DO MODAL ---------- */
+.modal-container {
+    background: #1a1a2ed9;
+    background: oklch(23.271% 0.04427 278.592 / 0.86);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: clamp(14px, 2vw, 24px);
+    max-width: clamp(300px, 90vw, 650px);
+    width: 100%;
+    max-height: 80vh;
+    max-height: 80dvh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: modalEntrada 0.25s ease-out;
+    overflow: hidden;
+}
+
+@keyframes modalEntrada {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ---------- CABEÇALHO DO MODAL ---------- */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: clamp(12px, 1.5vw, 20px) clamp(14px, 2vw, 24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    flex-shrink: 0;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 0.8vw, 12px);
+}
+
+.modal-header h3 i {
+    color: #ffbc00;
+}
+
+.modal-fechar {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+    flex-shrink: 0;
+}
+
+.modal-fechar:hover {
+    color: #fff;
+    transform: rotate(90deg) scale(1.05);
+}
+
+/* ---------- CORPO DO MODAL (LISTA DE MEMBROS) ---------- */
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: clamp(8px, 1.2vw, 16px) clamp(10px, 1.5vw, 20px);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 188, 0, 0.3) transparent;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 188, 0, 0.3);
+    border-radius: 4px;
+}
+
+/* ---------- LISTA DE MEMBROS ---------- */
+.membros-lista {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 0.8vw, 16px);
+}
+
+.membro-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(8px, 0.8vw, 10px) clamp(8px, 1vw, 14px);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: clamp(6px, 0.8vw, 10px);
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
+    flex-wrap: wrap;
+    gap: clamp(6px, 0.6vw, 12px);
+}
+
+.membro-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.membro-item .info-membro {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1vw, 14px);
+    flex: 1;
+    min-width: clamp(100px, 15vw, 180px);
+}
+
+.membro-item .avatar-membro {
+    width: clamp(32px, 3.5vw, 44px);
+    height: clamp(32px, 3.5vw, 44px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 188, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.membro-item .nome-membro {
+    font-weight: 500;
+    color: #fff;
+    font-size: clamp(0.85rem, 1vw, 1rem);
+    word-break: break-word;
+}
+
+.membro-item .data-membro {
+    font-size: clamp(0.6rem, 0.75vw, 0.75rem);
+    color: #888;
+    margin-top: 2px;
+}
+
+.membro-item .acoes-membro {
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 0.6vw, 12px);
+    flex-shrink: 0;
+}
+
+/* ---------- BADGE DE PAPEL ---------- */
+.papel-badge {
+    font-size: clamp(0.6rem, 0.65vw, 0.8rem);
+    font-weight: 600;
+    padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 14px);
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.papel-criador {
+    background: rgba(255, 188, 0, 0.15);
+    color: #ffbc00;
+}
+
+.papel-admin {
+    background: rgba(76, 175, 80, 0.15);
+    color: #4caf50;
+}
+
+.papel-membro {
+    background: rgba(255, 255, 255, 0.05);
+    color: #aaa;
+}
+
+/* ---------- BOTÕES DE AÇÃO NO MODAL ---------- */
+.btn-acao-membro {
+    background: none;
+    border: none;
+    font-size: clamp(0.75rem, 1vw, 1.05rem);
+    cursor: pointer;
+    overflow: hidden;
+    padding: clamp(3px, 0.5vw, 8px);
+    border-radius: 4px;
+    transition: all 0.15s ease;
+    line-height: 1;
+    opacity: 0.7;
+    color: #ccc;
+}
+
+.btn-acao-membro:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-acao-membro:active {
+    transform: scale(0.9);
+}
+
+.btn-acao-membro:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-banir {
+    color: #ff6b6b;
+}
+.btn-banir:hover {
+    color: #ff8a8a;
+}
+
+.btn-remover {
+    color: #ff6b6b;
+}
+.btn-remover:hover {
+    color: #ff8a8a;
+}
+
+.btn-promover {
+    color: #4caf50;
+}
+.btn-promover:hover {
+    color: #66bb6a;
+}
+
+.btn-rebaixar {
+    color: #ffbc00;
+}
+.btn-rebaixar:hover {
+    color: #ffd44d;
+}
+
+/* ---------- RODAPÉ DO MODAL ---------- */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px ;
+    padding: clamp(8px, 1vw, 14px) clamp(14px, 2vw, 24px);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 4px;
+    gap: clamp(6px, 0.8vw, 15px);
+}
+
+.contador-membros-modal {
+    font-size: clamp(0.75rem, 0.9vw, 0.95rem);
+    color: #888;
+    color: oklch(98.511% 0.00011 271.152 / 0.402);
+}
+
+#btn-fechar-modal-membros.btn-fechar-modal {
+    position: static;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: clamp(12px, 2.5vw, 30px);
+    padding: clamp(4px, 0.5vw, 8px) clamp(14px, 1.5vw, 24px);
+    color: #ccc;
+    font-size: 0.75rem;
+    font-size: clamp(0.85rem, 0.8vw, 1.05rem);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    /* Mantém alinhado no fluxo do flex do rodapé */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-fechar-modal:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.02);
+}
+
+/* ---------- LOADING E ESTADOS VAZIOS ---------- */
+.loading-membros {
+    text-align: center;
+    padding: clamp(20px, 3vw, 40px);
+}
+
+.loading-membros i {
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+    color: #ffbc00;
+}
+
+.loading-membros p {
+    color: #888;
+    margin-top: clamp(6px, 0.8vw, 12px);
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.btn-tentar-novamente {
+    background: #ffbc00;
+    color: #000;
+    border: none;
+    padding: 4px 10px;
+    padding: clamp(4px, 0.5vw, 8px) clamp(12px, 1.5vw, 20px);
+    border-radius: clamp(16px, 2vw, 24px);
+    font-size: clamp(0.75rem, 0.9vw, 0.9rem);
+    cursor: pointer;
+    margin-top: clamp(6px, 0.8vw, 12px);
+    transition: 0.2s;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+.btn-tentar-novamente:hover {
+    background: #ffd44d;
+    transform: scale(1.02);
+}
+
+/* ---------- CAMPO DE BUSCA NO MODAL ---------- */
+.modal-search-box {
+    padding: 6px 10px;
+    padding: clamp(8px, 1vw, 14px) clamp(12px, 1.5vw, 18px);
+    background: rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.input-busca-membro {
+    width: 100%;
+    padding: 4px 10px;
+    padding: clamp(6px, 0.8vw, 10px) clamp(10px, 1.2vw, 16px);
+    border-radius: clamp(6px, 0.8vw, 10px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    transition: border-color 0.2s ease;
+    font-family: inherit;
+}
+
+.input-busca-membro:focus {
+    outline: none;
+    border-color: #ffbc00;
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.input-busca-membro::placeholder {
+    color: #666;
+}
+
+/* ---------- MEMBRO BANIDO (opacidade reduzida) ---------- */
+.membro-banido {
+    opacity: 0.6;
+    filter: grayscale(0.2);
+}
+
+.membro-banido .nome-membro {
+    color: #999;
+}
+
+.status-banido {
+    font-size: 0.55rem;
+    font-size: clamp(0.6rem, 0.65vw, 0.85rem);
+    color: #ff5252;
+    margin-left: 6px;
+    font-weight: 600;
+}
+
+.btn-carregar-mais-membros {
+    background: rgba(255, 188, 0, 0.08);
+    border: 1px solid rgba(255, 188, 0, 0.15);
+    border-radius: clamp(24px, 3vw, 30px);
+    padding: 6px 12px;
+    padding: clamp(4px, 0.5vw, 8px) clamp(14px, 1.8vw, 24px);
+    color: #ffbc00;
+    font-weight: 600;
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 0.8vw, 1rem);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-carregar-mais-membros:hover {
+    background: rgba(255, 188, 0, 0.15);
+    border-color: rgba(255, 188, 0, 0.3);
+    transform: scale(1.02);
+}
+
+.btn-carregar-mais-membros:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ---------- FALLBACKS PARA NAVEGADORES ANTIGOS ---------- */
+@supports not (backdrop-filter: blur(2px)) {
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.7);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+@supports not (display: flex) {
+    .modal-header,
+    .modal-footer,
+    .membro-item {
+        display: block;
+        overflow: hidden;
+    }
+    .modal-header h3 {
+        float: left;
+    }
+    .modal-fechar {
+        float: right;
+    }
+    .membro-item .info-membro {
+        float: left;
+    }
+    .membro-item .acoes-membro {
+        float: right;
+    }
+}
+
+@supports not (font-size: clamp(0.8rem, 1vw, 1rem)) {
+    .btn-gerenciar-membros {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+    .modal-header h3 {
+        font-size: 1.2rem;
+    }
+    .membro-item .nome-membro {
+        font-size: 0.95rem;
+    }
+    .papel-badge {
+        font-size: 0.65rem;
+    }
+    .btn-acao-membro {
+        font-size: 0.9rem;
+    }
+    .contador-membros-modal {
+        font-size: 0.8rem;
+    }
+    .btn-fechar-modal {
+        font-size: 0.85rem;
+        padding: 6px 16px;
+    }
+}
+
+@supports not (background: oklch(0.18 0.02 250 / 0.95)) {
+    .modal-container {
+        background: #1a1a2e94;
+    }
+    .modal-overlay {
+        background: rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* ================================================================
+   RESPONSIVIDADE
+   ================================================================ */
+
+/* Telas médias (tablets) */
+@media (min-width: 481px) and (max-width: 768px) {
+    .modal-container {
+        max-width: 85vw;
+    }
+
+    .membro-item .info-membro {
+        min-width: 120px;
+    }
+}
+
 
 /* ============================================================
    3. FORMULÁRIO INLINE DE POST – ESTILO FACEBOOK DARK
@@ -494,7 +1476,7 @@
 }
 
 .comunidade-page .postar-inline-conteudo .contador-caracteres {
-    font-size: clamp(0.75rem, 0.9vw, 1rem);
+    font-size: clamp(0.8rem, 0.9vw, 1rem);
     color: #717171;
     color: oklch(0.56 0 0);
     font-weight: 500;
@@ -611,7 +1593,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 25px;
+    gap: 40px;
     padding: 0;
     max-width: 100%;
     margin: 15px auto;
@@ -628,10 +1610,10 @@
     border-top: 1px solid oklch(100% 0 0 / 0.06);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     border-bottom: 1px solid oklch(100% 0 0 / 0.06);
-    border-radius: 0;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
-    padding: 25px 0px;
+    padding: 25px 5px;
     margin: 0;
     max-width: 700px;
     width: 100%;
@@ -750,6 +1732,24 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     overflow: hidden;
 }
 
+ .comunidade-page .spotted-card:has(.feed-anexo-item:only-child img) {
+    display: block;
+    justify-content: center;
+    background: #0a0a0a;
+    border: none;
+    padding: 0;
+
+}
+
+.comunidade-page .feed-anexo-item:only-child img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    min-height: 200px;
+    max-height: 360px; 
+    object-fit: contain; 
+}
+
 .comunidade-page .spotted-card .carrossel-item img {
     width: 100%;
     height: 100%;
@@ -771,8 +1771,10 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 }
 
 .comunidade-page .spotted-card .carrossel-indicadores .indicador {
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
+    width: clamp(5px, 0.8vw, 10px);
+    height: clamp(5px, 0.8vw, 10px);
     border-radius: 50%;
     transition: background 0.3s, transform 0.3s;
     flex-shrink: 0;
@@ -862,12 +1864,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir,
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais,
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar {
     background: transparent;
     border: none;
     color: #aaa;
     color: oklch(68% 0 0);
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: clamp(0.85rem, 1vw, 1.1rem);
     font-weight: 500;
     cursor: pointer;
     padding: 4px 8px;
@@ -1132,14 +2135,17 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 
 .campo-ajuda {
     display: block;
-    color: #777;
-    color: oklch(58% 0 0);
+    color: #aaaaaa;
+    color: oklch(0.76 0 0);
     font-size: clamp(0.7rem, 1vw, 0.95rem);
     margin-top: 4px;
 }
 
 .comunidade-page,
 .main-comunidades {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     background: #0a0a0a;
     background: oklch(5% 0 0);
     min-height: 100vh;
@@ -1149,8 +2155,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 }
 
 .comunidades-header {
-    background: rgba(10, 10, 10, 0.85);
-    background: oklch(5% 0 0 / 0.85);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     padding: 20px 20px 10px 20px;
@@ -1249,6 +2253,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 .capa-preview-wrapper {
     position: relative;
     aspect-ratio: 16 / 9;
+    max-height: 300px;
     background: rgba(255, 255, 255, 0.03);
     background: oklch(100% 0 0 / 0.03);
     border: 2px dashed rgba(255, 255, 255, 0.1);
@@ -1333,14 +2338,14 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     background: oklch(83.276% 0.17139 82.036);
     color: #000;
     color: oklch(0% 0 0);
-    padding: 12px 40px;
+    padding: 12px 24px;
     border-radius: 30px;
     font-weight: bold;
     border: none;
     cursor: pointer;
     flex: 1;
     min-width: 150px;
-    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    font-size: clamp(0.9rem, 1.5vw, 1.3rem);
     transition: 0.3s;
 }
 
@@ -1401,3 +2406,4 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     border-color: #ffbc00;
     border-color: oklch(83.276% 0.17139 82.036);
 }
+

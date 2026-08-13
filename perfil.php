@@ -1,7 +1,7 @@
 <?php
 // 1. PRIMEIRO: Conexão e Sessão (Obrigatório, não pode faltar)
 require_once __DIR__ . '/auth_check.php';
-require_once __DIR__ . '/includes/upload_engine.php'; // 🔥 Inclui a função obterUrlImagem()
+require_once __DIR__ . '/includes/upload_engine.php';
 
 // 2. SEGUNDO: Segurança (Bloqueia quem não está logado)
 if (!isset($_SESSION['usuario_id'])) {
@@ -9,32 +9,33 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-// TERCEIRO: Lógica do "Modo Gaveta" (Definimos se vamos ou não carregar o resto)
+// TERCEIRO: Lógica do "Modo Gaveta"
 $isAjax = isset($_GET['modo']) && $_GET['modo'] === 'gaveta';
 
-// QUARTO: Includes Condicionais (Só carrega o que é global se NÃO for gaveta)
+// QUARTO: Includes Condicionais
 if (!$isAjax) {
     include 'includes/header.php';
     include 'includes/navbar.php';
     include 'includes/bolhas.php';
 }
 
-//QUINTO: Sua lógica de consulta ao banco (O motor de dados)
+//QUINTO: Consulta ao banco (ADICIONADO pref_swipe_balanga)
 $id_meu = $_SESSION['usuario_id'];
-
-// 🔥 ADICIONADO: pref_pip, pref_badge, pref_notif_comunidade na lista de campos
-$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, pref_som_trilha, pref_som_notif, pref_pip, pref_badge, pref_notif_comunidade FROM usuarios WHERE id = '$id_meu'";
+$query = "SELECT id, nome, foto, bio, capa, username, atletica_id, 
+          pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, 
+          pref_som_trilha, pref_som_notif, pref_pip, pref_badge, 
+          pref_notif_comunidade, pref_swipe_balanga 
+          FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
 
-// 🛡️ Blindando os nomes dos arquivos vindos do banco contra injeção de atributos HTML
+// 🛡️ Blindando os nomes dos arquivos
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
-// 🔥 OBTÉM AS URLs DO B2 PARA AVATAR E CAPA (com fallback para imagens locais)
+// 🔥 OBTÉM AS URLs DO B2
 try {
     $b2 = B2Client::getInstance();
-    
     // Avatar
     if (!empty($foto_limpa) && !filter_var($foto_limpa, FILTER_VALIDATE_URL)) {
         $foto_url = obterUrlImagem($foto_limpa, $b2, true);
@@ -42,7 +43,6 @@ try {
     } else {
         $foto_atual = 'uploads/ui/default_masculino.webp';
     }
-    
     // Capa
     if (!empty($capa_limpa) && !filter_var($capa_limpa, FILTER_VALIDATE_URL)) {
         $capa_url = obterUrlImagem($capa_limpa, $b2, true);
@@ -57,14 +57,10 @@ try {
 }
 
 $vibe_default = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
-// Pega do banco ou usa o padrão
 $cor_banco = $dados['pref_cor_padrao'] ?? '#70cde4';
-// Garante que tenha a # para o HTML entender
 if (substr($cor_banco, 0, 1) !== '#') {
     $cor_banco = '#' . $cor_banco;
 }
-
-// 2. Definição dos valores padrão para os campos de configuração, usando o operador de coalescência nula para garantir que sempre haja um valor
 $trilha_default = $dados['pref_som_trilha'] ?? 'ondas';
 $notif_default = $dados['pref_som_notif'] ?? 'padrao';
 $cor_default = $cor_banco;
@@ -77,27 +73,24 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
     <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
         <div class="perfil-header-container">
             <div class="capa-wrapper">
-                
                 <?php if (!empty($dados['capa'])): ?>
                     <img src="<?php echo $capa_atual; ?>" class="img-capa-preview" alt="Sua imagem de capa de perfil"
-                         onerror="this.src='uploads/ui/default_capa_masculino.webp';">
+                        onerror="this.src='uploads/ui/default_capa_masculino.webp';">
                 <?php else: ?>
                     <div class="capa-default-fenda" style="background: linear-gradient(135deg, #004a8f 0%, #00a896 100%); display: flex; align-items: center; justify-content: center;">
                         <span style="color: white; font-weight: bold; font-size: 1.3rem;">BEM-VINDO À FENDA!</span>
                     </div>
                 <?php endif; ?>
-
                 <label id="label-capa" class="btn-mudar-capa">
                     <i class="fas fa-camera" aria-hidden="true"></i>
                     <input type="file" name="capa" style="display:none;" aria-labelledby="label-capa">
                 </label>
-
             </div>
         </div>
 
         <div class="avatar-wrapper">
             <img src="<?php echo $foto_atual; ?>" class="img-avatar-perfil" alt="Sua foto de avatar"
-                 onerror="this.src='uploads/ui/fallback-avatar.webp';">
+                onerror="this.src='uploads/ui/fallback-avatar.webp';">
             <label id="label-avatar" class="btn-mudar-avatar">
                 <i class="fas fa-pencil-alt" aria-hidden="true"></i>
                 <input type="file" name="foto" style="display:none;" aria-labelledby="label-avatar">
@@ -109,32 +102,22 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo">
                 <label for="nome"><i class="fas fa-user-tag" aria-hidden="true"></i> Nome de Exibição</label>
-                <input type="text"
-                    id="nome"
-                    name="nome"
+                <input type="text" id="nome" name="nome"
                     value="<?php echo htmlspecialchars($dados['nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                     placeholder="Como quer ser chamado no feed?"
-                    pattern="[a-zA-ZÀ-ÿ\s]{2,25}"
-                    minlength="2"
-                    maxlength="25"
-                    title="Digite um nome válido de 2 a 25 letras."
-                    required>
+                    pattern="[a-zA-ZÀ-ÿ\s]{2,25}" minlength="2" maxlength="25"
+                    title="Digite um nome válido de 2 a 25 letras." required>
             </div>
 
             <div class="campo-grupo">
                 <label for="username"><i class="fas fa-at" aria-hidden="true"></i> Seu Username (@ para menções)</label>
                 <div class="input-username-wrapper">
                     <span>@</span>
-                    <input type="text"
-                        id="username"
-                        name="username"
+                    <input type="text" id="username" name="username"
                         value="<?php echo htmlspecialchars($dados['username'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                        pattern="[a-z0-9_\.]{5,18}"
-                        minlength="5"
-                        maxlength="18"
+                        pattern="[a-z0-9_\.]{5,18}" minlength="5" maxlength="18"
                         title="Apenas letras minúsculas, números, underline (_) ou ponto (.). Sem espaços! (De 5 a 18 caracteres)"
-                        oninput="this.value = this.value.toLowerCase().replace(/\s/g, '')"
-                        required>
+                        oninput="this.value = this.value.toLowerCase().replace(/\s/g, '')" required>
                 </div>
             </div>
 
@@ -165,15 +148,11 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <div class="campo-grupo">
                 <label for="bio"><i class="fas fa-pencil-alt" aria-hidden="true"></i> Sua Bio</label>
-                <textarea id="bio"
-                    name="bio"
-                    placeholder="Conte um pouco sobre você para a Fenda..."
-                    maxlength="350"><?php echo htmlspecialchars($dados['bio'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+                <textarea id="bio" name="bio" placeholder="Conte um pouco sobre você para a Fenda..." maxlength="350"><?php echo htmlspecialchars($dados['bio'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
             </div>
 
             <div class="campo-grupo" style="margin-top: 15px;">
                 <label>Configurações de Áudio e Interface</label>
-
                 <div class="audio-settings-card">
                     <input type="hidden" name="pref_som_trilha" id="drawer_input_pref_som_trilha" value="<?php echo $dados['pref_som_trilha']; ?>">
                     <input type="hidden" name="pref_som_notif" id="drawer_input_pref_som_notif" value="<?php echo $dados['pref_som_notif']; ?>">
@@ -228,7 +207,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 </select>
             </div>
 
-            <!-- 🔥 Toggle: Notificações Flutuantes (PiP) -->
+            <!-- PiP -->
             <div class="config-item">
                 <span>Notificações Flutuantes (PiP):</span>
                 <label class="switch">
@@ -238,7 +217,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <small>Receba notificações em janela flutuante (experimental, disponível apenas em desktop Chrome/Edge)</small>
             </div>
 
-            <!-- 🔥 Toggle: Badge no Ícone -->
+            <!-- Badge -->
             <div class="config-item">
                 <span>Badge no Ícone:</span>
                 <label class="switch">
@@ -248,20 +227,33 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 <small>Exibe o número de notificações no ícone do app (desktop/Android)</small>
             </div>
 
-            <!-- 🔥 NOVO: Toggle de Notificações da Comunidade -->
+            <!-- Notificações da Comunidade -->
             <div class="config-item">
                 <span>Notificações da Comunidade:</span>
                 <label class="switch">
-                    <input type="checkbox" name="pref_notif_comunidade" value="1" 
-                           <?php echo (isset($dados['pref_notif_comunidade']) && $dados['pref_notif_comunidade'] == 1) ? 'checked' : ''; ?>>
+                    <input type="checkbox" name="pref_notif_comunidade" value="1"
+                        <?php echo (isset($dados['pref_notif_comunidade']) && $dados['pref_notif_comunidade'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
                 <small>Receba notificações de novos posts nas comunidades que você participa</small>
             </div>
 
-            <!-- 🔥 Toggle: Modo Swipe (Beta) -->
+            <!-- 🔥 Toggle: Modo Swipe Balanga Teras (COM HIDDEN + CHECKBOX) -->
             <div class="config-item">
-                <span>Modo Swipe (Beta):</span>
+                <span>Modo Swipe Balanga Teras:</span>
+                <label class="switch">
+                    <!-- Hidden garante envio 0 quando desmarcado -->
+                    <input type="hidden" name="pref_swipe_balanga" value="0">
+                    <input type="checkbox" name="pref_swipe_balanga" value="1"
+                        <?php echo (isset($dados['pref_swipe_balanga']) && $dados['pref_swipe_balanga'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round"></span>
+                </label>
+                <small>Ative o modo de arraste (Tinder-style) para os eventos do Balanga Teras</small>
+            </div>
+
+            <!-- Modo Swipe Feed -->
+            <div class="config-item">
+                <span>Modo Swipe no Feed (Beta)</span>
                 <label class="switch">
                     <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
@@ -285,7 +277,6 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 </main>
 
 <script>
-    // NOVA FUNÇÃO: Validação de tamanho de imagem (Máximo 2MB)
     document.querySelectorAll('input[type="file"]').forEach(input => {
         input.addEventListener('change', function() {
             if (this.files && this.files[0]) {

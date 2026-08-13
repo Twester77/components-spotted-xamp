@@ -66,16 +66,16 @@ body.hacker-mode *::after {
 /* Scanlines horizontais */
 body.hacker-mode::before {
     content: " " !important;
-    display: block !important;
+    display: block ;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     bottom: 0 !important;
     right: 0 !important;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)) !important;
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)) ;
     z-index: 9999 !important;
-    background-size: 100% 3px, 3px 100% !important;
+    background-size: 100% 3px, 3px 100% ;
     pointer-events: none !important;
 }
 
@@ -139,13 +139,13 @@ body.hacker-mode .fenda-modal-content
 }
 
 body.hacker-mode .spotted-card {
-    background: #000 !important;
+    background: #000 ;
     border: none !important;
     /* LATERAIS: O duplo pipe "||" */
-    border-bottom: 2px double var(--hacker-green) ;
-    border-top: 2px double var(--hacker-green) ;
-    border-right: 1px double var(--glass-bg) ;
-    border-left: 1px double var(--glass-bg) ;
+    border-bottom: 2px double var(--aura-user)!important;
+    border-top: 2px double var(--aura-user)!important ;
+    border-right: 1px double var(--glass-bg) !important ;
+    border-left: 1px double var(--glass-bg) !important;
     box-shadow: none ;
 }
 
@@ -176,14 +176,14 @@ body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
     content: "+==================================================================+==============================================================+" ;
     position: absolute !important;
-    top: -22px ;
+    top: -18px ;
     left: -2px ; 
     right: -2px ;
     color: var(--hacker-green) ;
     font-family: monospace ;
     font-weight: bold ;
     white-space: nowrap ;
-    overflow: hidden ;
+    overflow: hidden !important ;
     z-index: 10 ;
 }
 
@@ -196,7 +196,7 @@ body.hacker-mode .sessao-publicar::before {
 
 body.hacker-mode .spotted-card.anonimo::before { content: "+== [ USER_NOT_FOUND ] ==================================================================================================+" !important; color: #ffffff !important;  }
 body.hacker-mode .spotted-card.perdidos::before { content: "+== [ PROTOCOLO: GET_$ITEM ] ================================================================================================+" !important; color: #fcf809 !important; }
-body.hacker-mode .spotted-card.ranco::before { content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+" !important; color: #f33232 !important; }
+body.hacker-mode .spotted-card.tenho-ranco::before { content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+" !important; color: #f33232 !important; }
 body.hacker-mode .spotted-card.elogio::before { content: "+== [ CORREIO_ELEGANTE <3 ] ==================================================================================================+" !important; color: #f85caa !important; }
 body.hacker-mode .spotted-card.games::before { content: "+== [ Xinput_DInput DETECTADO] ==================================================================================================+" !important; color: #00ffff !important; }
 body.hacker-mode .spotted-card.academico::before { content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+" !important; color: #b00bda !important; }
@@ -471,8 +471,8 @@ body.hacker-mode .avatar-busca,
 body.hacker-mode .img-avatar-perfil,
 body.hacker-mode .capa-img,
 body.hacker-mode .insignia-atletica-link img {
-    filter: sepia(0.25) brightness(0.9) contrast(1) grayscale(0.2) !important;
-    transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out !important;
+    filter: sepia(0.25) brightness(0.9) contrast(1) grayscale(0.2) ;
+    transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out ;
     border-radius: 0;
 }
 
@@ -480,7 +480,7 @@ body.hacker-mode img:hover,
 body.hacker-mode .foto-perfil:hover,
 body.hacker-mode .avatar-p:hover,
 body.hacker-mode .insignia-atletica-link:hover img {
-    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) !important;
+    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) ;
     transform: scale(1.01);
 }
 
@@ -526,15 +526,14 @@ body.hacker-mode .menu li a:hover i {
 body.hacker-mode .badge,
 body.hacker-mode .tag-categoria,
 body.hacker-mode .tag-link,
-body.hacker-mode .badge-presenca,
-body.hacker-mode .badge-alertas {
+body.hacker-mode .badge-presenca {
     background: #000 ;
     border: 1px solid #00ff00 ;
     color: #00ff00 ;
     border-radius: 0 ;
     padding: 5px 10px ;
-    text-transform: uppercase !important;
-    font-family: monospace !important;
+    text-transform: uppercase ;
+    font-family: monospace ;
 }
 
 body.hacker-mode .badge-perdido,
@@ -546,9 +545,9 @@ body.hacker-mode .badge-achado {
 }
 
 body.hacker-mode .badge-alertas {
-    background: #00ff00 !important;
-    color: #000 !important;
-    box-shadow: 0 0 10px #00ff00 !important;
+    background: #000000 ;
+    color: #00ff00 ;
+    box-shadow: 0 0 10px #00ff00 ;
 }
 
 /* ---------------------------------------------------------------
@@ -771,17 +770,19 @@ body.hacker-mode .bio-texto {
 
 body.hacker-mode .filtro-btn,
 body.hacker-mode .btn-abrir-filtros,
+body.hacker-mode  #bt-btn-filtros,
 body.hacker-mode .btn-filtro,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-enviar-chat,
 body.hacker-mode .preview-botao
  {
-    background: #000 !important;
-    border: 1px solid #00ff00 !important;
-    color: #00ff00 !important;
+    background: #000 ;
+    border: 1px solid #00ff00 ;
+    color: #00ff00 ;
 }
 
 body.hacker-mode .btn-filtro.ativo,
+body.hacker-mode  #bt-btn-filtros:hover,
 body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .btn-fenda-padrao:hover,
 body.hacker-mode .btn-editar-atalho:hover,
@@ -898,28 +899,24 @@ body.hacker-mode .reacoes-popup span:hover {
 }
 
 
-
-
-
-
 /* ---------------------------------------------------------------
    21. TOOLBAR LATERAL E CONFIGURAÇÕES DE ÁUDIO
    --------------------------------------------------------------- */
 
 body.hacker-mode #fenda-toolbar {
-    background: #000 !important;
-    border: 1px solid #00ff00 !important;
-    color: #00ff00 !important;
-    font-family: monospace !important;
+    background: #1b2916ad;
+    border: 1px solid #00ff00 ;
+    color: #00ff00 ;
+    font-family: monospace ;
 }
 body.hacker-mode .btn-notif-choice {
-    background: #000 !important;
-    border: 1px solid #00ff00 !important;
-    color: #00ff00 !important;
+    background: #000 ;
+    border: 1px solid #00ff00 ;
+    color: #00ff00 ;
 }
 body.hacker-mode .btn-notif-choice.active {
-    background: #00ff00 !important;
-    color: #000 !important;
+    background: #00ff00 ;
+    color: #000 ;
 }
 
 /* ---------------------------------------------------------------

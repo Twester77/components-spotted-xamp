@@ -1,6 +1,6 @@
 <?php
 include_once __DIR__ . '/conexao.php';
-require_once __DIR__ . '/includes/upload_engine.php'; // 🔥 NECESSÁRIO PARA obterUrlImagem()
+require_once __DIR__ . '/includes/upload_engine.php';
 
 $filtro = isset($_GET['filtro']) ? mysqli_real_escape_string($conn, $_GET['filtro']) : 'todos';
 
@@ -16,7 +16,6 @@ $sql_perdidos .= " ORDER BY m.id DESC";
 $resultado_perdidos = mysqli_query($conn, $sql_perdidos);
 $usuario_logado = isset($_SESSION['usuario_id']);
 
-// 🔥 INSTANCIA O B2 PARA GERAR URLs DAS IMAGENS
 try {
     $b2 = B2Client::getInstance();
 } catch (Exception $e) {
@@ -61,8 +60,62 @@ include 'includes/bolhas.php';
     </article>
 
     <!-- ============================================================
-FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
-============================================================ -->
+    FORMULÁRIO COM 4 ANEXOS E BALÃO DE FEEDBACK
+    ============================================================ -->
+    <section class="sessao-publicar" style="width: 100%" aria-labelledby="titulo-form-publicar">
+        <h3 id="titulo-form-publicar" class="titulo-publicar">Perdeu ou Achou algo?</h3>
+        <div class="nota-seguranca" role="note" aria-label="Aviso de Segurança">
+            <strong><span aria-hidden="true">⚠️</span> NOTA DE SEGURANÇA:</strong> Ao postar fotos, por favor, cubra dados sensíveis.
+        </div>
+
+        <?php if ($usuario_logado): ?>
+            <form action="enviar-post.php" method="POST" enctype="multipart/form-data" class="form-publicar form-perdidos-vivo" id="form-perdidos">
+                <input type="hidden" name="categoria" value="perdidos">
+
+                <div class="toggle-perdidos-vivo">
+                    <button type="button" class="btn-toggle-perdido ativo" data-valor="perdi" onclick="selecionarSubcategoria('perdi')">
+                        ❌ Perdi
+                    </button>
+                    <button type="button" class="btn-toggle-perdido" data-valor="achei" onclick="selecionarSubcategoria('achei')">
+                        ✅ Achei
+                    </button>
+                    <input type="hidden" name="subcategoria" id="subcategoria-perdidos" value="perdi">
+                </div>
+
+                <div class="area-texto-vivo area-perdidos-vivo">
+                    <textarea name="mensagem" id="mensagem-perdidos" placeholder="Descreva o objeto..." required maxlength="600"></textarea>
+                    <div id="anexos-grid-perdidos" class="anexos-grid" style="display: none;"></div>
+                </div>
+
+                <div class="barra-acoes-vivo barra-perdidos-vivo">
+                    <div class="acoes-esquerda">
+                        <label for="imagem-perdidos" class="btn-acao btn-acao-vivo" title="Adicionar imagem">
+                            <i class="fas fa-image"></i>
+                        </label>
+                        <!-- 🔥 CORREÇÃO DA DJÊ: removido o name="anexos[]" para evitar o "Fantasma do Índice Zero" -->
+                        <input type="file" id="imagem-perdidos" accept="image/*" style="display: none;" multiple>
+                        <button type="button" class="btn-acao btn-acao-vivo" title="Buscar GIF/Sticker" onclick="window.setGiphyTarget('gif-url-perdidos'); abrirGiphyModal();">
+                            <i class="fas fa-grin-tongue-squint"></i>
+                        </button>
+                        <input type="hidden" name="gif_url" id="gif-url-perdidos" value="">
+                    </div>
+                    <div class="acoes-direita">
+                        <span class="contador-caracteres" id="contador-perdidos">0/600</span>
+                        <button type="submit" class="btn-lancar btn-lancar-vivo btn-lancar-perdidos" id="btn-publicar-perdidos">Publicar na Fenda</button>
+                    </div>
+                </div>
+            </form>
+        <?php else: ?>
+            <p style="text-align: center; opacity: 0.7;">Faça login acima para publicar seu achado/perdido!</p>
+        <?php endif; ?>
+    </section>
+
+    <nav class="filtros-perdidos" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap:wrap; flex-direction: row;" aria-label="Filtros do feed">
+        <a href="perdidos.php?filtro=todos" class="btn-filtro <?php echo ($filtro == 'todos') ? 'ativo' : ''; ?>" <?php echo ($filtro == 'todos') ? 'aria-current="page"' : ''; ?>>Todos</a>
+        <a href="perdidos.php?filtro=perdi" class="btn-filtro <?php echo ($filtro == 'perdi') ? 'ativo' : ''; ?>" <?php echo ($filtro == 'perdi') ? 'aria-current="page"' : ''; ?>>❌ Só Perdidos</a>
+        <a href="perdidos.php?filtro=achei" class="btn-filtro <?php echo ($filtro == 'achei') ? 'ativo' : ''; ?>" <?php echo ($filtro == 'achei') ? 'aria-current="page"' : ''; ?>>✅ Só Achados</a>
+    </nav>
+
     <section class="feed-filtrado" style="margin-top: 30px;" aria-label="Feed de publicações">
         <div class="container-feed">
             <?php if (mysqli_num_rows($resultado_perdidos) > 0):
@@ -86,13 +139,9 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
                             <p><?php echo nl2br(htmlspecialchars($linha['mensagem'])); ?></p>
 
                             <?php
-                            // ============================================================
-                            // 🔥 EXIBIÇÃO DOS ANEXOS (MÚLTIPLOS VIA JSON OU FALLBACK)
-                            // ============================================================
                             $anexos_html = '';
                             $anexos_exibicao = null;
 
-                            // Tenta decodificar o campo anexos (JSON)
                             if (!empty($linha['anexos'])) {
                                 $anexos_exibicao = json_decode($linha['anexos'], true);
                                 if (json_last_error() !== JSON_ERROR_NONE || !is_array($anexos_exibicao)) {
@@ -101,7 +150,6 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
                             }
 
                             if (!empty($anexos_exibicao) && is_array($anexos_exibicao)) {
-                                // 🔥 GRID (exibe todos os anexos)
                                 $anexos_html = '<div class="feed-anexos-grid">';
                                 foreach ($anexos_exibicao as $anexo) {
                                     if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
@@ -113,9 +161,7 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
                                 }
                                 $anexos_html .= '</div>';
                             } elseif (!empty($linha['imagem_url'])) {
-                                // 🔥 Fallback: imagem única (compatibilidade)
                                 $nome_imagem = $linha['imagem_url'];
-                                // Verifica se é uma URL externa (GIF)
                                 if (filter_var($nome_imagem, FILTER_VALIDATE_URL)) {
                                     $img_url = $nome_imagem;
                                 } else {
@@ -126,7 +172,6 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
 
                             echo $anexos_html;
                             ?>
-
                         </div>
                         <div class="card-footer" style=" border-top: 1px solid rgba(255,255,255,0.1);">
                             <a href="comentarios-post.php?id=<?php echo $linha['id']; ?>" class="link-fofoca" aria-label="Ver detalhes / ajudar a encontrar o objeto de @<?php echo !empty($linha['username']) ? $linha['username'] : 'Anônimo'; ?>">
@@ -153,11 +198,7 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
         const balao = document.createElement('div');
         balao.className = 'balao-fenda ' + tipo;
 
-        const icones = {
-            sucesso: '✅',
-            erro: '❌',
-            info: 'ℹ️'
-        };
+        const icones = { sucesso: '✅', erro: '❌', info: 'ℹ️' };
         const icone = document.createElement('span');
         icone.className = 'balao-icone';
         icone.textContent = icones[tipo] || '💬';
@@ -368,6 +409,7 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
 
         if (inputFile) {
             inputFile.addEventListener('change', function() {
+                console.log('[inputFile] change disparado. Files:', this.files.length);
                 if (this.files.length > 0) {
                     for (let i = 0; i < this.files.length; i++) {
                         const file = this.files[i];
@@ -418,44 +460,56 @@ FEED DE PERDIDOS – COM MÚLTIPLOS ANEXOS (GRID)
             exibirBalao('Enviando post...', 'info', btnPublicar, 1500);
 
             fetch('enviar-post.php', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(async response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+                const text = await response.text();
+                if (!response.ok) {
+                    try {
+                        const errorJson = JSON.parse(text);
+                        throw new Error(errorJson.message || 'Erro no servidor');
+                    } catch (e) {
+                        throw new Error(text || 'Erro desconhecido');
                     }
-                })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                        return;
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    if (data) {
-                        console.error('Erro no servidor:', data);
-                        exibirBalao('Erro ao publicar. Tente novamente.', 'erro', btnPublicar);
-                    } else {
-                        exibirBalao('Post publicado com sucesso! 🎉', 'sucesso', btnPublicar);
-                        PerdidosAnexos.limparTodos();
-                        textarea.value = '';
-                        contador.textContent = '0/600';
-                        PerdidosAnexos.verificarConteudo();
-                        window.location.reload();
-                    }
-                })
-                .catch(err => {
-                    console.error('Erro na requisição:', err);
-                    exibirBalao('Erro de conexão. Tente novamente.', 'erro', btnPublicar);
-                })
-                .finally(() => {
-                    btnPublicar.disabled = false;
-                    btnPublicar.innerHTML = originalText;
-                });
+                }
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error('Resposta inválida do servidor');
+                }
+            })
+            .then(data => {
+                if (data && data.status === 'success') {
+                    exibirBalao('Post publicado com sucesso! 🎉', 'sucesso', btnPublicar);
+                    PerdidosAnexos.limparTodos();
+                    textarea.value = '';
+                    contador.textContent = '0/600';
+                    PerdidosAnexos.verificarConteudo();
+                    window.location.reload();
+                } else {
+                    const msg = data?.message || 'Falha ao publicar.';
+                    exibirBalao('Erro: ' + msg, 'erro', btnPublicar);
+                }
+            })
+            .catch(err => {
+                console.error('Erro na requisição:', err);
+                exibirBalao('❌ ' + err.message, 'erro', btnPublicar);
+            })
+            .finally(() => {
+                btnPublicar.disabled = false;
+                btnPublicar.innerHTML = originalText;
+            });
         });
 
         contador.textContent = '0/600';
         PerdidosAnexos.verificarConteudo();
+
     })();
 </script>
 

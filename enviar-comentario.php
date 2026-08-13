@@ -9,7 +9,6 @@ require_once 'includes/upload_engine.php';
 // ============================================================
 // 0. CSRF TOKEN (antes de qualquer processamento)
 // ============================================================
-// Só exige CSRF se o usuário estiver logado (para anônimos, não há token)
 if (isset($_SESSION['usuario_id'])) {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         http_response_code(403);
@@ -22,7 +21,6 @@ if (isset($_SESSION['usuario_id'])) {
 // 1. FUNÇÕES AUXILIARES DE SEGURANÇA
 // ============================================================
 
-// 1.1 Obtém o IP real do usuário (considerando proxies)
 function obterIPReal() {
     $ip = $_SERVER['REMOTE_ADDR'];
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -33,7 +31,6 @@ function obterIPReal() {
     return explode(',', $ip)[0];
 }
 
-// 1.2 Rate Limiting (máximo 5 comentários por minuto por IP)
 function verificarRateLimiting($conn, $ip) {
     $sql = "SELECT COUNT(*) as total FROM comentarios_ip_log WHERE ip_address = ? AND tentativa > NOW() - INTERVAL 1 MINUTE";
     $stmt = $conn->prepare($sql);
@@ -55,12 +52,10 @@ function verificarRateLimiting($conn, $ip) {
     $stmt_log->close();
 }
 
-// 1.3 Validação de conteúdo (mínimo 1 caractere, sem imagem pode ser vazio)
 function validarConteudo($texto, $temImagem = false) {
     $texto = trim($texto);
     $tamanho = mb_strlen($texto);
     
-    // Se tiver imagem/GIF, o texto pode ser vazio
     if ($temImagem) {
         if ($tamanho > 0 && preg_match('/(.)\1{20,}/', $texto)) {
             return ['valido' => false, 'mensagem' => 'Conteúdo parece ser spam.'];
@@ -68,7 +63,6 @@ function validarConteudo($texto, $temImagem = false) {
         return ['valido' => true];
     }
     
-    // Sem imagem: exige pelo menos 1 caractere
     if ($tamanho < 1) {
         return ['valido' => false, 'mensagem' => 'Digite algo ou adicione uma imagem/GIF.'];
     }
@@ -100,6 +94,35 @@ if ($id_mensagem > 0) {
     }
 }
 
+// 2.1.5 🔥 VERIFICA SE O USUÁRIO ESTÁ BANIDO (se o post for de uma comunidade)
+if ($id_mensagem > 0 && !$is_perdidos) {
+    $stmt_comunidade = $conn->prepare("SELECT comunidade_id FROM mensagens WHERE id = ?");
+    $stmt_comunidade->bind_param("i", $id_mensagem);
+    $stmt_comunidade->execute();
+    $res_com = $stmt_comunidade->get_result();
+    $post = $res_com->fetch_assoc();
+    $stmt_comunidade->close();
+
+    if ($post && $post['comunidade_id'] > 0) {
+        $comunidade_id = (int)$post['comunidade_id'];
+        $usuario_id = $_SESSION['usuario_id'] ?? 0;
+        if ($usuario_id > 0) {
+            $stmt_ban = $conn->prepare("SELECT status FROM comunidade_membros WHERE comunidade_id = ? AND usuario_id = ?");
+            $stmt_ban->bind_param("ii", $comunidade_id, $usuario_id);
+            $stmt_ban->execute();
+            $res_ban = $stmt_ban->get_result();
+            $membro = $res_ban->fetch_assoc();
+            $stmt_ban->close();
+
+            if (!$membro || $membro['status'] !== 'ativo') {
+                http_response_code(403);
+                echo json_encode(['status' => 'error', 'message' => 'Você não tem permissão para comentar nesta comunidade.']);
+                exit();
+            }
+        }
+    }
+}
+
 // 2.2 Exige login APENAS se NÃO for "perdidos"
 if (!$is_perdidos) {
     require_once __DIR__ . '/auth_check.php';
@@ -111,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// 2.4 HONEYPOT: campo oculto não deve ser preenchido
+// 2.4 HONEYPOT
 if (!empty($_POST['honeypot'])) {
     http_response_code(400);
     echo json_encode(['status' => 'error', 'message' => 'Erro ao enviar comentário.']);
@@ -140,16 +163,15 @@ $cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
 
 // ============================================================
 // 🔥 2.8 PROCESSAMENTO DE ANEXOS (MÚLTIPLOS + GIFs)
-// 🔥 LIMITE AUMENTADO PARA 4 (consistente com posts)
 // ============================================================
 $imagem_url = null;
 $anexos_json = null;
 $caminhosEnviados = [];
 $anexosArray = [];
 $contadorItens = 0;
-const MAX_ANEXOS = 4; // 🔥 AGORA SÃO 4!
+const MAX_ANEXOS = 4;
 
-// 2.8.1 - Processa GIFs externos (GIPHY)
+// 2.8.1 - GIFs externos
 if (!empty($_POST['gif_urls']) && is_array($_POST['gif_urls'])) {
     foreach ($_POST['gif_urls'] as $gif_url) {
         $gif_url = trim($gif_url);
@@ -169,7 +191,7 @@ if (!empty($_POST['gif_urls']) && is_array($_POST['gif_urls'])) {
     }
 }
 
-// 2.8.2 - Processa múltiplos arquivos (campo 'anexos[]')
+// 2.8.2 - Múltiplos arquivos
 if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
     $erroUpload = false;
     foreach ($_FILES['anexos']['tmp_name'] as $key => $tmp_name) {
@@ -201,7 +223,6 @@ if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
     if ($erroUpload) {
         foreach ($caminhosEnviados as $caminho) {
             deleteFromB2($caminho, $usuario_id);
-            error_log("[enviar-comentario] Rollback: arquivo deletado do B2: $caminho");
         }
         http_response_code(500);
         echo json_encode(['status' => 'error', 'message' => 'Erro ao enviar um ou mais anexos. Tente novamente.']);
@@ -209,7 +230,7 @@ if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
     }
 }
 
-// 2.8.3 - Fallback para campo único (imagem_comentario)
+// 2.8.3 - Fallback para imagem única
 if (empty($anexosArray) && isset($_FILES['imagem_comentario']) && $_FILES['imagem_comentario']['error'] === 0) {
     $pasta = 'comentarios';
     if (!is_dir($pasta)) {
@@ -229,7 +250,7 @@ if (empty($anexosArray) && isset($_FILES['imagem_comentario']) && $_FILES['image
     }
 }
 
-// 2.8.4 - Define o primeiro anexo como 'imagem_url' (compatibilidade)
+// 2.8.4 - Define o primeiro anexo como 'imagem_url'
 if (!empty($anexosArray)) {
     $primeiro = $anexosArray[0];
     if ($primeiro['tipo'] === 'imagem') {
@@ -253,7 +274,7 @@ if (!empty($anexosArray)) {
     }
 }
 
-// 2.8.6 - Verifica se há conteúdo
+// 2.8.6 - Verifica conteúdo
 $temImagem = !empty($anexosArray);
 $validacao = validarConteudo($comentario_raw, $temImagem);
 if (!$validacao['valido']) {
@@ -268,7 +289,7 @@ if (!$validacao['valido']) {
 }
 
 // ============================================================
-// 2.9 INSERÇÃO NO BANCO (COM CAMPO 'anexos')
+// 2.9 INSERÇÃO NO BANCO
 // ============================================================
 $sql = "INSERT INTO comentarios (
             id_mensagem, 
@@ -302,9 +323,7 @@ if ($stmt->execute()) {
     $novo_id = $stmt->insert_id;
     error_log("[enviar-comentario] ✅ Comentário ID $novo_id criado com " . count($anexosArray) . " anexos.");
 
-    // ============================================================
-    // 🔔 NOTIFICAÇÕES (mantidas)
-    // ============================================================
+    // NOTIFICAÇÕES (com tipo = 'post')
     if ($usuario_id) {
         $meu_id = $usuario_id;
         $quem_comentou = $usuario_nome ?? "Visitante";
@@ -316,7 +335,8 @@ if ($stmt->execute()) {
             $id_dono_post = $res_dono['usuario_id'];
             if ($id_dono_post != $meu_id) {
                 $msg_dono = "@$quem_comentou comentou no seu post!";
-                $st_dono_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, mensagem, lida) VALUES (?, ?, ?, 0)");
+                // 🔥 INSERE NOTIFICAÇÃO COM TIPO 'post'
+                $st_dono_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida) VALUES (?, ?, 'post', ?, 0)");
                 $st_dono_notif->bind_param("iis", $id_dono_post, $id_mensagem, $msg_dono);
                 $st_dono_notif->execute();
                 $st_dono_notif->close();
@@ -324,9 +344,7 @@ if ($stmt->execute()) {
         }
     }
 
-    // ============================================================
-    // 🧠 MENÇÕES (mantidas)
-    // ============================================================
+    // MENÇÕES (com tipo = 'post')
     if ($comentario !== null && preg_match_all('/@([a-zA-Z0-9\._]+)/', $comentario, $matches)) {
         $mencoes = array_unique($matches[1]);
         foreach ($mencoes as $nome_usuario) {
@@ -339,7 +357,8 @@ if ($stmt->execute()) {
                 $id_destinatario = $alvo['id'];
                 if ($id_destinatario != $meu_id) {
                     $msg_notificacao = "@$quem_comentou mencionou você em um comentário!";
-                    $st_n = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, mensagem, lida) VALUES (?, ?, ?, 0)");
+                    // 🔥 INSERE NOTIFICAÇÃO COM TIPO 'post'
+                    $st_n = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida) VALUES (?, ?, 'post', ?, 0)");
                     $st_n->bind_param("iis", $id_destinatario, $id_mensagem, $msg_notificacao);
                     $st_n->execute();
                     $st_n->close();
@@ -349,9 +368,7 @@ if ($stmt->execute()) {
         }
     }
 
-    // ============================================================
-    // 🚀 RENDERIZAÇÃO DO HTML DO COMENTÁRIO (SEM ELLIPSIS E SEM BOTÃO "RESPONDER")
-    // ============================================================
+    // RENDERIZAÇÃO DO HTML DO COMENTÁRIO
     $nomeExibicao = $usuario_nome ? '@' . htmlspecialchars($usuario_nome, ENT_QUOTES, 'UTF-8') : '👤 Anônimo';
 
     $textoHtml = '';
@@ -360,7 +377,6 @@ if ($stmt->execute()) {
         $textoHtml = '<div class="comentario-texto">' . $textoRenderizado . '</div>';
     }
 
-    // Renderização dos anexos
     $mediaHtml = '';
     if (!empty($anexosArray)) {
         $mediaHtml .= '<div class="comentario-media-wrapper-grid">';
@@ -411,7 +427,6 @@ if ($stmt->execute()) {
                             </div>';
     }
 
-    // 🔥 NOVO HTML: SEM ellipsis, SEM botão "RESPONDER"
     $comentarioHtml = '
     <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" id="comentario-' . $novo_id . '" style="--cor-borda-glow: ' . $cor_borda . ';">
         <div class="comentario-meta">
@@ -438,7 +453,7 @@ if ($stmt->execute()) {
     echo json_encode($response);
     exit();
 } else {
-    // Se houve erro na inserção, faz rollback dos uploads já feitos
+    // Rollback
     if (!empty($caminhosEnviados)) {
         foreach ($caminhosEnviados as $caminho) {
             deleteFromB2($caminho, $usuario_id);

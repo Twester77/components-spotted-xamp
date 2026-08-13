@@ -484,29 +484,46 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 })
-                .then(response => {
+                .then(async response => {
+                    // Se houver redirecionamento (fallback para requisições não AJAX)
                     if (response.redirected) {
                         window.location.href = response.url;
                         return;
                     }
-                    return response.text();
+                    // Tenta parsear como JSON
+                    const text = await response.text();
+                    if (!response.ok) {
+                        // Se não for ok, tenta extrair a mensagem de erro
+                        try {
+                            const errorJson = JSON.parse(text);
+                            throw new Error(errorJson.message || 'Erro no servidor');
+                        } catch (e) {
+                            throw new Error(text || 'Erro desconhecido');
+                        }
+                    }
+                    // Se for ok, parseia JSON
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Resposta inválida do servidor');
+                    }
                 })
                 .then(data => {
-                    if (data) {
-                        console.error('Erro no servidor:', data);
-                        exibirBalao('Erro ao publicar. Tente novamente.', 'erro', btnPublicar);
-                    } else {
+                    if (data && data.status === 'success') {
                         exibirBalao('Post publicado com sucesso! 🎉', 'sucesso', btnPublicar);
                         PostAnexos.limparTodos();
                         textarea.value = '';
                         contador.textContent = '0/600';
                         PostAnexos.verificarConteudo();
                         if (typeof fecharModalPostLimpo === 'function') fecharModalPostLimpo();
+                    } else {
+                        const msg = data?.message || 'Falha ao publicar.';
+                        exibirBalao('Erro: ' + msg, 'erro', btnPublicar);
                     }
                 })
                 .catch(err => {
                     console.error('Erro na requisição:', err);
-                    exibirBalao('Erro de conexão. Tente novamente.', 'erro', btnPublicar);
+                    exibirBalao('❌ ' + err.message, 'erro', btnPublicar);
                 })
                 .finally(() => {
                     btnPublicar.disabled = false;

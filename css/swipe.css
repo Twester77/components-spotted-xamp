@@ -50,7 +50,7 @@ body.modo-swipe-ativo .article.spotted-card {
     user-select: none !important;
     cursor: -moz-grab;
     cursor: -webkit-grab;
-    cursor: grab;
+    cursor: grab!important;
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
     
@@ -271,12 +271,13 @@ body.modo-swipe-ativo .spotted-card img {
 
 /* 2º CARD (Escondido atrás) - Leve profundidade + desfoque sutil */
 .feed-empilhado .spotted-card:nth-child(2) {
-    transform: perspective(1000px) translate(-54%, -42%) rotate(-2deg) scale(0.95);
+    transform: perspective(1200px) translate(-54%, -42%) rotate(-2deg) scale(0.95);
     opacity: 0.75 !important;
     z-index: 9;
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
-      will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+    will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+    pointer-events: none;
 }
 
 /* 3º CARD (Mais ao fundo) - Profundidade acentuada (Zero desfoque para poupar GPU) */
@@ -287,6 +288,7 @@ body.modo-swipe-ativo .spotted-card img {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+    pointer-events: none;
 }
 
 /* 🔥 4º CARD (A base da pilha que você adicionou) - Mais profundo, menor e bem suave */
@@ -308,8 +310,8 @@ body.modo-swipe-ativo .spotted-card img {
     pointer-events: none !important;
     
     /* Remove totalmente da árvore de renderização visual (Zera custo de VRAM) */
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     will-change: auto;
 }
 
@@ -576,7 +578,7 @@ body.fenda-arrastando .anonimo {
 /* 🔥 Grid de anexos no modo swipe */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap: 12px;
     margin: 6px 0;
     border-radius: 10px;
