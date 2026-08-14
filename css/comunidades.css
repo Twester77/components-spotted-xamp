@@ -163,6 +163,150 @@
     transform: scale(1.01);
 }
 
+/* ============================================================
+   BUSCA COM AUTOCOMPLETE (ESTILO MODERNO)
+   ============================================================ */
+
+.comunidades-search {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto 30px auto;
+    padding: 0 15px;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    padding: 8px 16px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, background 0.2s;
+    min-width: 0;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--dourado, #ffbc00);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+.search-btn {
+    flex-shrink: 0;
+    padding: 8px 20px;
+    background: var(--dourado, #ffbc00);
+    color: #000;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-btn:hover {
+    background: #ffd44d;
+    transform: scale(1.02);
+}
+
+/* DROPDOWN DE RESULTADOS */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    max-height: 320px;
+    overflow-y: auto;
+    background: rgba(16, 16, 28, 0.45);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    padding: 6px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 188, 0, 0.3) transparent;
+}
+
+.search-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+.search-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+.search-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 188, 0, 0.3);
+    border-radius: 4px;
+}
+
+/* ITEM DO RESULTADO */
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #fff;
+    transition: background 0.15s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.search-result-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.search-result-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.search-result-nome {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-result-descricao {
+    font-size: 0.8rem;
+    color: #aaa;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* ==================================================
    2. PÁGINA INDIVIDUAL DA COMUNIDADE (comunidade.php)
    ================================================== */
@@ -335,9 +479,9 @@
     gap: 8px;
     background: rgba(255, 188, 0, 0.08);
     color: #ffbc00;
-    border: 1px solid rgba(255, 188, 0, 0.15);
+    border: 1px solid rgba(255, 188, 0, 0.1);
     border-radius: 30px;
-    padding: 8px 20px;
+    padding: 8px 16px;
     font-weight: 600;
     font-size: clamp(0.8rem, 1vw, 0.95rem);
     cursor: default;
@@ -345,20 +489,38 @@
     pointer-events: none;
 }
 
+
 /* ---------- ESTADO BANIDO ---------- */
 .btn-banido {
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 1vw, 1.05rem);
+    background: rgba(255, 50, 50, 0.12);
+    color: #ff6b6b;
+    padding: 8px 15px;
+    font-weight: 600;
+    opacity: 0.6;
+    cursor: default;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 50, 50, 0.12);
-    color: #ff6b6b;
+    transition: opacity 0.2s ease, background 0.2s ease;
     border: 1px solid rgba(255, 50, 50, 0.2);
-    border-radius: 30px;
-    padding: 8px 20px;
-    font-weight: 600;
-    font-size: clamp(0.8rem, 1vw, 0.95rem);
-    cursor: default;
 }
+
+
+.btn-banido-estilo:hover {
+    opacity: 1;
+    background: rgba(255, 50, 50, 0.15);
+    border-color: rgba(255, 50, 50, 0.25);
+}
+
+.btn-banido-estilo small {
+    font-weight: 400;
+    opacity: 0.7;
+    font-size: 0.7rem;
+}
+
 
 /* ---------- BOTÕES APROVAR / REJEITAR (na lista de solicitações) ---------- */
 .btn-aprovar-solicitacao {
@@ -523,15 +685,17 @@
     background: rgba(0, 0, 0, 0.65);
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
-    padding: 2px 10px;
+    padding: 3px 10px;
     border-radius: 12px;
-    font-size: clamp(0.6rem, 0.7vw, 0.7rem);
+    font-size: 0.65rem;
+    font-size: clamp(0.65rem, 0.7vw, 0.8rem);
     font-weight: 600;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
 
 .badge-tipo.publica {
     border-color: rgba(76, 175, 80, 0.3);
@@ -607,7 +771,7 @@
     }
 
     .badge-tipo {
-        font-size: 0.55rem;
+        font-size: 0.6rem;
         padding: 1px 8px;
     }
 
@@ -671,6 +835,35 @@
         justify-content: center;
     }
 
+      .search-container {
+        flex-wrap: wrap;
+    }
+    .search-input {
+        flex: 1 1 100%;
+    }
+    .search-btn {
+        flex: 1 1 auto;
+        width: 100%;
+        justify-content: center;
+    }
+    .search-dropdown {
+        max-height: 250px;
+    }
+    .search-result-avatar {
+        width: 34px;
+        height: 34px;
+    }
+    .search-result-nome {
+        font-size: 0.85rem;
+    }
+    .search-result-descricao {
+        font-size: 0.7rem;
+    }
+    .search-clear {
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
 }
 
@@ -1864,7 +2057,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir,
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais,
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar {
     background: transparent;
     border: none;
@@ -1877,6 +2069,10 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     border-radius: 6px;
     transition: background 0.2s, color 0.2s;
 }
+
+    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais {
+        display: none;
+    }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir:hover,
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar:hover {
@@ -1992,7 +2188,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     }
 
     .comunidade-page {
-        padding: 10px;
+        padding: 8px;
     }
 
     .comunidade-capa .overlay h1 {
@@ -2145,7 +2341,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 .main-comunidades {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     background: #0a0a0a;
     background: oklch(5% 0 0);
     min-height: 100vh;

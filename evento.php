@@ -397,6 +397,105 @@ if (empty($_SESSION['csrf_token'])) {
             alert('Erro de conexão.');
         });
     });
+
+// ============================================================
+// LIGHTBOX PARA IMAGENS DA GALERIA (reutilizado dos comentários)
+// ============================================================
+(function() {
+    function abrirLightboxImagem(e) {
+        e.stopPropagation();
+        const imgSrc = e.currentTarget.src;
+        if (!imgSrc) return;
+
+        // Remove modal existente
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+
+        // Cria o modal
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText = `
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.85);
+            display:flex; justify-content:center; align-items:center;
+            z-index:1000000; cursor:pointer;
+            user-select:none; -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            opacity:0; transition:opacity 0.2s ease;
+        `;
+
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText = `
+            max-width:90%; max-height:90%;
+            object-fit:contain; border-radius:8px;
+            box-shadow:0 0 30px rgba(0,0,0,0.5);
+        `;
+
+        const btnFechar = document.createElement('button');
+        btnFechar.innerHTML = '✕';
+        btnFechar.style.cssText = `
+            position:absolute; top:20px; right:20px;
+            background:none; border:none; color:white;
+            font-size:2rem; cursor:pointer; z-index:100001;
+            text-shadow:0 0 10px black;
+        `;
+        btnFechar.onclick = fecharLightbox;
+
+        modal.appendChild(img);
+        modal.appendChild(btnFechar);
+        document.body.appendChild(modal);
+
+        // Fecha ao clicar no fundo
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) fecharLightbox();
+        });
+
+        // Anima entrada
+        requestAnimationFrame(() => { modal.style.opacity = '1'; });
+
+        function fecharLightbox() {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        }
+
+        // Fecha com ESC
+        function escHandler(e) {
+            if (e.key === 'Escape') fecharLightbox();
+        }
+        document.addEventListener('keydown', escHandler);
+        // Remove o listener quando o modal for removido
+        const observer = new MutationObserver(() => {
+            if (!document.getElementById('modal-lightbox-fenda')) {
+                document.removeEventListener('keydown', escHandler);
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true });
+    }
+
+    // Aplica a todas as imagens da galeria (dinamicamente)
+    function initGaleriaLightbox() {
+        document.querySelectorAll('.bt-galeria-grid img, .bt-detalhes-capa img').forEach(img => {
+            img.removeEventListener('click', abrirLightboxImagem);
+            img.addEventListener('click', abrirLightboxImagem);
+            img.style.cursor = 'zoom-in';
+        });
+    }
+
+    // Inicializa ao carregar a página e também quando novas imagens forem adicionadas
+    document.addEventListener('DOMContentLoaded', initGaleriaLightbox);
+
+    // Observa mudanças na galeria (caso seja carregada via AJAX)
+    const observer = new MutationObserver(() => initGaleriaLightbox());
+    const galeria = document.querySelector('.bt-galeria-grid');
+    if (galeria) observer.observe(galeria, { childList: true, subtree: true });
+
+    // Também observa a capa
+    const capa = document.querySelector('.bt-detalhes-capa');
+    if (capa) observer.observe(capa, { childList: true, subtree: true });
+})();
+
 </script>
 <!-- Carrega o autocomplete de menções -->
 <script src="js/fenda-mencoes.js"></script>

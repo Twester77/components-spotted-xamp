@@ -612,8 +612,9 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-
     justify-content: center;
 }
 
-body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item:only-child img {
-    max-height: 300px;
+body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item:only-child
+{
+    max-height: 400px;
     object-fit: contain;
 }
 

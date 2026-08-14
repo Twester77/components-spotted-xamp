@@ -1,0 +1,13 @@
+{
+    "name": "fenda-unifev/spotted",
+    "description": "A Fenda - Spotted Universitário",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    }
+}

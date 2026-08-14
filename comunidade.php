@@ -137,6 +137,9 @@ if ($is_admin || $is_criador) {
     <!-- ============================================================
     AÇÕES DA COMUNIDADE (Entrar/Sair, Solicitar, Membros, Criador)
     ============================================================ -->
+    <!-- ============================================================
+AÇÕES DA COMUNIDADE (Entrar/Sair, Solicitar, Membros, Criador)
+============================================================ -->
     <div class="comunidade-actions">
         <div class="comunidade-info-actions">
             <span class="contador-membros">
@@ -146,42 +149,57 @@ if ($is_admin || $is_criador) {
                 <i class="fas fa-crown" style="color: #ffbc00;"></i> Criada por @<?php echo htmlspecialchars($comunidade['criador_username'] ?? 'Anônimo'); ?>
             </span>
             <?php if ($is_admin || $is_criador): ?>
-                <span class="solicitacoes-badge" style="background:rgba(255,188,0,0.15); color:#ffbc00; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+                <span class="solicitacoes-badge">
                     <i class="fas fa-inbox"></i> <?php echo $total_pendentes; ?> pendentes
                 </span>
             <?php endif; ?>
         </div>
 
         <?php if (isset($_SESSION['usuario_id'])): ?>
-            <?php if ($comunidade_tipo === 'publica'): ?>
-                <!-- Comunidade pública: botão Entrar/Sair (já existente) -->
-                <button class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>"
-                    data-comunidade="<?php echo $id; ?>"
-                    data-pagina="comunidade">
-                    <?php echo $is_membro ? '✅ Membro' : '➕ Entrar'; ?>
-                </button>
+
+            <!-- 🔥 VERIFICAÇÃO DE BANIDO (PRIMEIRO) -->
+            <?php if ($is_banido): ?>
+                <span class="btn-banido"
+                    style=" opacity:0.65;  display:inline-flex; align-items:center; transition:opacity 0.2s;"
+                    title="Você foi banido desta comunidade e não pode participar."
+                    onmouseover="this.style.opacity='1'"
+                    onmouseout="this.style.opacity='0.65'">
+                    <i class="fas fa-ban"></i> Você está banido
+                    <small style="font-weight:bold; opacity:0.7; font-size:0.75rem;">(e não pode entrar)</small>
+                </span>
+
+                <!-- SE NÃO ESTIVER BANIDO, MOSTRA AS OPÇÕES NORMAIS -->
             <?php else: ?>
-                <!-- Comunidade privada -->
-                <?php if ($is_banido): ?>
-                    <span class="btn-banido" style="background:rgba(255,50,50,0.15); color:#ff6b6b; padding:8px 16px; border-radius:30px; font-weight:600;">
-                        <i class="fas fa-ban"></i>Você não pode mais participar dessa comunidade 
-                    </span>
-                <?php elseif ($is_membro): ?>
-                    <button class="btn-entrar-comunidade membro"
+
+                <?php if ($comunidade_tipo === 'publica'): ?>
+                    <!-- Comunidade pública: botão Entrar/Sair -->
+                    <button class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>"
                         data-comunidade="<?php echo $id; ?>"
                         data-pagina="comunidade">
-                        ✅ Membro
+                        <?php echo $is_membro ? '✅ Membro' : '➕ Entrar'; ?>
                     </button>
-                <?php elseif ($is_pendente): ?>
-                    <span class="btn-pendente" style="background:rgba(255,188,0,0.1); color:#ffbc00; padding:8px 16px; border-radius:30px; font-weight:600; cursor:default;">
-                        <i class="fas fa-clock"></i> Solicitação pendente...
-                    </span>
+
                 <?php else: ?>
-                    <button class="btn-solicitar-entrada" data-comunidade="<?php echo $id; ?>">
-                        <i class="fas fa-door-open"></i> Solicitar entrada
-                    </button>
+                    <!-- Comunidade privada -->
+                    <?php if ($is_membro): ?>
+                        <button class="btn-entrar-comunidade membro"
+                            data-comunidade="<?php echo $id; ?>"
+                            data-pagina="comunidade">
+                            ✅ Membro
+                        </button>
+                    <?php elseif ($is_pendente): ?>
+                        <span class="btn-pendente">
+                            <i class="fas fa-clock"></i> Solicitação pendente...
+                        </span>
+                    <?php else: ?>
+                        <button class="btn-solicitar-entrada" data-comunidade="<?php echo $id; ?>">
+                            <i class="fas fa-door-open"></i> Solicitar entrada
+                        </button>
+                    <?php endif; ?>
                 <?php endif; ?>
+
             <?php endif; ?>
+            <!-- FIM DA VERIFICAÇÃO DE BANIDO -->
 
             <?php if ($is_criador || $is_admin): ?>
                 <a href="editar-comunidade.php?id=<?php echo $id; ?>" class="btn-editar-comunidade">
@@ -191,6 +209,7 @@ if ($is_admin || $is_criador) {
                     <i class="fas fa-users-cog"></i> Gerenciar membros
                 </button>
             <?php endif; ?>
+
         <?php endif; ?>
     </div>
 

@@ -59,14 +59,21 @@ function recalcFeedLayout() {
         Math.round(Math.max(320, Math.min(vw * 0.60, 600))) :
         Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
-    var maxCardHeight = Math.round(Math.min(vh * 0.8));
+    // 🔥 Altura máxima do card: limitada e mais generosa no portrait
+    var maxCardHeight;
+    if (isLandscape) {
+        maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
+    } else {
+        maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
+    }
+
     var cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
     var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
-    var textMaxHeight = Math.round(Math.max(60, cardWidth * 0.25));
+    var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
     var avatarSize = Math.round(Math.max(36, cardWidth * 0.12));
 
-    // 🔥 NOVA VARIÁVEL: altura dinâmica para imagens em landscape
-    var innerDynamicHeight = Math.round(maxCardHeight * 0.5);
+    // 🔥 Altura dinâmica para imagens em landscape (55% da altura do card)
+    var innerDynamicHeight = Math.round(maxCardHeight * 0.55);
 
     var root = document.documentElement;
     root.style.setProperty('--card-width', cardWidth + 'px');
@@ -78,7 +85,6 @@ function recalcFeedLayout() {
     root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
     root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
 
-    // 🔥 Alimenta o CSS com a altura dinâmica tratada (fallback híbrido)
     root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
     root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
 }

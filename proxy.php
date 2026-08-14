@@ -15,7 +15,10 @@
  */
 
 // Carrega variáveis de ambiente
-require_once __DIR__ . '/.env.php';
+// Por:
+if (file_exists(__DIR__ . '/.env.php')) {
+    require_once __DIR__ . '/.env.php';
+}
 require_once __DIR__ . '/includes/B2Client.php';
 
 // ============================================================

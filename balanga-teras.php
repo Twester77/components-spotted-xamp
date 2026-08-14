@@ -3,7 +3,12 @@
 /**
  * balanga-teras.php – Página principal do Balanga Teras (Swipe de Eventos)
  * 
- * 🔧 ÚLTIMA REVISÃO – MARÉ (2026-08-10)
+ * 🔧 ÚLTIMA REVISÃO – LUZ (2026-08-14)
+ * - Adicionado filtro por comunidade (select com comunidades do usuário)
+ * - Integração com swipe-eventos.php via parâmetro comunidade_id
+ * - Listener para recarregar eventos ao mudar a comunidade selecionada
+ * 
+ * 🔧 REVISÃO ANTERIOR – MARÉ (2026-08-10)
  * - Transição suave ao resetar pilha (fade-out/in).
  * - Long press com menu de ações (Ver detalhes, Salvar favoritos, Cancelar evento).
  * - Cancelar evento integrado via AJAX com CSRF e confirmação.
@@ -32,9 +37,39 @@ if (empty($_SESSION['csrf_token'])) {
 
 $status_filtro = isset($_GET['status']) ? $_GET['status'] : 'todos';
 $comunidade_filtro = isset($_GET['comunidade']) ? (int)$_GET['comunidade'] : 0;
+
+// ============================================================
+// 🔍 BUSCA COMUNIDADES DO USUÁRIO (para o filtro)
+// ============================================================
+$comunidades_usuario = [];
+$sql_com = "SELECT c.id, c.nome FROM comunidades c
+            JOIN comunidade_membros cm ON c.id = cm.comunidade_id
+            WHERE cm.usuario_id = ? AND cm.status = 'ativo'
+            ORDER BY c.nome ASC";
+$stmt_com = $conn->prepare($sql_com);
+$stmt_com->bind_param("i", $_SESSION['usuario_id']);
+$stmt_com->execute();
+$res_com = $stmt_com->get_result();
+while ($com = $res_com->fetch_assoc()) {
+    $comunidades_usuario[] = $com;
+}
+$stmt_com->close();
 ?>
 
 <div class="bt-controles" role="toolbar" aria-label="Controles do Balanga Teras">
+    <!--  FILTRO POR COMUNIDADE (NOVO) -->
+    <div class="bt-filtro-comunidade">
+        <select id="bt-filtro-comunidade" class="bt-select-comunidade">
+            <option value="0">🌐 Todas as comunidades</option>
+            <?php foreach ($comunidades_usuario as $com): ?>
+                <option value="<?= $com['id'] ?>" <?= ($comunidade_filtro == $com['id']) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($com['nome']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <!--  FILTROS POR STATUS (já existentes) -->
     <button type="button" id="bt-btn-filtros" class="bt-btn-filtro" onclick="btToggleFiltros()" aria-expanded="false">
         <i class="fas fa-filter" aria-hidden="true"></i> FILTRAR EVENTOS
     </button>
@@ -76,7 +111,7 @@ $comunidade_filtro = isset($_GET['comunidade']) ? (int)$_GET['comunidade'] : 0;
     }
 
     // ============================================================
-    // 2. CARREGAR EVENTOS (AJAX)
+    // 2. CARREGAR EVENTOS (AJAX) – COM FILTRO POR COMUNIDADE
     // ============================================================
     let btOffset = 0;
     let btCarregando = false;
@@ -106,9 +141,10 @@ $comunidade_filtro = isset($_GET['comunidade']) ? (int)$_GET['comunidade'] : 0;
         if (btnLoad) btnLoad.disabled = true;
 
         const status = new URLSearchParams(window.location.search).get('status') || 'todos';
-        const comunidade = new URLSearchParams(window.location.search).get('comunidade') || 0;
+        const comunidadeSelect = document.getElementById('bt-filtro-comunidade');
+        const comunidadeId = comunidadeSelect ? comunidadeSelect.value : 0;
 
-        fetch(`swipe-eventos.php?offset=${btOffset}&status=${status}&comunidade_id=${comunidade}`)
+        fetch(`swipe-eventos.php?offset=${btOffset}&status=${status}&comunidade_id=${comunidadeId}`)
             .then(response => response.text())
             .then(data => {
                 if (data.trim() === "FIM_DADOS") {
@@ -320,202 +356,187 @@ $comunidade_filtro = isset($_GET['comunidade']) ? (int)$_GET['comunidade'] : 0;
     });
 
     // ============================================================
-// 8. LONG PRESS – MENU DE AÇÕES (com overlay, igual ao feed)
-// ============================================================
-let longPressTimer = null;
-let longPressCard = null;
-let startXLP = 0, startYLP = 0;
-const MOVE_THRESHOLD_LP = 10;
-let menuAberto = false;
+    // 8. LONG PRESS – MENU DE AÇÕES (com overlay, igual ao feed)
+    // ============================================================
+    let longPressTimer = null;
+    let longPressCard = null;
+    let startXLP = 0, startYLP = 0;
+    const MOVE_THRESHOLD_LP = 10;
+    let menuAberto = false;
 
-function btMostrarMenuAcoes(card) {
-    const eventoId = card.dataset.id;
-    const criadorId = parseInt(card.dataset.criador || '0');
-    const isOwner = (criadorId === usuarioId);
+    function btMostrarMenuAcoes(card) {
+        const eventoId = card.dataset.id;
+        const criadorId = parseInt(card.dataset.criador || '0');
+        const isOwner = (criadorId === usuarioId);
 
-    if (!eventoId) return;
-    if (menuAberto) return;
+        if (!eventoId) return;
+        if (menuAberto) return;
 
-    // 🔥 CALCULA O TAMANHO IDEAL COM BASE NA VIEWPORT
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const isMobile = vw < 600;
+        const vw = window.innerWidth;
+        const popupWidth = Math.min(Math.max(160, vw * 0.5), 320);
+        const fontSize = Math.min(Math.max(0.8, vw * 0.015), 1.1);
+        const btnPadding = Math.min(Math.max(6, vw * 0.015), 14);
 
-    // 🔥 Valores escalonáveis (usando clamp manual)
-    // Largura do popup: entre 160px e 320px, com 50vw como referência
-    const popupWidth = Math.min(Math.max(160, vw * 0.5), 320);
-    // Tamanho da fonte: entre 0.8rem e 1.1rem, com 1.2vw como referência
-    const fontSize = Math.min(Math.max(0.8, vw * 0.015), 1.1);
-    // Padding dos botões: entre 6px e 14px, com 1vw como referência
-    const btnPadding = Math.min(Math.max(6, vw * 0.015), 14);
+        const overlay = document.createElement('div');
+        overlay.className = 'bt-actions-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 99998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease;
+        `;
 
-    // Cria o OVERLAY
-    const overlay = document.createElement('div');
-    overlay.className = 'bt-actions-overlay';
-    overlay.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        z-index: 99998;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: fadeIn 0.2s ease;
-    `;
+        const menu = document.createElement('div');
+        menu.className = 'bt-actions-popup';
+        menu.style.cssText = `
+            background: rgba(10,10,10,0.92);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,188,0,0.3);
+            border-radius: 16px;
+            padding: 8px 0;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            min-width: ${popupWidth}px;
+            max-width: 85vw;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            animation: btPopupIn 0.2s ease-out;
+            font-size: ${fontSize}rem;
+        `;
 
-    // Cria o MENU com dimensões escalonáveis
-    const menu = document.createElement('div');
-    menu.className = 'bt-actions-popup';
-    // 🔥 Aplica os valores calculados no estilo inline (com fallback via CSS)
-    menu.style.cssText = `
-        background: rgba(10,10,10,0.92);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        border: 1px solid rgba(255,188,0,0.3);
-        border-radius: 16px;
-        padding: 8px 0;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-        min-width: ${popupWidth}px;
-        max-width: 85vw;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-        animation: btPopupIn 0.2s ease-out;
-        font-size: ${fontSize}rem;
-    `;
+        menu.innerHTML = `
+            <button class="bt-action-item" data-acao="detalhes" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#fff; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s;">
+                <i class="fas fa-info-circle"></i> Ver detalhes
+            </button>
+            <button class="bt-action-item" data-acao="favoritar" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#fff; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s;">
+                <i class="fas fa-star"></i> Salvar nos favoritos
+            </button>
+            ${isOwner ? `
+            <button class="bt-action-item" data-acao="excluir" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#ff6b6b; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s; border-top:1px solid rgba(255,255,255,0.05);">
+                <i class="fas fa-trash-alt"></i> Cancelar evento
+            </button>` : ''}
+            <button class="bt-action-item" data-acao="cancelar" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#888; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s; border-top:1px solid rgba(255,255,255,0.05);">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
+        `;
 
-    // 🔥 Conteúdo do menu com botões usando padding escalonável
-    menu.innerHTML = `
-        <button class="bt-action-item" data-acao="detalhes" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#fff; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s;">
-            <i class="fas fa-info-circle"></i> Ver detalhes
-        </button>
-        <button class="bt-action-item" data-acao="favoritar" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#fff; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s;">
-            <i class="fas fa-star"></i> Salvar nos favoritos
-        </button>
-        ${isOwner ? `
-        <button class="bt-action-item" data-acao="excluir" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#ff6b6b; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s; border-top:1px solid rgba(255,255,255,0.05);">
-            <i class="fas fa-trash-alt"></i> Cancelar evento
-        </button>` : ''}
-        <button class="bt-action-item" data-acao="cancelar" style="display:flex; align-items:center; gap:10px; width:100%; padding: ${btnPadding}px 16px; background:transparent; border:none; color:#888; cursor:pointer; font-family:inherit; font-size:inherit; transition:0.15s; border-top:1px solid rgba(255,255,255,0.05);">
-            <i class="fas fa-times"></i> Cancelar
-        </button>
-    `;
+        overlay.appendChild(menu);
+        document.body.appendChild(overlay);
+        menuAberto = true;
 
-    overlay.appendChild(menu);
-    document.body.appendChild(overlay);
-    menuAberto = true;
+        menu.querySelectorAll('.bt-action-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const acao = this.dataset.acao;
+                fecharMenu(overlay);
+                if (acao === 'detalhes') {
+                    window.location.href = 'evento.php?id=' + eventoId;
+                } else if (acao === 'favoritar') {
+                    if (typeof exibirToast === 'function') {
+                        exibirToast('📌 Evento salvo nos favoritos! (em breve)');
+                    } else {
+                        alert('Funcionalidade em desenvolvimento.');
+                    }
+                } else if (acao === 'excluir') {
+                    const confirmado = confirm('Tem certeza que deseja cancelar este evento? Esta ação é definitiva e notificará os participantes.');
+                    if (confirmado) {
+                        const csrfToken = document.getElementById('csrf_token')?.value || '';
+                        const formData = new FormData();
+                        formData.append('id', eventoId);
+                        formData.append('csrf_token', csrfToken);
 
-    // Eventos dos botões (mantido igual)
-    menu.querySelectorAll('.bt-action-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const acao = this.dataset.acao;
-            fecharMenu(overlay);
-            if (acao === 'detalhes') {
-                window.location.href = 'evento.php?id=' + eventoId;
-            } else if (acao === 'favoritar') {
-                if (typeof exibirToast === 'function') {
-                    exibirToast('📌 Evento salvo nos favoritos! (em breve)');
-                } else {
-                    alert('Funcionalidade em desenvolvimento.');
-                }
-            } else if (acao === 'excluir') {
-                const confirmado = confirm('Tem certeza que deseja cancelar este evento? Esta ação é definitiva e notificará os participantes.');
-                if (confirmado) {
-                    const csrfToken = document.getElementById('csrf_token')?.value || '';
-                    const formData = new FormData();
-                    formData.append('id', eventoId);
-                    formData.append('csrf_token', csrfToken);
-
-                    fetch('cancelar-evento.php', {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            if (typeof exibirToast === 'function') {
-                                exibirToast('🗑️ Evento cancelado com sucesso!', 'sucesso');
+                        fetch('cancelar-evento.php', {
+                            method: 'POST',
+                            body: formData,
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                if (typeof exibirToast === 'function') {
+                                    exibirToast('🗑️ Evento cancelado com sucesso!', 'sucesso');
+                                } else {
+                                    alert('Evento cancelado!');
+                                }
+                                const cardEl = document.querySelector(`.bt-card[data-id="${eventoId}"]`);
+                                if (cardEl) cardEl.remove();
+                                if (typeof window.btAbastecerPilha === 'function') {
+                                    window.btAbastecerPilha();
+                                }
                             } else {
-                                alert('Evento cancelado!');
+                                alert(data.message || 'Erro ao cancelar evento.');
                             }
-                            const cardEl = document.querySelector(`.bt-card[data-id="${eventoId}"]`);
-                            if (cardEl) cardEl.remove();
-                            if (typeof window.btAbastecerPilha === 'function') {
-                                window.btAbastecerPilha();
-                            }
-                        } else {
-                            alert(data.message || 'Erro ao cancelar evento.');
-                        }
-                    })
-                    .catch(err => {
-                        console.error('[BALANGA] Erro ao cancelar:', err);
-                        alert('Erro de conexão. Tente novamente.');
-                    });
+                        })
+                        .catch(err => {
+                            console.error('[BALANGA] Erro ao cancelar:', err);
+                            alert('Erro de conexão. Tente novamente.');
+                        });
+                    }
                 }
+            });
+        });
+
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                fecharMenu(overlay);
             }
         });
-    });
 
-    overlay.addEventListener('click', function(e) {
-        if (e.target === overlay) {
-            fecharMenu(overlay);
+        function fecharMenu(overlayEl) {
+            if (overlayEl && overlayEl.parentNode) overlayEl.remove();
+            menuAberto = false;
+            longPressCard = null;
         }
-    });
 
-    function fecharMenu(overlayEl) {
-        if (overlayEl && overlayEl.parentNode) overlayEl.remove();
-        menuAberto = false;
-        longPressCard = null;
-    }
-
-    // Estilos adicionais (fallback CSS para navegadores antigos)
-    if (!document.getElementById('bt-popup-styles')) {
-        const style = document.createElement('style');
-        style.id = 'bt-popup-styles';
-        style.textContent = `
-            @keyframes fadeIn {
-                from { opacity:0; }
-                to { opacity:1; }
-            }
-            @keyframes btPopupIn {
-                from { opacity:0; transform:scale(0.95) translateY(10px); }
-                to { opacity:1; transform:scale(1) translateY(0); }
-            }
-            .bt-action-item:hover {
-                background: rgba(255,255,255,0.06);
-            }
-            .bt-action-item[data-acao="excluir"]:hover {
-                background: rgba(255,50,50,0.12);
-                color: #ff8a8a;
-            }
-            /* 🔥 FALLBACK para navegadores antigos: usa valores fixos se o JS não conseguir */
-            .bt-actions-popup {
-                min-width: 200px ; /* fallback */
-            }
-            @media (max-width: 480px) {
+        if (!document.getElementById('bt-popup-styles')) {
+            const style = document.createElement('style');
+            style.id = 'bt-popup-styles';
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity:0; }
+                    to { opacity:1; }
+                }
+                @keyframes btPopupIn {
+                    from { opacity:0; transform:scale(0.95) translateY(10px); }
+                    to { opacity:1; transform:scale(1) translateY(0); }
+                }
+                .bt-action-item:hover {
+                    background: rgba(255,255,255,0.06);
+                }
+                .bt-action-item[data-acao="excluir"]:hover {
+                    background: rgba(255,50,50,0.12);
+                    color: #ff8a8a;
+                }
                 .bt-actions-popup {
-                    min-width: 140px ;
+                    min-width: 200px ;
                 }
-                .bt-action-item {
-                    padding: 8px 12px ;
+                @media (max-width: 480px) {
+                    .bt-actions-popup {
+                        min-width: 140px ;
+                    }
+                    .bt-action-item {
+                        padding: 8px 12px ;
+                    }
                 }
-            }
-        `;
-        document.head.appendChild(style);
+            `;
+            document.head.appendChild(style);
+        }
     }
-}
 
     // Configura o long press no container
     container.addEventListener('pointerdown', function(e) {
-        if (menuAberto) return; // 🔥 Se menu estiver aberto, não inicia novo
+        if (menuAberto) return;
         const card = e.target.closest('.bt-card');
         if (!card) return;
         if (e.target.closest('.bt-btn-resposta') || e.target.closest('.bt-btn-detalhes') || e.target.closest('a')) return;
@@ -529,7 +550,7 @@ function btMostrarMenuAcoes(card) {
                 btMostrarMenuAcoes(longPressCard);
                 longPressCard = null;
             }
-        }, 400); // 🔥 Aumentado para 400ms
+        }, 400);
     });
 
     container.addEventListener('pointermove', function(e) {
@@ -544,7 +565,6 @@ function btMostrarMenuAcoes(card) {
 
     container.addEventListener('pointerup', function() {
         clearTimeout(longPressTimer);
-        // Não limpa longPressCard se o menu estiver aberto
         if (!menuAberto) longPressCard = null;
     });
 
@@ -554,7 +574,14 @@ function btMostrarMenuAcoes(card) {
     });
 
     // ============================================================
-    // 9. INICIALIZAÇÃO
+    // 9. LISTENER PARA MUDANÇA NO FILTRO DE COMUNIDADE
+    // ============================================================
+    document.getElementById('bt-filtro-comunidade')?.addEventListener('change', function() {
+        btCarregarEventos(true); // Recarrega do zero com o novo filtro
+    });
+
+    // ============================================================
+    // 10. INICIALIZAÇÃO
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
         btCarregarEventos(true);

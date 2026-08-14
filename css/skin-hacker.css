@@ -142,11 +142,17 @@ body.hacker-mode .spotted-card {
     background: #000 ;
     border: none !important;
     /* LATERAIS: O duplo pipe "||" */
-    border-bottom: 2px double var(--aura-user)!important;
-    border-top: 2px double var(--aura-user)!important ;
-    border-right: 1px double var(--glass-bg) !important ;
-    border-left: 1px double var(--glass-bg) !important;
+     border-bottom: 2px double var(--hacker-green)!important;
+    border-top: 2px double var(--hacker-green)!important ;
+    border-right: 2px double var(--glass-bg) !important ;
+    border-left: 2px double var(--glass-bg) !important;
     box-shadow: none ;
+}
+
+body.hacker-mode .feed-usuario-fenda .spotted-card {
+border-bottom: 2px double var(--aura-user)!important;
+border-top: 2px double var(--aura-user)!important ;
+
 }
 
 
@@ -774,6 +780,8 @@ body.hacker-mode  #bt-btn-filtros,
 body.hacker-mode .btn-filtro,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-enviar-chat,
+body:not(.modo-swipe-ativo) #btn-abrir-filtros,
+.body-modo-swipe-ativo #btn-abrir-filtros,
 body.hacker-mode .preview-botao
  {
     background: #000 ;

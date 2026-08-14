@@ -58,54 +58,62 @@
     // 3. RECÁLCULO DE LAYOUT (RESPONSIVO) – COM CAPA DINÂMICA
     // ============================================================
     function btRecalcularLayout() {
-    if (recalculando) return;
-    if (!document.body.classList.contains('modo-tinder-ativo')) return;
+        if (recalculando) return;
+        if (!document.body.classList.contains('modo-tinder-ativo')) return;
 
-    const container = document.getElementById('bt-container-eventos');
-    if (!container) return;
+        const container = document.getElementById('bt-container-eventos');
+        if (!container) return;
 
-    recalculando = true;
+        recalculando = true;
 
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const isLandscape = vw > vh;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const isLandscape = vw > vh;
 
-    // Largura do card (baseado no feed)
-    const cardWidth = isLandscape
-        ? Math.round(Math.max(320, Math.min(vw * 0.60, 600)))
-        : Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
+        // Largura do card (baseado no feed)
+        const cardWidth = isLandscape
+            ? Math.round(Math.max(320, Math.min(vw * 0.60, 600)))
+            : Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
-    // 🔥 Altura máxima do card: 600px ou 85vh
-    const maxCardHeight = Math.round(Math.min(vh * 0.85, 600));
-    const cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
-    const fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
+        // 🔥 Altura máxima do card: mais generosa no portrait
+        let maxCardHeight;
+        if (isLandscape) {
+            // Landscape: mantém o limite conservador
+            maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
+        } else {
+            // Portrait: aproveita melhor a tela vertical
+            maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
+        }
 
-    // 🔥 Tamanhos específicos para cada elemento
-    const tituloSize = fontSize * 1.2;       // 20% maior que o base
-    const metaSize = fontSize * 0.8;        // 15% menor que o base
-    const textMaxHeight = Math.round(Math.max(60, cardWidth * 0.25));
+        const cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
+        const fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
 
-    // 🔥 Altura da capa: proporção 16:9, limitada a 60% da altura do card
-    const capaHeight = Math.round(Math.min(cardWidth * 0.5625, maxCardHeight * 0.6));
+        // 🔥 Tamanhos específicos para cada elemento
+        const tituloSize = fontSize * 1.2;       // 20% maior que o base
+        const metaSize = fontSize * 0.8;        // 15% menor que o base
+        const textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
 
-    const root = document.documentElement;
-    root.style.setProperty('--bt-card-width', cardWidth + 'px');
-    root.style.setProperty('--bt-card-padding', cardPadding + 'px');
-    root.style.setProperty('--bt-card-font-size', fontSize + 'rem');
-    root.style.setProperty('--bt-titulo-size', tituloSize + 'rem');
-    root.style.setProperty('--bt-meta-size', metaSize + 'rem');
-    root.style.setProperty('--bt-text-max-height', textMaxHeight + 'px');
-    root.style.setProperty('--bt-card-max-height', maxCardHeight + 'px');
-    root.style.setProperty('--bt-capa-height', capaHeight + 'px');
-    root.style.setProperty('--bt-container-height', Math.min(vh * 0.8, 650) + 'px');
+        // 🔥 Altura da capa: proporção 16:9, limitada a 60% da altura do card
+        const capaHeight = Math.round(Math.min(cardWidth * 0.5625, maxCardHeight * 0.65));
 
-    document.querySelectorAll('.bt-card').forEach(card => {
-        card.style.width = cardWidth + 'px';
-        card.style.maxWidth = cardWidth + 'px';
-    });
+        const root = document.documentElement;
+        root.style.setProperty('--bt-card-width', cardWidth + 'px');
+        root.style.setProperty('--bt-card-padding', cardPadding + 'px');
+        root.style.setProperty('--bt-card-font-size', fontSize + 'rem');
+        root.style.setProperty('--bt-titulo-size', tituloSize + 'rem');
+        root.style.setProperty('--bt-meta-size', metaSize + 'rem');
+        root.style.setProperty('--bt-text-max-height', textMaxHeight + 'px');
+        root.style.setProperty('--bt-card-max-height', maxCardHeight + 'px');
+        root.style.setProperty('--bt-capa-height', capaHeight + 'px');
+        root.style.setProperty('--bt-container-height', Math.min(vh * 0.8, 650) + 'px');
 
-    recalculando = false;
-}
+        document.querySelectorAll('.bt-card').forEach(card => {
+            card.style.width = cardWidth + 'px';
+            card.style.maxWidth = cardWidth + 'px';
+        });
+
+        recalculando = false;
+    }
 
     // ============================================================
     // 4. LISTENERS DE RESIZE (DEBOUNCE)

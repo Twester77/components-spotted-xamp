@@ -504,8 +504,9 @@
    VIBES (mantido integral)
    ================================================== */
 .comentario-item.vibe-light {
+    background: f1f1f1;
     background: oklch(from var(--cor-borda-glow) 0.95 0.04 h);
-    color: #111111;
+    border: 1px solid #fffccf;
     border: 1px solid oklch(from var(--cor-borda-glow) 0.88 0.06 h);
 }
 
@@ -514,6 +515,7 @@
 .comentario-item.vibe-light .comentario-autor,
 .comentario-item.vibe-light .btn-responder-fenda {
     color: #111111;
+    color: oklch(0 0 0 / 0.89);
     font-weight: bold;
 }
 
@@ -633,7 +635,8 @@
 
 .comentario-texto {
     color: #ddd;
-    font-size: clamp(0.85rem, 5cqw, 1.05rem);
+    color: oklch(0.92 0 0);
+    font-size: clamp(0.8rem, 3cqw, 1rem);
     line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -1372,7 +1375,7 @@ body.pagina-post .header-principal {
     padding: 0;
     background: transparent;
     max-width: 90%;
-    max-width: 320px;
+    max-width: 350px;
     margin: auto;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     position: fixed;
