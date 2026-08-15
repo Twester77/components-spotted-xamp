@@ -75,7 +75,7 @@
             ? Math.round(Math.max(320, Math.min(vw * 0.60, 600)))
             : Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
-        // 🔥 Altura máxima do card: mais generosa no portrait
+        //  Altura máxima do card: mais generosa no portrait
         let maxCardHeight;
         if (isLandscape) {
             // Landscape: mantém o limite conservador
@@ -88,12 +88,12 @@
         const cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
         const fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
 
-        // 🔥 Tamanhos específicos para cada elemento
+        //  Tamanhos específicos para cada elemento
         const tituloSize = fontSize * 1.2;       // 20% maior que o base
         const metaSize = fontSize * 0.8;        // 15% menor que o base
         const textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
 
-        // 🔥 Altura da capa: proporção 16:9, limitada a 60% da altura do card
+        //  Altura da capa: proporção 16:9, limitada a 60% da altura do card
         const capaHeight = Math.round(Math.min(cardWidth * 0.5625, maxCardHeight * 0.65));
 
         const root = document.documentElement;
@@ -105,7 +105,7 @@
         root.style.setProperty('--bt-text-max-height', textMaxHeight + 'px');
         root.style.setProperty('--bt-card-max-height', maxCardHeight + 'px');
         root.style.setProperty('--bt-capa-height', capaHeight + 'px');
-        root.style.setProperty('--bt-container-height', Math.min(vh * 0.8, 650) + 'px');
+        root.style.setProperty('--bt-container-height', Math.min(vh * 0.8, 800) + 'px');
 
         document.querySelectorAll('.bt-card').forEach(card => {
             card.style.width = cardWidth + 'px';

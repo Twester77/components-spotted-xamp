@@ -84,9 +84,9 @@ $stmt_com->close();
 </div>
 
 <main class="bt-main" id="bt-conteudo-principal">
-    <div class="bt-feedback bt-feedback-direita" aria-hidden="true">✅ VOU</div>
+    <div class="bt-feedback bt-feedback-direita" aria-hidden="true">✅ EU VOU!</div>
     <div class="bt-feedback bt-feedback-esquerda" aria-hidden="true">❌ NÃO VOU</div>
-    <div class="bt-feedback bt-feedback-cima" aria-hidden="true">🤔 VOU VER E TE AVISO</div>
+    <div class="bt-feedback bt-feedback-cima" aria-hidden="true">🤔 TALVEZ EU VÁ</div>
     <div class="bt-container" id="bt-container-eventos" role="feed" aria-busy="false" aria-live="polite"></div>
 </main>
 
@@ -289,11 +289,11 @@ $stmt_com->close();
         if (container.querySelector('.bt-radar')) return;
 
         const radarHtml = `
-            <div class="bt-radar" style="text-align:center; padding:40px 20px; color:#ccc; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:100%;">
-                <i class="fas fa-search" style="font-size:clamp(3rem, 8vw, 5rem); color:var(--bt-dourado); display:block; margin-bottom:16px;"></i>
-                <strong style="font-size:clamp(1.1rem, 2vw, 1.6rem); display:block; margin-bottom:8px; color:#fff;">Fim da pilha!</strong>
-                <p style="font-size:clamp(0.9rem, 1.2vw, 1.2rem); color:#888; margin-bottom:20px;">Que tal buscar novos eventos?</p>
-                <button onclick="btRecarregarPilha()" class="bt-btn-empty" style="background:var(--bt-dourado); color:#000; border:none; padding:10px 28px; border-radius:30px; font-weight:700; cursor:pointer;">
+            <div class="bt-radar">
+                <i class="fas fa-search"></i>
+                <strong>Fim da pilha!</strong>
+                <p>Que tal buscar novos eventos?</p>
+                <button onclick="btRecarregarPilha()" class="bt-btn-empty" style="border:none; cursor:pointer;">
                     <i class="fas fa-sync-alt"></i> Buscar Eventos
                 </button>
             </div>
@@ -374,7 +374,7 @@ $stmt_com->close();
 
         const vw = window.innerWidth;
         const popupWidth = Math.min(Math.max(160, vw * 0.5), 320);
-        const fontSize = Math.min(Math.max(0.8, vw * 0.015), 1.1);
+        const fontSize = Math.min(Math.max(0.8, vw * 0.015), 1.05);
         const btnPadding = Math.min(Math.max(6, vw * 0.015), 14);
 
         const overlay = document.createElement('div');
@@ -386,8 +386,8 @@ $stmt_com->close();
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             z-index: 99998;
             display: flex;
             align-items: center;
@@ -398,9 +398,9 @@ $stmt_com->close();
         const menu = document.createElement('div');
         menu.className = 'bt-actions-popup';
         menu.style.cssText = `
-            background: rgba(10,10,10,0.92);
-            backdrop-filter: blur(6px);
+            background: rgba(10, 10, 10, 0.5);
             -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
             border: 1px solid rgba(255,188,0,0.3);
             border-radius: 16px;
             padding: 8px 0;
@@ -410,7 +410,7 @@ $stmt_com->close();
             user-select: none;
             min-width: ${popupWidth}px;
             max-width: 85vw;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
             animation: btPopupIn 0.2s ease-out;
             font-size: ${fontSize}rem;
         `;

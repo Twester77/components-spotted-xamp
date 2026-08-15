@@ -710,7 +710,7 @@
     width: 100%;
     max-width: 1400px;
     margin: clamp(20px, 3vw, 40px) auto;
-    padding: 0 clamp(12px, 3vw, 30px);
+    padding: 0 clamp(8px, 3vw, 25px);
 }
 
 .feed-usuario-fenda h3 {

@@ -393,8 +393,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil {
 
 body.modo-swipe-ativo #btn-abrir-filtros {
     display: inline-flex !important;
-    position: absolute;
-    top: 30%;
+    position: fixed;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100000;

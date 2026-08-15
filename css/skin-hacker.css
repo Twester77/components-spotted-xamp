@@ -103,10 +103,11 @@ body.hacker-mode::after {
 /* ---------------------------------------------------------------
    4. SCROLLBAR ESTILO TERMINAL
    --------------------------------------------------------------- */
-
-body.hacker-mode::-webkit-scrollbar {  width: 2px !important; }
-body.hacker-mode::-webkit-scrollbar-track { background: #000 !important; }
-body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00 !important; border-radius: 0 !important; }
+body.hacker-mode { scrollbar-width: 2px ; scrollbar-color:#000000 #00fd00; ; border-radius: 0; 
+}
+body.hacker-mode::-webkit-scrollbar {  width: 2px ; }
+body.hacker-mode::-webkit-scrollbar-track { background: #000 ; }
+body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00 ; border-radius: 0 ; }
 
 /* ---------------------------------------------------------------
    5. BOLHAS DESATIVADAS
@@ -182,7 +183,7 @@ body.hacker-mode .sessao-publicar::before {
     /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
     content: "+==================================================================+==============================================================+" ;
     position: absolute !important;
-    top: -18px ;
+    top: -22px ;
     left: -2px ; 
     right: -2px ;
     color: var(--hacker-green) ;
@@ -203,7 +204,7 @@ body.hacker-mode .sessao-publicar::before {
 body.hacker-mode .spotted-card.anonimo::before { content: "+== [ USER_NOT_FOUND ] ==================================================================================================+" !important; color: #ffffff !important;  }
 body.hacker-mode .spotted-card.perdidos::before { content: "+== [ PROTOCOLO: GET_$ITEM ] ================================================================================================+" !important; color: #fcf809 !important; }
 body.hacker-mode .spotted-card.tenho-ranco::before { content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+" !important; color: #f33232 !important; }
-body.hacker-mode .spotted-card.elogio::before { content: "+== [ CORREIO_ELEGANTE <3 ] ==================================================================================================+" !important; color: #f85caa !important; }
+body.hacker-mode .spotted-card.elogio::before { content: "+== [ LOVE_IS_IN_THE_AIR <3 ] ==================================================================================================+" !important; color: #f85caa !important; }
 body.hacker-mode .spotted-card.games::before { content: "+== [ Xinput_DInput DETECTADO] ==================================================================================================+" !important; color: #00ffff !important; }
 body.hacker-mode .spotted-card.academico::before { content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+" !important; color: #b00bda !important; }
 body.hacker-mode .spotted-card.caronas::before { content: "+= [ SELECT * FROM unifev WHERE loc='houseofcaralho'] ========================================================================+" !important; color: #969dc4 !important; }
@@ -221,9 +222,9 @@ body.hacker-mode .menu,
 body.hacker-mode .sidebar-fenda,
 body.hacker-mode header,
 body.hacker-mode footer {
-    background-color: rgba(0, 0, 0, 0.95) !important;
+    background-color: rgba(0, 0, 0, 0.95) ;
     background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
-    background-size: 100% 4px ;
+    background-size: 100% 2px ;
     font-family: monospace ;
 }
 
@@ -477,7 +478,7 @@ body.hacker-mode .avatar-busca,
 body.hacker-mode .img-avatar-perfil,
 body.hacker-mode .capa-img,
 body.hacker-mode .insignia-atletica-link img {
-    filter: sepia(0.25) brightness(0.9) contrast(1) grayscale(0.2) ;
+    filter: sepia(0.3) brightness(0.9) contrast(1) grayscale(0.2) ;
     transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out ;
     border-radius: 0;
 }

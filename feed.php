@@ -696,10 +696,10 @@ function reforcarLayoutNosCards() {
         if (!document.body.classList.contains('modo-swipe-ativo')) return;
         if (feedContainer.querySelector('.fim-dos-cards-vibe')) return;
         const radarHtml = `
-            <div class="fim-dos-cards-vibe" style="text-align:center; justify-content: center; padding:40px 20px; color:#ccc;">
-                <i class="fas fa-ghost" style="font-size:clamp(3.5rem, 10vh, 7rem); color:#ff8c00; margin-bottom:15px; display:block;"></i>
-                <strong style="font-size:clamp(0.95rem, 1.5vw, 1.6rem); display:block; margin-bottom:8px; color:#fff;">A Fenda foi Limpa!</strong>
-                <p style="font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; margin-bottom:20px;">Você leu tudo por aqui ou o feed chegou ao fim.</p>
+            <div class="fim-dos-cards-vibe">
+                <i class="fas fa-ghost" style="display:block;"></i>
+                <strong>A Fenda foi Limpa!</strong>
+                <p>Você leu tudo por aqui ou o feed chegou ao fim.</p>
                 <button onclick="window.reiniciarPilhaFenda()" class="btn-fenda-padrao" style="background:#ff8c00; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">
                     <i class="fas fa-sync-alt" style="margin-right:8px;"></i> RADAR DE MARACUTAIA
                 </button>

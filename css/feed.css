@@ -230,6 +230,26 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     transition: transform 0.2s ease, background 0.3s ease !important;
 }
 
+.fim-dos-cards-vibe {
+    display: block;
+    text-align: center; justify-content: center; padding:40px 20px; color:#ccc;
+    position: relative;
+
+}
+
+.fim-dos-cards-vibe .fa-ghost:before { 
+    font-size:clamp(3.5rem, 10vh, 7rem); color:#ff8c00; margin-bottom:15px; display:block;
+}
+
+.fim-dos-cards-vibe strong {
+font-size:clamp(0.95rem, 1.5vw, 1.6rem); display:block; margin-bottom:8px; color:#fff; }
+
+.fim-dos-cards-vibe p {
+font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; margin-bottom:20px;
+}
+
+
+
 .btn-fenda-padrao {
     padding: 10px 24px;
     background: var(--dourado);
@@ -846,8 +866,9 @@ span.category-tag {
    ================================================== */
 .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 6px;
+    justify-content: center;
+    grid-template-columns: repeat(2, minmax(70px, 100px));
+    gap: 15px;
     margin-top: 5px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
@@ -889,6 +910,7 @@ span.category-tag {
 
 /* Se houver apenas 1 item, centraliza e limita tamanho */
 .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+    display: flex;
     justify-content: center;
     background: transparent;
     border: none;

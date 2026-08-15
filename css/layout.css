@@ -178,9 +178,9 @@ nav {
 .sidebar-fenda {
     position: fixed;
     top: 0;
-    left: -330px !important;
+    left: -350px !important;
     /* Começa escondida */
-    max-width: 300px;
+    max-width: 350px;
     height: 100dvh;
     /* Força a barra a ter EXATAMENTE a altura da tela */
     -webkit-overflow-scrolling: touch;
@@ -2360,10 +2360,6 @@ textarea[name="bio"] {
         flex-wrap: wrap;
         justify-content: center;
         gap: 15px;
-    }
-
-    body.modo-swipe-ativo #btn-abrir-filtros {
-        top: -20px;
     }
 
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
