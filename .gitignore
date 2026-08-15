@@ -9,3 +9,5 @@ vendor/
 *.log
 lixeira_postagens/
 postagens/
+.vercel
+.env*
