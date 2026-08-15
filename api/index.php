@@ -1,2 +1,3 @@
 <?php
-echo "Roteador funcionando!";
+chdir(__DIR__ . '/..');
+echo "Roteador com chdir funcionando!";
