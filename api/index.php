@@ -1,3 +1,5 @@
 <?php
 chdir(__DIR__ . '/..');
-echo "Roteador com chdir funcionando!";
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$file = ltrim($path, '/');
+echo "Arquivo requisitado: " . $file;
