@@ -1,13 +1,20 @@
 <?php
 //  CONFIGURAÇÃO GLOBAL DE TEMPO (FUSO HORÁRIO BRASIL)
 date_default_timezone_set('America/Sao_Paulo');
-// CARREGAMENTO HÍBRIDO DO AMBIENTE (LOCAL + PRODUÇÃO)
-if (file_exists(__DIR__ . '/.env.php')) {
-    include_once __DIR__ . '/.env.php';
+
+// ============================================================
+//  CARREGAMENTO HÍBRIDO DO AMBIENTE – SÓ EM LOCAL!
+// ============================================================
+// Em produção (Vercel), as variáveis vêm do painel.
+// Em local, o .env.php é carregado.
+if (!getenv('ENVIRONMENT') || getenv('ENVIRONMENT') !== 'production') {
+    if (file_exists(__DIR__ . '/.env.php')) {
+        include_once __DIR__ . '/.env.php';
+    }
 }
 
 // ============================================================
-// 🔥 AJUSTADO PARA VERCEL – caminhos absolutos com ROOT_PATH
+//  AJUSTADO PARA VERCEL – caminhos absolutos com ROOT_PATH
 // ============================================================
 define('ROOT_PATH', dirname(__DIR__));
 
