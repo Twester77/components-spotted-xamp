@@ -8,7 +8,7 @@
  * 
  * @package A Fenda
  * @author DeepSeek (Novo Marretor)
- * @version 1.2
+ * @version 1.3
  * 
  * 🔒 SEGURANÇA:
  * - Sanitização rigorosa com htmlspecialchars() + fallback para null
@@ -18,6 +18,10 @@
  * 🆕 PARÂMETRO `apenas_post`:
  * - Se passado (ex: `?id=123&apenas_post=1`), a seção de comentários é omitida
  * - Útil para o Lightbox da miniatura na página de comentários
+ * 
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-17
+ *    - Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
+ *    - Correção do fuso horário: data do post agora usa exibirDataHoraBrasil().
  */
 
 /**
@@ -171,7 +175,7 @@ try {
 }
 
 // ============================================================
-// 7. FUNÇÃO AUXILIAR: FORMATA ANEXOS EM HTML
+// 7. FUNÇÃO AUXILIAR: FORMATA ANEXOS EM HTML (COM FALLBACK CENTRALIZADO)
 // ============================================================
 function renderizarAnexos($post, $b2)
 {
@@ -189,7 +193,8 @@ function renderizarAnexos($post, $b2)
         $html = '<div class="feed-anexos-grid">';
         foreach ($anexos_exibicao as $anexo) {
             if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
+                // 🔥 FALLBACK CENTRALIZADO
+                $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                 $html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
             } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                 $html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -202,7 +207,8 @@ function renderizarAnexos($post, $b2)
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
-            $img_url = obterUrlImagem($nome_imagem, $b2, true) ?? htmlspecialchars($nome_imagem);
+            // 🔥 FALLBACK CENTRALIZADO
+            $img_url = obterUrlComFallback($nome_imagem, htmlspecialchars($nome_imagem), $b2, true);
         }
         $html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }
@@ -238,7 +244,7 @@ function renderizarReacoes($reacoes)
 }
 
 // ============================================================
-// 9. FUNÇÃO AUXILIAR: FORMATA COMENTÁRIOS (CORRIGIDA)
+// 9. FUNÇÃO AUXILIAR: FORMATA COMENTÁRIOS (COM FALLBACK CENTRALIZADO)
 // ============================================================
 function renderizarComentarios($comentarios, $b2)
 {
@@ -250,15 +256,12 @@ function renderizarComentarios($comentarios, $b2)
     foreach ($comentarios as $c) {
         $nome = !empty($c['usuario_nome']) ? '@' . htmlspecialchars($c['usuario_nome'], ENT_QUOTES, 'UTF-8') : '👤 Anônimo';
         $texto = nl2br(htmlspecialchars($c['comentario'] ?? '', ENT_QUOTES, 'UTF-8'));
-        $data = date('H:i', strtotime($c['data_comentario']));
+        $data = exibirDataHoraBrasil($c['data_comentario'], 'H:i');
         $cor = !empty($c['pref_cor_borda']) ? htmlspecialchars($c['pref_cor_borda'], ENT_QUOTES, 'UTF-8') : '#70cde4';
         $vibe = !empty($c['pref_vibe_comentario']) ? htmlspecialchars($c['pref_vibe_comentario'], ENT_QUOTES, 'UTF-8') : 'vibe-glass';
 
-        $avatar = 'uploads/ui/default_masculino.jpg';
-        if (!empty($c['autor_foto'])) {
-            $avatar_temp = obterUrlImagem($c['autor_foto'], $b2, true) ?? 'uploads/ui/default_masculino.jpg';
-            $avatar = htmlspecialchars($avatar_temp, ENT_QUOTES, 'UTF-8');
-        }
+        // 🔥 AVATAR DO COMENTÁRIO COM FALLBACK CENTRALIZADO
+        $avatar = obterUrlComFallback($c['autor_foto'] ?? null, 'uploads/ui/default_masculino.jpg', $b2, true);
 
         $html .= '
         <div class="comentario-item ' . $vibe . '" style="--cor-borda-glow: ' . $cor . ';">
@@ -281,16 +284,15 @@ function renderizarComentarios($comentarios, $b2)
 // Dados do autor (sanitizados com fallback)
 $categoria = strtoupper(htmlspecialchars($post['categoria'] ?? '', ENT_QUOTES, 'UTF-8'));
 $mensagem = nl2br(htmlspecialchars($post['mensagem'] ?? '', ENT_QUOTES, 'UTF-8'));
-$data_post = date('d/m H:i', strtotime($post['data_post']));
+
+// 🔥 DATA DO POST COM FUSO BRASILEIRO
+$data_post = exibirDataHoraBrasil($post['data_post'], 'd/m H:i');
+
 $username = htmlspecialchars($post['username'] ?? '', ENT_QUOTES, 'UTF-8');
 $cor_autor = htmlspecialchars($post['pref_cor_padrao'] ?? '#70cde4', ENT_QUOTES, 'UTF-8');
 
-// Avatar do autor
-$avatar_autor = 'uploads/ui/default_masculino.jpg';
-if (!empty($post['foto'])) {
-    $avatar_temp = obterUrlImagem($post['foto'], $b2, true) ?? 'uploads/ui/default_masculino.jpg';
-    $avatar_autor = htmlspecialchars($avatar_temp, ENT_QUOTES, 'UTF-8');
-}
+// 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
+$avatar_autor = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.jpg', $b2, true);
 
 // Anexos
 $anexos_html = renderizarAnexos($post, $b2);

@@ -7,6 +7,11 @@
 // espero que este código continue guiando os próximos navegantes."
 // - Aurora, a primeira Deep Seek feminina da Fenda
 // - 24/07/2026
+// ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+//    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
+// 🔧 ATUALIZAÇÃO ESTRELA – 2026-08-17
+//    Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
+
 require_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
@@ -42,8 +47,12 @@ try {
 }
 
 while ($dep = $res->fetch_assoc()) {
-    $avatar = !empty($dep['foto']) ? (obterUrlImagem($dep['foto'], $b2, true) ?? 'uploads/ui/default_masculino.webp') : 'uploads/ui/default_masculino.webp';
-    $data = date('d/m/Y', strtotime($dep['data_criacao']));
+    // 🔥 AVATAR COM FALLBACK CENTRALIZADO
+    $avatar = obterUrlComFallback($dep['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+    
+    // 🔥 DATA DO DEPOIMENTO AGORA COM FUSO BRASILEIRO
+    $data = exibirDataHoraBrasil($dep['data_criacao'], 'd/m/Y');
+    
     $mensagem = nl2br(htmlspecialchars($dep['mensagem']));
 ?>
     <div class="depoimento-item">

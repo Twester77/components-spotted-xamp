@@ -6,6 +6,9 @@
  * POST: Processa um voto (requer CSRF e rate limiting).
  * 
  * 🔥 VERSÃO COM RATE LIMITING INTELIGENTE – conta apenas tentativas falhas
+ * 
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+ *    Este arquivo não exibe datas no HTML, portanto não requer correção de fuso horário.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -262,3 +265,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
     exit;
 }
+?>

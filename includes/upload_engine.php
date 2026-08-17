@@ -273,3 +273,47 @@ function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600
 
     return 'proxy.php?path=' . urlencode($caminhoLimpo);
 }
+
+// ============================================================
+// 7. FUNÇÃO CENTRALIZADA DE FALLBACK DE IMAGENS
+// ============================================================
+
+/**
+ * Obtém a URL de uma imagem com fallback seguro, capturando exceções do B2.
+ * 
+ * @param string|null $caminho    Caminho da imagem (ex: 'postagens/post_abc.webp')
+ * @param string      $fallback   Caminho do fallback (ex: 'uploads/ui/default.webp')
+ * @param object|null $b2         Instância do B2Client (opcional, cria nova se null)
+ * @param bool        $assinado   Se deve gerar URL assinada (padrão: true)
+ * 
+ * @return string URL da imagem ou fallback em caso de erro
+ */
+function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b2 = null, $assinado = true)
+{
+    // 1. Se o caminho for vazio, retorna fallback imediatamente
+    if (empty($caminho) || !is_string($caminho)) {
+        return $fallback;
+    }
+
+    // 2. Se já for uma URL completa (ex: GIF do GIPHY), retorna o próprio caminho
+    if (filter_var($caminho, FILTER_VALIDATE_URL)) {
+        return $caminho;
+    }
+
+    // 3. Tenta obter a URL via B2
+    try {
+        // Se $b2 não foi passado, instancia
+        $b2Instance = ($b2 !== null) ? $b2 : B2Client::getInstance();
+        
+        // Tenta obter a URL
+        $url = obterUrlImagem($caminho, $b2Instance, $assinado);
+        
+        // Se obteve uma URL válida, retorna; senão, fallback
+        return ($url && is_string($url) && !empty($url)) ? $url : $fallback;
+        
+    } catch (Exception $e) {
+        // Log do erro (sem quebrar a página)
+        error_log("[OBTER_URL_FALLBACK] Erro ao obter URL para '$caminho': " . $e->getMessage());
+        return $fallback;
+    }
+}

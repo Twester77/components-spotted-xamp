@@ -219,9 +219,9 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
 /* 5. Altura e limites do texto no modo swipe */
 body.modo-swipe-ativo .post-content {
     /* Fallback JS */
+    max-height: clamp(60px, 25cqw, 200px);
     max-height: var(--text-max-height, clamp(3rem, 6vh, 17rem));
     /* Modernos: Baseia o limite dinamicamente na largura do próprio card */
-    max-height: clamp(60px, 25cqw, 160px);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     margin: 5px auto;

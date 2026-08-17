@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido – PHP 8.5+ gerencia automaticamente
 
         if ($httpCode !== 200) {
             error_log("[TURNSTILE] Falha na API (HTTP $httpCode)");
@@ -246,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $resend_response = curl_exec($ch);
         $resend_http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido – PHP 8.5+ gerencia automaticamente
 
         if ($resend_http_code !== 200) {
             error_log('[RESEND] Falha ao enviar e-mail: ' . $resend_response);

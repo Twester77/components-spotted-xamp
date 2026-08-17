@@ -224,7 +224,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }
 
-    $data_post = date('d/m H:i', strtotime($linha['data_post']));
+    // 🔥 DATA DO POST AGORA COM FUSO BRASILEIRO
+    $data_post = exibirDataHoraBrasil($linha['data_post'], 'd/m H:i');
 ?>
     <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>"
         data-id="<?php echo $post_id_atual; ?>"

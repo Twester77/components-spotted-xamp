@@ -3,6 +3,8 @@
  * notificacoes.php – Página dedicada a notificações
  * 
  * 🚀 OTIMIZADO: usa campo `tipo` em vez de consultas extras (Lua, 2026-08-13)
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+ *    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -70,7 +72,7 @@ include 'includes/navbar.php';
                         <div class="notificacao-conteudo">
                             <p><?= htmlspecialchars($row['mensagem']) ?></p>
                             <small class="notificacao-data">
-                                <i class="far fa-clock"></i> <?= date('d/m H:i', strtotime($row['data_criacao'])) ?>
+                                <i class="far fa-clock"></i> <?= exibirDataHoraBrasil($row['data_criacao'], 'd/m H:i') ?>
                             </small>
                         </div>
                         <?php if ($row['lida'] == 0): ?>

@@ -1,5 +1,6 @@
 <?php
 // auth-bridge.php – Ponte entre Supabase Auth e Sessão PHP (Vercel)
+// 🔧 v1.1 - Removido curl_close() para PHP 8.5+
 
 include_once __DIR__ . '/conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
@@ -34,7 +35,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-curl_close($ch);
+// 🔥 curl_close removido – PHP 8.5+ gerencia automaticamente
 
 if ($http_code !== 200) {
     fenda_log('🔴 Token inválido ou expirado (HTTP ' . $http_code . ')');

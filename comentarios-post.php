@@ -6,6 +6,8 @@
  *    evitando "headers already sent" em redirecionamentos.
  * 
  * 🌙 LUA – 2026-08-13
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+ *    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
  */
 
 include_once 'conexao.php';
@@ -332,7 +334,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
                             <!-- 🔥 RODAPÉ COM DATA (AGORA AQUI, ABAIXO DE TUDO) -->
                             <div class="comentario-rodape">
-                                <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
+                                <span class="comentario-data"><?= exibirDataHoraBrasil($c['data_comentario'], 'H:i') ?></span>
                             </div>
 
                         </div>

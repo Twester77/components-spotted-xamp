@@ -33,25 +33,15 @@ $dados = mysqli_fetch_assoc($resultado);
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
-// 🔥 OBTÉM AS URLs DO B2
+// 🔥 OBTÉM AS URLs DO B2 COM FALLBACK CENTRALIZADO
 try {
     $b2 = B2Client::getInstance();
-    // Avatar
-    if (!empty($foto_limpa) && !filter_var($foto_limpa, FILTER_VALIDATE_URL)) {
-        $foto_url = obterUrlImagem($foto_limpa, $b2, true);
-        $foto_atual = $foto_url ?? 'uploads/ui/default_masculino.webp';
-    } else {
-        $foto_atual = 'uploads/ui/default_masculino.webp';
-    }
-    // Capa
-    if (!empty($capa_limpa) && !filter_var($capa_limpa, FILTER_VALIDATE_URL)) {
-        $capa_url = obterUrlImagem($capa_limpa, $b2, true);
-        $capa_atual = $capa_url ?? 'uploads/ui/default_capa_masculino.webp';
-    } else {
-        $capa_atual = 'uploads/ui/default_capa_masculino.webp';
-    }
+    // Avatar com fallback centralizado
+    $foto_atual = obterUrlComFallback($foto_limpa, 'uploads/ui/default_masculino.webp', $b2, true);
+    // Capa com fallback centralizado
+    $capa_atual = obterUrlComFallback($capa_limpa, 'uploads/ui/default_capa_masculino.webp', $b2, true);
 } catch (Exception $e) {
-    error_log('[PERFIL] Falha ao obter URLs do B2: ' . $e->getMessage());
+    error_log('[PERFIL] Falha ao instanciar B2: ' . $e->getMessage());
     $foto_atual = 'uploads/ui/default_masculino.webp';
     $capa_atual = 'uploads/ui/default_capa_masculino.webp';
 }

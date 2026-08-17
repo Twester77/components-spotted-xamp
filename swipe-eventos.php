@@ -4,6 +4,9 @@
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-13
  * 🔧 CORREÇÃO: Eventos de comunidades privadas só são exibidos para membros ativos.
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-17
+ *    - Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
+ *    - Correção do fuso horário: data do evento agora usa exibirDataHoraBrasil().
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -109,8 +112,11 @@ while ($evento = $res->fetch_assoc()) {
         }
     }
 
-    $avatar = !empty($evento['criador_foto']) ? obterUrlImagem($evento['criador_foto']) : 'uploads/ui/default.webp';
-    $capa = !empty($evento['imagem_url']) ? obterUrlImagem($evento['imagem_url']) : 'uploads/ui/default_evento.webp';
+    // 🔥 AVATAR DO CRIADOR COM FALLBACK CENTRALIZADO
+    $avatar = obterUrlComFallback($evento['criador_foto'] ?? null, 'uploads/ui/default.webp', null, true);
+    
+    // 🔥 CAPA DO EVENTO COM FALLBACK CENTRALIZADO
+    $capa = obterUrlComFallback($evento['imagem_url'] ?? null, 'uploads/ui/default_evento.webp', null, true);
 
     $selo = match($status) {
         'expirado' => '<span class="bt-status-selo expirado">⚫ Encerrado</span>',
@@ -132,7 +138,9 @@ while ($evento = $res->fetch_assoc()) {
     $total_vou = $evento['total_vou'] ?? 0;
     $total_talvez = $evento['total_talvez'] ?? 0;
     $total_nao_vou = $evento['total_nao_vou'] ?? 0;
-    $data_formatada = date('d/m/Y H:i', strtotime($evento['data_evento']));
+    
+    // 🔥 DATA DO EVENTO COM FUSO BRASILEIRO
+    $data_formatada = exibirDataHoraBrasil($evento['data_evento'], 'd/m/Y H:i');
 ?>
     <!-- 🔥 CARD DE EVENTO -->
     <div class="bt-card <?php echo $status; ?>" data-id="<?php echo $evento['id']; ?>" data-criador="<?php echo $evento['criador_id']; ?>">

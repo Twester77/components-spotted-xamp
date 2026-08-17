@@ -146,9 +146,41 @@ if (!function_exists('fenda_decrypt_state')) {
 }
 
 // ============================================================
+// ⏰ FUNÇÃO UNIVERSAL PARA EXIBIR DATAS NO FUSO BRASILEIRO
+// ============================================================
+if (!function_exists('exibirDataHoraBrasil')) {
+    /**
+     * Converte uma data do formato do banco (UTC) para o fuso de Brasília
+     * e a formata conforme solicitado.
+     * 
+     * @param string|null $dataOriginal Data original (ex: '2026-08-16 05:23:45')
+     * @param string $formato Formato de saída (padrão: 'd/m/Y H:i')
+     * @return string Data formatada no fuso Brasil, ou string vazia se $dataOriginal for nulo/vazio
+     */
+    function exibirDataHoraBrasil($dataOriginal, $formato = 'd/m/Y H:i') {
+        if (empty($dataOriginal)) {
+            return '';
+        }
+        try {
+            $dt = new DateTime($dataOriginal, new DateTimeZone('UTC'));
+            $dt->setTimezone(new DateTimeZone('America/Sao_Paulo'));
+            return $dt->format($formato);
+        } catch (Exception $e) {
+            error_log("[EXIBIR_DATA] Erro ao converter data '$dataOriginal': " . $e->getMessage());
+            // Fallback: retorna a data original sem formatação
+            return $dataOriginal;
+        }
+    }
+}
+fenda_log('🔵 [CONEXAO] exibirDataHoraBrasil() definida');
+
+// ============================================================
 // 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO (com validação de 30 dias via banco)
 // ============================================================
 fenda_log('🔵 [CONEXAO] Antes de session_status');
+
+// 🔥 Aumenta o tempo de vida da sessão para evitar expiração prematura do CSRF token
+ini_set('session.gc_maxlifetime', 86400); // 24 horas
 if (session_status() === PHP_SESSION_NONE) {
     fenda_log('🔵 [CONEXAO] Iniciando sessão');
     if ($is_production) {

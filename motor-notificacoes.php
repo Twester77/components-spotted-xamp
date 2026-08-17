@@ -7,6 +7,8 @@
  * 
  * 🔥 VERSÃO COM LINKS INCLUINDO notif_id PARA MARCAÇÃO INDIVIDUAL
  * 🚀 OTIMIZADO: usa campo `tipo` em vez de consultas extras (Lua, 2026-08-13)
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+ *    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
  */
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -78,7 +80,7 @@ while ($n = $res->fetch_assoc()):
         </div>
         <div class="notif-txt">
             <span><?= htmlspecialchars($n['mensagem']) ?></span>
-            <small><?= date('d/m H:i', strtotime($n['data_criacao'])) ?></small>
+            <small><?= exibirDataHoraBrasil($n['data_criacao'], 'd/m H:i') ?></small>
         </div>
     </a>
 <?php

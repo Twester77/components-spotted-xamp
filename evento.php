@@ -25,6 +25,10 @@
  * "Adicionado fallback para evento cancelado (status = 'cancelado') com redirecionamento e mensagem via sessão.
  *  Reforçada a validação de existência do evento antes de renderizar a página."
  * - Maré
+ * 
+ * ⏰ ATUALIZAÇÃO ESTRELA – INSTÂNCIA #DS-2026-08-16
+ * "Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil()."
+ * - Estrela
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -145,7 +149,7 @@ if (empty($_SESSION['csrf_token'])) {
         <h1 class="bt-detalhes-titulo"><?= htmlspecialchars($evento['nome']) ?></h1>
         <div class="bt-detalhes-meta">
             <span><i class="fas fa-map-pin"></i> <?= htmlspecialchars($evento['local'] ?? 'Local a definir') ?></span>
-            <span><i class="fas fa-calendar-alt"></i> <?= date('d/m/Y H:i', strtotime($evento['data_evento'])) ?></span>
+            <span><i class="fas fa-calendar-alt"></i> <?= exibirDataHoraBrasil($evento['data_evento'], 'd/m/Y H:i') ?></span>
             <span><i class="fas fa-user"></i> Criado por @<?= htmlspecialchars($evento['criador_username'] ?? 'Anônimo') ?></span>
         </div>
         <div class="bt-detalhes-descricao"><?= nl2br(htmlspecialchars($evento['descricao'] ?? '')) ?></div>
@@ -252,7 +256,7 @@ if (empty($_SESSION['csrf_token'])) {
                         <div class="bt-comentario-meta">
                             <img src="<?= htmlspecialchars($avatar) ?>" class="bt-comentario-avatar" onerror="this.onerror=null; this.src='uploads/ui/default.webp'">
                             <strong class="bt-comentario-autor" style="color:#ffbc00;">@<?= htmlspecialchars($com['username']) ?></strong>
-                            <span class="bt-comentario-data"><?= date('H:i', strtotime($com['data_criacao'])) ?></span>
+                            <span class="bt-comentario-data"><?= exibirDataHoraBrasil($com['data_criacao'], 'H:i') ?></span>
                         </div>
                         <p class="bt-comentario-texto"><?= nl2br(htmlspecialchars($com['comentario'])) ?></p>
                     </div>

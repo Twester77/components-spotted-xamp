@@ -8,6 +8,7 @@
  * 
  * 🔥 OTIMIZAÇÃO: SQL_CALC_FOUND_ROWS (compatível com TiDB)
  * 🌙 CORREÇÃO FINAL: URL do fetch construída dinamicamente para evitar 404
+ * 🔧 CORREÇÃO V2: try/catch em cada card para isolar falhas do B2
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -59,7 +60,17 @@ if ($is_ajax) {
         exit;
     }
     while ($com = mysqli_fetch_assoc($result)) {
-        renderizarCardComunidade($com);
+        // 🔥 CADA CARD AGORA É PROTEGIDO POR try/catch
+        try {
+            renderizarCardComunidade($com);
+        } catch (Exception $e) {
+            error_log("[LISTA-COMUNIDADES AJAX] Erro ao renderizar card ID {$com['id']}: " . $e->getMessage());
+            // Fallback mínimo para não quebrar o grid
+            echo '<div class="comunidade-card erro" style="border:1px solid #ff6b6b; padding:10px;">';
+            echo '  <h4>' . htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8') . '</h4>';
+            echo '  <p style="color:#ff6b6b; font-size:0.8rem;">Erro ao carregar detalhes.</p>';
+            echo '</div>';
+        }
     }
     exit;
 }
@@ -73,6 +84,7 @@ include 'includes/bolhas.php';
 
 /**
  * Função auxiliar para renderizar um card de comunidade (reutilizada no loop e no AJAX)
+ * 🔥 AGORA COM TRY/CATCH INTERNO E FALLBACK SEGURO
  */
 function renderizarCardComunidade($com) {
     $membros = $com['total_membros'] ?? 0;
@@ -80,13 +92,15 @@ function renderizarCardComunidade($com) {
     $tipo_label = $tipo === 'privada' ? '🔒 Privada' : '🌐 Pública';
     $tipo_classe = $tipo === 'privada' ? 'privada' : 'publica';
 
-    // Capa via B2
+    // Capa via B2 – com try/catch para isolar falhas
+    $capa_exibicao = 'uploads/ui/default_comunidade.webp';
     $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
     try {
         $b2 = B2Client::getInstance();
         $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
     } catch (Exception $e) {
-        $capa_exibicao = 'uploads/ui/default_comunidade.webp';
+        error_log("[RENDER CARD] Erro ao obter capa para comunidade {$com['id']}: " . $e->getMessage());
+        // Fallback mantido
     }
 
     // Verifica se o usuário é membro (apenas para exibir)
@@ -96,11 +110,16 @@ function renderizarCardComunidade($com) {
         $check = mysqli_query($GLOBALS['conn'], "SELECT 1 FROM comunidade_membros WHERE comunidade_id = {$com['id']} AND usuario_id = $meu_id");
         $is_membro = mysqli_num_rows($check) > 0;
     }
+
+    // 🛡️ SANITIZAÇÃO DE SAÍDA (proteção XSS)
+    $nome_seguro = htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8');
+    $descricao_segura = htmlspecialchars($com['descricao'] ?? 'Sem descrição', ENT_QUOTES, 'UTF-8');
+    $criador_seguro = htmlspecialchars($com['criador_username'] ?? 'Anônimo', ENT_QUOTES, 'UTF-8');
 ?>
     <div class="comunidade-card">
         <a href="comunidade.php?id=<?php echo $com['id']; ?>" class="card-link">
             <div class="capa-wrapper">
-                <img src="<?php echo htmlspecialchars($capa_exibicao); ?>" alt="<?php echo htmlspecialchars($com['nome']); ?>" onerror="this.src='uploads/ui/default_comunidade.webp'">
+                <img src="<?php echo htmlspecialchars($capa_exibicao, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo $nome_seguro; ?>" onerror="this.src='uploads/ui/default_comunidade.webp'">
                 <span class="badge-membros">
                     <i class="fas fa-users"></i> <?php echo $membros; ?>
                 </span>
@@ -109,10 +128,10 @@ function renderizarCardComunidade($com) {
                 </span>
             </div>
             <div class="info-comunidade">
-                <h3><?php echo htmlspecialchars($com['nome']); ?></h3>
-                <p class="descricao"><?php echo htmlspecialchars($com['descricao'] ?? 'Sem descrição'); ?></p>
+                <h3><?php echo $nome_seguro; ?></h3>
+                <p class="descricao"><?php echo $descricao_segura; ?></p>
                 <div class="meta">
-                    <span>Criada por @<?php echo htmlspecialchars($com['criador_username'] ?? 'Anônimo'); ?></span>
+                    <span>Criada por @<?php echo $criador_seguro; ?></span>
                     <span><?php echo date('d/m/Y', strtotime($com['data_criacao'])); ?></span>
                 </div>
             </div>
@@ -159,12 +178,22 @@ function renderizarCardComunidade($com) {
         $total_cards = mysqli_num_rows($result);
         if ($total_cards > 0):
             while ($com = mysqli_fetch_assoc($result)):
-                renderizarCardComunidade($com);
+                // 🔥 CADA CARD AGORA É PROTEGIDO POR try/catch
+                try {
+                    renderizarCardComunidade($com);
+                } catch (Exception $e) {
+                    error_log("[LISTA-COMUNIDADES] Erro ao renderizar card ID {$com['id']}: " . $e->getMessage());
+                    // Fallback seguro
+                    echo '<div class="comunidade-card erro" style="border:1px solid #ff6b6b; padding:10px; margin-bottom:10px;">';
+                    echo '  <h4>' . htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8') . '</h4>';
+                    echo '  <p style="color:#ff6b6b; font-size:0.8rem;">Erro ao carregar detalhes. Tente novamente mais tarde.</p>';
+                    echo '</div>';
+                }
             endwhile;
         else:
         ?>
             <div class="empty-state">
-                <p><?php echo !empty($busca) ? 'Nenhuma comunidade encontrada com "' . htmlspecialchars($busca) . '".' : 'Nenhuma comunidade ainda.'; ?></p>
+                <p><?php echo !empty($busca) ? 'Nenhuma comunidade encontrada com "' . htmlspecialchars($busca, ENT_QUOTES, 'UTF-8') . '".' : 'Nenhuma comunidade ainda.'; ?></p>
                 <?php if (!empty($busca)): ?>
                     <a href="lista-comunidades.php" class="btn-fenda-padrao" style="margin-top: 10px;">Ver todas</a>
                 <?php else: ?>

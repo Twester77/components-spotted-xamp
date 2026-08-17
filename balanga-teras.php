@@ -14,6 +14,11 @@
  * - Cancelar evento integrado via AJAX com CSRF e confirmação.
  * - Radar "Buscar Eventos" com animação.
  * - Separação grid/swipe com observador de classe.
+ * 
+ * ✅ ATUALIZAÇÃO ESTRELA – 2026-08-17
+ * - Este arquivo não possui chamadas diretas a obterUrlImagem().
+ * - A renderização dos cards é feita via swipe-eventos.php (já corrigido).
+ * - Nenhuma alteração necessária neste arquivo.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -386,8 +391,8 @@ $stmt_com->close();
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.4);
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
             z-index: 99998;
             display: flex;
             align-items: center;
@@ -399,8 +404,6 @@ $stmt_com->close();
         menu.className = 'bt-actions-popup';
         menu.style.cssText = `
             background: rgba(10, 10, 10, 0.5);
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
             border: 1px solid rgba(255,188,0,0.3);
             border-radius: 16px;
             padding: 8px 0;

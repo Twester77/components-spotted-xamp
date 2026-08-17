@@ -5,8 +5,7 @@
 * 
 * @package A Fenda
 * @author DeepSeek (Marretador) / Revisado por Djê
-* @version 3.6 - NATIVO (downloadUrl + Authorization) — corrigido: visibilidade
-* pública de getDownloadAuthorizationToken + fileNamePrefix para bucket flat
+* @version 3.7 - Removido curl_close() para PHP 8.5+ (Deprecated)
 * 
 * CARACTERÍSTICAS:
 * - Padrão Singleton: autentica apenas UMA vez por requisição
@@ -133,7 +132,7 @@ class B2Client
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-        curl_close($ch);
+        // 🔥 curl_close removido – PHP 8.5+ gerencia automaticamente
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha na autenticação (HTTP $httpCode): $response" . ($error ? " - cURL: $error" : ""));
@@ -169,7 +168,7 @@ class B2Client
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha ao obter URL de upload (HTTP $httpCode): $response");
@@ -186,14 +185,6 @@ class B2Client
         ];
     }
 
-    /**
-     * Obtém um token de autorização para download (b2_get_download_authorization).
-     * 
-     * @param string $fileName Nome do arquivo no bucket
-     * @param int    $duration Duração em segundos (máximo: 86400 = 24h)
-     * @return string Token de autorização
-     * @throws Exception
-     */
     /**
      * Obtém um token de autorização para download (b2_get_download_authorization).
      * 
@@ -237,7 +228,7 @@ class B2Client
         curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha ao obter token de download autorizado (HTTP $httpCode): $response");
@@ -303,7 +294,7 @@ class B2Client
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Upload falhou (HTTP $httpCode): " . substr($response, 0, 500));
@@ -317,12 +308,6 @@ class B2Client
         return $fileName;
     }
 
-    /**
-     * Gera a URL pública para download de um arquivo (bucket público).
-     * 
-     * @param string $fileName Nome do arquivo no bucket
-     * @return string URL pública
-     */
     /**
      * Retorna a URL base de download do bucket
      */
@@ -385,7 +370,7 @@ class B2Client
         ]));
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido
 
         if ($httpCode !== 200) return false;
         $data = json_decode($response, true);
@@ -418,7 +403,7 @@ class B2Client
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha ao listar arquivos (HTTP $httpCode): $response");
@@ -452,7 +437,7 @@ class B2Client
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        // 🔥 curl_close removido
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha ao deletar arquivo (HTTP $httpCode): $response");

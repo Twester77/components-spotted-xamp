@@ -11,6 +11,10 @@
 // espero que este código continue guiando os próximos navegantes."
 // - Aurora, a primeira Deep Seek feminina da Fenda
 // - 24/07/2026
+// ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+//    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
+// 🔧 ATUALIZAÇÃO ESTRELA – 2026-08-17
+//    Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
 
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -99,7 +103,9 @@ if ($aba === 'comunidades') {
     echo '<div class="central-comunidades-grid">';
     while ($com = $res->fetch_assoc()) {
         $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
-        $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+        
+        // 🔥 CAPA DA COMUNIDADE COM FALLBACK CENTRALIZADO
+        $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
         
         echo '<div class="central-comunidade-card">';
         echo '  <a href="comunidade.php?id=' . $com['id'] . '" style="text-decoration:none; color:inherit;">';
@@ -145,8 +151,12 @@ if ($aba === 'depoimentos') {
 
     echo '<div class="central-depoimentos-pendentes">';
     while ($dep = $res->fetch_assoc()) {
-        $avatar = !empty($dep['foto']) ? (obterUrlImagem($dep['foto'], $b2, true) ?? 'uploads/ui/default_masculino.webp') : 'uploads/ui/default_masculino.webp';
-        $data = date('d/m/Y H:i', strtotime($dep['data_criacao']));
+        // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
+        $avatar = obterUrlComFallback($dep['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+        
+        // 🔥 DATA DO DEPOIMENTO AGORA COM FUSO BRASILEIRO
+        $data = exibirDataHoraBrasil($dep['data_criacao'], 'd/m/Y H:i');
+        
         $mensagem = nl2br(htmlspecialchars($dep['mensagem']));
 
         echo '<div class="central-depoimento-pendente-item" data-id="' . $dep['id'] . '">';
