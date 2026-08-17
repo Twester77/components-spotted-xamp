@@ -125,7 +125,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                 <div class="capa-default" style="background: linear-gradient(135deg, <?php echo $cor_user; ?>88 0%, #000 100%); width: 100%; height: 100%;"></div>
             <?php endif; ?>
             <div class="avatar-posicionador">
-                <img src="<?= htmlspecialchars($foto_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.jpg';">
+                <img src="<?= htmlspecialchars($foto_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.webp';">
                 <?php if ($is_presenca): ?>
                     <div class="badge-presenca-bottom"><i class="fa-solid fa-crown"></i></div>
                 <?php endif; ?>

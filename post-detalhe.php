@@ -261,12 +261,12 @@ function renderizarComentarios($comentarios, $b2)
         $vibe = !empty($c['pref_vibe_comentario']) ? htmlspecialchars($c['pref_vibe_comentario'], ENT_QUOTES, 'UTF-8') : 'vibe-glass';
 
         // 🔥 AVATAR DO COMENTÁRIO COM FALLBACK CENTRALIZADO
-        $avatar = obterUrlComFallback($c['autor_foto'] ?? null, 'uploads/ui/default_masculino.jpg', $b2, true);
+        $avatar = obterUrlComFallback($c['autor_foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
 
         $html .= '
         <div class="comentario-item ' . $vibe . '" style="--cor-borda-glow: ' . $cor . ';">
             <div class="comentario-meta">
-                <img src="' . $avatar . '" class="avatar-p" style="border-radius:50%; margin-right:4px;" onerror="this.src=\'uploads/ui/default_masculino.jpg\'">
+                <img src="' . $avatar . '" class="avatar-p" style="border-radius:50%; margin-right:4px;" onerror="this.src=\'uploads/ui/default_masculino.webp\'">
                 <strong class="comentario-autor" style="color: ' . $cor . ';">' . $nome . '</strong>
                 <span class="comentario-data">' . $data . '</span>
             </div>
@@ -314,7 +314,7 @@ $total_comentarios = $apenas_post ? 0 : count($comentarios);
     <!-- Cabeçalho do post -->
     <div class="lightbox-post-header">
         <div class="lightbox-autor">
-            <img src="<?php echo $avatar_autor; ?>" class="avatar-p" onerror="this.src='uploads/ui/default_masculino.jpg'">
+            <img src="<?php echo $avatar_autor; ?>" class="avatar-p" onerror="this.src='uploads/ui/default_masculino.webp'">
             <div class="lightbox-autor-info">
                 <span class="lightbox-autor-nome" style="color: <?php echo $cor_autor; ?>;">@<?php echo $username; ?></span>
                 <span class="lightbox-autor-data"><?php echo $data_post; ?></span>

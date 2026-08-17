@@ -68,7 +68,7 @@ echo '<div class="solicitacoes-central-lista">';
 
 while ($sol = $res->fetch_assoc()) {
     // 🔥 AVATAR DO SOLICITANTE COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
-    $avatar = obterUrlComFallback($sol['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+    $avatar = obterUrlComFallback($sol['foto'] ?? null, 'uploads/ui/default_masculino.jpg', $b2, true);
     
     $data = date('d/m/Y H:i', strtotime($sol['data_entrada']));
     $comunidade_link = 'comunidade.php?id=' . $sol['comunidade_id'] . '#solicitacoes';

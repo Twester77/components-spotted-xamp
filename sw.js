@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO v1.2.6 – Cache busting para proxy.php
-const CACHE_VERSION = 'fenda-v1.2.6';
+// 🛡️ VERSÃO v1.2.7 – Cache busting para proxy.php
+const CACHE_VERSION = 'fenda-v1.2.7';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 
@@ -35,7 +35,9 @@ const STATIC_FILES = [
   '/uploads/ui/default_capa_masculino.webp',
   '/uploads/ui/default_capa_feminino.webp',
   '/uploads/ui/default_feminino.jpg', 
+  '/uploads/ui/default_feminino.webp', 
   '/uploads/ui/default_masculino.jpg',
+  '/uploads/ui/default_masculino.webp',
   '/imagensfoto/campus-centro.webp',
   '/imagensfoto/cidade-universitaria.webp',
   '/imagensfoto/capa-entrada.webp',
