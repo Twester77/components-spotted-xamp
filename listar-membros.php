@@ -16,6 +16,11 @@
  * - Limite fixo de 20 membros por requisição.
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-12
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     no avatar dos membros."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -141,7 +146,9 @@ try {
 echo '<div class="membros-lista" data-total="' . $total . '" data-carregados="' . $carregados . '" data-offset="' . ($offset + $limite) . '">';
 
 while ($membro = $res->fetch_assoc()) {
-    $avatar = !empty($membro['foto']) ? (obterUrlImagem($membro['foto'], $b2, true) ?? 'uploads/ui/default_masculino.webp') : 'uploads/ui/default_masculino.webp';
+    // 🔥 AVATAR COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+    $avatar = obterUrlComFallback($membro['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+    
     $data = date('d/m/Y', strtotime($membro['data_entrada']));
     $is_self = ($membro['usuario_id'] == $usuario_id);
     $is_criador_alvo = ($membro['papel'] === 'criador');

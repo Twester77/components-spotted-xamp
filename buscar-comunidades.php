@@ -4,7 +4,11 @@
  * 
  * 🔒 SEGURANÇA: verificação de sessão manual (sem modificar auth_check)
  * 🛡️ BLINDADO: sem saída HTML, apenas JSON puro.
- * 🔧 CORREÇÃO DJÊ: include do upload_engine (B2Client e obterUrlImagem)
+ * 
+ * 🔧 CORREÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     e adição de fallback seguro para erros de B2."
+ * - Ondina
  */
 
 error_reporting(0);
@@ -13,7 +17,7 @@ ini_set('display_errors', 0);
 ob_start(); // Limpa qualquer saída acidental
 
 require_once __DIR__ . '/conexao.php';
-require_once __DIR__ . '/includes/upload_engine.php'; // 🔥 O FALTOSO!
+require_once __DIR__ . '/includes/upload_engine.php';
 
 // ============================================================
 // 🛡️ VERIFICAÇÃO DE SESSÃO (MANUAL, SEM REDIRECIONAMENTO)
@@ -70,12 +74,14 @@ $res = $stmt->get_result();
 
 $resultados = [];
 while ($row = $res->fetch_assoc()) {
-    // Obtém a capa via B2 com segurança
+    // 🔥 CAPA VIA B2 COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
     $capa_nome = !empty($row['capa']) ? $row['capa'] : 'default_comunidade.webp';
     try {
         $b2 = B2Client::getInstance();
-        $capa_url = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+        // 🔥 SUBSTITUIÇÃO AQUI: obterUrlImagem → obterUrlComFallback
+        $capa_url = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
     } catch (Exception $e) {
+        error_log("[BUSCAR-COMUNIDADES] Erro ao obter capa para comunidade {$row['id']}: " . $e->getMessage());
         $capa_url = 'uploads/ui/default_comunidade.webp';
     }
 

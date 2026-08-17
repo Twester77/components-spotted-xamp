@@ -16,7 +16,7 @@
  * - Separação grid/swipe com observador de classe.
  * 
  * ✅ ATUALIZAÇÃO ESTRELA – 2026-08-17
- * - Este arquivo não possui chamadas diretas a obterUrlImagem().
+ * - Este arquivo não possui chamadas diretas a obterUrlImagem() ou obterUrlComFallback.
  * - A renderização dos cards é feita via swipe-eventos.php (já corrigido).
  * - Nenhuma alteração necessária neste arquivo.
  */

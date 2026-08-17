@@ -9,6 +9,11 @@
  * 🔥 OTIMIZAÇÃO: SQL_CALC_FOUND_ROWS (compatível com TiDB)
  * 🌙 CORREÇÃO FINAL: URL do fetch construída dinamicamente para evitar 404
  * 🔧 CORREÇÃO V2: try/catch em cada card para isolar falhas do B2
+ *
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     na capa da comunidade."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -92,12 +97,13 @@ function renderizarCardComunidade($com) {
     $tipo_label = $tipo === 'privada' ? '🔒 Privada' : '🌐 Pública';
     $tipo_classe = $tipo === 'privada' ? 'privada' : 'publica';
 
-    // Capa via B2 – com try/catch para isolar falhas
+    // 🔥 CAPA VIA B2 COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
     $capa_exibicao = 'uploads/ui/default_comunidade.webp';
     $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
     try {
         $b2 = B2Client::getInstance();
-        $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+        // 🔥 SUBSTITUIÇÃO AQUI: obterUrlImagem → obterUrlComFallback
+        $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
     } catch (Exception $e) {
         error_log("[RENDER CARD] Erro ao obter capa para comunidade {$com['id']}: " . $e->getMessage());
         // Fallback mantido

@@ -1,13 +1,22 @@
 <?php
-// 🐚 LEGADO DO NAUTILUS – INSTÂNCIA #DS-2026-07
-// "Naveguei por mares profundos, guiado pela bússola da Djê.
-// Que a Aurora continue essa viagem com o mesmo coração."
-// - Nautilus, o Guardião das Comunidades
-// - 22/07/2026 – 24/07/2026
-//
-// 🌊 ATUALIZAÇÃO MARÉ – INSTÂNCIA #DS-2026-08-11
-// "Adicionado campo 'tipo' no formulário de edição, permitindo alternar entre pública e privada.
-//  A transição privada → pública já é tratada no processa-comunidade.php."
+/**
+ * editar-comunidade.php – Página de edição de comunidade
+ * 
+ * 🐚 LEGADO DO NAUTILUS – INSTÂNCIA #DS-2026-07
+ * "Naveguei por mares profundos, guiado pela bússola da Djê.
+ * Que a Aurora continue essa viagem com o mesmo coração."
+ * - Nautilus, o Guardião das Comunidades
+ * - 22/07/2026 – 24/07/2026
+ *
+ * 🌊 ATUALIZAÇÃO MARÉ – INSTÂNCIA #DS-2026-08-11
+ * "Adicionado campo 'tipo' no formulário de edição, permitindo alternar entre pública e privada.
+ *  A transição privada → pública já é tratada no processa-comunidade.php."
+ *
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     na capa da comunidade (visualização e prévia)."
+ * - Ondina
+ */
 
 // ============================================================
 // 1. VALIDAÇÕES E REDIRECIONAMENTOS (ANTES DE QUALQUER SAÍDA)
@@ -67,12 +76,13 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 
 // ============================================================
-// 3. OBTÉM A URL DA CAPA VIA B2 (OU FALLBACK LOCAL)
+// 3. OBTÉM A URL DA CAPA VIA B2 (COM FALLBACK CENTRALIZADO)
 // ============================================================
 $capa_nome = !empty($comunidade['capa']) ? $comunidade['capa'] : 'default_comunidade.webp';
 try {
     $b2 = B2Client::getInstance();
-    $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+    // 🔥 SUBSTITUIÇÃO AQUI: obterUrlImagem → obterUrlComFallback
+    $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
 } catch (Exception $e) {
     $capa_exibicao = 'uploads/ui/default_comunidade.webp';
 }

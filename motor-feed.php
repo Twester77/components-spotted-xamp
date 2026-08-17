@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 include_once __DIR__ . '/conexao.php';
-require_once __DIR__ . '/includes/upload_engine.php'; // Inclui a função obterUrlImagem()
+require_once __DIR__ . '/includes/upload_engine.php';
 
 /* MOTOR UNIVERSAL DA FENDA - OTIMIZADO (SEM N+1) */
 $offset        = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
@@ -40,7 +40,6 @@ if ($tipo_feed === 'perfil' && !empty($user_alvo)) {
     $tipos .= "i";
     $params[] = $meu_id;
 }
-// 🔥 NOVO: FILTRO POR COMUNIDADE
 if ($comunidade_id > 0) {
     $filtros[] = "m.comunidade_id = ?";
     $tipos .= "i";
@@ -142,8 +141,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         $avatar = !empty($linha['foto']) ? $linha['foto'] : 'uploads/ui/default.webp';
         if ($b2 !== null && !empty($avatar) && !filter_var($avatar, FILTER_VALIDATE_URL)) {
             try {
-                $avatar = obterUrlImagem($avatar, $b2, true);
-                $avatar = $avatar ?? 'uploads/ui/default.webp';
+                // 🔥 FALLBACK CENTRALIZADO
+                $avatar = obterUrlComFallback($avatar, 'uploads/ui/default.webp', $b2, true);
             } catch (Exception $e) {
                 $avatar = 'uploads/ui/default.webp';
             }
@@ -161,7 +160,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $anexos_html = '';
     $anexos_exibicao = null;
     $is_comunidade = ($comunidade_id > 0);
-    $is_central = ($tipo_feed === 'pessoal'); // 🔥 NOVO: detecta se estamos na Central
+    $is_central = ($tipo_feed === 'pessoal');
 
     if (!empty($linha['anexos'])) {
         $anexos_exibicao = json_decode($linha['anexos'], true);
@@ -176,7 +175,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             $anexos_html = '<div class="carrossel-wrapper">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                    $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
+                    // 🔥 FALLBACK CENTRALIZADO
+                    $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                     $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                     $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -204,7 +204,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             $anexos_html = '<div class="feed-anexos-grid">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                    $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
+                    // 🔥 FALLBACK CENTRALIZADO
+                    $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                     $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                     $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -219,7 +220,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
-            $img_url = obterUrlImagem($nome_imagem, $b2, true) ?? htmlspecialchars($nome_imagem);
+            // 🔥 FALLBACK CENTRALIZADO
+            $img_url = obterUrlComFallback($nome_imagem, htmlspecialchars($nome_imagem), $b2, true);
         }
         $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }
@@ -268,7 +270,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                     </div>
                 </div>
                 <a href="comentarios-post.php?id=<?php echo $post_id_atual; ?>#fofocar" class="btn-fofocar"><i class="fas fa-comments"></i> Fofocar</a>
-                <!-- 🔥 BOTÃO "VER MAIS" PARA ABRIR O LIGHTBOX -->
                 <button class="btn-ver-mais" onclick="window.abrirLightbox(<?php echo $post_id_atual; ?>)" title="Ver detalhes do post">
                     <i class="fas fa-expand"></i>Expandir 
                 </button>

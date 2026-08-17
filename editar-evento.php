@@ -9,6 +9,11 @@
  * 🔧 CORREÇÃO DJÊ – INSTÂNCIA #DS-2026-08-09
  * "Trava de duplo clique no submit e aviso sobre substituição de seleção de arquivos."
  * - Djê, a guardiã da segurança e da criatividade
+ *
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     na capa atual e nos anexos da galeria existente."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -80,8 +85,8 @@ $res_com = $stmt_com->get_result();
 $comunidades = $res_com->fetch_all(MYSQLI_ASSOC);
 $stmt_com->close();
 
-// Capa atual
-$capa_atual = !empty($evento['imagem_url']) ? obterUrlImagem($evento['imagem_url']) : 'uploads/ui/default_evento.webp';
+// 🔥 CAPA ATUAL COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+$capa_atual = obterUrlComFallback($evento['imagem_url'] ?? null, 'uploads/ui/default_evento.webp', null, true);
 
 // Anexos atuais
 $anexos_atuais = [];
@@ -157,7 +162,8 @@ include 'includes/bolhas.php';
                 <?php if (!empty($anexos_atuais)): ?>
                     <?php foreach ($anexos_atuais as $item): 
                         if ($item['tipo'] === 'imagem' && !empty($item['caminho'])):
-                            $img_url = obterUrlImagem($item['caminho']);
+                            // 🔥 ANEXO EXISTENTE COM FALLBACK CENTRALIZADO
+                            $img_url = obterUrlComFallback($item['caminho'], 'uploads/ui/default_evento.webp', null, true);
                     ?>
                         <div class="bt-anexo-item" data-id="<?= htmlspecialchars($item['id']) ?>">
                             <img src="<?= htmlspecialchars($img_url) ?>" alt="Foto do evento" onerror="this.onerror=null; this.style.display='none'">

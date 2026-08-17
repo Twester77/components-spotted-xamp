@@ -208,9 +208,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         <!-- 🔥 BARRA DE AÇÕES FIXA (HEADER) – FORA DO STICKY HEADER -->
         <?php
         // Dados da miniatura (já calculados antes, mas reforçamos aqui)
-        $avatar_miniatura = !empty($post['foto'])
-            ? (obterUrlImagem($post['foto'], $b2, true) ?? 'uploads/ui/default.webp')
-            : 'uploads/ui/default.webp';
+        $avatar_miniatura = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
         $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
         $texto_miniatura = htmlspecialchars(mb_substr($post['mensagem'], 0, 80));
         if (mb_strlen($post['mensagem']) > 80) $texto_miniatura .= '...';

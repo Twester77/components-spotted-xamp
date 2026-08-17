@@ -7,6 +7,11 @@
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-10 (estrutura)
  * 🌙 LUZ – ATUALIZAÇÃO 2026-08-13: adicionado campo `tipo` nas notificações.
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() no avatar do comentário
+ *     para fallback centralizado no retorno AJAX."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -203,7 +208,8 @@ if ($stmt->execute()) {
     $user = $stmt_user->get_result()->fetch_assoc();
     $stmt_user->close();
 
-    $avatar = !empty($user['foto']) ? obterUrlImagem($user['foto']) : 'uploads/ui/default.webp';
+    // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+    $avatar = obterUrlComFallback($user['foto'] ?? null, 'uploads/ui/default.webp', null, true);
     $avatar_html = '<img src="' . htmlspecialchars($avatar) . '" class="avatar-p" style="border-radius:50%; margin-right:8px;" onerror="this.src=\'uploads/ui/default.webp\'">';
 
     $html = '

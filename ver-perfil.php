@@ -1,4 +1,13 @@
 <?php
+/**
+ * ver-perfil.php – Página pública de perfil de um habitante
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ * "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *  em avatar e capa do usuário."
+ * - Ondina
+ */
+
 // 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/includes/upload_engine.php';
@@ -53,15 +62,16 @@ $cor_user  = $dados['pref_cor_padrao'] ?? '#08f7ff';
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
 
-// OBTÉM AS URLs VIA PROXY (B2)
+// OBTÉM AS URLs VIA PROXY (B2) COM FALLBACK CENTRALIZADO
 try {
     $b2 = B2Client::getInstance();
 } catch (Exception $e) {
     $b2 = null;
 }
 
-$foto_user = !empty($foto_limpa) ? (obterUrlImagem($foto_limpa, $b2, true) ?? 'uploads/ui/default_masculino.jpg') : 'uploads/ui/default_masculino.jpg';
-$capa_user = !empty($capa_limpa) ? (obterUrlImagem($capa_limpa, $b2, true) ?? 'uploads/ui/default_capa_masculino.webp') : 'uploads/ui/default_capa_masculino.webp';
+// 🔥 AVATAR E CAPA COM FALLBACK CENTRALIZADO
+$foto_user = obterUrlComFallback($foto_limpa, 'uploads/ui/default_masculino.jpg', $b2, true);
+$capa_user = obterUrlComFallback($capa_limpa, 'uploads/ui/default_capa_masculino.webp', $b2, true);
 
 $is_presenca = ($id_visto == 1);
 $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM seguidores WHERE id_seguido = '$id_visto'"))['total'];

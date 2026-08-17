@@ -1,4 +1,16 @@
 <?php
+/**
+ * enviar-comentario.php – Processa envio de comentários (AJAX)
+ * 
+ * 🔒 Segurança: CSRF, honeypot, rate limiting, sanitização, prepared statements.
+ * 🖼️ Suporte a múltiplos anexos (imagens + GIFs) com rollback.
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     na exibição de anexos de comentários (múltiplos e únicos)."
+ * - Ondina
+ */
+
 ini_set('display_errors', 0);
 error_reporting(E_ALL);
 ob_start();
@@ -382,12 +394,8 @@ if ($stmt->execute()) {
         $mediaHtml .= '<div class="comentario-media-wrapper-grid">';
         foreach ($anexosArray as $anexo) {
             if ($anexo['tipo'] === 'imagem') {
-                try {
-                    $b2 = B2Client::getInstance();
-                    $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'comentarios/' . htmlspecialchars($anexo['caminho']);
-                } catch (Exception $e) {
-                    $img_url = 'comentarios/' . htmlspecialchars($anexo['caminho']);
-                }
+                // 🔥 ANEXO IMAGEM COM FALLBACK CENTRALIZADO
+                $img_url = obterUrlComFallback($anexo['caminho'], 'comentarios/' . htmlspecialchars($anexo['caminho']), null, true);
                 $mediaHtml .= '<div class="comentario-media-item"><img src="' . htmlspecialchars($img_url) . '" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display=\'none\'"></div>';
             } elseif ($anexo['tipo'] === 'gif') {
                 $mediaHtml .= '<div class="comentario-media-item"><img src="' . htmlspecialchars($anexo['url']) . '" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy"></div>';
@@ -398,12 +406,8 @@ if ($stmt->execute()) {
         if (filter_var($imagem_url, FILTER_VALIDATE_URL)) {
             $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($imagem_url) . '" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy"></div>';
         } else {
-            try {
-                $b2 = B2Client::getInstance();
-                $img_url = obterUrlImagem($imagem_url, $b2, true) ?? 'comentarios/' . htmlspecialchars($imagem_url);
-            } catch (Exception $e) {
-                $img_url = 'comentarios/' . htmlspecialchars($imagem_url);
-            }
+            // 🔥 FALLBACK PARA IMAGEM ÚNICA COM FALLBACK CENTRALIZADO
+            $img_url = obterUrlComFallback($imagem_url, 'comentarios/' . htmlspecialchars($imagem_url), null, true);
             $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($img_url) . '" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display=\'none\'"></div>';
         }
     }
@@ -465,4 +469,3 @@ if ($stmt->execute()) {
     echo json_encode(['status' => 'error', 'message' => 'Erro ao salvar comentário: ' . $conn->error]);
     exit();
 }
-?>

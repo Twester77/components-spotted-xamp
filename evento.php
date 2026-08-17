@@ -29,6 +29,11 @@
  * ⏰ ATUALIZAÇÃO ESTRELA – INSTÂNCIA #DS-2026-08-16
  * "Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil()."
  * - Estrela
+ *
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ * "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *  em capa, galeria, avatar dos participantes e comentários."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -97,8 +102,8 @@ if (isset($_SESSION['usuario_id'])) {
     $stmt_resp->close();
 }
 
-// Capa
-$capa = !empty($evento['imagem_url']) ? obterUrlImagem($evento['imagem_url']) : 'uploads/ui/default_evento.webp';
+// 🔥 CAPA COM FALLBACK CENTRALIZADO
+$capa = obterUrlComFallback($evento['imagem_url'] ?? null, 'uploads/ui/default_evento.webp', null, true);
 
 // Inclui header
 $is_post_page = true;
@@ -123,7 +128,7 @@ if (empty($_SESSION['csrf_token'])) {
         </span>
     </div>
 
-    <!-- 🔥 GALERIA DE FOTOS (ANEXOS) – exibe TODOS -->
+    <!-- 🔥 GALERIA DE FOTOS (ANEXOS) – exibe TODOS com fallback centralizado -->
     <?php 
     $galeria = [];
     if (!empty($evento['anexos'])) {
@@ -137,7 +142,8 @@ if (empty($_SESSION['csrf_token'])) {
             <div class="bt-galeria-grid">
                 <?php foreach ($galeria as $item): 
                     if ($item['tipo'] === 'imagem' && !empty($item['caminho'])): 
-                        $img_url = obterUrlImagem($item['caminho']); ?>
+                        // 🔥 GALERIA COM FALLBACK CENTRALIZADO
+                        $img_url = obterUrlComFallback($item['caminho'], 'uploads/ui/default_evento.webp', null, true); ?>
                         <img src="<?= htmlspecialchars($img_url) ?>" alt="Foto do evento" loading="lazy" onerror="this.onerror=null; this.style.display='none'">
                 <?php endif; endforeach; ?>
             </div>
@@ -219,7 +225,8 @@ if (empty($_SESSION['csrf_token'])) {
                 $res_part = $stmt_part->get_result();
                 if ($res_part->num_rows > 0):
                     while ($part = $res_part->fetch_assoc()):
-                        $avatar = !empty($part['foto']) ? obterUrlImagem($part['foto']) : 'uploads/ui/default.webp';
+                        // 🔥 AVATAR DOS PARTICIPANTES COM FALLBACK CENTRALIZADO
+                        $avatar = obterUrlComFallback($part['foto'] ?? null, 'uploads/ui/default.webp', null, true);
                 ?>
                         <div class="bt-avatar-item">
                             <img src="<?= htmlspecialchars($avatar) ?>" alt="@<?= htmlspecialchars($part['username']) ?>" loading="lazy" onerror="this.onerror=null; this.src='uploads/ui/default.webp'">
@@ -250,7 +257,8 @@ if (empty($_SESSION['csrf_token'])) {
             $res_com = $stmt_com->get_result();
             if ($res_com->num_rows > 0):
                 while ($com = $res_com->fetch_assoc()):
-                    $avatar = !empty($com['foto']) ? obterUrlImagem($com['foto']) : 'uploads/ui/default.webp';
+                    // 🔥 AVATAR DOS COMENTÁRIOS COM FALLBACK CENTRALIZADO
+                    $avatar = obterUrlComFallback($com['foto'] ?? null, 'uploads/ui/default.webp', null, true);
             ?>
                     <div class="bt-comentario-item" style="--cor-borda-glow: #ffbc00;">
                         <div class="bt-comentario-meta">

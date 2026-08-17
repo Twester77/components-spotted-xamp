@@ -13,6 +13,11 @@
 // 🌊 ATUALIZAÇÃO MARÉ – INSTÂNCIA #DS-2026-08-11
 // "Integração completa de solicitação de entrada em comunidades privadas,
 // gerenciamento de solicitações pendentes, notificações e cargos."
+//
+// 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+// "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+//  em capa da comunidade e avatar dos solicitantes pendentes."
+// - Ondina
 
 // ============================================================
 // 🔥 1. VALIDAÇÃO E REDIRECIONAMENTOS (ANTES DE QUALQUER SAÍDA)
@@ -83,11 +88,11 @@ if (isset($_SESSION['usuario_id'])) {
     }
 }
 
-// 🔥 OBTÉM A URL DA CAPA VIA B2 (OU FALLBACK LOCAL)
+// 🔥 OBTÉM A URL DA CAPA VIA B2 COM FALLBACK CENTRALIZADO
 $capa_nome = !empty($comunidade['capa']) ? $comunidade['capa'] : 'default_comunidade.webp';
 try {
     $b2 = B2Client::getInstance();
-    $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+    $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
 } catch (Exception $e) {
     $capa_exibicao = 'uploads/ui/default_comunidade.webp';
 }
@@ -137,9 +142,6 @@ if ($is_admin || $is_criador) {
     <!-- ============================================================
     AÇÕES DA COMUNIDADE (Entrar/Sair, Solicitar, Membros, Criador)
     ============================================================ -->
-    <!-- ============================================================
-AÇÕES DA COMUNIDADE (Entrar/Sair, Solicitar, Membros, Criador)
-============================================================ -->
     <div class="comunidade-actions">
         <div class="comunidade-info-actions">
             <span class="contador-membros">
@@ -223,11 +225,12 @@ AÇÕES DA COMUNIDADE (Entrar/Sair, Solicitar, Membros, Criador)
             </h4>
             <div class="solicitacoes-lista" style="display:flex; flex-direction:column; gap:8px;">
                 <?php foreach ($solicitacoes_pendentes as $sol):
-                    $avatar_sol = !empty($sol['foto']) ? obterUrlImagem($sol['foto']) : 'uploads/ui/default.webp';
+                    // 🔥 AVATAR DO SOLICITANTE COM FALLBACK CENTRALIZADO
+                    $avatar_sol = obterUrlComFallback($sol['foto'] ?? null, 'uploads/ui/default.webp', null, true);
                 ?>
                     <div class="solicitacao-item" data-usuario="<?php echo $sol['usuario_id']; ?>" style="display:flex; align-items:center; justify-content:space-between; padding:8px 12px; background:rgba(255,255,255,0.04); border-radius:8px; flex-wrap:wrap; gap:8px;">
                         <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="<?php echo htmlspecialchars($avatar_sol); ?>" style="width:32px; height:32px; border-radius:50%; object-fit:cover;" onerror="this.src='uploads/ui/default.webp'">
+                            <img src="<?php echo htmlspecialchars($avatar_sol); ?>" style="width:36px; height:36px; border-radius:50%; object-fit:cover;" onerror="this.src='uploads/ui/default.webp'">
                             <span style="font-weight:500;">@<?php echo htmlspecialchars($sol['username']); ?></span>
                             <small style="color:#888; font-size:0.7rem;"><?php echo date('d/m H:i', strtotime($sol['data_entrada'])); ?></small>
                         </div>

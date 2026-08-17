@@ -1,4 +1,13 @@
 <?php
+/**
+ * perdidos.php – Página de Achados & Perdidos
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     nos anexos (imagens e GIFs) dos posts da categoria 'perdidos'."
+ * - Ondina
+ */
+
 include_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
@@ -153,7 +162,8 @@ include 'includes/bolhas.php';
                                 $anexos_html = '<div class="feed-anexos-grid">';
                                 foreach ($anexos_exibicao as $anexo) {
                                     if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                                        $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'postagens/' . htmlspecialchars($anexo['caminho']);
+                                        // 🔥 ANEXO IMAGEM COM FALLBACK CENTRALIZADO
+                                        $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                                         $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                                     } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                                         $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -165,7 +175,8 @@ include 'includes/bolhas.php';
                                 if (filter_var($nome_imagem, FILTER_VALIDATE_URL)) {
                                     $img_url = $nome_imagem;
                                 } else {
-                                    $img_url = obterUrlImagem($nome_imagem, $b2, true) ?? 'uploads/ui/fallback-post.webp';
+                                    // 🔥 FALLBACK PARA IMAGEM ÚNICA COM FALLBACK CENTRALIZADO
+                                    $img_url = obterUrlComFallback($nome_imagem, 'uploads/ui/fallback-post.webp', $b2, true);
                                 }
                                 $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
                             }

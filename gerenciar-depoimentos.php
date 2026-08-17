@@ -2,6 +2,11 @@
 /**
  * gerenciar-depoimentos.php – Lista depoimentos pendentes para aprovação
  * (Página avulsa – fallback)
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     no avatar dos autores de depoimentos pendentes."
+ * - Ondina
  */
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -44,7 +49,9 @@ include 'includes/navbar.php';
                 }
 
                 while ($dep = $res->fetch_assoc()):
-                    $avatar = !empty($dep['foto']) ? (obterUrlImagem($dep['foto'], $b2, true) ?? 'uploads/ui/default_masculino.webp') : 'uploads/ui/default_masculino.webp';
+                    // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+                    $avatar = obterUrlComFallback($dep['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+                    
                     $data = date('d/m/Y H:i', strtotime($dep['data_criacao']));
                     $mensagem = nl2br(htmlspecialchars($dep['mensagem']));
                 ?>

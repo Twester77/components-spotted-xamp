@@ -3,6 +3,11 @@
  * motor-solicitacoes.php – Endpoint para listar solicitações pendentes
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-11
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
+ *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
+ *     no avatar dos solicitantes pendentes."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -62,7 +67,9 @@ try {
 echo '<div class="solicitacoes-central-lista">';
 
 while ($sol = $res->fetch_assoc()) {
-    $avatar = !empty($sol['foto']) ? (obterUrlImagem($sol['foto'], $b2, true) ?? 'uploads/ui/default_masculino.webp') : 'uploads/ui/default_masculino.webp';
+    // 🔥 AVATAR DO SOLICITANTE COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+    $avatar = obterUrlComFallback($sol['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+    
     $data = date('d/m/Y H:i', strtotime($sol['data_entrada']));
     $comunidade_link = 'comunidade.php?id=' . $sol['comunidade_id'] . '#solicitacoes';
     
