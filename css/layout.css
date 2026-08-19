@@ -1442,9 +1442,9 @@ footer a {
 .erro-fenda {
     color: #ff4b2bc7 !important;
     padding: 10px;
-    border-radius: 8px !important;
+    border-radius: 8px ;
     text-align: center !important;
-    margin-top: 15px !important;
+    margin-top: 15px ;
     min-height: 300px;
 }
 
@@ -2201,7 +2201,7 @@ textarea[name="bio"] {
     .sidebar-fenda {
         display: block !important;
         visibility: visible !important;
-        width: 220px;
+        width: 240px;
         max-height: 100vh;
         position: fixed !important;
         top: 0;
@@ -2608,9 +2608,9 @@ section.sessao-publicar .form-publicar .anexos-grid {
     border: none;
     color: #fff;
     border-radius: 50%;
-    width: clamp(12px, 2vw, 22px);
-    height: clamp(12px, 2vw, 22px);
-    font-size: clamp(8px, 1vw, 13px);
+    width: clamp(14px, 1.5vw, 22px);
+    height: clamp(14px, 1.5vw, 22px);
+    font-size: clamp(9px, 1vw, 13px);
     cursor: pointer;
     pointer-events: auto;
     display: flex;

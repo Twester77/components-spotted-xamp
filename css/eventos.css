@@ -1158,7 +1158,7 @@
 .bt-comentario-data {
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     color: #888;
-    color: oklch(0.65 0 0);
+    color: oklch(0.62 0 0);
     margin-left: auto;
     flex-shrink: 0;
 }
@@ -1166,6 +1166,7 @@
 .bt-comentario-texto {
     color: #ddd;
     color: oklch(0.88 0 0);
+    font-size: 0.9rem;
     font-size: clamp(0.9rem, 1vw, 1rem);
     line-height: 1.5;
     margin: 0;

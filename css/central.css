@@ -14,7 +14,7 @@
     gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 25px 15px;
+    padding: 25px;
     min-height: 100dvh;
     min-height: 100vh;
     width: 100%;
@@ -321,7 +321,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-conteudo .spotted-card .carrossel-item {
     scroll-snap-align: start;
     aspect-ratio: auto;
-    min-height: clamp(140px, 25vh, 260px);
+    min-height: 120px;
+    max-width: 300px;
+    min-height: clamp(140px, 30vh, 350px);
     background: #0a0a0a;
     display: flex;
     align-items: center;
@@ -333,7 +335,6 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-conteudo .spotted-card .carrossel-item img {
     width: 100%;
     height: 100%;
-    max-height: 300px;
     object-fit: contain;
     display: block;
     background: #0a0a0a;
@@ -403,15 +404,18 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border: none;
     border-radius: 50%;
     color: #fff;
+    font-size: 1rem;
     font-size: clamp(1.2rem, 2.5cqw, 2rem);
-    width: clamp(44px, 5cqw, 64px);   /* 🔥 MAIOR PARA FACILITAR O CLIQUE */
-    height: clamp(44px, 5cqw, 64px);
+    width: 36px;    /*  MAIOR PARA FACILITAR O CLIQUE */
+    height: 36px;
+    width: clamp(38px, 5cqw, 64px);   /*  MAIOR PARA FACILITAR O CLIQUE */
+    height: clamp(38px, 5cqw, 64px);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 6;
     position: relative; /* Para o pseudo-elemento posicionar corretamente */
 }
@@ -1212,7 +1216,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 @media (max-width: 768px) {
     .central-usuario-container {
         flex-direction: column;
-        padding: 0 8px;
+        padding: 0 15px;
         gap: 15px;
     }
 
@@ -1248,8 +1252,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     }
 
     .central-conteudo {
-        padding: 15px;
-        max-height: calc(90vh - 80px);
+        padding: 20px;
+        max-height: calc(80vh - 60px);
     }
 
     .central-comunidades-grid {

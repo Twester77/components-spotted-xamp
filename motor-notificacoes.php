@@ -29,7 +29,7 @@ $limite = isset($_GET['limite']) ? (int)$_GET['limite'] : 5;
 if ($limite > 5) {
     echo '<div class="notif-actions" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">';
     echo '  <span style="color: #333333d9; font-weight: bold; font-size:clamp(0.85rem, 2vw, 1.3rem);">Suas notificações</span>';
-    echo '  <button id="btn-marcar-todas-lidas" class="btn-fenda-padrao" style="font-size:0.85rem; padding:6px 14px; background:rgba(255,188,0,0.12); color:#ffbc00; border:1px solid rgba(255,188,0,0.15); border-radius:30px; cursor:pointer;">';
+    echo '  <button id="btn-marcar-todas-lidas" class="btn-fenda-padrao" style="font-size:0.85rem; padding:6px 12px; background:rgba(255,188,0,0.12); color:#ffbc00; border:1px solid rgba(255,188,0,0.15); border-radius:30px; cursor:pointer;">';
     echo '    <i class="fas fa-check-double"></i> Marcar todas como lidas';
     echo '  </button>';
     echo '</div>';

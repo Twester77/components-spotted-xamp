@@ -1502,7 +1502,7 @@
     }
 
     .modal-depoimento-overlay {
-        padding-top: 8%;
+        padding-top: 10%;
     }
 }
 
@@ -1535,18 +1535,17 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.65);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
     z-index: 99999;
     display: none;
-    /* 🔥 CORREÇÃO: Alinha no topo com padding para não ficar colado no topo */
+    /*  CORREÇÃO: Alinha no topo com padding para não ficar colado no topo */
     align-items: flex-start;
     justify-content: center;
-    padding-top: clamp(15%, 15vh, 40%);
+    padding-top: 30dvh;
+    padding-top: clamp(15%, 25vh, 45%);
     padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
-    overflow-y: auto;
+    
 }
 
 .modal-depoimento-content {
@@ -1557,9 +1556,9 @@
     width: 100%;
     max-height: 80vh;
     overflow-y: auto;
-    padding: 30px 28px 28px 28px;
+    padding: 30px 24px 24px 24px;
     position: relative;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
     animation: modalDepoimentoIn 0.25s ease-out;
     /*  CORREÇÃO: Não deixa o modal esticar verticalmente */
     align-self: flex-start;
