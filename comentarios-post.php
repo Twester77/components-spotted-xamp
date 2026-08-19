@@ -8,6 +8,10 @@
  * 🌙 LUA – 2026-08-13
  * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
  *    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – 2026-08-17
+ *    Substituição de obterUrlImagem() por obterUrlComFallback() nos anexos
+ *    dos comentários (múltiplos e único) para fallback centralizado.
  */
 
 include_once 'conexao.php';
@@ -302,7 +306,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                     <?php foreach ($anexos_exibicao as $anexo): ?>
                                         <?php if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])): ?>
                                             <?php
-                                            $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'comentarios/' . htmlspecialchars($anexo['caminho']);
+                                            // 🔥 SUBSTITUÍDO: obterUrlImagem → obterUrlComFallback
+                                            $img_url = obterUrlComFallback($anexo['caminho'], 'comentarios/' . htmlspecialchars($anexo['caminho']), $b2, true);
                                             ?>
                                             <div class="comentario-media-item">
                                                 <img src="<?= htmlspecialchars($img_url) ?>" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display='none'">
@@ -319,7 +324,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 <?php
                                 $img_comentario = $c['imagem_url'];
                                 if (!filter_var($img_comentario, FILTER_VALIDATE_URL)) {
-                                    $img_comentario = obterUrlImagem($c['imagem_url'], $b2, true) ?? 'comentarios/' . htmlspecialchars($c['imagem_url']);
+                                    // 🔥 SUBSTITUÍDO: obterUrlImagem → obterUrlComFallback
+                                    $img_comentario = obterUrlComFallback($c['imagem_url'], 'comentarios/' . htmlspecialchars($c['imagem_url']), $b2, true);
                                 }
                                 ?>
                                 <div class="comentario-media-wrapper">

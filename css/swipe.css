@@ -95,8 +95,8 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     height: 100dvh;
     min-height: 100dvh;
     width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0 ;
+    padding: 0 ;
     background: transparent;
 }
 
@@ -149,19 +149,19 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
        ========================================== */
     
     /* LARGURA: Controlada de forma síncrona pelo seu Motor JS */
-    width: var(--card-width, 250px) !important;
+    width: var(--card-width, 250px) ;
     max-width: var(--card-width, 250px) !important;
     
     /* PADDING: 1º Linha (Antigos via JS) -> 2º Linha (Modernos via cqw na GPU) */
-    padding: var(--card-padding, 12px) !important;
+    padding: var(--card-padding, 12px) ;
     padding: clamp(12px, 4cqw, 24px) !important; 
     
     /* TAMANHO DA FONTE: 1º Linha (JS) -> 2º Linha (cqw) */
-    font-size: var(--card-font-size, 0.95rem) !important;
+    font-size: var(--card-font-size, 0.95rem) ;
     font-size: clamp(0.9rem, 2.5cqw, 1.6rem) !important;
     
     /* ALTURA MÁXIMA: Preserva o cálculo preciso do JS baseado na Viewport */
-    max-height: var(--card-max-height, 500px) !important;
+    max-height: var(--card-max-height, 600px) !important;
     height: auto;
     box-sizing: border-box;
 
@@ -517,16 +517,16 @@ body.modo-swipe-ativo .spotted-card .container-img-post {
    12. GARANTE QUE O CONTAINER NÃO FORCE LARGURA NOS CARDS
    ============================================================ */
 body.modo-swipe-ativo .container-feed article {
-    max-width: none !important;
-    width: auto !important;
-    flex-shrink: 1 !important;
-    margin: 0 !important;
+    max-width: none ;
+    width: auto ;
+    flex-shrink: 1 ;
+    margin: 0 ;
 }
 
 
 @media (orientation: landscape) and (max-height: 500px) {
     .container-feed.feed-empilhado {
-        margin-top: 0 !important;
+        margin-top: 0 ;
     }
 }
 

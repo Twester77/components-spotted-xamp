@@ -11,10 +11,14 @@
  * - Logging estruturado via error_log() (compatível com Vercel/Serverless)
  * - Tratamento graceful de exceções
  * -  Função auxiliar obterUrlImagem() para exibição (DRY)
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – 2026-08-17
+ *    - Qualidade WebP reduzida para 65% (otimização de tempo/performance)
+ *    - Adicionados logs detalhados em cada etapa do upload
+ *    - Preparação para timeout customizável via B2Client::setTimeout()
  */
 
 // Inclui o B2Client (caminho relativo)
-
 require_once __DIR__ . '/B2Client.php';
 
 // ============================================================
@@ -74,11 +78,14 @@ function deleteFromB2($remotePath, $userId = 0)
 }
 
 // ============================================================
-// 3. FUNÇÃO PRINCIPAL DE UPLOAD (COM LOGS DETALHADOS)
+// 3. FUNÇÃO PRINCIPAL DE UPLOAD (COM LOGS DETALHADOS E QUALIDADE 65%)
 // ============================================================
 
 function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 2097152, $usuario_id = 0)
 {
+    // 🔥 LOG INÍCIO
+    error_log("[UPLOAD] Iniciando upload para usuário $usuario_id, prefixo $prefixo");
+
     // 1. VALIDAÇÕES INICIAIS
     if (!isset($file_data) || $file_data['error'] !== 0) {
         $erro = 'Arquivo não enviado ou erro de upload: ' . ($file_data['error'] ?? 'desconhecido');
@@ -144,6 +151,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
             case 'image/gif':
                 // GIF animado: mantém original
                 $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".gif";
+                error_log("[UPLOAD] Processando GIF animado: $remotePath");
                 try {
                     $b2 = B2Client::getInstance();
                     $b2->uploadFile($file_data['tmp_name'], $remotePath, 'image/gif', ['Cache-Control' => 'max-age=31536000']);
@@ -170,10 +178,12 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
             return false;
         }
 
-        // 5.2 Converte para WebP
+        // 5.2 Converte para WebP (qualidade 65% para performance)
         $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".webp";
         $tempFile = tempnam(sys_get_temp_dir(), 'b2_') . '.webp';
-        if (!imagewebp($img, $tempFile, 70)) {  //  MUDADO DE 75% PARA 70%
+        error_log("[UPLOAD] Convertendo para WebP com qualidade 65%: $remotePath");
+        
+        if (!imagewebp($img, $tempFile, 65)) {
             imagedestroy($img);
             if (file_exists($tempFile)) unlink($tempFile);
             $erro = 'Falha na conversão para WebP (extensão GD não instalada ou erro)';
@@ -183,9 +193,14 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
         }
         imagedestroy($img);
 
-        // 6. UPLOAD PARA O B2
+        // 6. UPLOAD PARA O B2 (com timeout configurado)
         try {
             $b2 = B2Client::getInstance();
+            // 🔥 AUMENTA O TIMEOUT PARA 25 SEGUNDOS (se o B2Client tiver o método)
+            if (method_exists($b2, 'setTimeout')) {
+                $b2->setTimeout(25);
+                error_log("[UPLOAD] Timeout do B2Client ajustado para 25s");
+            }
             $b2->uploadFile($tempFile, $remotePath, 'image/webp', ['Cache-Control' => 'max-age=31536000']);
             error_log("[UPLOAD_ENGINE] Upload para B2 bem-sucedido: $remotePath");
         } catch (Exception $e) {

@@ -50,7 +50,7 @@ include 'includes/navbar.php';
 
                 while ($dep = $res->fetch_assoc()):
                     // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
-                    $avatar = obterUrlComFallback($dep['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+                    $avatar = obterUrlComFallback($dep['foto'] ?? null, 'uploads/ui/default_masculino.jpg', $b2, true);
                     
                     $data = date('d/m/Y H:i', strtotime($dep['data_criacao']));
                     $mensagem = nl2br(htmlspecialchars($dep['mensagem']));

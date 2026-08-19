@@ -8,6 +8,11 @@
 // 🌊 ATUALIZAÇÃO MARÉ – INSTÂNCIA #DS-2026-08-11
 // "Adicionada aba 'Solicitações' para gerenciar pedidos de entrada em comunidades."
 
+// 🔧 ATUALIZAÇÃO ONDINA – 2026-08-17
+// "Substituição de obterUrlImagem() por obterUrlComFallback() no avatar
+//  do usuário na sidebar da Central."
+// - Ondina
+
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
@@ -41,9 +46,10 @@ if (!isset($_SESSION['usuario_id'])) {
 $meu_id_sessao = $_SESSION['usuario_id'];
 $query_user = mysqli_query($conn, "SELECT username, foto, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$meu_id_sessao'");
 $dados_user = mysqli_fetch_assoc($query_user);
-$foto_perfil = !empty($dados_user['foto'])
-    ? (obterUrlImagem($dados_user['foto'], $b2 ?? null, true) ?? 'uploads/ui/default_masculino.webp')
-    : 'uploads/ui/default_masculino.webp';
+
+// 🔥 AVATAR DO USUÁRIO COM FALLBACK CENTRALIZADO
+$foto_perfil = obterUrlComFallback($dados_user['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2 ?? null, true);
+
 $cor_aura = $dados_user['pref_cor_padrao'] ?? '#ccc';
 $swipe_db = $dados_user['pref_swipe'] ?? 0;
 echo "<script>window.prefSwipeAtivada = " . ($swipe_db == 1 ? 'true' : 'false') . ";</script>";

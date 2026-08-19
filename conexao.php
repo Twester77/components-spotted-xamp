@@ -181,6 +181,17 @@ fenda_log('🔵 [CONEXAO] Antes de session_status');
 
 // 🔥 Aumenta o tempo de vida da sessão para evitar expiração prematura do CSRF token
 ini_set('session.gc_maxlifetime', 86400); // 24 horas
+
+// ============================================================
+// 🔥 CORREÇÃO CSRF – DOMÍNIO DA SESSÃO EM PRODUÇÃO
+// ============================================================
+if ($is_production) {
+    // Define o domínio do cookie de sessão para abranger subdomínios
+    ini_set('session.cookie_domain', '.fendauniversity.com.br');
+    fenda_log('🔵 [CONEXAO] session.cookie_domain definido como .fendauniversity.com.br');
+}
+
+// Inicia a sessão se não estiver ativa
 if (session_status() === PHP_SESSION_NONE) {
     fenda_log('🔵 [CONEXAO] Iniciando sessão');
     if ($is_production) {
@@ -193,6 +204,21 @@ if (session_status() === PHP_SESSION_NONE) {
     fenda_log('🔵 [CONEXAO] Sessão iniciada');
 } else {
     fenda_log('🔵 [CONEXAO] Sessão já estava ativa');
+    
+    // Se a sessão já estava ativa e estamos em produção, forçamos a redefinição do cookie
+    // para garantir que o domínio correto seja usado
+    if ($is_production) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), session_id(), [
+            'expires' => $params['lifetime'] ? time() + $params['lifetime'] : 0,
+            'path' => $params['path'],
+            'domain' => '.fendauniversity.com.br',
+            'secure' => $params['secure'],
+            'httponly' => $params['httponly'],
+            'samesite' => $params['samesite'] ?? 'Lax'
+        ]);
+        fenda_log('🔵 [CONEXAO] Cookie de sessão redefinido com domínio .fendauniversity.com.br');
+    }
 }
 
 // 🔋 MÁGICA DO STATELESS: Recupera estado caso a instância Vercel tenha resetado
