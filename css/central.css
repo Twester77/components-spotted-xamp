@@ -322,8 +322,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     scroll-snap-align: start;
     aspect-ratio: auto;
     min-height: 120px;
-    max-width: 300px;
-    min-height: clamp(140px, 30vh, 350px);
+    min-height: clamp(120px, 30vh, 250px);
+    max-height: 320px;
     background: #0a0a0a;
     display: flex;
     align-items: center;
@@ -478,7 +478,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
    ============================================================ */
 @supports not (font-size: clamp(1rem, 1vw, 2rem)) {
     .central-conteudo .spotted-card .carrossel-item {
-        min-height: 200px;
+        min-height: 180px;
     }
     .carrossel-numero {
         font-size: 0.9rem;

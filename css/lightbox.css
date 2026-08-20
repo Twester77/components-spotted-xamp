@@ -344,7 +344,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 
 .lightbox-comentarios-lista .comentario-item .comentario-texto {
-    font-size: clamp(0.9rem, 2cqw, 1.2rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 1.6cqw, 1.2rem);
     line-height: 1.4;
     color: #ddd;
     white-space: pre-wrap;

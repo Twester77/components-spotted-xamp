@@ -601,8 +601,8 @@ body.hacker-mode .comentario-item.vibe-dark .comentario-autor {
 /* 2. VIBE GLASS - Efeito Matrix translúcido */
 body.hacker-mode .comentario-item.vibe-glass {
     background: rgba(0, 30, 0, 0.7) !important;
-    -webkit-backdrop-filter: blur(4px) ;
-    backdrop-filter: blur(4px) ;
+    -webkit-backdrop-filter: blur(1px) ;
+    backdrop-filter: blur(1px) ;
     color: #00ff00 ;
 }
 

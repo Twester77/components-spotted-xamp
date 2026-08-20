@@ -893,7 +893,7 @@ footer {
     text-align: center;
     border-top: 1px solid rgba(255, 188, 0, 0.2);
     color: rgba(250, 202, 44, 0.719);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     flex-shrink: 0;
     /* Impede o footer de ser "esmagado" */
 }

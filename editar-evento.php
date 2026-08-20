@@ -15,8 +15,10 @@
  *     na capa atual e nos anexos da galeria existente."
  * - Ondina
  *
- * 🔥 PATCH ANTI-SUBSTITUIÇÃO – 2026-08-17
- *    "Corrigida seleção múltipla de anexos: agora acumula arquivos em vez de substituir."
+ * 🔥 PATCH ANTI-SUBSTITUIÇÃO – 2026-08-19
+ *    "Corrigida seleção múltipla de anexos: acumula arquivos e repopula o input
+ *     no submit usando DataTransfer (sem FormData morto)."
+ * - Ondina
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -153,7 +155,7 @@ include 'includes/bolhas.php';
             <label for="capa"><i class="fas fa-upload"></i> Substituir Capa (opcional)</label>
             <input type="file" name="capa" id="capa" accept="image/*">
             <small class="bt-campo-ajuda">Máx. 2MB, recomendado 16:9. Deixe em branco para manter.</small>
-            <div id="bt-capa-preview" style="display:none; ">
+            <div id="bt-capa-preview" style="display:none; margin-top:10px; max-width:200px;">
                 <img id="bt-capa-preview-img" src="" alt="Prévia da nova capa">
             </div>
         </div>
@@ -266,7 +268,7 @@ include 'includes/bolhas.php';
     const hiddenRemover = document.getElementById('anexos_remover');
 
     let anexosParaRemover = [];
-    // 🔥 ACUMULADOR DE ARQUIVOS PARA NOVOS ANEXOS (SUBSTITUI A LISTA ANTERIOR)
+    // 🔥 ACUMULADOR DE ARQUIVOS PARA NOVOS ANEXOS
     let arquivosSelecionados = [];
 
     function atualizarHiddenRemover() {
@@ -343,19 +345,19 @@ include 'includes/bolhas.php';
         });
     }
 
-    // 🔥 NOVO LISTENER: ACUMULA OS ARQUIVOS
+    // 🔥 LISTENER: ACUMULA OS ARQUIVOS (respeitando o limite)
     inputAnexos.addEventListener('change', function(e) {
         const files = Array.from(this.files);
         if (files.length === 0) return;
 
-        // Conta quantos itens já existem (antigos + novos)
+        // Conta quantos itens já existem (antigos + novos já acumulados)
         const existentes = galeriaGrid.querySelectorAll('.bt-anexo-item').length;
         const totalAtual = existentes + arquivosSelecionados.length;
         const limite = 4;
+        let adicionados = 0;
 
-        // Adiciona os novos arquivos ao acumulador, respeitando o limite
         for (const file of files) {
-            if (totalAtual + arquivosSelecionados.length >= limite) {
+            if (totalAtual + adicionados >= limite) {
                 exibirBalao(`Limite de ${limite} fotos atingido.`, 'erro', inputAnexos);
                 break;
             }
@@ -370,21 +372,22 @@ include 'includes/bolhas.php';
                 continue;
             }
             arquivosSelecionados.push(file);
+            adicionados++;
         }
 
-        // 🔥 LIMPA O INPUT PARA PERMITIR NOVAS SELEÇÕES, MAS NÃO PERDE OS ARQUIVOS ACUMULADOS
+        // 🔥 LIMPA O INPUT PARA PERMITIR NOVAS SELEÇÕES
         this.value = '';
 
         // Re-renderiza os novos anexos
         renderizarNovosAnexos();
 
-        if (arquivosSelecionados.length > 0) {
-            exibirBalao(`${arquivosSelecionados.length} foto(s) adicionada(s).`, 'sucesso', inputAnexos, 2000);
+        if (adicionados > 0) {
+            exibirBalao(`${adicionados} foto(s) adicionada(s).`, 'sucesso', inputAnexos, 2000);
         }
     });
 
     // ============================================================
-    // 4. TRAVA DE DUPLO CLIQUE (Double Submit Prevention)
+    // 4. SUBMIT: repopula o input com os arquivos acumulados (via DataTransfer)
     // ============================================================
     document.getElementById('form-editar-evento').addEventListener('submit', function(e) {
         const btn = document.getElementById('btn-salvar-evento');
@@ -392,6 +395,17 @@ include 'includes/bolhas.php';
             e.preventDefault();
             return;
         }
+
+        // 🔥 REPOPULA O INPUT #anexos com os arquivos do acumulador
+        if (arquivosSelecionados.length > 0) {
+            const dataTransfer = new DataTransfer();
+            arquivosSelecionados.forEach(file => dataTransfer.items.add(file));
+            // Também mantém os arquivos que já estavam no input original (se houver) - opcional
+            // Mas como já limpamos o input após cada seleção, só temos os acumulados.
+            inputAnexos.files = dataTransfer.files;
+        }
+
+        // Trava de duplo clique
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
         // O formulário será enviado normalmente

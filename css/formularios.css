@@ -6,7 +6,7 @@
 
 
 .input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 20px #00000086 inset;
+    -webkit-box-shadow: 0 0 0 10px #00000086 inset;
     ;
 }
 
@@ -217,10 +217,10 @@ select:focus {
             oklch(1 0 0 / 0.05) 45%,
             oklch(0 0 0 / 0.45) 100%), oklch(from var(--cor-aura, #70cde4) l c h / 0.3) !important;
     background-blend-mode: soft-light;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid oklch(1 0 0 / 0.35) !important;
-    box-shadow: 0 16px 45px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+    box-shadow: 0 16px 32px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
     border-radius: 16px;
     position: relative;
     overflow: hidden;
@@ -2021,7 +2021,7 @@ Especificidade: (0,1,1)
     flex-direction: column;
     align-items: center;
     width: 97%;
-    margin: 25px auto;
+    margin: 20px auto;
     display: flex;
     padding: 8px;
     float: none;

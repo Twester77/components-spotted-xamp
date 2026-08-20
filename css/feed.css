@@ -83,7 +83,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 20px;
-    max-width: 1800px; /* LIMITE MÁXIMO para telas grandes */
+    max-width: 1600px; /* LIMITE MÁXIMO para telas grandes */
     margin: 20px auto;
     width: 100%;
     box-sizing: border-box;

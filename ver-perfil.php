@@ -34,6 +34,8 @@ if (!isset($_GET['user'])) {
 // SÓ DAQUI PRA BAIXO O PHP PODE CUSPIR LAYOUT NA TELA
 include 'includes/header.php';
 include 'includes/navbar.php';
+include 'includes/bolhas.php'; 
+
 
 // 🔥 Usa prepared statement em vez de mysqli_real_escape_string
 $user_get = $_GET['user'];

@@ -6,10 +6,11 @@
  * 📄 Paginação: offset via GET (usado via AJAX)
  * 🔄 Carregamento mais: AJAX com parâmetro 'ajax=1'
  * 
- * 🔥 OTIMIZAÇÃO: SQL_CALC_FOUND_ROWS (compatível com TiDB)
- * 🌙 CORREÇÃO FINAL: URL do fetch construída dinamicamente para evitar 404
- * 🔧 CORREÇÃO V2: try/catch em cada card para isolar falhas do B2
- *
+ * 🔥 CORREÇÃO TiDB – 2026-08-20
+ *    Removido SQL_CALC_FOUND_ROWS (não suportado no TiDB).
+ *    Substituído por duas queries separadas: SELECT principal + SELECT COUNT(*).
+ *    Corrige o erro 500 em produção (Vercel).
+ * 
  * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
  *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
  *     na capa da comunidade."
@@ -68,9 +69,9 @@ try {
     error_log("[LISTA-COMUNIDADES] Parâmetros: busca='$busca', offset=$offset, is_ajax=" . ($is_ajax ? 'sim' : 'não'));
 
     // ============================================================
-    // 2. CONSTRUÇÃO DA QUERY COM SQL_CALC_FOUND_ROWS
+    // 2. CONSTRUÇÃO DA QUERY PRINCIPAL (SEM SQL_CALC_FOUND_ROWS)
     // ============================================================
-    $sql = "SELECT SQL_CALC_FOUND_ROWS c.*, 
+    $sql = "SELECT c.*, 
             (SELECT COUNT(*) FROM comunidade_membros WHERE comunidade_id = c.id) as total_membros,
             u.username as criador_username
             FROM comunidades c
@@ -78,6 +79,7 @@ try {
             WHERE 1=1";
 
     // 🔥 Busca com LIKE (funciona em todos os bancos, seguro e eficiente)
+    $busca_like = '';
     if (!empty($busca)) {
         $busca_like = '%' . $conn->real_escape_string($busca) . '%';
         $sql .= " AND (c.nome LIKE '$busca_like' OR c.descricao LIKE '$busca_like')";
@@ -91,18 +93,23 @@ try {
         throw new Exception("Erro na consulta ao banco de dados: " . mysqli_error($conn));
     }
 
-    // Obtém o total de registros (para o botão "Carregar mais")
+    // ============================================================
+    // 3. QUERY SEPARADA PARA CONTAR O TOTAL DE REGISTROS
+    // ============================================================
+    $sql_count = "SELECT COUNT(*) as total FROM comunidades c WHERE 1=1";
+    if (!empty($busca)) {
+        $sql_count .= " AND (c.nome LIKE '$busca_like' OR c.descricao LIKE '$busca_like')";
+    }
+    $res_count = mysqli_query($conn, $sql_count);
     $total_registros = 0;
-    if ($result) {
-        $res_count = mysqli_query($conn, "SELECT FOUND_ROWS() as total");
-        if ($res_count) {
-            $total_registros = (int)mysqli_fetch_assoc($res_count)['total'];
-            error_log("[LISTA-COMUNIDADES] Total de registros: $total_registros");
-        }
+    if ($res_count) {
+        $row = mysqli_fetch_assoc($res_count);
+        $total_registros = (int)($row['total'] ?? 0);
+        error_log("[LISTA-COMUNIDADES] Total de registros (COUNT): $total_registros");
     }
 
     // ============================================================
-    // 3. SE FOR AJAX, RETORNA APENAS OS CARDS (SEM HEADER/FOOTER)
+    // 4. SE FOR AJAX, RETORNA APENAS OS CARDS (SEM HEADER/FOOTER)
     // ============================================================
     if ($is_ajax) {
         error_log("[LISTA-COMUNIDADES] 🔄 Modo AJAX ativado");
@@ -127,7 +134,7 @@ try {
     }
 
     // ============================================================
-    // 4. PÁGINA COMPLETA (COM HEADER, NAVBAR, ETC.)
+    // 5. PÁGINA COMPLETA (COM HEADER, NAVBAR, ETC.)
     // ============================================================
     error_log("[LISTA-COMUNIDADES] 📄 Renderizando página completa");
     include 'includes/header.php';
@@ -467,7 +474,7 @@ try {
 
 <?php
 // ============================================================
-// 🔥 FIM DO try/catch GLOBAL
+//  FIM DO try/catch GLOBAL
 // ============================================================
 } catch (Exception $e) {
     error_log("[LISTA-COMUNIDADES] ❌ EXCEÇÃO GLOBAL CAPTURADA: " . $e->getMessage() . " em " . $e->getFile() . ":" . $e->getLine());

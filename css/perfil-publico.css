@@ -386,7 +386,6 @@
 }
 
 
-
 /* ================================================================
    DEPOIMENTOS (ESTILO ORKUT)
    ================================================================ */
@@ -1253,32 +1252,63 @@
 
 /* --- VIBE GLASS (Vidro) --- */
 .main-perfil-container-publico.vibe-glass {
-    background: linear-gradient(135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #ffbc00) l c h / 0.3) !important;
-    background-blend-mode: soft-light;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 45%,  rgba(255, 255, 255, 0.45) 100%),  #00bbff06;
+    background: linear-gradient(135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #70cde4) l c h / 0.2) ;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border: 1px solid oklch(1 0 0 / 0.35) !important;
-    border-radius: 16px 16px 0 0;
-    box-shadow: 0 16px 45px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 8px 16px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
     overflow: hidden;
     position: relative;
+    animation: none;
 }
 
-/* --- VIBE LIGHT (Claro, sóbrio) --- */
+.main-perfil-container-publico.vibe-glass .depoimento-item {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none; }
+
+
+/* --- VIBE LIGHT (Manhã Ensolarada & Sóbria) --- */
 .main-perfil-container-publico.vibe-light {
-    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) !important;
-    border: 2px solid rgba(139, 128, 100, 0.2);
-    border-top: 4px solid var(--aura-user, #ffbc00);
-    box-shadow: 0 4px 20px rgba(60, 50, 30, 0.15) !important;
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    /* 1. FALLBACK: Seu gradiente clássico e confortável */
+    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%) ;
+    
+    /* 2. PRODUÇÃO (OKLCH): Camada Dupla Otimizada */
+    background: 
+        /* CAMADA SUPERIOR (O Gradiente): Começa no creme/branco do fallback e termina em um cinza chumbo translúcido */
+        linear-gradient(165deg, 
+            oklch(0.98 0.01 85 / 0.75) 0%,      /* Branco creme/gelo bem confortável */
+            oklch(1 0 0 / 0.05) 20%,            /* Zona de respiro (transparente) */
+            oklch(0.35 0.01 250 / 0.5) 100%     /* O cinza chumbo sutil que você queria no final */
+        ), 
+        /* CAMADA INFERIOR: A aura do usuário suavizada em 0.75/0.85 fazendo a fusão por trás */
+        oklch(from var(--aura-user, #ffbc00) 0.94 0.04 h / 0.75) ;
+
+    /* O soft-light faz a mágica: o chumbo da ponta se mistura harmonicamente com a aura do usuário */
+    background-blend-mode: soft-light;
+
+    /* Mantém o seu vidro e bordas premium */
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border: 1px solid oklch(1 0 0 / 0.25) !important; 
+    border-top: 4px solid var(--aura-user, #ffbc00) !important;
+    border-radius: 16px 16px 0 0;
+    
+    box-shadow: 
+        0 8px 32px oklch(0 0 0 / 0.08), 
+        inset 0 1px 1px oklch(1 0 0 / 0.5) !important; 
 }
 
+/* Mantém o marrom terra nos textos que contrasta perfeitamente com o topo claro */
 .main-perfil-container-publico.vibe-light h3,
+.main-perfil-container-publico.vibe-light .btn-toggle-social,
+.main-perfil-container-publico.vibe-light .btn-toggle-depoimentos,
 .main-perfil-container-publico.vibe-light p {
-    color: #3e382d !important;
-    text-shadow: none !important;
+    color: #3e382d ;
+    text-shadow: none ;
 }
+
 
 /* ================================================================
    FALLBACKS GERAIS (CLAMP, BACKDROP-FILTER, LEGADOS)
