@@ -19,12 +19,15 @@
     let resultsContainer = null;
     let debounceTimer = null;
     let gifTargetInputId = 'hidden-gif-url';
-    let isSelecting = false; // 🔥 Flag anti-duplicação
+    let isSelecting = false;
 
     window.setGiphyTarget = function(targetId) {
         gifTargetInputId = targetId;
     };
 
+    // ============================================================
+    // MODAL DO GIPHY
+    // ============================================================
     function criarModal() {
         if (activeModal) return activeModal;
 
@@ -114,7 +117,7 @@
             transition: 0.2s;
             font-weight: bold;
         `;
-        
+
         function setActiveTab(active) {
             tabGifs.style.background = active === 'gifs' ? 'rgba(255,140,0,0.3)' : 'none';
             tabGifs.style.borderBottom = active === 'gifs' ? '2px solid #ff8c00' : 'none';
@@ -182,11 +185,14 @@
         return overlay;
     }
 
+    // ============================================================
+    // BUSCA E RENDERIZAÇÃO
+    // ============================================================
     async function realizarBusca() {
         if (!resultsContainer) return;
         const query = searchInput.value.trim();
         const endpoint = currentTab === 'gifs' ? ENDPOINTS.gifs : ENDPOINTS.stickers;
-        
+
         let url = `${endpoint}?api_key=${GIPHY_API_KEY}&limit=${CONFIG.limit}&rating=${CONFIG.rating}`;
         if (query) {
             url += `&q=${encodeURIComponent(query)}`;
@@ -227,7 +233,6 @@
             `;
             item.addEventListener('mouseenter', () => item.style.transform = 'scale(1.02)');
             item.addEventListener('mouseleave', () => item.style.transform = 'scale(1)');
-            // 🔥 Usa addEventListener em vez de onclick para evitar duplicação
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -243,10 +248,9 @@
     }
 
     // ============================================================
-    // 🔥 FUNÇÃO DE SELEÇÃO DE GIF – COM FLAG ANTI-DUPLICAÇÃO
+    // SELEÇÃO DO GIF – VERSÃO PURIFICADA (SEM CHAMADA GLOBAL)
     // ============================================================
     function selecionarGif(url) {
-        // 🔥 IMPEDE DUPLICIDADE
         if (isSelecting) {
             console.warn('[GIPHY] Seleção em andamento, ignorando clique duplicado.');
             return;
@@ -255,82 +259,25 @@
 
         fecharModal();
 
-        // 🔥 Se o AnexosManager estiver disponível, usamos ele
-        if (typeof window.adicionarGif === 'function') {
-            // Limpa o input file (caso exista)
-            const inputFile = document.getElementById('input-img-comentario');
-            if (inputFile) inputFile.value = '';
-
-            // Adiciona o GIF ao grid via AnexosManager
-            window.adicionarGif(url);
-
-            // Dispara evento para sincronizar com outras partes (ex: modal de postagem)
-            document.dispatchEvent(new CustomEvent('gifSelecionado', { detail: { url: url } }));
-
-            // Foca no campo de texto (opcional)
-            const campoTexto = document.querySelector('.textarea-chat') || document.querySelector('#modal-postar-fenda textarea');
-            if (campoTexto) campoTexto.focus();
-
-            // Libera a flag após um pequeno delay
-            setTimeout(() => { isSelecting = false; }, 300);
-            return;
+        // 🔥 PASSO 1: Atualiza o hidden input específico
+        const hiddenGif = document.getElementById(gifTargetInputId);
+        if (hiddenGif) {
+            hiddenGif.value = url;
+            console.log(`[GIPHY] URL salva em #${gifTargetInputId}`);
+        } else {
+            console.warn(`[GIPHY] Input #${gifTargetInputId} não encontrado.`);
         }
 
-        // ============================================================
-        // FALLBACK: Caso o AnexosManager não exista (ex: modal de postagem)
-        // Mantém o comportamento antigo (preview único)
-        // ============================================================
-        console.warn('[GIPHY] AnexosManager não encontrado. Usando fallback (preview único).');
+        // 🔥 PASSO 2: Dispara evento customizado para que os ouvintes decidam o que fazer
+        // NÃO chamamos mais window.adicionarGif aqui – cada formulário escuta e age.
+        document.dispatchEvent(new CustomEvent('gifSelecionado', {
+            detail: { url: url, targetId: gifTargetInputId }
+        }));
 
-        let hiddenGifUrl = document.getElementById(gifTargetInputId);
-        if (!hiddenGifUrl) {
-            hiddenGifUrl = document.createElement('input');
-            hiddenGifUrl.type = 'hidden';
-            hiddenGifUrl.id = gifTargetInputId;
-            hiddenGifUrl.name = 'gif_url';
-            const form = document.getElementById('form-comentario') || document.querySelector('#modal-postar-fenda form');
-            if (form) form.appendChild(hiddenGifUrl);
-        }
-        hiddenGifUrl.value = url;
-
-        const inputFile = document.getElementById('input-img-comentario');
-        if (inputFile) inputFile.value = '';
-
-        const previewAnexo = document.getElementById('anexo-preview');
-        if (previewAnexo) {
-            previewAnexo.style.display = 'inline-flex';
-            previewAnexo.style.position = 'relative';
-            previewAnexo.innerHTML = `
-                <img src="${url}" alt="Prévia do GIF" style="max-height:60px; max-width:60px; border-radius:4px; object-fit:contain;">
-                <button type="button" onclick="window.removerMidia()" style="
-                    position: absolute; top: -6px; right: -6px; 
-                    background: rgba(0,0,0,0.7); border: none; 
-                    color: #fff; border-radius: 50%; 
-                    width: 18px; height: 18px; font-size: 10px; 
-                    cursor: pointer; display: flex; align-items: center; justify-content: center;
-                    line-height: 1;
-                ">✕</button>
-            `;
-            previewAnexo.onclick = function(ev) {
-                if (ev.target.tagName !== 'BUTTON') {
-                    ev.stopPropagation();
-                    if (typeof window.abrirLightboxManual === 'function') {
-                        window.abrirLightboxManual(url);
-                    } else {
-                        window.open(url, '_blank');
-                    }
-                }
-            };
-        }
-
-        const campoTexto = document.querySelector('.textarea-chat') || document.querySelector('#modal-postar-fenda textarea');
-        if (campoTexto && campoTexto.value.trim() === '') {
-            campoTexto.value = '🎬 GIF enviado';
-            campoTexto.dispatchEvent(new Event('input'));
-        }
-        campoTexto?.focus();
-
-        document.dispatchEvent(new CustomEvent('gifSelecionado', { detail: { url: url } }));
+        // 🔥 PASSO 3: Foca no campo de texto (se houver)
+        const campoTexto = document.querySelector('.textarea-chat') || 
+                           document.querySelector('#modal-postar-fenda textarea');
+        if (campoTexto) campoTexto.focus();
 
         setTimeout(() => { isSelecting = false; }, 300);
     }
@@ -345,8 +292,4 @@
     window.abrirGiphyModal = function() {
         criarModal();
     };
-
-    // ============================================================
-    // REMOVIDO: observer que limpava o hidden gif_url – agora o AnexosManager gerencia isso.
-    // ============================================================
 })();

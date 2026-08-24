@@ -148,7 +148,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="hidden" name="pref_som_notif" id="drawer_input_pref_som_notif" value="<?php echo $dados['pref_som_notif']; ?>">
                     <input type="hidden" name="pref_bolhas" id="drawer_input_pref_bolhas" value="<?php echo $dados['pref_bolhas']; ?>">
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Som Ambiente</span>
+                    <span style="font-size: 0.9rem; color: #888; color:oklch(0.6268 0 0); font-weight: bold; text-transform: uppercase;">Som Ambiente</span>
                     <div class="audio-choices-container">
                         <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'chuva') ? 'active' : '' ?>" data-som="chuva" onclick="mudarSomAmbiente('chuva')">Chuva</button>
                         <button type="button" class="btn-audio-choice <?= ($dados['pref_som_trilha'] == 'ondas') ? 'active' : '' ?>" data-som="ondas" onclick="mudarSomAmbiente('ondas')">Oceano</button>
@@ -157,7 +157,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
                     <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
+                    <span style="font-size: 0.9rem; color: #888; font-weight: bold; text-transform: uppercase;">Notificações</span>
                     <div class="audio-choices-container">
                         <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'padrao') ? 'active' : '' ?>" data-notif="padrao" onclick="mudarTemaNotif('padrao')"><i class="fas fa-dot-circle"></i> Padrão</button>
                         <button type="button" class="btn-audio-choice <?= ($dados['pref_som_notif'] == 'cs') ? 'active' : '' ?>" data-notif="cs" onclick="mudarTemaNotif('cs')"><i class="fas fa-crosshairs"></i> CS</button>
@@ -176,7 +176,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
                     <div style="margin: 10px 0; border-top: 1px solid rgba(255,255,255,0.05);"></div>
 
-                    <span style="font-size: 0.85rem; color: #888; font-weight: bold; text-transform: uppercase;">(De)feitos Visuais</span>
+                    <span style="font-size: 0.9rem; color: #888; font-weight: bold; text-transform: uppercase;">(De)feitos Visuais</span>
                     <div class="audio-choices-container">
                         <button type="button" class="btn-audio-choice btn-bolhas-on <?= ($dados['pref_bolhas'] == 1) ? 'active' : '' ?>" onclick="setBolhasLocal(1)"> Bolhas On</button>
                         <button type="button" class="btn-audio-choice btn-bolhas-off <?= ($dados['pref_bolhas'] == 0) ? 'active' : '' ?>" onclick="setBolhasLocal(0)"> Desligar</button>

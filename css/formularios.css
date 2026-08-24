@@ -705,8 +705,10 @@ select:focus {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    max-width: clamp(260px, 90%, 650px);
-    max-height: clamp(200px, 60vh, 600px);
+    width: 100%;
+    height: auto;
+    max-width: clamp(260px, 90%, 600px);
+    max-height: clamp(200px, 60vh, 500px);
 }
 
 .btn-fechar-modal {
@@ -1089,8 +1091,9 @@ form[action="confirma-login.php"] {
 
 .titulo-pagina {
     color: var(--dourado);
-    font-size: 1.1rem;
-    margin-bottom: 20px;
+    color: oklch(0.834633 0.17177 82.5648);
+    font-size: 1.05rem;
+    margin-bottom: 15px;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -2020,12 +2023,14 @@ Especificidade: (0,1,1)
 .main-perfil-container-config {
     flex-direction: column;
     align-items: center;
-    width: 97%;
-    margin: 20px auto;
+    width: 100%;
+    margin: 25px auto;
     display: flex;
     padding: 8px;
     float: none;
     border-radius: 16px;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
     border: 2px solid #cccccc7c;
     max-width: 800px;
     background: #0d0d0dd1;
@@ -2043,7 +2048,7 @@ Especificidade: (0,1,1)
     align-items: center;
     /* Alinha os botões verticalmente no meio */
     gap: 15px;
-    margin: 20px auto;
+    margin: 15px auto;
     width: 100%;
     clear: both;
 }

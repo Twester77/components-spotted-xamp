@@ -1,24 +1,4 @@
 <?php
-/**
- * comentarios-post.php – Página de comentários de um post
- * 
- * 🔧 CORREÇÃO: Busca e validação do post movidas para antes do header,
- *    evitando "headers already sent" em redirecionamentos.
- * 
- * 🌙 LUA – 2026-08-13
- * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
- *    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
- * 
- * 🔧 ATUALIZAÇÃO ONDINA – 2026-08-17
- *    Substituição de obterUrlImagem() por obterUrlComFallback() nos anexos
- *    dos comentários (múltiplos e único) para fallback centralizado.
- * 
- * 🔧 CORREÇÃO NEREIDA – 2026-08-23
- *    - Adicionado ID exclusivo 'gif-url-comentario' para input hidden do GIF.
- *    - Botão GIF agora define setGiphyTarget('gif-url-comentario').
- *    - Listener gifSelecionado verifica targetId antes de adicionar.
- */
-
 include_once 'conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
@@ -29,22 +9,6 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 fenda_log('🟢 INÍCIO comentarios-post.php');
-
-// ============================================================
-// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
-// ============================================================
-if (isset($_GET['notif_id'])) {
-    $notif_id = (int)$_GET['notif_id'];
-    $user_id = $_SESSION['usuario_id'] ?? 0;
-    if ($user_id > 0) {
-        $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
-        $stmt_notif->bind_param("ii", $notif_id, $user_id);
-        $stmt_notif->execute();
-        $stmt_notif->close();
-        fenda_log("🟢 Notificação $notif_id marcada como lida para usuário $user_id (via comentarios-post)");
-    }
-}
-
 /* ==========================================================================
    Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir.
    Cada linha, cada debug, cada madrugada valeram a pena.
@@ -54,14 +18,7 @@ if (isset($_GET['notif_id'])) {
 // --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id == 0) {
-    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast
-    if (isset($_GET['notif_id'])) {
-        $_SESSION['toast_mensagem'] = 'Notificação marcada como lida.';
-        $_SESSION['toast_tipo'] = 'sucesso';
-        header("Location: feed.php");
-    } else {
-        header("Location: feed.php");
-    }
+    header("Location: feed.php");
     exit();
 }
 
@@ -75,47 +32,15 @@ if ($id > 0) {
     if ($check_post && $check_post['categoria'] === 'perdidos') {
         $is_perdidos = true;
     }
-    $stmt_check->close();
 }
 
 // --- SEGURANÇA: se não estiver logado e não for perdidos, redireciona ---
 if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
-    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast
-    if (isset($_GET['notif_id'])) {
-        $_SESSION['toast_mensagem'] = 'Notificação marcada como lida.';
-        $_SESSION['toast_tipo'] = 'sucesso';
-        header("Location: feed.php");
-    } else {
-        header("Location: index.php");
-    }
+    header("Location: index.php");
     exit();
 }
 
-// ============================================================
-// 🔥 BUSCA O POST E VERIFICA STATUS (ANTES DO HEADER!)
-// ============================================================
-$stmt = $conn->prepare("SELECT m.*, u.username, u.foto FROM mensagens m LEFT JOIN usuarios u ON m.usuario_id = u.id WHERE m.id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$post = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-
-if (!$post) {
-    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast amigável
-    if (isset($_GET['notif_id'])) {
-        $_SESSION['toast_mensagem'] = 'Postagem não encontrada ou excluída.';
-        $_SESSION['toast_tipo'] = 'info';
-        header("Location: feed.php");
-    } else {
-        die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
-    }
-    exit();
-}
-
-// 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
-$post_esta_ativo = ($post['status'] === 'ativo');
-
-// --- PUXA DADOS DO USUÁRIO LOGADO (preferências) ---
+// --- PUXA DADOS DO USUÁRIO LOGADO ---
 $vibe_default = 'vibe-glass';
 $cor_default = '#70cde4';
 $swipeAtivado = 0;
@@ -131,9 +56,6 @@ if (isset($_SESSION['usuario_id'])) {
     }
 }
 
-// ============================================================
-// 🔥 AGORA SIM, INCLUI O HEADER (COM SAÍDA HTML)
-// ============================================================
 $is_post_page = true;
 include 'includes/header.php';
 include 'includes/navbar.php';
@@ -148,6 +70,21 @@ try {
     $b2 = null;
     error_log('[COMENTARIOS] Falha ao instanciar B2: ' . $e->getMessage());
 }
+
+// ============================================================
+// 🔥 BUSCA O POST E VERIFICA STATUS
+// ============================================================
+$stmt = $conn->prepare("SELECT m.*, u.username, u.foto FROM mensagens m LEFT JOIN usuarios u ON m.usuario_id = u.id WHERE m.id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$post = $stmt->get_result()->fetch_assoc();
+
+if (!$post) {
+    die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
+}
+
+// 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
+$post_esta_ativo = ($post['status'] === 'ativo');
 
 // ============================================================
 // 1. BUSCAR REAÇÕES DETALHADAS PARA ESTE POST
@@ -217,7 +154,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
         <!-- 🔥 BARRA DE AÇÕES FIXA (HEADER) – FORA DO STICKY HEADER -->
         <?php
         // Dados da miniatura (já calculados antes, mas reforçamos aqui)
-        $avatar_miniatura = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
+        $avatar_miniatura = !empty($post['foto'])
+            ? (obterUrlImagem($post['foto'], $b2, true) ?? 'uploads/ui/default.webp')
+            : 'uploads/ui/default.webp';
         $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
         $texto_miniatura = htmlspecialchars(mb_substr($post['mensagem'], 0, 80));
         if (mb_strlen($post['mensagem']) > 80) $texto_miniatura .= '...';
@@ -233,6 +172,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
         <!-- ============================================================
         CONTEÚDO ROLÁVEL (APENAS COMENTÁRIOS)
+        🔥 A MINIATURA, BOTÃO VOLTAR E COLLAPSE FORAM REMOVIDOS DAQUI
+        ELES AGORA SÃO GERENCIADOS PELO CSS E PELO HEADERMANAGER
         ============================================================ -->
         <main class="lista-scrollavel" id="conteudo-rolavel">
 
@@ -274,10 +215,14 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 ?>
                         <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
 
+                            <!-- 🔥 REMOVIDO: botão de ellipsis (⋯) – agora centralizado no header -->
+                            <!-- O ellipsis foi removido para centralizar a ação "Excluir" no HeaderManager -->
+
                             <div class="comentario-meta">
                                 <strong class="comentario-autor" style="color: var(--cor-borda-glow);">
                                     <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
                                 </strong>
+                                <!-- 🔥 DATA REMOVIDA DAQUI (agora no rodapé) -->
                             </div>
 
                             <?php if (!empty($c['parent_id'])): ?>
@@ -301,13 +246,13 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             }
 
                             if (!empty($anexos_exibicao) && is_array($anexos_exibicao)):
+                                // Renderiza o grid com múltiplos anexos
                             ?>
                                 <div class="comentario-media-wrapper-grid">
                                     <?php foreach ($anexos_exibicao as $anexo): ?>
                                         <?php if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])): ?>
                                             <?php
-                                            // 🔥 SUBSTITUÍDO: obterUrlImagem → obterUrlComFallback
-                                            $img_url = obterUrlComFallback($anexo['caminho'], 'comentarios/' . htmlspecialchars($anexo['caminho']), $b2, true);
+                                            $img_url = obterUrlImagem($anexo['caminho'], $b2, true) ?? 'comentarios/' . htmlspecialchars($anexo['caminho']);
                                             ?>
                                             <div class="comentario-media-item">
                                                 <img src="<?= htmlspecialchars($img_url) ?>" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display='none'">
@@ -324,7 +269,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 <?php
                                 $img_comentario = $c['imagem_url'];
                                 if (!filter_var($img_comentario, FILTER_VALIDATE_URL)) {
-                                    $img_comentario = obterUrlComFallback($c['imagem_url'], 'comentarios/' . htmlspecialchars($c['imagem_url']), $b2, true);
+                                    $img_comentario = obterUrlImagem($c['imagem_url'], $b2, true) ?? 'comentarios/' . htmlspecialchars($c['imagem_url']);
                                 }
                                 ?>
                                 <div class="comentario-media-wrapper">
@@ -332,9 +277,12 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 </div>
                             <?php endif; ?>
 
-                            <!-- RODAPÉ COM DATA -->
+                            <!-- 🔥 REMOVIDO: botão "RESPONDER" do rodapé – agora centralizado no header -->
+                            <!-- A ação "Responder" agora é acionada pelo HeaderManager ao selecionar o comentário -->
+
+                            <!-- 🔥 RODAPÉ COM DATA (AGORA AQUI, ABAIXO DE TUDO) -->
                             <div class="comentario-rodape">
-                                <span class="comentario-data"><?= exibirDataHoraBrasil($c['data_comentario'], 'H:i') ?></span>
+                                <span class="comentario-data"><?php echo date('H:i', strtotime($c['data_comentario'])); ?></span>
                             </div>
 
                         </div>
@@ -355,7 +303,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
             <footer class="fixed-input">
                 <section class="sessao-fofoca-focada" id="fofocar">
 
-                    <!-- NOVO GRID DE ANEXOS -->
+                    <!-- ============================================================
+                NOVO GRID DE ANEXOS (substitui o antigo #anexo-preview)
+                ============================================================ -->
                     <div id="anexos-grid" class="anexos-grid" style="display: none;"></div>
 
                     <!-- ÁREA PRINCIPAL -->
@@ -364,8 +314,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             <i class="fas fa-paperclip"></i>
                         </button>
 
+                        <!-- 🔥 NOVO CONTAINER FLEX COM INDICADOR E TEXTAREA -->
                         <div class="textarea-container">
-                            <!-- INDICADOR DE RESPOSTA -->
+                            <!-- INDICADOR DE RESPOSTA (FORA DO TEXTAREA) -->
                             <div id="resposta-indicador" class="resposta-indicador">
                                 <i class="fas fa-reply"></i>
                                 <strong id="texto-nome-resposta">...</strong>
@@ -382,7 +333,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         </button>
                     </div>
 
-                    <!-- GAVETA DE OPÇÕES -->
+                    <!-- GAVETA DE OPÇÕES (vibe/cor) -->
                     <div id="gaveta-opcoes" class="gaveta-opcoes">
                         <button type="button" id="btn-toggle-gaveta" class="btn-toggle-gaveta">
                             <i class="fas fa-palette"></i> Estilo
@@ -398,13 +349,10 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             <input type="color" name="pref_cor_borda" id="cor-borda" class="color-mini" value="<?php echo $cor_default; ?>">
                         </div>
                         <button type="button" id="btn-anexar-img" class="btn-attach-opcao"><i class="fas fa-image"></i> Imagem</button>
-                        <!-- 🔥 CORREÇÃO: Define targetId exclusivo para o GIF do comentário -->
-                        <button type="button" id="btn-gif" class="btn-attach-opcao" onclick="window.setGiphyTarget('gif-url-comentario'); abrirGiphyModal();">
-                            <i class="fas fa-grin-tongue-squint"></i> GIF/Sticker
-                        </button>
+                        <button type="button" id="btn-gif" class="btn-attach-opcao" onclick="abrirGiphyModal()"><i class="fas fa-grin-tongue-squint"></i> GIF/Sticker</button>
                     </div>
 
-                    <!-- 🔥 INPUT FILE ESCONDIDO -->
+                    <!-- 🔥 INPUT FILE ESCONDIDO (indispensável para o JS) -->
                     <input type="file" name="imagem_comentario" id="input-img-comentario" accept="image/*" style="display:none;">
 
                     <!-- Formulário oculto -->
@@ -414,10 +362,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         <input type="hidden" name="pref_vibe_comentario" id="hidden-vibe" value="">
                         <input type="hidden" name="pref_cor_borda" id="hidden-cor" value="">
                         <textarea name="comentario" id="hidden-textarea"></textarea>
-                        <!-- 🔥 CSRF TOKEN -->
+                        <!-- 🔥 CSRF TOKEN ADICIONADO -->
                         <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
-                        <!-- 🔥 NOVO: input oculto para GIF com ID exclusivo -->
-                        <input type="hidden" name="gif_url" id="gif-url-comentario" value="">
                     </form>
 
                     <!-- Honeypot -->
@@ -427,7 +373,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 </section>
             </footer>
         <?php else: ?>
-            <!-- POST ENCERRADO – BLOQUEIO DE COMENTÁRIOS -->
+            <!--  POST ENCERRADO – BLOQUEIO DE COMENTÁRIOS -->
             <footer class="fixed-input fixed-input-bloqueado">
                 <div class="comentarios-bloqueados-msg">
                     <i class="fas fa-ban"></i>
@@ -438,13 +384,15 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
     </div>
 </div>
-
-<!-- BOTÃO DE COLLAPSE FLUTUANTE -->
+<!-- 🔥 BOTÃO DE COLLAPSE FLUTUANTE (FORA DO LINGOTE) -->
 <button id="btn-toggle-collapse" class="btn-toggle-collapse" aria-label="Minimizar/Expandir post">
     <i class="fas fa-chevron-up"></i>
 </button>
 
 <script>
+    // ==================== CLIQUE NO BOTÃO ELLIPSIS (REMOVIDO) ====================
+    // 🔥 O ellipsis foi removido dos comentários. A ação "Excluir" agora é centralizada no HeaderManager.
+
     // ==================== INICIALIZA O ANEXOS MANAGER ====================
     if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
         AnexosManager.init();
@@ -468,7 +416,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         const modal = document.createElement('div');
         modal.id = 'modal-lightbox-fenda';
         modal.style.cssText =
-            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-bakcdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
         const img = document.createElement('img');
         img.src = imgSrc;
         img.style.cssText =
@@ -501,7 +449,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         const modal = document.createElement('div');
         modal.id = 'modal-lightbox-fenda';
         modal.style.cssText =
-            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-bakcdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
         const img = document.createElement('img');
         img.src = src;
         img.style.cssText =
@@ -562,21 +510,27 @@ $total_reacoes = array_sum($reacoes_detalhes);
             if (elementoRef) {
                 const rect = elementoRef.getBoundingClientRect();
                 let top = rect.top - 10;
-                let left = rect.left + rect.width / 2 - 50;
+                let left = rect.left + rect.width / 2 - 50; // centraliza horizontalmente
+
+                // 🔥 Reposiciona se estiver muito perto da borda direita
                 const balaoWidth = Math.min(300, window.innerWidth * 0.8);
                 if (left + balaoWidth > window.innerWidth - 20) {
                     left = window.innerWidth - balaoWidth - 20;
                 }
                 if (left < 20) left = 20;
+
+                // Se o elemento estiver no topo da tela, coloca o balão abaixo
                 if (rect.top < 60) {
                     top = rect.bottom + 10;
                 } else {
                     top = rect.top - 60;
                 }
+
                 balao.style.top = top + 'px';
                 balao.style.left = left + 'px';
                 balao.style.maxWidth = balaoWidth + 'px';
             } else {
+                // Fallback: centralizado
                 balao.style.top = '50%';
                 balao.style.left = '50%';
                 balao.style.transform = 'translate(-50%, -50%)';
@@ -595,6 +549,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
             alert(mensagem);
         }
     };
+
+    // ==================== CLIQUE NO BOTÃO ELLIPSIS (REMOVIDO) ====================
+    // 🔥 O ellipsis foi removido dos comentários. A ação "Excluir" agora é centralizada no HeaderManager.
 
     // ==================== INICIALIZA O ANEXOS MANAGER ====================
     if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
@@ -733,21 +690,24 @@ $total_reacoes = array_sum($reacoes_detalhes);
         // ============================================================
         inputFile.addEventListener('change', function() {
             if (this.files.length > 0) {
+                // 🔥 VALIDA CADA ARQUIVO SELECIONADO
                 for (let i = 0; i < this.files.length; i++) {
                     const file = this.files[i];
-                    const maxSize = 2 * 1024 * 1024;
+                    const maxSize = 2 * 1024 * 1024; // 2MB
                     const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 
+                    // Valida tamanho
                     if (file.size > maxSize) {
                         window.exibirBalao(
                             `❌ Arquivo excede 2MB (${(file.size / 1024 / 1024).toFixed(1)}MB)`,
                             'erro',
                             btnEnviar
                         );
-                        this.value = '';
-                        return;
+                        this.value = ''; // limpa o input
+                        return; // interrompe o loop
                     }
 
+                    // Valida tipo
                     if (!tiposPermitidos.includes(file.type)) {
                         window.exibirBalao(
                             '❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
@@ -758,6 +718,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         return;
                     }
 
+                    // Sucesso: exibe o balão com o tamanho
                     const tamanhoKB = Math.round(file.size / 1024);
                     window.exibirBalao(
                         `✅ Arquivo aceito (${tamanhoKB} KB)`,
@@ -765,26 +726,21 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         btnEnviar
                     );
 
+                    // Adiciona ao AnexosManager
                     if (typeof window.adicionarAnexo === 'function') {
                         window.adicionarAnexo(file);
                     } else {
                         console.warn('[comentarios-post] AnexosManager não disponível para adicionar imagem.');
                     }
                 }
-                this.value = '';
+                this.value = ''; // limpa o input após processar
             }
         });
 
         // ============================================================
-        // 🔥 EVENTO PARA CAPTURAR GIF SELECIONADO VIA GIPHY (COM VERIFICAÇÃO DE TARGET)
+        // 🔥 EVENTO PARA CAPTURAR GIF SELECIONADO VIA GIPHY
         // ============================================================
         document.addEventListener('gifSelecionado', function(e) {
-            // 🔥 SÓ REAGE SE O targetId FOR O DO COMENTÁRIO
-            if (e.detail && e.detail.targetId && e.detail.targetId !== 'gif-url-comentario') {
-                console.log('[comentarios-post] GIF disparado para outro formulário. Ignorando.');
-                return;
-            }
-
             if (e.detail && e.detail.url) {
                 if (typeof window.adicionarGif === 'function') {
                     window.adicionarGif(e.detail.url);
@@ -796,7 +752,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
         });
 
         // ============================================================
-        // 🔥 FUNÇÕES DE RESPOSTA
+        // 🔥 FUNÇÕES DE RESPOSTA (mantidas)
         // ============================================================
         window.toggleBarraFofoca = function() {
             const icone = document.querySelector('#toggle-chat-barra i');
@@ -829,6 +785,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
             }
         };
 
+        // ============================================================
+        // 🔥 FUNÇÕES DE RESPOSTA (com classe CSS)
+        // ============================================================
         window.prepararResposta = function(id, username) {
             const inputParent = document.getElementById('input_parent_id');
             const indicador = document.getElementById('resposta-indicador');
@@ -933,6 +892,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     }
                 }
 
+                // 🔥 GARANTE QUE O CSRF TOKEN ESTEJA NO FORMDATA
                 const csrfInput = document.getElementById('csrf_token');
                 if (csrfInput && csrfInput.value) {
                     formData.set('csrf_token', csrfInput.value);
@@ -947,6 +907,8 @@ $total_reacoes = array_sum($reacoes_detalhes);
                 const originalIcon = btn.innerHTML;
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                // 🔥 DESABILITA OS BOTÕES DE REMOVER ANEXO DURANTE O ENVIO
                 document.querySelectorAll('.btn-remover-anexo').forEach(b => b.disabled = true);
 
                 window.exibirBalao('Enviando comentário...', 'info', btn, 1500);
@@ -1003,6 +965,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                     .finally(() => {
                         btn.innerHTML = originalIcon;
                         btn.disabled = false;
+                        // 🔥 REABILITA OS BOTÕES DE REMOVER ANEXO
                         document.querySelectorAll('.btn-remover-anexo').forEach(b => b.disabled = false);
                     });
             });
@@ -1035,10 +998,11 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
         verificarConteudo();
 
-    <?php endif; ?>
+    <?php endif; // fim do bloco de comentários ativos 
+    ?>
 
     // ============================================================
-    // 🔥 INICIALIZA O HEADER MANAGER
+    // 🔥 INICIALIZA O HEADER MANAGER (APÓS O DOM ESTAR PRONTO)
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof HeaderManager !== 'undefined' && HeaderManager.init) {

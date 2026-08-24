@@ -1,10 +1,12 @@
 <?php
-/*
+
+/** 
 * B2Client - Integração com Backblaze B2 (Object Storage)
 * 
 * @package A Fenda
-* @author DeepSeek (Marretador) / Revisado por Djê / Ondina
-* @version 3.8 - Timeout ajustável + logs detalhados
+* @author DeepSeek (Marretador) / Revisado por Djê
+* @version 3.6 - NATIVO (downloadUrl + Authorization) — corrigido: visibilidade
+* pública de getDownloadAuthorizationToken + fileNamePrefix para bucket flat
 * 
 * CARACTERÍSTICAS:
 * - Padrão Singleton: autentica apenas UMA vez por requisição
@@ -13,7 +15,6 @@
 * - ✅ NATIVO: https://f005.backblazeb2.com/file/BUCKET/arquivo?Authorization=TOKEN
 * - CACHE DE URLs: evita múltiplas chamadas à API para o mesmo arquivo
 * - Upload, Delete e Download com logs estruturados
-* - Timeout ajustável (padrão 30s)
 */
 
 class B2Client
@@ -71,11 +72,6 @@ class B2Client
     private $urlCache = [];
 
     /**
-     * @var int Timeout padrão para requisições cURL (segundos)
-     */
-    private $timeout = 30;
-
-    /**
      * Construtor privado (Singleton) – carrega credenciais e autentica
      * 
      * @throws Exception Se alguma credencial estiver faltando ou autenticação falhar
@@ -98,21 +94,8 @@ class B2Client
             );
         }
 
-        error_log('[B2Client] Credenciais carregadas. Bucket: ' . $this->bucketName);
-
         // Realiza autenticação (uma única vez)
         $this->authorize();
-    }
-
-    /**
-     * Define o timeout para as requisições cURL.
-     * 
-     * @param int $seconds Timeout em segundos
-     */
-    public function setTimeout($seconds)
-    {
-        $this->timeout = max(5, (int)$seconds);
-        error_log("[B2Client] Timeout ajustado para {$this->timeout}s");
     }
 
     /**
@@ -141,35 +124,29 @@ class B2Client
      */
     private function authorize()
     {
-        error_log('[B2Client] Iniciando autenticação...');
-
         // 1. Obter a URL da API e o token de autorização
         $ch = curl_init($this->apiUrl . '/b2api/v2/b2_authorize_account');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $this->keyId . ':' . $this->applicationKey);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $error = curl_error($ch);
-        // 🔥 curl_close removido – PHP 8.5+ gerencia automaticamente
+        curl_close($ch);
 
         if ($httpCode !== 200) {
-            error_log("[B2Client] Falha na autenticação (HTTP $httpCode): " . ($response ?: 'sem resposta'));
             throw new Exception("[B2Client] Falha na autenticação (HTTP $httpCode): $response" . ($error ? " - cURL: $error" : ""));
         }
 
         $data = json_decode($response, true);
         if (!isset($data['apiUrl'], $data['authorizationToken'], $data['downloadUrl'])) {
-            error_log('[B2Client] Resposta de autenticação inválida: ' . substr($response, 0, 200));
             throw new Exception('[B2Client] Resposta de autenticação inválida: ' . substr($response, 0, 200));
         }
 
         $this->apiUrl = $data['apiUrl'];
         $this->authorizationToken = $data['authorizationToken'];
         $this->downloadUrl = $data['downloadUrl'];
-
-        error_log('[B2Client] Autenticação bem-sucedida. Download URL: ' . $this->downloadUrl);
     }
 
     /**
@@ -180,8 +157,6 @@ class B2Client
      */
     private function getUploadUrl()
     {
-        error_log('[B2Client] Obtendo URL de upload...');
-
         $ch = curl_init($this->apiUrl . '/b2api/v2/b2_get_upload_url');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -191,29 +166,34 @@ class B2Client
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['bucketId' => $this->bucketId]));
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 🔥 curl_close removido
+        curl_close($ch);
 
         if ($httpCode !== 200) {
-            error_log("[B2Client] Falha ao obter URL de upload (HTTP $httpCode): " . ($response ?: 'sem resposta'));
             throw new Exception("[B2Client] Falha ao obter URL de upload (HTTP $httpCode): $response");
         }
 
         $data = json_decode($response, true);
         if (!isset($data['uploadUrl'], $data['authorizationToken'])) {
-            error_log('[B2Client] Resposta de upload URL inválida: ' . substr($response, 0, 200));
             throw new Exception('[B2Client] Resposta de upload URL inválida: ' . substr($response, 0, 200));
         }
 
-        error_log('[B2Client] URL de upload obtida com sucesso.');
         return [
             'uploadUrl' => $data['uploadUrl'],
             'authorizationToken' => $data['authorizationToken']
         ];
     }
 
+    /**
+     * Obtém um token de autorização para download (b2_get_download_authorization).
+     * 
+     * @param string $fileName Nome do arquivo no bucket
+     * @param int    $duration Duração em segundos (máximo: 86400 = 24h)
+     * @return string Token de autorização
+     * @throws Exception
+     */
     /**
      * Obtém um token de autorização para download (b2_get_download_authorization).
      * 
@@ -254,19 +234,17 @@ class B2Client
             'fileNamePrefix' => $fileNamePrefix,
             'validDurationInSeconds' => $duration
         ]));
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 🔥 curl_close removido
+        curl_close($ch);
 
         if ($httpCode !== 200) {
-            error_log("[B2Client] Falha ao obter token de download autorizado (HTTP $httpCode): " . ($response ?: 'sem resposta'));
             throw new Exception("[B2Client] Falha ao obter token de download autorizado (HTTP $httpCode): $response");
         }
 
         $data = json_decode($response, true);
         if (!isset($data['authorizationToken'])) {
-            error_log('[B2Client] Resposta de download authorization inválida: ' . substr($response, 0, 200));
             throw new Exception('[B2Client] Resposta de download authorization inválida: ' . substr($response, 0, 200));
         }
 
@@ -275,7 +253,6 @@ class B2Client
             'expires' => time() + $duration - 60
         ];
 
-        error_log("[B2Client] Token de download autorizado obtido para: $fileName (expira em $duration s)");
         return $data['authorizationToken'];
     }
 
@@ -295,8 +272,6 @@ class B2Client
         if (!file_exists($filePath)) {
             throw new Exception("[B2Client] Arquivo não encontrado: $filePath");
         }
-
-        error_log("[B2Client] Iniciando upload de '$fileName' (" . filesize($filePath) . " bytes)");
 
         $uploadData = $this->getUploadUrl();
         $uploadUrl = $uploadData['uploadUrl'];
@@ -324,27 +299,30 @@ class B2Client
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $fileContent);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 🔥 curl_close removido
+        curl_close($ch);
 
         if ($httpCode !== 200) {
-            error_log("[B2Client] Upload falhou (HTTP $httpCode) para '$fileName': " . substr($response, 0, 500));
             throw new Exception("[B2Client] Upload falhou (HTTP $httpCode): " . substr($response, 0, 500));
         }
 
         $data = json_decode($response, true);
         if (!isset($data['fileId'])) {
-            error_log('[B2Client] Resposta de upload inválida: ' . substr($response, 0, 200));
             throw new Exception('[B2Client] Resposta de upload inválida: ' . substr($response, 0, 200));
         }
 
-        error_log("[B2Client] Upload bem-sucedido: $fileName (fileId: {$data['fileId']})");
         return $fileName;
     }
 
+    /**
+     * Gera a URL pública para download de um arquivo (bucket público).
+     * 
+     * @param string $fileName Nome do arquivo no bucket
+     * @return string URL pública
+     */
     /**
      * Retorna a URL base de download do bucket
      */
@@ -405,10 +383,9 @@ class B2Client
             'startFileName' => $fileName,
             'maxFileCount' => 1
         ]));
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 🔥 curl_close removido
+        curl_close($ch);
 
         if ($httpCode !== 200) return false;
         $data = json_decode($response, true);
@@ -437,11 +414,11 @@ class B2Client
             'startFileName' => $fileName,
             'maxFileCount' => 1
         ]));
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 🔥 curl_close removido
+        curl_close($ch);
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha ao listar arquivos (HTTP $httpCode): $response");
@@ -471,17 +448,16 @@ class B2Client
             'fileId' => $fileId,
             'fileName' => $fileName
         ]));
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        // 🔥 curl_close removido
+        curl_close($ch);
 
         if ($httpCode !== 200) {
             throw new Exception("[B2Client] Falha ao deletar arquivo (HTTP $httpCode): $response");
         }
 
-        error_log("[B2Client] Arquivo deletado: $fileName (fileId: $fileId)");
         return true;
     }
 

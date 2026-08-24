@@ -189,23 +189,23 @@
     flex-direction: column;
     justify-content: center;
     gap: clamp(10px, 2vmin, 20px);
-    padding: 16px 8px;
+    padding: 16px 10px;
     overflow-y: auto;
     scrollbar-width: thin;
+    scrollbar-color: #74ffff;
 }
 
 .lightbox-post-body {
     width: 100%;
     margin: 10px auto;
     padding: 15px;
-    border: 2px solid rgba(255, 255, 255, 0.06);
 }
 
 
 /* 7.1 Texto do post – centralizado com boa legibilidade */
 .lightbox-post-texto {
-    font-size: 0.95rem;
-    font-size: clamp(0.9rem, 4cqw, 1.3rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.95rem, 3cqw, 1.3rem);
     line-height: 1.6;
     color: #eee;
     display: flex;
@@ -223,7 +223,7 @@
 body:not(.modo-swipe-ativo) .lightbox-post-body img,
 body.modo-swipe-ativo .lightbox-post-body img {
     max-width: 100%;
-    max-height: 300px;
+    max-height: 400px;
     object-fit: contain;
     border-radius: clamp(8px, 2cqw, 16px);
     display: block;
@@ -254,6 +254,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 180px));
     gap: 10px;
+    justify-content: center;
     align-items: center;
     color-scheme: light dark;
     image-rendering: auto;
@@ -292,6 +293,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-comentarios {
     display:flex ;
     flex-direction: column;
+    gap: 10px;
+    align-items: center;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding-top: clamp(10px, 1.5vmin, 20px);
     margin-top: 15px;
@@ -373,7 +376,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-ver-todos {
     text-align: center;
     margin-top: 10px;
-    margin-top: clamp(8px, 2cqh, 18px);
+    margin-top: clamp(6px, 1cqh, 20px);
 
 }
 
@@ -381,7 +384,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     color: #ffbc00;
     text-decoration: none;
     font-weight: 600;
-    font-size: clamp(0.75rem, 2.5cqw, 1rem);
+    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 2cqw, 1rem);
     transition: 0.2s;
 }
 
@@ -432,7 +436,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-apenas-post .lightbox-post-body {
     background: #000000;
     border: none ;
-    box-shadow: 0 0 10px rgba(0,0,0,0.9) ;
+    box-shadow: 0 0 8px rgba(0,0,0,0.9) ;
     max-width: auto;
     max-height: 90vh;
     max-height: 90dvh;

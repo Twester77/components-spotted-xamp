@@ -1444,7 +1444,7 @@ function initViewportTracker() {
 }
 
 // ============================================================
-// 🖼️ ANEXOS MANAGER – GERENCIAMENTO DE MÚLTIPLOS ARQUIVOS
+// 🖼️ ANEXOS MANAGER – GERENCIAMENTO DE MÚLTIPLOS ARQUIVOS (COM COMPRESSÃO)
 // ============================================================
 
 const AnexosManager = {
@@ -1463,8 +1463,8 @@ const AnexosManager = {
         }
     },
 
-    // 🔥 ADICIONA UM ANEXO (COM VALIDAÇÃO E FEEDBACK VISUAL)
-    adicionar(file, tipo = 'imagem', url = null) {
+    // 🔥 ADICIONA UM ANEXO (COM VALIDAÇÃO, COMPRESSÃO E FEEDBACK VISUAL)
+    async adicionar(file, tipo = 'imagem', url = null) {
         // ============================================================
         // 🔥 1. VALIDAÇÃO PARA ARQUIVOS DE IMAGEM (UPLOAD LOCAL)
         // ============================================================
@@ -1480,7 +1480,7 @@ const AnexosManager = {
                 } else {
                     alert(mensagem);
                 }
-                return false; // 🔥 NÃO ADICIONA O ARQUIVO
+                return false;
             }
 
             // 🔥 VALIDA TIPO (MIME)
@@ -1491,13 +1491,27 @@ const AnexosManager = {
                 } else {
                     alert(mensagem);
                 }
-                return false; // 🔥 NÃO ADICIONA O ARQUIVO
+                return false;
             }
 
             // 🔥 SE PASSOU NAS VALIDAÇÕES, EXIBE FEEDBACK DE SUCESSO
             if (typeof mostrarFeedback === 'function') {
                 const tamanhoKB = Math.round(file.size / 1024);
                 mostrarFeedback(`✅ Arquivo aceito (${tamanhoKB} KB)`, 'sucesso');
+            }
+
+            // 🔥 COMPRESSÃO: converte para WebP com orientação corrigida
+            try {
+                const blobComprimido = await comprimirImagemClientSide(file, 0.7, 1200, 1200);
+                // Cria um novo File com o mesmo nome (mas extensão .webp) e tipo image/webp
+                const nomeBase = file.name.replace(/\.[^.]+$/, '') + '.webp';
+                const arquivoComprimido = new File([blobComprimido], nomeBase, { type: 'image/webp' });
+                // Substitui o arquivo original pelo comprimido
+                file = arquivoComprimido;
+                console.log(`[AnexosManager] Imagem comprimida: ${(file.size / 1024).toFixed(1)} KB`);
+            } catch (err) {
+                console.warn('[AnexosManager] Falha na compressão, usando original:', err);
+                // Se falhar, mantém o arquivo original
             }
         }
 
@@ -1515,7 +1529,7 @@ const AnexosManager = {
         }
 
         // ============================================================
-        // 🔥 3. LIMITE MÁXIMO DE ITENS (3)
+        // 🔥 3. LIMITE MÁXIMO DE ITENS (4)
         // ============================================================
         if (this.anexos.length >= this.maxItems) {
             const mensagem = `⚠️ Máximo de ${this.maxItems} anexos por comentário.`;
@@ -1551,12 +1565,9 @@ const AnexosManager = {
         const grid = this.gridElement;
         if (grid && grid.lastElementChild) {
             const ultimoItem = grid.lastElementChild;
-            // 🔥 Garante que a borda não "empurre" o layout
             ultimoItem.style.boxSizing = 'border-box';
             ultimoItem.style.border = '4px solid #4caf50';
             ultimoItem.style.transition = 'border-color 0.2s ease';
-
-            // 🔥 Remove a borda após 4 segundos
             setTimeout(() => {
                 ultimoItem.style.border = '';
                 ultimoItem.style.boxSizing = '';
@@ -1647,7 +1658,6 @@ const AnexosManager = {
         const temAnexo = this.anexos.length > 0;
         const atingiuLimite = this.anexos.length >= this.maxItems;
 
-        // Botão de enviar: sempre visível, mas desabilitado se vazio
         if (btnEnviar) {
             btnEnviar.style.display = 'flex';
             btnEnviar.disabled = !(temTexto || temAnexo);
@@ -1657,21 +1667,18 @@ const AnexosManager = {
                 btnEnviar.classList.remove('visivel');
             }
         }
-        // Botão de attach: visível apenas se não atingiu o limite
         if (btnGaveta) {
             btnGaveta.style.display = atingiuLimite ? 'none' : 'flex';
         }
     },
 
-    // 🔥 PREPARA O FORMDATA PARA ENVIO (ATUALMENTE ENVIA UM ÚNICO GIF)
+    // 🔥 PREPARA O FORMDATA PARA ENVIO
     prepararFormData(form) {
         const formData = new FormData(form);
-        // Adiciona arquivos (imagens)
         this.anexos.forEach((item) => {
             if (item.file) {
                 formData.append('anexos[]', item.file);
             } else if (item.tipo === 'gif' && item.url) {
-                // 🔥 AGORA ENVIA COMO 'gif_urls[]' (MÚLTIPLOS)
                 formData.append('gif_urls[]', item.url);
             }
         });
@@ -1685,6 +1692,146 @@ const AnexosManager = {
         this.renderizar();
     }
 };
+
+// ============================================================
+// 🖼️ FUNÇÕES DE COMPRESSÃO CLIENT-SIDE (COM CORREÇÃO EXIF)
+// ============================================================
+
+/**
+ * Lê a orientação EXIF de um arquivo de imagem usando DataView
+ * @param {File} file - Arquivo de imagem
+ * @returns {Promise<number>} - Orientação (1 a 8), ou 1 se não encontrada
+ */
+function obterOrientacaoEXIF(file) {
+    return new Promise((resolve) => {
+        if (!window.FileReader) {
+            resolve(1);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const view = new DataView(e.target.result);
+                if (view.getUint16(0, false) !== 0xFFD8) {
+                    resolve(1);
+                    return;
+                }
+                const length = view.byteLength;
+                let offset = 2;
+                while (offset < length) {
+                    const marker = view.getUint16(offset, false);
+                    offset += 2;
+                    if (marker === 0xFFE1) {
+                        const exifLength = view.getUint16(offset, false);
+                        offset += 2;
+                        if (view.getUint32(offset, false) === 0x45786966) {
+                            offset += 6;
+                            const littleEndian = view.getUint16(offset, false) === 0x4949;
+                            offset += 2;
+                            const tagCount = view.getUint16(offset, littleEndian);
+                            offset += 2;
+                            for (let i = 0; i < tagCount; i++) {
+                                const tag = view.getUint16(offset, littleEndian);
+                                const type = view.getUint16(offset + 2, littleEndian);
+                                const count = view.getUint32(offset + 4, littleEndian);
+                                const valueOffset = view.getUint32(offset + 8, littleEndian);
+                                offset += 12;
+                                if (tag === 0x0112) {
+                                    let orientation = 1;
+                                    if (type === 3 && count === 1) {
+                                        orientation = view.getUint16(offset - 12 + 8, littleEndian);
+                                    } else if (type === 4 && count === 1) {
+                                        orientation = view.getUint32(valueOffset, littleEndian);
+                                    }
+                                    resolve(orientation);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    const nextOffset = view.getUint16(offset, false);
+                    offset += nextOffset;
+                }
+                resolve(1);
+            } catch (err) {
+                console.warn('[EXIF] Erro ao ler orientação:', err);
+                resolve(1);
+            }
+        };
+        reader.onerror = function() {
+            resolve(1);
+        };
+        reader.readAsArrayBuffer(file.slice(0, 65536));
+    });
+}
+
+/**
+ * Comprime uma imagem usando canvas (WebP) com correção de orientação EXIF
+ * @param {File} file - Arquivo de imagem original
+ * @param {number} qualidade - 0 a 1 (padrão: 0.7)
+ * @param {number} maxWidth - Largura máxima (padrão: 1200)
+ * @param {number} maxHeight - Altura máxima (padrão: 1200)
+ * @returns {Promise<Blob>} - Blob comprimido em WebP
+ */
+async function comprimirImagemClientSide(file, qualidade = 0.7, maxWidth = 1200, maxHeight = 1200) {
+    const orientacao = await obterOrientacaoEXIF(file);
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Redimensiona mantendo proporção
+                if (width > maxWidth || height > maxHeight) {
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width = Math.round(width * ratio);
+                    height = Math.round(height * ratio);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+
+                // Aplica rotação baseada na orientação EXIF
+                const orientationMap = {
+                    1: { rotate: 0, flip: false },
+                    3: { rotate: 180, flip: false },
+                    6: { rotate: 90, flip: false },
+                    8: { rotate: -90, flip: false },
+                    2: { rotate: 0, flip: true },
+                    4: { rotate: 180, flip: true },
+                    5: { rotate: 90, flip: true },
+                    7: { rotate: -90, flip: true }
+                };
+                const mapping = orientationMap[orientacao] || orientationMap[1];
+                const rotateRad = mapping.rotate * Math.PI / 180;
+
+                // Se houver rotação, ajusta canvas e desenha com rotação
+                if (mapping.rotate !== 0) {
+                    canvas.width = (mapping.rotate === 90 || mapping.rotate === -90) ? height : width;
+                    canvas.height = (mapping.rotate === 90 || mapping.rotate === -90) ? width : height;
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.rotate(rotateRad);
+                    ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
+                } else {
+                    ctx.drawImage(img, 0, 0, width, height);
+                }
+
+                canvas.toBlob((blob) => {
+                    resolve(blob);
+                }, 'image/webp', qualidade);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 
 const HeaderManager = {
     containerId: 'header-actions',

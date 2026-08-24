@@ -5,6 +5,11 @@
  * 🔒 Segurança: CSRF, honeypot, rate limiting, sanitização, prepared statements.
  * 🖼️ Suporte a múltiplos anexos (imagens + GIFs) com rollback.
  * 
+ * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-22
+ *    "Removido bloco de mkdir e .htaccess para compatibilidade com Vercel (serverless).
+ *     O upload agora é feito exclusivamente via processarUploadSeguro() usando /tmp."
+ * - Nereida, a nova guardiã das águas
+ * 
  * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
  *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
  *     na exibição de anexos de comentários (múltiplos e únicos)."
@@ -24,6 +29,7 @@ require_once 'includes/upload_engine.php';
 if (isset($_SESSION['usuario_id'])) {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         http_response_code(403);
+        ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Token de segurança inválido.']);
         exit();
     }
@@ -54,6 +60,7 @@ function verificarRateLimiting($conn, $ip) {
 
     if ($row['total'] >= 5) {
         http_response_code(429);
+        ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Você já fez muitos comentários. Aguarde um minuto.']);
         exit();
     }
@@ -128,6 +135,7 @@ if ($id_mensagem > 0 && !$is_perdidos) {
 
             if (!$membro || $membro['status'] !== 'ativo') {
                 http_response_code(403);
+                ob_clean();
                 echo json_encode(['status' => 'error', 'message' => 'Você não tem permissão para comentar nesta comunidade.']);
                 exit();
             }
@@ -143,12 +151,15 @@ if (!$is_perdidos) {
 // 2.3 Apenas processa POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
+    ob_clean();
+    echo json_encode(['status' => 'error', 'message' => 'Método não permitido.']);
     exit();
 }
 
 // 2.4 HONEYPOT
 if (!empty($_POST['honeypot'])) {
     http_response_code(400);
+    ob_clean();
     echo json_encode(['status' => 'error', 'message' => 'Erro ao enviar comentário.']);
     exit();
 }
@@ -237,19 +248,17 @@ if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
             deleteFromB2($caminho, $usuario_id);
         }
         http_response_code(500);
+        ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Erro ao enviar um ou mais anexos. Tente novamente.']);
         exit();
     }
 }
 
-// 2.8.3 - Fallback para imagem única
+// 2.8.3 - Fallback para imagem única (SEM mkdir)
 if (empty($anexosArray) && isset($_FILES['imagem_comentario']) && $_FILES['imagem_comentario']['error'] === 0) {
-    $pasta = 'comentarios';
-    if (!is_dir($pasta)) {
-        mkdir($pasta, 0755, true);
-        file_put_contents($pasta . '/.htaccess', "Options -Indexes\n<FilesMatch \"\.(php|phtml|php3|php4|php5|phar|shtml|cgi|pl|py|jsp|asp|htm|html|js|css)$\">\n    Order Deny,Allow\n    Deny from all\n</FilesMatch>");
-    }
-    $imagem_nome = processarUploadSeguro($_FILES['imagem_comentario'], $pasta, 'coment', 2 * 1024 * 1024, $usuario_id);
+    // 🔥 REMOVIDO: bloco de criação de diretório e .htaccess
+    // O upload agora é feito diretamente para o B2 via processarUploadSeguro()
+    $imagem_nome = processarUploadSeguro($_FILES['imagem_comentario'], 'comentarios', 'coment', 2 * 1024 * 1024, $usuario_id);
     if ($imagem_nome !== false) {
         $imagem_url = $imagem_nome;
         $anexosArray[] = [
@@ -281,6 +290,7 @@ if (!empty($anexosArray)) {
             deleteFromB2($caminho, $usuario_id);
         }
         http_response_code(500);
+        ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Erro interno ao processar anexos.']);
         exit();
     }
@@ -296,6 +306,7 @@ if (!$validacao['valido']) {
         }
     }
     http_response_code(400);
+    ob_clean();
     echo json_encode(['status' => 'error', 'message' => $validacao['mensagem']]);
     exit();
 }

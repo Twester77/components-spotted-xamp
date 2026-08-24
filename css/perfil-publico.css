@@ -13,6 +13,7 @@
     flex-direction: column;
     width: 100%;
     max-width: 1200px;
+    gap: 10px;
     margin: 0 auto;
     padding: 0;
     border: none;
@@ -111,7 +112,7 @@
     text-align: center;
     gap: 15px;
     width: 100%;
-    padding: 12px clamp(10px, 2vw, 30px);
+    padding: 8px clamp(10px, 2vw, 25px);
     overflow-y: auto;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
@@ -1264,7 +1265,8 @@
     animation: none;
 }
 
-.main-perfil-container-publico.vibe-glass .depoimento-item {
+.main-perfil-container-publico.vibe-glass .depoimento-item,
+.main-perfil-container-publico.vibe-glass .avaliacao-item {
     -webkit-backdrop-filter: none;
     backdrop-filter: none; }
 

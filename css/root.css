@@ -27,15 +27,15 @@ html, body {
     min-height: 100dvh; 
     height: 100vh;
     height: 100dvh;
-    background: #0246859d;
-    background: var(--cor-principal, #02468585); 
+    background: var(--cor-principal, #0246859d );
+    background: oklch(0.3951 0.1215 253.34 / 61.6%);
     color: #fffffff8;
+    color: oklch(1 0 0 / 97.3%);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont , Segoe UI, Tahoma, Verdana, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;   
     max-width: 100vw !important;
     max-width: 100cqw;
-    overflow: auto ;
     position: relative;
     width: 100%;
     container-type: inline-size;

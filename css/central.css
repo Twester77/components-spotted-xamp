@@ -11,17 +11,17 @@
 
 .central-usuario-container {
     display: flex;
-    gap: 30px;
-    max-width: 1200px;
+    gap: 20px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 25px;
+    padding: 20px;
     min-height: 100dvh;
     min-height: 100vh;
     width: 100%;
     flex: 1 0 auto;
-    
+
     /* O BRANCO GELO DA PÁGINA (SÓLIDO E LIMPO) */
-    background-color: oklch(0.96 0 0 / 1); 
+    background-color: oklch(0.96 0 0 / 1);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
@@ -31,15 +31,16 @@
    SIDEBAR / MENU DE ABAS
    ---------------------------------------------------------------- */
 .central-sidebar {
-    flex: 0 0 240px;
-    
+    flex: 0 0 220px;
+
     /* 
        O EIGENGRAU DESBOTADO COM OKLCH
        Usamos uma luminosidade baixa (0.16) com matiz azul/roxa (250) 
        misturada com opacidade suave.
     */
-    background: oklch(0.16 0.02 250 / 0.85);
-    
+    background: #0c1b2de0;
+    background: oklch(0.22 0.04 252.76 / 88%);
+
     /* 
      MIX-BLEND-MODE APLICADO
        Como o container de fundo agora é um branco-gelo palpável via OKLCH, 
@@ -51,18 +52,18 @@
     -webkit-background-clip: padding-box;
     /* Safari 3-4, iOS 3-4 */
     background-clip: padding-box;
-    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */ 
+    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
     -webkit-mix-blend-mode: plus-darker;
-    mix-blend-mode: plus-darker; 
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    mix-blend-mode: plus-darker;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 20px 0;
-    margin: 25px auto;
+    margin: 20px auto;
     height: fit-content;
     position: sticky;
-    top: 80px;
+    top: 60px;
 }
 
 
@@ -160,14 +161,14 @@
    CONTEÚDO PRINCIPAL (ÁREA DE CADA ABA)
    ---------------------------------------------------------------- */
 .central-conteudo {
+    background: #9e9e9e3d;
     background: oklch(0.7 0 0 / 0.24);
-    border: 1px solid oklch(0.91 0 0 / 0.15);
-    
+    border: 2px solid oklch(0.91 0 0 / 0.15);
     /* ✨ Impede que a cor de fundo invada a área da borda transparente */
-    background-clip: padding-box; 
-    
+    background-clip: padding-box;
+
     border-radius: 20px;
-    padding: 30px;
+    padding: 20px;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     flex: 1;
@@ -175,14 +176,15 @@
     min-height: 200px;
     width: 100%;
     overflow-y: auto !important;
-    max-height: calc(100vh - 100px);  
+    max-height: calc(100vh - 100px);
 }
 
 /* ================================================================
    LOADING DA CENTRAL (spinner laranja com clamp e fallback)
    ================================================================ */
 #central-loading {
-    display: none; /* controlado pelo JS */
+    display: none;
+    /* controlado pelo JS */
     text-align: center;
     padding: 40px;
     padding: clamp(30px, 20vw, 60px);
@@ -200,6 +202,7 @@
     #central-loading i {
         font-size: 2.5rem;
     }
+
     #central-loading {
         padding: 40px;
     }
@@ -207,10 +210,15 @@
 
 /* Animação do spinner (já existe no Font Awesome, mas garantimos) */
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
-           
+
 /* ============================================================
    SNAP MAGNÉTICO PARA OS CARDS NA CENTRAL
    ============================================================ */
@@ -254,10 +262,10 @@
     max-width: 500px;
     scroll-snap-align: start;
     scroll-margin-top: 20px;
-    border-radius: 10px; 
-    padding: 15px;
-    position: relative; 
-    background: oklch(0.24 0 0 / 1); 
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    background: oklch(0.24 0 0 / 1);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     break-inside: avoid;
     margin-bottom: 30px;
@@ -276,7 +284,7 @@
 
 /* Efeito de Hover Sutil no Card (Estilo App de 2026) */
 body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
-    background: oklch(0.31 0 0 / 1); 
+    background: oklch(0.31 0 0 / 1);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
     transform: none;
 }
@@ -296,11 +304,12 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 /* Força o wrapper a ocupar a largura total do card e permitir scroll */
 .central-conteudo .spotted-card .carrossel-wrapper {
-    position: relative; /*  PARA O .carrossel-nav POSICIONAR RELATIVO A ELE */
-    display: flex ;
-    flex-wrap: nowrap ;
-    overflow-x: auto ;
-    overflow-y: hidden ;
+    position: relative;
+    /*  PARA O .carrossel-nav POSICIONAR RELATIVO A ELE */
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -310,8 +319,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     margin: clamp(6px, 1vw, 12px) 0;
     background: #0a0a0a;
     background: oklch(5% 0 0);
-    width: 100% ;
-    height: auto ;
+    width: 100%;
+    height: auto;
 }
 
 .central-conteudo .spotted-card .carrossel-wrapper::-webkit-scrollbar {
@@ -322,14 +331,14 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     scroll-snap-align: start;
     aspect-ratio: auto;
     min-height: 120px;
-    min-height: clamp(120px, 30vh, 250px);
-    max-height: 320px;
+    min-height: clamp(100px, 25vh, 180px);
+    max-height: 250px;
     background: #0a0a0a;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    flex: 0 0 100% ;
+    flex: 0 0 100%;
 }
 
 .central-conteudo .spotted-card .carrossel-item img {
@@ -382,17 +391,20 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
    SETAS DE NAVEGAÇÃO – VERSÃO ABSOLUTA (CLIQUE EM TODO O BOTÃO)
    ============================================================ */
 .central-conteudo .spotted-card .carrossel-nav {
-    position: absolute;          /* 🔥 SAI DO FLUXO E NÃO COMPRIME O CONTEÚDO */
-    top: 50%;                    /* Centraliza verticalmente */
+    position: absolute;
+    /* 🔥 SAI DO FLUXO E NÃO COMPRIME O CONTEÚDO */
+    top: 50%;
+    /* Centraliza verticalmente */
     left: 0;
     right: 0;
-    transform: translateY(-50%); /* Ajuste fino */
+    transform: translateY(-50%);
+    /* Ajuste fino */
     display: flex;
     justify-content: space-between;
     padding: 0 clamp(4px, 1vw, 12px);
     pointer-events: none;
-    z-index: 5;                  
-    height: auto;               
+    z-index: 5;
+    height: auto;
 }
 
 .central-conteudo .spotted-card .carrossel-nav button {
@@ -406,9 +418,11 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     color: #fff;
     font-size: 1rem;
     font-size: clamp(1.2rem, 2.5cqw, 2rem);
-    width: 36px;    /*  MAIOR PARA FACILITAR O CLIQUE */
+    width: 36px;
+    /*  MAIOR PARA FACILITAR O CLIQUE */
     height: 36px;
-    width: clamp(38px, 5cqw, 64px);   /*  MAIOR PARA FACILITAR O CLIQUE */
+    width: clamp(38px, 5cqw, 64px);
+    /*  MAIOR PARA FACILITAR O CLIQUE */
     height: clamp(38px, 5cqw, 64px);
     cursor: pointer;
     display: flex;
@@ -417,7 +431,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     transition: background 0.2s, transform 0.15s;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     z-index: 6;
-    position: relative; /* Para o pseudo-elemento posicionar corretamente */
+    position: relative;
+    /* Para o pseudo-elemento posicionar corretamente */
 }
 
 /* 🔥 ÁREA DE CLIQUE ESTENDIDA (PSEUDO-ELEMENTO) – aumenta a zona de toque */
@@ -429,7 +444,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     right: -12px;
     bottom: -12px;
     border-radius: 50%;
-    pointer-events: auto;   /* ESTENDE A ÁREA CLICÁVEL */
+    pointer-events: auto;
+    /* ESTENDE A ÁREA CLICÁVEL */
 }
 
 .central-conteudo .spotted-card .carrossel-nav button:hover {
@@ -480,14 +496,17 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     .central-conteudo .spotted-card .carrossel-item {
         min-height: 180px;
     }
+
     .carrossel-numero {
         font-size: 0.9rem;
         min-width: 24px;
     }
+
     .indicador {
         width: 8px;
         height: 8px;
     }
+
     .central-conteudo .spotted-card .carrossel-nav button {
         width: 48px;
         height: 48px;
@@ -499,12 +518,15 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     .carrossel-numero {
         color: rgba(255, 255, 255, 0.5);
     }
+
     .indicador {
         background: rgba(255, 255, 255, 0.3);
     }
+
     .central-conteudo .spotted-card .carrossel-nav button {
         background: rgba(0, 0, 0, 0.6);
     }
+
     .central-conteudo .spotted-card .carrossel-nav button:hover {
         background: rgba(255, 188, 0, 0.8);
     }
@@ -517,7 +539,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-comunidades-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
-    gap: 20px;
+    gap: 15px;
     max-width: 100%;
 }
 
@@ -787,7 +809,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     color: oklch(0.95 0 0);
     transition: background 0.2s ease, transform 0.15s ease;
     border-left: 3px solid transparent;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 #central-body .item-notif-rapida:hover {
@@ -851,13 +873,26 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     text-decoration: none;
     transition: 0.2s;
     margin-top: 10px;
-    border: 1px solid rgba(255,188,0,0.15);
+    border: 1px solid rgba(255, 188, 0, 0.15);
+}
+
+#btn-marcar-todas-lidas.btn-fenda-padrao {
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+    padding: 6px 12px;
+    padding: clamp(6px, 1.5vw, 10px) clamp(8px, 1.5vw, 16px);
+    background: rgba(255, 188, 0, 0.12);
+    color: #ff9b00;
+    border: 1px solid rgba(255, 188, 0, 0.15);
+    border-radius: 30px;
+    cursor: pointer;
 }
 
 #central-body .ver-todas-notif:hover {
     background: oklch(0.25 0 0 / 0.7);
     transform: scale(1.01);
 }
+
 
 /* ================================================================
    DEPOIMENTOS PENDENTES NA CENTRAL (motor-central.php?aba=depoimentos)
@@ -870,7 +905,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     margin-bottom: clamp(12px, 1.5vw, 20px);
     border-left: 4px solid #ffbc00;
     transition: 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .central-depoimento-pendente-item:hover {
@@ -947,13 +982,13 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-depoimento-pendente-item .btn-rejeitar-depoimento {
     background: rgba(255, 255, 255, 0.08);
     color: #ccc;
-    border: 1px solid rgba(255, 255, 255, 0.1) ;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .central-depoimento-pendente-item .btn-rejeitar-depoimento:hover {
     background: rgba(255, 60, 60, 0.15);
     color: #ff6b6b;
-    border-color: #ff6b6b ;
+    border-color: #ff6b6b;
 }
 
 .central-depoimento-pendente-item .depoimento-pendente-acoes button:disabled {
@@ -999,9 +1034,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 10px ;
+    padding: 6px 10px;
     padding: clamp(8px, 1.5vw, 16px) clamp(12px, 2vw, 20px);
-    background: rgba(20, 20, 30, 0.35);
+    background: rgba(20, 20, 30, 0.44);
     border-radius: clamp(8px, 1.2vw, 14px);
     border: 1px solid rgba(255, 255, 255, 0.04);
     flex-wrap: wrap;
@@ -1038,7 +1073,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     font-weight: 600;
     color: #fff;
     color: oklch(96.115% 0.00011 271.152);
-    font-size: 0.8rem ;
+    font-size: 0.8rem;
     font-size: clamp(0.85rem, 1.2vw, 1.05rem);
 }
 
@@ -1047,7 +1082,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     font-size: clamp(0.65rem, 0.9vw, 0.8rem);
     color: #aaa;
     color: oklch(96.115% 0.00011 271.152 / 0.747);
-    
+
 }
 
 .solicitacao-central-item .solicitante-comunidade {
@@ -1154,6 +1189,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
 }
 
+
+
 /* ================================================================
    FALLBACKS PARA NAVEGADORES ANTIGOS
    ================================================================ */
@@ -1163,10 +1200,12 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
         overflow: hidden;
         padding: 12px 16px;
     }
+
     .solicitacao-central-item .solicitante-info {
         display: block;
         float: left;
     }
+
     .solicitacao-central-item .acoes {
         display: block;
         float: right;
@@ -1174,23 +1213,29 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 @supports not (font-size: clamp(0.7rem, 0.9vw, 0.85rem)) {
+
     .btn-aprovar-solicitacao-central,
     .btn-rejeitar-solicitacao-central {
         font-size: 0.75rem;
         padding: 4px 14px;
     }
+
     .solicitacao-central-item .solicitante-data {
         font-size: 0.75rem;
     }
+
     .solicitacao-central-item .solicitante-nome {
         font-size: 1rem;
     }
+
     .badge-solicitacoes {
         font-size: 0.6rem;
     }
+
     .central-empty-state i {
         font-size: 2.5rem;
     }
+
     .central-empty-state p {
         font-size: 1rem;
     }
@@ -1207,7 +1252,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
    ESCONDER BOTÕES DE INTERAÇÃO NO FEED-PESSOAL (CENTRAL)
    ================================================================ */
 .central-conteudo .footer-links {
-    display: none ;
+    display: none;
 }
 
 /* ================================================================
@@ -1257,9 +1302,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     }
 
     .central-comunidades-grid {
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
         gap: 12px;
     }
+
 }
 
 @media (max-width: 480px) {
@@ -1290,13 +1336,16 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
         padding: 8px 12px;
         gap: 8px;
     }
+
     .central-depoimento-pendente-item {
         padding: 10px 14px;
     }
+
     .central-depoimento-pendente-item .depoimento-pendente-acoes {
         flex-direction: column;
         align-items: stretch;
     }
+
     .central-depoimento-pendente-item .depoimento-pendente-acoes button {
         justify-content: center;
     }
@@ -1306,7 +1355,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
         flex-direction: column;
         align-items: stretch;
         gap: 6px;
-        padding: 8px 14px;
+        padding: 6px 12px;
     }
 
     .solicitacao-central-item .solicitante-info {
@@ -1318,7 +1367,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
         display: flex;
         gap: 6px;
         justify-content: flex-end;
-        margin-top: 4px;
+        margin-top: 5px;
     }
 
     .btn-aprovar-solicitacao-central,
@@ -1336,16 +1385,19 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 @media (orientation: landscape) and (max-height: 500px) {
     .solicitacao-central-item {
-        padding: 4px 10px;
-        gap: 4px;
+        padding: 3px 8px;
+        gap: 5px;
     }
+
     .solicitacao-central-item .solicitante-avatar {
         width: 30px;
         height: 30px;
     }
+
     .solicitacao-central-item .solicitante-nome {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
+
     .btn-aprovar-solicitacao-central,
     .btn-rejeitar-solicitacao-central {
         font-size: 0.7rem;

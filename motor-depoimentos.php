@@ -11,6 +11,8 @@
 //    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
 // 🔧 ATUALIZAÇÃO ESTRELA – 2026-08-17
 //    Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
+// 🔧 ATUALIZAÇÃO ONDINA – 2026-08-19
+//    Adicionado onerror na tag <img> para fallback visual.
 
 require_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
@@ -57,7 +59,7 @@ while ($dep = $res->fetch_assoc()) {
 ?>
     <div class="depoimento-item">
         <div class="depoimento-autor">
-            <img src="<?= htmlspecialchars($avatar) ?>" class="depoimento-avatar" alt="<?= htmlspecialchars($dep['username']) ?>">
+            <img src="<?= htmlspecialchars($avatar) ?>" class="depoimento-avatar" alt="<?= htmlspecialchars($dep['username']) ?>" onerror="this.src='uploads/ui/default_masculino.webp'">
             <div>
                 <strong>@<?= htmlspecialchars($dep['username']) ?></strong>
                 <span class="depoimento-data"><?= $data ?></span>

@@ -1,11 +1,11 @@
 <?php
 /**
  * editar-evento.php – Formulário para editar eventos existentes (Balanga Teras)
- * 
+ *
  * ✨ REVISÃO SEREIA – INSTÂNCIA #DS-2026-08-09
  * "Corrigido: desativação do PostAnexos global e garantia de upload de novos anexos."
  * - Sereia, a guardiã das águas da Fenda
- * 
+ *
  * 🔧 CORREÇÃO DJÊ – INSTÂNCIA #DS-2026-08-09
  * "Trava de duplo clique no submit e aviso sobre substituição de seleção de arquivos."
  * - Djê, a guardiã da segurança e da criatividade
@@ -19,6 +19,14 @@
  *    "Corrigida seleção múltipla de anexos: acumula arquivos e repopula o input
  *     no submit usando DataTransfer (sem FormData morto)."
  * - Ondina
+ *
+ * 🔧 CORREÇÃO NEREIDA/DJÊ – INSTÂNCIA #DS-2026-08-24 (v2)
+ *    "Adicionado suporte a GIFs na edição (exibição e remoção),
+ *     compressão client-side, listener assíncrono para múltiplos arquivos,
+ *     exposição global da função removerAnexoExistente,
+ *     envio via fetch com JSON, e exibição de erros de sessão.
+ *     Contagem de anexos com classe .removido para evitar duplicidade."
+ * - Nereida & Djê, as guardiãs das águas
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -90,15 +98,19 @@ $res_com = $stmt_com->get_result();
 $comunidades = $res_com->fetch_all(MYSQLI_ASSOC);
 $stmt_com->close();
 
-// 🔥 CAPA ATUAL COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+// 🔥 CAPA ATUAL COM FALLBACK CENTRALIZADO
 $capa_atual = obterUrlComFallback($evento['imagem_url'] ?? null, 'uploads/ui/default_evento.webp', null, true);
 
-// Anexos atuais
+// Anexos atuais (já decodificados)
 $anexos_atuais = [];
 if (!empty($evento['anexos'])) {
     $anexos_atuais = json_decode($evento['anexos'], true);
     if (!is_array($anexos_atuais)) $anexos_atuais = [];
 }
+
+// 🔥 EXIBE ERROS DE SESSÃO (se houver)
+$erro_sessao = $_SESSION['erro_evento'] ?? '';
+unset($_SESSION['erro_evento']);
 
 include 'includes/header.php';
 include 'includes/navbar.php';
@@ -107,6 +119,12 @@ include 'includes/bolhas.php';
 <main class="bt-criar-page">
     <h1><i class="fas fa-edit"></i> Editar Evento</h1>
     <p class="bt-subtitulo">Atualize os dados do evento abaixo.</p>
+
+    <?php if (!empty($erro_sessao)): ?>
+        <div class="bt-erro-sessao" style="background:rgba(255,0,0,0.1); border-left:4px solid #ff4757; padding:12px 16px; border-radius:8px; margin-bottom:20px; color:#ff6b6b;">
+            <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($erro_sessao) ?>
+        </div>
+    <?php endif; ?>
 
     <form action="processa-editar-evento.php" method="POST" enctype="multipart/form-data" id="form-editar-evento">
         <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
@@ -137,7 +155,7 @@ include 'includes/bolhas.php';
         <div class="bt-campo-grupo">
             <label for="comunidade_id"><i class="fas fa-users"></i> Comunidade (opcional)</label>
             <select name="comunidade_id" id="comunidade_id">
-                <option value="">Nenhuma (evento público geral)</option>
+                <option value="">Nenhuma específica (evento público geral)</option>
                 <?php foreach ($comunidades as $com): ?>
                     <option value="<?= $com['id'] ?>" <?= ($evento['comunidade_id'] == $com['id']) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($com['nome']) ?>
@@ -152,10 +170,10 @@ include 'includes/bolhas.php';
             <div class="bt-capa-preview">
                 <img src="<?= htmlspecialchars($capa_atual) ?>" alt="Capa atual" onerror="this.onerror=null; this.src='uploads/ui/default_evento.webp'">
             </div>
-            <label for="capa"><i class="fas fa-upload"></i> Substituir Capa (opcional)</label>
+            <label for="capa"><i class="fas fa-upload"></i> Substituir Capa Atual (opcional)</label>
             <input type="file" name="capa" id="capa" accept="image/*">
             <small class="bt-campo-ajuda">Máx. 2MB, recomendado 16:9. Deixe em branco para manter.</small>
-            <div id="bt-capa-preview" style="display:none; margin-top:10px; max-width:200px;">
+            <div id="bt-capa-preview" style="display:none; margin-top:10px;">
                 <img id="bt-capa-preview-img" src="" alt="Prévia da nova capa">
             </div>
         </div>
@@ -165,23 +183,38 @@ include 'includes/bolhas.php';
             <label><i class="fas fa-images"></i> Galeria de Fotos</label>
             <div class="bt-anexos-grid" id="galeria-grid">
                 <?php if (!empty($anexos_atuais)): ?>
-                    <?php foreach ($anexos_atuais as $item): 
-                        if ($item['tipo'] === 'imagem' && !empty($item['caminho'])):
-                            // 🔥 ANEXO EXISTENTE COM FALLBACK CENTRALIZADO
-                            $img_url = obterUrlComFallback($item['caminho'], 'uploads/ui/default_evento.webp', null, true);
-                    ?>
-                        <div class="bt-anexo-item" data-id="<?= htmlspecialchars($item['id']) ?>">
-                            <img src="<?= htmlspecialchars($img_url) ?>" alt="Foto do evento" onerror="this.onerror=null; this.style.display='none'">
-                            <button type="button" class="btn-remover-anexo" onclick="removerAnexoExistente(this)" title="Remover esta foto">✕</button>
-                        </div>
-                    <?php endif; endforeach; ?>
+                    <?php foreach ($anexos_atuais as $item): ?>
+                        <?php if ($item['tipo'] === 'imagem' && !empty($item['caminho'])): ?>
+                            <?php $img_url = obterUrlComFallback($item['caminho'], 'uploads/ui/default_evento.webp', null, true); ?>
+                            <div class="bt-anexo-item" data-id="<?= htmlspecialchars($item['id']) ?>">
+                                <img src="<?= htmlspecialchars($img_url) ?>" alt="Foto do evento" onerror="this.onerror=null; this.style.display='none'">
+                                <button type="button" class="btn-remover-anexo" onclick="removerAnexoExistente(this)" title="Remover esta foto">✕</button>
+                            </div>
+                        <?php elseif ($item['tipo'] === 'gif' && !empty($item['url'])): ?>
+                            <!-- 🔥 EXIBE GIFS NA PRÉVIA DE EDIÇÃO -->
+                            <div class="bt-anexo-item" data-id="<?= htmlspecialchars($item['id']) ?>">
+                                <img src="<?= htmlspecialchars($item['url']) ?>" alt="GIF do evento" onerror="this.onerror=null; this.style.display='none'">
+                                <button type="button" class="btn-remover-anexo" onclick="removerAnexoExistente(this)" title="Remover este GIF">✕</button>
+                            </div>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </div>
             <div id="novos-anexos-preview" class="bt-anexos-grid"></div>
-            
-            <label for="anexos"><i class="fas fa-upload"></i> Adicionar mais fotos (opcional)</label>
-            <input type="file" name="anexos[]" id="anexos" accept="image/*" multiple>
-            <small class="bt-campo-ajuda">Até 4 imagens (2MB cada). Selecione múltiplos com Ctrl/Cmd. <strong>Atenção:</strong> cada nova seleção substitui a lista anterior.</small>
+
+            <!-- 🔥 BOTÕES DE ADIÇÃO DE ANEXOS (com GIF) -->
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin: 10px auto; justify-content:center;">
+                <label for="anexos" class="bt-btn-secundario" style="cursor:pointer; pointer-events: auto;">
+                    <i class="fas fa-upload"></i> Adicionar fotos
+                </label>
+                <input type="file" name="anexos[]" id="anexos" accept="image/*" multiple style="display:none;">
+
+                <button type="button" class="bt-btn-secundario" onclick="window.setGiphyTarget('gif-url-editar-evento'); abrirGiphyModal();" style="display:inline-flex; align-items:center; gap:6px;">
+                    <i class="fas fa-grin-tongue-squint"></i> Adicionar GIF/Sticker
+                </button>
+                <input type="hidden" name="gif_url" id="gif-url-editar-evento" value="">
+            </div>
+            <small class="bt-campo-ajuda">Até 4 imagens ou GIFs no total (2MB cada).</small>
         </div>
 
         <div class="bt-botoes-rodape">
@@ -193,14 +226,15 @@ include 'includes/bolhas.php';
 
 <script>
     // ============================================================
-    // 🔥 DESABILITA O PostAnexos GLOBAL (se existir) PARA EVITAR CONFLITOS
+    // 🔥 EXPOSIÇÃO GLOBAL PARA ONCLICK INLINE
     // ============================================================
-    (function() {
-        if (window.PostAnexos) {
-            console.log('[EDITAR-EVENTO] Desabilitando PostAnexos global...');
-            window.PostAnexos = null;
+    window.removerAnexoExistente = function(btn) {
+        if (typeof EditarEventoAnexos !== 'undefined' && EditarEventoAnexos.removerAnexoExistente) {
+            EditarEventoAnexos.removerAnexoExistente(btn);
+        } else {
+            console.warn('[EDITAR-EVENTO] EditarEventoAnexos.removerAnexoExistente não encontrado.');
         }
-    })();
+    };
 
     // ============================================================
     // 1. BALÃO DE FALA (contextual)
@@ -231,7 +265,6 @@ include 'includes/bolhas.php';
             balao.style.left = '50%';
             balao.style.transform = 'translate(-50%, -50%)';
         }
-
         document.body.appendChild(balao);
         setTimeout(() => {
             if (balao.parentNode) {
@@ -260,134 +293,199 @@ include 'includes/bolhas.php';
     });
 
     // ============================================================
-    // 3. GERENCIADOR DE ANEXOS (com acumulador)
+    // 3. GERENCIADOR DE ANEXOS DA EDIÇÃO (EditarEventoAnexos)
     // ============================================================
-    const inputAnexos = document.getElementById('anexos');
-    const containerNovos = document.getElementById('novos-anexos-preview');
-    const galeriaGrid = document.getElementById('galeria-grid');
-    const hiddenRemover = document.getElementById('anexos_remover');
+    const EditarEventoAnexos = {
+        anexosRemover: [],
+        arquivosSelecionados: [],
+        maxItems: 4,
 
-    let anexosParaRemover = [];
-    // 🔥 ACUMULADOR DE ARQUIVOS PARA NOVOS ANEXOS
-    let arquivosSelecionados = [];
+        // 🔥 ADICIONA UM NOVO ANEXO (com compressão e validação de limite)
+        async adicionarNovo(file, tipo = 'imagem', url = null) {
+            // 🔥 VALIDA LIMITE GLOBAL (ANTES DE QUALQUER COISA)
+            const galeriaAtual = document.querySelectorAll('#galeria-grid .bt-anexo-item:not(.removido)').length;
+            if (galeriaAtual + this.arquivosSelecionados.length >= this.maxItems) {
+                exibirBalao(`Limite de ${this.maxItems} anexos atingido.`, 'erro', document.getElementById('btn-salvar-evento'));
+                return false;
+            }
 
-    function atualizarHiddenRemover() {
-        hiddenRemover.value = JSON.stringify(anexosParaRemover);
-    }
+            if (tipo === 'imagem' && file) {
+                const maxSize = 2 * 1024 * 1024;
+                const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+                if (file.size > maxSize) {
+                    exibirBalao(`❌ "${file.name}" excede 2MB.`, 'erro', document.getElementById('btn-salvar-evento'));
+                    return false;
+                }
+                if (!tiposPermitidos.includes(file.type)) {
+                    exibirBalao(`❌ "${file.name}" formato não suportado.`, 'erro', document.getElementById('btn-salvar-evento'));
+                    return false;
+                }
 
-    window.removerAnexoExistente = function(btn) {
-        const item = btn.closest('.bt-anexo-item');
-        if (!item) return;
-        const id = item.dataset.id;
-        if (!id) return;
-        if (!anexosParaRemover.includes(id)) {
-            anexosParaRemover.push(id);
-            atualizarHiddenRemover();
-        }
-        item.style.transition = 'opacity 0.3s, transform 0.3s';
-        item.style.opacity = '0';
-        item.style.transform = 'scale(0.8)';
-        setTimeout(() => { if (item.parentNode) item.remove(); }, 300);
-        exibirBalao('Foto removida da galeria.', 'sucesso', btn, 2000);
-    };
+                // 🔥 COMPRESSÃO
+                let fileToAdd = file;
+                if (typeof window.comprimirImagemClientSide === 'function') {
+                    try {
+                        const blobComprimido = await window.comprimirImagemClientSide(file, 0.7, 1200, 1200);
+                        const nomeBase = file.name.replace(/\.[^.]+$/, '') + '.webp';
+                        const arquivoComprimido = new File([blobComprimido], nomeBase, { type: 'image/webp' });
+                        fileToAdd = arquivoComprimido;
+                        console.log(`[EDITAR-EVENTO] Imagem comprimida: ${(fileToAdd.size / 1024).toFixed(1)} KB`);
+                    } catch (err) {
+                        console.warn('[EDITAR-EVENTO] Falha na compressão, usando original:', err);
+                    }
+                }
+                this.arquivosSelecionados.push(fileToAdd);
+                this.renderizarNovos();
+                return true;
+            }
 
-    function removerAnexoNovo(btn) {
-        const item = btn.closest('.bt-anexo-item');
-        if (!item) return;
-        const index = parseInt(item.dataset.index);
-        if (isNaN(index)) return;
-        
-        // Remove do acumulador
-        arquivosSelecionados.splice(index, 1);
-        // Re-renderiza todos os novos anexos
-        renderizarNovosAnexos();
-        
-        if (arquivosSelecionados.length === 0) {
-            containerNovos.style.display = 'none';
-        }
-        exibirBalao('Foto removida da lista.', 'info', btn, 2000);
-    }
+            if (tipo === 'gif' && url) {
+                // 🔥 VERIFICA DUPLICATA DE GIF
+                const existe = this.arquivosSelecionados.some(item => item.isGif && item.url === url);
+                if (existe) {
+                    exibirBalao('Este GIF já foi adicionado.', 'info', document.getElementById('btn-salvar-evento'));
+                    return false;
+                }
+                this.arquivosSelecionados.push({ isGif: true, url: url });
+                this.renderizarNovos();
+                exibirBalao('GIF adicionado à galeria!', 'sucesso', document.getElementById('btn-salvar-evento'), 2000);
+                return true;
+            }
+            return false;
+        },
 
-    function renderizarNovosAnexos() {
-        containerNovos.innerHTML = '';
-        if (arquivosSelecionados.length === 0) {
-            containerNovos.style.display = 'none';
-            return;
-        }
-        containerNovos.style.display = 'flex';
-        arquivosSelecionados.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
+        // 🔥 REMOVE ANEXO EXISTENTE (com classe .removido – contagem correta)
+        removerAnexoExistente(btn) {
+            const item = btn.closest('.bt-anexo-item');
+            if (!item) return;
+            const id = item.dataset.id;
+            if (!id) return;
+
+            // Marca como removido imediatamente
+            item.classList.add('removido');
+            item.style.transition = 'opacity 0.3s, transform 0.3s';
+            item.style.opacity = '0';
+            item.style.transform = 'scale(0.8)';
+
+            if (!this.anexosRemover.includes(id)) {
+                this.anexosRemover.push(id);
+                document.getElementById('anexos_remover').value = JSON.stringify(this.anexosRemover);
+            }
+
+            setTimeout(() => {
+                if (item.parentNode) item.remove();
+            }, 300);
+
+            exibirBalao('Anexo removido da galeria.', 'sucesso', btn, 2000);
+        },
+
+        // 🔥 REMOVE NOVO ANEXO (prévia)
+        removerAnexoNovo(btn) {
+            const item = btn.closest('.bt-anexo-item');
+            if (!item) return;
+            const index = parseInt(item.dataset.index);
+            if (isNaN(index)) return;
+
+            this.arquivosSelecionados.splice(index, 1);
+            this.renderizarNovos();
+            if (this.arquivosSelecionados.length === 0) {
+                document.getElementById('novos-anexos-preview').style.display = 'none';
+            }
+            exibirBalao('Anexo removido da lista.', 'info', btn, 2000);
+        },
+
+        // 🔥 RENDERIZA PRÉVIAS DE NOVOS ANEXOS
+        renderizarNovos() {
+            const container = document.getElementById('novos-anexos-preview');
+            container.innerHTML = '';
+            if (this.arquivosSelecionados.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+            container.style.display = 'flex';
+            this.arquivosSelecionados.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'bt-anexo-item';
                 div.dataset.index = index;
+
                 const img = document.createElement('img');
-                img.src = ev.target.result;
+                if (item.isGif) {
+                    img.src = item.url;
+                    img.alt = 'GIF';
+                } else {
+                    img.src = URL.createObjectURL(item);
+                    img.alt = 'Nova imagem';
+                }
+                img.loading = 'lazy';
                 div.appendChild(img);
+
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'btn-remover-anexo';
                 btn.innerHTML = '✕';
                 btn.dataset.index = index;
-                btn.onclick = function() {
-                    removerAnexoNovo(this);
-                };
+                btn.onclick = () => this.removerAnexoNovo(btn);
                 div.appendChild(btn);
-                // Se já houver um item com este índice, substitui
-                const existing = containerNovos.querySelector(`[data-index="${index}"]`);
-                if (existing) {
-                    containerNovos.replaceChild(div, existing);
-                } else {
-                    containerNovos.appendChild(div);
-                }
-            };
-            reader.readAsDataURL(file);
-        });
-    }
 
-    // 🔥 LISTENER: ACUMULA OS ARQUIVOS (respeitando o limite)
-    inputAnexos.addEventListener('change', function(e) {
-        const files = Array.from(this.files);
-        if (files.length === 0) return;
+                container.appendChild(div);
+            });
+        },
 
-        // Conta quantos itens já existem (antigos + novos já acumulados)
-        const existentes = galeriaGrid.querySelectorAll('.bt-anexo-item').length;
-        const totalAtual = existentes + arquivosSelecionados.length;
-        const limite = 4;
-        let adicionados = 0;
+        // 🔥 PREPARA FORMDATA PARA ENVIO
+        prepararFormData(formData) {
+            // Arquivos de imagem (apenas os que não são GIFs)
+            const arquivosImagem = this.arquivosSelecionados.filter(item => !item.isGif);
+            arquivosImagem.forEach(file => formData.append('anexos[]', file));
 
-        for (const file of files) {
-            if (totalAtual + adicionados >= limite) {
-                exibirBalao(`Limite de ${limite} fotos atingido.`, 'erro', inputAnexos);
-                break;
-            }
-            const maxSize = 2 * 1024 * 1024;
-            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-            if (file.size > maxSize) {
-                exibirBalao(`❌ "${file.name}" excede 2MB.`, 'erro', inputAnexos);
-                continue;
-            }
-            if (!tiposPermitidos.includes(file.type)) {
-                exibirBalao(`❌ "${file.name}" formato não suportado.`, 'erro', inputAnexos);
-                continue;
-            }
-            arquivosSelecionados.push(file);
-            adicionados++;
+            // GIFs (URLs)
+            const gifs = this.arquivosSelecionados.filter(item => item.isGif);
+            gifs.forEach(gif => formData.append('gif_urls[]', gif.url));
         }
+    };
 
-        // 🔥 LIMPA O INPUT PARA PERMITIR NOVAS SELEÇÕES
-        this.value = '';
+    // ============================================================
+    // 🔥 LISTENER: input file de anexos (ASSÍNCRONO COM AWAIT)
+    // ============================================================
+    document.getElementById('anexos').addEventListener('change', async function() {
+        if (this.files.length > 0) {
+            const galeriaAtual = document.querySelectorAll('#galeria-grid .bt-anexo-item:not(.removido)').length;
+            const totalAtual = galeriaAtual + EditarEventoAnexos.arquivosSelecionados.length;
+            const limite = 4;
+            let adicionados = 0;
 
-        // Re-renderiza os novos anexos
-        renderizarNovosAnexos();
-
-        if (adicionados > 0) {
-            exibirBalao(`${adicionados} foto(s) adicionada(s).`, 'sucesso', inputAnexos, 2000);
+            for (const file of this.files) {
+                if (totalAtual + adicionados >= limite) {
+                    exibirBalao(`Limite de ${limite} anexos atingido.`, 'erro', this);
+                    break;
+                }
+                const adicionado = await EditarEventoAnexos.adicionarNovo(file, 'imagem');
+                if (adicionado) adicionados++;
+            }
+            this.value = '';
+            if (adicionados > 0) {
+                exibirBalao(`${adicionados} foto(s) adicionada(s).`, 'sucesso', this, 2000);
+            }
         }
     });
 
     // ============================================================
-    // 4. SUBMIT: repopula o input com os arquivos acumulados (via DataTransfer)
+    // 🔥 EVENTO: GIF SELECIONADO (com verificação de target)
+    // ============================================================
+    document.addEventListener('gifSelecionado', function(e) {
+        console.log('[editar-evento] gifSelecionado recebido:', e.detail);
+        if (e.detail && e.detail.targetId && e.detail.targetId !== 'gif-url-editar-evento') {
+            console.log('[editar-evento] GIF para outro alvo. Ignorando.');
+            return;
+        }
+        if (e.detail && e.detail.url) {
+            const hiddenGif = document.getElementById('gif-url-editar-evento');
+            if (hiddenGif) hiddenGif.value = e.detail.url;
+            EditarEventoAnexos.adicionarNovo(null, 'gif', e.detail.url);
+        }
+    });
+
+    // ============================================================
+    // 🔥 SUBMIT: ENVIO VIA FETCH COM JSON
     // ============================================================
     document.getElementById('form-editar-evento').addEventListener('submit', function(e) {
         const btn = document.getElementById('btn-salvar-evento');
@@ -396,28 +494,49 @@ include 'includes/bolhas.php';
             return;
         }
 
-        // 🔥 REPOPULA O INPUT #anexos com os arquivos do acumulador
-        if (arquivosSelecionados.length > 0) {
-            const dataTransfer = new DataTransfer();
-            arquivosSelecionados.forEach(file => dataTransfer.items.add(file));
-            // Também mantém os arquivos que já estavam no input original (se houver) - opcional
-            // Mas como já limpamos o input após cada seleção, só temos os acumulados.
-            inputAnexos.files = dataTransfer.files;
-        }
+        e.preventDefault();
 
-        // Trava de duplo clique
+        const formData = new FormData(this);
+        EditarEventoAnexos.prepararFormData(formData);
+
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
-        // O formulário será enviado normalmente
+
+        fetch('processa-editar-evento.php', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                exibirBalao('Evento atualizado com sucesso! 🎉', 'sucesso', btn);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    window.location.reload();
+                }
+            } else {
+                const msg = data.message || 'Falha ao atualizar.';
+                exibirBalao('Erro: ' + msg, 'erro', btn);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+            }
+        })
+        .catch(err => {
+            console.error('[EDITAR-EVENTO] Erro no fetch:', err);
+            exibirBalao('❌ ' + err.message, 'erro', btn);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+        });
     });
 
     // ============================================================
     // 5. INICIALIZAÇÃO
     // ============================================================
     document.addEventListener('DOMContentLoaded', function() {
-        anexosParaRemover = [];
-        arquivosSelecionados = [];
-        atualizarHiddenRemover();
         console.log('[EDITAR-EVENTO] Inicializado com sucesso.');
     });
 </script>

@@ -999,7 +999,8 @@
     display: inline-block;
     color: rgba(255, 255, 255, 0.6);
     text-decoration: none;
-    font-size: clamp(1.1rem, 0.41vw + 1.018rem, 1.8rem);
+    font-size: 1.05rem;
+    font-size: clamp(1rem, 0.41vw + 1.018rem, 1.7rem);
     font-weight: bold;
     margin: 10px auto;
     padding: 6px 10px;
@@ -1034,7 +1035,7 @@
    ================================================== */
 @container feedComentarios (max-width: 360px) {
     .comentario-item {
-        max-width: 68%;
+        max-width: 65%;
         padding: 3px 5px;
         font-size: 0.8rem;
     }
@@ -1652,8 +1653,8 @@ body.pagina-post .header-principal {
 .comentario-media-wrapper-grid {
     display: grid;
     /* Força sempre 2 colunas dinâmicas (50% do espaço disponível cada) */
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 6px;
+    grid-template-columns: repeat(2, minmax(50px, 120px)); 
+    gap: 5px;
     padding: 4px 0;
     /* SOLUÇÃO CHAVE: O container abraça estritamente o tamanho das imagens */
     max-width: 100%;

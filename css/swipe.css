@@ -392,22 +392,27 @@ body.modo-swipe-ativo .filtros-wrapper-retratil {
 }
 
 body.modo-swipe-ativo #btn-abrir-filtros {
-    display: inline-flex !important;
+    display: inline-flex ;
     position: fixed;
     left: 50%;
+    gap: 6px;
     transform: translateX(-50%);
     z-index: 100000;
     background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301));
     color: #000000d0;
+    padding: 3px 8px;
     padding: clamp(4px, 1.5vw, 12px) clamp(10px, 1.5vw, 16px);
-    font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 1.5vw, 1.05rem);
     border-radius: 25px;
     font-weight: bold;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    background-clip: padding-box;
     pointer-events: auto;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: 0.3 ease;
 }
 
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
@@ -536,7 +541,7 @@ body.modo-swipe-ativo .container-feed article {
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child {
     pointer-events: auto ;
     position: absolute ;
-    z-index: 9999;
+    z-index: 100;
 }
 
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child * {
@@ -630,16 +635,16 @@ body.modo-swipe-ativo .feed-empilhado  .spotted-card .container-img-post {
    
 }
 
-@media screen and (max-width: 350px) and (orientation: portrait),
+@media screen and (max-width: 360px) and (orientation: portrait),
  (max-width: 480px) and (orientation: landscape)
  {
 
  body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
     gap: 4px;
-    margin: 4px 0;
-    border-radius: 8px; }
+    margin: 2px 0;
+    border-radius: 6px; }
  }
 
 /* ============================================================

@@ -8,6 +8,13 @@
  * Modo de uso:
  * - Modal: chamado normalmente via include
  * - Inline: passe ?modo=inline&comunidade_id=X via GET
+ * 
+ * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-23
+ *    "Adicionada compressão client-side no PostAnexos.adicionar()
+ *     e correção do evento gifSelecionado com verificação por targetId
+ *     (sugestão da Djê para evitar conflitos em múltiplos formulários).
+ *     Exposição global de PostAnexos para permitir roteamento via evento."
+ * - Nereida, a guardiã das águas
  */
 
 // Detecta modo inline via GET ou variável pré-definida
@@ -257,14 +264,14 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
         }
 
         // ============================================================
-        // 🔥 GERENCIADOR DE ANEXOS (PostAnexos)
+        // 🔥 GERENCIADOR DE ANEXOS (PostAnexos) COM COMPRESSÃO
         // ============================================================
         const PostAnexos = {
             anexos: [],
             maxItems: 4,
             gridElement: gridElement,
 
-            adicionar(file, tipo = 'imagem', url = null) {
+            async adicionar(file, tipo = 'imagem', url = null) {
                 console.log('[PostAnexos] adicionar() chamado com:', {
                     tipo,
                     url: url || 'N/A',
@@ -285,7 +292,22 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                     }
                     const tamanhoKB = Math.round(file.size / 1024);
                     exibirBalao(`Arquivo aceito (${tamanhoKB} KB)`, 'sucesso', btnPublicar);
-                    // 🔥 IMPORTANTE: se adicionar imagem, NÃO limpa o gifHiddenInput
+
+                    // 🔥 COMPRESSÃO: aplica se a função existir (global)
+                    if (typeof window.comprimirImagemClientSide === 'function') {
+                        try {
+                            const blobComprimido = await window.comprimirImagemClientSide(file, 0.7, 1200, 1200);
+                            const nomeBase = file.name.replace(/\.[^.]+$/, '') + '.webp';
+                            const arquivoComprimido = new File([blobComprimido], nomeBase, { type: 'image/webp' });
+                            file = arquivoComprimido;
+                            console.log(`[PostAnexos] Imagem comprimida: ${(file.size / 1024).toFixed(1)} KB`);
+                        } catch (err) {
+                            console.warn('[PostAnexos] Falha na compressão, usando original:', err);
+                            // mantém o original
+                        }
+                    } else {
+                        console.warn('[PostAnexos] comprimirImagemClientSide não encontrada, usando original.');
+                    }
                 }
 
                 if (tipo === 'gif' && url) {
@@ -295,7 +317,7 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                         return false;
                     }
                     exibirBalao('GIF adicionado!', 'sucesso', btnPublicar);
-                    if (inputFile) inputFile.value = ''; // limpa seleção de arquivo, mas NÃO remove imagens já adicionadas
+                    if (inputFile) inputFile.value = ''; // limpa seleção de arquivo
                 }
 
                 if (this.anexos.length >= this.maxItems) {
@@ -316,8 +338,18 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                 });
 
                 console.log('[PostAnexos] Novo estado:', this.anexos.map(a => a.tipo + (a.url ? ' (GIF)' : ' (IMG)')));
+
+                // 🔥 RENDERIZAÇÃO IMEDIATA (NÃO ESPERA O FLUXO DE TARGET)
                 this.renderizar();
                 this.verificarConteudo();
+
+                // 🔥 Dispara evento para sincronização (opcional)
+                if (tipo === 'gif' && url) {
+                    document.dispatchEvent(new CustomEvent('gifAdicionado', {
+                        detail: { url: url, targetId: 'gif-url-vivo' }
+                    }));
+                }
+
                 return true;
             },
 
@@ -442,8 +474,18 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
             });
         }
 
+        // ============================================================
+        // 🔥 EVENTO GIF SELECIONADO – COM VERIFICAÇÃO POR TARGET (DJÊ)
+        // ============================================================
         document.addEventListener('gifSelecionado', function(e) {
-            console.log('[gifSelecionado] Evento recebido:', e.detail);
+            console.log('[gifSelecionado] Evento recebido no card-postar:', e.detail);
+
+            // Verifica se o evento foi disparado para este formulário
+            if (e.detail && e.detail.targetId && e.detail.targetId !== 'gif-url-vivo') {
+                console.log('[card-postar] GIF disparado para outro formulário. Ignorando.');
+                return;
+            }
+
             if (e.detail && e.detail.url) {
                 if (gifHiddenInput) {
                     gifHiddenInput.value = e.detail.url;
@@ -485,15 +527,12 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                     }
                 })
                 .then(async response => {
-                    // Se houver redirecionamento (fallback para requisições não AJAX)
                     if (response.redirected) {
                         window.location.href = response.url;
                         return;
                     }
-                    // Tenta parsear como JSON
                     const text = await response.text();
                     if (!response.ok) {
-                        // Se não for ok, tenta extrair a mensagem de erro
                         try {
                             const errorJson = JSON.parse(text);
                             throw new Error(errorJson.message || 'Erro no servidor');
@@ -501,7 +540,6 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                             throw new Error(text || 'Erro desconhecido');
                         }
                     }
-                    // Se for ok, parseia JSON
                     try {
                         return JSON.parse(text);
                     } catch (e) {
@@ -560,10 +598,14 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
             };
         <?php endif; ?>
 
+        // ============================================================
+        // EXPOSIÇÃO GLOBAL DO PostAnexos (para roteamento via evento)
+        // ============================================================
+        window.PostAnexos = PostAnexos;
+
         // Inicializa
         contador.textContent = '0/600';
         PostAnexos.verificarConteudo();
-        window.PostAnexos = PostAnexos;
         console.log('[card-postar] Inicialização concluída. PostAnexos disponível globalmente.');
 
     })();

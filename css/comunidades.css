@@ -1100,8 +1100,8 @@
 }
 
 .membro-item .avatar-membro {
-    width: clamp(32px, 3.5vw, 44px);
-    height: clamp(32px, 3.5vw, 44px);
+    width: clamp(32px, 3vw, 50px);
+    height: clamp(32px, 3vw, 50px);
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid rgba(255, 188, 0, 0.1);
@@ -1916,8 +1916,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 .comunidade-page .spotted-card .carrossel-item {
     flex: 0 0 100%;
     scroll-snap-align: start;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: auto;
     min-height: 200px;
+    max-height: 400px;
     background: #0a0a0a;
     display: flex;
     align-items: center;

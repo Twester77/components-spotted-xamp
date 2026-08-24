@@ -414,7 +414,6 @@ body.hacker-mode .nexus-trigger {
 body.hacker-mode .insignia-atletica-bottom:hover,
 body.hacker-mode .insignia-atletica-link:hover ,
 body.hacker-mode .img-comunidade-grande:hover {
-    background-color: #00b304 ;
     object-fit: contain ;
     color: #000000 ;
     border-style: none ;
@@ -587,28 +586,28 @@ body.hacker-mode .comentario-autor {
 
 /* 1. VIBE DARK (Eigengrau) - Terminal clássico pesado */
 body.hacker-mode .comentario-item.vibe-dark {
-    background: #0a0a0ace !important;
+    background: #0b0e2bad ;
     -webkit-backdrop-filter: none ;
     backdrop-filter: none ;
-    color: #00ff00 !important;
+    color: #00ff00 ;
 }
 
 body.hacker-mode .comentario-item.vibe-dark .comentario-autor {
-    color: #00ff00 !important;
+    color: #00ff00 ;
     text-shadow: 0 0 5px #00ff00;
 }
 
 /* 2. VIBE GLASS - Efeito Matrix translúcido */
 body.hacker-mode .comentario-item.vibe-glass {
-    background: rgba(0, 30, 0, 0.7) !important;
-    -webkit-backdrop-filter: blur(1px) ;
-    backdrop-filter: blur(1px) ;
+    background: rgba(0, 30, 0, 0.7) ;
+    -webkit-backdrop-filter: blur(3px) ;
+    backdrop-filter: blur(3px) ;
     color: #00ff00 ;
 }
 
 body.hacker-mode .comentario-item.vibe-glass .comentario-autor {
-    color: #00ff00 !important;
-    text-shadow: 0 0 5px #00ff00;
+    color: #00ff00 ;
+    text-shadow: 0 0 4px #00ff00;
 }
 
 /* 3. VIBE NEON - Efeito glitch pulsante */
@@ -916,8 +915,10 @@ body.hacker-mode #fenda-toolbar {
     background: #1b2916ad;
     border: 1px solid #00ff00 ;
     color: #00ff00 ;
+    border-radius: 0;
     font-family: monospace ;
 }
+
 body.hacker-mode .btn-notif-choice {
     background: #000 ;
     border: 1px solid #00ff00 ;

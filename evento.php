@@ -1,4 +1,5 @@
 <?php
+
 /**
  * evento.php – Página de detalhes de um evento (Balanga Teras)
  * 
@@ -81,7 +82,8 @@ if ($evento['status'] === 'cancelado') {
 }
 
 // Calcula status (agendado, em-andamento, expirado)
-function btCalcularStatus($data_evento) {
+function btCalcularStatus($data_evento)
+{
     $now = time();
     $evento_time = strtotime($data_evento);
     $diff = $evento_time - $now;
@@ -124,28 +126,30 @@ if (empty($_SESSION['csrf_token'])) {
             <?php if ($status === 'expirado'): ?>⚫ Encerrado
             <?php elseif ($status === 'em-andamento'): ?>🔴 Acontecendo agora
             <?php else: ?>🟡 Em breve
-            <?php endif; ?>
+        <?php endif; ?>
         </span>
     </div>
 
     <!-- 🔥 GALERIA DE FOTOS (ANEXOS) – exibe TODOS com fallback centralizado -->
-    <?php 
+    <?php
     $galeria = [];
     if (!empty($evento['anexos'])) {
         $galeria = json_decode($evento['anexos'], true);
         if (!is_array($galeria)) $galeria = [];
     }
-    if (count($galeria) > 0): 
+    if (count($galeria) > 0):
     ?>
         <div class="bt-galeria">
             <h4><i class="fas fa-images"></i> Galeria</h4>
             <div class="bt-galeria-grid">
-                <?php foreach ($galeria as $item): 
-                    if ($item['tipo'] === 'imagem' && !empty($item['caminho'])): 
-                        // 🔥 GALERIA COM FALLBACK CENTRALIZADO
+                <?php foreach ($galeria as $item):
+                    if ($item['tipo'] === 'imagem' && !empty($item['caminho'])):
                         $img_url = obterUrlComFallback($item['caminho'], 'uploads/ui/default_evento.webp', null, true); ?>
                         <img src="<?= htmlspecialchars($img_url) ?>" alt="Foto do evento" loading="lazy" onerror="this.onerror=null; this.style.display='none'">
-                <?php endif; endforeach; ?>
+                    <?php elseif ($item['tipo'] === 'gif' && !empty($item['url'])): ?>
+                        <img src="<?= htmlspecialchars($item['url']) ?>" alt="GIF do evento" loading="lazy" style="object-fit:contain; aspect-ratio:auto;">
+                <?php endif;
+                endforeach; ?>
             </div>
         </div>
     <?php endif; ?>
@@ -309,39 +313,41 @@ if (empty($_SESSION['csrf_token'])) {
             formData.append('opcao', opcao);
             formData.append('csrf_token', csrfToken);
             fetch('enviar-resposta-evento.php', {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const grupo = this.closest('.bt-acoes');
-                    if (grupo) {
-                        grupo.querySelectorAll('.bt-btn-resposta').forEach(b => {
-                            b.classList.remove('ativo-vou', 'ativo-talvez', 'ativo-nao');
-                            b.innerHTML = b.dataset.opcao === 'vou' ? '👍 Vou' :
-                                         b.dataset.opcao === 'talvez' ? '🤔 Talvez' : '👎 Não vou';
-                            b.disabled = false;
-                        });
-                        this.classList.add('ativo-' + opcao);
-                        this.innerHTML = '✅ ' + (opcao === 'vou' ? 'Vou' : opcao === 'talvez' ? 'Talvez' : 'Não vou');
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
-                    location.reload();
-                } else {
-                    alert(data.message || 'Erro ao registrar resposta.');
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const grupo = this.closest('.bt-acoes');
+                        if (grupo) {
+                            grupo.querySelectorAll('.bt-btn-resposta').forEach(b => {
+                                b.classList.remove('ativo-vou', 'ativo-talvez', 'ativo-nao');
+                                b.innerHTML = b.dataset.opcao === 'vou' ? '👍 Vou' :
+                                    b.dataset.opcao === 'talvez' ? '🤔 Talvez' : '👎 Não vou';
+                                b.disabled = false;
+                            });
+                            this.classList.add('ativo-' + opcao);
+                            this.innerHTML = '✅ ' + (opcao === 'vou' ? 'Vou' : opcao === 'talvez' ? 'Talvez' : 'Não vou');
+                        }
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Erro ao registrar resposta.');
+                        this.disabled = false;
+                        this.innerHTML = this.dataset.opcao === 'vou' ? '👍 Vou' :
+                            this.dataset.opcao === 'talvez' ? '🤔 Talvez' : '👎 Não vou';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Erro de conexão.');
                     this.disabled = false;
                     this.innerHTML = this.dataset.opcao === 'vou' ? '👍 Vou' :
-                                   this.dataset.opcao === 'talvez' ? '🤔 Talvez' : '👎 Não vou';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Erro de conexão.');
-                this.disabled = false;
-                this.innerHTML = this.dataset.opcao === 'vou' ? '👍 Vou' :
-                               this.dataset.opcao === 'talvez' ? '🤔 Talvez' : '👎 Não vou';
-            });
+                        this.dataset.opcao === 'talvez' ? '🤔 Talvez' : '👎 Não vou';
+                });
         });
     });
 
@@ -358,29 +364,31 @@ if (empty($_SESSION['csrf_token'])) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         const formData = new FormData(this);
         fetch('enviar-comentario-evento.php', {
-            method: 'POST',
-            body: formData,
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const container = document.getElementById('bt-lista-comentarios');
-                container.insertAdjacentHTML('afterbegin', data.html);
-                textarea.value = '';
-                if (typeof exibirToast === 'function') exibirToast('Comentário enviado!');
-            } else {
-                alert(data.message || 'Erro ao enviar comentário.');
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Erro de conexão.');
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-        });
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const container = document.getElementById('bt-lista-comentarios');
+                    container.insertAdjacentHTML('afterbegin', data.html);
+                    textarea.value = '';
+                    if (typeof exibirToast === 'function') exibirToast('Comentário enviado!');
+                } else {
+                    alert(data.message || 'Erro ao enviar comentário.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro de conexão.');
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            });
     });
 
     // ============================================================
@@ -391,42 +399,44 @@ if (empty($_SESSION['csrf_token'])) {
         const id = this.dataset.id;
         const csrfToken = document.querySelector('input[name="csrf_token"]')?.value || '';
         fetch('cancelar-evento.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${id}&csrf_token=${encodeURIComponent(csrfToken)}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Evento cancelado com sucesso.');
-                location.href = 'balanga-teras.php';
-            } else {
-                alert(data.message || 'Erro ao cancelar.');
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Erro de conexão.');
-        });
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `id=${id}&csrf_token=${encodeURIComponent(csrfToken)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Evento cancelado com sucesso.');
+                    location.href = 'balanga-teras.php';
+                } else {
+                    alert(data.message || 'Erro ao cancelar.');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Erro de conexão.');
+            });
     });
 
-// ============================================================
-// LIGHTBOX PARA IMAGENS DA GALERIA (reutilizado dos comentários)
-// ============================================================
-(function() {
-    function abrirLightboxImagem(e) {
-        e.stopPropagation();
-        const imgSrc = e.currentTarget.src;
-        if (!imgSrc) return;
+    // ============================================================
+    // LIGHTBOX PARA IMAGENS DA GALERIA (reutilizado dos comentários)
+    // ============================================================
+    (function() {
+        function abrirLightboxImagem(e) {
+            e.stopPropagation();
+            const imgSrc = e.currentTarget.src;
+            if (!imgSrc) return;
 
-        // Remove modal existente
-        const modalExistente = document.getElementById('modal-lightbox-fenda');
-        if (modalExistente) modalExistente.remove();
+            // Remove modal existente
+            const modalExistente = document.getElementById('modal-lightbox-fenda');
+            if (modalExistente) modalExistente.remove();
 
-        // Cria o modal
-        const modal = document.createElement('div');
-        modal.id = 'modal-lightbox-fenda';
-        modal.style.cssText = `
+            // Cria o modal
+            const modal = document.createElement('div');
+            modal.id = 'modal-lightbox-fenda';
+            modal.style.cssText = `
             position:fixed; top:0; left:0; width:100%; height:100%;
             background:rgba(0,0,0,0.85);
             display:flex; justify-content:center; align-items:center;
@@ -436,78 +446,87 @@ if (empty($_SESSION['csrf_token'])) {
             opacity:0; transition:opacity 0.2s ease;
         `;
 
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.style.cssText = `
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            img.style.cssText = `
             max-width:90%; max-height:90%;
             object-fit:contain; border-radius:8px;
             box-shadow:0 0 30px rgba(0,0,0,0.5);
         `;
 
-        const btnFechar = document.createElement('button');
-        btnFechar.innerHTML = '✕';
-        btnFechar.style.cssText = `
+            const btnFechar = document.createElement('button');
+            btnFechar.innerHTML = '✕';
+            btnFechar.style.cssText = `
             position:absolute; top:20px; right:20px;
             background:none; border:none; color:white;
             font-size:2rem; cursor:pointer; z-index:100001;
             text-shadow:0 0 10px black;
         `;
-        btnFechar.onclick = fecharLightbox;
+            btnFechar.onclick = fecharLightbox;
 
-        modal.appendChild(img);
-        modal.appendChild(btnFechar);
-        document.body.appendChild(modal);
+            modal.appendChild(img);
+            modal.appendChild(btnFechar);
+            document.body.appendChild(modal);
 
-        // Fecha ao clicar no fundo
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) fecharLightbox();
-        });
+            // Fecha ao clicar no fundo
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) fecharLightbox();
+            });
 
-        // Anima entrada
-        requestAnimationFrame(() => { modal.style.opacity = '1'; });
+            // Anima entrada
+            requestAnimationFrame(() => {
+                modal.style.opacity = '1';
+            });
 
-        function fecharLightbox() {
-            modal.style.opacity = '0';
-            setTimeout(() => modal.remove(), 200);
-        }
-
-        // Fecha com ESC
-        function escHandler(e) {
-            if (e.key === 'Escape') fecharLightbox();
-        }
-        document.addEventListener('keydown', escHandler);
-        // Remove o listener quando o modal for removido
-        const observer = new MutationObserver(() => {
-            if (!document.getElementById('modal-lightbox-fenda')) {
-                document.removeEventListener('keydown', escHandler);
-                observer.disconnect();
+            function fecharLightbox() {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
             }
+
+            // Fecha com ESC
+            function escHandler(e) {
+                if (e.key === 'Escape') fecharLightbox();
+            }
+            document.addEventListener('keydown', escHandler);
+            // Remove o listener quando o modal for removido
+            const observer = new MutationObserver(() => {
+                if (!document.getElementById('modal-lightbox-fenda')) {
+                    document.removeEventListener('keydown', escHandler);
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body, {
+                childList: true
+            });
+        }
+
+        // Aplica a todas as imagens da galeria (dinamicamente)
+        function initGaleriaLightbox() {
+            document.querySelectorAll('.bt-galeria-grid img, .bt-detalhes-capa img').forEach(img => {
+                img.removeEventListener('click', abrirLightboxImagem);
+                img.addEventListener('click', abrirLightboxImagem);
+                img.style.cursor = 'zoom-in';
+            });
+        }
+
+        // Inicializa ao carregar a página e também quando novas imagens forem adicionadas
+        document.addEventListener('DOMContentLoaded', initGaleriaLightbox);
+
+        // Observa mudanças na galeria (caso seja carregada via AJAX)
+        const observer = new MutationObserver(() => initGaleriaLightbox());
+        const galeria = document.querySelector('.bt-galeria-grid');
+        if (galeria) observer.observe(galeria, {
+            childList: true,
+            subtree: true
         });
-        observer.observe(document.body, { childList: true });
-    }
 
-    // Aplica a todas as imagens da galeria (dinamicamente)
-    function initGaleriaLightbox() {
-        document.querySelectorAll('.bt-galeria-grid img, .bt-detalhes-capa img').forEach(img => {
-            img.removeEventListener('click', abrirLightboxImagem);
-            img.addEventListener('click', abrirLightboxImagem);
-            img.style.cursor = 'zoom-in';
+        // Também observa a capa
+        const capa = document.querySelector('.bt-detalhes-capa');
+        if (capa) observer.observe(capa, {
+            childList: true,
+            subtree: true
         });
-    }
-
-    // Inicializa ao carregar a página e também quando novas imagens forem adicionadas
-    document.addEventListener('DOMContentLoaded', initGaleriaLightbox);
-
-    // Observa mudanças na galeria (caso seja carregada via AJAX)
-    const observer = new MutationObserver(() => initGaleriaLightbox());
-    const galeria = document.querySelector('.bt-galeria-grid');
-    if (galeria) observer.observe(galeria, { childList: true, subtree: true });
-
-    // Também observa a capa
-    const capa = document.querySelector('.bt-detalhes-capa');
-    if (capa) observer.observe(capa, { childList: true, subtree: true });
-})();
-
+    })();
 </script>
 <!-- Carrega o autocomplete de menções -->
 <script src="js/fenda-mencoes.js"></script>
