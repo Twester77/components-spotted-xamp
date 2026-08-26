@@ -39,7 +39,6 @@
     { "src": "/badges/(.*)", "dest": "/badges/$1" },
     { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
-    { "src": "/proxy.php", "dest": "/proxy.php" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }

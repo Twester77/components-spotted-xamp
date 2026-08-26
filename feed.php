@@ -148,7 +148,8 @@ function reforcarLayoutNosCards() {
                 display: none;
                 align-items: flex-start;
                 justify-content: center;
-                padding-top: 12%;
+                padding-top: 10%;
+                padding-bottom: 5%;
                 font-family: 'Inter', system-ui, sans-serif;
             }
             .reactions-popup-overlay.active {
@@ -156,14 +157,12 @@ function reforcarLayoutNosCards() {
             }
             .reactions-popup-card {
                 background: rgba(20, 20, 32, 0.95);
-                backdrop-filter: blur(6px);
-                -webkit-backdrop-filter: blur(6px);
                 border: 1px solid rgba(255, 188, 0, 0.3);
                 border-radius: 28px;
                 padding: 20px 16px 18px 16px;
                 max-width: 450px;
                 width: 90%;
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
                 transform: scale(0.95) translateY(10px);
                 animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
                 -webkit-user-select: none;
@@ -176,10 +175,10 @@ function reforcarLayoutNosCards() {
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
                 gap: 6px;
-                margin-bottom: 14px;
+                margin-bottom: 10px;
             }
             .reaction-emoji {
-                font-size: clamp(1.1rem, 3.5vw, 1.8rem);
+                font-size: clamp(1.1rem, 3.5vw, 1.7rem);
                 padding: 4px 2px;
                 text-align: center;
                 border-radius: 16px;

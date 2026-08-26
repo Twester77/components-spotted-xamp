@@ -159,7 +159,8 @@ body:not(.modo-swipe-ativo) .post-content {
     padding-left: 30px;
     color: var(--dourado);
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
+    font-size: clamp(0.7rem, 1cqw, 0.9rem);
     pointer-events: auto;
 }
 
