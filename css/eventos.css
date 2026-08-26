@@ -1092,6 +1092,7 @@
 
 .bt-galeria-grid img {
     width: 100%;
+    height: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 8px;
@@ -1664,7 +1665,8 @@
     padding: 20px 0 40px 0;
 }
 
-.bt-btn-load-more {
+.bt-btn-load-more ,
+.btn-load-more-comunidades.btn-fenda-padrao {
     background: #faba0d;
     background: oklch(0.8 0.19 76.05);
     border: 1px solid var(--bt-borda-sutil);

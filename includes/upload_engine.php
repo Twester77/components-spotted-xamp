@@ -10,12 +10,11 @@
  * - Rollback automático se o banco falhar (atomicidade)
  * - Logging estruturado via error_log() (compatível com Vercel/Serverless)
  * - Tratamento graceful de exceções
- * -  Função auxiliar obterUrlImagem() para exibição (DRY)
  * 
- * 🔧 ATUALIZAÇÃO ONDINA – 2026-08-17
- *    - Qualidade WebP reduzida para 65% (otimização de tempo/performance)
- *    - Adicionados logs detalhados em cada etapa do upload
- *    - Preparação para timeout customizável via B2Client::setTimeout()
+ * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
+ *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção.
+ *     Logs de entrada, validação, conversão, upload, verificação e erros específicos."
+ * - Nereida, a guardiã das águas
  */
 
 // Inclui o B2Client (caminho relativo)
@@ -78,26 +77,27 @@ function deleteFromB2($remotePath, $userId = 0)
 }
 
 // ============================================================
-// 3. FUNÇÃO PRINCIPAL DE UPLOAD (COM LOGS DETALHADOS E QUALIDADE 65%)
+// 3. FUNÇÃO PRINCIPAL DE UPLOAD (COM LOGS DETALHADOS)
 // ============================================================
 
 function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 2097152, $usuario_id = 0)
 {
     // 🔥 LOG INÍCIO
-    error_log("[UPLOAD] Iniciando upload para usuário $usuario_id, prefixo $prefixo");
+    error_log("[UPLOAD_ENGINE] 🟢 Iniciando upload para usuário $usuario_id, prefixo $prefixo");
+    error_log("[UPLOAD_ENGINE] 📁 Arquivo: " . ($file_data['name'] ?? 'N/A') . " | Tamanho: " . ($file_data['size'] ?? 0) . " bytes | Tipo: " . ($file_data['type'] ?? 'N/A'));
 
     // 1. VALIDAÇÕES INICIAIS
     if (!isset($file_data) || $file_data['error'] !== 0) {
         $erro = 'Arquivo não enviado ou erro de upload: ' . ($file_data['error'] ?? 'desconhecido');
         logB2Event('ERROR', $usuario_id, 'UPLOAD', '', 0, $erro);
-        error_log("[UPLOAD_ENGINE] " . $erro);
+        error_log("[UPLOAD_ENGINE] ❌ " . $erro);
         return false;
     }
 
     if ($file_data['size'] > $max_size) {
         $erro = 'Tamanho excede o limite: ' . $file_data['size'] . ' > ' . $max_size;
         logB2Event('WARNING', $usuario_id, 'UPLOAD', '', 0, $erro);
-        error_log("[UPLOAD_ENGINE] " . $erro);
+        error_log("[UPLOAD_ENGINE] ❌ " . $erro);
         return false;
     }
 
@@ -108,7 +108,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
     if (!in_array($mime_type, $formatos)) {
         $erro = 'Formato não permitido: ' . $mime_type;
         logB2Event('WARNING', $usuario_id, 'UPLOAD', '', 0, $erro);
-        error_log("[UPLOAD_ENGINE] " . $erro);
+        error_log("[UPLOAD_ENGINE] ❌ " . $erro);
         return false;
     }
 
@@ -118,7 +118,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
     if (!$valid_exif) {
         $erro = 'exif_imagetype falhou: ' . $exif_type;
         logB2Event('WARNING', $usuario_id, 'UPLOAD', '', 0, $erro);
-        error_log("[UPLOAD_ENGINE] " . $erro);
+        error_log("[UPLOAD_ENGINE] ❌ " . $erro);
         return false;
     }
 
@@ -127,7 +127,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
     if (strpos($content, '<?php') !== false || strpos($content, '<?') !== false) {
         $erro = 'Polyglot bloqueado (código PHP detectado)';
         logB2Event('ERROR', $usuario_id, 'UPLOAD', '', 0, $erro);
-        error_log("[UPLOAD_ENGINE] " . $erro);
+        error_log("[UPLOAD_ENGINE] ❌ " . $erro);
         return false;
     }
 
@@ -138,6 +138,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
 
     try {
         // 5.1 Carregar imagem
+        error_log("[UPLOAD_ENGINE] 🔄 Carregando imagem para conversão...");
         switch ($mime_type) {
             case 'image/jpeg':
                 $img = imagecreatefromjpeg($file_data['tmp_name']);
@@ -151,86 +152,92 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
             case 'image/gif':
                 // GIF animado: mantém original
                 $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".gif";
-                error_log("[UPLOAD] Processando GIF animado: $remotePath");
+                error_log("[UPLOAD_ENGINE] 🎞️ Processando GIF animado: $remotePath");
                 try {
                     $b2 = B2Client::getInstance();
+                    error_log("[UPLOAD_ENGINE] 📤 Enviando GIF para B2...");
                     $b2->uploadFile($file_data['tmp_name'], $remotePath, 'image/gif', ['Cache-Control' => 'max-age=31536000']);
                     $b2->getDownloadUrl($remotePath);
                     logB2Event('INFO', $usuario_id, 'UPLOAD', $remotePath, 200, 'Upload GIF bem-sucedido');
-                    error_log("[UPLOAD_ENGINE] GIF enviado com sucesso: $remotePath");
+                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado com sucesso: $remotePath");
                     return $remotePath;
                 } catch (Exception $e) {
                     logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath, 0, 'Falha no upload GIF: ' . $e->getMessage());
-                    error_log("[UPLOAD_ENGINE] ERRO no upload GIF: " . $e->getMessage());
+                    error_log("[UPLOAD_ENGINE] ❌ ERRO no upload GIF: " . $e->getMessage());
                     return false;
                 }
             default:
                 $erro = 'Formato não suportado: ' . $mime_type;
                 logB2Event('ERROR', $usuario_id, 'UPLOAD', '', 0, $erro);
-                error_log("[UPLOAD_ENGINE] " . $erro);
+                error_log("[UPLOAD_ENGINE] ❌ " . $erro);
                 return false;
         }
 
         if ($img === null) {
             $erro = 'Falha ao criar imagem a partir do arquivo';
             logB2Event('ERROR', $usuario_id, 'UPLOAD', '', 0, $erro);
-            error_log("[UPLOAD_ENGINE] " . $erro);
+            error_log("[UPLOAD_ENGINE] ❌ " . $erro);
             return false;
         }
 
         // 5.2 Converte para WebP (qualidade 65% para performance)
         $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".webp";
         $tempFile = tempnam(sys_get_temp_dir(), 'b2_') . '.webp';
-        error_log("[UPLOAD] Convertendo para WebP com qualidade 65%: $remotePath");
+        error_log("[UPLOAD_ENGINE] 🔄 Convertendo para WebP com qualidade 65%: $remotePath");
         
         if (!imagewebp($img, $tempFile, 65)) {
             imagedestroy($img);
             if (file_exists($tempFile)) unlink($tempFile);
             $erro = 'Falha na conversão para WebP (extensão GD não instalada ou erro)';
             logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath, 0, $erro);
-            error_log("[UPLOAD_ENGINE] " . $erro);
+            error_log("[UPLOAD_ENGINE] ❌ " . $erro);
             return false;
         }
         imagedestroy($img);
+        error_log("[UPLOAD_ENGINE] ✅ Conversão para WebP concluída. Tamanho do arquivo temporário: " . filesize($tempFile) . " bytes");
 
         // 6. UPLOAD PARA O B2 (com timeout configurado)
         try {
             $b2 = B2Client::getInstance();
-            // 🔥 AUMENTA O TIMEOUT PARA 25 SEGUNDOS (se o B2Client tiver o método)
             if (method_exists($b2, 'setTimeout')) {
                 $b2->setTimeout(25);
-                error_log("[UPLOAD] Timeout do B2Client ajustado para 25s");
+                error_log("[UPLOAD_ENGINE] ⏱️ Timeout do B2Client ajustado para 25s");
             }
+            error_log("[UPLOAD_ENGINE] 📤 Enviando para B2: $remotePath");
             $b2->uploadFile($tempFile, $remotePath, 'image/webp', ['Cache-Control' => 'max-age=31536000']);
-            error_log("[UPLOAD_ENGINE] Upload para B2 bem-sucedido: $remotePath");
+            error_log("[UPLOAD_ENGINE] ✅ Upload para B2 bem-sucedido: $remotePath");
         } catch (Exception $e) {
             if ($tempFile && file_exists($tempFile)) unlink($tempFile);
             logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath, 0, 'Falha no upload para B2: ' . $e->getMessage());
-            error_log("[UPLOAD_ENGINE] ERRO no upload B2: " . $e->getMessage());
+            error_log("[UPLOAD_ENGINE] ❌ ERRO no upload B2: " . $e->getMessage());
             return false;
         }
 
-        if ($tempFile && file_exists($tempFile)) unlink($tempFile);
+        if ($tempFile && file_exists($tempFile)) {
+            unlink($tempFile);
+            error_log("[UPLOAD_ENGINE] 🗑️ Arquivo temporário removido: $tempFile");
+        }
 
         // 7. VERIFICAÇÃO DE INTEGRIDADE
         try {
+            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2...");
             $b2->getDownloadUrl($remotePath);
             logB2Event('INFO', $usuario_id, 'VERIFY', $remotePath, 200, 'Arquivo verificado com sucesso');
-            error_log("[UPLOAD_ENGINE] Verificação concluída: $remotePath");
+            error_log("[UPLOAD_ENGINE] ✅ Verificação concluída: $remotePath");
         } catch (Exception $e) {
             deleteFromB2($remotePath, $usuario_id);
             logB2Event('ERROR', $usuario_id, 'VERIFY', $remotePath, 0, 'Verificação falhou, arquivo removido: ' . $e->getMessage());
-            error_log("[UPLOAD_ENGINE] Verificação falhou, removido: " . $e->getMessage());
+            error_log("[UPLOAD_ENGINE] ❌ Verificação falhou, removido: " . $e->getMessage());
             return false;
         }
 
         logB2Event('INFO', $usuario_id, 'UPLOAD', $remotePath, 200, 'Upload e verificação concluídos');
-        error_log("[UPLOAD_ENGINE] Upload completo com sucesso: $remotePath");
+        error_log("[UPLOAD_ENGINE] ✅ Upload completo com sucesso: $remotePath");
         return $remotePath;
     } catch (Exception $e) {
         if ($tempFile && file_exists($tempFile)) unlink($tempFile);
         logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath ?: '', 0, 'Exceção: ' . $e->getMessage());
-        error_log("[UPLOAD_ENGINE] EXCEÇÃO: " . $e->getMessage());
+        error_log("[UPLOAD_ENGINE] ❌ EXCEÇÃO: " . $e->getMessage() . " em " . $e->getFile() . ":" . $e->getLine());
         return false;
     }
 }

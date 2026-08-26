@@ -58,7 +58,7 @@ error_log("[PROXY] ✅ Path validado: '$path' (ext: $ext)");
 // ============================================================
 $is_production = (getenv('ENVIRONMENT') === 'production');
 // 🔥 FORÇA FALSE PARA DIAGNÓSTICO (depois reverter para $is_production ? true : false)
-$verifySSL = false; 
+$verifySSL = $is_production ? true : false; 
 error_log("[PROXY] verifySSL = " . ($verifySSL ? 'true' : 'false') . " (produção: " . ($is_production ? 'sim' : 'não') . ")");
 
 // ============================================================

@@ -5,14 +5,14 @@
  * 🔒 Segurança: CSRF (indireto via sessão), prepared statements, rollback atômico.
  * 🖼️ Suporte a múltiplos anexos (imagens + GIFs) com compressão client-side.
  *
- * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-22
- *    "Removido qualquer resquício de escrita local (mkdir, file_put_contents).
- *     Garantido ob_clean() antes de todas as respostas JSON de erro.
- *     Compatível com Vercel (serverless) e ambiente local."
- * - Nereida, a nova guardiã das águas
+ * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
+ *    "Adicionados logs detalhados em cada etapa do processamento de anexos
+ *     para diagnóstico em produção (Vercel). Logs via error_log() e
+ *     respostas JSON com mensagens de erro mais descritivas."
+ * - Nereida, a guardiã das águas
  *
  * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
- *    "Adicionados logs detalhados e rollback atômico para múltiplos anexos."
+ *    "Adicionados logs básicos e rollback atômico para múltiplos anexos."
  * - Ondina
  */
 
@@ -57,10 +57,13 @@ $comunidade_id = isset($_POST['comunidade_id']) && (int)$_POST['comunidade_id'] 
 $is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
+error_log("[enviar-post] 🟢 Iniciando processamento para usuário $usuario_id (AJAX: " . ($is_ajax ? 'sim' : 'não') . ")");
+
 // ============================================================
 // 3. VALIDAÇÃO DA COMUNIDADE (COM PREPARED STATEMENTS)
 // ============================================================
 if ($comunidade_id !== null) {
+    error_log("[enviar-post] 🔍 Validando comunidade ID: $comunidade_id");
     // 3.1 Verifica se a comunidade existe
     $stmt_check = $conn->prepare("SELECT id FROM comunidades WHERE id = ?");
     $stmt_check->bind_param("i", $comunidade_id);
@@ -68,6 +71,7 @@ if ($comunidade_id !== null) {
     $res_check = $stmt_check->get_result();
     if ($res_check->num_rows === 0) {
         $stmt_check->close();
+        error_log("[enviar-post] ❌ Comunidade $comunidade_id não encontrada.");
         if ($is_ajax) {
             http_response_code(404);
             ob_clean();
@@ -88,6 +92,7 @@ if ($comunidade_id !== null) {
     $res_membro = $stmt_membro->get_result();
     if ($res_membro->num_rows === 0) {
         $stmt_membro->close();
+        error_log("[enviar-post] ❌ Usuário $usuario_id não é membro da comunidade $comunidade_id");
         if ($is_ajax) {
             http_response_code(403);
             ob_clean();
@@ -101,7 +106,7 @@ if ($comunidade_id !== null) {
     }
     $stmt_membro->close();
 
-    // 3.3 VERIFICA SE O USUÁRIO NÃO ESTÁ BANIDO NA COMUNIDADE
+    // 3.3 VERIFICA SE O USUÁRIO NÃO ESTÁ BANIDO
     $stmt_ban = $conn->prepare("SELECT status FROM comunidade_membros WHERE comunidade_id = ? AND usuario_id = ?");
     $stmt_ban->bind_param("ii", $comunidade_id, $usuario_id);
     $stmt_ban->execute();
@@ -110,6 +115,7 @@ if ($comunidade_id !== null) {
     $stmt_ban->close();
 
     if (!$membro || $membro['status'] !== 'ativo') {
+        error_log("[enviar-post] ❌ Usuário $usuario_id banido ou inativo na comunidade $comunidade_id");
         if ($is_ajax) {
             http_response_code(403);
             ob_clean();
@@ -121,6 +127,7 @@ if ($comunidade_id !== null) {
             exit();
         }
     }
+    error_log("[enviar-post] ✅ Usuário $usuario_id validado na comunidade $comunidade_id");
 }
 
 // ============================================================
@@ -133,9 +140,7 @@ $anexosArray = [];
 $contadorItens = 0;
 const MAX_ANEXOS = 4;
 
-error_log("[enviar-post] 🟢 Iniciando processamento para usuário $usuario_id");
-error_log("[enviar-post] 📝 POST recebido: " . print_r($_POST, true));
-error_log("[enviar-post] 📎 FILES: " . print_r($_FILES, true));
+error_log("[enviar-post] 📎 Processando anexos...");
 
 // 4.1 - GIFs externos
 $gif_urls = isset($_POST['gif_urls']) && is_array($_POST['gif_urls']) ? $_POST['gif_urls'] : [];
@@ -161,7 +166,8 @@ if (!empty($gif_urls)) {
 
 // 4.2 - Múltiplos arquivos (imagens)
 if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name']) && count(array_filter($_FILES['anexos']['name'])) > 0) {
-    error_log("[enviar-post] 🖼️ Processando " . count($_FILES['anexos']['tmp_name']) . " imagens...");
+    $totalArquivos = count($_FILES['anexos']['tmp_name']);
+    error_log("[enviar-post] 🖼️ Processando $totalArquivos imagens...");
     $erroUpload = false;
     $ultimoErro = '';
     foreach ($_FILES['anexos']['tmp_name'] as $key => $tmp_name) {
@@ -182,9 +188,11 @@ if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name']) && count(arr
             'error'    => $_FILES['anexos']['error'][$key],
             'size'     => $_FILES['anexos']['size'][$key]
         ];
+        error_log("[enviar-post] 📤 Enviando imagem $key: " . $file_data['name'] . " (" . $file_data['size'] . " bytes)");
+
         $nome = processarUploadSeguro($file_data, 'postagens', 'post', 2 * 1024 * 1024, $usuario_id);
         if ($nome === false) {
-            $ultimoErro = "Falha no processamento da imagem $key (verifique logs)";
+            $ultimoErro = "Falha no processamento da imagem $key (verifique logs do upload_engine)";
             error_log("[enviar-post] ❌ " . $ultimoErro);
             $erroUpload = true;
             break;
@@ -192,7 +200,7 @@ if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name']) && count(arr
         $caminhosEnviados[] = $nome;
         $anexosArray[] = ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'imagem', 'caminho' => $nome];
         $contadorItens++;
-        error_log("[enviar-post] ✅ Imagem enviada: $nome");
+        error_log("[enviar-post] ✅ Imagem enviada com sucesso: $nome");
     }
     if ($erroUpload) {
         error_log("[enviar-post] 🔴 Rollback: deletando " . count($caminhosEnviados) . " arquivos do B2");
@@ -239,6 +247,8 @@ if (!empty($anexosArray)) {
     $primeiro = $anexosArray[0];
     $imagem_url = ($primeiro['tipo'] === 'imagem') ? $primeiro['caminho'] : $primeiro['url'];
     error_log("[enviar-post] 📦 Primeiro anexo definido como imagem_url: $imagem_url");
+} else {
+    error_log("[enviar-post] 📭 Nenhum anexo processado (apenas texto)");
 }
 
 // 4.5 - Converte para JSON
@@ -259,13 +269,12 @@ if (!empty($anexosArray)) {
         }
     }
     error_log("[enviar-post] ✅ JSON gerado: " . $anexos_json);
-} else {
-    error_log("[enviar-post] 📭 Nenhum anexo processado.");
 }
 
 // ============================================================
 // 5. INSERÇÃO NO BANCO (COM PREPARED STATEMENTS)
 // ============================================================
+error_log("[enviar-post] 💾 Inserindo post no banco...");
 $sql = "INSERT INTO mensagens (mensagem, categoria, subcategoria, usuario_id, imagem_url, anexos, comunidade_id, data_post) 
         VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 $stmt = $conn->prepare($sql);
@@ -273,6 +282,7 @@ $stmt->bind_param("sssissi", $mensagem, $categoria, $subcategoria, $usuario_id, 
 
 if ($stmt->execute()) {
     $post_id = $conn->insert_id;
+    $stmt->close();
     error_log("[enviar-post] ✅ Post ID $post_id inserido com sucesso");
 
     // --- MENÇÕES (com tipo = 'post') ---
@@ -325,7 +335,9 @@ if ($stmt->execute()) {
         exit();
     }
 } else {
-    error_log("[enviar-post] ❌ Erro ao inserir no banco: " . $stmt->error);
+    $erro = $stmt->error;
+    $stmt->close();
+    error_log("[enviar-post] ❌ Erro ao inserir no banco: " . $erro);
     if (!empty($caminhosEnviados)) {
         error_log("[enviar-post] 🔴 Rollback: deletando " . count($caminhosEnviados) . " arquivos do B2");
         foreach ($caminhosEnviados as $caminho) deleteFromB2($caminho, $usuario_id);
@@ -333,10 +345,10 @@ if ($stmt->execute()) {
     if ($is_ajax) {
         http_response_code(500);
         ob_clean();
-        echo json_encode(['status' => 'error', 'message' => 'Erro ao salvar o post: ' . $stmt->error]);
+        echo json_encode(['status' => 'error', 'message' => 'Erro ao salvar o post: ' . $erro]);
         exit();
     } else {
-        $_SESSION['erro_post'] = 'Erro ao salvar o post: ' . $stmt->error;
+        $_SESSION['erro_post'] = 'Erro ao salvar o post: ' . $erro;
         header("Location: " . ($comunidade_id !== null ? "comunidade.php?id=$comunidade_id" : "feed.php"));
         exit();
     }

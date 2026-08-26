@@ -1294,6 +1294,70 @@
     transform: scale(1.02);
 }
 
+
+.btn-bt-ver-lista {
+    flex: 1;
+    display: flex;
+    padding: 8px 15px;
+    justify-content: center;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-size: clamp(0.9rem, 0.8vw, 1.1rem);
+    background: rgba(255, 255, 255, 0.25);
+    text-decoration: none;
+    border: #1111;
+    font-weight: 600;
+    color: #ffffcf;
+    color: oklch(0.9882 0.0617 107.48);
+}
+
+
+.btn-bt-ver-lista:hover {
+    background: #2c2c3a;
+    transition: 0.3s;
+}
+
+
+ .main-comunidades .container-load-more {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 25px 0;
+    margin-bottom: 20px;
+}
+
+
+.main-comunidades  #btn-load-more-comunidades {
+    background: #faba0d;
+    background: oklch(0.8 0.19 76.05);
+    border: 1px solid var(--bt-borda-sutil);
+    border-radius: 30px;
+    padding: 10px 30px;
+    color: #1e1a1a;
+    color: oklch(0.09 0 1);
+    font-weight: 600;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    display: inline-flex;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: inherit;
+}
+
+.main-comunidades #btn-load-more-comunidades:hover {
+    background: rgba(255, 255, 255, 0.1);
+    background: oklch(1 0 0 / 0.1);
+    border-color: var(--bt-dourado);
+    transform: translateY(-2px);
+}
+
+.main-comunidades  .bt-btn-load-more:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+
 /* ---------- CAMPO DE BUSCA NO MODAL ---------- */
 .modal-search-box {
     padding: 6px 10px;
@@ -2312,11 +2376,15 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 }
 
 .empty-state {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     text-align: center;
+    justify-content: center;
     color: #a5a5a5;
     color: oklch(68% 0 0);
     grid-column: 1 / -1;
-    padding: 40px;
+    padding: 30px;
 }
 
 .empty-state .btn-criar-comunidade {

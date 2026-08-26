@@ -515,7 +515,7 @@ $stmt_com->close();
                     to { opacity:1; transform:scale(1) translateY(0); }
                 }
                 .bt-action-item:hover {
-                    background: rgba(255,255,255,0.06);
+                    background: rgba(255, 255, 255, 0.20);
                 }
                 .bt-action-item[data-acao="excluir"]:hover {
                     background: rgba(255,50,50,0.12);

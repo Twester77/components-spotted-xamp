@@ -273,7 +273,7 @@ try {
             <div class="empty-state">
                 <p><?php echo !empty($busca) ? 'Nenhuma comunidade encontrada com "' . htmlspecialchars($busca, ENT_QUOTES, 'UTF-8') . '".' : 'Nenhuma comunidade ainda.'; ?></p>
                 <?php if (!empty($busca)): ?>
-                    <a href="lista-comunidades.php" class="btn-fenda-padrao" style="margin-top: 10px;">Ver todas</a>
+                    <a href="lista-comunidades.php" class="btn-bt-ver-lista" style="margin-top: 10px;">Ver todas</a>
                 <?php else: ?>
                     <a href="criar-comunidade.php" class="btn-criar-comunidade">Seja o primeiro a criar uma!</a>
                 <?php endif; ?>

@@ -1713,7 +1713,14 @@ body.pagina-post .header-principal {
 }
 
 
-
+.btn-fechar-erro {
+padding: 6px 10px;
+font-size: 0.9rem;
+font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+text-decoration: none;
+background: #ff8a8a;
+color: #ff4757;
+}
 
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
 .comentario-item.comentario-selecionado {

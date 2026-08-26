@@ -1378,7 +1378,7 @@ const LightboxManager = {
                         <div class="lightbox-erro">
                             <i class="fas fa-exclamation-triangle"></i>
                             <p>Erro ao carregar o post. Tente novamente.</p>
-                            <button onclick="LightboxManager.fechar()" class="btn-fenda-padrao">Fechar</button>
+                            <button onclick="LightboxManager.fechar()" class="btn-fechar-erro">Fechar</button>
                         </div>
                     `;
                 }
