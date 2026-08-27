@@ -18,6 +18,12 @@
       ]
     },
     {
+      "source": "/manifest.php",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
@@ -39,6 +45,7 @@
     { "src": "/badges/(.*)", "dest": "/badges/$1" },
     { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/manifest.php", "dest": "/manifest.php" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }
