@@ -156,6 +156,13 @@ border-top: 2px double var(--aura-user)!important ;
 
 }
 
+body.hacker-mode .spotted-card:hover {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0px 0px 6px 0px #00fd00;
+
+}
+
 
 body.hacker-mode .sessao-fofoca-focada {
     border: 1px solid var(--hacker-green);
@@ -753,21 +760,21 @@ body.hacker-mode .conselho-header {
     color: #00ff00 ;
     text-transform: uppercase ;
     border-bottom: 1px dashed #00ff00 ;
-    display: inline-block !important;
+    display: inline-block ;
     padding-right: 15px;
 }
 
-body.hacker-mode h1::before { content: "root@fenda:~# " !important; opacity: 0.6 !important; }
-body.hacker-mode h2::before { content: "./" !important; opacity: 0.6 !important; }
+body.hacker-mode h1::before { content: "root@fenda:~# " ; opacity: 0.6 ; }
+body.hacker-mode h2::before { content: "./" ; opacity: 0.6 ; }
 
 
 body.hacker-mode .comentario-texto,
 body.hacker-mode .post-content,
 body.hacker-mode .bio-texto {
-    font-family: monospace !important;
-    color: #00ff00 !important;
-    line-height: 1.5 !important;
-    text-shadow: 0 0 5px rgba(0,255,0,0.3) !important;
+    font-family: monospace ;
+    color: #00ff00 ;
+    line-height: 1.5 ;
+    text-shadow: 0 0 5px rgba(0,255,0,0.3) ;
 }
 
 /* ---------------------------------------------------------------
@@ -777,6 +784,8 @@ body.hacker-mode .bio-texto {
 body.hacker-mode .filtro-btn,
 body.hacker-mode .btn-abrir-filtros,
 body.hacker-mode  #bt-btn-filtros,
+body.hacker-mode .bt-btn-principal,
+body.hacker-mode .login-btn,
 body.hacker-mode .btn-filtro,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-enviar-chat,
@@ -793,6 +802,8 @@ body.hacker-mode .btn-filtro.ativo,
 body.hacker-mode  #bt-btn-filtros:hover,
 body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .btn-fenda-padrao:hover,
+body.hacker-mode .bt-btn-principal:hover,
+body.hacker-mode .login-btn:hover,
 body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
 body.hacker-mode .filtro-btn:hover {
@@ -801,7 +812,7 @@ body.hacker-mode .filtro-btn:hover {
 }
 
 body.hacker-mode .filtros-perdidos {
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 /* ---------------------------------------------------------------
@@ -917,6 +928,10 @@ body.hacker-mode #fenda-toolbar {
     color: #00ff00 ;
     border-radius: 0;
     font-family: monospace ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    clip-path: none;
+    background-image: none;
 }
 
 body.hacker-mode .btn-notif-choice {

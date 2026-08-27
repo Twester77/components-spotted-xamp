@@ -459,12 +459,10 @@
     background: rgba(255, 255, 255, 0.062);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     align-self: flex-start;
-    
     /* MUDANÇA CHAVE: O balão agora se ajusta ao texto de forma inteligente */
     width: fit-content; 
     /* Removemos o max-width: min-content; pois o @container já dita o limite real */
-    
-    min-width: 150px;
+    min-width: 140px;
     min-height: 55px;
     box-sizing: border-box;
     position: relative;
@@ -1653,7 +1651,7 @@ body.pagina-post .header-principal {
 .comentario-media-wrapper-grid {
     display: grid;
     /* Força sempre 2 colunas dinâmicas (50% do espaço disponível cada) */
-    grid-template-columns: repeat(2, minmax(50px, 120px)); 
+    grid-template-columns: repeat(2, minmax(60px, 120px)); 
     gap: 5px;
     padding: 4px 0;
     /* SOLUÇÃO CHAVE: O container abraça estritamente o tamanho das imagens */
@@ -1725,9 +1723,9 @@ color: #ff4757;
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
 .comentario-item.comentario-selecionado {
     position: relative ;
-    z-index: 2 !important;
     border: none!important ;
-    background: rgba(255, 187, 0, 0.075) !important;
+    background: rgba(255, 187, 0, 0.075) ;
+    background: oklch(0.832757 0.171572 82.0575 / 7.5%);
     transition: background 0.3s ease;
 }
 

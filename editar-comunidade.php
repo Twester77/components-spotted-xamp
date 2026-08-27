@@ -1,4 +1,5 @@
 <?php
+
 /**
  * editar-comunidade.php – Página de edição de comunidade
  * 
@@ -97,8 +98,9 @@ $tipo_atual = $comunidade['tipo'] ?? 'publica';
 
     <div class="form-container form-comunidade">
         <form action="processa-comunidade.php" method="POST" enctype="multipart/form-data" id="form-editar-comunidade">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
-            
+
             <!-- Nome -->
             <div class="campo-grupo">
                 <label for="nome"><i class="fas fa-tag"></i> Nome da Comunidade</label>
@@ -171,16 +173,16 @@ $tipo_atual = $comunidade['tipo'] ?? 'publica';
 </main>
 
 <script>
-function previewCapa(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('capa-preview').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+    function previewCapa(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('capa-preview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     }
-}
 </script>
 
 <?php include 'includes/footer.php'; ?>

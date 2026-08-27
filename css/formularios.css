@@ -688,12 +688,13 @@ select:focus {
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
     /* Padding dinâmico: menor em telas pequenas */
+    padding: 6px;
     padding: clamp(8px, 3.5vw, 20px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     background: #00000094;
     position: relative;
     /* Garante que o 'X' de fechar se posicione certo */
@@ -707,7 +708,9 @@ select:focus {
     margin: 0 auto;
     width: 100%;
     height: auto;
-    max-width: clamp(260px, 90%, 600px);
+    max-width: 300px ;
+    max-height: 250px ;
+    max-width: clamp(280px, 90%, 550px);
     max-height: clamp(200px, 60vh, 500px);
 }
 
@@ -757,6 +760,7 @@ select:focus {
 /* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
 .modal-body-ajuste .main-novo-post h2 {
     color: #f5f5f5;
+    font-size: 1.05rem;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     margin-bottom: 15px;
     text-transform: uppercase;
@@ -2029,9 +2033,11 @@ Especificidade: (0,1,1)
     padding: 8px;
     float: none;
     border-radius: 16px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    border: 2px solid #cccccc7c;
+    border: 1px solid #cccccc;
     max-width: 800px;
     background: #0d0d0dd1;
 }

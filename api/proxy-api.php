@@ -1,22 +1,21 @@
 <?php
 /**
  * proxy.php – Intermediário de imagens para Backblaze B2
- *
+ * 
+ * 🔧 VERSÃO API – movido para api/proxy.php (Vercel Serverless)
+ * 
  * 🔧 ATUALIZAÇÃO NEREIDA – 2026-08-26
  *    "Adicionados logs detalhados para diagnóstico em produção.
  *     Incluídos logs de entrada, autenticação, tentativas de download e erros."
- * 
- * 🔥 CORREÇÃO ÍRIS – 2026-08-27
- *    "Removidos todos os curl_close() para compatibilidade com PHP 8.5+."
  */
  
-// Carrega variáveis de ambiente
-if (file_exists(__DIR__ . '/.env.php')) {
-    require_once __DIR__ . '/.env.php';
+// Carrega variáveis de ambiente (agora com caminho relativo à raiz)
+if (file_exists(__DIR__ . '/../.env.php')) {
+    require_once __DIR__ . '/../.env.php';
 }
-require_once __DIR__ . '/includes/B2Client.php';
+require_once __DIR__ . '/../includes/B2Client.php';
 
-error_log("[PROXY] 🔵 INICIANDO proxy.php para path: " . ($_GET['path'] ?? 'NENHUM'));
+error_log("[PROXY] 🔵 INICIANDO proxy.php (API) para path: " . ($_GET['path'] ?? 'NENHUM'));
 
 // ============================================================
 // 1. VALIDAÇÃO DE ENTRADA
@@ -81,7 +80,7 @@ function tentarDownload($b2, $nomeArquivo, $verifySSL) {
         $imageData = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlError = curl_error($ch);
-        // 🔥 REMOVIDO: curl_close($ch); – PHP 8.5+ gerencia automaticamente
+        curl_close($ch);
 
         if ($httpCode === 200 && !empty($imageData)) {
             error_log("[PROXY] ✅ Download bem-sucedido: '$nomeArquivo' (HTTP $httpCode, " . strlen($imageData) . " bytes)");

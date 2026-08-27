@@ -27,6 +27,7 @@ while ($row = mysqli_fetch_assoc($res_atleticas)) {
 
     <div class="form-container">
         <form action="processa-comunidade.php" method="POST" enctype="multipart/form-data" class="form-comunidade" id="form-criar-comunidade">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?? ''; ?>">
 
             <!-- Nome -->
             <div class="campo-grupo">

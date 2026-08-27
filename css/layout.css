@@ -296,11 +296,12 @@ nav {
 
 /* Ajuste fino do ícone dentro do botão */
 .btn-menu-hamburguer {
+    width: 32px;
+    height: 32px;
     width: clamp(30px, 10vmin, 70px);
     height: clamp(30px, 10vmin, 70px);
     display: block;
     stroke: currentColor;
-
 }
 
 
@@ -1545,8 +1546,8 @@ article.conteudo-principal {
 
 .bloco-conselhos {
     padding: 10px;
-    background: rgba(255 255 255 / 8%);
-    background: oklch(1 0 0 / 8%);
+    background: rgba(255 255 255 / 5%);
+    background: oklch(1 0 0 / 5%);
     border-radius: 15px;
     border-top: 2px solid #fff350f3;
     border-bottom: 2px solid #fff350f3;
@@ -2162,14 +2163,15 @@ textarea[name="bio"] {
         box-sizing: border-box ;
     }
     body:not(.modo-swipe-ativo) .feed-anexos-grid {
-        grid-template-columns: repeat(2, minmax(45px, 80px));
+        grid-template-columns: repeat(2, minmax(40px, 80px));
 
     }
 
     footer {
         /* Garante que ele saia debaixo de floats */
-        padding: 8px 12px 12px 8px;
+        padding: 6px 12px 12px 6px;
         font-size: 0.8rem;
+        line-height: 1.3;
 
     }
     header {
@@ -2595,8 +2597,36 @@ body.modal-aberto #fenda-nexus {
 /* ==================================================
    GRID DE ANEXOS (COMPARTILHADO – COMENTÁRIOS E MODAL POST, ACHADOS E PERDIDOS, ETC.)
    ================================================== */
+/* Estiliza o botão de clique em QUALQUER input de arquivo do site */
+input[type="file"]::file-selector-button {
+    background-color: #2ecc71; 
+    font-size: clamp(0.8rem, 0.8vw, 1rem);
+    color: #f1f1f1;
+    color: oklch(0.95 0 0);           
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    
+    /* Efeito seguro para PC e Celular: Transição suave de opacidade */
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+/* Efeito exclusivo para computadores (não trava no touch do celular) */
+@media (hover: hover) {
+    input[type="file"]::file-selector-button:hover {
+        background-color: #27ae60; 
+        opacity: 0.9;
+    }
+}
+
+
 
 .anexos-grid-post {
+    display: flex;
     gap: 4px;
     margin-top: 8px;
     border-radius: 12px;
@@ -2617,8 +2647,8 @@ body.modal-aberto #fenda-nexus {
 
 .anexo-item {
     position: relative;
-    width: clamp(50px, 12vmin, 100px);
-    height: clamp(50px, 12vmin, 100px);
+    width: clamp(65px, 12vmin, 120px);
+    height: clamp(65px, 12vmin, 120px);
     border-radius: 4px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -2653,10 +2683,14 @@ section.sessao-publicar .form-publicar .anexos-grid {
     border: none;
     color: #fff;
     border-radius: 50%;
-    width: clamp(14px, 1.5vw, 22px);
-    height: clamp(14px, 1.5vw, 22px);
-    font-size: clamp(9px, 1vw, 13px);
+    width: 13px;
+    height: 13px;
+    width: clamp(14px, 2.5cqw, 22px);
+    height: clamp(14px, 2.5cqw, 22px);
+    font-size: 9px;
+    font-size: clamp(9px, 1cqw, 14px);
     cursor: pointer;
+    background-clip: padding-box;
     pointer-events: auto;
     display: flex;
     align-items: center;
@@ -2704,8 +2738,11 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
 /* Container principal */
 .notificacoes-page {
+    max-width: 300px;
     max-width: clamp(300px, 90%, 600px);
+    margin: 20px auto;
     margin: clamp(15px, 4vh, 40px) auto;
+    padding: 8px ;
     padding: clamp(6px, 2vw, 15px);
     box-sizing: border-box;
 }
@@ -2715,17 +2752,21 @@ section.sessao-publicar .form-publicar .anexos-grid {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
     margin-bottom: clamp(12px, 3vw, 24px);
     flex-wrap: wrap;
-    gap: clamp(6px, 1.5vw, 14px);
+    gap: 6px;
+    gap: clamp(6px, 1.5vw, 15px);
 }
 
 .notificacoes-header h2 {
     color: var(--dourado, #ffbc00);
     margin: 0;
+    font-size: 1rem;
     font-size: clamp(1.1rem, 3vw, 1.8rem);
     display: flex;
     align-items: center;
+    gap: 5px;
     gap: clamp(4px, 1vw, 10px);
 }
 
@@ -2735,7 +2776,9 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
 /* Botão "Marcar todas" – sem inline */
 .btn-marcar-todas {
+    font-size: 0.75rem ;
     font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    padding: 4px 10px;
     padding: clamp(4px, 0.6vw, 8px) clamp(10px, 1.5vw, 18px);
     background: rgba(255, 188, 0, 0.12);
     color: var(--dourado, #ffbc00);
@@ -2765,6 +2808,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 .notificacoes-list {
     display: flex;
     flex-direction: column;
+    gap: 5px ;
     gap: clamp(6px, 1.5vw, 14px);
 }
 
@@ -2778,6 +2822,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
 .notificacao-link:hover .notificacao-card {
     background: rgba(255, 255, 255, 0.08);
+    transform: translateX(3px);
     transform: translateX(clamp(2px, 0.5vw, 6px));
 }
 
@@ -2785,8 +2830,10 @@ section.sessao-publicar .form-publicar .anexos-grid {
 .notificacao-card {
     background: rgba(255, 255, 255, 0.05);
     background: oklch(1 0 0 / 0.05);
+    padding: 8px;
     padding: clamp(10px, 2vw, 18px);
     border-radius: clamp(8px, 1.2vw, 14px);
+    border-left: 2px solid var(--borda-esquerda, transparent) ;
     border-left: clamp(3px, 0.5vw, 6px) solid var(--borda-esquerda, transparent);
     display: flex;
     justify-content: space-between;
@@ -2810,6 +2857,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
 .notificacao-conteudo p {
     margin: 0;
+    font-size: 0.8rem;
     font-size: clamp(0.85rem, 2vw, 1.05rem);
     color: #fff;
     color: oklch(1 0 0);
@@ -2818,6 +2866,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 }
 
 .notificacao-data {
+    font-size: 0.6rem ;
     font-size: clamp(0.65rem, 1.4vw, 0.9rem);
     color: rgba(255, 255, 255, 0.6);
     color: oklch(1 0 0 / 0.6);
@@ -2832,11 +2881,14 @@ section.sessao-publicar .form-publicar .anexos-grid {
 /* Indicador de não lida (bolinha dourada) */
 .notificacao-indicador {
     display: inline-block;
+    width: 5px;
+    height: 5px;
     width: clamp(6px, 1vw, 10px);
     height: clamp(6px, 1vw, 10px);
     border-radius: 50%;
     background: var(--dourado, #ffbc00);
     flex-shrink: 0;
+    margin-left: 5px;
     margin-left: clamp(6px, 1.5vw, 14px);
 }
 
@@ -2845,8 +2897,11 @@ section.sessao-publicar .form-publicar .anexos-grid {
     text-align: center;
     color: #666;
     color: oklch(0.6 0 0);
+    margin-top: 15px;
     margin-top: clamp(20px, 5vh, 50px);
+    padding: 8px;
     padding: clamp(10px, 2vw, 30px);
+    font-size: 0.85rem ;
     font-size: clamp(0.9rem, 1.8vw, 1.1rem);
 }
 

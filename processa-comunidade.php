@@ -2,12 +2,14 @@
 /**
  * processa-comunidade.php – Cria ou edita uma comunidade
  * 
+ * 🔒 CSRF: verificação obrigatória do token enviado via POST.
+ * 
  * Ações:
- * - Criar: POST com nome, slug, descricao, capa, tipo
- * - Editar: POST com id, nome, slug, descricao, capa, tipo
+ * - Criar: POST com nome, slug, descricao, capa, tipo, csrf_token
+ * - Editar: POST com id, nome, slug, descricao, capa, tipo, csrf_token
  * 
  * 🔥 Transição privada → pública: aprova automaticamente todas as solicitações pendentes,
- *    carimba a data de entrada como NOW() para identificar recém-aprovados e envia notificações em massa.
+ *    carimba a data de entrada como NOW() e envia notificações em massa.
  * 
  * Redireciona para lista-comunidades.php ou comunidade.php?id=X
  */
@@ -18,6 +20,21 @@ include_once __DIR__ . '/fenda_debug.php';
 
 fenda_log('🔵 INÍCIO processa-comunidade.php');
 
+// ============================================================
+// 🔥 0. VERIFICAÇÃO CSRF (OBRIGATÓRIA)
+// ============================================================
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    fenda_log('🔴 CSRF inválido em processa-comunidade.php');
+    $_SESSION['erro_comunidade'] = 'Token de segurança inválido. Recarregue a página e tente novamente.';
+    // Redireciona para a página anterior (criação ou edição)
+    $destino = isset($_POST['id']) ? "editar-comunidade.php?id=" . (int)$_POST['id'] : "criar-comunidade.php";
+    header("Location: $destino");
+    exit();
+}
+
+// ============================================================
+// 1. VALIDAÇÃO DO MÉTODO E PARÂMETROS
+// ============================================================
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: lista-comunidades.php");
     exit();
@@ -27,9 +44,7 @@ $usuario_id = $_SESSION['usuario_id'];
 $modo = isset($_POST['id']) ? 'editar' : 'criar';
 $id = $modo === 'editar' ? (int)$_POST['id'] : 0;
 
-// ============================================================
-// 1. CAPTURA DOS DADOS
-// ============================================================
+// Captura dos dados
 $nome = trim($_POST['nome'] ?? '');
 $slug = trim($_POST['slug'] ?? '');
 $descricao = trim($_POST['descricao'] ?? '');
@@ -74,9 +89,6 @@ $stmt_check->close();
 // 3. PROCESSAMENTO DA CAPA (upload para B2)
 // ============================================================
 $capa_nome = null;
-
-fenda_log('🔵 [UPLOAD] FILES recebidos: ' . print_r($_FILES, true));
-
 if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
     fenda_log('🔵 [UPLOAD] Arquivo capa recebido: ' . $_FILES['capa']['name'] . ' (' . $_FILES['capa']['size'] . ' bytes)');
     
@@ -87,9 +99,8 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
         $_SESSION['erro_comunidade'] = 'Erro ao enviar a capa. Verifique o tamanho (máx 2MB) e formato.';
         header("Location: " . ($modo === 'editar' ? "editar-comunidade.php?id=$id" : "criar-comunidade.php"));
         exit();
-    } else {
-        fenda_log('🟢 [UPLOAD] Capa enviada com sucesso para B2: ' . $capa_nome);
     }
+    fenda_log('🟢 [UPLOAD] Capa enviada com sucesso: ' . $capa_nome);
 } else {
     fenda_log('🔵 [UPLOAD] Nenhuma capa enviada ou erro no upload (código: ' . ($_FILES['capa']['error'] ?? 'N/A') . ')');
 }
@@ -152,7 +163,6 @@ if ($modo === 'criar') {
     }
     
     // 🔥 Transição: se mudou de privada para pública, aprova todas as solicitações pendentes
-    //    e carimba data_entrada = NOW() para identificar recém-aprovados
     if ($com['tipo'] === 'privada' && $tipo === 'publica') {
         $stmt_aprovar = $conn->prepare("UPDATE comunidade_membros 
                                          SET status = 'ativo', papel = 'membro', data_entrada = NOW() 
@@ -161,12 +171,12 @@ if ($modo === 'criar') {
         $stmt_aprovar->execute();
         $afetados = $stmt_aprovar->affected_rows;
         $stmt_aprovar->close();
-        fenda_log("🟢 Transição privada → pública: $afetados solicitações pendentes foram aprovadas automaticamente.");
+        fenda_log("🟢 Transição privada → pública: $afetados solicitações pendentes aprovadas automaticamente.");
         
-        // 🔥 Notificações em massa (apenas para os recém-aprovados, baseado na data_entrada carimbada)
+        // Notificações em massa
         if ($afetados > 0) {
-            $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, mensagem, lida, data_criacao) 
-                                           SELECT usuario_id, NULL, CONCAT('Sua solicitação para entrar em \"', ?, '\" foi aprovada automaticamente! A comunidade agora é pública.'), 0, NOW()
+            $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida, data_criacao) 
+                                           SELECT usuario_id, NULL, 'solicitacao', CONCAT('Sua solicitação para entrar em \"', ?, '\" foi aprovada automaticamente! A comunidade agora é pública.'), 0, NOW()
                                            FROM comunidade_membros 
                                            WHERE comunidade_id = ? AND status = 'ativo' AND papel = 'membro' AND data_entrada >= DATE_SUB(NOW(), INTERVAL 1 MINUTE)");
             $stmt_notif->bind_param("si", $com['nome'], $id);
@@ -177,7 +187,7 @@ if ($modo === 'criar') {
         }
     }
     
-    // Monta a query de atualização (inclui o campo tipo)
+    // Monta a query de atualização
     $sql = "UPDATE comunidades SET nome = ?, slug = ?, descricao = ?, tipo = ?";
     $params = [$nome, $slug, $descricao, $tipo];
     $types = "ssss";
@@ -187,8 +197,6 @@ if ($modo === 'criar') {
         $params[] = $capa_nome;
         $types .= "s";
         fenda_log('🔵 [UPLOAD] Atualizando capa para: ' . $capa_nome);
-    } else {
-        fenda_log('🔵 [UPLOAD] Mantendo capa atual (sem alteração).');
     }
     
     $sql .= " WHERE id = ?";

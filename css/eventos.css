@@ -54,8 +54,8 @@
 /* Container principal da página */
 .bt-main {
     max-width: 1600px;
-    margin: 0 auto;
-    padding: 30px 12px;
+    margin: 20px auto;
+    padding: 0px 10px;
     min-height: 70vh;
     width: 100%;
     box-sizing: border-box;
@@ -177,8 +177,8 @@
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 /* 🔥 CAPA DINÂMICA (usando variável do JS) */
@@ -317,9 +317,9 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 2.5cqw, 1.1rem);
+    font-size: clamp(0.9rem, 2.5cqw, 1.2rem);
     min-width: 200px;
-    max-width: 600px;
+    max-width: 550px;
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     font-family: inherit;
@@ -360,16 +360,16 @@
    ============================================================ */
 /* 1. SELECT COM ESTILO "GLOW" NO MODO SWIPE */
 .modo-tinder-ativo .bt-select-comunidade {
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border-color: rgba(255, 188, 0, 0.25);
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.05);
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.05);
 }
 
 
 .modo-tinder-ativo .bt-select-comunidade:focus {
     border-color: var(--bt-dourado, #ffbc00);
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.15);
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.15);
 }
 
 
@@ -427,10 +427,10 @@
     background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301));
     color: #000000d0;
     padding: 4px 10px;
-    padding: clamp(4px, 1.5vw, 12px) clamp(10px, 1.5vw, 16px);
+    padding: clamp(4px, 1.5vw, 10px) clamp(10px, 1.5vw, 16px);
     font-size: 0.65rem;
-    font-size: clamp(0.7rem, 1.5vw, 1rem);
-    border-radius: 25px;
+    font-size: clamp(0.7rem, 1.5vw, 0.95rem);
+    border-radius: 24px;
     font-weight: bold;
     white-space: nowrap;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -847,7 +847,7 @@
 .bt-detalhes-info {
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 1.2vw, 16px);
+    gap: clamp(10px, 1.2vw, 20px);
 }
 
 .bt-detalhes-titulo {
@@ -1458,10 +1458,12 @@
 }
 
 .bt-campo-grupo input[type="file"] {
-    display: block;
-    margin-top: 4px;
+    display: inline-block;
+    margin-top: 5px;
     color: #aaa;
     color: oklch(0.75 0 0);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 1.5vw, 0.95rem);
 }
 
 .bt-campo-ajuda {
@@ -1469,8 +1471,8 @@
     color: #888;
     color: oklch(0.65 0 0);
     font-size: 0.7rem;
-    font-size: clamp(0.7rem, 0.9vw, 0.9rem);
-    margin-top: 4px;
+    font-size: clamp(0.7rem, 0.9vw, 0.95rem);
+    margin-top: 5px;
 }
 
 .bt-anexos-grid {

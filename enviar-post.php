@@ -314,8 +314,30 @@ if ($stmt->execute()) {
 
     // --- NOTIFICAÇÃO PARA MEMBROS DA COMUNIDADE (se houver) ---
     if ($comunidade_id !== null) {
-        // Código mantido igual ao original (não foi modificado)
-        // ... (se houver, não há alterações)
+        $stmt_nome = $conn->prepare("SELECT nome FROM comunidades WHERE id = ?");
+        $stmt_nome->bind_param("i", $comunidade_id);
+        $stmt_nome->execute();
+        $res_nome = $stmt_nome->get_result();
+        $com_nome = $res_nome->fetch_assoc()['nome'] ?? 'Comunidade';
+        $stmt_nome->close();
+
+        $mensagem_notif = "📢 Novo post em \"$com_nome\"!";
+        $sql_notif = "
+            INSERT INTO notificacoes (usuario_id, post_id, mensagem, lida, data_criacao)
+            SELECT cm.usuario_id, ?, ?, 0, NOW()
+            FROM comunidade_membros cm
+            JOIN usuarios u ON cm.usuario_id = u.id
+            WHERE cm.comunidade_id = ? 
+              AND cm.usuario_id != ? 
+              AND u.pref_notif_comunidade = 1
+        ";
+        $stmt_notif = $conn->prepare($sql_notif);
+        $stmt_notif->bind_param("isii", $post_id, $mensagem_notif, $comunidade_id, $usuario_id);
+        $stmt_notif->execute();
+        $stmt_notif->close();
+
+        error_log("[enviar-post] 🔔 Notificações em lote enviadas para membros da comunidade ID $comunidade_id (post_id = $post_id)");
+    
     }
 
     // ============================================================

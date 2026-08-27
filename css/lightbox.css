@@ -24,12 +24,12 @@
 /* 2. CONTEÚDO DO MODAL (card principal) */
 .lightbox-content {
     position: relative;
-    max-width:480px;
+    max-width: 550px;
     width: 100%;
     max-height: 70vh;
-    max-height: 80dvh;
-    background: rgba(20, 20, 30, 0.92);
-    border-radius: clamp(12px, 2.5cqw, 28px);
+    max-height: 75dvh;
+    background: rgba(25, 25, 38, 0.8);
+    border-radius: clamp(12px, 2.5cqw, 24px);
     border: 1px solid rgb(255 188 0 / 13%);;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
     padding: clamp(14px, 2cqw, 32px);
@@ -161,9 +161,11 @@
     flex: 1;
 }
 .lightbox-autor-data {
-    font-size: clamp(0.75rem, 3cqw, 1rem);
-    opacity: 0.65;
+    font-size: 0.7rem;
+    font-size: clamp(0.75rem, 2.5cqw, 1rem);
+    opacity: 0.7;
     color: #aaa;
+    color: oklch(0.738 0 0);
 }
 
 
@@ -424,22 +426,85 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     transform: scale(1.02);
 }
 
+
+/* LIGHTBOX DOS COMENTARIOS -  ( APENAS POST ) */
 .lightbox-apenas-post {
     background: #000000;
     -webkit-backdrop-filter: none;
     backdrop-filter: none ;
     border: none;
-
 }
+
+.lightbox-apenas-post .lightbox-post-header {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.lightbox-apenas-post .lightbox-autor {
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    line-height: 1.6;
+    flex: unset;
+}
+
+
+.lightbox-apenas-post .lightbox-fechar-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transition: 0.3s background ;
+}
+
 
 .lightbox-apenas-post .lightbox-content ,
 .lightbox-apenas-post .lightbox-post-body {
     background: #000000;
     border: none ;
     box-shadow: 0 0 8px rgba(0,0,0,0.9) ;
-    max-width: auto;
-    max-height: 90vh;
-    max-height: 90dvh;
+    max-width: 100%;
+    height: auto;
+}
+
+
+/*  Imagens individuai */
+.lightbox-apenas-post.lightbox-post-body img,
+.lightbox-apenas-post .lightbox-post-body img {
+    max-width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+    border-radius: clamp(8px, 2cqw, 20px);
+    display: block;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);   
+}
+
+body:not(.modo-swipe-ativo) .lightbox-apenas-post .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
+body.modo-swipe-ativo .lightbox-apenas-post .feed-anexos-grid:has(.feed-anexo-item:only-child) img
+ {
+    max-width: 85%;
+    max-height: 85vh;
+    max-height: 85dvh;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+}
+
+
+/*  Grid de anexos (reutiliza a classe do feed) */
+body:not(.modo-swipe-ativo) .lightbox-apenas-post .lightbox-post-body .feed-anexos-grid,
+body.modo-swipe-ativo .lightbox-apenas-post .lightbox-post-body .feed-anexos-grid {
+    max-width: 100%;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 400px));
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 

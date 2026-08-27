@@ -88,7 +88,7 @@ include 'includes/bolhas.php';
                     <li> Usem camisinha;</li>
                     <li> Não construam casa no terreno da sogra;</li>
                     <li> O barato às vezes sai muito caro;</li>
-                    <li> O diploma é o papel: o aprendizado, o trauma;</li>
+                    <li> O diploma é só o papel: o aprendizado, o trauma;</li>
                     <li> Faculdade é igual o Titanic: se for pra afundar, que seja de primeira classe e com música tocando;</li>
                     <li> Invistam em Bitcoin;</li>
                     <li> NÃO é NÃO;</li>
