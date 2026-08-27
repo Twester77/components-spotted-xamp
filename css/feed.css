@@ -761,8 +761,8 @@ span.category-tag {
 .avatar-p {
     border: 1px solid #ff9f0f;
     gap: 10px;
-    width: clamp(30px, 3vw, 48px);
-    height: clamp(30px, 3vw, 48px);
+    width: clamp(36px, 3vw, 60px);
+    height: clamp(36px, 3vw, 60px);
     border-radius: 50%;
     -moz-background-clip: padding-box;
     /* Firefox 3.6 and earlier */
