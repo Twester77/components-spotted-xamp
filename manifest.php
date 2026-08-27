@@ -1,4 +1,7 @@
 <?php
+// 🔥 GARANTE QUE NENHUM CARACTERE INVISÍVEL OU ESPAÇO SEJA ENVIADO ANTES
+ob_start();
+
 header('Content-Type: application/json');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');
@@ -44,4 +47,7 @@ $manifest = [
     'categories' => ['social', 'education']
 ];
 
+//  LIMPA O BUFFER E GARANTE QUE NADA MAIS SEJA ENVIADO
+ob_clean();
 echo json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+exit;
