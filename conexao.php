@@ -22,6 +22,14 @@ if (ob_get_level() == 0) ob_start();
 include_once __DIR__ . '/fenda_debug.php';
 fenda_log('🔵 [CONEXAO] INÍCIO conexao.php (Vercel/Local)');
 
+// 🔥 Polyfill para str_ends_with (caso PHP < 8.0)
+if (!function_exists('str_ends_with')) {
+    function str_ends_with($haystack, $needle) {
+        if ($needle === '') return true;
+        return substr($haystack, -strlen($needle)) === $needle;
+    }
+}
+
 // ============================================================
 // 🌍 DETERMINAÇÃO DO AMBIENTE (MAIS ROBUSTA)
 // ============================================================
@@ -29,12 +37,12 @@ $env_raw = getenv('ENVIRONMENT');
 $env = trim($env_raw ?: '');
 fenda_log('🔵 [CONEXAO] ENVIRONMENT (raw): "' . $env_raw . '" | (trim): "' . $env . '"');
 
-// Verifica se está em produção: ambiente explícito ou domínio não localhost
-$is_production = ($env === 'production') || 
-                 ($_SERVER['HTTP_HOST'] !== 'localhost' && $_SERVER['HTTP_HOST'] !== '127.0.0.1');
-fenda_log('🔵 [CONEXAO] is_production = ' . ($is_production ? 'true' : 'false'));
+// 🔥 CORREÇÃO DJÊ: domínio dinâmico para previews Vercel
+$current_host = $_SERVER['HTTP_HOST'] ?? '';
+$is_real_production = ($env === 'production') || str_ends_with($current_host, 'fendauniversity.com.br');
+fenda_log('🔵 [CONEXAO] is_real_production = ' . ($is_real_production ? 'true' : 'false') . ' | host: ' . $current_host);
 
-if ($is_production) {
+if ($is_real_production) {
     ini_set('display_errors', 0);
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 } else {
@@ -45,7 +53,7 @@ if ($is_production) {
 // ============================================================
 // 🔌 EXTRAÇÃO SEGURA DAS CONFIGURAÇÕES DO BANCO
 // ============================================================
-if ($is_production) {
+if ($is_real_production) {
     // Em produção na Vercel, o getenv busca direto do painel deles
     $host         = getenv('DB_HOST');
     $usuario      = getenv('DB_USER');
@@ -54,7 +62,7 @@ if ($is_production) {
     $porta        = (int)(getenv('DB_PORT') ?: 4000);
     $certPath     = __DIR__ . '/config/isrgrootx1.pem';
     $ssl_flag     = MYSQLI_CLIENT_SSL;
-    $cookieDomain = '.fendauniversity.com.br';
+    $cookieDomain = $is_real_production ? '.fendauniversity.com.br' : null;
     
     fenda_log('🔵 [CONEXAO] Modo PRODUÇÃO: host=' . $host . ', banco=' . $banco . ', porta=' . $porta);
 } else {
@@ -87,7 +95,7 @@ if (!$conn) {
 }
 fenda_log('🔵 [CONEXAO] mysqli_init() OK');
 
-if ($is_production) {
+if ($is_real_production) {
     if (file_exists($certPath)) {
         mysqli_ssl_set($conn, NULL, NULL, $certPath, NULL, NULL);
         mysqli_options($conn, MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, false);
@@ -149,14 +157,6 @@ if (!function_exists('fenda_decrypt_state')) {
 // ⏰ FUNÇÃO UNIVERSAL PARA EXIBIR DATAS NO FUSO BRASILEIRO
 // ============================================================
 if (!function_exists('exibirDataHoraBrasil')) {
-    /**
-     * Converte uma data do formato do banco (UTC) para o fuso de Brasília
-     * e a formata conforme solicitado.
-     * 
-     * @param string|null $dataOriginal Data original (ex: '2026-08-16 05:23:45')
-     * @param string $formato Formato de saída (padrão: 'd/m/Y H:i')
-     * @return string Data formatada no fuso Brasil, ou string vazia se $dataOriginal for nulo/vazio
-     */
     function exibirDataHoraBrasil($dataOriginal, $formato = 'd/m/Y H:i') {
         if (empty($dataOriginal)) {
             return '';
@@ -167,7 +167,6 @@ if (!function_exists('exibirDataHoraBrasil')) {
             return $dt->format($formato);
         } catch (Exception $e) {
             error_log("[EXIBIR_DATA] Erro ao converter data '$dataOriginal': " . $e->getMessage());
-            // Fallback: retorna a data original sem formatação
             return $dataOriginal;
         }
     }
@@ -175,26 +174,20 @@ if (!function_exists('exibirDataHoraBrasil')) {
 fenda_log('🔵 [CONEXAO] exibirDataHoraBrasil() definida');
 
 // ============================================================
-// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO (com validação de 30 dias via banco)
+// 🍪 GERENCIAMENTO E HIDRATAÇÃO DE SESSÃO
 // ============================================================
 fenda_log('🔵 [CONEXAO] Antes de session_status');
 
-// 🔥 Aumenta o tempo de vida da sessão para evitar expiração prematura do CSRF token
-ini_set('session.gc_maxlifetime', 86400); // 24 horas
+ini_set('session.gc_maxlifetime', 86400);
 
-// ============================================================
-// 🔥 CORREÇÃO CSRF – DOMÍNIO DA SESSÃO EM PRODUÇÃO
-// ============================================================
-if ($is_production) {
-    // Define o domínio do cookie de sessão para abranger subdomínios
+if ($is_real_production) {
     ini_set('session.cookie_domain', '.fendauniversity.com.br');
     fenda_log('🔵 [CONEXAO] session.cookie_domain definido como .fendauniversity.com.br');
 }
 
-// Inicia a sessão se não estiver ativa
 if (session_status() === PHP_SESSION_NONE) {
     fenda_log('🔵 [CONEXAO] Iniciando sessão');
-    if ($is_production) {
+    if ($is_real_production) {
         ini_set('session.cookie_httponly', 1);
         ini_set('session.use_strict_mode', 1);
         ini_set('session.cookie_secure', 1);
@@ -204,10 +197,7 @@ if (session_status() === PHP_SESSION_NONE) {
     fenda_log('🔵 [CONEXAO] Sessão iniciada');
 } else {
     fenda_log('🔵 [CONEXAO] Sessão já estava ativa');
-    
-    // Se a sessão já estava ativa e estamos em produção, forçamos a redefinição do cookie
-    // para garantir que o domínio correto seja usado
-    if ($is_production) {
+    if ($is_real_production) {
         $params = session_get_cookie_params();
         setcookie(session_name(), session_id(), [
             'expires' => $params['lifetime'] ? time() + $params['lifetime'] : 0,
@@ -221,74 +211,175 @@ if (session_status() === PHP_SESSION_NONE) {
     }
 }
 
-// 🔋 MÁGICA DO STATELESS: Recupera estado caso a instância Vercel tenha resetado
-if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
-    fenda_log('🔵 [CONEXAO] Cookie fenda_state_token encontrado. Tentando decriptar...');
+// ============================================================
+// 🔥 VALIDAÇÃO DO TOKEN EM TODAS AS REQUISIÇÕES
+// ============================================================
+// Esta verificação garante que, mesmo que a sessão PHP já esteja ativa,
+// o token ainda seja validado no banco. Se o token estiver inativo,
+// a sessão é destruída e o usuário é redirecionado para o login.
+if (!empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
     if ($decrypted_payload) {
         $user_data = json_decode($decrypted_payload, true);
         if (is_array($user_data) && !empty($user_data['id'])) {
-            fenda_log('🔵 [CONEXAO] Payload decriptado: user_id=' . $user_data['id']);
-            
-            // 🔥 QUERY UNIFICADA: Verifica existência, status E os 30 dias de inatividade de uma vez só!
-            $stmt = $conn->prepare("
-                SELECT id, nome, username, email 
-                FROM usuarios 
-                WHERE id = ? 
-                  AND ativo = 1 
-                  AND ultima_atividade >= DATE_SUB(NOW(), INTERVAL 30 DAY)
-            ");
-            $stmt->bind_param("i", $user_data['id']);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $usuario = $result->fetch_assoc();
-            $stmt->close();
-
-            if ($usuario) {
-                fenda_log('🟢 [CONEXAO] Usuário validado, restaurando sessão para ID: ' . $usuario['id']);
-                // Usuário passou em todas as validações → Restaura a sessão PHP
-                $_SESSION['usuario_id']       = $usuario['id'];
-                $_SESSION['usuario_nome']     = $usuario['nome'];
-                $_SESSION['usuario_username'] = $usuario['username'];
-                if (!empty($usuario['email'])) {
-                    $_SESSION['usuario_email'] = $usuario['email'];
+            $token_sessao = $user_data['token_sessao'] ?? $user_data['token'] ?? null;
+            if ($token_sessao) {
+                $stmt_check = $conn->prepare("SELECT ativo FROM sessoes_ativas WHERE usuario_id = ? AND token = ?");
+                $stmt_check->bind_param("is", $user_data['id'], $token_sessao);
+                $stmt_check->execute();
+                $res = $stmt_check->get_result();
+                $row = $res->fetch_assoc();
+                $stmt_check->close();
+                
+                if (!$row || $row['ativo'] != 1) {
+                    fenda_log('🔴 [VALIDACAO] Token INATIVO para usuário ' . $user_data['id'] . '. Destruindo sessão.');
+                    $_SESSION = [];
+                    session_destroy();
+                    setcookie('fenda_state_token', '', [
+                        'expires' => time() - 86400,
+                        'path' => '/',
+                        'domain' => $cookieDomain,
+                        'secure' => $is_real_production,
+                        'httponly' => true,
+                        'samesite' => 'Lax'
+                    ]);
+                    // Redireciona para o login com uma mensagem
+                    header("Location: index.php?erro=sessao_expirada");
+                    exit;
                 }
+            }
+        }
+    }
+}
 
-                // 🔄 RENOVA O COOKIE POR MAIS 30 DIAS
-                $new_expires_in = time() + (86400 * 30);
-                $new_cookie_payload = json_encode([
-                    'id'       => $usuario['id'],
-                    'nome'     => $usuario['nome'],
-                    'username' => $usuario['username'],
-                    'email'    => $usuario['email'] ?? '',
-                    'exp'      => $new_expires_in
-                ]);
-                $new_encrypted_payload = fenda_encrypt_state($new_cookie_payload);
+// ============================================================
+// 🔥 HIDRATAÇÃO COM VALIDAÇÃO DE SESSÃO ATIVA
+// ============================================================
+if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
+    fenda_log('🔵 [HYDRATION] Cookie fenda_state_token encontrado. Tentando decriptar...');
+    $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
+    
+    if ($decrypted_payload) {
+        $user_data = json_decode($decrypted_payload, true);
+        
+        // 🔥 FALLBACK: aceita tanto 'token_sessao' (padrão) quanto 'token' (legado)
+        if (is_array($user_data) && !empty($user_data['id'])) {
+            $token_sessao = $user_data['token_sessao'] ?? $user_data['token'] ?? null;
+            
+            if ($token_sessao) {
+                fenda_log('🔵 [HYDRATION] Payload decriptado: user_id=' . $user_data['id'] . ', token_sessao=' . substr($token_sessao, 0, 16) . '...');
+                
+                // 🔥 VERIFICA SE O TOKEN DA SESSÃO AINDA ESTÁ ATIVO NA TABELA
+                $stmt_check_token = $conn->prepare("
+                    SELECT id, ativo 
+                    FROM sessoes_ativas 
+                    WHERE usuario_id = ? AND token = ? AND ativo = 1
+                ");
+                $stmt_check_token->bind_param("is", $user_data['id'], $token_sessao);
+                $stmt_check_token->execute();
+                $res_token = $stmt_check_token->get_result();
+                $sessao_ativa = $res_token->fetch_assoc();
+                $stmt_check_token->close();
 
-                setcookie('fenda_state_token', $new_encrypted_payload, [
-                    'expires'  => $new_expires_in,
-                    'path'     => '/',
-                    'domain'   => $cookieDomain,
-                    'secure'   => $is_production,
-                    'httponly' => true,
-                    'samesite' => 'Lax'
-                ]);
+                if (!$sessao_ativa) {
+                    fenda_log('🔴 [HYDRATION] Token de sessão NÃO encontrado ou INATIVO. Removendo cookie.');
+                    setcookie('fenda_state_token', '', [
+                        'expires'  => time() - 86400,
+                        'path'     => '/',
+                        'domain'   => $cookieDomain,
+                        'secure'   => $is_real_production,
+                        'httponly' => true,
+                        'samesite' => 'Lax'
+                    ]);
+                    unset($_COOKIE['fenda_state_token']);
+                    // Remove qualquer sessão PHP residual
+                    $_SESSION = [];
+                    session_destroy();
+                    fenda_log('🔴 [HYDRATION] Sessão destruída por token inativo.');
+                    // Não prossegue — o usuário será redirecionado para o login pela falta de sessão
+                } else {
+                    // Token ativo, prossegue com a hidratação
+                    fenda_log('🟢 [HYDRATION] Token de sessão ATIVO na tabela. Prosseguindo...');
+                    
+                    // Busca dados do usuário no banco
+                    $stmt = $conn->prepare("
+                        SELECT id, nome, username, email 
+                        FROM usuarios 
+                        WHERE id = ? AND ativo = 1 AND ultima_atividade >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                    ");
+                    $stmt->bind_param("i", $user_data['id']);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $usuario = $result->fetch_assoc();
+                    $stmt->close();
 
-                fenda_log('🟢 [HYDRATION] Sessão recuperada e cookie rolante renovado para ID: ' . $usuario['id']);
+                    if ($usuario) {
+                        fenda_log('🟢 [HYDRATION] Usuário validado, restaurando sessão para ID: ' . $usuario['id']);
+                        $_SESSION['usuario_id']       = $usuario['id'];
+                        $_SESSION['usuario_nome']     = $usuario['nome'];
+                        $_SESSION['usuario_username'] = $usuario['username'];
+                        if (!empty($usuario['email'])) {
+                            $_SESSION['usuario_email'] = $usuario['email'];
+                        }
+
+                        // 🔥 DJÊ: SÓ RENOVA O COOKIE SE FOR PERSISTENTE
+                        if (isset($user_data['persistente']) && $user_data['persistente'] === true) {
+                            fenda_log('🟢 [HYDRATION] Cookie persistente ativo. Renovando token rolante...');
+                            $new_expires_in = time() + (86400 * 30);
+                            $new_cookie_payload = json_encode([
+                                'id'           => $usuario['id'],
+                                'nome'         => $usuario['nome'],
+                                'username'     => $usuario['username'],
+                                'email'        => $usuario['email'] ?? '',
+                                'persistente'  => true,
+                                'token_sessao' => $token_sessao,
+                                'exp'          => $new_expires_in
+                            ]);
+                            $new_encrypted_payload = fenda_encrypt_state($new_cookie_payload);
+
+                            setcookie('fenda_state_token', $new_encrypted_payload, [
+                                'expires'  => $new_expires_in,
+                                'path'     => '/',
+                                'domain'   => $cookieDomain,
+                                'secure'   => $is_real_production,
+                                'httponly' => true,
+                                'samesite' => 'Lax'
+                            ]);
+
+                            fenda_log('🟢 [HYDRATION] Cookie rolante renovado para ID: ' . $usuario['id']);
+                        } else {
+                            fenda_log('🟡 [HYDRATION] Cookie NÃO persistente. Mantendo sem renovação.');
+                        }
+                        
+                        // 🔥 ATUALIZA A ÚLTIMA ATIVIDADE DA SESSÃO NA TABELA
+                        $stmt_update_sessao = $conn->prepare("
+                            UPDATE sessoes_ativas 
+                            SET ultima_atividade = NOW() 
+                            WHERE token = ? AND usuario_id = ?
+                        ");
+                        $stmt_update_sessao->bind_param("si", $token_sessao, $usuario['id']);
+                        $stmt_update_sessao->execute();
+                        $stmt_update_sessao->close();
+                        fenda_log('🟢 [HYDRATION] ultima_atividade atualizada para sessão ' . substr($token_sessao, 0, 16) . '...');
+                        
+                    } else {
+                        fenda_log('🔴 [HYDRATION] Usuário não encontrado ou inativo. Removendo cookie.');
+                        setcookie('fenda_state_token', '', [
+                            'expires'  => time() - 86400,
+                            'path'     => '/',
+                            'domain'   => $cookieDomain,
+                            'secure'   => $is_real_production,
+                            'httponly' => true,
+                            'samesite' => 'Lax'
+                        ]);
+                        unset($_COOKIE['fenda_state_token']);
+                    }
+                }
             } else {
-                fenda_log('🔴 [HYDRATION] Token inválido, conta inativa ou expirada por tempo. Removendo cookie.');
-                setcookie('fenda_state_token', '', [
-                    'expires'  => time() - 86400,
-                    'path'     => '/',
-                    'domain'   => $cookieDomain,
-                    'secure'   => $is_production,
-                    'httponly' => true,
-                    'samesite' => 'Lax'
-                ]);
-                unset($_COOKIE['fenda_state_token']);
+                fenda_log('🔴 [HYDRATION] Token não encontrado no payload (nem token_sessao nem token)');
             }
         } else {
-            fenda_log('🔴 [HYDRATION] Payload inválido (não contém id)');
+            fenda_log('🔴 [HYDRATION] Payload inválido (faltando id)');
         }
     } else {
         fenda_log('🔴 [HYDRATION] Falha ao decriptar cookie');
@@ -301,11 +392,31 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     }
 }
 
-// Atualiza última atividade do usuário (se logado)
+// ============================================================
+// 🔥 DJÊ: THROTTLE PARA ATUALIZAÇÃO DE ultima_atividade (5 minutos)
+// ============================================================
 if (!empty($_SESSION['usuario_id'])) {
     $id_logado = mysqli_real_escape_string($conn, $_SESSION['usuario_id']);
-    mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
-    fenda_log('🔵 [CONEXAO] Atualizada ultima_atividade para usuário ' . $_SESSION['usuario_id']);
+    
+    $stmt_last = $conn->prepare("SELECT ultima_atividade FROM usuarios WHERE id = ?");
+    $stmt_last->bind_param("i", $id_logado);
+    $stmt_last->execute();
+    $res_last = $stmt_last->get_result();
+    $row_last = $res_last->fetch_assoc();
+    $stmt_last->close();
+    
+    if ($row_last) {
+        $ultima = strtotime($row_last['ultima_atividade']);
+        $agora = time();
+        $diferenca = $agora - $ultima;
+        
+        if ($diferenca > 300) {
+            mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
+            fenda_log('🔵 [CONEXAO] Atualizada ultima_atividade para usuário ' . $_SESSION['usuario_id'] . ' (throttle de 5min)');
+        } else {
+            fenda_log('🔵 [CONEXAO] ultima_atividade ainda recente ('. $diferenca . 's), pulando update.');
+        }
+    }
 }
 
 // ============================================================
@@ -333,4 +444,3 @@ if (!defined('TURNSTILE_SECRET_KEY')) {
 }
 
 fenda_log('🟢 [CONEXAO] FIM conexao.php executado com sucesso');
-?>

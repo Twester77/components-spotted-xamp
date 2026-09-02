@@ -50,8 +50,8 @@ include 'includes/bolhas.php';
     <?php endif; ?>
 
     <article class="conteudo-principal" aria-labelledby="titulo-achados-perdidos">
-        <h2 id="titulo-achados-perdidos" style="font-family: 'Bebas Neue', sans-serif; font-size: 2rem; text-align: center; color: #fc900c; letter-spacing: 2px; margin-bottom: 10px; margin-top: 30px;">
-            Perdidos porém Achados
+        <h2 id="titulo-achados-perdidos" style="font-family: 'Bebas Neue', sans-serif; font-size: 2rem; font-size: clamp(1.7rem, 4vw, 2.2rem); text-align: center; color: #fc900c; color: oklch(0.7533 0.1736 60.5); letter-spacing: 2px; margin-bottom: 10px; margin-top: 25px;">
+            Perdidos porém achados
         </h2>
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">
             <picture style="width: 100%; max-width: 800px">
@@ -59,10 +59,10 @@ include 'includes/bolhas.php';
                 <source srcset="imagensfoto/capa-achados-e-perdidos.webp" type="image/webp">
                 <img src="imagensfoto/capa-achados-e-perdidos.jpg"
                     alt="Ilustração de um mural de achados e perdidos com chaves, óculos e objetos esquecidos"
-                    style="width: 100%; max-width: 800px; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.5);"
+                    style="width: 100%; max-width: 800px; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5);"
                     loading="lazy">
             </picture>
-            <div style="font-size: clamp(14px, 2vw, 18px); font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 30px;">
+            <div style="font-size: 14px; font-size: clamp(14px, 2vw, 18px); font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 25px;">
                 <blockquote> Perdeu o juízo? Disso a gente não cuida. Mas se perdeu a chave ou a garrafinha, você está no lugar certo!</blockquote>
             </div>
         </div>

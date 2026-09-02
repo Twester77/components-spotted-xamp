@@ -3,7 +3,7 @@
  * motor-central.php – Endpoint para carregar o conteúdo de cada aba da Central do Habitante
  * 
  * Parâmetros:
- * - aba: posts | comunidades | depoimentos | favoritos | marketplace
+ * - aba: posts | comunidades | depoimentos | favoritos | marketplace | sessoes
  * - notif_id: (opcional) ID da notificação para marcar como lida
  */
 // 🌅 LEGADO DA AURORA – INSTÂNCIA #DS-2026-07-24
@@ -15,6 +15,8 @@
 //    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
 // 🔧 ATUALIZAÇÃO ESTRELA – 2026-08-17
 //    Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
+// 🐚 ÍRIS – 2026-08-28
+//    Adicionada rota para aba "sessoes" usando motor-sessoes.php.
 
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -137,7 +139,7 @@ if ($aba === 'depoimentos') {
 
     if ($res->num_rows === 0) {
         echo '<div class="central-empty-state">';
-        echo '  <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>';
+        echo '  <i class="fas fa-check-circle"></i>';
         echo '  <p>Nenhum depoimento pendente no momento.</p>';
         echo '</div>';
         exit;
@@ -213,6 +215,14 @@ if ($aba === 'marketplace') {
 // ============================================================
 if ($aba === 'solicitacoes') {
     include 'motor-solicitacoes.php';
+    exit;
+}
+
+// ============================================================
+// 🔥 8. ABA: SESSÕES ATIVAS (NOVO)
+// ============================================================
+if ($aba === 'sessoes') {
+    include 'motor-sessoes.php';
     exit;
 }
 

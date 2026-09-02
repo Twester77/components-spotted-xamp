@@ -208,11 +208,11 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     transition: 0.3s ease;
 }
 
-@supports (backdrop-filter: blur(6px)) {
+@supports (backdrop-filter: blur(3px)) {
     body:not(.modo-swipe-ativo) .spotted-card:hover {
-        background: rgba(0, 0, 0, 0.534);
-        -webkit-backdrop-filter: blur(4px);
-        backdrop-filter: blur(4px);
+        background: rgba(0, 0, 0, 0.45);
+        -webkit-backdrop-filter: blur(3px);
+        backdrop-filter: blur(3px);
         border-color: rgba(255, 255, 255, 0.144);
         transform: translateY(-8px);
         transition: 0.3s ease;
@@ -225,7 +225,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 25px 0;
+    padding: 20px 0;
     margin-bottom: 20px;
 }
 
@@ -624,13 +624,12 @@ span.category-tag {
     background: #252542;
     padding: 6px 10px;
     border-radius: 20px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
     z-index: 9999 !important;
     border: 1px solid rgba(255, 255, 255, 0.1);
     white-space: nowrap;
     /* A MÁGICA: Escondemos assim */
     opacity: 0;
-    transform: translateX(-30%) scale(1);
     transition: all 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -760,9 +759,8 @@ span.category-tag {
 
 .avatar-p {
     border: 1px solid #ff9f0f;
-    gap: 10px;
-    width: clamp(36px, 3vw, 60px);
-    height: clamp(36px, 3vw, 60px);
+    width: clamp(36px, 3cqw, 60px);
+    height: clamp(36px, 3cqw, 60px);
     border-radius: 50%;
     -moz-background-clip: padding-box;
     /* Firefox 3.6 and earlier */
@@ -778,7 +776,8 @@ span.category-tag {
 
 .user-info-post {
     display: flex;
-    font-size: clamp(0.85rem, 1.5vw, 1.3rem);
+    gap: 10px;
+    font-size: clamp(0.85rem, 1.5vw, 1.2rem);
     margin-bottom: auto;
     font-weight: bold;
     align-items: flex-start;
@@ -794,7 +793,7 @@ span.category-tag {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-size: clamp(0.75rem, 1.3vw, 1.05rem);
     width: fit-content;
 }

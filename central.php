@@ -13,6 +13,9 @@
 //  do usuário na sidebar da Central."
 // - Ondina
 
+// 🐚 ÍRIS – 2026-08-28
+// "Adicionada aba 'Sessões' para gerenciar sessões ativas e encerramento remoto."
+
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
@@ -82,10 +85,14 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
             <button class="aba-central" data-aba="notificacoes" data-url="motor-central.php?aba=notificacoes">
                 <i class="fas fa-bell"></i> Notificações
             </button>
-            <!-- 🔥 NOVA ABA: SOLICITAÇÕES -->
+            <!-- 🔥 ABA: SOLICITAÇÕES -->
             <button class="aba-central" data-aba="solicitacoes" data-url="motor-central.php?aba=solicitacoes">
                 <i class="fas fa-door-open"></i> Solicitações
                 <span class="badge-solicitacoes" id="badge-solicitacoes" style="display:none; background:#ffbc00; padding:1px 6px; margin-left:4px;">0</span>
+            </button>
+            <!-- 🔥 NOVA ABA: SESSÕES ATIVAS -->
+            <button class="aba-central" data-aba="sessoes" data-url="motor-central.php?aba=sessoes">
+                <i class="fas fa-laptop"></i> Sessões
             </button>
             <button class="aba-central" data-aba="favoritos" data-url="motor-central.php?aba=favoritos">
                 <i class="fas fa-star"></i> Favoritos
@@ -144,7 +151,7 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
             // 🔥 CAPTURA O notif_id DA URL DA PÁGINA
             const urlParams = new URLSearchParams(window.location.search);
             const notifId = urlParams.get('notif_id');
-            
+
             // 🔥 SE TIVER notif_id, ADICIONA NA URL DO AJAX
             let finalUrl = url;
             if (notifId) {
@@ -180,8 +187,22 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                         setTimeout(atualizarContadorSolicitacoes, 200);
                     }
 
+                    // 🔥 SE FOR A ABA SESSÕES, INICIALIZA O DELEGADOR
+                    if (abaId === 'sessoes') {
+                        // Aguarda um pequeno delay para o DOM ser atualizado
+                        setTimeout(function() {
+                            if (typeof window.initSessoesActions === 'function') {
+                                window.initSessoesActions();
+                            } else {
+                                console.warn('[SESSOES] initSessoesActions não encontrada. O script motor-sessoes.js pode não ter carregado.');
+                            }
+                        }, 200);
+                    }
+
                     document.dispatchEvent(new CustomEvent('abaCarregada', {
-                        detail: { aba: abaId }
+                        detail: {
+                            aba: abaId
+                        }
                     }));
                 })
                 .catch(err => {
@@ -302,42 +323,44 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                 btnAprovar.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
                 fetch('aprovar-entrada.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `comunidade_id=${comunidadeId}&usuario_id=${usuarioId}&csrf_token=${encodeURIComponent(csrfToken)}`
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        if (item) {
-                            item.style.transition = 'opacity 0.3s, transform 0.3s';
-                            item.style.opacity = '0';
-                            item.style.transform = 'scale(0.95)';
-                            setTimeout(() => {
-                                item.remove();
-                                atualizarContadorSolicitacoes();
-                                const lista = document.querySelector('.solicitacoes-central-lista');
-                                if (lista && lista.children.length === 0) {
-                                    lista.innerHTML = `<div class="central-empty-state" style="text-align:center; padding:40px 20px;">
-                                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `comunidade_id=${comunidadeId}&usuario_id=${usuarioId}&csrf_token=${encodeURIComponent(csrfToken)}`
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (item) {
+                                item.style.transition = 'opacity 0.3s, transform 0.3s';
+                                item.style.opacity = '0';
+                                item.style.transform = 'scale(0.95)';
+                                setTimeout(() => {
+                                    item.remove();
+                                    atualizarContadorSolicitacoes();
+                                    const lista = document.querySelector('.solicitacoes-central-lista');
+                                    if (lista && lista.children.length === 0) {
+                                        lista.innerHTML = `<div class="central-empty-state" style="text-align:center;">
+                                        <i class="fas fa-check-circle"></i>
                                         <p style="color: #aaa;">Nenhuma solicitação de entrada pendente no momento.</p>
                                     </div>`;
-                                }
-                            }, 300);
+                                    }
+                                }, 300);
+                            }
+                            if (typeof exibirToast === 'function') exibirToast('✅ Solicitação aprovada!', 'sucesso');
+                        } else {
+                            alert(data.message || 'Erro ao aprovar.');
+                            btnAprovar.disabled = false;
+                            btnAprovar.innerHTML = '✅ Aprovar';
                         }
-                        if (typeof exibirToast === 'function') exibirToast('✅ Solicitação aprovada!', 'sucesso');
-                    } else {
-                        alert(data.message || 'Erro ao aprovar.');
+                    })
+                    .catch(err => {
+                        console.error('[APROVAR] Erro:', err);
+                        alert('Erro de conexão.');
                         btnAprovar.disabled = false;
                         btnAprovar.innerHTML = '✅ Aprovar';
-                    }
-                })
-                .catch(err => {
-                    console.error('[APROVAR] Erro:', err);
-                    alert('Erro de conexão.');
-                    btnAprovar.disabled = false;
-                    btnAprovar.innerHTML = '✅ Aprovar';
-                });
+                    });
             }
 
             if (btnRejeitar) {
@@ -353,42 +376,44 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                 btnRejeitar.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
                 fetch('rejeitar-entrada.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `comunidade_id=${comunidadeId}&usuario_id=${usuarioId}&csrf_token=${encodeURIComponent(csrfToken)}`
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        if (item) {
-                            item.style.transition = 'opacity 0.3s, transform 0.3s';
-                            item.style.opacity = '0';
-                            item.style.transform = 'scale(0.95)';
-                            setTimeout(() => {
-                                item.remove();
-                                atualizarContadorSolicitacoes();
-                                const lista = document.querySelector('.solicitacoes-central-lista');
-                                if (lista && lista.children.length === 0) {
-                                    lista.innerHTML = `<div class="central-empty-state" style="text-align:center; padding:40px 20px;">
-                                        <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `comunidade_id=${comunidadeId}&usuario_id=${usuarioId}&csrf_token=${encodeURIComponent(csrfToken)}`
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (item) {
+                                item.style.transition = 'opacity 0.3s, transform 0.3s';
+                                item.style.opacity = '0';
+                                item.style.transform = 'scale(0.95)';
+                                setTimeout(() => {
+                                    item.remove();
+                                    atualizarContadorSolicitacoes();
+                                    const lista = document.querySelector('.solicitacoes-central-lista');
+                                    if (lista && lista.children.length === 0) {
+                                        lista.innerHTML = `<div class="central-empty-state" style="text-align:center;">
+                                        <i class="fas fa-check-circle"></i>
                                         <p style="color: #aaa;">Nenhuma solicitação de entrada pendente no momento.</p>
                                     </div>`;
-                                }
-                            }, 300);
+                                    }
+                                }, 300);
+                            }
+                            if (typeof exibirToast === 'function') exibirToast('❌ Solicitação rejeitada.', 'info');
+                        } else {
+                            alert(data.message || 'Erro ao rejeitar.');
+                            btnRejeitar.disabled = false;
+                            btnRejeitar.innerHTML = '✕ Rejeitar';
                         }
-                        if (typeof exibirToast === 'function') exibirToast('❌ Solicitação rejeitada.', 'info');
-                    } else {
-                        alert(data.message || 'Erro ao rejeitar.');
+                    })
+                    .catch(err => {
+                        console.error('[REJEITAR] Erro:', err);
+                        alert('Erro de conexão.');
                         btnRejeitar.disabled = false;
                         btnRejeitar.innerHTML = '✕ Rejeitar';
-                    }
-                })
-                .catch(err => {
-                    console.error('[REJEITAR] Erro:', err);
-                    alert('Erro de conexão.');
-                    btnRejeitar.disabled = false;
-                    btnRejeitar.innerHTML = '✕ Rejeitar';
-                });
+                    });
             }
         });
 

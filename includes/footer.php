@@ -190,6 +190,8 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
     })();
 </script>
 
+<script src="<?= asset_versao('js/motor-sessoes.js') ?>"></script>
+
 </body>
 
 </html>

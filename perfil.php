@@ -214,7 +214,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="checkbox" name="pref_badge" value="1" <?php echo (isset($dados['pref_badge']) && $dados['pref_badge'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
-                <small>Exibe o número de notificações no ícone do app (desktop/Android)</small>
+                <small>Exibe o número de notificações no ícone do app (desktop/Android, em breve)</small>
             </div>
 
             <!-- Notificações da Comunidade -->
@@ -238,7 +238,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                         <?php echo (isset($dados['pref_swipe_balanga']) && $dados['pref_swipe_balanga'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
-                <small>Ative o modo de arraste (Tinder-style) para os eventos do Balanga Teras</small>
+                <small>Ative o modo Pilha para os eventos do Balanga Teras (Estilo Tinder)</small>
             </div>
 
             <!-- Modo Swipe Feed -->
@@ -248,7 +248,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
-                <small>Isso mudará seu feed para o modo Pilha (Estilo APP)</small>
+                <small>Isso mudará seu feed para o modo Pilha (Estilo Tinder)</small>
             </div>
 
             <div class="campo-grupo">

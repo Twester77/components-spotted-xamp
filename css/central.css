@@ -161,19 +161,21 @@
    CONTEÚDO PRINCIPAL (ÁREA DE CADA ABA)
    ---------------------------------------------------------------- */
 .central-conteudo {
+    display: flex;
+    flex-direction: column;
     background: #9e9e9e3d;
     background: oklch(0.7 0 0 / 0.24);
     border: 2px solid oklch(0.91 0 0 / 0.15);
     /* ✨ Impede que a cor de fundo invada a área da borda transparente */
     background-clip: padding-box;
-
+    container-type: inline-size;
     border-radius: 20px;
     padding: 20px;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     flex: 1;
     margin: 20px auto;
-    min-height: 200px;
+    min-height: 250px;
     width: 100%;
     overflow-y: auto !important;
     max-height: calc(100vh - 100px);
@@ -187,12 +189,12 @@
     /* controlado pelo JS */
     text-align: center;
     padding: 40px;
-    padding: clamp(30px, 20vw, 60px);
+    padding: clamp(30px, 20cqw, 60px);
 }
 
 #central-loading i {
     font-size: 2rem;
-    font-size: clamp(2rem, 15vw, 3.5rem);
+    font-size: clamp(2rem, 15cqw, 4rem);
     color: #ffbc00;
     animation: spin 1s linear infinite;
 }
@@ -232,6 +234,7 @@
     scroll-snap-type: y mandatory;
     overflow-y: auto;
     max-height: 70vh;
+    max-height: 70dvh;
     padding-right: 4px;
     scrollbar-width: thin;
     scrollbar-color: #ffbc00;
@@ -259,14 +262,14 @@
 
 .central-conteudo .spotted-card {
     word-wrap: break-word;
-    max-width: 500px;
+    max-width: 400px;
     scroll-snap-align: start;
     scroll-margin-top: 20px;
     border-radius: 10px;
     padding: 10px;
     position: relative;
     background: oklch(0.24 0 0 / 1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     break-inside: avoid;
     margin-bottom: 30px;
     margin-left: auto;
@@ -315,7 +318,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
+    border-radius: 6px;
     border-radius: clamp(8px, 1.2vw, 14px);
+    margin: 6px 0 ;
     margin: clamp(6px, 1vw, 12px) 0;
     background: #0a0a0a;
     background: oklch(5% 0 0);
@@ -332,7 +337,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     aspect-ratio: auto;
     min-height: 120px;
     min-height: clamp(100px, 25vh, 180px);
-    max-height: 250px;
+    max-height: 300px;
     background: #0a0a0a;
     display: flex;
     align-items: center;
@@ -999,7 +1004,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .central-empty-state {
     text-align: center;
-    padding: clamp(30px, 5vw, 60px) 10px;
+    padding: 20px 10px;
+    padding: clamp(20px, 4vw, 50px) clamp(10px, 2vw, 30px);
+
 }
 
 .central-empty-state i {
@@ -1009,7 +1016,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .central-empty-state p {
-    font-size: clamp(1rem, 1.2vw, 1.2rem);
+    font-size: clamp(0.9rem, 1.2vw, 1.2rem);
     color: #a5a5a5;
     color: oklch(0.68 0 0);
 }
@@ -1026,6 +1033,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     display: flex;
     flex-direction: column;
     grid-area: 8px;
+    gap: 10px;
     gap: clamp(8px, 1.5vw, 16px);
 }
 
@@ -1171,25 +1179,6 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     font-weight: 700;
 }
 
-/* Estado vazio */
-.central-empty-state {
-    text-align: center;
-    padding: clamp(20px, 4vw, 50px) clamp(10px, 2vw, 30px);
-}
-
-.central-empty-state i {
-    font-size: 2rem;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    color: #4caf50;
-    margin-bottom: clamp(8px, 1.5vw, 18px);
-}
-
-.central-empty-state p {
-    color: #aaa;
-    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-}
-
-
 
 /* ================================================================
    FALLBACKS PARA NAVEGADORES ANTIGOS
@@ -1237,7 +1226,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     }
 
     .central-empty-state p {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 }
 
@@ -1298,7 +1287,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
     .central-conteudo {
         padding: 20px;
-        max-height: calc(80vh - 60px);
+        max-height: calc(80vh - 50px);
     }
 
     .central-comunidades-grid {

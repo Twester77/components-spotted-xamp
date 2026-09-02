@@ -403,7 +403,7 @@
     width: 100%;
     position: relative; /* Necessário para o posicionamento dos comentários */
     overflow-x: hidden;
-    margin: 0 auto;
+    margin: 20px auto;
     gap: 10px;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -477,7 +477,7 @@
     
     margin-bottom: 20px;
     scroll-snap-align: start;
-    scroll-margin-top: 60px;
+    scroll-margin-top: 20px;
     overflow: visible;
     will-change: transform;
 }
@@ -812,6 +812,7 @@
     background: transparent !important;
     border: none;
     color: #fff;
+    color: oklch(0.97 0 0.9);
     font-family: inherit;
     resize: vertical;
     min-height: 45px;
@@ -1376,10 +1377,11 @@ body.pagina-post .header-principal {
     max-width: 90%;
     max-width: 350px;
     margin: auto;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     position: fixed;
     top: 50%;
     left: 50%;
+    transform: translate3d(-50%, -50%, 0px);
     transform: translate(-50%, -50%);
 }
 
@@ -1710,15 +1712,44 @@ body.pagina-post .header-principal {
     background: rgba(0, 0, 0, 0.3);
 }
 
-
 .btn-fechar-erro {
-padding: 6px 10px;
-font-size: 0.9rem;
-font-size: clamp(0.85rem, 1.5vw, 1.05rem);
-text-decoration: none;
-background: #ff8a8a;
-color: #ff4757;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-size: clamp(0.85rem, 1.5vw, 1.2rem);
+  border: none;
+  box-shadow: none;
+  text-decoration: none;
+  outline: none;
+  appearance: none;
+  cursor: pointer; 
+  /* Cores padrão */
+  background: oklch(0.7615 0.1421 20.94);
+  color: oklch(0.6689 0.2189 20.91);
+  border-radius: 10px;
+  margin: 5px auto;
+  display: block; /* Garante que o margin auto centralize o botão */
+
+  transition: all 0.2s ease-in-out;
 }
+
+/* Efeito ao passar o mouse */
+.btn-fechar-erro:hover {
+  background: oklch(0.72 0.16 20.94); 
+  color: oklch(0.55 0.25 20.91);     
+  transform: translateY(-2px);         
+  
+  /* Uma sombra suave moderna que combina com o movimento de subida */
+  box-shadow: 0 4px 10px oklch(0.7615 0.1421 20.94 / 0.4); 
+}
+
+/* Efeito ao CLICAR no botão (Sensação de clique real) */
+.btn-fechar-erro:active {
+  transform: translateY(1px); 
+  box-shadow: 0 2px 4px oklch(0.7615 0.1421 20.94 / 0.2); 
+}
+
+
+
 
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
 .comentario-item.comentario-selecionado {

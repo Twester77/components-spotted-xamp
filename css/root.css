@@ -18,8 +18,9 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 * {
-    tap-highlight-color: transparent;         /* Padrão futuro / Outros navegadores */
     -webkit-tap-highlight-color: transparent; /* Chrome, Safari, Opera, Edge, iOS */
+    tap-highlight-color: transparent;         /* Padrão futuro / Outros navegadores */
+
 }
 
 
@@ -34,7 +35,7 @@ html, body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont , Segoe UI, Tahoma, Verdana, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;   
-    max-width: 100vw !important;
+    max-width: 100vw ;
     max-width: 100cqw;
     position: relative;
     width: 100%;

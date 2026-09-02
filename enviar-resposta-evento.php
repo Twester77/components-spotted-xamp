@@ -86,7 +86,7 @@ if ($evento['comunidade_id'] > 0) {
 
     if (!$membro || $membro['status'] !== 'ativo') {
         http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Você não tem permissão para responder a este evento (banido da comunidade).']);
+        echo json_encode(['success' => false, 'message' => 'Você não tem permissão para responder a este evento porque foi banido da comunidade.']);
         exit;
     }
 }

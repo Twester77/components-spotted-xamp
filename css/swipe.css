@@ -190,7 +190,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
 }
 
 
-
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
     .feed-empilhado .spotted-card {
         /* 1. O navegador antigo lê esse e aplica */

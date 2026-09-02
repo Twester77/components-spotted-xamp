@@ -8,10 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
     
     fenda_log('🔵 POST recebido para login: ' . $_POST['email']);
     
-    $email = $_POST['email']; // sem escape, o bind_param cuida
-    $senha = $_POST['senha']; 
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
 
-    // 🔥 PREPARED STATEMENT
     $sql = "SELECT * FROM usuarios WHERE email = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -29,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
         fenda_log('🔵 Usuário encontrado: ID ' . $usuario['id']);
         
         if ($usuario['ativo'] == 0) {
-            fenda_log('🔴 REDIRECIONANDO para index.php?erro=pendente (conta inativa)');
+            fenda_log('🔴 REDIRECIONANDO para index.php?erro=pendente');
             header("Location: index.php?erro=pendente");
             exit();
         }
@@ -38,40 +37,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario_nome'] = $usuario['nome'];
             $_SESSION['usuario_username'] = $usuario['username'];
+
+            // ============================================================
+            // 🔥 NOVO: Gera token único para esta sessão
+            // ============================================================
+            $token_sessao = bin2hex(random_bytes(32)); // 64 caracteres hex
+            $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+
+            // Insere na tabela sessoes_ativas
+            $stmt_insert = $conn->prepare("INSERT INTO sessoes_ativas (usuario_id, token, user_agent, ip) VALUES (?, ?, ?, ?)");
+            $stmt_insert->bind_param("isss", $usuario['id'], $token_sessao, $user_agent, $ip);
+            if (!$stmt_insert->execute()) {
+                fenda_log('🔴 Erro ao inserir sessão ativa: ' . $stmt_insert->error);
+                // Não impede o login, mas registra o erro
+            }
+            $stmt_insert->close();
+
+            // ============================================================
+            // 🔥 "Manter-me conectado" – lógica condicional
+            // ============================================================
+            $manter = isset($_POST['manter_conectado']) && $_POST['manter_conectado'] == 1;
+            $expires_in = $manter ? time() + (86400 * 30) : 0;
             
-            // 🛡️ GERAÇÃO DO TOKEN DE ESTADO PERSISTENTE (30 DIAS) COM EXPIRAÇÃO INTERNA
-            $expires_in = time() + (86400 * 30);
+            // 🔥 CORRIGIDO: campo 'token' → 'token_sessao' para alinhar com auth-bridge.php e conexao.php
             $cookie_payload = json_encode([
                 'id' => $usuario['id'],
                 'nome' => $usuario['nome'],
                 'username' => $usuario['username'],
+                'token_sessao' => $token_sessao, // 🔥 agora usa token_sessao
+                'persistente' => $manter,
                 'exp' => $expires_in
             ]);
             
             $encrypted_payload = fenda_encrypt_state($cookie_payload);
             
-            $cookieDomain = $is_production ? '.fendauniversity.com.br' : null;
+            $current_host = $_SERVER['HTTP_HOST'] ?? '';
+            $is_real_production = ($is_production ?? false) || str_ends_with($current_host, 'fendauniversity.com.br');
+            $cookieDomain = $is_real_production ? '.fendauniversity.com.br' : null;
             
             setcookie('fenda_state_token', $encrypted_payload, [
-                'expires' => $expires_in,
+                'expires' => $expires_in ?: 0,
                 'path' => '/',
                 'domain' => $cookieDomain,
-                'secure' => $is_production,
+                'secure' => $is_real_production,
                 'httponly' => true,
                 'samesite' => 'Lax'
             ]);
-            fenda_log('🔵 Token de estado persistente injetado via Cookie para ID: ' . $usuario['id'] . ' (expira em 30 dias)');
             
-            fenda_log('🔴 REDIRECIONANDO para feed.php (login bem-sucedido)');
+            fenda_log('🟢 Login bem-sucedido para ID ' . $usuario['id'] . ' (token: ' . substr($token_sessao, 0, 8) . '...)');
+            
             header("Location: feed.php");
             exit();
         } else {
-            fenda_log('🔴 REDIRECIONANDO para index.php?erro=senha (senha incorreta)');
+            fenda_log('🔴 REDIRECIONANDO para index.php?erro=senha');
             header("Location: index.php?erro=senha");
             exit();
         }
     } else {
-        fenda_log('🔴 REDIRECIONANDO para index.php?erro=usuario (e-mail não encontrado)');
+        fenda_log('🔴 REDIRECIONANDO para index.php?erro=usuario');
         header("Location: index.php?erro=usuario");
         exit();
     }
@@ -80,4 +104,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
     header("Location: index.php");
     exit();
 }
-?>

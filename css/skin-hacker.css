@@ -65,17 +65,17 @@ body.hacker-mode *::after {
 
 /* Scanlines horizontais */
 body.hacker-mode::before {
-    content: " " !important;
+    content: " " ;
     display: block ;
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    right: 0 !important;
+    top: 0 ;
+    left: 0 ;
+    bottom: 0 ;
+    right: 0 ;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
                 linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)) ;
-    z-index: 9999 !important;
-    background-size: 100% 3px, 3px 100% ;
+    z-index: 9999 ;
+    background-size: 100% 2px, 1px 100% ;
     pointer-events: none !important;
 }
 
@@ -514,12 +514,12 @@ body.hacker-mode .fas,
 body.hacker-mode .spotted-card .user-info-post::after,
 body.hacker-mode .far,
 body.hacker-mode .fab {
-    color: #00ff00 !important;
-    text-shadow: 0 0 8px #00ff00 !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    display: inline-block !important;
-    animation: flicker 4s infinite ease-in  !important;
+    color: #00ff00 ;
+    text-shadow: 0 0 6px #00ff00 ;
+    opacity: 1 ;
+    visibility: visible ;
+    display: inline-block ;
+    animation: flicker 4s infinite ease-in  ;
 }
 
 /* No hover dos botões, ícones também invertem */
@@ -528,8 +528,8 @@ body.hacker-mode #toggle-chat-barra,
 body.hacker-mode .fenda-btn-glow:hover i,
 body.hacker-mode .nav-link:hover i,
 body.hacker-mode .menu li a:hover i {
-    color: #000 !important;
-    text-shadow: none !important;
+    color: #000 ;
+    text-shadow: none ;
 }
 
 /* ---------------------------------------------------------------
@@ -1007,7 +1007,6 @@ body.hacker-mode .article p {
     overflow: hidden ;
     white-space: normal ;
     display: block ;
-    width: auto ;
     animation: typing-global 4s steps(20, end) forwards ;
 
 }
@@ -1063,13 +1062,13 @@ body.hacker-mode i,
 body.hacker-mode .fa-solid, 
 body.hacker-mode .fa-regular,
 body.hacker-mode [class*="fa-"] {
-    display: inline-block !important;
-    visibility: visible !important;
+    display: inline-block ;
+    visibility: visible ;
     font-family: "Font Awesome 6 Free" ;
 }
 
 body.hacker-mode [class*="fa-"]::before:hover {
-    color: #000 !important;
+    color: #000 ;
 }
 
 /* ---------------------------------------------------------------
@@ -1199,7 +1198,11 @@ body.hacker-mode .char-counter {
    --------------------------------------------------------------- */
 .hacker-boot-screen {
     position: absolute;
-    top: 50%!important; left: 50%!important; transform: translate(-50%, -50%); width:100%; height: 100%;
+    top: 50%!important; 
+    left: 50%!important; 
+    transform: translate3d(-50%, -50%, 0px);
+    transform: translate(-50%, -50%); 
+    width:100%; height: 100%;
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     background: #000;

@@ -73,7 +73,6 @@ $stmt_com->close();
             <?php endforeach; ?>
         </select>
     </div>
-
     <!--  FILTROS POR STATUS (já existentes) -->
     <button type="button" id="bt-btn-filtros" class="bt-btn-filtro" onclick="btToggleFiltros()" aria-expanded="false">
         <i class="fas fa-filter" aria-hidden="true"></i> FILTRAR EVENTOS
@@ -514,7 +513,7 @@ $stmt_com->close();
                     from { opacity:0; transform:scale(0.95) translateY(10px); }
                     to { opacity:1; transform:scale(1) translateY(0); }
                 }
-                .bt-action-item:hover {
+                .bt-actions-item:hover {
                     background: rgba(255, 255, 255, 0.20);
                 }
                 .bt-action-item[data-acao="excluir"]:hover {
