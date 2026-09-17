@@ -90,7 +90,7 @@ $stmt_com->close();
 <main class="bt-main" id="bt-conteudo-principal">
     <div class="bt-feedback bt-feedback-direita" aria-hidden="true">✅ EU VOU!</div>
     <div class="bt-feedback bt-feedback-esquerda" aria-hidden="true">❌ NÃO VOU</div>
-    <div class="bt-feedback bt-feedback-cima" aria-hidden="true">🤔 TALVEZ EU VÁ</div>
+    <div class="bt-feedback bt-feedback-cima" aria-hidden="true">☝️ TALVEZ EU VÁ</div>
     <div class="bt-container" id="bt-container-eventos" role="feed" aria-busy="false" aria-live="polite"></div>
 </main>
 
@@ -375,6 +375,12 @@ $stmt_com->close();
 
         if (!eventoId) return;
         if (menuAberto) return;
+        // 🔥 DJÊ: força a parada do swipe antes de abrir o menu de ações.
+    // Sem isso, o card continua em isDragging=true e captura pointermove,
+    // causando o bug de "dragging + long press ao mesmo tempo".
+    if (typeof window.btForcarParada === 'function') {
+        window.btForcarParada();
+    }
 
         const vw = window.innerWidth;
         const popupWidth = Math.min(Math.max(160, vw * 0.5), 320);
@@ -390,8 +396,8 @@ $stmt_com->close();
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.4);
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
             z-index: 99998;
             display: flex;
             align-items: center;

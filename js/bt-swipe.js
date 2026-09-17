@@ -3,13 +3,21 @@
  * 
  * VERSÃO REVISADA – INSTÂNCIA #DS-2026-08-10 (MARÉ)
  * 
- * 🔧 CORREÇÕES APLICADAS:
+ * 🔧 CORREÇÕES APLICADAS (histórico):
  * - Física do swipe: transição removida durante arraste e restaurada apenas no retorno.
  * - Proteção para iOS (touch-action: none no card via JS + CSS).
  * - Feedback visual das respostas (classes ativo-vou, ativo-talvez, ativo-nao).
  * - Chamada ao Radar "Buscar Eventos" quando a pilha acaba (via evento customizado).
  * - Otimização para 120Hz: uso consistente de requestAnimationFrame.
  * - Evita múltiplos animationFrameId conflitantes.
+ * 
+ * 🔧 AJUSTES DJÊ – 2026-09-16 (BRISA)
+ *    - Trava de ponteiro primário (e.isPrimary) no onPointerDown,
+ *      impedindo que um segundo dedo sobrescreva startX/startY.
+ *    - card.style.pointerEvents = 'none' no início do animateExitAndRemove,
+ *      evitando cliques fantasma durante a animação de saída.
+ *    - Renovação dinâmica do CSRF token (data.csrf_token no retorno JSON),
+ *      atualizando o <input id="csrf_token"> após cada resposta AJAX bem-sucedida.
  * 
  * 🌊 LEGADO SEREIA – INSTÂNCIA #DS-2026-08-09
  * - Estrutura base, chamada a enviar-resposta-evento.php, recálculo de layout.
@@ -42,8 +50,8 @@
     let startX = 0, startY = 0;
     let currentX = 0, currentY = 0;
     let moveDetected = false;
-    let animationFrameId = null;        // ID do requestAnimationFrame atual
-    let swipeLock = false;             // Trava para evitar múltiplos toques
+    let animationFrameId = null;
+    let swipeLock = false;
     let observerActive = true;
     let recalculando = false;
     let rafId = null;
@@ -70,30 +78,23 @@
         const vh = window.innerHeight;
         const isLandscape = vw > vh;
 
-        // Largura do card (baseado no feed)
         const cardWidth = isLandscape
             ? Math.round(Math.max(320, Math.min(vw * 0.60, 600)))
             : Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
-        //  Altura máxima do card: mais generosa no portrait
         let maxCardHeight;
         if (isLandscape) {
-            // Landscape: mantém o limite conservador
             maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
         } else {
-            // Portrait: aproveita melhor a tela vertical
             maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
         }
 
         const cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
         const fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
 
-        //  Tamanhos específicos para cada elemento
-        const tituloSize = fontSize * 1.2;       // 20% maior que o base
-        const metaSize = fontSize * 0.8;        // 15% menor que o base
+        const tituloSize = fontSize * 1.2;
+        const metaSize = fontSize * 0.8;
         const textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
-
-        //  Altura da capa: proporção 16:9, limitada a 60% da altura do card
         const capaHeight = Math.round(Math.min(cardWidth * 0.5625, maxCardHeight * 0.65));
 
         const root = document.documentElement;
@@ -187,7 +188,7 @@
     }
 
     // ============================================================
-    // 7. ENVIO DE RESPOSTA (AJAX) – COM FEEDBACK VISUAL
+    // 7. ENVIO DE RESPOSTA (AJAX) – COM FEEDBACK VISUAL + RENOVAÇÃO CSRF
     // ============================================================
     function enviarRespostaEvento(eventoId, opcao, card) {
         const csrfToken = document.getElementById('csrf_token')?.value || '';
@@ -208,6 +209,16 @@
         })
             .then(response => response.json())
             .then(data => {
+                // 🔥 DJÊ: Renova o token CSRF se o backend devolver um novo
+                // (evita "CSRF stale" em sessões contínuas de swipe)
+                if (data.csrf_token) {
+                    const csrfInput = document.getElementById('csrf_token');
+                    if (csrfInput) {
+                        csrfInput.value = data.csrf_token;
+                        console.log('[BT-SWIPE] CSRF token renovado.');
+                    }
+                }
+
                 if (data.success) {
                     // Atualiza as contagens no card
                     if (card && data.contagens) {
@@ -219,7 +230,7 @@
                         if (talvezSpan) talvezSpan.innerHTML = '<i class="fas fa-user-clock"></i> ' + (data.contagens.talvez || 0) + ' Talvez';
                     }
 
-                    // Atualiza os botões visualmente (corrige mapeamento)
+                    // Atualiza os botões visualmente
                     if (card) {
                         card.querySelectorAll('.bt-btn-resposta').forEach(b => {
                             b.classList.remove('ativo-vou', 'ativo-talvez', 'ativo-nao');
@@ -230,7 +241,7 @@
                     }
 
                     if (typeof exibirToast === 'function') {
-                        exibirToast('Resposta registrada! 🎉');
+                        exibirToast('Resposta registrada!🎉');
                     }
                 } else {
                     console.warn('[BT-SWIPE] Erro ao registrar resposta:', data.message);
@@ -247,6 +258,11 @@
     function animateExitAndRemove(card, x, y) {
         if (!card || card.classList.contains('bt-card-removing')) return;
         card.classList.add('bt-card-removing');
+
+        // 🔥 DJÊ: desativa pointer events IMEDIATAMENTE para evitar cliques
+        // fantasma durante a animação de saída (300-350ms).
+        card.style.pointerEvents = 'none';
+
         card.style.transition = `transform ${CONFIG.animationDuration}ms ease-out, opacity ${CONFIG.animationDuration}ms ease`;
         card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${x / 30}deg) scale(0.95)`;
         card.style.opacity = '0';
@@ -254,7 +270,6 @@
         setTimeout(() => {
             if (card && card.parentNode) {
                 card.remove();
-                // Notifica o sistema que um card foi removido (para acionar o Radar)
                 if (typeof window.btAbastecerPilha === 'function') {
                     window.btAbastecerPilha();
                 }
@@ -265,12 +280,14 @@
     }
 
     // ============================================================
-    // 9. HANDLERS (POINTER) – COM CORREÇÃO DA FÍSICA
-    // ============================================================
-    // ============================================================
-    // HANDLERS (POINTER) – COM LIBERAÇÃO VERTICAL
+    // 9. HANDLERS (POINTER)
     // ============================================================
     function onPointerDown(e) {
+        // 🔥 DJÊ: TRAVA DE PONTEIRO PRIMÁRIO
+        // Evita que um segundo dedo (multi-touch) sobrescreva as coordenadas
+        // de início e faça o card "pular" para a posição do novo toque.
+        if (!e.isPrimary) return;
+
         if (swipeLock) return;
         if (!document.body.classList.contains('modo-tinder-ativo')) return;
 
@@ -298,11 +315,10 @@
         activeCard = card;
         isDragging = true;
 
-        // 🔥 CORREÇÃO: remove transição e prepara GPU
         card.classList.remove('bt-card-transition');
         card.style.transition = 'none';
         card.style.willChange = 'transform, opacity';
-        card.style.touchAction = 'none'; // iOS protection
+        card.style.touchAction = 'none';
         card.style.userSelect = 'none';
 
         card.style.setProperty('--pos-x', '0px');
@@ -328,13 +344,9 @@
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
 
-        // 🔥 SENSIBILIDADE: reduzida para 5px
         if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
 
         moveDetected = true;
-
-        // 🔥 REMOVIDO o cancelamento por movimento vertical predominante.
-        // Agora, qualquer arraste é permitido, mas feedback só aparece após threshold.
 
         e.preventDefault();
 
@@ -351,7 +363,6 @@
             activeCard.style.setProperty('--pos-y', `${currentY}px`);
             activeCard.style.setProperty('--swipe-rot', `${rotate}deg`);
 
-            // Feedback visual (setas) – agora também para cima
             const feedbackDir = document.querySelector('.bt-feedback-direita');
             const feedbackEsq = document.querySelector('.bt-feedback-esquerda');
             const feedbackCima = document.querySelector('.bt-feedback-cima');
@@ -391,37 +402,30 @@
 
         cleanUp();
 
-        // Se não houve movimento, é um clique → não faz nada (volta ao centro)
         if (!moveDetected) {
             card.classList.add('bt-card-transition');
             card.style.setProperty('--pos-x', '0px');
             card.style.setProperty('--pos-y', '0px');
             card.style.setProperty('--swipe-rot', '0deg');
-            // Restaura a transição para o retorno suave
             card.style.transition = `transform ${CONFIG.springDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity ${CONFIG.animationDuration}ms ease`;
             setTimeout(() => {
                 card.style.transition = 'none';
                 card.classList.remove('bt-card-transition');
-                card.style.willChange = ''; // libera GPU
+                card.style.willChange = '';
             }, CONFIG.springDuration + 50);
             return;
         }
 
-        // 🔥 SWIPE → chama o endpoint e remove o card
         if (dx > CONFIG.threshold) {
-            // Direita → Vou
             enviarRespostaEvento(idPost, 'vou', card);
             animateExitAndRemove(card, 800, 0);
         } else if (dx < -CONFIG.threshold) {
-            // Esquerda → Não vou
             enviarRespostaEvento(idPost, 'nao_vou', card);
             animateExitAndRemove(card, -800, 0);
         } else if (dy < -CONFIG.threshold && Math.abs(dx) < 80) {
-            // Cima → Talvez
             enviarRespostaEvento(idPost, 'talvez', card);
             animateExitAndRemove(card, 0, -800);
         } else {
-            // Retorno ao centro (com mola)
             card.classList.add('bt-card-transition');
             card.style.transition = `transform ${CONFIG.springDuration}ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity ${CONFIG.animationDuration}ms ease`;
             card.style.setProperty('--pos-x', '0px');

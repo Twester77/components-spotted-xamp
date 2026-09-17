@@ -14,6 +14,10 @@
  *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
  *     na exibição de anexos de comentários (múltiplos e únicos)."
  * - Ondina
+ * 
+ * 🐚 BRISA – 2026-09-10
+ *    "Removida a declaração duplicada de obterIPReal() (agora definida em conexao.php).
+ *     Isso resolve o erro 500 causado por redeclaração de função."
  */
 
 ini_set('display_errors', 0);
@@ -38,16 +42,8 @@ if (isset($_SESSION['usuario_id'])) {
 // ============================================================
 // 1. FUNÇÕES AUXILIARES DE SEGURANÇA
 // ============================================================
-
-function obterIPReal() {
-    $ip = $_SERVER['REMOTE_ADDR'];
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    }
-    return explode(',', $ip)[0];
-}
+// 🔥 obterIPReal() agora está definida em conexao.php e é usada globalmente.
+// Não a declaramos aqui para evitar conflito.
 
 function verificarRateLimiting($conn, $ip) {
     $sql = "SELECT COUNT(*) as total FROM comentarios_ip_log WHERE ip_address = ? AND tentativa > NOW() - INTERVAL 1 MINUTE";
@@ -256,8 +252,6 @@ if (isset($_FILES['anexos']) && !empty($_FILES['anexos']['name'][0])) {
 
 // 2.8.3 - Fallback para imagem única (SEM mkdir)
 if (empty($anexosArray) && isset($_FILES['imagem_comentario']) && $_FILES['imagem_comentario']['error'] === 0) {
-    // 🔥 REMOVIDO: bloco de criação de diretório e .htaccess
-    // O upload agora é feito diretamente para o B2 via processarUploadSeguro()
     $imagem_nome = processarUploadSeguro($_FILES['imagem_comentario'], 'comentarios', 'coment', 2 * 1024 * 1024, $usuario_id);
     if ($imagem_nome !== false) {
         $imagem_url = $imagem_nome;
@@ -358,7 +352,6 @@ if ($stmt->execute()) {
             $id_dono_post = $res_dono['usuario_id'];
             if ($id_dono_post != $meu_id) {
                 $msg_dono = "@$quem_comentou comentou no seu post!";
-                // 🔥 INSERE NOTIFICAÇÃO COM TIPO 'post'
                 $st_dono_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida) VALUES (?, ?, 'post', ?, 0)");
                 $st_dono_notif->bind_param("iis", $id_dono_post, $id_mensagem, $msg_dono);
                 $st_dono_notif->execute();
@@ -380,7 +373,6 @@ if ($stmt->execute()) {
                 $id_destinatario = $alvo['id'];
                 if ($id_destinatario != $meu_id) {
                     $msg_notificacao = "@$quem_comentou mencionou você em um comentário!";
-                    // 🔥 INSERE NOTIFICAÇÃO COM TIPO 'post'
                     $st_n = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida) VALUES (?, ?, 'post', ?, 0)");
                     $st_n->bind_param("iis", $id_destinatario, $id_mensagem, $msg_notificacao);
                     $st_n->execute();
@@ -405,7 +397,6 @@ if ($stmt->execute()) {
         $mediaHtml .= '<div class="comentario-media-wrapper-grid">';
         foreach ($anexosArray as $anexo) {
             if ($anexo['tipo'] === 'imagem') {
-                // 🔥 ANEXO IMAGEM COM FALLBACK CENTRALIZADO
                 $img_url = obterUrlComFallback($anexo['caminho'], 'comentarios/' . htmlspecialchars($anexo['caminho']), null, true);
                 $mediaHtml .= '<div class="comentario-media-item"><img src="' . htmlspecialchars($img_url) . '" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display=\'none\'"></div>';
             } elseif ($anexo['tipo'] === 'gif') {
@@ -417,7 +408,6 @@ if ($stmt->execute()) {
         if (filter_var($imagem_url, FILTER_VALIDATE_URL)) {
             $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($imagem_url) . '" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy"></div>';
         } else {
-            // 🔥 FALLBACK PARA IMAGEM ÚNICA COM FALLBACK CENTRALIZADO
             $img_url = obterUrlComFallback($imagem_url, 'comentarios/' . htmlspecialchars($imagem_url), null, true);
             $mediaHtml = '<div class="comentario-media-wrapper"><img src="' . htmlspecialchars($img_url) . '" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display=\'none\'"></div>';
         }

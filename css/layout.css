@@ -4,15 +4,15 @@ header {
     background: var(--laranja-fenda);
     position: relative;
     border-radius: 0 0 10px 10px;
-    z-index: 9997 ;
+    z-index: 9994;
     display: flex;
     max-height: 100px;
     justify-content: space-between;
     /* Empurra o menu pra esquerda e o perfil pra direita */
     align-items: center;
-    padding: 10px;
+    padding: 8px;
     max-width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     container-type: inline-size;
@@ -25,13 +25,15 @@ header {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     /* Espaço entre o botão hamburguer e o título */
 }
 
 header h1 {
-    font-size: clamp(0.9rem, 3vw, 2.2rem);
+    font-size: 0.95rem;
+    font-size: clamp(0.9rem, 3.5cqi, 2.1rem);
     letter-spacing: 0.5px;
+    line-height: 1.5;
     text-transform: uppercase;
     color: #fff;
     font-family: 'Urbanist', sans-serif;
@@ -43,9 +45,9 @@ header h1 {
 /* --- ESTILO BASE DOS ÍCONES --- */
 .header-icons {
     display: flex;
-    gap: 8px;
+    gap: 5px;
     align-items: center;
-    padding: 4px;
+    padding: 2px 4px;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
@@ -66,14 +68,13 @@ header h1 {
     color: var(--dourado);
     color: oklch(0.834633 0.17177 82.5648);
     font-size: 1.05rem;
-    font-size: clamp(1.05rem, 6vw, 1.75rem);
-    font-size: clamp(1.05rem, 6cqw, 1.75rem);
+    font-size: clamp(1.1rem, 3cqi, 1.75rem);
     transition: all 0.3s ease;
 }
 
 /* HOVER GERAL */
 .header-icons a:hover i {
-    color: #fff ;
+    color: #fff;
     transform: scale(1.2);
 }
 
@@ -148,7 +149,7 @@ nav {
     color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(0.95rem, 0.8rem + 0.5vw, 1.5rem) !important;
+    font-size: clamp(0.95rem, 0.8rem + 0.5cqi, 1.5rem);
     line-height: 1.5;
     padding: 8px 16px;
     display: block;
@@ -233,7 +234,7 @@ nav {
     /* Aparece */
     background: rgba(10, 25, 47, 0.95);
     border: 1px solid #029687;
-    padding: 20px;
+    padding: 12px;
 }
 
 /* Overlay simples */
@@ -263,11 +264,12 @@ nav {
 
 #btn-menu-hamburguer {
     background: rgba(5, 14, 65, 0.329);
+    background: oklch(0.2013 0.0964 267.22 / 32.9%);
     /* Fundo semi-transparente */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+    border-radius: 12px;
     padding: 4px;
     cursor: pointer;
     color: #ffc72d;
@@ -275,13 +277,13 @@ nav {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Efeito ao passar o mouse */
 #btn-menu-hamburguer:hover {
     background: rgba(255, 140, 0, 0.3);
-    transform: scale(1.05);
+    transform: scale(1.03);
     border-color: rgba(255, 140, 0, 0.5);
 }
 
@@ -289,8 +291,8 @@ nav {
 .btn-menu-hamburguer {
     width: 32px;
     height: 32px;
-    width: clamp(30px, 10vmin, 70px);
-    height: clamp(30px, 10vmin, 70px);
+    width: clamp(30px, 10vmin, 65px);
+    height: clamp(30px, 10vmin, 65px);
     display: block;
     stroke: currentColor;
 }
@@ -351,9 +353,9 @@ nav {
 .titulo-sessao-pessoal {
     color: #fa800e;
     text-align: center;
-    display: flex ;
-    flex-wrap: nowrap ;
-    word-break: break-word ;
+    display: flex;
+    flex-wrap: nowrap;
+    word-break: break-word;
     display: 1 !important;
     margin-bottom: 20px;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
@@ -373,8 +375,8 @@ nav {
    ============================================================ */
 
 .toolbar-content {
-    overflow-y: auto ;
-    overflow-x: hidden ;
+    overflow-y: auto;
+    overflow-x: hidden;
     max-height: 55dvh;
     padding-right: 5px;
     scrollbar-width: none;
@@ -404,7 +406,7 @@ nav {
     display: flex;
     flex-direction: column;
     /* ===== SCROLL VERTICAL ===== */
-    max-height: 50dvh ;
+    max-height: 50dvh;
     /* Altura máxima de 50% da tela */
 
 }
@@ -736,18 +738,19 @@ body.modal-aberto .fab-postar {
     left: 0;
     min-width: 100px;
     padding: 5px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 8px 14px rgba(0, 0, 0, 0.4);
     list-style: none;
     z-index: 10000;
 }
 
 .submenu li a {
     border-bottom: 1px solid rgba(255, 255, 255, 0.021);
-    font-size: clamp (0.95rem, 2vw, 1.4rem);
-    font-weight: normal !important;
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 2cqw, 1.2rem);
+    font-weight: normal;
     text-align: left;
     color: #d4b8b8;
-    padding: 8px 12px;
+    padding: 6px 12px;
     line-height: 1.2;
 }
 
@@ -757,11 +760,10 @@ body.modal-aberto .fab-postar {
     backdrop-filter: blur(4px);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
-
 }
 
 .submenu li:hover a {
-    color: #ff8c00 !important;
+    color: #ff8c00;
     transition: color 0.3s ease;
 }
 
@@ -774,15 +776,15 @@ body.modal-aberto .fab-postar {
 
 /* 1. Força a coluna na sidebar */
 .sidebar-fenda .menu {
-    flex-direction: column !important;
-    align-items: flex-start !important;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 /* 2. Reseta o submenu para ser 'normal' dentro da sidebar */
 .sidebar-fenda .submenu {
-    position: relative !important;
+    position: relative;
     /* Sai do absoluto */
-    display: none !important;
+    display: none;
     /* Esconde por padrão */
     width: 100%;
     box-shadow: none;
@@ -791,7 +793,7 @@ body.modal-aberto .fab-postar {
 
 /* 3. Faz o submenu abrir quando passa o mouse no menu-item */
 .sidebar-fenda .menu-item:hover .submenu {
-    display: flex !important;
+    display: flex;
     /* Força aparecer */
     flex-direction: column;
 }
@@ -830,7 +832,7 @@ body.modal-aberto .fab-postar {
 
 /* Base dos botões com brilho */
 .fenda-btn-glow {
-    border-radius: 12px;
+    border-radius: 16px;
     font-weight: bold;
     font-size: 16px;
     text-decoration: none;
@@ -1018,7 +1020,7 @@ footer a {
 }
 
 .notificacao-popup strong {
-    font-size: 15px ;
+    font-size: 15px;
     /* Título mais visível */
     margin-bottom: 3px;
 }
@@ -1167,8 +1169,8 @@ footer a {
     color: white;
     font-size: 10px;
     font-weight: 800;
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -1286,27 +1288,27 @@ footer a {
 
 /* A caixa que envolve a logo no classificados */
 .atletica-item {
-    display: flex ;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 140px ;
-    height: 140px ;
-    margin: 0 auto ;
-    overflow: visible ;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+    overflow: visible;
     /* Mude para visible para o brilho não cortar */
-    background: none ;
-    border: none ;
+    background: none;
+    border: none;
 }
 
 .atletica-item:hover .insignia-atletica-link {
     transform: scale(1.05) !important;
-    filter: brightness(1.1) drop-shadow(0 0 15px var(--dourado));
+    filter: brightness(1.1) drop-shadow(0 0 12px var(--dourado));
 }
 
 /* A logo */
 .insignia-atletica-link {
-    max-width: 100% ;
-    max-height: 100% ;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -1315,41 +1317,41 @@ footer a {
 /*  SESSÃO DE BUSCA - FORMULÁRIO E RESULTADOS  */
 
 /* 1. O Formulário (Tamanho Desktop e Mobile) */
-.container-busca.container-fenda-flex { 
+.container-busca.container-fenda-flex {
     height: 100dvh;
-    margin: 30px auto;
+    margin: 25px auto;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 .form-busca-fenda {
     display: flex;
-    flex-direction: row ;
-    align-items: stretch ;
+    flex-direction: row;
+    align-items: stretch;
     gap: 8px;
-    width: 100% ;
+    width: 100%;
     max-width: 600px;
-    margin: 25px auto ;
+    margin: 25px auto;
     background: transparent !important;
-    border: none ;
+    border: none;
 }
 
 .form-busca-fenda input[type="text"] {
     display: flex;
-    flex: 1 ;
-    min-width: 0 ;
-    max-width: 600px ;
+    flex: 1;
+    min-width: 0;
+    max-width: 600px;
     background: rgba(255, 255, 255, 0.08);
     color: white;
     border: 2px solid rgba(255, 188, 0, 0.5);
-    outline: none ;
-    box-shadow: none ;
-    -webkit-appearance: none ;
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
     appearance: none;
     border-radius: 10px;
     padding: 8px 16px;
     font-size: 1.2rem;
-    box-sizing: border-box ;
+    box-sizing: border-box;
 }
 
 /* Quando você clica para digitar */
@@ -1366,18 +1368,18 @@ footer a {
     min-height: 50px;
     background: #fc900c;
     color: #000;
-    border: none ;
+    border: none;
     border-radius: 10px;
-    font-weight: 900 ;
+    font-weight: 900;
     font-size: 1rem;
     cursor: pointer;
     padding: 0 20px;
-    outline: none ;
+    outline: none;
 }
 
 .form-busca-fenda input[type="text"] {
     padding: 12px 15px;
-    font-size: 1rem ;
+    font-size: 1rem;
 }
 
 .form-busca-fenda button {
@@ -1401,7 +1403,7 @@ footer a {
     align-items: center;
     background: rgba(255, 255, 255, 0.05);
     padding: 12px;
-    border-radius: 12px ;
+    border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.2s ease, background 0.2s ease !important;
 }
@@ -1443,9 +1445,9 @@ footer a {
 .erro-fenda {
     color: #ff4b2bc7 !important;
     padding: 10px;
-    border-radius: 8px ;
+    border-radius: 8px;
     text-align: center !important;
-    margin-top: 15px ;
+    margin-top: 15px;
     min-height: 300px;
 }
 
@@ -1508,8 +1510,8 @@ article.conteudo-principal {
     margin-bottom: 15px;
     text-align: left;
     color: #e0e0e0;
-    color:oklch(0.9067 0 0);
-    text-rendering: optimizeLegibility ;
+    color: oklch(0.9067 0 0);
+    text-rendering: optimizeLegibility;
     max-width: clamp(300px, 100%, 800px);
 }
 
@@ -1519,7 +1521,7 @@ article.conteudo-principal {
     opacity: 0.8;
     margin-bottom: 20px;
     color: #a6d4eeee;
-    color: oklch(0.8462 0.0603 233.17 / 93.3%) ;
+    color: oklch(0.8462 0.0603 233.17 / 93.3%);
 }
 
 .citacao-anarquica {
@@ -1530,9 +1532,9 @@ article.conteudo-principal {
     background: rgba(255, 255, 255, 0.096);
 }
 
-.conselho-header{
+.conselho-header {
     font-size: clamp(1rem, 1.3vw, 1.5rem);
-    border-bottom: 1px dotted #fff3504f ;
+    border-bottom: 1px dotted #fff3504f;
     font-weight: 600;
 }
 
@@ -1657,6 +1659,7 @@ article.conteudo-principal {
 
 /* Correção e upgrade da imagem do Câmpus */
 .campus-flex .img-campus {
+    width: 280px;
     width: clamp(200px, 100vh, 300px);
     min-height: 200px;
     max-height: 100dvh;
@@ -1685,24 +1688,34 @@ article.conteudo-principal {
 
 .comunidade-topo {
     text-align: center;
+    gap: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    flex:  1 1 auto;
+    justify-content: center;
     padding: 40px 20px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.04);
     border-radius: 0 0 30px 30px;
     border-bottom: 1px solid rgba(255, 188, 0, 0.2);
-    margin-bottom: 30px;
+    margin: 20px auto;
 }
 
 .img-comunidade-grande {
-    width: 250px;
-    height: 250px;
+    max-width: 250px;
+    max-height: 250px;
     object-fit: contain;
-    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-content: center;
     filter: drop-shadow(0 0 10px rgba(255, 188, 0, 0.3));
 }
 
 .grid-habitantes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 15px;
     padding: 10px;
     max-width: auto;
@@ -1713,10 +1726,10 @@ article.conteudo-principal {
     background: #0a0a0a;
     border: 1px solid #333;
     border-radius: 20px;
-    padding: 12px;
+    padding: 8px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     transition: 0.3s;
     text-decoration: none;
     break-inside: avoid;
@@ -1724,20 +1737,21 @@ article.conteudo-principal {
     word-break: break-word;
     /* Evita que cards enormes explodam o layout */
     overflow-wrap: break-word;
-    max-width: 280px;
+    max-width: 300px;
     margin: 20px auto;
     position: relative;
 }
 
 .card-habitante:hover {
     border-color: var(--dourado);
-    transform: translateY(-5px);
+    transform: translateY(-6px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 .avatar-lista {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #444;
@@ -1747,12 +1761,15 @@ article.conteudo-principal {
     margin: 0;
     color: #fff;
     font-size: 1rem;
+    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
 }
 
 .info-h p {
     margin: 10px 0 0;
     color: #888;
+    color: oklch(62.675% 0.00007 271.152);
     font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2cqi, 0.95rem);
 }
 
 /* CONTAINER DAS REGRAS - VISUAL FENDA */
@@ -1772,7 +1789,7 @@ article.conteudo-principal {
 }
 
 .secao-seguranca h2 {
-    color: #fc900c ;
+    color: #fc900c;
     /* Laranja padrão da Fenda */
     text-align: center;
     margin-bottom: 20px;
@@ -1783,7 +1800,7 @@ article.conteudo-principal {
 
 .secao-seguranca p {
     color: #ffffff;
-    font-size: clamp(14px, 2.5vw, 18px) ;
+    font-size: clamp(14px, 2.5vw, 18px);
     margin-bottom: 15px;
 }
 
@@ -1860,10 +1877,12 @@ article.conteudo-principal {
 input[type="checkbox" i] {
     height: 12px;
     width: 12px;
-    height: clamp(14px, 1.5vw, 20px);
-    width: clamp(14px, 1.5vw, 20px);
-    margin: 5px auto;
-    accent-color: #b8ad0fbd;
+    height: clamp(13px, 2.1cqi, 20px);
+    width: clamp(13px, 2.1cqi, 20px);
+    margin: 4px auto;
+    accent-color: #efb71c;
+    accent-color: oklch(80.867% 0.16047 85.448);
+
 }
 
 
@@ -1880,12 +1899,6 @@ input[type="checkbox" i] {
 
 }
 
-.campo-grupo label {
-    text-align: left;
-    width: 100%;
-    margin-bottom: 5px;
-    color: #bbb;
-}
 
 /* 4. Estilo dos Inputs para não vazarem */
 input[type="text"],
@@ -1905,8 +1918,8 @@ textarea {
 .campo-grupo select,
 .campo-grupo textarea,
 .input-username-wrapper {
-    width: 100% ;
-    max-width: auto ;
+    width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
     /* ISSO AQUI resolve o vazamento da Bio */
     margin: 0 auto;
@@ -1950,7 +1963,7 @@ textarea {
 
 .input-username-wrapper input {
     flex: 1 !important;
-    border: none ;
+    border: none;
     background: transparent !important;
     height: 100%;
     margin: 0;
@@ -1983,7 +1996,7 @@ textarea[name="bio"] {
     position: absolute;
     right: 0;
     /* Alinha com a direita do sino */
-    top: 55px;
+    top: calc(55px + 10px);
     /* Joga um pouco para baixo do sino */
     width: 250px;
     background: rgba(10, 25, 41, 0.98);
@@ -2065,17 +2078,18 @@ textarea[name="bio"] {
 
 /* Efeito especial para o post do Leonardo */
 .post-admin-gold {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
     position: relative;
 }
 
 .post-admin-gold::after {
     content: 'ADM';
     position: absolute;
-    top: 4px;
-    right: 30px;
+    top: 10px;
+    right: 40px;
     /* Ajuste conforme o menu de opções */
-    font-size: 0.75rem;
+    font-size: 0.65rem;
+    font-size: clamp(0.65rem, 1.8vw, 0.95rem);
     font-weight: bold;
     color: #FFD700;
     letter-spacing: 2px;
@@ -2087,20 +2101,19 @@ textarea[name="bio"] {
 /* ============================================================
    SISTEMA DE RESPONSIVIDADE "A FENDA" - CORREÇÃO LANDSCAPE
    ============================================================ */
-   /* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
+/* CORREÇÃO DA MARGEM ESQUERDA NO IPHONE 4 (PORTRAIT) */
 
 
 /* 1. CELULARES MUITO BAIXOS (iPhone 4 deitado, S20 deitado) */
-@media 
-(orientation: landscape) and (max-height: 360px), 
+@media (orientation: landscape) and (max-height: 360px),
 (orientation: portrait) and (max-height: 480px) {
 
     /* Forçamos 1 coluna só. 2 colunas em 320px de altura é suicídio de layout */
     main.container-feed {
-        display: flex ;
-        flex-direction: column ;
-        align-items: center ;
-        padding-top: 50px ;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
         /* Espaço para a navbar não cobrir o post */
     }
 
@@ -2110,22 +2123,22 @@ textarea[name="bio"] {
         width: 100%;
         max-width: 400px;
         gap: 4px;
-        padding: 6px ;
+        padding: 6px;
     }
 
 
     #conteudo-principal.main-perdidos {
-        padding: 10px ;
+        padding: 10px;
     }
 
 
     /* Esconde elementos não essenciais para ganhar altura */
     .avatar-p {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
     }
 
-       /* Reseta o main-perdidos que estava deslocado */
+    /* Reseta o main-perdidos que estava deslocado */
     #conteudo-principal.main-perdidos {
         display: flex;
         flex-direction: column;
@@ -2141,8 +2154,8 @@ textarea[name="bio"] {
     .main-perdidos .feed-anexos-grid {
         margin: 5px auto;
         width: 100%;
-        grid-template-columns: 1fr ;
-        padding: 10px ;
+        grid-template-columns: 1fr;
+        padding: 10px;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2150,8 +2163,9 @@ textarea[name="bio"] {
         width: 100%;
         margin-left: 0;
         margin-right: 0;
-        box-sizing: border-box ;
+        box-sizing: border-box;
     }
+
     body:not(.modo-swipe-ativo) .feed-anexos-grid {
         grid-template-columns: repeat(2, minmax(40px, 80px));
 
@@ -2171,6 +2185,7 @@ textarea[name="bio"] {
         line-height: 1.3;
 
     }
+
     header {
         padding: 8px 4px;
     }
@@ -2178,7 +2193,7 @@ textarea[name="bio"] {
     .area-perdidos-vivo {
         justify-content: space-between;
         display: flex;
-        flex-direction: column ;
+        flex-direction: column;
     }
 
 
@@ -2188,9 +2203,9 @@ textarea[name="bio"] {
 /* 2. CELULARES EM PÉ (Portrait) - O padrão que já funciona */
 @media screen and (max-width: 600px) and (orientation: portrait) {
     main.container-feed {
-        display: grid ;
-        grid-template-columns: 1fr ;
-        padding: 10px ;
+        display: grid;
+        grid-template-columns: 1fr;
+        padding: 10px;
     }
 
 }
@@ -2199,8 +2214,8 @@ textarea[name="bio"] {
 /* 3. TABLETS E CELULARES LARGOS (S20 Ultra Normal) */
 @media screen and (min-width: 601px) and (min-height: 421px) {
     main.container-feed {
-        display: grid ;
-        grid-template-columns: repeat(2, 1fr) ;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
     }
 
@@ -2211,8 +2226,37 @@ textarea[name="bio"] {
     AJUSTES MOBILE (MENU, GAVETA, ETC.)
    ============================================================ */
 @media (max-width: 768px) {
+
+    .form-perdidos-vivo {
+        flex-direction: row;
+    }
+
+    /* Força o botão de toggle e a área de texto a ficarem alinhados */
+    .toggle-perdidos-vivo {
+        flex-direction: column;
+        flex-shrink: 0;
+        justify-content: center;
+    }
+
+    .form-publicar.form-perdidos-vivo {
+        flex-direction: row;
+    }
+
+    .form-publicar.form-perdidos-vivo .toggle-perdidos-vivo {
+        display: flex;
+        flex-direction: row;
+        width: auto;
+        flex-shrink: 0;
+        justify-content: center;
+    }
+
     .chat-input-container {
-        justify-content: space-between ;
+        justify-content: space-between;
+    }
+
+    section.sessao-publicar {
+        max-width: 100%;
+        width: 100%;
     }
 
     #form-comentario {
@@ -2222,7 +2266,7 @@ textarea[name="bio"] {
     .sidebar-fenda {
         display: block !important;
         visibility: visible !important;
-        width: 240px;
+        max-width: 240px;
         max-height: 100vh;
         position: fixed !important;
         top: 0;
@@ -2248,26 +2292,60 @@ textarea[name="bio"] {
         width: 85%;
     }
 
+    /* 1. Registra a propriedade para permitir a animação suave do ângulo do gradiente */
+    @property --angulo-motoserra {
+        syntax: '<angle>';
+        initial-value: 0deg;
+        inherits: false;
+    }
+
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 55px;
+        top: 40px;
+        top: calc(1cqi + 10px);
     }
 
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
         display: inline-flex;
         position: fixed;
+        top: calc(10% + 10px);
         gap: 6px;
         left: 50%;
         transform: translate3d(-50%, -50%, 0px);
         transform: translate(-50%, -50%);
-        z-index: 9998;
+        z-index: 9995;
         color: #000;
-        padding: 5px 10px;
+        padding: 4px 10px;
+        padding: clamp(4px, 1cqw, 8px) clamp(8px, 1cqw, 16px);
         font-size: 0.75rem;
-        font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+        font-size: clamp(0.8rem, 1.4cqw, 1.15rem);
         border-radius: 40px;
         font-weight: bold;
         white-space: nowrap;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        /* Fallback estrutural e visual para navegadores velhos */
+        background: #ffffff;
+    }
+
+    /* O contorno "motosserra" que corre perfeitamente fixo no eixo */
+    body:not(.modo-swipe-ativo) #btn-abrir-filtros::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        /* Espessura da borda um pouquinho maior*/
+        border-radius: inherit;
+        z-index: -1;
+        /* Fallback de degradê estático para navegadores velhos */
+        background: linear-gradient(90deg, #ff8c00, #ff007f);
+        /* O segredo: passamos a variável do ângulo aqui dentro */
+        background: conic-gradient(from var(--angulo-motoserra), #ff8c00, #ff007f, #00f0ff, #ff8c00);
+        /* Máscara para manter o centro do botão limpo (branco) */
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 2px;
+        /* Animação que altera apenas o ângulo do gradiente, sem mover o elemento */
+        animation: rodarMotoserra 3s linear infinite;
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil .filtros-container {
@@ -2275,29 +2353,63 @@ textarea[name="bio"] {
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil.aberto .filtros-container {
-        display: inline-flex;
-        background: #111;
-        position: fixed !important;
-        top: 25%;
+        top: 20%;
+        top: calc(20% + 20px);
         left: 50%;
         transform: translate3d(-50%, -50%, 0px);
         transform: translate(-50%, -50%);
-        z-index: 98;
+        display: inline-flex;
+        background: #111;
+        background: oklch(0.1 0 0);
+        margin-block: 20px;
+        /* Cuida do eixo vertical (topo/base) */
+        margin-inline: auto;
+        /* Cuida do eixo horizontal (laterais) */
         color: #000;
+        color: oklch(0 0 0);
         gap: 10px;
         padding: 40px 15px 25px 15px;
         border-radius: 0 0 20px 20px;
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+        font-size: clamp(0.8rem, 1.5cqw, 1rem);
         font-weight: bold;
         white-space: nowrap;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         max-height: 35vh;
+        z-index: 98;
+        position: fixed;
         overflow-y: auto;
         border-bottom: 3px solid #ff8c00;
+        will-change: opacity, animation;
+
+        /* CORRIGIDO: Injeta a animação clássica de abertura controlada pela curva cubic-bezier */
+        animation: slideDownFiltro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
+    /* Anima apenas os graus do gradiente (de 0 a 360) */
+    @keyframes rodarMotoserra {
+        to {
+            --angulo-motoserra: 360deg;
+        }
+    }
+
+    /* Nova Keyframe específica para o contêiner fixo centralizado */
+    @keyframes slideDownFiltro {
+        from {
+            /* Mantém o alinhamento em X (-50%) e desliza o Y de cima para a posição correta */
+            transform: translate(-50%, -150%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+    }
+
+
     .lista-comentarios-social {
-        padding: 20px 15px 20px 15px;
+        padding: 20px 15px 30px 15px;
         max-width: 500px;
     }
 
@@ -2366,16 +2478,16 @@ textarea[name="bio"] {
 
 @media (min-width: 769px) {
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
-        display: none ;
+        display: none;
     }
 
     body:not(.modo-swipe-ativo) .filtros-wrapper-retratil {
         display: block;
         position: relative;
-        background: transparent ;
+        background: transparent;
         backdrop-filter: none;
         padding: 10px;
-        margin: 20px 0;
+        margin: 15px 0;
         box-shadow: none;
     }
 
@@ -2388,7 +2500,6 @@ textarea[name="bio"] {
 
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         top: 40px;
-        left: 50%;
         transform: translateX(-50%);
     }
 
@@ -2403,49 +2514,51 @@ textarea[name="bio"] {
 
 
     .central-conteudo #central-body {
-        display: grid ;
+        display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
         align-items: flex-start;
-        gap: 15px ;
+        gap: 15px;
 
     }
 
     .central-conteudo {
-    border-radius: 12px;
-    padding: 15px;
-    margin: 10px auto;
-    min-height: 200px;
-}
+        border-radius: 12px;
+        padding: 15px;
+        margin: 10px auto;
+        min-height: 200px;
+    }
 
-.central-usuario-container {
-    gap: 15px;
-    padding: 10px;
+    .central-usuario-container {
+        gap: 15px;
+        padding: 10px;
 
-}
+    }
 
-    
+
 }
 
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         top: 40px;
-        max-height: 45dvh;
+        max-height: 40dvh;
     }
-    .main-perfil-container-publico .capa-container {
-    width: 100%;
-    max-width: 600px;
-    max-height: 200px;
-    aspect-ratio: 600 / 200;
-}
 
-    .main-perfil-container-publico  .avatar-posicionador {
-    position: absolute;
-    bottom: -60px;
-    bottom: clamp(-60px, 12cqw, -110px);
-    width: clamp(60px, 10cqw, 110px);
-    height: clamp(60px, 10cqw, 110px);
-    aspect-ratio: 1 / 1; }
+    .main-perfil-container-publico .capa-container {
+        width: 100%;
+        max-width: 600px;
+        max-height: 230px;
+        aspect-ratio: 600 / 230;
+    }
+
+    .main-perfil-container-publico .avatar-posicionador {
+        position: absolute;
+        bottom: -70px;
+        bottom: clamp(-70px, 10cqi, -110px);
+        width: clamp(70px, 10cqi, 110px);
+        height: clamp(70px, 10cqi, 110px);
+        aspect-ratio: 1 / 1;
+    }
 
 }
 
@@ -2598,10 +2711,12 @@ body.modal-aberto #fenda-nexus {
     font-weight: bold;
     font-size: clamp(0.7rem, 2vw, 0.95rem);
 }
+
 .link-pagina-especializada a {
     color: var(--dourado);
     text-decoration: none;
 }
+
 .link-pagina-especializada a:hover {
     text-decoration: underline;
 }
@@ -2612,10 +2727,10 @@ body.modal-aberto #fenda-nexus {
    ================================================== */
 /* Estiliza o botão de clique em QUALQUER input de arquivo do site */
 input[type="file"]::file-selector-button {
-    background-color: #2ecc71; 
+    background-color: #2ecc71;
     font-size: clamp(0.8rem, 0.8vw, 1rem);
     color: #f1f1f1;
-    color: oklch(0.95 0 0);           
+    color: oklch(0.95 0 0);
     border: none;
     border-radius: 8px;
     padding: 6px 14px;
@@ -2623,7 +2738,7 @@ input[type="file"]::file-selector-button {
     cursor: pointer;
     text-decoration: none;
     font-weight: bold;
-    
+
     /* Efeito seguro para PC e Celular: Transição suave de opacidade */
     transition: opacity 0.2s ease, background-color 0.2s ease;
 }
@@ -2631,7 +2746,7 @@ input[type="file"]::file-selector-button {
 /* Efeito exclusivo para computadores (não trava no touch do celular) */
 @media (hover: hover) {
     input[type="file"]::file-selector-button:hover {
-        background-color: #27ae60; 
+        background-color: #27ae60;
         opacity: 0.9;
     }
 }
@@ -2674,8 +2789,9 @@ section.sessao-publicar .form-publicar .anexos-grid {
     gap: 8px;
     background: rgba(0, 0, 0, 0.2);
     grid-auto-rows: minmax(100px, auto);
-    padding: 4px 0 4px 0;
+    padding: 6px 0 6px 0;
     align-items: center;
+    justify-items: center;
     justify-content: center;
     width: 100%;
 }
@@ -2756,7 +2872,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     max-width: clamp(300px, 90%, 600px);
     margin: 20px auto;
     margin: clamp(15px, 4vh, 40px) auto;
-    padding: 8px ;
+    padding: 8px;
     padding: clamp(6px, 2vw, 15px);
     box-sizing: border-box;
 }
@@ -2790,7 +2906,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
 /* Botão "Marcar todas" – sem inline */
 .btn-marcar-todas {
-    font-size: 0.75rem ;
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 1.2vw, 0.9rem);
     padding: 4px 10px;
     padding: clamp(4px, 0.6vw, 8px) clamp(10px, 1.5vw, 18px);
@@ -2822,7 +2938,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 .notificacoes-list {
     display: flex;
     flex-direction: column;
-    gap: 5px ;
+    gap: 5px;
     gap: clamp(6px, 1.5vw, 14px);
 }
 
@@ -2847,7 +2963,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     padding: 8px;
     padding: clamp(10px, 2vw, 18px);
     border-radius: clamp(8px, 1.2vw, 14px);
-    border-left: 2px solid var(--borda-esquerda, transparent) ;
+    border-left: 2px solid var(--borda-esquerda, transparent);
     border-left: clamp(3px, 0.5vw, 6px) solid var(--borda-esquerda, transparent);
     display: flex;
     justify-content: space-between;
@@ -2880,7 +2996,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
 }
 
 .notificacao-data {
-    font-size: 0.6rem ;
+    font-size: 0.6rem;
     font-size: clamp(0.65rem, 1.4vw, 0.9rem);
     color: rgba(255, 255, 255, 0.6);
     color: oklch(1 0 0 / 0.6);
@@ -2915,7 +3031,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     margin-top: clamp(20px, 5vh, 50px);
     padding: 8px;
     padding: clamp(10px, 2vw, 30px);
-    font-size: 0.85rem ;
+    font-size: 0.85rem;
     font-size: clamp(0.9rem, 1.8vw, 1.1rem);
 }
 
@@ -2926,24 +3042,30 @@ section.sessao-publicar .form-publicar .anexos-grid {
     .notificacoes-header h2 {
         font-size: 1.5rem;
     }
+
     .notificacao-conteudo p {
         font-size: 1rem;
     }
+
     .notificacao-data {
         font-size: 0.8rem;
     }
+
     .btn-marcar-todas {
         font-size: 0.8rem;
         padding: 4px 12px;
     }
+
     .notificacao-card {
         padding: 14px;
         border-left-width: 4px;
     }
+
     .notificacao-indicador {
         width: 8px;
         height: 8px;
     }
+
     .notificacoes-page {
         max-width: 600px;
         margin: 30px auto;
@@ -2955,15 +3077,19 @@ section.sessao-publicar .form-publicar .anexos-grid {
     .notificacao-card {
         background: rgba(255, 255, 255, 0.05);
     }
+
     .notificacao-card.nova {
         background: rgba(255, 188, 0, 0.04);
     }
+
     .notificacao-conteudo p {
         color: #fff;
     }
+
     .notificacao-data {
         color: rgba(255, 255, 255, 0.6);
     }
+
     .notificacao-empty {
         color: #666;
     }
@@ -2978,6 +3104,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
         align-items: stretch;
         gap: 8px;
     }
+
     .btn-marcar-todas {
         width: 100%;
         justify-content: center;
@@ -2985,6 +3112,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
         padding: 8px;
         font-size: 0.8rem;
     }
+
     .notificacao-card {
         padding: 12px;
     }
@@ -2996,6 +3124,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO (OTIMIZADO)
    --------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
+
     body.hacker-mode::before,
     body.hacker-mode::after,
     body.hacker-mode .post-content,
@@ -3011,16 +3140,23 @@ section.sessao-publicar .form-publicar .anexos-grid {
     .main-perfil-container-publico.vibe-ads .perfil-header-container::before,
     .main-perfil-container-publico.vibe-ads .hex-item {
         animation: none !important;
-        transition: none !important; /* Desativa transições para economizar processamento em celulares fracos */
+        transition: none !important;
+        /* Desativa transições para economizar processamento em celulares fracos */
         filter: none !important;
     }
 
     /* Mantém as colmeias fixas e os mocegos com a aura suavizada e estática */
-    .main-perfil-container-publico.vibe-ads::after { opacity: 0.3; background-position: 0px 0px; }
-    .main-perfil-container-publico.vibe-dark::after { opacity: 0.1; background-position: 0px 0px; }
+    .main-perfil-container-publico.vibe-ads::after {
+        opacity: 0.3;
+        background-position: 0px 0px;
+    }
+
+    .main-perfil-container-publico.vibe-dark::after {
+        opacity: 0.1;
+        background-position: 0px 0px;
+    }
 
     .main-perfil-container-publico.vibe-ads .perfil-header-container::before {
         display: none;
     }
 }
-

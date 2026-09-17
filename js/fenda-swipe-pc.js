@@ -1,5 +1,11 @@
 /* ============================================================
    FENDA SWIPE PC – COM MODAL GLOBAL (FUNÇÃO ÚNICA)
+   
+   🐚 BRISA – 2026-09-16 (v2 – ajustes da Djê)
+      - Trava de ponteiro primário (e.isPrimary) no onPointerDown,
+        impedindo que um segundo dedo sobrescreva startX/startY.
+      - card.style.pointerEvents = 'none' no início do animateExitAndRemove,
+        evitando cliques fantasma durante a animação de saída.
    ============================================================ */
 (function () {
     'use strict';
@@ -53,6 +59,11 @@
     function animateExitAndRemove(card, x, y) {
         if (!card) return;
         removerEfeitoPrisma(card);
+
+        // 🔥 DJÊ: desativa pointer events IMEDIATAMENTE para evitar cliques
+        // fantasma durante a animação de saída (300ms).
+        card.style.pointerEvents = 'none';
+
         card.style.transition = 'transform 0.3s ease-out, opacity 0.2s';
         card.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${x / 30}deg) scale(0.95)`;
         card.style.opacity = '0';
@@ -68,7 +79,12 @@
 
     let onPointerMoveHandler, onPointerUpHandler, onPointerCancelHandler;
 
-        function onPointerDown(e) {
+    function onPointerDown(e) {
+        // 🔥 DJÊ: TRAVA DE PONTEIRO PRIMÁRIO
+        // Evita que um segundo dedo (multi-touch) sobrescreva as coordenadas
+        // de início e faça o card "pular" para a posição do novo toque.
+        if (!e.isPrimary) return;
+
         if (swipeLock) return;
         const card = e.target.closest('.spotted-card');
         if (!card) return;

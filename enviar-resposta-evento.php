@@ -4,6 +4,13 @@
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-13
  * 🔧 CORREÇÃO: Verificação de banimento para eventos de comunidades privadas.
+ * 
+ * 🐚 BRISA – 2026-09-16 (v2 – rolling CSRF token)
+ *    - Após validar o token atual, geramos um novo CSRF token e atualizamos
+ *      $_SESSION['csrf_token']. O novo token é devolvido no JSON de sucesso
+ *      para o front-end atualizar o <input id="csrf_token"> dinamicamente.
+ *      Isso resolve o "CSRF stale" em sessões contínuas de swipe.
+ *      (Recomendação da Djê na auditoria do bt-swipe.js.)
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -29,13 +36,22 @@ if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_tok
     exit;
 }
 
+// ============================================================
+// 🔥 ROTACIONA O CSRF TOKEN (rolling token)
+// ============================================================
+// Gera um novo token a cada requisição válida. O token antigo é
+// imediatamente invalidado, e o novo é enviado no JSON de sucesso
+// para o front-end atualizar seu <input id="csrf_token">.
+$novo_csrf_token = bin2hex(random_bytes(32));
+$_SESSION['csrf_token'] = $novo_csrf_token;
+
 $evento_id = isset($_POST['evento_id']) ? (int)$_POST['evento_id'] : 0;
 $opcao = isset($_POST['opcao']) ? $_POST['opcao'] : '';
 $usuario_id = $_SESSION['usuario_id'];
 
 if ($evento_id <= 0 || !in_array($opcao, ['vou', 'nao_vou', 'talvez'])) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Dados inválidos.']);
+    echo json_encode(['success' => false, 'message' => 'Dados inválidos.', 'csrf_token' => $novo_csrf_token]);
     exit;
 }
 
@@ -51,13 +67,13 @@ $stmt->close();
 
 if (!$evento) {
     http_response_code(404);
-    echo json_encode(['success' => false, 'message' => 'Evento não encontrado.']);
+    echo json_encode(['success' => false, 'message' => 'Evento não encontrado.', 'csrf_token' => $novo_csrf_token]);
     exit;
 }
 
 if ($evento['status'] === 'cancelado') {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Este evento foi cancelado.']);
+    echo json_encode(['success' => false, 'message' => 'Este evento foi cancelado.', 'csrf_token' => $novo_csrf_token]);
     exit;
 }
 
@@ -70,7 +86,7 @@ if ($data_evento < time() && $evento['status'] !== 'encerrado') {
     $stmt_upd->close();
 
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Este evento já foi encerrado.']);
+    echo json_encode(['success' => false, 'message' => 'Este evento já foi encerrado.', 'csrf_token' => $novo_csrf_token]);
     exit;
 }
 
@@ -86,7 +102,7 @@ if ($evento['comunidade_id'] > 0) {
 
     if (!$membro || $membro['status'] !== 'ativo') {
         http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Você não tem permissão para responder a este evento porque foi banido da comunidade.']);
+        echo json_encode(['success' => false, 'message' => 'Você não tem permissão para responder a este evento porque foi banido da comunidade.', 'csrf_token' => $novo_csrf_token]);
         exit;
     }
 }
@@ -118,11 +134,12 @@ if ($stmt->affected_rows >= 0) {
     echo json_encode([
         'success' => true,
         'message' => 'Resposta registrada!',
-        'contagens' => $counts
+        'contagens' => $counts,
+        'csrf_token' => $novo_csrf_token  // 🔥 Renovação do CSRF token
     ]);
 } else {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erro ao registrar resposta.']);
+    echo json_encode(['success' => false, 'message' => 'Erro ao registrar resposta.', 'csrf_token' => $novo_csrf_token]);
 }
 
 exit;

@@ -145,7 +145,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             </div>
 
             <div class="stats-perfil">
-                <span style="color: <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>; font-weight: bold;">
+                <span style="font-weight: bold;">
                     <?php echo $total_seguidores; ?> SEGUIDORES
                 </span>
             </div>

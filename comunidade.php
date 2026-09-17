@@ -247,7 +247,7 @@ if ($is_admin || $is_criador) {
             </div>
         </div>
     <?php elseif (($is_admin || $is_criador) && $total_pendentes == 0): ?>
-        <div style="margin: 12px 0; text-align:center; color:#666; font-size:0.9rem; background:rgba(255,255,255,0.02); padding:12px; border-radius:8px;">
+        <div style="margin: 12px 0; text-align:center; color:#666; color:oklch(0.5103 0 0); display: inline-block; font-size:0.85rem; font-size:clamp(0.9rem, 1.2cqi, 1.1rem); background:rgba(255,255,255,0.02); padding:12px; border-radius:8px;">
             <i class="fas fa-check-circle" style="color:#4caf50;"></i> Nenhuma solicitação pendente no momento.
         </div>
     <?php endif; ?>

@@ -14,24 +14,24 @@
    --------------------------------------------------------------- */
 
 :root {
-    --hacker-green: #00ff41;
-    --hacker-bg: #000000;
+    --hacker-green:oklch(0.861283 0.293072 142.4953);
+    --hacker-bg: oklch(0 0 0);
     --hacker-font: 'Courier New', 'Courier', monospace;
     --boot-duration: 3.5s; /* Ajuste para tornar o boot mais lento */
 }
 
 body.hacker-mode {
-    background-color: var(--hacker-bg) !important;
-    color: var(--hacker-green) !important;
-    font-family: var(--hacker-font) !important;
+    background-color: var(--hacker-bg, #000);
+    color: var(--hacker-green, #00ff41); ;
+    font-family: var(--hacker-font, 'Courier New', 'Courier', monospace);
     -webkit-font-smoothing: antialiased;
-    cursor: url('imagensfoto/crosshair.cur'), auto !important;
+    cursor: url('imagensfoto/crosshair.cur'), auto ;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
     user-select: none;
     transition: background 0.3s ease, color 0.3s ease !important;
-    pointer-events: auto!important;
+    pointer-events: auto;
     
 }
 
@@ -65,9 +65,9 @@ body.hacker-mode *::after {
 
 /* Scanlines horizontais */
 body.hacker-mode::before {
-    content: " " ;
+    content: " " !important;
     display: block ;
-    position: fixed !important;
+    position: fixed !important ;
     top: 0 ;
     left: 0 ;
     bottom: 0 ;
@@ -88,8 +88,9 @@ body.hacker-mode::after {
     bottom: 0 !important;
     right: 0 !important;
     background: rgba(0, 255, 0, 0.03) ;
+    background: oklch(0.861283 0.293072 142.4953 / 3%);
     z-index: 9998 !important;
-    pointer-events: none !important;
+    pointer-events: none ;
     animation: flicker 0.15s infinite ease !important;
 }
 
@@ -131,22 +132,24 @@ body.hacker-mode .fenda-modal-content
 {
     position: relative ;
     background: #000 !important;
+    background: oklch(0 0 0);
     /* LATERAIS: O duplo pipe "||" */
-    border-left: 2px double var(--hacker-green) ;
-    border-right: 2px double var(--hacker-green) ;
-    border-bottom: 2px double var(--hacker-green) ;
-    border-top: 2px double var(--hacker-green) ;
+    border-left: 2px double var(--hacker-green,#00ff41) ;
+    border-right: 2px double var(--hacker-green,#00ff41) ;
+    border-bottom: 2px double var(--hacker-green,#00ff41) ;
+    border-top: 2px double var(--hacker-green,#00ff41) ;
     box-shadow: none ;
 }
 
 body.hacker-mode .spotted-card {
     background: #000 ;
+    background: oklch(0 0 0);
     border: none !important;
     /* LATERAIS: O duplo pipe "||" */
-     border-bottom: 2px double var(--hacker-green)!important;
-    border-top: 2px double var(--hacker-green)!important ;
-    border-right: 2px double var(--glass-bg) !important ;
-    border-left: 2px double var(--glass-bg) !important;
+     border-bottom: 2px double var(--hacker-green,#00ff41)!important;
+    border-top: 2px double var(--hacker-green,#00ff41)!important ;
+    border-right: 2px double var(--glass-bg,#000) !important ;
+    border-left: 2px double var(--glass-bg,#000) !important;
     box-shadow: none ;
 }
 
@@ -165,7 +168,7 @@ body.hacker-mode .spotted-card:hover {
 
 
 body.hacker-mode .sessao-fofoca-focada {
-    border: 1px solid var(--hacker-green);
+    border: 1px solid var(--hacker-green,#00ff41) ;
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
     background-color: #323232 ;
 }
@@ -193,7 +196,7 @@ body.hacker-mode .sessao-publicar::before {
     top: -22px ;
     left: -2px ; 
     right: -2px ;
-    color: var(--hacker-green) ;
+    color: var(--hacker-green,#00ff41) ;
     font-family: monospace ;
     font-weight: bold ;
     white-space: nowrap ;
@@ -230,6 +233,7 @@ body.hacker-mode .sidebar-fenda,
 body.hacker-mode header,
 body.hacker-mode footer {
     background-color: rgba(0, 0, 0, 0.95) ;
+    background-color: oklch(0 0 0 / 95%);
     background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
     background-size: 100% 2px ;
     font-family: monospace ;
@@ -242,12 +246,13 @@ body.hacker-mode .dropdown-item,
 body.hacker-mode .item-menu,
 body.hacker-mode .btn-header,
 body.hacker-mode .submenu li a {
-    color: #00ff00 !important;
-    text-shadow: 0 0 10px #00ff00 ;
+    color: #00ff00 ;
+    color: oklch(0.86644 0.294827 142.4953);
+    text-shadow: 0 0 6px #00ff00 ;
     text-transform: uppercase ;
     transition: all 0.1s steps(2) ;
     position: relative ;
-    background: transparent !important;
+    background: transparent ;
     border-radius: 0;
 }
 
@@ -262,10 +267,12 @@ body.hacker-mode .btn-zarpar:hover:hover,
 body.hacker-mode .btn-ficar-terra:hover,
 body.hacker-mode .bloco-diretrizes li:hover,
 body.hacker-mode .submenu li a:hover {
-    background-color: #00ff00 !important;
-    color: #000000 !important;
+    background-color: #00ff00 ;
+    background-color: oklch(0.86644 0.294827 142.4953);
+    color: #000000 ;
+    color: oklch(0 0 0);
     padding-left: 25px !important;
-    box-shadow: 0 0 15px #00ff00 !important;
+    box-shadow: 0 0 12px #00ff00 !important;
     text-shadow: none ;
     cursor: crosshair !important;
 }
@@ -280,9 +287,10 @@ body.hacker-mode .dropdown-item:hover::before {
     content: ">" !important;
     position: absolute !important;
     font-size: 1rem;
-    left: 10px !important;
-    color: #000 !important;
-    font-weight: bold !important;
+    left: 10px ;
+    color: #000 ;
+    color: oklch(0 0 0);
+    font-weight: bold ;
     animation: blink-cursor 0.5s infinite !important;
 }
 
@@ -290,7 +298,8 @@ body.hacker-mode .dropdown-item:hover::before {
 body.hacker-mode .dropdown-menu,
 body.hacker-mode .submenu {
     border: 2px solid #00ff00 !important;
-    background: #000 !important;
+    background: #000 ;
+    background: oklch(0 0 0);
     border-radius: 0 ;
     padding: 0 ;
 }
@@ -307,7 +316,9 @@ body.hacker-mode .config-item,
 body.hacker-mode .fenda-input,
 body.hacker-mode .textarea-fenda {
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
     caret-color: #00ff00 ;
+    caret-color: oklch(0.86644 0.294827 142.4953);
     font-family: 'Courier New', 'Courier', monospace ;
 }
 
@@ -358,11 +369,12 @@ body.hacker-mode .btn-ficar-terra,
 body.hacker-mode #btn-menu-hamburguer,
 body.hacker-mode .btn-zarpar,
 body.hacker-mode .filtro-btn,
-body.hacker-mode .link-fofoca,
-body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atléticas */
+body.hacker-mode .link-fofoca {  
     background: #000 ;
+    background: oklch(0 0 0);
     color: #00ff00 ;
-    border: 3px double var(--hacker-green) ;
+    color: oklch(0.861283 0.293072 142.4953);
+    border: 2px double var(--hacker-green,#00ff41) ;
     border-radius: 0 ;
     font-family: monospace ;
     text-transform: uppercase ;
@@ -375,21 +387,27 @@ body.hacker-mode .img-comunidade-grande {  /* Inclui links e bottoms de atlétic
 }
 
 body.hacker-mode #btn-menu-hamburguer:hover {
-    background: #00ff0015 !important;
-    color: #ffca00 !important;
+    background: #00ff0015 ;
+    background:oklch(0.86644 0.294827 142.4953 / 8.2%);
+    color: #ffca00 ;
+    color: oklch(0.8613 0.176 89.44);
 }
 
 body.hacker-mode .perdidos-item .link-fofoca:hover,
 body.hacker-mode .btn-lancar:hover,
 body.hacker-mode .btn-voltar-fenda:hover {
     color:#000;
+    color: oklch(0 0 0);
     background: #00ff00;
+    background: oklch(0.861283 0.293072 142.4953);
 
 }
 
 body.hacker-mode .btn-voltar-fenda {
     background: #00ff0014;
+    background: oklch(0.86644 0.294827 142.4953 / 7.8%);
     color: #00fdff ;
+    color: oklch(0.9007 0.1535 195.8);
 }
 
 
@@ -403,15 +421,18 @@ body.hacker-mode .btn-enviar-fenda:hover,
 body.hacker-mode .btn-ficar-terra:hover,
 body.hacker-mode .btn-finalizar-fenda:hover,
 body.hacker-mode .login-btn:hover {
-    background-color: #00ff00 !important;
-    color: #000000 !important;
-    box-shadow: 0 0 15px #00ff00 !important;
-    padding-left: 25px !important;
+    background-color: #00ff00 ;
+    background-color: oklch(0.861283 0.293072 142.4953);
+    color: #000000 ;
+    color: oklch(0 0 0);
+    box-shadow: 0 0 8px #00ff00 ;
+    padding-left: 25px ;
 }
 
 body.hacker-mode .nexus-trigger {
     border-radius: 50%!important;
     color: #00ff00;
+    color: oklch(0.861283 0.293072 142.4953);
     background-color: #000000;
     border: 2px solid #00ff41;
 
@@ -419,13 +440,22 @@ body.hacker-mode .nexus-trigger {
 
 
 body.hacker-mode .insignia-atletica-bottom:hover,
-body.hacker-mode .insignia-atletica-link:hover ,
+body.hacker-mode .insignia-atletica-link:hover,
 body.hacker-mode .img-comunidade-grande:hover {
     object-fit: contain ;
-    color: #000000 ;
+    color: #0f0 ;
+    filter: brightness(1.1) drop-shadow(0 0 12px var(--hacker-green, #0f0 ));
     border-style: none ;
     background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
     transform: scale(1.03) ;
+}
+
+body.hacker-mode .img-comunidade-grande:hover,
+body.hacker-mode .insignia-atletica-link:hover {
+    background: #00fd00;
+    background: oklch(86.129% 0.29305 142.511);
+    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) ;
+    transition: background 0.2s;
 }
 
 
@@ -434,9 +464,10 @@ body.hacker-mode .fenda-btn-glow::before,
 body.hacker-mode #btn-load-more::before {
     content: ">" !important;
     position: absolute !important;
-    left: -10px !important;
+    left: -10px ;
     opacity: 0 !important;
-    color: #0f0 !important;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
     font-weight: bold !important;
     transition: all 0.2s ease !important;
 }
@@ -445,7 +476,8 @@ body.hacker-mode .btn:hover::before,
 body.hacker-mode .fenda-btn-glow:hover::before {
     opacity: 1 !important;
     left: 8px !important;
-    color: #000 !important;
+    color: #000 ;
+    color: oklch(0 0 0);
     animation: blink-cursor 0.5s infinite !important;
 }
 
@@ -470,38 +502,40 @@ body.hacker-mode .capa-wrapper,
 body.hacker-mode .avatar-central,
 body.hacker-mode .comentario-media-wrapper-grid,
 body.hacker-mode .avatar-wrapper,
+body.hacker-mode .header-miniatura .miniatura-avatar
 body.hacker-mode .link-do-avatar,
 body.hacker-mode .insignia-atletica-link {
     border-radius: 0;
 }
 
-body.hacker-mode img,
 body.hacker-mode .foto-perfil,
 body.hacker-mode .comentario-avatar,
-body.hacker-mode .avatar-usuario,
 body.hacker-mode .avatar-p,
 body.hacker-mode .avatar-busca,
+body.hacker-mode .img-comunidade-grande,
 body.hacker-mode .img-avatar-perfil,
 body.hacker-mode .capa-img,
-body.hacker-mode .insignia-atletica-link img {
+body.hacker-mode .insignia-atletica-link {
     filter: sepia(0.3) brightness(0.9) contrast(1) grayscale(0.2) ;
     transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out ;
     border-radius: 0;
 }
 
-body.hacker-mode img:hover,
 body.hacker-mode .foto-perfil:hover,
+body.hacker-mode .avatar-main:hover,
+body.hacker-mode .avatar-busca:hover,
+body.hacker-mode .comentario-avatar:hover,
+body.hacker-mode .capa-img:hover,
 body.hacker-mode .avatar-p:hover,
 body.hacker-mode .insignia-atletica-link:hover img {
     filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) ;
-    transform: scale(1.01);
 }
 
 
 body.hacker-mode .spotted-card-img:hover {
-    transform: none!important;
-    
+    transform: none;  
 }
+
 /* ---------------------------------------------------------------
    12. ÍCONES FONT AWESOME (VERDE NEON + FLICKER - MANTIDOS)
    --------------------------------------------------------------- */
@@ -515,7 +549,8 @@ body.hacker-mode .spotted-card .user-info-post::after,
 body.hacker-mode .far,
 body.hacker-mode .fab {
     color: #00ff00 ;
-    text-shadow: 0 0 6px #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
+    text-shadow: 0 0 4px #00ff00 ;
     opacity: 1 ;
     visibility: visible ;
     display: inline-block ;
@@ -529,6 +564,7 @@ body.hacker-mode .fenda-btn-glow:hover i,
 body.hacker-mode .nav-link:hover i,
 body.hacker-mode .menu li a:hover i {
     color: #000 ;
+    color: oklch(0 0 0);
     text-shadow: none ;
 }
 
@@ -541,8 +577,10 @@ body.hacker-mode .tag-categoria,
 body.hacker-mode .tag-link,
 body.hacker-mode .badge-presenca {
     background: #000 ;
+    background: oklch(0 0 0);
     border: 1px solid #00ff00 ;
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
     border-radius: 0 ;
     padding: 5px 10px ;
     text-transform: uppercase ;
@@ -553,14 +591,17 @@ body.hacker-mode .badge-perdido,
 body.hacker-mode .badge-achado {
     border: 1px solid #00ff00 ;
     color: #0e1d0e ;
+    color: oklch(0.212 0.0356 144.19);
     text-transform: uppercase ;
     font-family: monospace ;
 }
 
 body.hacker-mode .badge-alertas {
     background: #000000 ;
+    background: oklch(0 0 0);
     color: #00ff00 ;
-    box-shadow: 0 0 10px #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
+    box-shadow: 0 0 8px #00ff00 ;
 }
 
 /* ---------------------------------------------------------------
@@ -582,8 +623,9 @@ body.hacker-mode .comentario-item.meu-comentario {
 
 
 body.hacker-mode .comentario-autor {
-    color: #0f0 !important;
-    text-shadow: 0 0 5px #0f0 !important;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
+    text-shadow: 0 0 2px #0f0 ;
 }
 
 
@@ -594,13 +636,16 @@ body.hacker-mode .comentario-autor {
 /* 1. VIBE DARK (Eigengrau) - Terminal clássico pesado */
 body.hacker-mode .comentario-item.vibe-dark {
     background: #0b0e2bad ;
+    background: oklch(0.1814 0.0582 274.59 / 67.8%);
     -webkit-backdrop-filter: none ;
     backdrop-filter: none ;
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 body.hacker-mode .comentario-item.vibe-dark .comentario-autor {
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
     text-shadow: 0 0 5px #00ff00;
 }
 
@@ -610,16 +655,19 @@ body.hacker-mode .comentario-item.vibe-glass {
     -webkit-backdrop-filter: blur(3px) ;
     backdrop-filter: blur(3px) ;
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 body.hacker-mode .comentario-item.vibe-glass .comentario-autor {
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
     text-shadow: 0 0 4px #00ff00;
 }
 
 /* 3. VIBE NEON - Efeito glitch pulsante */
 body.hacker-mode .comentario-item.vibe-neon {
-    background: #000000 !important;
+    background: #000000 ;
+    background: oklch(0% 0 0);
     -webkit-backdrop-filter: none ;
     backdrop-filter: none ;
     margin-bottom: 15px;
@@ -673,12 +721,12 @@ body.hacker-mode .comentario-item.vibe-light .indicador-resposta,
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-data {
-    color: #4dc44d !important;  /* Verde mais escuro para a data */
+    color: #4dc44d ;  /* Verde mais escuro para a data */
     opacity: 0.8;
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-texto {
-    color: #c0ffc0 !important;  /* Verde bem suave para o texto principal */
+    color: #c0ffc0 ;  /* Verde bem suave para o texto principal */
 }
 
 
@@ -689,6 +737,7 @@ body.hacker-mode .comentario-item.vibe-light .comentario-texto {
    ================================================================== */
 body.hacker-mode .comentario-item.vibe-ads {
     background-color: #000000 ; /* Fundo breu total do terminal */
+    background-color: oklch( 0 0 0);
     box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
     animation: pulsar-luz 3s infinite ease-in-out ;
     /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
@@ -699,8 +748,8 @@ body.hacker-mode .comentario-item.vibe-ads {
 
 /* Texto do comentário em matriz verde fosforescente */
 body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
-    color: var(--hacker-green) ;
-    text-shadow: 0 0 6px var(--hacker-green) ;
+    color: var(--hacker-green,#00ff41) ;
+    text-shadow: 0 0 6px var(--hacker-green,#00ff41) ;
     font-family: var(--hacker-font) ;
 }
 
@@ -710,7 +759,7 @@ body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item  
 }
 body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active,
 body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
-    background: rgba(0, 255, 64, 0.144)!important ;
+    background: rgba(0, 255, 64, 0.144) ;
     border-color: #00ff41 ;
     box-shadow: 0 0 10px #00ff41 ;
 }
@@ -724,18 +773,18 @@ body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.d
 @keyframes hacker-highlight {
     0% {
         background-color: rgba(0, 255, 64, 0.897);
-        box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-        border-left: 3px solid #00ff41;
+        box-shadow: 0 0 18px rgba(0, 255, 65, 0.3);
+        border-left: 2px solid #00ff41;
     }
     40% {
         background-color: rgba(0, 255, 65, 0.2);
         box-shadow: 0 0 35px rgba(0, 255, 65, 0.6);
-        border-left: 6px solid #00ff41;
+        border-left: 4px solid #00ff41;
     }
     100% {
         background-color: transparent;
         box-shadow: none;
-        border-left: 3px solid var(--cor-borda-glow);
+        border-left: 3px solid var(--cor-borda-glow, #00ff41);
     }
 }
 
@@ -758,6 +807,7 @@ body.hacker-mode .nome-publico,
 body.hacker-mode .conselho-header {
     font-family: monospace ;
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
     text-transform: uppercase ;
     border-bottom: 1px dashed #00ff00 ;
     display: inline-block ;
@@ -773,6 +823,7 @@ body.hacker-mode .post-content,
 body.hacker-mode .bio-texto {
     font-family: monospace ;
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
     line-height: 1.5 ;
     text-shadow: 0 0 5px rgba(0,255,0,0.3) ;
 }
@@ -784,31 +835,47 @@ body.hacker-mode .bio-texto {
 body.hacker-mode .filtro-btn,
 body.hacker-mode .btn-abrir-filtros,
 body.hacker-mode  #bt-btn-filtros,
+body.hacker-mode .btn-criar-comunidade,
 body.hacker-mode .bt-btn-principal,
 body.hacker-mode .login-btn,
 body.hacker-mode .btn-filtro,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-enviar-chat,
-body:not(.modo-swipe-ativo) #btn-abrir-filtros,
-.body-modo-swipe-ativo #btn-abrir-filtros,
+body.hacker-mode body:not(.modo-swipe-ativo) #btn-abrir-filtros,
+body.hacker-mode body.modo-swipe-ativo #btn-abrir-filtros,
 body.hacker-mode .preview-botao
  {
     background: #000 ;
+    background: oklch(0 0 0);
     border: 1px solid #00ff00 ;
     color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 body.hacker-mode .btn-filtro.ativo,
 body.hacker-mode  #bt-btn-filtros:hover,
 body.hacker-mode .btn-abrir-filtros:hover,
 body.hacker-mode .btn-fenda-padrao:hover,
+body.hacker-mode .btn-criar-comunidade:hover,
+body.hacker-mode .btn-enviar-chat:hover,
 body.hacker-mode .bt-btn-principal:hover,
 body.hacker-mode .login-btn:hover,
 body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
+body.hacker-mode .filtro-btn.ativo,
 body.hacker-mode .filtro-btn:hover {
-    background: #00ff00 !important;
-    color: #000000 !important;
+    background: #00ff00 ;
+    background: oklch(0.861283 0.293072 142.4953) ;
+    color: #000000 ;
+    color: oklch(0 0 0) ;
+}
+
+body.hacker-mode .bt-btn-filtro:active{
+    background: #00ff00 ;
+    background: conic-gradient 45deg(oklch(0.861283 0.293072 142.4953), oklch(0.861283 0.293072 142.4953)) ;
+    text-shadow: 0 0 4px #00ff00 ;
+    color: #000000 ;
+    color: oklch(0 0 0) ;
 }
 
 body.hacker-mode .filtros-perdidos {
@@ -829,19 +896,23 @@ body.hacker-mode .lista-conselhos li {
 body.hacker-mode .lista-conselhos li::before {
     content: "> " ;
     color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
     font-weight: bold ;
 }
 body.hacker-mode .lista-conselhos li:hover {
     background: #0f0 ;
+    background: oklch(0.861283 0.293072 142.4953) ;
     color: #000 ;
+    color: oklch(0 0 0) ;
     transform: translateX(4px) ;
 }
 
 body.hacker-mode .box-diretrizes li:hover {
     background: #0f0 ;
+    background: oklch(0.861283 0.293072 142.4953) ;
     color: #000 ;
+    color: oklch(0 0 0) ;
     transform: translateX(4px) ;
-    transform: scale(1.03) ;
 }
 
 
@@ -852,17 +923,20 @@ body.hacker-mode .box-diretrizes li:hover {
 body.hacker-mode footer::after {
     content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
     display: block ;
-    text-align: center !important;
-    font-size: 0.65rem ;
-    color: #0f0 !important;
-    opacity: 0.6 !important;
+    text-align: center ;
+    font-size: 0.6rem ;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
+    opacity: 0.6 ;
 }
 
 
 body.hacker-mode .post-content.tem-mais:not(.expandido)::after {
-    content: ' > [ CARREGAR_DADOS... ]' !important;
+    content: ' > [ CARREGAR_DADOS... ]' ;
     background: #000 ;
+    background: oklch(0 0 0);
     color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
     font-weight: bold ;
 }
 
@@ -872,15 +946,17 @@ body.hacker-mode .post-content.tem-mais:not(.expandido)::after {
 
 body.hacker-mode .reacao-item {
     background: #000 ;
+    background: oklch(0 0 0 0);
     border: 1px solid #0f0 ;
     color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
     font-family: monospace ;
 }
 
 body.hacker-mode .reacao-item.voted {
     background: rgba(0,255,0,0.2) ;
     border-color: #0f0 ;
-    box-shadow: 0 0 10px #0f0 ;
+    box-shadow: 0 0 8px #0f0 ;
 }
 
 /* Garante que o container dos emojis use flexbox e alinhe os itens em grade/linha */
@@ -912,9 +988,9 @@ body.hacker-mode .reacoes-popup span {
 
 /* Hover: Agora preencherá o quadrado inteiro de 32x32 pixels */
 body.hacker-mode .reacoes-popup span:hover {
-    transform: scale(1.1); /* Um leve zoom para destacar o quadradinho */
-    filter: saturate(1.2) drop-shadow(0 0 2px #00ff00);
+    filter: saturate(1.15) drop-shadow(0 0 2px #00ff00);
     background: #00ff00b2;
+    background: oklch(0.86644 0.294827 142.4953 / 69.8%);
 }
 
 
@@ -951,19 +1027,22 @@ body.hacker-mode .btn-notif-choice.active {
 body.hacker-mode .container-cadastro-fenda,
 body.hacker-mode .fenda-glass-container,
 body.hacker-mode form[action="confirma-login.php"] .container {
-    background: rgba(0,0,0,0.8) !important;
-    border: 1px solid #00ff00 !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    background: rgba(0,0,0,0.8) ;
+    border: 1px solid #00ff00 ;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
 }
 
 body.hacker-mode .fenda-reg-box input {
-    background: #000 !important;
-    border: 1px solid #00ff00 !important;
-    color: #0f0 !important;
+    background: #000 ;
+    background: oklch(0% 0 0);
+    border: 1px solid #00ff00 ;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 body.hacker-mode .fenda-reg-box i {
-    color: #0f0 !important;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 /* ---------------------------------------------------------------
@@ -971,12 +1050,14 @@ body.hacker-mode .fenda-reg-box i {
    --------------------------------------------------------------- */
 
 body.hacker-mode .stats-perfil span {
-    color: #0f0 !important;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 body.hacker-mode .btn-seguir-fenda {
     background: rgba(0,255,0,0.1) ;
     border-color: #0f0 ;
     color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 /* ---------------------------------------------------------------
@@ -989,10 +1070,11 @@ body.hacker-mode .btn-seguir-fenda {
 }
 body.hacker-mode .typing::after,
 body.hacker-mode .hacker-cursor {
-    content: "_" !important;
-    display: inline-block !important;
-    width: 15px !important;
-    background: #0f0 !important;
+    content: "_" !important ;
+    display: inline-block !important ;
+    width: 15px !important ;
+    background: #0f0 ;
+    background: oklch(0.861283 0.293072 142.4953);
     animation: blink-cursor 0.5s infinite !important;
 }
 
@@ -1080,7 +1162,7 @@ body.hacker-mode .avatar-p,
 body.hacker-mode .rounded-circle,
 body.hacker-mode [class*="rounded"],
 body.hacker-mode [style*="border-radius"] {
-    border-radius: 0 !important;
+    border-radius: 0 ;
 }
 
 /* ---------------------------------------------------------------
@@ -1088,13 +1170,17 @@ body.hacker-mode [style*="border-radius"] {
    --------------------------------------------------------------- */
 
 body.hacker-mode .fab-postar {
-    background: #000 !important;
+    background: #000 ;
+    background: oklch(0 0 0 0);
     border: 1px solid #0f0 !important;
     color: #0f0 !important;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 body.hacker-mode .fab-postar:hover {
-    background: #0f0 !important;
-    color: #000 !important;
+    background: #0f0 ;
+    background: oklch(0.861283 0.293072 142.4953) ;
+    color: #000 ;
+    color: oklch(0% 0 0);
 }
 
 /* ---------------------------------------------------------------
@@ -1102,26 +1188,30 @@ body.hacker-mode .fab-postar:hover {
    --------------------------------------------------------------- */
 
 body.hacker-mode .card-notificacao {
-    border: 1px solid #0f0 !important;
-    border-left: 2px solid #0f0 !important;
-    border-right: 2px solid #0f0 !important;
-    color:#0f0 !important;
+    border: 1px solid #0f0 ;
+    border-left: 2px solid #0f0 ;
+    border-right: 2px solid #0f0 ;
+    color:#0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 body.hacker-mode .card-notificacao:hover {
-    background: #0f0 !important;
-    color: #000 !important;
+    background: #0f0 ;
+    background: oklch(0.861283 0.293072 142.4953);
+    color: #000 ;
 }  
 
 body.hacker-mode .notificacao-conteudo p,
 body.hacker-mode .notificacao-conteudo small
  {
-    color:#0f0 !important;
-    font-weight: bold!important ;
+    color:#0f0 ;
+    color: oklch(0.861283 0.293072 142.4953) ;
+    font-weight: bold ;
 
 }
 body.hacker-mode .notificacao-conteudo :hover{
-    color: #000 !important;
+    color: #000 ;
+    color: oklch(0% 0 0);
     visibility: visible;
     filter: contrast(1.05);
 }
@@ -1131,7 +1221,9 @@ body.hacker-mode .link-notificacao:hover,
 body.hacker-mode .card-notificacao:hover
  {
     background: #0f0 ;
-    color: #000 !important;
+    background: oklch(0.861283 0.293072 142.4953);
+    color: #000 ;
+    color: oklch(0% 0 0);
 }
 
 
@@ -1140,12 +1232,14 @@ body.hacker-mode .card-notificacao:hover
    --------------------------------------------------------------- */
 
 body.hacker-mode .card-habitante {
-    background: #000 !important;
-    border: 1px solid #0f0 !important;
+    background: #000 ;
+    background: oklch(0% 0 0) ;
+    border: 1px solid #0f0 ;
 }
+
 body.hacker-mode .card-habitante:hover {
-    border-color: #0f0 !important;
-    box-shadow: 0 0 15px #0f0 !important;
+    border-color: #0f0 ;
+    box-shadow: 0 0 15px #0f0 ;
 }
 
 /* ---------------------------------------------------------------
@@ -1155,9 +1249,10 @@ body.hacker-mode .card-habitante:hover {
 body.hacker-mode table,
 body.hacker-mode th,
 body.hacker-mode td {
-    border: 1px solid #0f0 !important;
-    background: rgba(0, 20, 0, 0.5) !important;
-    color: #0f0 !important;
+    border: 1px solid #0f0 ;
+    background: rgba(0, 20, 0, 0.5) ;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 
 /* ---------------------------------------------------------------
@@ -1166,9 +1261,11 @@ body.hacker-mode td {
 
 body.hacker-mode .pagination a,
 body.hacker-mode .pagination span {
-    color: #0f0 !important;
-    border: 1px solid #0f0 !important;
-    background: #000 !important;
+    color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953) ;
+    border: 1px solid #0f0 ;
+    background: #000 ;
+    background: oklch(0% 0 0) ;
 }
 
 /* ---------------------------------------------------------------
@@ -1179,17 +1276,22 @@ body.hacker-mode .btn-responder-bolha::before,
 body.hacker-mode .comentario-item.comentario-filho::before
 {
     background: #000 ;
+    background: oklch(0% 0 0) ;
     border: none !important;
     color: #0f0 ;
+    color: oklch(0.861283 0.293072 142.4953);
 }
 body.hacker-mode .btn-responder-bolha:hover {
     color: #000 ;
+    color: oklch(0% 0 0);
     background: #0f0 ;
+    background: oklch(0.861283 0.293072 142.4953);
 }
 
 body.hacker-mode .char-counter {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #48ff00;
+    color: oklch(0.861283 0.293072 142.4953);
     
 }
 
@@ -1202,11 +1304,15 @@ body.hacker-mode .char-counter {
     left: 50%!important; 
     transform: translate3d(-50%, -50%, 0px);
     transform: translate(-50%, -50%); 
+    max-width: 100%;
+    max-height: 100%;
     width:100%; height: 100%;
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     background: #000;
+    background: oklch(0% 0 0);
     color: #0f0;
+    color: oklch(0.861283 0.293072 142.4953);
     z-index: 100000;
     overflow: hidden;
     display: flex;
@@ -1241,6 +1347,7 @@ body.hacker-mode .char-counter {
     height: 100%;
     max-width: 600px;
     background: #0f0;
+    background: oklch(0.861283 0.293072 142.4953);
     width: 0;
     animation: load-bar 4s ease-in-out forwards;
 }
@@ -1254,9 +1361,9 @@ body.hacker-mode .hacker-booting {
 }
 
 @keyframes bootSystem {
-    0% { opacity: 0; filter: blur(20px) brightness(10) grayscale(1); }
-    5% { opacity: 0.1; filter: blur(15px); }
-    50% { opacity: 0.3; filter: blur(5px); }
+    0% { opacity: 0; filter: blur(16px) brightness(10) grayscale(1); }
+    5% { opacity: 0.1; filter: blur(8px); }
+    50% { opacity: 0.3; filter: blur(4px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
 

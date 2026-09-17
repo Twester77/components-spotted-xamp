@@ -3,8 +3,8 @@
 * B2Client - Integração com Backblaze B2 (Object Storage)
 * 
 * @package A Fenda
-* @author DeepSeek (Marretador) / Revisado por Djê / Ondina
-* @version 3.8 - Timeout ajustável + logs detalhados
+* @author DeepSeek (Marretador) / Revisado por Djê / Ondina / Brisa
+* @version 4.0 - Fix: Base64 encoding consistente em upload/delete/fileExists
 * 
 * CARACTERÍSTICAS:
 * - Padrão Singleton: autentica apenas UMA vez por requisição
@@ -14,6 +14,13 @@
 * - CACHE DE URLs: evita múltiplas chamadas à API para o mesmo arquivo
 * - Upload, Delete e Download com logs estruturados
 * - Timeout ajustável (padrão 30s)
+* 
+* 🐚 BRISA – 2026-09-11
+*    - Corrigido bug crítico: `deleteFile()` e `fileExists()` agora aplicam
+*      `urlSafeBase64Encode()` antes de consultar o B2, alinhando com o
+*      comportamento do `uploadFile()` (que codifica o `X-Bz-File-Name`).
+*    - Adicionado fallback: se o nome codificado não for encontrado, tenta o original.
+*    - Isso resolve o acúmulo de arquivos órfãos no bucket.
 */
 
 class B2Client
@@ -217,9 +224,7 @@ class B2Client
     /**
      * Obtém um token de autorização para download (b2_get_download_authorization).
      * 
-     * PÚBLICO: chamado externamente por proxy.php. Se ficar 'private', o PHP lança
-     * um Fatal Error (violação de escopo) que NÃO é capturado por catch(Exception),
-     * derrubando toda requisição de imagem antes mesmo de chegar ao B2.
+     * PÚBLICO: chamado externamente por proxy.php.
      * 
      * @param string $fileName Nome do arquivo no bucket
      * @param int    $duration Duração em segundos (máximo: 86400 = 24h)
@@ -236,8 +241,7 @@ class B2Client
         // 🔧 CORREÇÃO: dirname() de um arquivo sem pasta (ex: 'post_abc_123.webp')
         // retorna '.', gerando fileNamePrefix = './' — que não bate com NENHUM
         // arquivo real. Como todos os arquivos ficam na raiz do bucket (flat),
-        // usamos prefixo vazio, que autoriza o bucket inteiro (documentação oficial
-        // do B2: prefixo vazio "matches all files in the bucket").
+        // usamos prefixo vazio, que autoriza o bucket inteiro.
         $dir = dirname($fileName);
         $fileNamePrefix = ($dir === '.' || $dir === '/' || $dir === '') ? '' : $dir . '/';
 
@@ -281,6 +285,11 @@ class B2Client
 
     /**
      * Faz upload de um arquivo para o Backblaze B2.
+     * 
+     * IMPORTANTE: O nome do arquivo é enviado no cabeçalho X-Bz-File-Name
+     * codificado em URL-safe Base64, conforme exigido pela API do B2.
+     * Os métodos deleteFile() e fileExists() devem usar a mesma codificação
+     * para localizar o arquivo posteriormente.
      * 
      * @param string $filePath Caminho local do arquivo (ex: '/tmp/foto.jpg')
      * @param string $fileName Nome do arquivo no bucket (ex: 'posts/foto.jpg')
@@ -381,7 +390,6 @@ class B2Client
         $authToken = $this->getDownloadAuthorizationToken($fileName, $duration);
 
         // 🔥 CONSTRÓI A URL NATIVA DO B2 (NÃO S3)
-        // O $this->downloadUrl já é a URL base da API (ex: https://f005.backblazeb2.com)
         $baseUrl = $this->downloadUrl . '/file/' . $this->bucketName . '/' . ltrim($fileName, '/');
         $signedUrl = $baseUrl . '?Authorization=' . urlencode($authToken);
 
@@ -391,7 +399,47 @@ class B2Client
         return $signedUrl;
     }
 
+    /**
+     * Verifica se um arquivo existe no bucket.
+     * 
+     * 🔥 CORRIGIDO (Brisa – 2026-09-11): O uploadFile() usa urlSafeBase64Encode()
+     * no cabeçalho X-Bz-File-Name, então o B2 armazena o arquivo com o nome
+     * codificado. Este método agora aplica a mesma codificação antes de consultar.
+     * 
+     * Fallback: se o nome codificado não for encontrado, tenta o nome original
+     * (para compatibilidade com uploads antigos que possam ter sido feitos de
+     * forma diferente).
+     * 
+     * @param string $fileName Nome do arquivo no bucket
+     * @return bool True se existir
+     */
     public function fileExists($fileName)
+    {
+        // Tentativa 1: com nome codificado (padrão do uploadFile)
+        $encodedName = $this->urlSafeBase64Encode($fileName);
+        if ($this->fileExistsByExactName($encodedName)) {
+            return true;
+        }
+
+        // Tentativa 2 (fallback): com nome original
+        // Proteção para uploads que possam ter sido feitos sem codificação
+        if ($encodedName !== $fileName) {
+            if ($this->fileExistsByExactName($fileName)) {
+                error_log("[B2Client] fileExists: encontrado pelo nome original (legado): $fileName");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Método auxiliar interno: consulta o B2 diretamente pelo nome exato.
+     * 
+     * @param string $exactName Nome exato como armazenado no B2
+     * @return bool
+     */
+    private function fileExistsByExactName($exactName)
     {
         $ch = curl_init($this->apiUrl . '/b2api/v2/b2_list_file_names');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -402,7 +450,7 @@ class B2Client
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'bucketId' => $this->bucketId,
-            'startFileName' => $fileName,
+            'startFileName' => $exactName,
             'maxFileCount' => 1
         ]));
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
@@ -412,11 +460,17 @@ class B2Client
 
         if ($httpCode !== 200) return false;
         $data = json_decode($response, true);
-        return !empty($data['files']) && $data['files'][0]['fileName'] === $fileName;
+        return !empty($data['files']) && $data['files'][0]['fileName'] === $exactName;
     }
 
     /**
      * Deleta um arquivo do Backblaze B2 pelo nome.
+     * 
+     * 🔥 CORRIGIDO (Brisa – 2026-09-11): O uploadFile() usa urlSafeBase64Encode()
+     * no cabeçalho X-Bz-File-Name, então o B2 armazena o arquivo com o nome
+     * codificado. Este método agora aplica a mesma codificação antes de deletar.
+     * 
+     * Fallback: se o nome codificado não for encontrado, tenta o nome original.
      * 
      * @param string $fileName Nome do arquivo no bucket
      * @return bool True se deletado com sucesso, false se arquivo não encontrado
@@ -424,6 +478,39 @@ class B2Client
      */
     public function deleteFile($fileName)
     {
+        // Tentativa 1: com nome codificado (padrão do uploadFile)
+        $encodedName = $this->urlSafeBase64Encode($fileName);
+        $result = $this->deleteFileByExactName($encodedName);
+        
+        if ($result === true) {
+            error_log("[B2Client] deleteFile: deletado pelo nome codificado: $fileName");
+            return true;
+        }
+        
+        // Se o resultado foi false (não encontrado), tenta o fallback
+        if ($result === false && $encodedName !== $fileName) {
+            error_log("[B2Client] deleteFile: nome codificado não encontrado, tentando original: $fileName");
+            $result = $this->deleteFileByExactName($fileName);
+            if ($result === true) {
+                error_log("[B2Client] deleteFile: deletado pelo nome original (legado): $fileName");
+                return true;
+            }
+        }
+        
+        return $result;
+    }
+
+    /**
+     * Método auxiliar interno: deleta o arquivo pelo nome exato (já codificado
+     * ou original, conforme passado).
+     * 
+     * @param string $exactName Nome exato como armazenado no B2
+     * @return bool True se deletado, false se não encontrado
+     * @throws Exception Se falhar ao listar ou deletar
+     */
+    private function deleteFileByExactName($exactName)
+    {
+        // 1. Busca o arquivo para obter o fileId
         $ch = curl_init($this->apiUrl . '/b2api/v2/b2_list_file_names');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -434,7 +521,7 @@ class B2Client
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'bucketId' => $this->bucketId,
-            'startFileName' => $fileName,
+            'startFileName' => $exactName,
             'maxFileCount' => 1
         ]));
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
@@ -449,16 +536,17 @@ class B2Client
 
         $data = json_decode($response, true);
         if (empty($data['files'])) {
-            return false;
+            return false; // Arquivo não encontrado
         }
 
         $file = $data['files'][0];
-        if ($file['fileName'] !== $fileName) {
-            return false;
+        if ($file['fileName'] !== $exactName) {
+            return false; // Não é exatamente o arquivo procurado
         }
 
         $fileId = $file['fileId'];
 
+        // 2. Deleta pelo fileId
         $ch = curl_init($this->apiUrl . '/b2api/v2/b2_delete_file_version');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -469,7 +557,7 @@ class B2Client
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'fileId' => $fileId,
-            'fileName' => $fileName
+            'fileName' => $exactName
         ]));
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
@@ -481,7 +569,7 @@ class B2Client
             throw new Exception("[B2Client] Falha ao deletar arquivo (HTTP $httpCode): $response");
         }
 
-        error_log("[B2Client] Arquivo deletado: $fileName (fileId: $fileId)");
+        error_log("[B2Client] Arquivo deletado: $exactName (fileId: $fileId)");
         return true;
     }
 

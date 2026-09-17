@@ -26,23 +26,24 @@
     --bt-dourado-oklch: oklch(83.276% 0.17139 82.036);
     --bt-fundo-escuro: #0a0a0a;
     --bt-fundo-card: #1a1a2ee0;
+    --img-bg:rgba(255, 255, 255, 0);
     --bt-texto-claro: #eee;
     --bt-texto-cinza: #aaa;
     --bt-borda-sutil: rgba(255, 255, 255, 0.06);
 
     /* 🔥 Variáveis controladas pelo JS (btRecalcularLayout) */
     --bt-card-width: 280px;
-    --bt-card-padding: clamp(10px, 2vw, 20px);
-    --bt-card-font-size: clamp(0.85rem, 1.2vw, 1.1rem);
-    --bt-titulo-size: clamp(1rem, 1.8vw, 1.6rem);
+    --bt-card-padding: clamp(10px, 1.5cqi, 30px);
+    --bt-card-font-size: clamp(0.85rem, 1.5cqi, 1.4rem);
+    --bt-titulo-size: clamp(1rem, 3cqi, 2rem);
     /* será sobrescrito pelo JS */
-    --bt-meta-size: clamp(0.75rem, 1vw, 0.9rem);
+    --bt-meta-size: clamp(0.75rem, 4cqw, 1.2rem);
     /* será sobrescrito pelo JS */
-    --bt-text-max-height: 60px;
+    --bt-text-max-height: 80px;
     /* será sobrescrito pelo JS */
-    --bt-card-max-height: 700px;
+    --bt-card-max-height: 650px;
     /* será sobrescrito pelo JS */
-    --bt-capa-height: 220px;
+    --bt-capa-height: 300px;
     /* será sobrescrito pelo JS */
     --bt-container-height: 800px;
 }
@@ -108,7 +109,7 @@
     display: block;
     position: relative;
     min-height: 100dvh;
-    height: 100vh;
+    height: 100dvh;
     max-height: 100vh;
     width: 100%;
     margin: 0;
@@ -142,11 +143,11 @@
     --swipe-rot: 0deg;
 
     /* 🔥 LARGURA DINÂMICA (CONTROLADA PELO JS) */
-    width: var(--bt-card-width, 250px) !important;
-    max-width: var(--bt-card-width, 250px) !important;
-    padding: var(--bt-card-padding, clamp(12px, 2cqw, 20px)) !important;
-    font-size: var(--bt-card-font-size, clamp(0.85rem, 1.5cqw, 1.1rem)) !important;
-    max-height: var(--bt-card-max-height, 600px) !important;
+    width: var(--bt-card-width, 280px) ;
+    max-width: var(--bt-card-width, 650px) ;
+    padding: var(--bt-card-padding, clamp(10px, 2cqi, 20px)) ;
+    font-size: var(--bt-card-font-size, clamp(0.85rem, 2.5cqi, 1.1rem)) ;
+    max-height: var(--bt-card-max-height, 600px) ;
     height: auto;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -161,8 +162,8 @@
 /* 🔥 TRANSFORMS COM VARIÁVEIS (IGUAL AO FEED) */
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
     .modo-tinder-ativo #bt-container-eventos .bt-card {
-       transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot)) !important;
-        transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot))) !important;
+       transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot)) ;
+        transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot))) ;
         transition: none;
     }
 }
@@ -184,7 +185,7 @@
 
 /* 🔥 CAPA DINÂMICA (usando variável do JS) */
 .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa {
-    height: var(--bt-capa-height, 250px);
+    height: var(--bt-capa-height, 300px);
     min-height: 140px;
     aspect-ratio: auto;
     /* remove o fixo 16/9 */
@@ -201,7 +202,7 @@
 .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa img,
 .modo-tinder-ativo #bt-container-eventos .bt-card .feed-anexo-item img {
     max-height: calc(var(--bt-card-max-height, 500px) * 0.5);
-    height: var(--img-max-height, auto);
+    height: var(--bt-max-height, auto);
     object-fit: var(--img-fit, contain);
     background-color: var(--img-bg, transparent);
     width: 100%;
@@ -216,14 +217,14 @@
 
 /*  EMPILHAMENTO VISUAL */
 .modo-tinder-ativo #bt-container-eventos .bt-card:first-child {
-    z-index: 100 !important;
-    opacity: 1 !important;
+    z-index: 100 ;
+    opacity: 1 ;
     pointer-events: auto;
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-card:not(:first-child) {
-    pointer-events: none !important;
-    user-select: none !important;
+    pointer-events: none ;
+    user-select: none ;
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-card:nth-child(2) {
@@ -265,18 +266,18 @@
 .modo-tinder-ativo #bt-container-eventos .bt-dragging {
     transition: none;
     will-change: transform, opacity;
-    z-index: 9999 !important;
+    z-index: 9999 ;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
     -webkit-font-smoothing: antialiased;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-dragging:hover {
-    box-shadow: none !important;
-    border-color: rgba(255, 255, 255, 0.15) !important;
+    box-shadow: none ;
+    border-color: rgba(255, 255, 255, 0.15) ;
     background: #1a1a2ed8;
 }
 
@@ -417,7 +418,7 @@
 
 .modo-tinder-ativo .bt-controles {
     top: 20%;
-    top: calc(15% + 50px);
+    top: calc(18% + 20px);
     left: 50%;
     transform: translate3d(-50%, -50%, 0px);
     transform: translate(-50%, -50%);
@@ -428,14 +429,13 @@
     background: #16162dc0 ;
     margin: 10px auto;
     max-width: 800px;
-    max-height: 5vh;
-    max-height: 25dvh;
+    max-height: 18vh;
+    max-height: 18dvh;
     overflow: hidden;
     overflow-y: auto;
-    scroll-snap-align: start;
-    scroll-margin-top: 20px;
+    scrollbar-width: none;
     display: flex;
-    position: fixed ;
+    position: absolute ;
     flex-direction: column;
     gap: 8px;
     padding: 15px 5px 15px 5px;
@@ -585,8 +585,6 @@
     cursor: default;
     backdrop-filter: none;
     transform: none;
-    width: auto;
-    height: auto;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
@@ -701,14 +699,14 @@
 .bt-info {
     display: flex;
     flex-direction: column;
-    gap: clamp(4px, 0.8vw, 10px);
+    gap: clamp(4px, 0.8cqw, 10px);
     flex: 1;
 }
 
 .bt-titulo {
     color: #fff;
     color: oklch(1 0 0);
-    font-size: var(--bt-titulo-size, clamp(1rem, 1.8cqw, 1.3rem));
+    font-size: var(--bt-titulo-size, clamp(1rem, 5cqi, 1.8rem));
     font-weight: 700;
     margin: 0;
     line-height: 1.2;
@@ -719,7 +717,7 @@
 
 .bt-local,
 .bt-data {
-    font-size: var(--bt-meta-size, clamp(0.8rem, 1.5cqw, 1rem));
+    font-size: var(--bt-meta-size, clamp(0.75rem, 2cqw, 1rem));
     color: var(--bt-texto-cinza);
     color: oklch(0.75 0 0);
     margin: 0;
@@ -737,7 +735,8 @@
 }
 
 .bt-descricao {
-    font-size: clamp(0.85rem, 1.5cqw, 1rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 2cqw, 1rem);
     color: #ccc;
     color: oklch(0.85 0 0);
     margin: 4px 0;
@@ -754,16 +753,18 @@
 /* Participação (contagens) */
 .bt-participacao {
     display: flex;
+    gap: 10px;
     gap: clamp(10px, 1.5vw, 20px);
-    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    font-size: clamp(0.75rem, 1cqw, 0.9rem);
     color: var(--bt-texto-cinza);
     color: oklch(0.75 0 0);
-    margin: clamp(4px, 0.5vw, 8px) 0;
+    margin: 6px 0;
+    margin: clamp(4px, 0.5vw, 12px) 0;
     flex-wrap: wrap;
 }
 
 .bt-participacao span {
-    font-size: var(--bt-meta-size, clamp(0.75rem, 1vw, 0.95rem));
+    font-size: var(--bt-meta-size, clamp(0.75rem, 1cqi, 0.95rem));
     display: flex;
     align-items: center;
     gap: 5px;
@@ -833,10 +834,11 @@
 
 /* Mensagem de evento expirado */
 .bt-expirado-msg {
+    padding: 8px;
     padding: clamp(6px, 0.8vw, 10px);
     text-align: center;
-    background: rgba(255, 0, 0, 0.08);
-    background: oklch(55% 0.18 30 / 0.08);
+    background: rgba(255, 0, 0, 0.06);
+    background: oklch(55% 0.18 30 / 0.06);
     border-radius: 8px;
     color: #ff6b6b;
     color: oklch(65% 0.15 30);
@@ -956,7 +958,7 @@
 .bt-detalhes-acoes {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
 }
 
 .bt-admin-acoes {
@@ -974,7 +976,7 @@
     color: var(--bt-dourado);
     text-decoration: none;
     font-weight: 600;
-    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    font-size: clamp(0.8rem, 1vw, 1.05rem);
     transition: 0.2s;
 }
 
@@ -988,10 +990,10 @@
     background: rgba(255, 50, 50, 0.15);
     border: 1px solid rgba(255, 50, 50, 0.3);
     border-radius: 30px;
-    padding: 6px 18px;
+    padding: 6px 16px;
     color: #ff6b6b;
     font-weight: 600;
-    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    font-size: clamp(0.8rem, 1vw, 1.05rem);
     cursor: pointer;
     transition: 0.2s;
     font-family: inherit;
@@ -1034,7 +1036,8 @@
 
 .bt-barra-fundo {
     flex: 1;
-    height: clamp(18px, 2.5vh, 28px);
+    height: 20px;
+    height: clamp(18px, 3cqh, 28px);
     background: rgba(255, 255, 255, 0.06);
     background: oklch(1 0 0 / 0.06);
     border-radius: 30px;
@@ -1098,15 +1101,17 @@
 .bt-lista-avatares {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
     gap: 20px;
 }
 
 .bt-avatar-item {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    width: clamp(50px, 8vw, 70px);
+    gap: 10px;
 }
 
 .bt-avatar-item img {
@@ -1118,13 +1123,13 @@
 }
 
 .bt-avatar-item span {
-    font-size: clamp(0.65rem, 0.8vw, 0.85rem);
+    font-size: clamp(0.65rem, 0.8vw, 0.95rem);
     color: var(--bt-texto-cinza);
     color: oklch(0.75 0 0);
     position: relative;
     display: flex;
     text-align: center;
-    max-width: 60px;
+    max-width: fit-content;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1143,7 +1148,8 @@
 }
 
 .bt-galeria h4 {
-    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    font-size: 1rem;
+    font-size: clamp(0.95rem, 1.8vw, 1.3rem);
     color: #ddd;
     color: oklch(0.85 0 0);
     margin-bottom: 10px;
@@ -1152,7 +1158,7 @@
 .bt-galeria-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 8px;
+    gap: 10px;
 }
 
 .bt-galeria-grid img {
@@ -1189,10 +1195,10 @@
     background: rgba(255, 255, 255, 0.04);
     background: oklch(1 0 0 / 0.04);
     border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 12px;
-    border-left: 4px solid var(--bt-dourado);
-    border-left: 4px solid oklch(83.276% 0.17139 82.036);
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    border-left: 3px solid var(--,);
+    border-left: 3px solid oklch(83.276% 0.17139 82.036);
     transition: background 0.2s;
 }
 
@@ -1209,10 +1215,19 @@
 }
 
 .bt-comentario-avatar {
-    width: 28px;
-    height: 28px;
+    width: clamp(36px, 3cqi, 60px);
+    height: clamp(36px, 3cqi, 60px);
     border-radius: 50%;
+    -moz-background-clip: padding-box;
+    /* Firefox 3.6 and earlier */
+    -webkit-background-clip: padding-box;
+    /* Safari 3-4, iOS 3-4 */
+    background-clip: padding-box;
+    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
     object-fit: cover;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
     border: 1px solid var(--bt-borda-sutil);
 }
@@ -1221,10 +1236,12 @@
     font-weight: 600;
     color: var(--bt-dourado);
     color: oklch(83.276% 0.17139 82.036);
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.85rem, 2vw, 1.05rem);
 }
 
 .bt-comentario-data {
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     color: #888;
     color: oklch(0.62 0 0);
@@ -1236,7 +1253,7 @@
     color: #ddd;
     color: oklch(0.88 0 0);
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 1vw, 1rem);
+    font-size: clamp(0.9rem, 1vw, 1.05rem);
     line-height: 1.5;
     margin: 0;
     white-space: pre-wrap;
@@ -1289,15 +1306,14 @@
 
 .bt-btn-enviar {
     flex-shrink: 0;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border: none;
     border-radius: 50%;
-    background: linear-gradient(165deg, #fc5f21, #9b5ab9d2);
-    background: var(--laranja-fenda);
+    background: var(--laranja-fenda, linear-gradient(165deg, #fc5f21, #9b5ab9d2));
     color: #000;
     color: oklch(0% 0 0);
-    font-size: 1.1rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
     display: flex;
@@ -1334,6 +1350,13 @@
     z-index: 9995;
 }
 
+/* 1. Registra a propriedade para animar o ângulo das luzes da pista sem mover o botão */
+@property --angulo-balada {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
 /* 🔥 Botões de ação (toggle + filtro) – agora sem position: fixed */
 .bt-btn-filtro {
     display: inline-flex;
@@ -1359,6 +1382,29 @@
     font-family: inherit;
     /* volta ao fluxo normal */
     z-index: 9995;
+
+    /* Apenas isola o contexto para o brilho ficar estritamente atrás do botão */
+    isolation: isolate;
+}
+
+/* 🎇 O Efeito Balada injetado puramente no visual de fundo */
+.bt-btn-filtro::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: inherit;
+    z-index: -1;
+    background: conic-gradient(
+        from var(--angulo-balada), 
+        oklch(83.276% 0.17139 82.036), 
+        #ff007f,                       
+        #00f0ff,                       
+        oklch(83.276% 0.17139 82.036)
+    );
+    filter: blur(4px);
+    animation: 
+        girarLuzesBalada 4s linear infinite,
+        strobeBalada 0.6s ease-in-out infinite alternate;
 }
 
 .bt-btn-filtro:hover {
@@ -1430,6 +1476,25 @@
     box-shadow: 0 4px 12px rgba(255, 188, 0, 0.2);
 }
 
+/* Animações da pista de dança */
+@keyframes girarLuzesBalada {
+    to {
+        --angulo-balada: 360deg;
+    }
+}
+
+@keyframes strobeBalada {
+    0% {
+        opacity: 0.3;
+        filter: blur(4px);
+    }
+    100% {
+        opacity: 0.9;
+        filter: blur(8px);
+    }
+}
+
+
 /* ================================================================
    10. FORMULÁRIOS DE CRIAÇÃO/EDIÇÃO (criar-evento.php, editar-evento.php)
    ================================================================ */
@@ -1471,7 +1536,7 @@
 .bt-campo-grupo {
     display: flex;
     flex-direction: column;
-    margin: 20px 0;
+    margin: 10px 0;
     max-width: 95%;
     justify-content: center;
     padding: 10px;
@@ -1549,15 +1614,14 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    max-height: 220px;
-    margin-top: 8px;
-
 }
 
 .bt-anexo-item {
     position: relative;
-    width: clamp(46px, 10vw, 90px);
-    height: clamp(46px, 10vw, 90px);
+    width: 100px;
+    height: 100px;
+    width: clamp(100px, 15cqw, 220px);
+    height: clamp(100px, 15cqw, 220px);
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--bt-borda-sutil);
@@ -1680,7 +1744,7 @@
     display: block;
     position: relative;
     text-align: center;
-    top: calc(50% - 50px);
+    top: calc(25% - 50px);
     margin: 20px auto;
     padding: 40px 20px;
     color: #ccc;
@@ -1688,23 +1752,24 @@
 }
 
 .bt-empty i {
-    font-size: clamp(2.8rem, 8vw, 5rem);
-    color: var(--bt-dourado);
-    color: oklch(83.276% 0.17139 82.036);
+    font-size: 2.5rem;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    color: var(--bt-dourado, #ffbc00);
+    color: var(--bt-dourado-oklch);
     display: block;
     margin-bottom: 15px;
 }
 
 .bt-empty strong {
     display: block;
-    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    font-size: clamp(1.1rem, 2cqw, 1.6rem);
     color: #fff;
     color: oklch(1 0 0);
     margin-bottom: 8px;
 }
 
 .bt-empty p {
-    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+    font-size: clamp(0.9rem, 1.2cqw, 1.1rem);
     color: #888;
     color: oklch(0.65 0 0);
     margin-bottom: 20px;
@@ -1720,7 +1785,7 @@
     padding: 14px 28px;
     font-weight: 700;
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 1.5vw, 1.15rem);
+    font-size: clamp(0.9rem, 1.5cqw, 1.15rem);
     cursor: pointer;
     transition: 0.2s;
 }
@@ -1806,8 +1871,7 @@
 #bt-capa-preview {
     margin: 10px auto;
     width: 100%;
-    height: 100%;
-    
+    height: 100%;  
 }
 
 .bt-capa-preview img, 
@@ -1833,14 +1897,16 @@
 #galeria-container .bt-anexos-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
     margin: 10px auto;
 }
 
 #galeria-container .bt-anexo-item {
     position: relative;
-    width: clamp(60px, 10vw, 90px);
-    height: clamp(60px, 10vw, 90px);
+    width: 80px;
+    height: 80px;
+    width: clamp(70px, 12cqw, 120px);
+    height: clamp(70px, 12cqw, 120px);
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--bt-borda-sutil);
@@ -1854,7 +1920,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    display: inline-block;
 }
 
 #galeria-container .btn-remover-anexo {
@@ -1867,7 +1933,7 @@
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    font-size: 12px;
+    font-size: 11px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1876,15 +1942,15 @@
 }
 
 #galeria-container .btn-remover-anexo:hover {
-    background: rgba(255, 50, 50, 0.8);
-    transform: scale(1.1);
+    background: rgba(255, 50, 50, 0.7);
+    transform: scale(1.05);
 }
 
 #novos-anexos-preview {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     min-height: 10px;
 }
 
@@ -1914,12 +1980,12 @@
     align-items: center;
     gap: 10px;
     background: rgba(20, 20, 32, 0.95);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #fff;
     transition: opacity 0.3s ease;
-    max-width: 90%;
+    max-width: 95%;
     pointer-events: none;
 }
 

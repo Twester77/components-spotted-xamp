@@ -210,13 +210,13 @@ if ($stmt->execute()) {
 
     // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
     $avatar = obterUrlComFallback($user['foto'] ?? null, 'uploads/ui/default.webp', null, true);
-    $avatar_html = '<img src="' . htmlspecialchars($avatar) . '" class="avatar-p" style="border-radius:50%; margin-right:8px;" onerror="this.src=\'uploads/ui/default.webp\'">';
+    $avatar_html = '<img src="' . htmlspecialchars($avatar) . '" class="avatar-p" style="border-radius:50%; width: 40px; height: 40px; margin-right:8px;" onerror="this.src=\'uploads/ui/default.webp\'">';
 
     $html = '
     <div class="bt-comentario-item" style="--cor-borda-glow: #ffbc00;">
         <div class="bt-comentario-meta">
             ' . $avatar_html . '
-            <strong class="bt-comentario-autor" style="color:#ffbc00;">@' . htmlspecialchars($user['username']) . '</strong>
+            <strong class="bt-comentario-autor">@' . htmlspecialchars($user['username']) . '</strong>
             <span class="bt-comentario-data">' . date('H:i') . '</span>
         </div>
         <p class="bt-comentario-texto">' . nl2br(htmlspecialchars($comentario_sanitizado)) . '</p>

@@ -107,6 +107,29 @@ if (isset($_SESSION['usuario_id'])) {
 }
 
 // ==================================================
+// 🔥 PRÉ-BUSCA: usuário é admin/criador da comunidade?
+// ==================================================
+$is_comunidade = ($comunidade_id > 0);
+$usuario_logado = isset($_SESSION['usuario_id']) ? (int)$_SESSION['usuario_id'] : 0;
+$sou_admin_ou_criador = false;
+
+if ($is_comunidade && $usuario_logado > 0) {
+    $stmt_role = $conn->prepare("
+        SELECT papel
+        FROM comunidade_membros
+        WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+    ");
+    $stmt_role->bind_param("ii", $comunidade_id, $usuario_logado);
+    $stmt_role->execute();
+    $role_data = $stmt_role->get_result()->fetch_assoc();
+    $stmt_role->close();
+
+    if ($role_data && in_array($role_data['papel'], ['criador', 'admin'])) {
+        $sou_admin_ou_criador = true;
+    }
+}
+
+// ==================================================
 // 3. LOOP DE EXIBIÇÃO (COM B2 INTEGRADO E GRID/CARROSSEL)
 // ==================================================
 $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
@@ -124,8 +147,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $categoria_atual = $linha['categoria'];
     $total_comentarios = $linha['total_comentarios'] ?? 0;
     $total_reacoes = $linha['total_reacoes'] ?? 0;
+    $comunidade_do_post = (int)($linha['comunidade_id'] ?? 0);
 
-    $usuario_logado = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;
     $sou_eu = ($linha['usuario_id'] == $usuario_logado);
 
     $cor_post = $sou_eu ? '#ffbb00' : ($linha['pref_cor_padrao'] ?? '#70cde4');
@@ -141,7 +164,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         $avatar = !empty($linha['foto']) ? $linha['foto'] : 'uploads/ui/default.webp';
         if ($b2 !== null && !empty($avatar) && !filter_var($avatar, FILTER_VALIDATE_URL)) {
             try {
-                // 🔥 FALLBACK CENTRALIZADO
                 $avatar = obterUrlComFallback($avatar, 'uploads/ui/default.webp', $b2, true);
             } catch (Exception $e) {
                 $avatar = 'uploads/ui/default.webp';
@@ -155,12 +177,9 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 
     // ============================================================
     // 🔥 EXIBIÇÃO DOS ANEXOS (MÚLTIPLOS VIA JSON OU FALLBACK)
-    // 🔥 MODO CARROSSEL ATIVADO EM COMUNIDADES OU NA CENTRAL (tipo_feed === 'pessoal')
     // ============================================================
     $anexos_html = '';
     $anexos_exibicao = null;
-    $is_comunidade = ($comunidade_id > 0);
-    $is_central = ($tipo_feed === 'pessoal');
 
     if (!empty($linha['anexos'])) {
         $anexos_exibicao = json_decode($linha['anexos'], true);
@@ -170,12 +189,12 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     }
 
     if (!empty($anexos_exibicao) && is_array($anexos_exibicao)) {
-        // 🔥 CARROSSEL (se for comunidade OU central e tiver mais de 1 anexo)
+        // Carrossel para comunidade ou central com mais de 1 anexo
+        $is_central = ($tipo_feed === 'pessoal');
         if ( ($is_comunidade || $is_central) && count($anexos_exibicao) > 1) {
             $anexos_html = '<div class="carrossel-wrapper">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                    // 🔥 FALLBACK CENTRALIZADO
                     $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                     $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
@@ -184,7 +203,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             }
             $anexos_html .= '</div>';
             
-            // 🔥 INDICADORES (bolinhas + número)
+            // Indicadores
             if (count($anexos_exibicao) > 1) {
                 $anexos_html .= '<div class="carrossel-indicadores">';
                 $anexos_html .= '  <span class="carrossel-numero" id="carrossel-numero-' . $post_id_atual . '">1/' . count($anexos_exibicao) . '</span>';
@@ -194,17 +213,16 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 $anexos_html .= '</div>';
             }
 
-            // 🔥 SETAS DE NAVEGAÇÃO (PC)
+            // Setas de navegação
             $anexos_html .= '<div class="carrossel-nav">';
             $anexos_html .= '  <button class="carrossel-prev" data-post="' . $post_id_atual . '" aria-label="Anterior">‹</button>';
             $anexos_html .= '  <button class="carrossel-next" data-post="' . $post_id_atual . '" aria-label="Próximo">›</button>';
             $anexos_html .= '</div>';
         } else {
-            // 🔥 GRID (padrão para outros contextos ou comunidade/central com 1 anexo)
+            // Grid padrão
             $anexos_html = '<div class="feed-anexos-grid">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                    // 🔥 FALLBACK CENTRALIZADO
                     $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                     $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
@@ -214,24 +232,43 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             $anexos_html .= '</div>';
         }
     } elseif (!empty($linha['imagem_url'])) {
-        // Fallback: imagem única (compatibilidade)
+        // Fallback: imagem única
         $nome_imagem = $linha['imagem_url'];
         $defaults = ['default_feminino.jpg', 'default_masculino.jpg', 'default_capa_feminino.webp', 'default_capa_masculino.webp'];
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
-            // 🔥 FALLBACK CENTRALIZADO
             $img_url = obterUrlComFallback($nome_imagem, htmlspecialchars($nome_imagem), $b2, true);
         }
         $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }
 
-    // 🔥 DATA DO POST AGORA COM FUSO BRASILEIRO
+    // 🔥 DATA DO POST COM FUSO BRASILEIRO
     $data_post = exibirDataHoraBrasil($linha['data_post'], 'd/m H:i');
+
+    // ============================================================
+    // 🔥 BOTÃO ELLIPSIS
+    // Visível quando estamos em comunidade E (sou o autor OU sou admin/criador)
+    // ============================================================
+    $ellipsis_html = '';
+    if ($is_comunidade && ($sou_eu || $sou_admin_ou_criador)) {
+        $ellipsis_html = '
+            <div class="card-actions-ellipsis" data-post-id="' . $post_id_atual . '">
+                <button class="btn-ellipsis" onclick="window.abrirMenuEllipsis(' . $post_id_atual . ', this)" aria-label="Abrir menu de ações">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+            </div>
+        ';
+    }
+
+    // 🔥 Atributo para o feed identificar posts de comunidade (útil para o futuro)
+    $data_comunidade_attr = ($comunidade_do_post > 0) ? 'data-comunidade-id="' . $comunidade_do_post . '"' : '';
 ?>
     <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>"
         data-id="<?php echo $post_id_atual; ?>"
+        <?php echo $data_comunidade_attr; ?>
         style="border: 2px solid <?php echo $cor_post; ?>">
+        <?php echo $ellipsis_html; ?>
         <div class="card-header">
             <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
             <span class="post-time"><?php echo $data_post; ?></span>

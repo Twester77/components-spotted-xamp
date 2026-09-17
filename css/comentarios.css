@@ -50,8 +50,8 @@
     top: 0;
     z-index: 1000;
     background: rgba(20, 20, 30, 0.92);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     padding: 6px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     display: flex;
@@ -263,6 +263,8 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
+    filter: none;
+    transform: none;
     object-fit: cover;
     flex-shrink: 0;
     border: 2px solid rgba(255, 255, 255, 0.1);
@@ -319,8 +321,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 5px 0;
-    margin-top: 4px;
+    padding: 8px 0;
 }
 
 .header-actions-container {
@@ -403,7 +404,8 @@
     width: 100%;
     position: relative; /* Necessário para o posicionamento dos comentários */
     overflow-x: hidden;
-    margin: 20px auto;
+    margin: 35px auto;
+    margin: calc(20px + 40px) auto;
     gap: 10px;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -442,7 +444,7 @@
     padding: 6px;
     margin-bottom: 10px;
     border-radius: 6px;
-    font-size: clamp(0.8rem, 2cqw, 1.1rem);
+    font-size: clamp(0.8rem, 2cqi, 1.1rem);
 }
 
 /* ==================================================
@@ -457,12 +459,13 @@
     border-radius: 16px 16px 16px 4px;
     border-right: 3px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     align-self: flex-start;
+    justify-content: center;
     /* MUDANÇA CHAVE: O balão agora se ajusta ao texto de forma inteligente */
     width: fit-content; 
     /* Removemos o max-width: min-content; pois o @container já dita o limite real */
-    min-width: 140px;
+    min-width: 120px;
     min-height: 55px;
     box-sizing: border-box;
     position: relative;
@@ -571,7 +574,7 @@
 
 .comentario-item.vibe-glass {
     background: rgb(255 255 255 / 5%);
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(4px);
     color: #fff;
     border-bottom: 1px solid #11111141;
     border-top: 1px solid #11111141;
@@ -616,13 +619,13 @@
 
 .comentario-item.vibe-glass:hover {
     transition: 0.3 ease;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
 }
 
 /* META DADOS */
 
 .comentario-data {
-    font-size: clamp(0.7rem, 3.5cqw, 0.95rem);
+    font-size: clamp(0.7rem, 2.5cqi, 0.95rem);
     opacity: 0.75;
     font-weight: bold;
     white-space: nowrap;
@@ -634,7 +637,7 @@
 .comentario-texto {
     color: #ddd;
     color: oklch(0.92 0 0);
-    font-size: clamp(0.8rem, 3cqw, 1rem);
+    font-size: clamp(0.8rem, 3cqi, 1rem);
     line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: break-word;
@@ -742,7 +745,7 @@
     border: 1px solid rgba(255, 188, 0, 0.25);
     border-radius: 20px;
     padding: 4px 10px 4px 12px;
-    font-size: clamp(0.7rem, 2.5cqw, 1rem);
+    font-size: clamp(0.7rem, 2.5cqi, 1rem);
     color: #ffbc00;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     max-height: 50px;
@@ -911,7 +914,8 @@
     max-height: 50vh;
     max-width: 250px;
     background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     overflow-y: auto;
     border-radius: 16px;
     padding: 12px;
@@ -932,6 +936,7 @@
     align-self: flex-start;
     cursor: pointer;
     padding: 6px 10px;
+    font-size: 0.95rem;
     border-radius: 8px;
     transition: 0.2s;
 }
@@ -1267,6 +1272,7 @@ body.pagina-post .header-principal {
 
 .comentario-deletado-msg {
     text-align: center;
+    justify-content: left;
     word-break: break-word;
     letter-spacing: 0.5px;
     overflow: hidden;
@@ -1278,14 +1284,15 @@ body.pagina-post .header-principal {
     flex-direction: column;
     word-break: break-word;
     hyphens: auto;
-    padding: 7px;
-    color: #c4c4c4;
+    padding: 6px;
+    color: #878787;
+    color: oklch(62.341% 0.00007 271.152);
     font-style: italic;
-    font-size: 0.75rem;
-    font-size: clamp(0.8rem, 0.382vw + 0.625rem, 1.1rem);
     background-color: rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-    min-width: 160px;
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 0.382vw + 0.625rem, 1rem);
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    min-width: 200px;
     min-height: 50px;
 }
 
@@ -1368,92 +1375,6 @@ body.pagina-post .header-principal {
     left: -32px;
 }
 
-/* DIALOG POP-UP ESTILO WHATSAPP */
-.dialog-confirmacao {
-    border: none;
-    border-radius: 16px;
-    padding: 0;
-    background: transparent;
-    max-width: 90%;
-    max-width: 350px;
-    margin: auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate3d(-50%, -50%, 0px);
-    transform: translate(-50%, -50%);
-}
-
-.dialog-confirmacao::backdrop {
-    display: none;
-}
-
-.dialog-conteudo {
-    background: rgba(20, 20, 32, 0.96);
-    backdrop-filter: blur(6px);
-    border-radius: 16px;
-    padding: 16px 20px 20px;
-    text-align: center;
-    border: 1px solid rgba(255, 140, 0, 0.3);
-    pointer-events: auto;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-}
-
-.dialog-conteudo h3 {
-    margin: 0 0 8px 0;
-    color: #ffbc00;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.dialog-conteudo p {
-    margin: 0 0 16px 0;
-    color: #fff;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.dialog-botoes {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-.dialog-btn {
-    border: none;
-    border-radius: 30px;
-    padding: 7px 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 0.85rem;
-    min-width: 80px;
-}
-
-.dialog-btn-sim {
-    background: rgba(220, 53, 69, 0.2);
-    border: 1px solid #ff4b2b;
-    color: #ff8a8a;
-}
-
-.dialog-btn-sim:hover {
-    background: rgba(220, 53, 69, 0.4);
-}
-
-.dialog-btn-nao {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid #666;
-    color: #ccc;
-}
-
-.dialog-btn-nao:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
 /* ==================================================
    RESPONSIVIDADE – telas pequenas e landscape
    ================================================== */
@@ -1462,110 +1383,8 @@ body.pagina-post .header-principal {
         left: -24px;
         top: 4px;
     }
-
-    .dialog-confirmacao {
-        width: 240px;
-    }
-
-    .dialog-conteudo {
-        padding: 14px 16px 16px;
-    }
-
-    .dialog-conteudo h3 {
-        font-size: 0.9rem;
-    }
-
-    .dialog-conteudo p {
-        font-size: 0.8rem;
-    }
-
-    .dialog-btn {
-        font-size: 0.75rem;
-        padding: 4px 10px;
-        min-width: 60px;
-    }
-
-    .post-encerrado-banner {
-        font-size: 0.8rem;
-        padding: 8px 12px;
-    }
-
-    .comentarios-bloqueados-msg {
-        font-size: 0.85rem;
-    }
-
-    .container-cadastro-fenda {
-        padding: 20px;
-    }
-
-    .cadastro-header h2 {
-        font-size: 1.3rem;
-    }
-
-    .grid-vibes {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .step-content {
-        padding: 0 10px;
-    }
-
-    .botoes-rodape {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .botoes-rodape .btn-step-prev {
-        width: 100%;
-        text-align: center;
-    }
-
-    .botoes-rodape .btn-finalizar-fenda {
-        width: 100%;
-    }
-
-    .preview-perfil {
-        height: 100px;
-    }
-
-    .preview-avatar {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-    }
-
-    .preview-info .nome {
-        font-size: 0.85rem;
-    }
 }
 
-@media (orientation: landscape) and (max-height: 500px) {
-    .dialog-confirmacao {
-        width: 260px;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .dialog-conteudo {
-        padding: 10px 14px 14px;
-    }
-
-    .dialog-conteudo h3 {
-        font-size: 0.85rem;
-        margin-bottom: 4px;
-    }
-
-    .dialog-conteudo p {
-        font-size: 0.8rem;
-        margin-bottom: 10px;
-    }
-
-    .dialog-btn {
-        font-size: 0.75rem;
-        padding: 4px 10px;
-        min-width: 50px;
-    }
-}
 
 /* POST ENCERRADO – BANNER E BLOQUEIO */
 .post-encerrado-banner {
@@ -1618,10 +1437,11 @@ body.pagina-post .header-principal {
     display: flex;
     justify-content: flex-end;
     font-size: 0.7rem;
-    font-size: clamp(0.75rem, 3.5cqw, 0.95rem);
+    font-size: clamp(0.75rem, 3.5cqi, 0.95rem);
     gap: 4px;
     opacity: 0.6;
-    color: #c4c4c4;
+    color: #d1d1d1;
+    color: oklch(86% 0.0001 271.152);
 }
 
 /* META: agora sem o nowrap, para o nome não esticar a bolha */
@@ -1639,13 +1459,14 @@ body.pagina-post .header-principal {
 .comentario-autor {
     color: var(--cor-borda-glow);
     font-size: 0.75rem;
-    font-size: clamp(0.8rem, 3.5cqw, 1rem);
+    font-size: clamp(0.8rem, 3.5cqi, 1rem);
     font-weight: bold;
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     /* Removemos o max-width fixo para permitir que o nome se expanda até o limite da bolha */
-    max-width: 100%;
+    max-width: 180px;
+    width: 100%;
     word-break: break-word;
 }
 
@@ -1667,7 +1488,6 @@ body.pagina-post .header-principal {
 /* Comportamento específico para quando houver apenas 1 foto */
 .comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
     display: block;
-    width: max-content;
     max-width: 100%;
 }
 
@@ -1692,7 +1512,7 @@ body.pagina-post .header-principal {
 
 /* Quando for uma foto única, ela pode expandir um pouco mais para dar destaque */
 .comentario-media-item:only-child {
-    max-width: 220px;
+    max-width: 250px;
 }
 
 .comentario-media-item:hover {
@@ -1703,19 +1523,21 @@ body.pagina-post .header-principal {
 .comentario-media-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
 .comentario-media-item img.gif-externo {
     object-fit: contain;
     background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
 }
 
 .btn-fechar-erro {
   padding: 6px 10px;
   font-size: 0.8rem;
-  font-size: clamp(0.85rem, 1.5vw, 1.2rem);
+  font-size: clamp(0.85rem, 5cqw, 1.2rem);
   border: none;
   box-shadow: none;
   text-decoration: none;
@@ -1726,7 +1548,7 @@ body.pagina-post .header-principal {
   background: oklch(0.7615 0.1421 20.94);
   color: oklch(0.6689 0.2189 20.91);
   border-radius: 10px;
-  margin: 5px auto;
+  margin: 4px auto;
   display: block; /* Garante que o margin auto centralize o botão */
 
   transition: all 0.2s ease-in-out;

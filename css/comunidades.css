@@ -48,8 +48,8 @@
 .comunidade-card {
     background: rgba(255, 255, 255, 0.04);
     background: oklch(100% 0 0 / 0.04);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border: 1px solid oklch(100% 0 0 / 0.06);
@@ -148,7 +148,8 @@
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-    font-size: clamp(0.85rem, 1.1vw, 1rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 1.1cqw, 1.05rem);
 }
 
 .btn-entrar-comunidade.membro {
@@ -202,12 +203,14 @@
 
 .search-input::placeholder {
     color: #888;
+    color: oklch(62.675% 0.00007 271.152);
 }
 
 .search-btn {
     flex-shrink: 0;
     padding: 8px 20px;
-    background: var(--dourado, #ffbc00);
+    background: #4caf50;
+    background: oklch(67.311% 0.16242 144.231);
     color: #000;
     border: none;
     border-radius: 30px;
@@ -217,7 +220,7 @@
 }
 
 .search-btn:hover {
-    background: #ffd44d;
+    filter: brightness(1.02);
     transform: scale(1.02);
 }
 
@@ -230,8 +233,8 @@
     max-height: 320px;
     overflow-y: auto;
     background: rgba(16, 16, 28, 0.45);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
@@ -313,7 +316,7 @@
 .comunidade-page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
 }
 
 .comunidade-capa {
@@ -425,14 +428,31 @@
     margin-top: 20px;
 }
 
+
 /* Formulários (criar/editar posts) – fundo escuro com leve vidro */
 .form-container.form-comunidade {
     background: #1c1c25;
     background-clip: padding-box;
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
+    width: 100%;
+    max-width: 700px;
     padding: 20px 15px;
     margin: 0 auto 20px auto;
+}
+
+textarea#descricao{
+    resize: vertical;
+    min-height: 60px;
+    max-height: 200px;
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 12px;
+    font-family: inherit;
+    outline: none;
+    color: #ffffffeb;
+    color: oklch(100% 0.00011 271.152 / 0.922);
+    background: #1a1a1a;
 }
 
 
@@ -669,7 +689,8 @@
     color: #ffbc00;
     padding: 2px 10px;
     border-radius: 20px;
-    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
+    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 0.9cqw, 0.95rem);
     font-weight: 600;
     display: inline-flex;
     align-items: center;
@@ -919,8 +940,8 @@
     }
 
     .papel-badge {
-        font-size: 0.5rem;
-        padding: 1px 6px;
+        font-size: 0.55rem;
+        padding: 2px 6px;
     }
 }
 
@@ -1032,7 +1053,7 @@
     background: none;
     border: none;
     color: rgba(255, 255, 255, 0.5);
-    font-size: clamp(1.4rem, 2vw, 2rem);
+    font-size: clamp(1.2rem, 2vw, 2rem);
     cursor: pointer;
     padding: 0;
     line-height: 1;
@@ -1042,14 +1063,14 @@
 
 .modal-fechar:hover {
     color: #fff;
-    transform: rotate(90deg) scale(1.05);
+    transform: scale(1.05);
 }
 
 /* ---------- CORPO DO MODAL (LISTA DE MEMBROS) ---------- */
 .modal-body {
     flex: 1;
     overflow-y: auto;
-    padding: clamp(8px, 1.2vw, 16px) clamp(10px, 1.5vw, 20px);
+    padding: clamp(6px, 1.2vw, 14px) clamp(8px, 1.5vw, 20px);
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 188, 0, 0.3) transparent;
 }
@@ -1076,15 +1097,15 @@
 
 .membro-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
-    padding: clamp(8px, 0.8vw, 10px) clamp(8px, 1vw, 14px);
+    padding: clamp(6px, 0.9cqw, 10px) clamp(6px, 1.5cqw, 14px);
     background: rgba(255, 255, 255, 0.03);
-    border-radius: clamp(6px, 0.8vw, 10px);
+    border-radius: clamp(6px, 0.8cqw, 10px);
     border-left: 3px solid transparent;
     transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
     flex-wrap: wrap;
-    gap: clamp(6px, 0.6vw, 12px);
+    gap: clamp(6px, 0.6cqw, 12px);
 }
 
 .membro-item:hover {
@@ -1100,39 +1121,49 @@
 }
 
 .membro-item .avatar-membro {
-    width: clamp(32px, 3vw, 50px);
-    height: clamp(32px, 3vw, 50px);
+    width: 35px;
+    width: clamp(36px, 4cqw, 50px);
+    height: 35px;
+    height: clamp(36px, 4cqw, 50px);
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 188, 0, 0.1);
+    border: 1px solid rgba(255, 188, 0, 0.1);
     flex-shrink: 0;
 }
 
 .membro-item .nome-membro {
     font-weight: 500;
     color: #fff;
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.8rem, 1cqw, 1rem);
     word-break: break-word;
 }
 
 .membro-item .data-membro {
-    font-size: clamp(0.6rem, 0.75vw, 0.75rem);
+    font-size: 0.7rem;
+    font-size: clamp(0.65rem, 2.5cqw, 0.85rem);
     color: #888;
+    color: oklch(0.6268 0 0);
     margin-top: 2px;
 }
 
 .membro-item .acoes-membro {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: clamp(6px, 0.6vw, 12px);
+    flex-wrap: nowrap;
+    break-inside: avoid;
+    gap: 8px;
+    gap: clamp(6px, 1cqw, 12px);
     flex-shrink: 0;
 }
 
 /* ---------- BADGE DE PAPEL ---------- */
 .papel-badge {
-    font-size: clamp(0.6rem, 0.65vw, 0.8rem);
+    font-size: 0.6rem;
+    font-size: clamp(0.65rem, 1.3vw, 0.9rem);
     font-weight: 600;
-    padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 14px);
+    padding: 3px 8px;
+    padding: clamp(2px, 0.3cqw, 6px) clamp(8px, 1cqw, 14px);
     border-radius: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1158,10 +1189,11 @@
 .btn-acao-membro {
     background: none;
     border: none;
-    font-size: clamp(0.75rem, 1vw, 1.05rem);
+    font-size: clamp(0.75rem, 1.5vw, 1.05rem);
     cursor: pointer;
     overflow: hidden;
-    padding: clamp(3px, 0.5vw, 8px);
+    padding: 4px;
+    padding: clamp(4px, 0.8vw, 8px);
     border-radius: 4px;
     transition: all 0.15s ease;
     line-height: 1;
@@ -1524,7 +1556,7 @@
 
 .comunidade-page .card-postar-inline-wrapper {
     background: #16161d; /* eigengrau */
-    background: oklch(15% 0 0);
+    background: oklch(0.2035 0.0139 285.1);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     border: 1px solid oklch(100% 0 0 / 0.06);
@@ -1537,7 +1569,7 @@
 .comunidade-page .card-postar-inline-wrapper:hover {
     border-color: rgba(255, 255, 255, 0.12);
     border-color: oklch(100% 0 0 / 0.12);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* Botão toggle – texto sempre à esquerda */
@@ -1555,16 +1587,13 @@
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease ;
     font-family: inherit;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    border-bottom: 1px solid oklch(100% 0 0 / 0.04);
     text-align: left;
 }
 
 .comunidade-page .btn-toggle-postar:hover {
-    background: rgba(255, 255, 255, 0.03);
-    background: oklch(100% 0 0 / 0.03);
     color: #fff;
     color: oklch(100% 0 0);
+    transition: background 0.2s ease;
 }
 
 .comunidade-page .btn-toggle-postar i {
@@ -1860,9 +1889,8 @@
 /* Cada card – sem bordas laterais, apenas superior e inferior, fundo escuro */
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
     background: #16161d;
-    background: oklch(15% 0 0);
+    background:oklch(0.2035 0.0139 285.1);
     border: none !important;
-    border-left: 6px solid var(--aura-user);
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-top: 1px solid oklch(100% 0 0 / 0.06);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -1870,7 +1898,7 @@
     border-radius: 8px;
     display: flex;
     justify-content: center;
-    padding: 25px 5px;
+    padding: 15px 5px;
     margin: 0;
     max-width: 700px;
     width: 100%;
@@ -1891,11 +1919,16 @@
     align-items: center;
     gap: 10px;
     margin-bottom: 6px;
+    font-size: 0.8rem;
+    font-size: clamp(0.8rem, 1.3cqi, 1.2rem);
+
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .avatar-p {
-    width: clamp(36px, 4vw, 48px);
-    height: clamp(36px, 4vw, 48px);
+    width: 38px;
+    height: 38px;
+    width: clamp(40px, 12cqw, 80px);
+    height: clamp(40px, 12cqw, 80px);
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border: 1px solid oklch(100% 0 0 / 0.1);
@@ -1904,6 +1937,7 @@
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-mention,
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-anonimo {
+    font-size: 0.85rem;
     font-size: clamp(0.9rem, 1.1vw, 1.1rem);
     font-weight: 600;
     color: #ffbc00;
@@ -1912,7 +1946,8 @@
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-time {
-    font-size: clamp(0.7rem, 0.8vw, 0.9rem);
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 3cqi, 1.1rem);
     color: #888;
     color: oklch(60% 0 0);
     margin-left: auto;
@@ -1920,7 +1955,8 @@
 
 /* Conteúdo do post – texto e imagens */
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
-    font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.9rem, 1.2cqw, 1.15rem);
     line-height: 1.6;
     color: #eee;
     color: oklch(95% 0 0);
@@ -1981,8 +2017,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     flex: 0 0 100%;
     scroll-snap-align: start;
     aspect-ratio: auto;
-    min-height: 200px;
-    max-height: 400px;
+    min-height: 150px;
+    max-height: 350px;
+    max-height: clamp(220px, 70cqh, 400px);
     background: #0a0a0a;
     display: flex;
     align-items: center;
@@ -1993,18 +2030,16 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
  .comunidade-page .spotted-card:has(.feed-anexo-item:only-child img) {
     display: block;
     justify-content: center;
-    background: #0a0a0a;
     border: none;
-    padding: 0;
-
 }
 
 .comunidade-page .feed-anexo-item:only-child img {
     width: 100%;
     height: 100%;
     aspect-ratio: auto;
-    min-height: 200px;
-    max-height: 360px; 
+    min-height: 180px;
+    max-height: 350px;
+    max-height: clamp(250px, 75cqh, 450px);
     object-fit: contain; 
 }
 
@@ -2031,8 +2066,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 .comunidade-page .spotted-card .carrossel-indicadores .indicador {
     width: 5px;
     height: 5px;
-    width: clamp(5px, 0.8vw, 10px);
-    height: clamp(5px, 0.8vw, 10px);
+    width: clamp(5px, 0.6vw, 8px);
+    height: clamp(5px, 0.6vw, 8px);
     border-radius: 50%;
     transition: background 0.3s, transform 0.3s;
     flex-shrink: 0;
@@ -2052,7 +2087,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 
 .carrossel-numero {
     font-size: 0.75rem;
-    font-size: clamp(0.8rem, 1vw, 1.05rem);
+    font-size: clamp(0.8rem, 3.2cqi, 1.05rem);
     color: rgba(255, 255, 255, 0.5);
     font-weight: 500;
     margin-right: 8px;
@@ -2162,8 +2197,10 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     background: rgba(255, 255, 255, 0.04);
     background: oklch(100% 0 0 / 0.04);
     border-radius: 20px;
-    padding: 2px 10px;
-    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+    padding: 4px 8px;
+    padding: clamp(4px, 2cqi, 8px) clamp(10px, 3cqi, 14px);
+    font-size: 0.8rem;
+    font-size: clamp(0.85rem, 2cqw, 1.1rem);
     color: #ddd;
     color: oklch(88% 0 0);
     border: 1px solid transparent;
@@ -2188,7 +2225,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     }
 }
 
-@supports not (clamp(1rem, 1vw, 2rem)) {
+@supports not (clamp(1rem, 1cqi, 2rem)) {
     .comunidade-page .btn-toggle-postar {
         font-size: 1rem;
     }
@@ -2209,10 +2246,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         min-height: 70px;
         font-size: 1rem;
     }
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .avatar-p {
-        width: 40px;
-        height: 40px;
-    }
+    
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
         font-size: 1rem;
     }
@@ -2253,7 +2287,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     }
 
     .comunidade-page {
-        padding: 8px;
+        padding: 4px;
     }
 
     .comunidade-capa .overlay h1 {
@@ -2435,8 +2469,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     padding: 25px 5px;
     max-width: 750px;
     margin: 0 auto;
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border: 1px solid oklch(100% 0 0 / 0.05);
     border-radius: 10px;
@@ -2639,6 +2673,221 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     background: oklch(100% 0 0 / 0.05);
     color: #fff;
     color: oklch(100% 0 0);
+}
+
+
+/* ============================================================
+   BOTÃO ELLIPSIS PARA COMUNIDADES (MENU DE AÇÕES)
+   ============================================================
+   🐚 BRISA – 2026-09-06
+   Posicionado no canto superior direito do card, apenas para
+   o autor do post em comunidades.
+   ============================================================ */
+
+.card-actions-ellipsis {
+    position: relative;
+    justify-items: center;
+    display: block;
+    top: 5px;
+    right: 5px;
+    padding: 4px 0;
+    z-index: 10;
+}
+
+.btn-ellipsis {
+    background: rgba(0, 0, 0, 0.45);
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    width: clamp(36px, 2vw, 60px);
+    height: clamp(36px, 2vw, 60px);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: flex-end;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-ellipsis:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-ellipsis:active {
+    transform: scale(0.9);
+}
+
+.feed-comunidade .post-admin-gold::after {
+    top: 20px;
+    right: 60px;
+    font-size: 0.9rem;
+}
+
+/* ============================================================
+   MENU ELLIPSIS (POPUP)
+   ============================================================ */
+
+.ellipsis-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.25);
+    cursor: default;
+}
+
+.ellipsis-menu {
+    position: fixed;
+    background: rgba(20, 20, 32, 0.95);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    border-radius: 12px;
+    padding: 6px 0;
+    min-width: 150px;
+    max-width: 260px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    z-index: 100000;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.ellipsis-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 2cqw, 1.2rem);
+    transition: background 0.15s;
+    border-radius: 0;
+}
+
+.ellipsis-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ellipsis-item[data-acao="excluir"] {
+    color: #ff6b6b;
+}
+
+.ellipsis-item[data-acao="excluir"]:hover {
+    background: rgba(255, 50, 50, 0.15);
+}
+
+.ellipsis-item[data-acao="cancelar"] {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    color: #888;
+    color: oklch(62.675% 0.00007 271.152);
+}
+
+.ellipsis-item[data-acao="cancelar"]:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ellipsis-item:active {
+    transform: scale(0.96);
+}
+
+/* ============================================================
+   ANIMAÇÕES
+   ============================================================ */
+
+@keyframes ellipsisFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes ellipsisSlideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* ============================================================
+   RESPONSIVIDADE (MOBILE)
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .ellipsis-menu {
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 40px);
+        max-width: 360px;
+        border-radius: 16px;
+        animation: ellipsisSlideUp 0.25s ease-out;
+    }
+
+    /* Ajuste para telas muito pequenas */
+    @media (max-width: 480px) {
+        .ellipsis-item {
+            font-size: 1rem;
+            padding: 14px 16px;
+        }
+        .btn-ellipsis {
+            width: 28px;
+            height: 28px;
+            font-size: 1.1rem;
+        }
+    }
+}
+
+/* ============================================================
+   FALLBACK PARA NAVEGADORES QUE NÃO SUPORTAM BACKDROP-FILTER
+   ============================================================ */
+
+@supports not (backdrop-filter: blur(4px)) {
+    .ellipsis-menu {
+        background: rgba(10, 10, 18, 0.97);
+    }
+    .btn-ellipsis {
+        background: rgba(0, 0, 0, 0.7);
+    }
+}
+
+/* ============================================================
+   FALLBACK PARA CLAMP
+   ============================================================ */
+
+@supports not (font-size: clamp(1rem, 1vw, 2rem)) {
+    .ellipsis-item {
+        font-size: 0.9rem;
+    }
+    .btn-ellipsis {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
 }
 
 /* ==================================================

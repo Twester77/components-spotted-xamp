@@ -1,5 +1,8 @@
 <?php
 // footer.php
+// 🔥 BLINDAGEM: garante que $basePath sempre tenha um valor válido
+// (evita warning de variável indefinida caso o header não seja incluído)
+$basePath = $basePath ?? '';
 $u_id = $_SESSION['usuario_id'] ?? 0;
 
 // ==================== SENSOR DE ASSETS AUTOMÁTICO (FALLBACK) ====================
@@ -162,13 +165,15 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
 
 <!-- SCRIPTS PRINCIPAIS (CARREGADOS NO RODAPÉ)  -->
 <script src="<?= asset_versao('js/fenda-main.js') ?>"></script>
+<script src="<?= asset_versao('js/fenda-acoes.js') ?>"></script>
 
 <!-- ESCUDO DOS 99,999% - CONTROLLER CHANGE     -->
 <script>
-    (function() {
+        (function() {
         if ('serviceWorker' in navigator) {
-            // Usa a mesma variável $basePath definida no header
-            const basePath = '<?= $basePath ?>';
+            // 🔥 BLINDAGEM: garante que $basePath sempre tenha um valor válido
+            // (evita warning de variável indefinida caso o header não seja incluído)
+            const basePath = '<?= $basePath ?? '' ?>';
 
             navigator.serviceWorker.addEventListener('controllerchange', function() {
                 console.log('[PWA] Service Worker atualizou. Recarregando página.');

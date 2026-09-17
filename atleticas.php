@@ -36,7 +36,7 @@ $total_habitantes = $res->num_rows;
         <h1 style="color: var(--dourado); text-transform: uppercase;">
             Comunidade <?php echo htmlspecialchars(str_replace('-', ' ', $atletica_id)); ?>
         </h1>
-        <p style="color: #ccc;">Há <?php echo $total_habitantes; ?> habitantes nesta área da Fenda</p>
+        <p style="color: #ccc; display:flex; align-self: flex-end;">Há <?php echo $total_habitantes; ?> habitantes nesta área da Fenda</p>
     </section>
 
     <div class="grid-habitantes">

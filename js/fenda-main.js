@@ -391,7 +391,7 @@ window.exibirToast = function (mensagem) {
     toast.innerHTML = `
         <div style="font-size: 20px;"></div>
         <div style="flex-grow: 1;">
-            <strong style="display: block; font-size: 14px; color: #ddc80e;">Sucesso!</strong>
+            <strong style="display: block; font-size: 14px; color: #ddc80e;">Aviso!</strong>
             <span>${mensagem}</span>
         </div>
     `;
@@ -953,6 +953,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (btnConfig) {
         btnConfig.addEventListener('click', window.abrirPerfilDrawer);
     }
+    // INICIALIZA O FORMULÁRIO DE PERFIL (drawer ou página direta)
+    if (typeof window.configurarFormularioPerfil === 'function') {
+        window.configurarFormularioPerfil();
+        console.log('[PERFIL] configurarFormularioPerfil() executado.');
+    }
 
     const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
     dropdownLinks.forEach(link => {
@@ -1203,7 +1208,7 @@ window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') 
     });
 };
 
-// ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS (COM LOGS) ====================
+// ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS (COM LOGS + CSRF) ====================
 window.excluirComentario = async function (commentId, btnElement) {
     console.log('[excluirComentario] 🟢 Iniciando exclusão para ID:', commentId, '| btnElement:', btnElement);
 
@@ -1231,8 +1236,20 @@ window.excluirComentario = async function (commentId, btnElement) {
 
     console.log('[excluirComentario] ✅ Elemento encontrado:', comentarioDiv);
 
+    // ============================================================
+    // 🔥 CSRF TOKEN (auditoria da Djê) – obrigatório para a exclusão
+    // ============================================================
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        console.error('[excluirComentario] ❌ CSRF token não encontrado no DOM.');
+        alert('Erro de segurança: token CSRF não encontrado. Recarregue a página.');
+        return;
+    }
+    console.log('[excluirComentario] 🔑 CSRF token encontrado:', csrfToken.substring(0, 16) + '...');
+
     // Feedback visual
     if (btnElement) {
+        btnElement._originalText = btnElement._originalText || btnElement.innerHTML;
         btnElement.disabled = true;
         btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     }
@@ -1242,7 +1259,7 @@ window.excluirComentario = async function (commentId, btnElement) {
         const response = await fetch('includes/excluir-comentario.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `id=${commentId}`
+            body: `id=${commentId}&csrf_token=${encodeURIComponent(csrfToken)}`
         });
         const data = await response.json();
         console.log('[excluirComentario] 📥 Resposta do servidor:', data);
@@ -1267,7 +1284,7 @@ window.excluirComentario = async function (commentId, btnElement) {
             }
         }
     } catch (err) {
-        console.error('[excluirComentario]  Erro de rede ou servidor:', err);
+        console.error('[excluirComentario] Erro de rede ou servidor:', err);
         alert("Erro de conexão. Tente novamente.");
         comentarioDiv.classList.remove('is-loading');
         if (btnElement) {
@@ -1709,7 +1726,7 @@ function obterOrientacaoEXIF(file) {
             return;
         }
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             try {
                 const view = new DataView(e.target.result);
                 if (view.getUint16(0, false) !== 0xFFD8) {
@@ -1758,7 +1775,7 @@ function obterOrientacaoEXIF(file) {
                 resolve(1);
             }
         };
-        reader.onerror = function() {
+        reader.onerror = function () {
             resolve(1);
         };
         reader.readAsArrayBuffer(file.slice(0, 65536));
@@ -1777,9 +1794,9 @@ async function comprimirImagemClientSide(file, qualidade = 0.7, maxWidth = 1200,
     const orientacao = await obterOrientacaoEXIF(file);
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const img = new Image();
-            img.onload = function() {
+            img.onload = function () {
                 const canvas = document.createElement('canvas');
                 let width = img.width;
                 let height = img.height;
@@ -2299,6 +2316,128 @@ document.addEventListener('click', function (e) {
         }
     }, 200);
 });
+
+// ==================== BALÃO DE FEEDBACK GLOBAL ====================
+window.exibirBalaoFenda = function (mensagem, tipo, elementoRef, duracao = 2500) {
+    // Remove balão antigo (evita empilhamento)
+    const balaoAntigo = document.querySelector('.balao-fenda');
+    if (balaoAntigo) balaoAntigo.remove();
+
+    const balao = document.createElement('div');
+    balao.className = 'balao-fenda ' + tipo;
+
+    const icones = { sucesso: '✅', erro: '❌', info: 'ℹ️' };
+    const icone = document.createElement('span');
+    icone.className = 'balao-icone';
+    icone.textContent = icones[tipo] || '💬';
+    balao.appendChild(icone);
+
+    const texto = document.createElement('span');
+    texto.textContent = mensagem;
+    balao.appendChild(texto);
+
+    if (elementoRef) {
+        const rect = elementoRef.getBoundingClientRect();
+        let top = rect.top - 10;
+        let left = rect.left + rect.width / 2 - 50;
+        const balaoWidth = Math.min(300, window.innerWidth * 0.8);
+
+        if (left + balaoWidth > window.innerWidth - 20) {
+            left = window.innerWidth - balaoWidth - 20;
+        }
+        if (left < 20) left = 20;
+        if (rect.top < 60) {
+            top = rect.bottom + 10;
+        } else {
+            top = rect.top - 60;
+        }
+
+        balao.style.top = top + 'px';
+        balao.style.left = left + 'px';
+        balao.style.maxWidth = balaoWidth + 'px';
+    } else {
+        balao.style.top = '50%';
+        balao.style.left = '50%';
+        balao.style.transform = 'translate(-50%, -50%)';
+    }
+
+    document.body.appendChild(balao);
+     // 🔥 Garante que o balão fique acima de drawers/modais (z-index do drawer = 999999)
+    balao.style.zIndex = '1000000';
+
+    setTimeout(() => {
+        if (balao.parentNode) {
+            balao.style.opacity = '0';
+            setTimeout(() => balao.remove(), 300);
+        }
+    }, duracao);
+};
+
+// ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
+window.configurarFormularioPerfil = function () {
+    console.log('[PERFIL] Configurando formulário de perfil...');
+
+    // Busca inputs de arquivo em qualquer contexto (drawer ou página direta)
+    const inputsFile = document.querySelectorAll(
+        '#perfil-drawer input[type="file"], ' +
+        '.main-perfil-container-config input[type="file"], ' +
+        'form[action="processa-perfil.php"] input[type="file"]'
+    );
+
+    if (inputsFile.length === 0) {
+        console.log('[PERFIL] Nenhum input de arquivo encontrado.');
+        return;
+    }
+
+    console.log('[PERFIL] Encontrados', inputsFile.length, 'inputs de arquivo.');
+
+    inputsFile.forEach(input => {
+        // Evita duplicação de listener (reentrância)
+        if (input._fendaListenerAdded) return;
+        input._fendaListenerAdded = true;
+
+        input.addEventListener('change', function () {
+            if (!this.files || !this.files[0]) return;
+
+            const file = this.files[0];
+            const tamanhoMB = file.size / 1024 / 1024;
+            const tipo = this.name; // 'foto' ou 'capa'
+            const anchor = this.closest('label') || this;
+
+            // Validação de tamanho
+            if (tamanhoMB > 2) {
+                window.exibirBalaoFenda(
+                    `Arquivo muito grande (${tamanhoMB.toFixed(2)}MB). Limite: 2MB.`,
+                    'erro',
+                    anchor
+                );
+                this.value = '';
+                return;
+            }
+
+            // Validação de formato
+            const formatosPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+            if (!formatosPermitidos.includes(file.type)) {
+                window.exibirBalaoFenda(
+                    'Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
+                    'erro',
+                    anchor
+                );
+                this.value = '';
+                return;
+            }
+
+            // Sucesso
+            const tamanhoKB = Math.round(file.size / 1024);
+            const label = tipo === 'capa' ? 'Capa' : 'Foto de perfil';
+            window.exibirBalaoFenda(
+                `✅ ${label} selecionada (${tamanhoKB} KB)`,
+                'sucesso',
+                anchor
+            );
+        });
+    });
+};
 
 // ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
 window.deslogarUsuario = async function () {

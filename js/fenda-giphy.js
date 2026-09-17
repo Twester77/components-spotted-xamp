@@ -39,7 +39,8 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
             z-index: 40000;
             display: flex;
             align-items: center;
@@ -58,7 +59,7 @@
             flex-direction: column;
             overflow: hidden;
             border: 1px solid rgba(255, 140, 0, 0.5);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         `;
 
         // Cabeçalho

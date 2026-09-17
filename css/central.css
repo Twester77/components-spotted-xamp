@@ -31,7 +31,7 @@
    SIDEBAR / MENU DE ABAS
    ---------------------------------------------------------------- */
 .central-sidebar {
-    flex: 0 0 220px;
+    flex: 0 0 260px;
 
     /* 
        O EIGENGRAU DESBOTADO COM OKLCH
@@ -55,6 +55,8 @@
     /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
     -webkit-mix-blend-mode: plus-darker;
     mix-blend-mode: plus-darker;
+    container-type: inline-size;
+    container-name: menu-central;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -75,8 +77,10 @@
 }
 
 .avatar-central {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
+    width: clamp(48px, 12cqw, 72px);
+    height: clamp(48px, 12cqw, 72px);
     border-radius: 50%;
     object-fit: cover;
     -moz-background-clip: padding-box;
@@ -169,16 +173,17 @@
     /* ✨ Impede que a cor de fundo invada a área da borda transparente */
     background-clip: padding-box;
     container-type: inline-size;
+    container-name: central-conteudo;
     border-radius: 20px;
-    padding: 20px;
+    padding: 15px;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     flex: 1;
     margin: 20px auto;
     min-height: 250px;
     width: 100%;
-    overflow-y: auto !important;
-    max-height: calc(100vh - 100px);
+    overflow-y: auto ;
+    max-height: calc(100vh + 50px);
 }
 
 /* ================================================================
@@ -189,12 +194,12 @@
     /* controlado pelo JS */
     text-align: center;
     padding: 40px;
-    padding: clamp(30px, 20cqw, 60px);
+    padding: clamp(30px, 20cqi, 60px);
 }
 
 #central-loading i {
     font-size: 2rem;
-    font-size: clamp(2rem, 15cqw, 4rem);
+    font-size: clamp(2rem, 15cqi, 4rem);
     color: #ffbc00;
     animation: spin 1s linear infinite;
 }
@@ -319,7 +324,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
     border-radius: 6px;
-    border-radius: clamp(8px, 1.2vw, 14px);
+    border-radius: clamp(8px, 1.5vw, 14px);
     margin: 6px 0 ;
     margin: clamp(6px, 1vw, 12px) 0;
     background: #0a0a0a;
@@ -337,7 +342,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     aspect-ratio: auto;
     min-height: 120px;
     min-height: clamp(100px, 25vh, 180px);
-    max-height: 300px;
+    max-height: 350px;
+    max-height: clamp(200px, 35cqh, 350px);
+    height: auto;
     background: #0a0a0a;
     display: flex;
     align-items: center;
@@ -361,25 +368,26 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: clamp(4px, 1cqw, 10px);
+    gap: clamp(4px, 1cqi, 10px);
     padding: clamp(4px, 0.8vw, 10px) 0;
     position: relative;
     z-index: 2;
 }
 
 .carrossel-numero {
-    font-size: clamp(0.75rem, 1cqw, 1rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 3.2cqi, 1rem);
     color: rgba(255, 255, 255, 0.5);
     color: oklch(1 0 0 / 0.5);
     font-weight: 500;
-    margin-right: clamp(4px, 0.8cqw, 10px);
+    margin-right: clamp(4px, 0.8cqi, 10px);
     min-width: 30px;
     text-align: center;
 }
 
 .indicador {
-    width: clamp(6px, 1cqw, 10px);
-    height: clamp(6px, 1cqw, 10px);
+    width: clamp(6px, 1cqi, 10px);
+    height: clamp(6px, 1cqi, 10px);
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.3);
     background: oklch(1 0 0 / 0.3);
@@ -422,13 +430,13 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border-radius: 50%;
     color: #fff;
     font-size: 1rem;
-    font-size: clamp(1.2rem, 2.5cqw, 2rem);
+    font-size: clamp(1.2rem, 2.5cqi, 2rem);
     width: 36px;
     /*  MAIOR PARA FACILITAR O CLIQUE */
     height: 36px;
-    width: clamp(38px, 5cqw, 64px);
+    width: clamp(38px, 5cqi, 64px);
     /*  MAIOR PARA FACILITAR O CLIQUE */
-    height: clamp(38px, 5cqw, 64px);
+    height: clamp(38px, 5cqi, 64px);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -543,7 +551,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
    ---------------------------------------------------------------- */
 .central-comunidades-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
     gap: 15px;
     max-width: 100%;
 }
@@ -643,8 +651,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .central-conteudo .avatar-p {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
+    width: clamp(36px, 18cqw, 60px);
+    height: clamp(36px, 18cqw, 60px);
     border-radius: 50%;
     object-fit: cover;
 }
@@ -655,7 +665,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .gerenciar-depoimentos-page {
     max-width: 900px;
     margin: clamp(20px, 4vw, 60px) auto;
-    padding: 0 clamp(12px, 3vw, 30px);
+    padding: 0 10px;
+    padding: 0 clamp(15px, 3vw, 30px);
 }
 
 .gerenciar-depoimentos-container {
@@ -663,8 +674,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: clamp(14px, 2vw, 22px);
     padding: clamp(20px, 3vw, 42px);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
 }
 
 .gerenciar-depoimentos-container h1 {
@@ -869,11 +880,13 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 #central-body .ver-todas-notif {
     display: block;
     text-align: center;
+    padding: 5px;
     padding: clamp(8px, 1vw, 14px);
     background: oklch(0.18 0 0 / 0.5);
     border-radius: 30px;
     color: #ffbc00;
     font-weight: 600;
+    font-size: 0.85rem;
     font-size: clamp(0.8rem, 0.9vw, 0.95rem);
     text-decoration: none;
     transition: 0.2s;
@@ -882,10 +895,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 #btn-marcar-todas-lidas.btn-fenda-padrao {
-    font-size: 0.85rem;
-    font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+    font-size: 0.7rem;
+    font-size: clamp(0.75rem, 1.2cqw, 1.1rem);
     padding: 6px 12px;
-    padding: clamp(6px, 1.5vw, 10px) clamp(8px, 1.5vw, 16px);
+    padding: clamp(6px, 1.5cqw, 10px) clamp(8px, 1.2cqw, 16px);
     background: rgba(255, 188, 0, 0.12);
     color: #ff9b00;
     border: 1px solid rgba(255, 188, 0, 0.15);
@@ -1206,7 +1219,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     .btn-aprovar-solicitacao-central,
     .btn-rejeitar-solicitacao-central {
         font-size: 0.75rem;
-        padding: 4px 14px;
+        padding: 4px 12px;
     }
 
     .solicitacao-central-item .solicitante-data {
@@ -1279,7 +1292,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     .aba-central,
     .aba-central-link {
         flex: 0 1 auto;
-        padding: 8px 14px;
+        padding: 8px 12px;
         font-size: 0.85rem;
         white-space: nowrap;
         width: auto;
@@ -1287,12 +1300,12 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
     .central-conteudo {
         padding: 20px;
-        max-height: calc(80vh - 50px);
+        max-height: calc(80vh - 40px);
     }
 
     .central-comunidades-grid {
         grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
-        gap: 12px;
+        gap: 10px;
     }
 
 }

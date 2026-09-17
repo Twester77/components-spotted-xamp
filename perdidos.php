@@ -6,6 +6,10 @@
  *    "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
  *     nos anexos (imagens e GIFs) dos posts da categoria 'perdidos'."
  * - Ondina
+ * 
+ * 🐚 BRISA – 2026-09-04
+ *    "Adicionada verificação de targetId no evento gifSelecionado para evitar conflitos
+ *     com outros formulários (ex: modal do Nexus)."
  */
 
 include_once __DIR__ . '/conexao.php';
@@ -101,7 +105,6 @@ include 'includes/bolhas.php';
                         <label for="imagem-perdidos" class="btn-acao btn-acao-vivo" title="Adicionar imagem">
                             <i class="fas fa-image"></i>
                         </label>
-                        <!-- 🔥 CORREÇÃO DA DJÊ: removido o name="anexos[]" para evitar o "Fantasma do Índice Zero" -->
                         <input type="file" id="imagem-perdidos" accept="image/*" style="display: none;" multiple>
                         <button type="button" class="btn-acao btn-acao-vivo" title="Buscar GIF/Sticker" onclick="window.setGiphyTarget('gif-url-perdidos'); abrirGiphyModal();">
                             <i class="fas fa-grin-tongue-squint"></i>
@@ -162,7 +165,6 @@ include 'includes/bolhas.php';
                                 $anexos_html = '<div class="feed-anexos-grid">';
                                 foreach ($anexos_exibicao as $anexo) {
                                     if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                                        // 🔥 ANEXO IMAGEM COM FALLBACK CENTRALIZADO
                                         $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
                                         $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                                     } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
@@ -175,7 +177,6 @@ include 'includes/bolhas.php';
                                 if (filter_var($nome_imagem, FILTER_VALIDATE_URL)) {
                                     $img_url = $nome_imagem;
                                 } else {
-                                    // 🔥 FALLBACK PARA IMAGEM ÚNICA COM FALLBACK CENTRALIZADO
                                     $img_url = obterUrlComFallback($nome_imagem, 'uploads/ui/fallback-post.webp', $b2, true);
                                 }
                                 $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
@@ -435,7 +436,15 @@ include 'includes/bolhas.php';
             });
         }
 
+        // ============================================================
+        // 🔥 CORREÇÃO: verificação de targetId para evitar conflitos
+        // ============================================================
         document.addEventListener('gifSelecionado', function(e) {
+            // Só reage se o targetId for o do formulário de perdidos
+            if (e.detail && e.detail.targetId && e.detail.targetId !== 'gif-url-perdidos') {
+                console.log('[perdidos] GIF para outro formulário. Ignorando.');
+                return;
+            }
             if (e.detail && e.detail.url) {
                 if (gifHiddenInput) {
                     gifHiddenInput.value = e.detail.url;

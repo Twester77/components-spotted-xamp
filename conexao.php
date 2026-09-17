@@ -31,6 +31,36 @@ if (!function_exists('str_ends_with')) {
 }
 
 // ============================================================
+// 🔍 FUNÇÃO PARA OBTER IP REAL DO CLIENTE (PROXY / VERCEL)
+// ============================================================
+function obterIPReal() {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    
+    // Verifica cabeçalhos de proxy reverso (Vercel, Cloudflare, etc.)
+    $headers = [
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_REAL_IP',
+        'HTTP_CF_CONNECTING_IP',
+        'HTTP_CLIENT_IP'
+    ];
+    
+    foreach ($headers as $header) {
+        if (!empty($_SERVER[$header])) {
+            $ips = explode(',', $_SERVER[$header]);
+            $ip = trim($ips[0]);
+            break;
+        }
+    }
+    
+    // Valida se o IP é válido (fallback para REMOTE_ADDR se não for)
+    if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    }
+    
+    return $ip;
+}
+
+// ============================================================
 // 🌍 DETERMINAÇÃO DO AMBIENTE (MAIS ROBUSTA)
 // ============================================================
 $env_raw = getenv('ENVIRONMENT');

@@ -230,7 +230,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <!-- 🔥 Toggle: Modo Swipe Balanga Teras (COM HIDDEN + CHECKBOX) -->
             <div class="config-item">
-                <span>Modo Swipe Balanga Teras:</span>
+                <span>Modo Swipe Balanga Teras (Beta):</span>
                 <label class="switch">
                     <!-- Hidden garante envio 0 quando desmarcado -->
                     <input type="hidden" name="pref_swipe_balanga" value="0">
@@ -238,17 +238,17 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                         <?php echo (isset($dados['pref_swipe_balanga']) && $dados['pref_swipe_balanga'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
-                <small>Ative o modo Pilha para os eventos do Balanga Teras (Estilo Tinder)</small>
+                <small>Ative o modo Pilha para os eventos do Balanga Teras (Swipe)</small>
             </div>
 
             <!-- Modo Swipe Feed -->
             <div class="config-item">
-                <span>Modo Swipe no Feed (Beta)</span>
+                <span>Modo Swipe no Feed (Beta):</span>
                 <label class="switch">
                     <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
-                <small>Isso mudará seu feed para o modo Pilha (Estilo Tinder)</small>
+                <small>Isso mudará seu feed para o modo empilhado (Swipe)</small>
             </div>
 
             <div class="campo-grupo">
@@ -266,19 +266,6 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
     </form>
 </main>
 
-<script>
-    document.querySelectorAll('input[type="file"]').forEach(input => {
-        input.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const tamanhoMB = this.files[0].size / 1024 / 1024;
-                if (tamanhoMB > 2) {
-                    alert("A imagem é muito grande (" + tamanhoMB.toFixed(2) + "MB). O limite do servidor é 2MB. Por favor, escolha uma foto mais leve!");
-                    this.value = "";
-                }
-            }
-        });
-    });
-</script>
 
 <?php
 // SÉTIMO: Footer condicional

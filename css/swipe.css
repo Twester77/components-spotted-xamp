@@ -44,13 +44,13 @@ body.modo-swipe-ativo .spotted-card,
 body.modo-swipe-ativo .post-content,
 body.modo-swipe-ativo .article.spotted-card {
     scrollbar-width: none ;
-    -webkit-user-select: none !important;
-    -ms-user-select: none !important;
-    -moz-user-select: none !important;
-    user-select: none !important;
+    -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
+    user-select: none ;
     cursor: -moz-grab;
     cursor: -webkit-grab;
-    cursor: grab!important;
+    cursor: grab;
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
     
@@ -68,10 +68,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
 body.modo-swipe-ativo .feed-empilhado .card-body {
     touch-action: auto;
     pointer-events: none;
-    -webkit-user-select: none !important;
-    -ms-user-select: none !important;
-    -moz-user-select: none !important;
-    user-select: none !important;
+    -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
+    user-select: none ;
 }
 
 body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
@@ -121,12 +121,12 @@ body.modo-swipe-ativo .container-feed {
 body.modo-swipe-ativo .feed-empilhado .spotted-card {
         /* Posicionamento e estrutura */
 
-    position: absolute !important;
-    left: 50% !important;
-    top: 50% !important;
-    margin: 0 !important;
+    position: absolute ;
+    left: 50% ;
+    top: 50% ;
+    margin: 0 ;
     z-index: 10 ;
-    display: flex !important;
+    display: flex ;
     flex-direction: column;
     justify-content: space-between;
     overflow-y: hidden;
@@ -150,23 +150,33 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     
     /* LARGURA: Controlada de forma síncrona pelo seu Motor JS */
     width: var(--card-width, 250px) ;
-    max-width: var(--card-width, 250px) !important;
+    max-width: var(--card-width, 250px) ;
     
     /* PADDING: 1º Linha (Antigos via JS) -> 2º Linha (Modernos via cqw na GPU) */
     padding: var(--card-padding, 12px) ;
-    padding: clamp(12px, 4cqw, 24px) !important; 
+    padding: clamp(12px, 4cqi, 24px) ; 
     
     /* TAMANHO DA FONTE: 1º Linha (JS) -> 2º Linha (cqw) */
     font-size: var(--card-font-size, 0.95rem) ;
-    font-size: clamp(0.9rem, 2.5cqw, 1.6rem) !important;
+    font-size: clamp(0.9rem, 2.5cqi, 1.6rem) ;
     
     /* ALTURA MÁXIMA: Preserva o cálculo preciso do JS baseado na Viewport */
-    max-height: var(--card-max-height, 600px) !important;
+    max-height: var(--card-max-height, 700px) ;
     height: auto;
     box-sizing: border-box;
 
     /* Suaviza as bordas do card em movimento e previne distorção das quinas */
     -webkit-font-smoothing: antialiased;
+    transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-content-visibility: auto;
+    content-visibility: auto;
+    touch-action: none;
+    -webkit-user-select: none ;
+    -ms-user-select: none ;
+    -moz-user-select: none ;
+    user-select: none ;
     transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
 }
 
@@ -210,16 +220,16 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     width: var(--avatar-size, 40px);
     height: var(--avatar-size, 40px);
     /* Modernos: Escala com base na largura interna do card */
-    width: clamp(34px, 12cqw, 54px);
-    height: clamp(34px, 12cqw, 54px);
+    width: clamp(36px, 12cqi, 60px);
+    height: clamp(36px, 12cqi, 60px);
     flex-shrink: 0;
 }
 
 /* 5. Altura e limites do texto no modo swipe */
 body.modo-swipe-ativo .post-content {
     /* Fallback JS */
-    max-height: clamp(60px, 25cqw, 200px);
-    max-height: var(--text-max-height, clamp(3rem, 6vh, 17rem));
+    max-height:  180px;
+    max-height: var(--text-max-height, clamp(3.8rem, 25cqi, 16rem));
     /* Modernos: Baseia o limite dinamicamente na largura do próprio card */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -233,7 +243,7 @@ body.modo-swipe-ativo .post-content {
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
     /* Estilos estruturais dinâmicos mantidos pelo seu JS (Portrait vs Landscape) */
-    max-height: calc(var(--card-max-height, 500px) * 0.5);
+    max-height: calc(var(--card-max-height, 600px) * 0.5);
     /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
     height: var(--img-max-height, auto); 
     object-fit: var(--img-fit, contain);
@@ -374,20 +384,33 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .btn-ver-mais {
 
 
 /* ============================================================
-   9. BOTÃO DE FILTRO E GAVETA
+   9. BOTÃO DE FILTRO E GAVETA + EFEITO MOTOSSERRA
    ============================================================ */
+
+/* 1. Registra a propriedade para animar o ângulo da motosserra no botão do swipe */
+@property --angulo-motoserra-swipe {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
 body.modo-swipe-ativo .controles-feed-topo {
-    position: fixed;
-    top: 50px;
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
+    margin-block: 10px;
+    margin-inline: auto ;
+    top: 5vh;
+    top: calc(1cqi + 20px );
     left: 0;
     width: 100%;
-    z-index: 9999;
-    background: transparent !important;
-    padding: 0 !important;
+    z-index: 9995;
+    background: transparent;
+    padding: 0;
 }
 
 body.modo-swipe-ativo .filtros-wrapper-retratil {
-    display: none !important;
+    display: none ;
 }
 
 body.modo-swipe-ativo #btn-abrir-filtros {
@@ -396,13 +419,15 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     left: 50%;
     gap: 6px;
     transform: translateX(-50%);
-    z-index: 100000;
+    z-index: 9995;
+    
+    /* Seu gradiente de fundo original */
     background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301));
     color: #000000d0;
     padding: 3px 8px;
-    padding: clamp(4px, 1.5vw, 12px) clamp(10px, 1.5vw, 16px);
+    padding: clamp(4px, 1.5cqw, 12px) clamp(10px, 1.5cqw, 16px);
     font-size: 0.75rem;
-    font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+    font-size: clamp(0.8rem, 2cqw, 1.05rem);
     border-radius: 25px;
     font-weight: bold;
     white-space: nowrap;
@@ -410,23 +435,58 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     border: 1px solid rgba(255, 255, 255, 0.2);
     background-clip: padding-box;
     pointer-events: auto;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transition: 0.3 ease;
+    
+    /* Corrigido: unificado as transições mantendo a curva bezier que você definiu */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease;
+    
+    /* Prepara o contexto para isolar a borda motosserra */
+    position: relative;
+    isolation: isolate;
+}
+
+/* ⚡ Injeção do efeito Motosserra no contorno do botão */
+body.modo-swipe-ativo #btn-abrir-filtros::before {
+    content: '';
+    position: absolute;
+    inset: -2px; /* Encaixa perfeitamente na linha da borda */
+    border-radius: inherit;
+    z-index: -1;
+    /* Fallback estático para navegadores velhos */
+    background: #fbff00;
+    /* O gradiente cônico usando a paleta do seu botão (Amarelo e Verde Limão) */
+    background: conic-gradient(
+        from var(--angulo-motoserra-swipe), 
+        #fbff00, 
+        rgba(214, 252, 0, 0.2), 
+        #fbff00
+    );
+    
+    /* Máscara cirúrgica: esconde o meio e isola o feixe correndo na borda */
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 2px; /* Espessura da linha da motosserra */
+    /* Rotação interna super veloz e contínua */
+    animation: rodarMotoserraSwipe 2s linear infinite;
 }
 
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-    display: block !important;
+    display: block ;
     position: absolute;
     background: rgba(0, 0, 0, 0.751);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border-radius: 0 0 20px 20px;
     padding: 15px;
-    z-index: 10000;
+    z-index: 9994;
     max-height: 50dvh;
     overflow-y: auto !important;
     width: 100%;
     border-bottom: 3px solid #ff8c00;
+    
+    /* CORRIGIDO: Ativa a animação de slideDown quando a classe .aberto entra em ação */
+    animation: slideDown 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
@@ -435,12 +495,19 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     }
 }
 
+/* Animação do ângulo da motosserra */
+@keyframes rodarMotoserraSwipe {
+    to {
+        --angulo-motoserra-swipe: 360deg;
+    }
+}
+
+/* Suas Keyframes originais de abertura ajustadas para suavidade */
 @keyframes slideDown {
     from {
         transform: translateY(-100%);
         opacity: 0;
     }
-
     to {
         transform: translateY(0);
         opacity: 1;
@@ -548,16 +615,6 @@ body.modo-swipe-ativo .container-feed article {
 }
 
 
-.feed-empilhado .spotted-card {
-    content-visibility: auto;
-    touch-action: none;
-    -webkit-user-select: none !important;
-    -ms-user-select: none !important;
-    -moz-user-select: none !important;
-    user-select: none !important;
-    transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
-
-}
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .feed-anexo-item img,
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .user-info-post * {
     touch-action: none;
@@ -581,7 +638,7 @@ body.fenda-arrastando .anonimo {
 /* 🔥 Grid de anexos no modo swipe */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
     gap: 12px;
     margin: 6px 0;
     border-radius: 10px;

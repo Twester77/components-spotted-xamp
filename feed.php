@@ -64,11 +64,12 @@ function recalcFeedLayout() {
     if (isLandscape) {
         maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
     } else {
-        maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
+        maxCardHeight = Math.round(Math.min(vh * 0.90, 700));
     }
 
     var cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
     var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
+    var fontSizeInfo = Math.max(0.75, Math.min(cardWidth / 260, 1.3));
     var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
     var avatarSize = Math.round(Math.max(36, cardWidth * 0.12));
 
@@ -84,6 +85,7 @@ function recalcFeedLayout() {
     root.style.setProperty('--avatar-size', avatarSize + 'px');
     root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
     root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
+    root.style.setProperty('--user-info-font-size', fontSizeInfo + 'rem');
 
     root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
     root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
@@ -142,8 +144,8 @@ function reforcarLayoutNosCards() {
                 width: 100%;
                 height: 100%;
                 background: rgba(0, 0, 0, 0.4);
-                backdrop-filter: blur(4px);
-                -webkit-backdrop-filter: blur(4px);
+                -webkit-backdrop-filter: blur(3px);
+                backdrop-filter: blur(3px);
                 z-index: 30000;
                 display: none;
                 align-items: flex-start;
@@ -160,7 +162,7 @@ function reforcarLayoutNosCards() {
                 border: 1px solid rgba(255, 188, 0, 0.3);
                 border-radius: 28px;
                 padding: 20px 16px 18px 16px;
-                max-width: 450px;
+                max-width: 500px;
                 width: 90%;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
                 transform: scale(0.95) translateY(10px);

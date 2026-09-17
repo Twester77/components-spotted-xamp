@@ -39,6 +39,7 @@ select:focus {
 }
 
 .toast-login.ativado {
+    background: #27ce27bd ;
     background: linear-gradient(170deg, #27ce27bd 15%, #2e6ba5a2 100%);
     color: #fff;
     color: oklch(0.96 0 0 / 1);
@@ -347,7 +348,7 @@ select:focus {
 .sessoes-lista {
     display: flex;
     flex-direction: column;
-    gap: clamp(6px, 0.8vw, 10px);
+    gap: clamp(6px, 1.5cqi, 15px);
 }
 
 /* Item da sessão – fundo escuro com contraste */
@@ -357,18 +358,33 @@ select:focus {
     justify-content: space-between;
     padding: 6px 10px;
     padding: clamp(8px, 1vw, 14px) clamp(10px, 1.5vw, 18px);
+    
+    /* Fundo escuro padrão */
     background: rgba(0, 0, 0, 0.4);
     background: oklch(0 0 0 / 0.4);
+    
+    /* Texto claro padrão 0.96 oklch para contraste no fundo escuro */
+    color: #fff;
+    color: oklch(0.96 0 0);
+    
     border-radius: 10px;
     border-radius: clamp(8px, 1vw, 12px);
     margin-bottom: clamp(6px, 0.8vw, 10px);
     border-left: 3px solid #4caf50;
-    transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
+    transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease, color 0.2s ease;
     flex-wrap: wrap;
     gap: 6px;
     gap: clamp(6px, 1vw, 12px);
 }
 
+/* Força os ícones e spans da sessão comum a seguirem o texto claro */
+.sessao-item .sessao-dispositivo,
+.sessao-item .sessao-detalhes span,
+.sessao-item .sessao-detalhes i {
+    color: inherit;
+}
+
+/* Hover da sessão comum: Fundo um pouco mais cinza e escuro */
 .sessao-item:hover {
     background: rgba(0, 0, 0, 0.6);
     background: oklch(0 0 0 / 0.6);
@@ -378,22 +394,49 @@ select:focus {
 .sessao-item.sessao-atual {
     border-left-color: #ffbb01cc;
     border-left-color: oklch(0.83277 0.171456 82.0349 / 80%);
-    background:rgba(38, 248, 0, 0.07);
-    background:oklch(from rgba(38, 248, 0, 0.06) l c h / 0.07);
+    
+    /* Seu fundo verde encardido translúcido */
+    background: rgba(38, 248, 0, 0.07);
+    background: oklch(from rgba(38, 248, 0, 0.06) l c h / 0.07);
+    
+    /* Texto cinza escuro/preto para dar contraste no fundo verde */
+    color: #0a0a0aa1;
+    color: oklch(0.1448 0 0 / 63.1%);
 }
 
+/* Aplica o cinza escuro cirurgicamente em todos os textos internos da atual */
+.sessao-item.sessao-atual .sessao-dispositivo,
+.sessao-item.sessao-atual .sessao-detalhes span,
+.sessao-item.sessao-atual .sessao-detalhes i {
+    color: #0a0a0aa1;
+    color: oklch(0.1448 0 0 / 63.1%);
+}
+
+/* Ajustes de tamanho e flex da sessão atual */
+.sessao-item.sessao-atual .sessao-dispositivo {
+    font-size: 0.8rem;
+    font-size: clamp(0.85rem, 1vw, 1.05rem);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Hover da Sessão Atual: O verde brilha um pouco mais (14%) */
 .sessao-item.sessao-atual:hover {
-    background: rgba(38, 248, 0, 0.14);
-    background: oklch(0.85 0.29 141.38 / 14%);
+    background: rgba(38, 248, 0, 0.12);
+    background: oklch(0.85 0.29 141.38 / 12%);
 }
 
+/* Sufixo da sessão atual */
 .sessao-item.sessao-atual .sessao-dispositivo::after {
     content: " (sessão atual)";
     font-size: 0.7rem;
     color: #ffa600;
     color: oklch(0.7945 0.1709 71.19);
     font-weight: 400;
+    margin-left: 4px;
 }
+
 
 /* Informações da sessão */
 .sessao-info {
@@ -416,6 +459,7 @@ select:focus {
 }
 
 .sessao-detalhes {
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     color: #aaa;
     color: oklch(0.75 0 0);
@@ -684,8 +728,8 @@ select:focus {
     position: relative;
     z-index: 1;
     background: rgba(20, 20, 30, 0.85);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
     padding: 28px;
@@ -1040,7 +1084,7 @@ select:focus {
 .preview-perfil.vibe-light .preview-info .bio-preview,
 .preview-perfil.vibe-light p,
 .preview-perfil.vibe-light h3 {
-    color: #3e382d !important;
+    color: #3e382d ;
     text-shadow: none !important;
 }
 
@@ -1059,7 +1103,7 @@ select:focus {
     backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.04);
     border-top: 4px solid var(--cor-aura, #70cde4) ;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
     animation: ads-neon-glow-pulse-preview 3.5s infinite ease-in-out alternate;
     border-radius: 16px;
 }
@@ -1534,8 +1578,6 @@ select:focus {
 }
 
 
-
-
 /* --- AJUSTE PARA O MODAL VIRAR UM POP-UP COMPACTO (ESTILO AÇO) --- */
 
 /* 1. Ajuste do Container do Modal (o pai) */
@@ -1722,7 +1764,7 @@ select:focus {
 
 .midia-wrapper img {
     width: 100%;
-    max-height: 200px;
+    max-height: 220px;
     border-radius: 10px;
     object-fit: contain;
     background: #000000c5;
@@ -1823,8 +1865,8 @@ select:focus {
 
 /* Contador */
 .contador-caracteres {
-    font-size: 0.9rem;
-    font-size: clamp(0.75rem, 1.2vw, 1rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 1.2vw, 0.95rem);
     color: #aaaaaa;
     font-weight: 600;
 }
@@ -1833,10 +1875,11 @@ select:focus {
 .btn-cancelar-vivo {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 6px 14px;
+    padding: 6px 10px;
     border-radius: 30px;
     color: #aaa;
     font-size: 0.85rem;
+    font-size: clamp(0.75rem, 1.2vw, 0.95rem);
     cursor: pointer;
     transition: 0.2s;
 }
@@ -1907,15 +1950,6 @@ textarea[name="bio"] {
     resize: none;
 }
 
-
-/* Centraliza o rótulo "Bio" também */
-.campo-grupo label[for="bio"] {
-    display: block !important;
-    text-align: center !important;
-    margin-top: 10px;
-}
-
-
 .container,
 .login-form,
 form[action="confirma-login.php"] {
@@ -1961,9 +1995,13 @@ form[action="confirma-login.php"] {
 
 
 .campo-grupo label {
+    text-align: left;
     display: block;
+    width: 100%;
     color: #bbb;
+    color: oklch(79.208% 0.00009 271.152);
     font-size: 15px;
+    font-size: clamp(15px, 1.5vw, 18px);
     margin-bottom: 10px;
     font-weight: bold;
 }
@@ -1985,33 +2023,6 @@ form[action="confirma-login.php"] {
 }
 
 /* Estilo geral para Inputs e Textarea */
-
-.container input,
-.container button,
-select,
-textarea {
-    padding: 10px;
-    width: 100%;
-    border-radius: 15px;
-    border: 1px solid #333;
-    display: block;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-
-}
-
-
-.campo-grupo input[type="text"],
-.campo-grupo textarea {
-    width: 100%;
-    padding: 12px 15px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 8px;
-    color: #fff;
-    color: oklch(1 0 0 / 0.9);
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s ease;
-}
 
 
 /* Efeito de foco (quando clica para digitar) */
@@ -2043,9 +2054,366 @@ textarea {
     border-right: 1px solid #444;
 }
 
+/* ============================================================
+   PARTE 1: FORMULÁRIO VIVO – ESTILOS EXISTENTES E GLOBAIS
+   ============================================================ */
+
+/* Container do formulário */
+.form-container-vivo {
+    padding: 0;
+    background: transparent;
+}
+
+/* Área de texto – fundo cinza escuro */
+.area-texto-vivo {
+    background: #16161d73;
+    border: 1px solid #333;
+    margin-bottom: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.area-post-vivo {
+    border-radius: 12px;
+    padding: 10px 14px;
+    width: 100%;
+    flex: 1 1 auto;
+    justify-content: space-between;
+}
+
+.area-texto-vivo:focus-within {
+    border-color: var(--dourado);
+}
+
+#mensagem-vivo {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 50px;
+    max-height: 180px;
+    resize: vertical;
+    field-sizing: content;
+    background: transparent;
+    border: none;
+    color: #eee;
+    font-size: 1rem;
+    line-height: 1.4;
+    padding: 4px;
+    font-family: inherit;
+    outline: none;
+}
+
+#mensagem-vivo::placeholder {
+    color: #a1a1a1;
+    font-style: italic;
+}
+
+/* Prévia da mídia – com botão remover */
+.previa-midia-vivo {
+    margin-top: 12px;
+    max-width: 100%;
+}
+
+.midia-wrapper {
+    position: relative;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.midia-wrapper img {
+    width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    object-fit: contain;
+    background: #000000c5;
+    display: block;
+    object-position: center;
+}
+
+.btn-remover-midia {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.btn-remover-midia:hover {
+    background: rgba(255, 0, 0, 0.8);
+    transform: scale(1.1);
+}
+
+#form-postar-vivo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Categoria – badge clean */
+#form-postar-vivo .campo-categoria-vivo {
+    margin-bottom: 10px;
+    align-self: flex-start;
+}
+
+.campo-categoria-vivo select {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 30px;
+    padding: 6px 16px;
+    padding-right: 36px;
+    color: #ccc;
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 1.041vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ccc' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+}
+
+.campo-categoria-vivo select:hover {
+    border-color: var(--dourado);
+    background-color: rgba(255, 188, 0, 0.04);
+}
+
+.campo-categoria-vivo select option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* Barra de ações global */
+.barra-acoes-vivo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex: 1 0 auto;
+    padding: 8px 0 4px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.acoes-esquerda,
+.acoes-direita {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Contador */
+.contador-caracteres {
+    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 1.2vw, 0.95rem);
+    color: #aaaaaa;
+    font-weight: 600;
+}
+
+/* Botão cancelar – versão limpa */
+.btn-cancelar-vivo {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 6px 10px;
+    border-radius: 30px;
+    color: #aaa;
+    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancelar-vivo:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+/* Botão de GIF/Sticker no modal de post */
+.btn-acao-vivo {
+    display: flex;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    width: clamp(40px, 2vw, 70px);
+    height: clamp(40px, 2vw, 70px);
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 10px 16px;
+    margin-bottom: 15px;
+    color: #aaa;
+    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2vw, 1.1rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-acao-vivo:hover {
+    background: rgba(255, 188, 0, 0.08);
+    border-color: #ffbc00;
+    color: #fff;
+    transform: scale(1.03);
+}
+
+.btn-acao-vivo i {
+    font-size: 1.1rem;
+    color: #ffbc00;
+}
+
+/* Bio: Centralizada e com limite de largura */
+.campo-grupo textarea#bio,
+textarea[name="bio"] {
+    width: 100% ;
+    max-width: 100%;
+    margin: 0 auto ;
+    display: block;
+    box-sizing: border-box;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    line-height: 1.5;
+    resize: none;
+}
+
+/* Centraliza o rótulo "Bio" também */
+.campo-grupo label[for="bio"] {
+    display: block ;
+    text-align: left ;
+    margin-top: 10px;
+}
+
+.container,
+.login-form,
+form[action="confirma-login.php"] {
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.post-content,
+.card-body p,
+.perfil-info-publica p {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    width: 100%;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    flex-grow: 1;
+}
+
+/* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
+.titulo-pagina {
+    color: var(--dourado);
+    color: oklch(0.834633 0.17177 82.5648);
+    font-size: 1.05rem;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.campo-grupo {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+
+/* Textarea (Bio) */
+.campo-grupo textarea {
+    resize: vertical;
+    min-height: 160px;
+    max-height: 100%;
+}
+
+.pref_vibe_padrao select {
+    color: #bbb;
+    font-size: 14px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+/* Estilo geral para Inputs e Textarea */
+.container input,
+.container button,
+select,
+textarea {
+    padding: 10px;
+    width: 100%;
+    border-radius: 15px;
+    border: 1px solid #333;
+    display: block;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.campo-grupo input[type="text"],
+.campo-grupo textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    color: oklch(1 0 0 / 0.9);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+/* Efeito de foco (quando clica para digitar) */
+.campo-grupo input:focus,
+.campo-grupo textarea:focus {
+    outline: none;
+    border-color: var(--dourad, #ffbc00);
+    background: #222;
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+}
+
+/* Wrapper do Username (Onde tem o @) */
+.input-username-wrapper {
+    display: flex;
+    align-items: center;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.input-username-wrapper span {
+    background: #333;
+    color: var(--dourado);
+    padding: 12px 15px;
+    font-weight: bold;
+    border-right: 1px solid #444;
+}
+
 .input-username-wrapper input {
-    border: none !important;
-    background: transparent !important;
+    border: none ;
+    background: transparent ;
     appearance: none;
 }
 
@@ -2068,7 +2436,7 @@ textarea {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;/
+    gap: 15px;
 }
 
 .painel-sessao p {
@@ -2101,7 +2469,9 @@ textarea {
 
 
 
-/* --- ESTILIZAÇÃO DA SESSÃO DE PUBLICAR (ACHADOS E PERDIDOS) --- */
+/* ============================================================
+   PARTE 2: ESTILIZAÇÃO DA SESSÃO DE PUBLICAR E PRODUTO FINAL
+   ============================================================ */
 
 /* Blindagem absoluta contra estouros de padding */
 .main-perdidos,
@@ -2145,19 +2515,20 @@ section.sessao-publicar,
 
 /* O container que envolve o formulário de postagem */
 section.sessao-publicar {
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.007);
     padding: 15px;
     margin: 20px auto;
-    box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.37);
-    max-width: 280px;
-    max-width: clamp(280px, 90vw, 550px);
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.37);
+    max-width: 300px;
+    max-width: clamp(280px, 90cqw, 600px);
     background-color: #49414121;
     background: rgba(0, 0, 0, 0.45);
     border-radius: 20px;
     height: auto;
 }
+
 
 .sessao-publicar h3,
 .titulo-publicar {
@@ -2188,24 +2559,21 @@ section.sessao-publicar {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-end;
-    /* CORREÇÃO: Alinha todos por baixo, impedindo de esticarem */
     gap: 15px;
 }
 
-/* Os blocos de embrulho (.input-group) se adaptando ao espaço */
+/* Os blocos de embrulho se adaptando */
 .form-publicar .input-group {
     margin-bottom: 0;
     flex: 1 1 calc(50% - 12px);
     min-width: 140px;
 }
 
-/* CORREÇÃO: Aumentando a prioridade de espaço/width da Textarea no flexbox */
 .form-publicar .input-group:has(textarea) {
     flex: 3 1 280px;
-    /* Peso maior (3) para esticar bem pros lados */
 }
 
-/* Estilo base dos seus inputs (Deixando mais magrelos e elegantes) */
+/* Estilo base dos seus inputs */
 .form-publicar select,
 .form-publicar textarea,
 .form-publicar .fenda-input {
@@ -2214,18 +2582,15 @@ section.sessao-publicar {
     max-width: 100%;
     padding: 8px;
     padding: clamp(10px, 1.5vw, 15px);
-    /* CORREÇÃO: Reduzido o padding para emagrecer os campos */
     border: 1px solid rgba(7, 4, 4, 0.2);
     color: #fff;
     border-radius: 14px;
     margin-bottom: 0;
 }
 
-/* Tamanho de altura fixo para inputs normais (PC e Mobile) */
 .form-publicar select,
 .form-publicar .fenda-input {
     height: 55px;
-    /* Altura magrela padrão ideal */
 }
 
 #imagem.fenda-input {
@@ -2245,11 +2610,9 @@ section.sessao-publicar {
     border-style: none;
 }
 
-/* CORREÇÃO: Altura específica apenas para a Textarea */
 .form-publicar textarea {
     display: flex !important;
     min-height: 80px;
-    /* Menos espaço vertical, priorizando a largura */
     max-height: 150px;
     line-height: 1.4;
     resize: vertical;
@@ -2285,7 +2648,6 @@ section.sessao-publicar {
     color: black;
     border: none;
     height: 40px;
-    /* Casando com a altura dos inputs magrelos */
     padding: 0 12px;
     border-radius: 8px;
     font-weight: 800;
@@ -2299,28 +2661,32 @@ section.sessao-publicar {
     transition: 0.3s;
 }
 
-.btn-lancar :hover {
+.btn-lancar:hover {
     background: #c8ff00d3;
     transform: translateY(-2px);
     box-shadow: 0 5px 10px rgba(255, 188, 0, 0.3);
 }
 
+/* ============================================================
+   AJUSTE DE ESPECIFICIDADE PARA PÁGINA PERDIDOS (DEITADO E SEM TREMOR)
+   ============================================================ */
 
-
-/* Container do formulário vivo */
-.form-perdidos-vivo {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.25);
-    background: oklch(0 0 0 / 0.4);
-    padding: 12px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    margin-bottom: 0;
-    max-width: 100%;
-    width: 100%;
+/* Anula os flex-wraps e alinhamentos inferiores herdados lá de cima */
+.form-publicar.form-perdidos-vivo {
+    display: flex ;
+    flex-direction: column ;
+    align-items: center ;
+    gap: 12px ;
+    background: rgba(0, 0, 0, 0.25) ;
+    background: oklch(0 0 0 / 0.4) ;
+    padding: 12px ;
+    border-radius: 16px ;
+    border: 1px solid rgba(255, 255, 255, 0.04) ;
+    margin-bottom: 0 ;
+    max-width: 100% ;
+    width: 100% ;
 }
+
 
 /* Toggle de Perdi/Achei */
 .toggle-perdidos-vivo {
@@ -2329,8 +2695,7 @@ section.sessao-publicar {
     justify-content: space-between;
     margin-bottom: 4px;
     flex-wrap: wrap;
-    align-self: center;
-
+    align-self: flex-start;
 }
 
 .btn-toggle-perdido {
@@ -2368,36 +2733,36 @@ section.sessao-publicar {
     box-shadow: 0 0 20px rgba(46, 204, 113, 0.08);
 }
 
-/* Área de texto – adaptada para a página (reutiliza estrutura do modal, mas com fundo próprio) */
-.area-perdidos-vivo {
-    border-radius: 12px;
-    padding: 10px 14px;
-    width: 100%;
-    transition: border-color 0.3s ease;
-    flex: 1 1 auto;
-    background: rgba(0, 0, 0, 0.25);
-    justify-content: space-between;
-    display: flex;
-    flex-direction: column;
+/* Caixa de Texto */
+.form-perdidos-vivo .area-perdidos-vivo {
+    border-radius: 12px ;
+    padding: 10px 14px ;
+    width: 100% ;
+    transition: border-color 0.3s ease ;
+    flex: 1 1 auto ;
+    background: rgba(0, 0, 0, 0.25) ;
+    justify-content: space-between ;
+    display: flex ;
+    flex-direction: column ;
 }
 
-.area-perdidos-vivo:focus-within {
-    border-color: var(--dourado);
+.form-perdidos-vivo .area-perdidos-vivo:focus-within {
+    border-color: var(--dourado) ;
 }
 
-#mensagem-perdidos {
-    width: 100%;
-    min-height: 80px;
-    max-height: 200px;
-    background: transparent;
-    color: #eee;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    resize: vertical;
-    padding: 0;
-    font-family: inherit;
-    outline: none;
-    border: none;
+.form-perdidos-vivo #mensagem-perdidos {
+    width: 100% ;
+    min-height: 80px ;
+    max-height: 200px ;
+    background: transparent ;
+    color: #eee ;
+    font-size: 0.95rem ;
+    line-height: 1.6 ;
+    resize: none ; /* Desliga o resize para não quebrar o alinhamento em linha */
+    padding: 0 ;
+    font-family: inherit ;
+    outline: none ;
+    border: none ;
 }
 
 #mensagem-perdidos::placeholder {
@@ -2405,55 +2770,245 @@ section.sessao-publicar {
     font-style: italic;
 }
 
-/* Barra de ações – específica para a página, herda .barra-acoes-vivo */
-.barra-perdidos-vivo {
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-    padding-top: 8px;
-    margin-top: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
+/* Barra de ações interna (Efeito Space-Between Corrigido) */
+.form-perdidos-vivo .barra-perdidos-vivo {
+    border-top: 1px solid rgba(255, 255, 255, 0.04) ;
+    padding-top: 8px ;
+    margin-top: 4px ;
+    display: flex ;
+    justify-content: space-between ;
+    align-self: stretch ;
+    gap: 15px ;
+    width: 100% ;
 }
 
-/* Ajuste para os grupos de ações (já usam .acoes-esquerda e .acoes-direita do modal) */
-.barra-perdidos-vivo .acoes-esquerda,
-.barra-perdidos-vivo .acoes-direita {
+.form-perdidos-vivo .barra-perdidos-vivo .acoes-esquerda {
+    display: flex ;
+    gap: 10px ;
+    justify-content: flex-start ;
+    align-items: center ;
+}
+
+.form-perdidos-vivo .barra-perdidos-vivo .acoes-direita {
+    display: flex ;
+    gap: 15px ;
+    justify-content: flex-end ;
+    align-items: center ;
+}
+
+/* TRAVA DO TREMOR: Congela as larguras numéricas */
+.form-perdidos-vivo .contador-caracteres {
+    color: #aaaaaa ;
+    font-size: 0.8rem ;
+    font-variant-numeric: tabular-nums ;
+    font-weight: 600 ;
+    white-space: nowrap ;
+}
+
+/* Botão Lançar da página de perdidos */
+.form-perdidos-vivo .btn-lancar-perdidos {
+    background: #7cd632e8 ;
+    color: #000 ;
+    border: none ;
+    padding: 8px 14px ;
+    border-radius: 30px ;
+    font-weight: 800 ;
+    text-transform: uppercase ;
+    font-size: clamp(0.8rem, 1.041cqw, 1rem) ;
+    cursor: pointer ;
+    transition: 0.3s ;
+    height: auto ;
+    max-width: 300px ;
+    margin-top: 0 ;
+    white-space: nowrap ;
+}
+
+.form-perdidos-vivo .btn-lancar-perdidos:hover {
+    background: #c8ff00d3 ;
+    transform: scale(1.02) ;
+    box-shadow: 0 5px 12px rgba(255, 188, 0, 0.3) ;
+}
+
+
+/* ============================================================
+   CONTAINER DO FORMULÁRIO (VIRA DEITADO EM TELAS GRANDES)
+   ============================================================ */
+.form-perdidos-vivo {
+    display: flex;
+    flex-direction: column; /* Mobile primeiro: empilhado */
+    gap: 12px;
+    background: oklch(0 0 0 / 0.4);
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    width: 100%;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+
+/* ============================================================
+   BOTÕES DE TOGGLE (PERDI / ACHEI)
+   ============================================================ */
+.toggle-perdidos-vivo {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap;
 }
 
-/* Botão Publicar – versão específica para perdidos (verde) */
+.btn-toggle-perdido {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 30px;
+    padding: 8px 16px;
+    color: #aaa;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+    text-align: center;
+}
+
+.btn-toggle-perdido:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.btn-toggle-perdido.ativo[data-valor="perdi"] {
+    background: rgba(204, 66, 12, 0.3);
+    border-color: #cc420c;
+    color: #ff8a5e;
+    box-shadow: 0 0 15px rgba(204, 66, 12, 0.15);
+}
+
+.btn-toggle-perdido.ativo[data-valor="achei"] {
+    background: rgba(46, 204, 112, 0.2);
+    border-color: #2ecc71;
+    color: #5dffa0;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.15);
+}
+
+/* ============================================================
+   ÁREA DE TEXTO (GANHA VISUAL DE CAIXA UNIFICADA)
+   ============================================================ */
+.area-perdidos-vivo {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ocupa o meio do formulário deitado */
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    min-height: 120px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.area-perdidos-vivo:focus-within {
+    border-color: #fc900c; /* Dourado/Laranja do seu tema */
+    box-shadow: 0 0 10px rgba(252, 144, 12, 0.15);
+}
+
+#mensagem-perdidos {
+    width: 100%;
+    flex: 1;
+    background: transparent;
+    color: #eee;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    resize: none; /* Desativado para o layout deitado não quebrar */
+    outline: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+#mensagem-perdidos::placeholder {
+    color: #666;
+    font-style: italic;
+}
+
+/* ============================================================
+   BARRA DE AÇÕES (REPOUSANDO ABAIXO DO TEXTO)
+   ============================================================ */
+.barra-perdidos-vivo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 8px;
+    margin-top: auto; /* Força ir para o final da caixa */
+    gap: 15px;
+    align-self: stretch;
+}
+
+/* Alinhando os grupos internos originais */
+.barra-perdidos-vivo .acoes-esquerda {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.barra-perdidos-vivo .acoes-direita {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex: 1;
+    justify-content: flex-end; /* Joga o contador e botão para a direita */
+}
+
+/* Ícones de imagem/gif originais */
+.btn-acao-vivo {
+    color: #aaa;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+
+.btn-acao-vivo:hover {
+    color: #fc900c;
+}
+
+/* FIM DO TREMOR: Fonte com espaçamento fixo para números */
+.contador-caracteres {
+    color: #666;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums; 
+    white-space: nowrap;
+}
+
+/* ============================================================
+   BOTÃO PUBLICAR
+   ============================================================ */
 .btn-lancar-perdidos {
     background: #7cd632e8;
     color: #000;
     border: none;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 30px;
     font-weight: 800;
     text-transform: uppercase;
-    font-size: 0.75rem;
-    font-size: clamp(0.8rem, 1.041vw, 1rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
     cursor: pointer;
-    transition: 0.3s;
-    height: auto;
-    max-width: 300px;
-    margin-top: 0;
-    flex: 0 1 auto;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .btn-lancar-perdidos:hover {
     background: #c8ff00d3;
-    transform: scale(1.02);
-    box-shadow: 0 5px 12px rgba(255, 188, 0, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(124, 214, 50, 0.25);
 }
 
-/* Esconde os input-group antigos que foram substituídos pelo formulário vivo */
-.sessao-publicar .form-publicar .input-group {
-    display: none;
-}
+
+
+
+
+
+
 
 
 /* ESTILO DOS BOTÕES DE EDIÇÃO */
@@ -2528,7 +3083,6 @@ section.sessao-publicar {
 /* 1. Botão da Câmera (Capa) */
 
 .btn-mudar-capa {
-
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     width: clamp(30px, 4vw + 6px, 48px);
@@ -2754,7 +3308,9 @@ input[type="checkbox"]:focus {
 }
 
 .perfil-gold .img-capa-preview {
-    border: 2px solid var(--dourado);
+    border: 2px solid var(--dourado, #ffbc00fc);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
     border-radius: 20px;
 }
 
@@ -2860,18 +3416,16 @@ form[action="confirma-login.php"] a {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin: 25px auto;
+    margin: 20px auto;
     display: flex;
     padding: 8px;
     float: none;
     border-radius: 16px;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
     border: 1px solid #cccccc;
     max-width: 800px;
-    background: #0d0d0dd1;
+    background: #0d0d0db4;
 }
 
 
@@ -3013,13 +3567,14 @@ textarea {
 .balao-fenda {
     position: fixed;
     background: rgba(10, 10, 10, 0.92);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     color: #f0f0f0;
     padding: 12px 20px 12px 16px;
     border-radius: 16px 16px 16px 4px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
     font-weight: 500;
     max-width: 300px;
     z-index: 99999;
@@ -3118,5 +3673,152 @@ textarea {
     .balao-fenda::after {
         left: 16px;
         border-width: 8px 8px 0 8px;
+    }
+}
+
+/* DIALOG POP-UP ESTILO WHATSAPP */
+.dialog-confirmacao {
+    border: none;
+    border-radius: 16px;
+    padding: 0;
+    background: transparent;
+    max-width: 90%;
+    max-width: 350px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0px);
+    transform: translate(-50%, -50%);
+}
+
+.dialog-confirmacao::backdrop {
+    display: none;
+}
+
+.dialog-conteudo {
+    background: rgba(20, 20, 32, 0.96);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border-radius: 16px;
+    padding: 16px 20px 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 140, 0, 0.3);
+    pointer-events: auto;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.dialog-conteudo h3 {
+    margin: 0 0 8px 0;
+    color: #ffbc00;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.dialog-conteudo p {
+    margin: 0 0 16px 0;
+    color: #fff;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.dialog-botoes {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.dialog-btn {
+    border: none;
+    border-radius: 30px;
+    padding: 7px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.85rem;
+    min-width: 80px;
+}
+
+.dialog-btn-sim {
+    background: rgba(220, 53, 69, 0.2);
+    border: 1px solid #ff4b2b;
+    color: #ff8a8a;
+}
+
+.dialog-btn-sim:hover {
+    background: rgba(220, 53, 69, 0.4);
+}
+
+.dialog-btn-nao {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid #666;
+    color: #ccc;
+}
+
+.dialog-btn-nao:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ==================================================
+   RESPONSIVIDADE – telas pequenas e landscape
+   ================================================== */
+@media (max-width: 480px) {
+    .btn-excluir-comentario {
+        left: -24px;
+        top: 4px;
+    }
+
+    .dialog-confirmacao {
+        width: 240px;
+    }
+
+    .dialog-conteudo {
+        padding: 14px 16px 16px;
+    }
+
+    .dialog-conteudo h3 {
+        font-size: 0.9rem;
+    }
+
+    .dialog-conteudo p {
+        font-size: 0.8rem;
+    }
+
+    .dialog-btn {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        min-width: 60px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+    .dialog-confirmacao {
+        width: 260px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .dialog-conteudo {
+        padding: 10px 14px 14px;
+    }
+
+    .dialog-conteudo h3 {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+
+    .dialog-conteudo p {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+    }
+
+    .dialog-btn {
+        font-size: 0.75rem;
+        padding: 4px 10px;
+        min-width: 50px;
     }
 }
