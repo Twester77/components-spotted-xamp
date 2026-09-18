@@ -2,6 +2,12 @@
 // auth-bridge.php – Ponte entre Supabase Auth e Sessão PHP (Vercel)
 // 🔧 v1.3 – Adicionado "Manter-me conectado" + registro em sessoes_ativas
 // 🐚 Íris – 2026-08-28
+//
+// 🐚 Pérola – 2026-09-18 (v1.4)
+//    - Adicionado csrf_token ao payload do cookie cifrado, para que ele
+//      sobreviva entre requests serverless. Sem isso, o token do HTML
+//      nunca batia com o token da $_SESSION no próximo POST, causando
+//      403 em avaliações, depoimentos, exclusão de comentário e sessões.
 
 include_once __DIR__ . '/conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
@@ -94,6 +100,17 @@ $_SESSION['usuario_username'] = $usuario['username'];
 $_SESSION['usuario_email'] = $usuario['email'];
 
 // ============================================================
+// 🔥 3.1 GARANTE CSRF TOKEN (auditoria Pérola – 2026-09-18)
+// ============================================================
+// Em serverless, a $_SESSION morre entre requests. Para que o token
+// do HTML (request N) sobreviva até o POST (request N+1), ele precisa
+// viajar cifrado dentro do cookie `fenda_state_token` (ver bloco 6).
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    fenda_log('🟢 [CSRF] Novo token gerado no login: ' . substr($_SESSION['csrf_token'], 0, 16) . '...');
+}
+
+// ============================================================
 // 4. GERA TOKEN ÚNICO PARA A SESSÃO ATIVA
 // ============================================================
 $session_token = bin2hex(random_bytes(32)); // 64 caracteres hex
@@ -126,6 +143,7 @@ $cookie_payload = json_encode([
     'email' => $usuario['email'],
     'persistente' => $manter,
     'token_sessao' => $session_token, // 🔥 chave para validar na tabela
+    'csrf_token' => $_SESSION['csrf_token'], // 🔥 NOVO (auditoria Pérola – 2026-09-18)
     'exp' => $expires_in
 ]);
 
@@ -145,12 +163,13 @@ setcookie('fenda_state_token', $encrypted_payload, [
     'samesite' => 'Lax'
 ]);
 
-fenda_log('🟢 Sessão e Token de persistência criados para usuário: ' . $usuario['id'] . 
+fenda_log('🟢 Sessão e Token de persistência criados para usuário: ' . $usuario['id'] .
           ' (' . $usuario['email'] . ') persistente=' . ($manter ? 'sim' : 'não') .
-          ' token_sessao=' . substr($session_token, 0, 16) . '...');
+          ' token_sessao=' . substr($session_token, 0, 16) . '...' .
+          ' csrf=' . substr($_SESSION['csrf_token'], 0, 16) . '...');
 
 // ============================================================
 // 7. RESPOSTA
 // ============================================================
 echo json_encode(['success' => true, 'redirect' => 'feed.php']);
-exit();
+exit;

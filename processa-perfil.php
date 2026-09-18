@@ -158,12 +158,21 @@ try {
     }
     mysqli_stmt_close($stmt);
 
-    if ($foto_antiga && $foto_antiga != $foto_nome) {
-        if (file_exists("./uploads/" . $foto_antiga)) unlink("./uploads/" . $foto_antiga);
+    // ============================================================
+    // 🔧 FIX: Só deletar foto/capa antiga do B2 se uma NOVA foi enviada
+    // (auditoria Pérola – 2026-09-18)
+    //
+    // Bug anterior: se o usuário salvava o perfil SEM enviar nova foto,
+    // $foto_nome ficava null, mas a condição `$foto_antiga != $foto_nome`
+    // ainda era true → deletava a foto do B2 sem ter nova. Resultado:
+    // próximo request ao proxy.php retornava 404 e caía no fallback.
+    //
+    // Também removido `unlink()` local (código morto, arquivos estão no B2).
+    // ============================================================
+    if ($foto_nome !== null && $foto_antiga && $foto_antiga != $foto_nome) {
         deleteFromB2($foto_antiga, $usuario_id);
     }
-    if ($capa_antiga && $capa_antiga != $capa_nome) {
-        if (file_exists("./uploads/" . $capa_antiga)) unlink("./uploads/" . $capa_antiga);
+    if ($capa_nome !== null && $capa_antiga && $capa_antiga != $capa_nome) {
         deleteFromB2($capa_antiga, $usuario_id);
     }
 
@@ -181,4 +190,3 @@ try {
     header("Location: " . $url_origem . "?erro=update_falhou");
     exit();
 }
-?>

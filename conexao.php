@@ -352,17 +352,49 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                             $_SESSION['usuario_email'] = $usuario['email'];
                         }
 
-                        // 🔥 DJÊ: SÓ RENOVA O COOKIE SE FOR PERSISTENTE
-                        if (isset($user_data['persistente']) && $user_data['persistente'] === true) {
-                            fenda_log('🟢 [HYDRATION] Cookie persistente ativo. Renovando token rolante...');
-                            $new_expires_in = time() + (86400 * 30);
+                        // ============================================================
+                        // 🔥 CSRF TOKEN (auditoria Pérola – 2026-09-18)
+                        // ============================================================
+                        // PROBLEMA: em serverless, a $_SESSION morre entre requests.
+                        // O token que veio no HTML (request N) não sobrevive até o
+                        // POST (request N+1), gerando 403 em todos os endpoints que
+                        // validam CSRF (avaliações, depoimentos, exclusão de
+                        // comentário, gerenciador de sessões).
+                        //
+                        // SOLUÇÃO: o csrf_token viaja cifrado dentro do cookie
+                        // `fenda_state_token` (que sobrevive entre requests) e é
+                        // restaurado aqui na hidratação.
+                        //
+                        // Usuários com cookie antigo (pré-fix): geramos um novo
+                        // csrf e forçamos a renovação do cookie para que ele seja
+                        // salvo para os próximos requests.
+                        // ============================================================
+                        $csrf_from_cookie = $user_data['csrf_token'] ?? null;
+                        $precisa_renovar_cookie = false;
+
+                        if (!empty($csrf_from_cookie)) {
+                            $_SESSION['csrf_token'] = $csrf_from_cookie;
+                        } else {
+                            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                            $precisa_renovar_cookie = true;
+                            fenda_log('🟡 [HYDRATION] csrf_token ausente no cookie. Gerado novo e forçando renovação.');
+                        }
+
+                        // 🔥 Renova o cookie se for persistente (rolling token) OU
+                        // se o csrf estava faltando (precisa ser salvo para os
+                        // próximos requests sobreviverem).
+                        $is_persistente = isset($user_data['persistente']) && $user_data['persistente'] === true;
+
+                        if ($is_persistente || $precisa_renovar_cookie) {
+                            $new_expires_in = $is_persistente ? time() + (86400 * 30) : 0;
                             $new_cookie_payload = json_encode([
                                 'id'           => $usuario['id'],
                                 'nome'         => $usuario['nome'],
                                 'username'     => $usuario['username'],
                                 'email'        => $usuario['email'] ?? '',
-                                'persistente'  => true,
+                                'persistente'  => $is_persistente,
                                 'token_sessao' => $token_sessao,
+                                'csrf_token'   => $_SESSION['csrf_token'], // 🔥 NOVO
                                 'exp'          => $new_expires_in
                             ]);
                             $new_encrypted_payload = fenda_encrypt_state($new_cookie_payload);
@@ -376,9 +408,9 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                                 'samesite' => 'Lax'
                             ]);
 
-                            fenda_log('🟢 [HYDRATION] Cookie rolante renovado para ID: ' . $usuario['id']);
+                            fenda_log('🟢 [HYDRATION] Cookie renovado (persistente=' . ($is_persistente ? 'sim' : 'não') . ', csrf_precisa_salvar=' . ($precisa_renovar_cookie ? 'sim' : 'não') . ')');
                         } else {
-                            fenda_log('🟡 [HYDRATION] Cookie NÃO persistente. Mantendo sem renovação.');
+                            fenda_log('🟡 [HYDRATION] Cookie não persistente e csrf já presente. Sem renovação.');
                         }
                         
                         // 🔥 ATUALIZA A ÚLTIMA ATIVIDADE DA SESSÃO NA TABELA

@@ -70,10 +70,23 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
 
     <!-- PWA Manifest -->
     <?php
-    // Define o caminho base do projeto (ex: /spotted-unifev ou vazio)
-    $basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+    // 🔥 CÁLCULO DE BASE PATH HÍBRIDO (serverless-safe)
+    // Usa REQUEST_URI (URL que o cliente pediu) em vez de SCRIPT_NAME
+    // (que na Vercel aponta para /api/index.php por causa do roteador).
+    //
+    // Remove o nome do arquivo .php do fim, preserva o diretório base.
+    // Testes:
+    //   /feed.php                       → ''            (produção)
+    //   /spotted-unifev/feed.php        → '/spotted-unifev'  (local)
+    //   /                               → ''            (raiz)
+    //   /spotted-unifev/                → '/spotted-unifev'
+    //   /motor-feed.php?offset=0        → ''            (query ignorada)
+    $request_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $basePath = preg_replace('#/[^/]*\.php$#', '', $request_path);
+    $basePath = rtrim($basePath, '/');
     ?>
-    <link rel="manifest" href="<?= $basePath ?>/manifest.php">
+    <link rel="manifest" href="<?= $basePath ?>/manifest.json">
+    <link rel="manifest" href="<?= $basePath ?>/manifest.json">
 
     <!-- CSS com Cache Busting Automático -->
     <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">
@@ -102,7 +115,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <?php endif; ?>
 
     <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'perdidos.php' || $pagina_atual == 'comunidade.php' || $pagina_atual == 'central.php'): ?>
-    <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
+        <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
     <?php endif; ?>
 
     <!-- Comentários -->

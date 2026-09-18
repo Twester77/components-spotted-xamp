@@ -54,7 +54,7 @@ include 'includes/navbar.php';
                 <?php foreach ($resultados as $user): 
                     $foto = !empty($user['foto']) 
                         ? "uploads/" . htmlspecialchars($user['foto'], ENT_QUOTES, 'UTF-8') 
-                        : "uploads/ui/default_masculino.jpg";
+                        : "uploads/ui/default_masculino.webp";
                 ?>
                     <a href="ver-perfil.php?user=<?php echo urlencode($user['username']); ?>" 
                        style="text-decoration: none; color: inherit;">

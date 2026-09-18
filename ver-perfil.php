@@ -72,7 +72,7 @@ try {
 }
 
 // 🔥 AVATAR E CAPA COM FALLBACK CENTRALIZADO
-$foto_user = obterUrlComFallback($foto_limpa, 'uploads/ui/default_masculino.jpg', $b2, true);
+$foto_user = obterUrlComFallback($foto_limpa, 'uploads/ui/default_masculino.webp', $b2, true);
 $capa_user = obterUrlComFallback($capa_limpa, 'uploads/ui/default_capa_masculino.webp', $b2, true);
 
 $is_presenca = ($id_visto == 1);

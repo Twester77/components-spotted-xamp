@@ -127,10 +127,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $aura_inicial = $_POST['aura_inicial'] ?? 'masculino';
     if ($aura_inicial === 'feminino') {
-        $foto_perfil_final = 'default_feminino.jpg';
+        $foto_perfil_final = 'default_feminino.webp';
         $foto_capa_final   = 'default_capa_feminino.webp';
     } else {
-        $foto_perfil_final = 'default_masculino.jpg';
+        $foto_perfil_final = 'default_masculino.webp';
         $foto_capa_final   = 'default_capa_masculino.webp';
     }
 
@@ -264,4 +264,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: cad-usuario.php");
     exit();
 }
-?>

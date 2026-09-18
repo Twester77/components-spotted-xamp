@@ -203,7 +203,7 @@ function renderizarAnexos($post, $b2)
         $html .= '</div>';
     } elseif (!empty($post['imagem_url'])) {
         $nome_imagem = $post['imagem_url'];
-        $defaults = ['default_feminino.jpg', 'default_masculino.jpg', 'default_capa_feminino.webp', 'default_capa_masculino.webp'];
+        $defaults = ['default_feminino.webp', 'default_masculino.webp', 'default_capa_feminino.webp', 'default_capa_masculino.webp'];
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
@@ -292,7 +292,7 @@ $username = htmlspecialchars($post['username'] ?? '', ENT_QUOTES, 'UTF-8');
 $cor_autor = htmlspecialchars($post['pref_cor_padrao'] ?? '#70cde4', ENT_QUOTES, 'UTF-8');
 
 // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
-$avatar_autor = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.jpg', $b2, true);
+$avatar_autor = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
 
 // Anexos
 $anexos_html = renderizarAnexos($post, $b2);
