@@ -2087,7 +2087,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 
 .carrossel-numero {
     font-size: 0.75rem;
-    font-size: clamp(0.8rem, 3.2cqi, 1.05rem);
+    font-size: clamp(0.8rem, 3cqi, 1.05rem);
     color: rgba(255, 255, 255, 0.5);
     font-weight: 500;
     margin-right: 8px;
@@ -2122,7 +2122,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 .carrossel-nav button {
     pointer-events: auto; /* os botões recebem eventos */
     background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border: none;
     border-radius: 50%;
     color: #fff;
@@ -2467,7 +2468,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     flex-direction: column;
     gap: 10px;
     padding: 25px 5px;
-    max-width: 750px;
+    max-width: 700px;
     margin: 0 auto;
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);

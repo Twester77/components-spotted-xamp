@@ -404,7 +404,7 @@ body.modo-swipe-ativo .controles-feed-topo {
     top: calc(1cqi + 20px );
     left: 0;
     width: 100%;
-    z-index: 9995;
+    z-index: 101;
     background: transparent;
     padding: 0;
 }
@@ -486,7 +486,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     border-bottom: 3px solid #ff8c00;
     
     /* CORRIGIDO: Ativa a animação de slideDown quando a classe .aberto entra em ação */
-    animation: slideDown 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation: slideDown-filtro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
@@ -503,7 +503,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 }
 
 /* Suas Keyframes originais de abertura ajustadas para suavidade */
-@keyframes slideDown {
+@keyframes slideDown-filtro {
     from {
         transform: translateY(-100%);
         opacity: 0;
@@ -660,7 +660,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;

@@ -398,7 +398,7 @@
     border-radius: 30px;
     font-weight: 700;
     font-size: 1rem;
-    font-size: (0.9rem, 1.2vw, 1.1rem);
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     border: none;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -1197,7 +1197,7 @@
     border-radius: 12px;
     padding: 10px 14px;
     margin-bottom: 15px;
-    border-left: 3px solid var(--,);
+    border-left: 3px solid var(--bt-dourado,#ffbc00);
     border-left: 3px solid oklch(83.276% 0.17139 82.036);
     transition: background 0.2s;
 }

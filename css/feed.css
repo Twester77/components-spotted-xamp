@@ -119,6 +119,7 @@
     color: #f2f2f2;
     color: oklch(0.96 0 0 );
     display: -webkit-box;
+    max-height: 7rem;
     -webkit-line-clamp: 4;
     line-clamp: 4;
     -webkit-box-orient: vertical;
@@ -131,7 +132,6 @@
 
 body:not(.modo-swipe-ativo) .post-content {
     display: flex;
-    transition: max-height 0.4s ease-in-out;
     margin: 5px 0;
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.041vw, 1.05rem);
@@ -147,11 +147,6 @@ body:not(.modo-swipe-ativo) .post-content {
     max-height: 2000px;
     /* valor alto para caber todo o texto */
     overflow: visible;
-}
-
-/* Quando tem a classe 'tem-mais', o ponteiro vira mãozinha */
-.post-content.tem-mais {
-    cursor: pointer;
 }
 
 /* O 'Ler Mais' aparece apenas se não estiver expandido */
@@ -187,7 +182,6 @@ body:not(.modo-swipe-ativo) .post-content {
     scrollbar-width: none;
     container-type: inline-size;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
-    will-change: transform, opacity;
 
 }
 
@@ -988,19 +982,32 @@ span.category-tag {
     grid-template-columns: repeat(2, minmax(80px, 120px));
     grid-template-columns: repeat(2, minmax(18cqi, 28cqi));
     gap: 8px;
-    margin-top: 8px;
+    margin-top: 5px;
     overflow: hidden;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.096);
     padding: 8px 0;
 }
 
+.main-perdidos .feed-anexo-item {
+    aspect-ratio: auto;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.main-perdidos .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+    max-height: 360px;
+    max-width: 100%;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    object-fit: cover;
+    border-radius: 4px;
+}
 
 .feed-anexo-item {
     aspect-ratio: 1 / 1;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.15s ease;
@@ -1010,7 +1017,7 @@ span.category-tag {
 .feed-anexo-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 
 }
@@ -1024,8 +1031,16 @@ span.category-tag {
     padding: 0;
 }
 
+body:not(.modo-swipe-ativo)  .feed-anexo-item:only-child {
+    background: #0a0a0a;
+    height: 100%;
+    width: 100%;
+    display: block;
+    max-height: 300px;
+    max-height: clamp(180px, 60cqh, 350px);
+}
+
 .feed-anexo-item:only-child  {
-    aspect-ratio: auto;
     object-fit: cover;
     display: flex;
     align-items: center;

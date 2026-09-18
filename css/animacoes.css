@@ -120,7 +120,7 @@
     font-weight: bold;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    animation: slideDown 0.5s ease-out;
+    animation: slideDown-toast 0.5s ease-out;
     transition: opacity 0.6s ease-in-out;
     z-index: 10005;
     /* 5 níveis acima da navbar*/
@@ -131,7 +131,7 @@
         background: rgba(40, 167, 69, 0.9);
 }
 
-@keyframes slideDown {
+@keyframes slideDown-toast {
     from {
         transform: translate(-50%, -150px);
         opacity: 0;

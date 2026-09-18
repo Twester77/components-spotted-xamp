@@ -17,7 +17,7 @@
     max-width: 1200px;
     gap: 10px;
     margin: 0 auto;
-    padding: 0;
+    padding: 8px;
     border: none;
     container-type: inline-size;
     container-name: main-perfil;
@@ -660,8 +660,7 @@
     border-radius: 30px;
     padding: clamp(4px, 0.5vw, 8px) clamp(12px, 1.5vw, 20px);
     color: var(--dourado, #ffbc00);
-    font: size 0.8rem;
-    ;
+    font-size: 0.8rem;
     font-size: clamp(0.75rem, 1vw, 1.05rem);
     cursor: pointer;
     transition: 0.25s ease;
@@ -1086,7 +1085,7 @@
     position: relative;
     overflow: hidden;
     min-height: 100vh;
-    background-color: #16161db0 !important;
+    background-color: #16161db0 ;
 
     /* Gradiente original de fundo isolado */
     background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.9) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.9) 100%) !important;
@@ -1095,7 +1094,7 @@
     background-position: 0% 0%;
 
     border: 1px solid rgba(255, 255, 255, 0.04);
-    border-top: 4px solid var(--aura-user) !important;
+    border-top: 6px solid var(--aura-user) ;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     will-change: box-shadow, background-position, opacity, animation;
     animation: ads-neon-glow-pulse var(--vibe-ads-pulse-duration) infinite ease-in-out alternate;
@@ -1215,7 +1214,7 @@
     background: #0d0d11 ;
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border-top: 2px solid rgba(255, 0, 50, 0.5);
+    border-top: 4px solid rgba(255, 0, 50, 0.5);
     border-radius: 14px;
     transition: all 0.5s ease;
 }
@@ -1377,7 +1376,7 @@
 .main-perfil-container-publico.vibe-neon {
     background: linear-gradient(to bottom, transparent 0%, var(--aura-user, #ff9100) 25%, #000 50%) !important;
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
-    border: 1px solid var(--aura-user, #ff9100);
+    border: 2px solid var(--aura-user, #ff9100);
 }
 
 @keyframes neon-flicker-subtle {
@@ -1461,7 +1460,7 @@
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border: 1px solid oklch(1 0 0 / 0.25) ;
-    border-top: 4px solid var(--aura-user, #ffa600) ;
+    border-top: 6px solid var(--aura-user, #ffa600) ;
     border-radius: 16px 16px 0 0;
 
     box-shadow:
@@ -1606,8 +1605,8 @@
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
 
         
-        -webkit-mask-size: 150px 150px;
-        mask-size: 150px 150px;
+        -webkit-mask-size: 120px 120px;
+        mask-size: 120px 120px;
         
         -webkit-mask-repeat: repeat;
         mask-repeat: repeat;

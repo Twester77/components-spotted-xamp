@@ -500,6 +500,7 @@ nav {
 
 .status-section {
     margin-top: 15px;
+    color: #00ffcc; font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block;
 }
 
 .status-user {
@@ -1322,6 +1323,8 @@ footer a {
     margin: 25px auto;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    height: 100dvh;
 }
 
 .form-busca-fenda {
@@ -1330,7 +1333,7 @@ footer a {
     align-items: stretch;
     gap: 8px;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     margin: 25px auto;
     background: transparent !important;
     border: none;
@@ -1390,20 +1393,45 @@ footer a {
 
 /* 2. Lista de Resultados  */
 .lista-resultados {
-    max-width: 300px;
+    display: grid;
+    align-items: flex-start;
+    align-content: center;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    max-width: 1600px; 
     margin: 20px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    column-count: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    gap: 16px;
+    max-width: 100%;
+    
 }
 
 /* 3. O Card de Usuário  */
 .user-card {
     display: flex;
-    align-items: center;
     background: rgba(255, 255, 255, 0.05);
     padding: 12px;
     border-radius: 12px;
+    border-radius: 10px;
+    padding: 10px;
+    break-inside: avoid;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: column;
+    width: 100%;
+    max-width: 350px;
+     /* Suaviza as bordas do card em movimento de forma contínua */
+    -webkit-font-smoothing: antialiased;
+    height: auto;
+    scrollbar-width: none;
+    container-type: inline-size;
+    container-name: card-busca;
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.2s ease, background 0.2s ease !important;
 }

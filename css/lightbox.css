@@ -32,7 +32,7 @@
     width: 100%;
     background: rgba(25, 25, 38, 0.8);
     border-radius: clamp(10px, 2vw, 24px);
-    border: 1px solid rgb(255 188 0 / 13%);;
+    border: 1px solid rgb(255 188 0 / 13%);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
     padding: 12px;
     padding: clamp(12px, 2cqi, 30px);
@@ -247,7 +247,7 @@ body.modo-swipe-ativo .lightbox-post-body img {
     
 }
 
-body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexo-item:only-child img
+body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexo-item:only-child img,
 body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child img{
     max-height: 400px;
     object-fit: contain;
@@ -298,6 +298,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-reacoes .reacao-placeholder {
     justify-content: center;
+    display: flex;
+    font-size: 0.85rem;
     font-size: clamp(0.75rem, 3cqi, 1rem);
     width: 100%;
     text-align: center;

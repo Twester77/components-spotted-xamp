@@ -380,6 +380,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     color: rgba(255, 255, 255, 0.5);
     color: oklch(1 0 0 / 0.5);
     font-weight: 500;
+    margin-right: 6px ;
     margin-right: clamp(4px, 0.8cqi, 10px);
     min-width: 30px;
     text-align: center;
@@ -585,6 +586,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-comunidade-card h4 {
     padding: 0 12px;
     margin: 10px 0 4px 0;
+    font-size: 0.9rem;
     font-size: clamp(0.95rem, 1.2vw, 1.2rem);
     color: #fff;
 }
@@ -635,7 +637,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-conteudo .feed-anexo-item:only-child {
     aspect-ratio: auto;
     max-width: 100%;
-    max-height: 400px;
+    min-height: 150px;
+    max-height: 350px;
+    max-height: clamp(220px, 70cqh, 400px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -644,10 +648,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .central-conteudo .feed-anexo-item:only-child img {
-    max-height: 400px;
     object-fit: contain;
     width: 100%;
-    height: auto;
+    height: 100%;
+    aspect-ratio: auto;
 }
 
 .central-conteudo .avatar-p {

@@ -57,7 +57,7 @@ if (isset($_SESSION['usuario_id'])):
             <hr style="border: 0.5px solid rgba(0, 255, 204, 0.2); margin: 15px 0;">
 
             <div class="status-section">
-                <label style="color: #00ffcc; font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block;">Seguindo:</label>
+                <label style="margin-bottom: 10px; display: block;">Seguindo:</label>
                 <div id="lista-amigos-toolbar">
                     <?php
                     if (mysqli_num_rows($res_toolbar) > 0):
