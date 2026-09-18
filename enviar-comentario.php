@@ -18,6 +18,12 @@
  * 🐚 BRISA – 2026-09-10
  *    "Removida a declaração duplicada de obterIPReal() (agora definida em conexao.php).
  *     Isso resolve o erro 500 causado por redeclaração de função."
+ *
+ * 🐚 PÉROLA – 2026-09-18 (auditoria XSS)
+ *    - Adicionada validação whitelist de `pref_vibe_comentario` e regex de
+ *      `pref_cor_borda`. Sem isso, um atacante poderia injetar HTML/CSS via
+ *      POST manipulado (ex: 'vibe-glass" onmouseover="...') e obter XSS
+ *      armazenado ao renderizar no comentarios-post.php.
  */
 
 ini_set('display_errors', 0);
@@ -88,6 +94,34 @@ function validarConteudo($texto, $temImagem = false) {
         return ['valido' => false, 'mensagem' => 'Conteúdo parece ser spam.'];
     }
     return ['valido' => true];
+}
+
+// ============================================================
+// 🔒 AUDITORIA PÉROLA – 2026-09-18
+// Sanitização de preferências visuais (whitelist + regex).
+// Protege contra XSS armazenado via manipulação de POST.
+// ============================================================
+
+/**
+ * Whitelist de vibes conhecidas. Qualquer valor fora disso cai no padrão.
+ * Isso previne injeção de classe CSS manipulada que poderia quebrar o atributo
+ * e injetar HTML (ex: 'vibe-glass" onmouseover="alert(1)').
+ */
+function sanitizarVibe($vibe) {
+    $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
+    return in_array($vibe, $vibes_validas, true) ? $vibe : 'vibe-glass';
+}
+
+/**
+ * Valida cor no formato #RGB ou #RRGGBB (case-insensitive).
+ * Qualquer coisa fora disso cai no padrão.
+ * Isso previne injeção de CSS via style inline (ex: 'red; } .x { background: url(...) }').
+ */
+function sanitizarCorBorda($cor) {
+    if (is_string($cor) && preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $cor)) {
+        return $cor;
+    }
+    return '#70cde4';
 }
 
 // ============================================================
@@ -177,8 +211,11 @@ $comentario_raw = $_POST['comentario'] ?? '';
 $comentario = trim($comentario_raw) === '' ? null : $comentario_raw;
 
 // 2.7 Preferências visuais
-$vibe = $_POST['pref_vibe_comentario'] ?? 'vibe-glass';
-$cor_borda = $_POST['pref_cor_borda'] ?? '#70cde4';
+// 🔒 AUDITORIA PÉROLA: valores passam por sanitização antes de irem pro banco.
+// Antes, iam crus e depois eram injetados no HTML do comentarios-post.php,
+// permitindo XSS armazenado.
+$vibe = sanitizarVibe($_POST['pref_vibe_comentario'] ?? 'vibe-glass');
+$cor_borda = sanitizarCorBorda($_POST['pref_cor_borda'] ?? '#70cde4');
 
 // ============================================================
 // 🔥 2.8 PROCESSAMENTO DE ANEXOS (MÚLTIPLOS + GIFs)

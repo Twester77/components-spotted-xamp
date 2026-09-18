@@ -155,6 +155,11 @@ try {
 }
 
 mysqli_set_charset($conn, "utf8mb4");
+// 🔥 PHP 8.1+ lança mysqli_sql_exception por padrão. Isso conflita com o
+// padrão antigo (execute() retornando false). Como o código da Fenda
+// usa o padrão antigo, desligamos o report para evitar fatal errors em
+// INSERTs que falham (ex: id_mensagem inexistente, coluna faltando, etc).
+mysqli_report(MYSQLI_REPORT_OFF);
 
 // ============================================================
 // 🔒 MOTOR DE SEGURANÇA E CRIPTOGRAFIA SIMÉTRICA (AES-256-CBC)

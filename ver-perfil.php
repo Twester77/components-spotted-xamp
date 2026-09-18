@@ -1,11 +1,15 @@
 <?php
 /**
  * ver-perfil.php – Página pública de perfil de um habitante
- * 
+ *
  * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
  * "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
  *  em avatar e capa do usuário."
  * - Ondina
+ *
+ * 🔒 AUDITORIA PÉROLA – 2026-09-18
+ *    - Botão "Seguir" mudou de <a href="seguir.php"> para <button>
+ *      que envia POST com csrf_token via fetch (fix CSRF).
  */
 
 // 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
@@ -156,11 +160,16 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 
             <div class="perfil-controles-publico">
                 <?php if ($_SESSION['usuario_id'] != $id_visto): ?>
-                    <a href="seguir.php?id=<?php echo $id_visto; ?>&user=<?php echo $user_get; ?>"
+                    <!-- 🔥 CSRF FIX: botão (não <a>) que envia POST via JS -->
+                    <button type="button"
                         class="btn-seguir-fenda <?php echo $ja_segue ? 'seguindo' : ''; ?>"
-                        style="background: <?php echo $ja_segue ? 'transparent' : $cor_user; ?>; border-color: <?php echo $cor_user; ?>;">
+                        id="btn-seguir-perfil"
+                        data-id="<?php echo (int)$id_visto; ?>"
+                        data-user="<?php echo htmlspecialchars($user_get, ENT_QUOTES, 'UTF-8'); ?>"
+                        data-cor="<?php echo htmlspecialchars($cor_user, ENT_QUOTES, 'UTF-8'); ?>"
+                        style="background: <?php echo $ja_segue ? 'transparent' : htmlspecialchars($cor_user, ENT_QUOTES, 'UTF-8'); ?>; border-color: <?php echo htmlspecialchars($cor_user, ENT_QUOTES, 'UTF-8'); ?>; cursor: pointer;">
                         <?php echo $ja_segue ? '<i class="fa-solid fa-check"></i> Seguindo' : '+ Seguir'; ?>
-                    </a>
+                    </button>
                 <?php endif; ?>
             </div>
         </div>
@@ -240,6 +249,96 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     // LOG DE INICIALIZAÇÃO
     // ============================================================
     console.log('[VER-PERFIL] 🟢 Página carregada. Inicializando módulos...');
+
+    // ============================================================
+    // 🔥 CSRF FIX: SEGUIR/DESSEGUIR VIA POST (auditoria Pérola – 2026-09-18)
+    // ============================================================
+    (function() {
+        const btn = document.getElementById('btn-seguir-perfil');
+        if (!btn) return;
+
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (btn.disabled) return;
+
+            const seguidoId = btn.dataset.id;
+            const username  = btn.dataset.user;
+            const auraColor = btn.dataset.cor || '#28a745';
+            const csrfToken = document.getElementById('csrf_token')?.value || '';
+
+            if (!csrfToken) {
+                alert('Erro de segurança. Recarregue a página.');
+                return;
+            }
+
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            const formData = new FormData();
+            formData.append('id', seguidoId);
+            formData.append('user', username);
+            formData.append('csrf_token', csrfToken);
+
+            fetch('seguir.php', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const seguindo = data.seguindo;
+
+                    // Atualiza visual do botão
+                    btn.classList.toggle('seguindo', seguindo);
+                    btn.style.background = seguindo ? '' : auraColor;
+                    btn.style.borderColor = auraColor;
+                    btn.innerHTML = seguindo
+                        ? '<i class="fa-solid fa-check"></i> Seguindo'
+                        : '+ Seguir';
+
+                    // Atualiza o contador de seguidores
+                    if (typeof data.total_seguidores !== 'undefined') {
+                        const statsSpan = document.querySelector('.stats-perfil span');
+                        if (statsSpan) {
+                            statsSpan.textContent = data.total_seguidores + ' SEGUIDORES';
+                        }
+                    }
+
+                    // Feedback visual
+                    if (typeof window.exibirBalaoFenda === 'function') {
+                        window.exibirBalaoFenda(
+                            seguindo ? '✅ Seguindo!' : '👋 Deixou de seguir.',
+                            'sucesso',
+                            btn
+                        );
+                    }
+                } else {
+                    btn.innerHTML = originalHtml;
+                    if (typeof window.exibirBalaoFenda === 'function') {
+                        window.exibirBalaoFenda(data.message || 'Erro ao processar.', 'erro', btn);
+                    } else {
+                        alert(data.message || 'Erro ao processar.');
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('[SEGUIR] Erro:', err);
+                btn.innerHTML = originalHtml;
+                if (typeof window.exibirBalaoFenda === 'function') {
+                    window.exibirBalaoFenda('Erro de conexão. Tente novamente.', 'erro', btn);
+                } else {
+                    alert('Erro de conexão.');
+                }
+            })
+            .finally(() => {
+                btn.disabled = false;
+            });
+        });
+
+        console.log('[SEGUIR] ✅ Delegador de seguir/desseguir inicializado.');
+    })();
 
     // ============================================================
     // TOGGLE SOCIAL COLLAPSE (com a nova estrutura)

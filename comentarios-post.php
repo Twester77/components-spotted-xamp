@@ -17,6 +17,12 @@
  *    - Adicionado ID exclusivo 'gif-url-comentario' para input hidden do GIF.
  *    - Botão GIF agora define setGiphyTarget('gif-url-comentario').
  *    - Listener gifSelecionado verifica targetId antes de adicionar.
+ *
+ * 🐚 PÉROLA – 2026-09-18 (auditoria XSS – defesa em profundidade)
+ *    - Aplicadas sanitizarVibe() e sanitizarCorBorda() na LEITURA, para
+ *      proteger mesmo se um valor malicioso entrar no banco por outra via
+ *      (SQL direto, migração, etc). O enviar-comentario.php já sanitiza
+ *      na entrada; aqui é a segunda camada.
  */
 
 include_once 'conexao.php';
@@ -29,6 +35,25 @@ if (empty($_SESSION['csrf_token'])) {
 }
 
 fenda_log('🟢 INÍCIO comentarios-post.php');
+
+// ============================================================
+// 🔒 AUDITORIA PÉROLA – Sanitização de preferências visuais
+// (mesmas funções do enviar-comentario.php, defesa em profundidade)
+// ============================================================
+if (!function_exists('sanitizarVibe')) {
+    function sanitizarVibe($vibe) {
+        $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
+        return in_array($vibe, $vibes_validas, true) ? $vibe : 'vibe-glass';
+    }
+}
+if (!function_exists('sanitizarCorBorda')) {
+    function sanitizarCorBorda($cor) {
+        if (is_string($cor) && preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $cor)) {
+            return $cor;
+        }
+        return '#70cde4';
+    }
+}
 
 // ============================================================
 // 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
@@ -256,8 +281,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
                 if ($res_c->num_rows > 0):
                     while ($c = $res_c->fetch_assoc()):
-                        $vibe = !empty($c['pref_vibe_comentario']) ? $c['pref_vibe_comentario'] : 'vibe-glass';
-                        $cor_borda = !empty($c['pref_cor_borda']) ? $c['pref_cor_borda'] : '#70cde4';
+                        // 🔒 AUDITORIA PÉROLA – sanitização na leitura (defesa em profundidade)
+                        $vibe = sanitizarVibe($c['pref_vibe_comentario'] ?? 'vibe-glass');
+                        $cor_borda = sanitizarCorBorda($c['pref_cor_borda'] ?? '#70cde4');
                         $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
                         $id_vincular = !empty($c['parent_id']) ? $c['parent_id'] : $c['id'];
                         $id_autor_comentario = $c['id_usuario'] ?? $c['usuario_id'] ?? 0;

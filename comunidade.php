@@ -524,33 +524,53 @@ if ($is_admin || $is_criador) {
     });
 
     // ============================================================
-    // BOTÃO ENTRAR/SAIR (COMUNIDADE PÚBLICA – já existente, mantido)
+    // 🔥 CSRF FIX: BOTÃO ENTRAR/SAIR (GET → POST com token)
     // ============================================================
     document.querySelectorAll('.btn-entrar-comunidade').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
+
+            if (this.disabled) return;
+
             const comunidadeId = this.dataset.comunidade;
             const isMembro = this.classList.contains('membro');
             const action = isMembro ? 'sair' : 'entrar';
-            const url = `includes/comunidade-actions.php?comunidade_id=${comunidadeId}&acao=${action}`;
+            const csrfToken = document.getElementById('csrf_token')?.value || '';
 
-            fetch(url)
+            if (!csrfToken) {
+                alert('Erro de segurança. Recarregue a página.');
+                return;
+            }
+
+            const originalHtml = this.innerHTML;
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            const formData = new FormData();
+            formData.append('comunidade_id', comunidadeId);
+            formData.append('acao', action);
+            formData.append('csrf_token', csrfToken);
+
+            fetch('includes/comunidade-actions.php', {
+                    method: 'POST',
+                    body: formData
+                })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        this.classList.toggle('membro');
-                        this.textContent = isMembro ? '➕ Entrar' : '✅ Membro';
-                        this.style.background = isMembro ? '#ffbc00' : 'rgba(255,255,255,0.05)';
-                        this.style.color = isMembro ? '#000' : '#aaa';
                         location.reload();
                     } else {
                         alert(data.message || 'Erro ao processar solicitação.');
+                        this.innerHTML = originalHtml;
+                        this.disabled = false;
                     }
                 })
                 .catch(err => {
                     console.error('[COMUNIDADE] Erro:', err);
                     alert('Erro de conexão. Tente novamente.');
+                    this.innerHTML = originalHtml;
+                    this.disabled = false;
                 });
         });
     });
@@ -604,7 +624,7 @@ if ($is_admin || $is_criador) {
     const observerModoSwipe = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.attributeName === 'class') {
-                if (!document.body.classList.contains('modo-swipe-ativo')) {
+                if (!document.body.classList.contains('modo-swipe-atiativo')) {
                     if (typeof configurarPosts === 'function') {
                         configurarPosts();
                     }

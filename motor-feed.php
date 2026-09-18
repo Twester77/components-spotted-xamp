@@ -234,7 +234,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     } elseif (!empty($linha['imagem_url'])) {
         // Fallback: imagem única
         $nome_imagem = $linha['imagem_url'];
-        $defaults = ['default_feminino.jpg', 'default_masculino.jpg', 'default_capa_feminino.webp', 'default_capa_masculino.webp'];
+        $defaults = ['default_feminino.webp', 'default_masculino.webp', 'default_capa_feminino.webp', 'default_capa_masculino.webp'];
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
