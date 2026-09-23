@@ -136,9 +136,9 @@ include 'includes/bolhas.php';
                         <div class="card-header">
                             <span class="category-tag">
                                 <?php if ($linha['subcategoria'] == 'achei'): ?>
-                                    <span class="badge-achado"><i class="fas fa-check-circle" aria-hidden="true"></i> #ACHADO</span>
+                                    <span class="badge-achado"><i class="fas fa-check-circle" aria-hidden="true"></i> ACHADO</span>
                                 <?php else: ?>
-                                    <span class="badge-perdido"><i class="fas fa-search" aria-hidden="true"></i> #PERDIDO</span>
+                                    <span class="badge-perdido"><i class="fas fa-search" aria-hidden="true"></i> PERDIDO</span>
                                 <?php endif; ?>
                                 <small>@<?php echo !empty($linha['username']) ? $linha['username'] : "Anônimo"; ?></small>
                             </span>

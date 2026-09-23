@@ -86,7 +86,6 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     $basePath = rtrim($basePath, '/');
     ?>
     <link rel="manifest" href="<?= $basePath ?>/manifest.json">
-    <link rel="manifest" href="<?= $basePath ?>/manifest.json">
 
     <!-- CSS com Cache Busting Automático -->
     <link rel="stylesheet" href="<?= asset_versao('css/root.css') ?>">

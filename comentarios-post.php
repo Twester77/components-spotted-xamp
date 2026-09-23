@@ -555,8 +555,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
 </script>
 
 <script src="js/fenda-giphy.js"></script>
-<?php include 'includes/footer.php'; ?>
 <script src="js/fenda-mencoes.js"></script>
+<?php include 'includes/footer.php'; ?>
+
 
 <script>
     // ============================================================

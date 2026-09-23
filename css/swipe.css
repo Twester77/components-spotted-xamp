@@ -167,7 +167,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
 
     /* Suaviza as bordas do card em movimento e previne distorção das quinas */
     -webkit-font-smoothing: antialiased;
-    transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     -webkit-content-visibility: auto;
@@ -674,8 +673,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item:only-child
 {
-    max-height: 400px;
-    object-fit: contain;
+max-height: 360px;
+object-fit: contain;
 }
 
 

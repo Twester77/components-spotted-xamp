@@ -49,7 +49,7 @@
                             emptyState.className = 'empty-state';
                             emptyState.innerHTML = `
                                 <i class="fas fa-check-circle" style="font-size: 3rem; color: #4caf50; margin-bottom: 15px;"></i>
-                                <p>Todos os depoimentos foram processados! 🎉</p>
+                                <p> style="font-size: 0.85rem; font-size: clamp(0.9rem, 1.2vw, 1.2rem); text-align:center; Todos os depoimentos foram processados! 🎉</p>
                             `;
                             container.parentNode.appendChild(emptyState);
                             container.remove();

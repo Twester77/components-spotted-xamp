@@ -8,7 +8,7 @@ include 'includes/navbar.php';
 
     <section class="atleticas-section" style="text-align: center; margin-bottom: 40px;">
         <h2 style="color: var(--dourado); font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 2px;">
-            Atléticas Parceiras
+            Atléticas da UNIFEV
         </h2>
 
         <div class="atleticas-grid" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
@@ -70,8 +70,8 @@ include 'includes/navbar.php';
             </div>
 
             <div style="text-align: center;">
-                <a href="https://www.instagram.com/narcotica_atletica.unifev/" target="_blank" class="atletica-item" alt="Instagram da Atlética de Enfermagem" aria-label="Siga a Atlética de Farmácia no Instagram">
-                    <img src="badges/farmacia.webp" class="insignia-atletica-link" title="Siga a Atlética de Enfermagem">
+                <a href="https://www.instagram.com/narcotica_atletica.unifev/" target="_blank" class="atletica-item" alt="Instagram da Atlética de Farmácia" aria-label="Siga a Atlética de Farmácia no Instagram">
+                    <img src="badges/farmacia.webp" class="insignia-atletica-link" title="Siga a Atlética de Farmácia">
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">FARMÁCIA</p>
             </div>

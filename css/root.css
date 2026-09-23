@@ -5,9 +5,10 @@
     --cor-principal: #0246859d; 
     --laranja-fenda: linear-gradient(165deg, #fc5f21, #9b5ab9d2);
     --dourado: #ffbc00;
+    --azul-fenda: #70cde4;
     --background-dark: #0d0d0d;
     --glass-bg: rgba(255, 255, 255, 0.055);
-     --vibe-ads-bg: #08080ec2;
+    --vibe-ads-bg: #08080ec2;
     --vibe-ads-stroke-opacity: 0.12;
     --vibe-ads-static-brightness: 0.06;
     --vibe-ads-dynamic-brightness: 0.3;

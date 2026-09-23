@@ -117,6 +117,7 @@ main article {
 
 main {
     max-width: 100vw;
+    max-width: 100cqw;
     margin: 0 auto;
     padding: 0 15px;
     /* Isso devolve o respiro nas laterais */
@@ -356,7 +357,7 @@ nav {
     display: flex;
     flex-wrap: nowrap;
     word-break: break-word;
-    display: 1 !important;
+    display: 1 ;
     margin-bottom: 20px;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     text-transform: uppercase;
@@ -587,6 +588,7 @@ body.modal-aberto .fab-postar {
     animation: surgimentoModal 0.3s ease-out;
     padding: 15px;
     max-width: 95%;
+    -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
 }
 
@@ -833,7 +835,7 @@ body.modal-aberto .fab-postar {
 
 /* Base dos botões com brilho */
 .fenda-btn-glow {
-    border-radius: 16px;
+    border-radius: 12px;
     font-weight: bold;
     font-size: 16px;
     text-decoration: none;
@@ -1042,8 +1044,8 @@ footer a {
 
 /* Container dos botões de Chuva/Onda/Mudo */
 .audio-choices-container {
-    display: inline-flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     margin-top: 8px;
     gap: 10px;
 }
@@ -1053,14 +1055,15 @@ footer a {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #999;
+    color: oklch(68.295% 0.00008 271.152);
     padding: 6px 14px;
     border-radius: 20px;
     cursor: pointer;
-    font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1.2rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.9rem, 0.8rem + 0.3vw, 1.2rem);
     font-weight: 600;
     transition: all 0.3s ease;
     flex: 1;
-    min-width: 120px;
     max-width: 100%;
     display: flex;
     align-items: center;
@@ -1230,7 +1233,7 @@ footer a {
     /* Começa escondida à direita */
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
-    scrollbar-width: 4px;
+    scrollbar-width: thin;
     scroll-behavior: smooth;
     scrollbar-color: rgba(255, 166, 0, 0.5);
     padding: 8px;
@@ -1246,7 +1249,8 @@ footer a {
 .drawer-backdrop {
     position: fixed;
     top: 0;
-    right: -100%;
+    inset: 0;
+    right: 0;
     left: 0;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
@@ -1380,10 +1384,6 @@ footer a {
     outline: none;
 }
 
-.form-busca-fenda input[type="text"] {
-    padding: 12px 15px;
-    font-size: 1rem;
-}
 
 .form-busca-fenda button {
     padding: 0 15px;
@@ -1522,7 +1522,7 @@ h2.titulo-home {
     mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 100%);
     width: 100%;
     /* Não deixa colar nas bordas do iPhone/Lumia */
-    max-width: clamp(320px, 100%, 800px);
+    max-width: clamp(300px, 100%, 800px);
     height: auto;
     margin: 20px auto;
     /* Reforça a centralização */
@@ -1746,7 +1746,7 @@ article.conteudo-principal {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
     gap: 15px;
     padding: 10px;
-    max-width: auto;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -1807,7 +1807,7 @@ article.conteudo-principal {
     background-color: rgba(105, 61, 10, 0.22);
     /* Cor original que você estava usando */
     border-radius: 20px;
-    padding: 15px;
+    padding: 10px;
     /* Valor de segurança que não entendem os clamps */
     padding: clamp(8px, 4vw, 20px);
     line-height: 1.4;
@@ -1828,6 +1828,8 @@ article.conteudo-principal {
 
 .secao-seguranca p {
     color: #ffffff;
+    color: oklch(100% 0.00011 271.152);
+    font-size: 14px ;
     font-size: clamp(14px, 2.5vw, 18px);
     margin-bottom: 15px;
 }
@@ -1837,6 +1839,7 @@ article.conteudo-principal {
     /* Um fundo bem sutil */
     border-left: 4px solid #fc900c;
     /* O laranja que você curtiu */
+    padding: 6px;
     padding: clamp(8px, 3vw, 20px);
     -webkit-hyphens: auto;
     /*Safari/Chrome*/
@@ -1855,19 +1858,21 @@ article.conteudo-principal {
 .box-diretrizes ul {
     list-style-type: none;
     /* Vamos tirar as bolinhas padrão */
-    padding: 0 !important;
+    padding: 0 ;
     margin: 0;
 }
 
 .box-diretrizes li {
     color: #e0e0e0;
+    color: oklch(90.67% 0.0001 271.152);
     /* Cinza claro: aparece bem no fundo branco e no preto */
     margin-bottom: 15px;
     line-height: 1.6;
     position: relative;
     padding-left: 20px;
     list-style: none;
-    font-size: clamp(13px, 3vw, 18px)
+    font-size: 13px;
+    font-size: clamp(13px, 2.5vw, 16px)
 }
 
 
@@ -1883,6 +1888,7 @@ article.conteudo-principal {
 
 .box-diretrizes li strong {
     color: #ffffff;
+    color: oklch(100% 0.00011 271.152);
     /* Deixa o título do item bem visível */
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -1910,9 +1916,7 @@ input[type="checkbox" i] {
     margin: 4px auto;
     accent-color: #efb71c;
     accent-color: oklch(80.867% 0.16047 85.448);
-
 }
-
 
 /* OS CAMPOS (Organização vertical) */
 .campo-grupo {
@@ -1926,7 +1930,6 @@ input[type="checkbox" i] {
     grid-column: span 1;
 
 }
-
 
 /* 4. Estilo dos Inputs para não vazarem */
 input[type="text"],
@@ -1952,9 +1955,11 @@ textarea {
     /* ISSO AQUI resolve o vazamento da Bio */
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.07);
+    background: oklch(100% 0.00011 271.152 / 0.07);
     border: 1px solid #333;
     border-radius: 8px;
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
 }
 
 /* Formulários (criar/editar posts) – fundo escuro com leve vidro */
@@ -1962,32 +1967,13 @@ textarea {
     display: flex;
     flex-direction: column;
     background: #00000094;
+    background: oklch(0% 0 0 / 0.58);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 24px 20px;
     margin: 0 auto 20px auto;
 }
 
-
-/* Correção do campo @Username */
-.input-username-wrapper {
-    height: 45px;
-    align-items: center;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-}
-
-
-.input-username-wrapper span {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0 12px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    color: var(--dourado);
-}
 
 .input-username-wrapper input {
     flex: 1 !important;
@@ -2028,6 +2014,7 @@ textarea[name="bio"] {
     /* Joga um pouco para baixo do sino */
     width: 250px;
     background: rgba(10, 25, 41, 0.98);
+    background: oklch(20.926% 0.03813 251.502 / 0.98);
     /* Fundo bem sólido para não vazar o que está atrás */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
@@ -2060,11 +2047,12 @@ textarea[name="bio"] {
 }
 
 .notif-avatar {
-    width: 35px;
-    height: 35px;
-    background: var(--azul-fenda);
+    width: 36px;
+    height: 36px;
+    background: var(--laranja-fenda, linear-gradient(165deg, #fc5f21, #9b5ab9d2));
     border-radius: 50%;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     font-weight: bold;
@@ -2172,7 +2160,7 @@ textarea[name="bio"] {
         flex-direction: column;
         left: 0;
         right: 0;
-        margin: 10px auto;
+        margin: 12px auto;
         padding: 4px;
     }
 
@@ -2180,7 +2168,7 @@ textarea[name="bio"] {
     /* Garante que o container do feed não tenha padding lateral */
     body:not(.modo-swipe-ativo) .container-feed,
     .main-perdidos .feed-anexos-grid {
-        margin: 5px auto;
+        margin: 6px auto;
         width: 100%;
         grid-template-columns: 1fr;
         padding: 10px;
@@ -2215,7 +2203,7 @@ textarea[name="bio"] {
     }
 
     header {
-        padding: 8px 4px;
+        padding: 6px 3px;
     }
 
     .area-perdidos-vivo {
@@ -2545,7 +2533,7 @@ textarea[name="bio"] {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
         align-items: flex-start;
-        gap: 15px;
+        gap: 20px;
 
     }
 
@@ -2884,11 +2872,6 @@ section.sessao-publicar .form-publicar .anexos-grid {
     display: block !important;
 }
 
-@keyframes spin {
-    to {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
 
 /* ============================================================
    NOTIFICAÇÕES – PÁGINA DEDICADA (CSS PURO, SEM INLINE)

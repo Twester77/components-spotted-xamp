@@ -39,13 +39,11 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.75);
-            -webkit-backdrop-filter: blur(3px);
-            backdrop-filter: blur(3px);
             z-index: 40000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
         `;
 
         const modal = document.createElement('div');
@@ -55,6 +53,8 @@
             width: 85%;
             max-width: 650px;
             max-height: 80vh;
+            -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
             display: flex;
             flex-direction: column;
             overflow: hidden;

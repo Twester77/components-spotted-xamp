@@ -219,7 +219,6 @@
     max-width: 800px;
     margin: clamp(8px, 1.5cqi, 20px) auto;
     display: inline-block;
-    margin: 20px 0;
     text-align: center;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -242,7 +241,9 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    gap: 8px;
     gap: clamp(10px, 1.5cqi, 20px);
+    margin: 15px auto;
     margin: clamp(12px, 2cqi, 24px) auto;
     width: 100%;
 }
@@ -251,6 +252,7 @@
     background-color: #28a745;
     color: #fff;
     border: none;
+    padding: 5px 14px;
     padding: clamp(6px, 0.8vw, 10px) clamp(16px, 2vw, 28px);
     border-radius: 30px;
     text-decoration: none;
@@ -259,6 +261,7 @@
     align-items: center;
     gap: 8px;
     transition: all 0.25s ease;
+    font-size: 0.8rem;
     font-size: clamp(0.85rem, 1vw, 1.05rem);
 }
 
@@ -288,7 +291,7 @@
 .avaliacoes-section {
     width: 100%;
     max-width: 700px;
-    margin: 30px auto;
+    margin: 25px auto;
     margin: clamp(20px, 2vw, 60px) auto;
     padding: 0 15px;
     padding: 0 clamp(12px, 3vw, 30px);
@@ -299,8 +302,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 12px;
     margin-bottom: clamp(10px, 1.5vw, 18px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 8px;
     padding-bottom: clamp(6px, 1vw, 12px);
     flex-wrap: wrap;
     gap: 8px;
@@ -321,6 +326,7 @@
 .avaliacoes-actions {
     display: flex;
     align-items: center;
+    gap: 8px;
     gap: clamp(6px, 1vw, 14px);
     flex-wrap: wrap;
 }

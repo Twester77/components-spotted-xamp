@@ -56,7 +56,7 @@ function recalcFeedLayout() {
 
     // 🔥 ARREDONDAMENTO DE PIXEL (ACABA COM O EFEITO ONDULATÓRIO)
     var cardWidth = isLandscape ?
-        Math.round(Math.max(320, Math.min(vw * 0.60, 600))) :
+        Math.round(Math.max(300, Math.min(vw * 0.60, 600))) :
         Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
     // 🔥 Altura máxima do card: limitada e mais generosa no portrait
@@ -64,7 +64,7 @@ function recalcFeedLayout() {
     if (isLandscape) {
         maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
     } else {
-        maxCardHeight = Math.round(Math.min(vh * 0.90, 700));
+        maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
     }
 
     var cardPadding = Math.round(Math.max(12, cardWidth * 0.05));

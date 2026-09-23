@@ -30,7 +30,9 @@
     max-height: 80vh;
     max-height: clamp(250px, 85dvh, 600px);
     width: 100%;
-    background: rgba(25, 25, 38, 0.8);
+    background: rgba(25, 25, 38, 0.84);
+    background: oklch(21.985% 0.02532 284.121 / 0.84);
+    border-radius: 8px;
     border-radius: clamp(10px, 2vw, 24px);
     border: 1px solid rgb(255 188 0 / 13%);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
@@ -57,15 +59,19 @@
 /* 3. BOTÃO FECHAR (X) */
 .lightbox-fechar-btn {
     position: sticky;
-    top: 0;
     float: right;
+    top: 10px;
+    right: 10px;
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     color: #fff;
-    width: clamp(32px, 4vmin, 40px);
-    height: clamp(32px, 4vmin, 40px);
-    font-size: clamp(1rem, 2vmin, 1.3rem);
+    width: 38px;
+    height: 38px;
+    width: clamp(36px, 6.5cqi, 46px);
+    height: clamp(36px, 6.5cqi, 46px);
+    font-size: clamp(0.85rem, 2vmin, 1.2rem);
+    padding: 6px;
     cursor: pointer;
     transition: 0.25s ease;
     z-index: 10;
@@ -93,8 +99,8 @@
 }
 
 .lightbox-loading .spinner {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border: 4px solid rgba(255, 188, 0, 0.15);
     border-top: 4px solid #ffbc00;
     border-radius: 50%;
@@ -102,9 +108,6 @@
     margin-bottom: 16px;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
 
 .lightbox-erro {
     display: flex;
@@ -150,8 +153,8 @@
 
 .lightbox-autor-nome {
     font-weight: 600;
-    font-size: 0.8rem;
-    font-size: clamp(0.8rem, 2.5cqi, 1.1rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2.5cqi, 1.3rem);
     color: #fff;
     white-space: nowrap;
     overflow: hidden;
@@ -248,8 +251,10 @@ body.modo-swipe-ativo .lightbox-post-body img {
 }
 
 body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexo-item:only-child img,
-body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child img{
+body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child img {
     max-height: 400px;
+    height: 100%;
+    width: 100%;
     object-fit: contain;
 }
 
@@ -297,7 +302,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 /* 8. REAÇÕES */
 
 .lightbox-reacoes .reacao-placeholder {
-    justify-content: center;
+    justify-content: safe center;
     display: flex;
     font-size: 0.85rem;
     font-size: clamp(0.75rem, 3cqi, 1rem);
@@ -312,7 +317,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     gap: 8px;
     gap: clamp(6px, 1.5cqi, 10px);
     padding: 8px 0;
-    justify-content: center;
+    margin-block-start: 15px;
+    justify-content: safe center;
 }
 
 .lightbox-reacoes .reacao-item {
@@ -326,7 +332,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     min-height: clamp(28px, 5vw, 42px);
     border-radius: 20px;
     font-size: 0.9rem;
-    font-size: clamp(0.85rem, 5cqi, 1.4rem);
+    font-size: clamp(0.85rem, 4.5cqi, 1.4rem);
     color: #ffffffe7;
     color: oklch(100% 0.00011 271.152 / 0.904);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -372,7 +378,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 }
 
 .lightbox-comentarios-lista .comentario-item .comentario-meta {
-    padding: clamp(6px, 1cqi, 12px) clamp(10px, 1.5cqi, 16px);
+    padding: 4px 8px;
+    padding: clamp(6px, 1cqi, 12px) clamp(8px, 1.5cqi, 16px);
     border-radius: 12px;
     gap: 10px;
     display: flex;
@@ -384,8 +391,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-comentarios-lista  .comentario-item .comentario-meta .avatar-p {
     width: 32px;
     height: 32px;
-    width: clamp(30px, 2cqi, 70px);
-    height: clamp(30px, 2cqi, 70px);
+    width: clamp(30px, 10cqi, 70px);
+    height: clamp(30px, 10cqi, 70px);
     border-radius: 50%;
     object-fit: cover;
 }
@@ -513,7 +520,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 
 /*  Imagens individuai */
-.lightbox-apenas-post.lightbox-post-body img,
+.lightbox-apenas-post .lightbox-post-body img,
 .lightbox-apenas-post .lightbox-post-body img {
     max-width: 100%;
     max-height: 450px;
@@ -570,9 +577,9 @@ body.modo-swipe-ativo .lightbox-apenas-post .lightbox-post-body .feed-anexos-gri
         height: 36px;
     }
     .lightbox-fechar-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 0.9rem;
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
     }
 }
 

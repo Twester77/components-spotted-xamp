@@ -1153,7 +1153,9 @@ textarea#descricao{
     flex-wrap: nowrap;
     break-inside: avoid;
     gap: 8px;
-    gap: clamp(6px, 1cqw, 12px);
+    gap: clamp(8px, 1.8cqw, 16px);
+    padding: 2px;
+    padding: clamp(2px, 1.1vw, 6px) clamp(4px, 1.3vw, 10px);;
     flex-shrink: 0;
 }
 
@@ -1189,7 +1191,7 @@ textarea#descricao{
 .btn-acao-membro {
     background: none;
     border: none;
-    font-size: clamp(0.75rem, 1.5vw, 1.05rem);
+    font-size: clamp(0.65rem, 1.3vw, 0.95rem);
     cursor: pointer;
     overflow: hidden;
     padding: 4px;
@@ -1730,13 +1732,13 @@ textarea#descricao{
 
 .comunidade-page .postar-inline-conteudo .acoes-esquerda {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
 }
 
 .comunidade-page .postar-inline-conteudo .btn-acao-vivo {
-    width: clamp(34px, 4.5vw, 42px);
-    height: clamp(34px, 4.5vw, 42px);
+    width: clamp(34px, 4.5vw, 46px);
+    height: clamp(34px, 4.5vw, 46px);
     background: rgba(255, 255, 255, 0.04);
     background: oklch(100% 0 0 / 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
@@ -2060,7 +2062,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     gap: 6px;
     padding: 8px 0 4px 0;
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 .comunidade-page .spotted-card .carrossel-indicadores .indicador {
@@ -2082,7 +2084,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     gap: 8px;
     padding: 8px 0 4px 0;
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 .carrossel-numero {
@@ -2135,8 +2137,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     align-items: center;
     justify-content: center;
     transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 2;
 }
 .carrossel-nav button:hover {
     background: rgba(255, 188, 0, 0.8);
@@ -2367,9 +2369,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 /* ==================================================
    7. AJUSTES E COMPLEMENTOS (FORMULÁRIOS DE CRIAÇÃO/EDIÇÃO)
    ================================================== */
-.main-comunidades {
-    min-height: 60vh;
-}
 
 .subtitle {
     color: #aaa;
@@ -2504,7 +2503,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     padding: 10px;
     color: #fff;
     color: oklch(100% 0 0);
-    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.85rem, 1.1vw, 1rem);
     transition: border-color 0.3s ease;
     box-sizing: border-box;
 }
@@ -2697,6 +2697,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 
 .btn-ellipsis {
     background: rgba(0, 0, 0, 0.45);
+    background: oklch(0% 0 0 / 0.45);
     -webkit-backdrop-filter: blur(1.5px);
     backdrop-filter: blur(1.5px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2706,7 +2707,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     width: clamp(36px, 2vw, 60px);
     height: clamp(36px, 2vw, 60px);
     color: rgba(255, 255, 255, 0.8);
-    font-size: 1rem;
+    font-size: 1.2rem;
     position: relative;
     cursor: pointer;
     display: flex;
@@ -2848,6 +2849,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         border-radius: 16px;
         animation: ellipsisSlideUp 0.25s ease-out;
     }
+}
 
     /* Ajuste para telas muito pequenas */
     @media (max-width: 480px) {
@@ -2858,16 +2860,16 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         .btn-ellipsis {
             width: 28px;
             height: 28px;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
     }
-}
+
 
 /* ============================================================
    FALLBACK PARA NAVEGADORES QUE NÃO SUPORTAM BACKDROP-FILTER
    ============================================================ */
 
-@supports not (backdrop-filter: blur(4px)) {
+@supports not (backdrop-filter: blur(1.5px)) {
     .ellipsis-menu {
         background: rgba(10, 10, 18, 0.97);
     }

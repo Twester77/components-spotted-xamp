@@ -60,9 +60,9 @@
 
 .container-feed>div {
     /* Alvo nos cards gerados pelo motor-feed */
-    width: 100% !important;
+    width: 100% ;
     box-sizing: border-box;
-    height: auto !important;
+    height: auto ;
     /* Deixa o card crescer com o conteúdo */
 }
 
@@ -100,7 +100,6 @@
     flex-direction: column;
     width: 100%;
     /* Deixa o Grid controlar a largura */
-    flex-shrink: 0;
     position: relative;
     margin: 20px auto;
     top: auto;
@@ -125,7 +124,6 @@
     -webkit-box-orient: vertical;
     box-orient: vertical;
     transition: max-height 0.4s ease-in-out;
-    z-index: 2;
     overflow: hidden;
     pointer-events: auto;
 }
@@ -510,7 +508,6 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: clamp(120px, 5vw, 160px);
 }
 
 .badge-achado {
@@ -528,13 +525,16 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     overflow: hidden;
     text-overflow: ellipsis;
     gap: 4px;
-     max-width: clamp(120px, 5vw, 160px);
+    
 }
 
 .badge-perdido,
 .badge-achado {
     background: rgba(255, 255, 255, 0.192);
     border-left-style: solid !important;
+    max-width: 150px;
+    max-width: clamp(15cqi, 18vw, 50cqi);
+
 }
 
 .perdidos-item .link-fofoca {
@@ -547,8 +547,7 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     border-radius: 10px;
     text-decoration: none;
     font-size: 0.8rem;
-    font-size: clamp(0.7rem, 1.5vw, 1rem);
-    font-size: clamp(0.7rem, 3cqi, 1rem);
+    font-size: clamp(0.75rem, 3cqi, 1rem);
     font-weight: 800;
     text-transform: uppercase;
     transition: 0.3s ease-in-out;
@@ -573,8 +572,8 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
 }
 
 span.data-post {
-    font-size: 14px;
-    font-size: clamp(0.75rem, 3.5cqi, 0.9rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 3.5cqi, 0.95rem);
     color: #fffff4;
     color: oklch(0.97 0.0144 106.66);
     font-weight: bold;
@@ -585,7 +584,7 @@ span.data-post {
 /* --- COMPONENTES DO CARD/PERFIL --- */
 
 span.category-tag {
-    color: #ffbc00;
+    color: #ffc801ec;
     color: oklch(85.748% 0.17506 88.476 / 0.925);
     font-weight: bold;
     flex: 1;
@@ -702,7 +701,6 @@ span.category-tag {
     opacity: 1 !important;
     visibility: visible !important;
     /* REVERTIDO: Mantendo sua translação original de ativação para a direita/cima */
-    transform: translate3d(-30%, 0px, 0); 
     transform: translateX(-30%) translateY(0px);
 
 }
@@ -871,10 +869,10 @@ span.category-tag {
     display: flex;
     gap: 8px;
     font-size: 0.85rem;
-    font-size: var(--user-info-font-size, clamp(0.9rem, 5cqi, 1.5rem));
+    font-size: var(--user-info-font-size, clamp(0.9rem, 5cqi, 1.3rem));
     margin-bottom: auto;
     font-weight: bold;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .user-anonimo {
@@ -1031,12 +1029,12 @@ span.category-tag {
     padding: 0;
 }
 
-body:not(.modo-swipe-ativo)  .feed-anexo-item:only-child {
+body:not(.modo-swipe-ativo)  .feed-anexo-item:only-child img {
     background: #0a0a0a;
     height: 100%;
     width: 100%;
     display: block;
-    max-height: 300px;
+    max-height: 260px;
     max-height: clamp(180px, 60cqh, 350px);
 }
 

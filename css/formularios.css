@@ -534,11 +534,6 @@ select:focus {
     animation: spin 0.8s linear infinite;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 /* Mensagem de feedback após encerrar */
 .toast-sessoes-encerradas {
@@ -590,8 +585,8 @@ select:focus {
 /* Spinners */
 .spinner {
     display: inline-block;
-    width: 22px;
-    height: 22px;
+    width: 40px;
+    height: 40px;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-top: 2px solid #ff6b6b;
     border-radius: 50%;
@@ -601,8 +596,8 @@ select:focus {
 
 .spinner-small {
     display: inline-block;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-top: 2px solid #ff6b6b;
     border-radius: 50%;
@@ -610,11 +605,6 @@ select:focus {
     vertical-align: middle;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 /* Fallbacks para navegadores sem oklch */
 @supports not (color: oklch(1 0 0)) {
@@ -1585,12 +1575,12 @@ select:focus {
     text-align: left;
     /* Padding dinâmico: menor em telas pequenas */
     padding: 6px;
-    padding: clamp(8px, 3.5vw, 20px);
+    padding: clamp(8px, 2.5vw, 20px);
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     background: #00000094;
     position: relative;
     /* Garante que o 'X' de fechar se posicione certo */
@@ -1604,10 +1594,10 @@ select:focus {
     margin: 0 auto;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 250px;
+    max-width: 400px;
+    max-height: 300px;
     max-width: clamp(280px, 90%, 550px);
-    max-height: clamp(200px, 60vh, 500px);
+    max-height: clamp(220px, 60vh, 500px);
 }
 
 .btn-fechar-modal {
@@ -1670,7 +1660,6 @@ select:focus {
 .modal-body-ajuste .main-novo-post select,
 .modal-body-ajuste .main-novo-post input {
     width: 100%;
-    background: rgba(0, 0, 0, 0.158);
     border: 1px solid #444;
     /* Cinza escuro */
     border-radius: 12px;
@@ -1819,6 +1808,7 @@ select:focus {
     padding: 6px 16px;
     padding-right: 36px;
     color: #ccc;
+    color: oklch(84.522% 0.0001 271.152);
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.041vw, 1.1rem);
     font-weight: 500;
@@ -1839,19 +1829,21 @@ select:focus {
 
 .campo-categoria-vivo select option {
     background: #1a1a1a;
+    background: oklch(21.779% 0.00002 271.152);
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
 }
 
-/* Barra de ações */
+/* Barra de ações global */
 .barra-acoes-vivo {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: row;
-    gap: 10px;
+    gap: 15px;
     flex-wrap: wrap;
     flex: 1 0 auto;
-    padding: 8px 0 4px 0;
+    padding: 8px 4px;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -1862,13 +1854,19 @@ select:focus {
     align-items: center;
 }
 
+.acoes-direita {
+    flex-wrap: wrap;
+}
 
-/* Contador */
+/* contador com FIM DO TREMOR: Fonte com espaçamento fixo para números */
 .contador-caracteres {
+    color: #666;
+    color: oklch(51.028% 0.00006 271.152);
     font-size: 0.8rem;
-    font-size: clamp(0.7rem, 1.2vw, 0.95rem);
-    color: #aaaaaa;
+    font-size: clamp(0.75rem, 1.2vw, 0.95rem);
     font-weight: 600;
+    font-variant-numeric: tabular-nums; 
+    white-space: nowrap;
 }
 
 /* Botão cancelar – versão limpa */
@@ -1890,30 +1888,27 @@ select:focus {
     color: #fff;
 }
 
-
-
 /* Botão de GIF/Sticker no modal de post */
- .btn-acao-vivo {
+.btn-acao-vivo {
     display: flex;
     align-items: center;
     width: 40px;
     height: 40px;
-    width: clamp(40px , 2vw, 70px);
-    height: clamp(40px , 2vw, 70px);
+    width: clamp(40px, 2vw, 80px);
+    height: clamp(40px, 2vw, 80px);
     justify-content: center;
     gap: 8px;
     width: 100%;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 30px;
-    padding: 10px 16px;
-    margin-bottom: 15px;
+    padding: 10px 14px;
     color: #aaa;
     font-size: 0.9rem;
-    font-size: clamp(0.8rem, 2vw , 1.1rem);
+    font-size: clamp(0.85rem, 2vw, 1.1rem);
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease;
 }
 
  .btn-acao-vivo:hover {
@@ -2029,7 +2024,7 @@ form[action="confirma-login.php"] {
 .campo-grupo input:focus,
 .campo-grupo textarea:focus {
     outline: none;
-    border-color: var(--dourado);
+    border-color: var(--dourado , #ffbc00);
     background: #222;
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
@@ -2044,15 +2039,25 @@ form[action="confirma-login.php"] {
     border-radius: 8px;
     overflow: hidden;
     transition: 0.3s;
+    /* Correção do campo @Username */
+    height: 45px;
+    align-items: center;
+    padding: 0;
 }
 
 .input-username-wrapper span {
     background: #333;
     color: var(--dourado);
-    padding: 12px 15px;
+    padding: 0 12px;
     font-weight: bold;
     border-right: 1px solid #444;
+    background: rgba(255, 255, 255, 0.12);
+    background: oklch(100% 0.00011 271.152 / 0.12);
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
+
 
 /* ============================================================
    PARTE 1: FORMULÁRIO VIVO – ESTILOS EXISTENTES E GLOBAIS
@@ -2081,7 +2086,7 @@ form[action="confirma-login.php"] {
 }
 
 .area-texto-vivo:focus-within {
-    border-color: var(--dourado);
+    border-color: var(--dourado, #ffbc00);
 }
 
 #mensagem-vivo {
@@ -2168,106 +2173,14 @@ form[action="confirma-login.php"] {
     align-self: flex-start;
 }
 
-.campo-categoria-vivo select {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 30px;
-    padding: 6px 16px;
-    padding-right: 36px;
-    color: #ccc;
-    font-size: 0.9rem;
-    font-size: clamp(0.85rem, 1.041vw, 1.1rem);
-    font-weight: 500;
-    cursor: pointer;
-    outline: none;
-    transition: 0.2s;
-    -webkit-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://w3.org' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23ccc' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-}
-
-.campo-categoria-vivo select:hover {
-    border-color: var(--dourado);
-    background-color: rgba(255, 188, 0, 0.04);
-}
-
-.campo-categoria-vivo select option {
-    background: #1a1a1a;
-    color: #fff;
-}
-
-/* Barra de ações global */
-.barra-acoes-vivo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    gap: 10px;
-    flex-wrap: wrap;
-    flex: 1 0 auto;
-    padding: 8px 0 4px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-}
 
 .acoes-esquerda,
 .acoes-direita {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
 }
 
-/* Contador */
-.contador-caracteres {
-    font-size: 0.8rem;
-    font-size: clamp(0.7rem, 1.2vw, 0.95rem);
-    color: #aaaaaa;
-    font-weight: 600;
-}
-
-/* Botão cancelar – versão limpa */
-.btn-cancelar-vivo {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 6px 10px;
-    border-radius: 30px;
-    color: #aaa;
-    font-size: 0.85rem;
-    font-size: clamp(0.75rem, 1.2vw, 0.95rem);
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.btn-cancelar-vivo:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-}
-
-/* Botão de GIF/Sticker no modal de post */
-.btn-acao-vivo {
-    display: flex;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    width: clamp(40px, 2vw, 70px);
-    height: clamp(40px, 2vw, 70px);
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 30px;
-    padding: 10px 16px;
-    margin-bottom: 15px;
-    color: #aaa;
-    font-size: 0.9rem;
-    font-size: clamp(0.8rem, 2vw, 1.1rem);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
 
 .btn-acao-vivo:hover {
     background: rgba(255, 188, 0, 0.08);
@@ -2373,7 +2286,7 @@ textarea {
 .campo-grupo input[type="text"],
 .campo-grupo textarea {
     width: 100%;
-    padding: 12px 15px;
+    padding: 10px 14px;
     background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 8px;
@@ -2387,7 +2300,7 @@ textarea {
 .campo-grupo input:focus,
 .campo-grupo textarea:focus {
     outline: none;
-    border-color: var(--dourad, #ffbc00);
+    border-color: var(--dourado, #ffbc00);
     background: #222;
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
@@ -2401,14 +2314,6 @@ textarea {
     border-radius: 8px;
     overflow: hidden;
     transition: 0.3s;
-}
-
-.input-username-wrapper span {
-    background: #333;
-    color: var(--dourado);
-    padding: 12px 15px;
-    font-weight: bold;
-    border-right: 1px solid #444;
 }
 
 .input-username-wrapper input {
@@ -2507,9 +2412,9 @@ section.sessao-publicar,
     margin-bottom: 20px;
     padding: 8px;
     padding: clamp(8px, 2cqw, 14px);
-    border-radius: clamp(8px, 2vw, 16px);
+    border-radius: clamp(6px, 1.3vw, 14px);
     font-size: 0.8rem;
-    font-size: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+    font-size: clamp(0.875rem, 1vw + 0.3rem, 1.125rem);
     background: var(--glass-bg);
 }
 
@@ -2518,7 +2423,7 @@ section.sessao-publicar {
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255, 255, 255, 0.007);
-    padding: 15px;
+    padding: 12px;
     margin: 20px auto;
     box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.37);
     max-width: 300px;
@@ -2794,12 +2699,17 @@ section.sessao-publicar {
     gap: 15px ;
     justify-content: flex-end ;
     align-items: center ;
+    flex-direction: row; 
+    flex-wrap: wrap;
+    max-width: 100%;
 }
 
 /* TRAVA DO TREMOR: Congela as larguras numéricas */
 .form-perdidos-vivo .contador-caracteres {
     color: #aaaaaa ;
+    color: oklch(73.802% 0.00008 271.152);
     font-size: 0.8rem ;
+    font-size: clamp(0.75rem, 1.5cqw, 1rem);
     font-variant-numeric: tabular-nums ;
     font-weight: 600 ;
     white-space: nowrap ;
@@ -2814,19 +2724,25 @@ section.sessao-publicar {
     border-radius: 30px ;
     font-weight: 800 ;
     text-transform: uppercase ;
-    font-size: clamp(0.8rem, 1.041cqw, 1rem) ;
+    font-size: 0.75rem;
+    font-size: clamp(0.8rem, 1.041cqw, 1.05rem);
     cursor: pointer ;
-    transition: 0.3s ;
+    transition: color 0.3s ease ;
     height: auto ;
-    max-width: 300px ;
+    max-width: 300px;
     margin-top: 0 ;
-    white-space: nowrap ;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    flex-wrap: wrap;
+    white-space: nowrap;
 }
 
 .form-perdidos-vivo .btn-lancar-perdidos:hover {
     background: #c8ff00d3 ;
+    background: oklch(92.812% 0.23031 123.995 / 0.827) ;
     transform: scale(1.02) ;
-    box-shadow: 0 5px 12px rgba(255, 188, 0, 0.3) ;
+    box-shadow: 0 6px 12px rgba(179, 255, 0, 0.3) ;
 }
 
 
@@ -2837,10 +2753,11 @@ section.sessao-publicar {
     display: flex;
     flex-direction: column; /* Mobile primeiro: empilhado */
     gap: 12px;
+    background: #00000066;
     background: oklch(0 0 0 / 0.4);
-    padding: 16px;
+    padding: 14px;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     width: 100%;
     box-sizing: border-box;
     align-items: center;
@@ -2958,25 +2875,12 @@ section.sessao-publicar {
     justify-content: flex-end; /* Joga o contador e botão para a direita */
 }
 
-/* Ícones de imagem/gif originais */
-.btn-acao-vivo {
-    color: #aaa;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: color 0.2s;
-}
+
 
 .btn-acao-vivo:hover {
     color: #fc900c;
 }
 
-/* FIM DO TREMOR: Fonte com espaçamento fixo para números */
-.contador-caracteres {
-    color: #666;
-    font-size: 0.8rem;
-    font-variant-numeric: tabular-nums; 
-    white-space: nowrap;
-}
 
 /* ============================================================
    BOTÃO PUBLICAR
@@ -3050,7 +2954,6 @@ section.sessao-publicar {
     aspect-ratio: 16 / 8;
     overflow: hidden;
     border-radius: 15px 15px 0 0;
-    background: #1a1a1a;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3060,8 +2963,9 @@ section.sessao-publicar {
 .img-capa-preview {
     max-width: 100%;
     max-height: 100%;
+    background: #1a1a1a;
     object-fit: contain;
-    object-position: center 25% !important;
+    object-position: center 25% ;
     /* Foca um pouco acima do meio */
     display: block;
     aspect-ratio: 16/8;
@@ -3702,6 +3606,7 @@ textarea {
     background: rgba(20, 20, 32, 0.96);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
+    z-index: 99;
     border-radius: 16px;
     padding: 16px 20px 20px;
     text-align: center;
@@ -3730,7 +3635,7 @@ textarea {
 .dialog-botoes {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
 }
 
 .dialog-btn {
@@ -3740,7 +3645,8 @@ textarea {
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 2cqi, 0.95rem);
     min-width: 80px;
 }
 
@@ -3774,7 +3680,7 @@ textarea {
     }
 
     .dialog-confirmacao {
-        width: 240px;
+        width: 250px;
     }
 
     .dialog-conteudo {
@@ -3798,7 +3704,7 @@ textarea {
 
 @media (orientation: landscape) and (max-height: 500px) {
     .dialog-confirmacao {
-        width: 260px;
+        width: 280px;
         top: 50%;
         transform: translate(-50%, -50%);
     }

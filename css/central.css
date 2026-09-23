@@ -179,11 +179,12 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     flex: 1;
+    gap: 10px;
     margin: 20px auto;
     min-height: 250px;
     width: 100%;
     overflow-y: auto ;
-    max-height: calc(100vh + 50px);
+    max-height: calc(90vh + 60px);
 }
 
 /* ================================================================
@@ -215,17 +216,6 @@
     }
 }
 
-/* Animação do spinner (já existe no Font Awesome, mas garantimos) */
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 /* ============================================================
    SNAP MAGNÉTICO PARA OS CARDS NA CENTRAL
    ============================================================ */
@@ -234,7 +224,7 @@
     flex-direction: column;
     gap: 25px;
     max-width: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
     width: 100%;
     scroll-snap-type: y mandatory;
     overflow-y: auto;
@@ -276,7 +266,7 @@
     background: oklch(0.24 0 0 / 1);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     break-inside: avoid;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     margin-left: auto;
     margin-right: auto;
     display: flex;

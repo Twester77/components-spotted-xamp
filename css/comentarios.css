@@ -401,10 +401,11 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    justify-content: safe center;
     width: 100%;
     position: relative; /* Necessário para o posicionamento dos comentários */
     overflow-x: hidden;
-    margin: 35px auto;
+    margin: 30px auto;
     margin: calc(20px + 40px) auto;
     gap: 10px;
     scroll-snap-type: y mandatory;
@@ -505,7 +506,7 @@
    VIBES (mantido integral)
    ================================================== */
 .comentario-item.vibe-light {
-    background: f1f1f1;
+    background: #f1f1f1;
     background: oklch(from var(--cor-borda-glow) 0.95 0.04 h);
     border: 1px solid #fffccf;
     border: 1px solid oklch(from var(--cor-borda-glow) 0.88 0.06 h);
@@ -574,6 +575,7 @@
 
 .comentario-item.vibe-glass {
     background: rgb(255 255 255 / 5%);
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     color: #fff;
     border-bottom: 1px solid #11111141;
@@ -761,7 +763,7 @@
 }
 
 .resposta-indicador i {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     opacity: 0.6;
     flex-shrink: 0;
 }
@@ -769,6 +771,7 @@
 .resposta-indicador strong {
     font-weight: 600;
     color: #ffbc00;
+    font-size: 0.65rem;
     font-size: clamp(0.65rem, 1.2vmin, 0.95rem);
     min-width: 0;
     max-width: 100%;
@@ -780,6 +783,7 @@
 
 .resposta-indicador .cancelar-resposta {
     background: rgba(255, 255, 255, 0.08);
+    background: oklch(100% 0.00011 271.152 / 0.08);
     border: none;
     border-radius: 50%;
     color: #ff8a8a;
@@ -799,6 +803,7 @@
 
 .resposta-indicador .cancelar-resposta:hover {
     background: rgba(253, 67, 67, 0.486);
+    background: oklch(65.921% 0.22216 25.741 / 0.486);
     transform: scale(1.1);
 }
 
@@ -848,6 +853,7 @@
     bottom: 5px;
     right: 5px;
     font-size: 0.75rem;
+    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
     color: #aaaaaa;
     pointer-events: none;
     background: rgba(0, 0, 0, 0.3);
