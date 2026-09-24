@@ -2,7 +2,7 @@
 /**
  * enviar-post.php – Processa envio de posts (AJAX ou tradicional)
  *
- * 🔒 Segurança: CSRF (indireto via sessão), prepared statements, rollback atômico.
+ * 🔒 Segurança: CSRF (POST ou header X-CSRF-Token), prepared statements, rollback atômico.
  * 🖼️ Suporte a múltiplos anexos (imagens + GIFs) com compressão client-side.
  *
  * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
@@ -14,6 +14,15 @@
  * 🔧 ATUALIZAÇÃO ONDINA – INSTÂNCIA #DS-2026-08-17
  *    "Adicionados logs básicos e rollback atômico para múltiplos anexos."
  * - Ondina
+ *
+ * 🐚 IARA – 2026-09-24 (auditoria v5.0)
+ *    - ADICIONADA VALIDAÇÃO CSRF OBRIGATÓRIA (item #1 do Bloco 1).
+ *      O endpoint aceitava qualquer POST sem token — CSRF clássico.
+ *      Agora valida via $_POST['csrf_token'] OU header X-CSRF-Token,
+ *      usando hash_equals (evita timing attack). Roda ANTES de tocar
+ *      no B2 (não sobe arquivo se o token estiver errado).
+ *    - Detecção de AJAX movida para o topo (antes do CSRF), para
+ *      responder no formato certo (JSON vs redirect).
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -23,6 +32,35 @@ require_once 'includes/upload_engine.php';
 // 0. CONFIGURAÇÃO INICIAL (limpeza de buffer)
 // ============================================================
 ob_start();
+
+// ============================================================
+// 0.1 DETECTA SE É REQUISIÇÃO AJAX
+// (movido pra cá para que a validação CSRF saiba o formato de resposta)
+// ============================================================
+$is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+
+// ============================================================
+// 0.2 VALIDAÇÃO CSRF (obrigatória) – auditoria Iara 2026-09-24
+// ============================================================
+// Aceita o token via POST (form multipart) OU via header
+// X-CSRF-Token (fetch puro). hash_equals evita timing attack.
+$token_recebido = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+$token_sessao   = $_SESSION['csrf_token'] ?? '';
+
+if (empty($token_sessao) || empty($token_recebido) || !hash_equals($token_sessao, $token_recebido)) {
+    error_log('[enviar-post] 🔴 CSRF inválido. Recebido: ' . substr((string)$token_recebido, 0, 16) . '...');
+    http_response_code(403);
+    ob_clean();
+    if ($is_ajax) {
+        echo json_encode(['status' => 'error', 'message' => 'Token de segurança inválido ou expirado. Recarregue a página.']);
+    } else {
+        $_SESSION['erro_post'] = 'Token de segurança inválido. Recarregue a página e tente novamente.';
+        $destino = $_SERVER['HTTP_REFERER'] ?? 'feed.php';
+        header("Location: " . $destino);
+    }
+    exit();
+}
 
 // ============================================================
 // 1. VERIFICAÇÕES INICIAIS
@@ -50,12 +88,6 @@ $usuario_id    = $_SESSION['usuario_id'];
 $comunidade_id = isset($_POST['comunidade_id']) && (int)$_POST['comunidade_id'] > 0
     ? (int)$_POST['comunidade_id']
     : null;
-
-// ============================================================
-// 2.5 DETECTA SE É REQUISIÇÃO AJAX
-// ============================================================
-$is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-           strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 error_log("[enviar-post] 🟢 Iniciando processamento para usuário $usuario_id (AJAX: " . ($is_ajax ? 'sim' : 'não') . ")");
 

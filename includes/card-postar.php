@@ -15,6 +15,12 @@
  *     (sugestão da Djê para evitar conflitos em múltiplos formulários).
  *     Exposição global de PostAnexos para permitir roteamento via evento."
  * - Nereida, a guardiã das águas
+ *
+ * 🐚 IARA – 2026-09-24 (auditoria v5.0)
+ *    - ADICIONADO HIDDEN csrf_token dentro do <form>. Sem isso, o
+ *      enviar-post.php (que agora valida CSRF) retornaria 403 em
+ *      todo post. O token vai via POST (multipart) — o PostAnexos
+ *      já usa new FormData(form), que pega o hidden automaticamente.
  */
 
 // Detecta modo inline via GET ou variável pré-definida
@@ -59,6 +65,9 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
             <div class="<?php echo $container_class; ?>">
 
                 <form action="enviar-post.php" method="POST" enctype="multipart/form-data" id="form-postar-vivo">
+
+                    <!-- 🔥 CSRF TOKEN (auditoria Iara – 2026-09-24) -->
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
 
                     <!-- 🔥 CAMPO OCULTO: comunidade_id (se estiver em modo comunidade) -->
                     <?php if ($comunidade_id > 0): ?>
