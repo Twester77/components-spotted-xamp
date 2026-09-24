@@ -236,8 +236,12 @@ if (!function_exists('fenda_resposta_sessao_expirada')) {
             exit;
         }
 
-        // Navegação tradicional: redireciona
-        header("Location: index.php?erro=sessao_expirada");
+        // 🔥 CORREÇÃO IARA – 2026-09-24 (v5.1)
+        // O redirect precisa ser ABSOLUTO (com barra no começo).
+        // Sem isso, o header Location resolve relativo à URL atual
+        // (ex: /includes/contar_alertas.php → /includes/index.php),
+        // e a whitelist do api/index.php bloqueia com 404.
+        header("Location: /index.php?erro=sessao_expirada");
         exit;
     }
 }
