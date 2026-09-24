@@ -14,7 +14,8 @@
     {
       "source": "/manifest.json",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Content-Type", "value": "application/manifest+json" }
       ]
     },
     {
@@ -35,6 +36,9 @@
     }
   ],
   "routes": [
+    { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/manifest.php", "dest": "/manifest.php" },
+    { "src": "/sw.js", "dest": "/sw.js" },
     { "src": "/css/(.*)", "dest": "/css/$1" },
     { "src": "/js/(.*)", "dest": "/js/$1" },
     { "src": "/imagensfoto/(.*)", "dest": "/imagensfoto/$1" },
@@ -43,9 +47,6 @@
     { "src": "/postagens/(.*)", "dest": "/postagens/$1" },
     { "src": "/comentarios/(.*)", "dest": "/comentarios/$1" },
     { "src": "/badges/(.*)", "dest": "/badges/$1" },
-    { "src": "/sw.js", "dest": "/sw.js" },
-    { "src": "/manifest.json", "dest": "/manifest.json" },
-    { "src": "/manifest.php", "dest": "/manifest.php" },
     { "src": "/(.*)", "dest": "/api/index.php" }
   ]
 }
