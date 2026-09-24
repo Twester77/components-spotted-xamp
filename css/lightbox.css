@@ -163,8 +163,8 @@
 
 
 .lightbox-autor .avatar-p {
-    width: clamp(40px, 5cqi, 75px);
-    height: clamp(40px, 5cqi, 75px);
+    width: clamp(40px, 12cqi, 75px);
+    height: clamp(40px, 12cqi, 75px);
     border-radius: 50%;
     flex-shrink: 0;
     object-fit: cover;
@@ -232,10 +232,10 @@
     word-break: break-word;
     justify-content: center;
     text-align: left;
-    max-width: 100%;
+    max-width: 800px;
     width: 100%;
     margin: 0 auto 15px auto;
-    padding: 0 6px;
+    padding: 0 5px;
     padding: 0 clamp(4px, 1cqi, 12px);
 }
 
