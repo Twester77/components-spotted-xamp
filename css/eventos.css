@@ -1185,6 +1185,14 @@
     transition: transform 0.2s;
 }
 
+.bt-galeria-grid.has:only-child img {
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    aspect-ratio: auto;
+    object-fit: cover;
+}
+
 .bt-galeria-grid img:hover {
     transform: scale(1.02);
     cursor: pointer;        /* Transforma o mouse na mãozinha de clique */
@@ -1367,7 +1375,9 @@ padding-bottom: env(safe-area-inset-bottom);
     height: 40px;
     border: none;
     border-radius: 50%;
-    background: var(--laranja-fenda, linear-gradient(165deg, #fc5f21, #9b5ab9d2));
+     /* Fallback */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
+    background: var(--laranja-fenda);
     color: #000;
     color: oklch(0% 0 0);
     font-size: 1rem;

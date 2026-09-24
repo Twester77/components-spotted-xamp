@@ -893,7 +893,9 @@
 }
 
 .btn-enviar-chat {
-    background: var(--laranja-fenda, #ff8c00);
+     /* Fallback */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
+    background: var(--laranja-fenda);
     border: none;
     border-radius: 50%;
     width: clamp(32px, 8vmin, 70px);

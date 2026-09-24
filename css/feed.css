@@ -164,10 +164,11 @@ body:not(.modo-swipe-ativo) .post-content {
 
 .spotted-card {
     background: rgba(17, 17, 17, 0.32);
+    background: oklch(17.764% 0.00002 271.152 / 0.32);
     border-radius: 10px;
     padding: 10px;
     break-inside: avoid;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     margin-left: auto;
     margin-right: auto;
     display: flex;
@@ -180,6 +181,7 @@ body:not(.modo-swipe-ativo) .post-content {
     scrollbar-width: none;
     container-type: inline-size;
     /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
+    container-name: container-card;
 
 }
 

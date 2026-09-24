@@ -2968,12 +2968,14 @@ section.sessao-publicar {
     object-position: center 25% ;
     /* Foca um pouco acima do meio */
     display: block;
-    aspect-ratio: 16/8;
+    aspect-ratio: 16 / 8;
 }
 
 /* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
+    width: 65px;
+    height: 65px;
     width: clamp(60px, 15vw + 5px, 145px);
     height: clamp(60px, 15vw + 5px, 145px);
     aspect-ratio: 1/1;
@@ -3011,14 +3013,13 @@ section.sessao-publicar {
 }
 
 .btn-mudar-capa:hover {
-    background: rgba(255, 188, 0, 0.2);
+     /* Fallback */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
     background: var(--laranja-fenda);
     transform: scale(1.2);
 }
 
 /* 2. Botão do Lápis (Trocar Avatar) */
-
-
 .btn-mudar-avatar {
     position: absolute;
     right: 0;

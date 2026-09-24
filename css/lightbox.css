@@ -252,7 +252,6 @@ body.modo-swipe-ativo .lightbox-post-body img {
 
 body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexo-item:only-child img,
 body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child img {
-    max-height: 400px;
     height: 100%;
     width: 100%;
     object-fit: contain;

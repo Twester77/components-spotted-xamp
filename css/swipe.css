@@ -60,10 +60,6 @@ body.modo-swipe-ativo .article.spotted-card {
     will-change: transform, opacity;
 }
 
-body.modo-swipe-ativo .feed-empilhado .spotted-card {
-    display: flex;
-    flex-direction: column;
-}
 
 body.modo-swipe-ativo .feed-empilhado .card-body {
     touch-action: auto;
@@ -142,7 +138,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
 
     /* Define o card também como container para elementos internos menores (ex: textos, avatares) */
     container-type: inline-size;
-    container-name: card-container;
+    container-name: card-swipe;
 
     /* ==========================================
        ESTRATÉGIA DE FALLBACK (MELHORIA PROGRESSIVA)

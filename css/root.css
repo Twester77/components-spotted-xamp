@@ -3,7 +3,7 @@
 
 :root {
     --cor-principal: #0246859d; 
-    --laranja-fenda: linear-gradient(165deg, #fc5f21, #9b5ab9d2);
+    --laranja-fenda: linear-gradient(165deg, lab(60.77% 57.37 62.27), lab(49.23% 43.11 -39.71 / 0.824)) ;
     --dourado: #ffbc00;
     --azul-fenda: #70cde4;
     --background-dark: #0d0d0d;

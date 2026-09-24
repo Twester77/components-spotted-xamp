@@ -1,4 +1,5 @@
 <?php
+
 /**
  * api/index.php – Roteador Serverless da Vercel
  *
@@ -36,32 +37,91 @@ function responder404(string $path): void
     }
 
     header('Content-Type: text/html; charset=utf-8');
-    ?>
+?>
     <!DOCTYPE html>
     <html lang="pt-BR">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>404 — A Fenda</title>
         <style>
-            body { background: #0a0a0a; color: #fff; font-family: 'Inter', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; text-align: center; }
-            .container { max-width: 600px; }
-            h1 { color: #ffbc00; font-size: 3rem; font-size: clamp(3rem, 12vw, 5rem); margin: 0 0 10px 0; letter-spacing: 4px; }
-            p { color: #ccc; font-size: 1.05rem; line-height: 1.6; margin-bottom: 30px; }
-            a { display: inline-block; background: #ffbc00; color: #000; padding: 12px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; transition: transform 0.2s ease; }
-            a:hover { transform: scale(1.05); }
+             * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            * {
+                -webkit-tap-highlight-color: transparent;
+                /* Chrome, Safari, Opera, Edge, iOS */
+                tap-highlight-color: transparent;
+                /* Padrão futuro / Outros navegadores */
+
+            }
+
+            body {
+                background: #0a0a0a;
+                background: hsl(0, 0%, 4%);
+                color: #fff;
+                font-family: 'Inter', system-ui, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px;
+                text-align: center;
+            }
+
+            .container {
+                max-width: 600px;
+            }
+
+            h1 {
+                color: #ffbc00;
+                font-size: 3rem;
+                font-size: clamp(3rem, 12vw, 5rem);
+                margin: 0 0 10px 0;
+                letter-spacing: 4px;
+            }
+
+            p {
+                color: #ccc;
+                font-size: 1.05rem;
+                line-height: 1.6;
+                margin-bottom: 30px;
+            }
+
+            a {
+                display: inline-block;
+                background: #ffbc00;
+                color: #000;
+                padding: 12px 28px;
+                border-radius: 30px;
+                text-decoration: none;
+                font-weight: bold;
+                transition: transform 0.2s ease;
+            }
+
+            a:hover {
+                transform: scale(1.05);
+            }
+
         </style>
     </head>
+
     <body>
         <div class="container">
             <h1>404</h1>
             <p>Ops... essa página não existe na Fenda.<br>
-               Talvez o link tenha se perdido no fundo do mar.</p>
+                Talvez o link tenha se perdido no fundo do mar.</p>
             <a href="/feed.php">Voltar para o Feed</a>
         </div>
     </body>
+
     </html>
-    <?php
+<?php
     exit;
 }
 
@@ -142,17 +202,20 @@ if (strpos($basename, '.') === 0 || strpos($basename, 'teste-') === 0) {
 // ============================================================
 // 7. WHITELIST — ENDPOINTS PERMITIDOS EM includes/
 // ============================================================
-// O diretório includes/ tem arquivos internos (B2Client, upload_engine)
-// E endpoints públicos (contar_alertas, checar_notificacoes, reagir...).
-// Em vez de bloquear o diretório inteiro, permitimos só os endpoints
-// explicitamente listados aqui.
+// 🔧 PATCH IARA – 2026-09-24 (v5.2)
+//    A whitelist original esqueceu includes/excluir.php — endpoint
+//    legítimo usado pelo fenda-main.js para exclusão via long press
+//    no feed/ver-perfil. Sem ele, o feed caía no 404 amigável.
+//    Adicionado à lista de permitidos. NÃO unificar com
+//    excluir-post.php: são fluxos com regras de permissão distintas
+//    (autor no feed, autor OU admin/criador na comunidade).
 if (strpos($relative, 'includes/') === 0) {
     $endpoints_publicos = [
+        'includes/excluir.php',              // 🔥 ADICIONADO (feed/ver-perfil via long press)
+        'includes/excluir-comentario.php',
         'includes/contar_alertas.php',
         'includes/checar-notificacoes.php',
         'includes/reagir.php',
-        'includes/comunidade-actions.php',
-        'includes/excluir-comentario.php',
         'includes/comunidade-actions.php',
     ];
     if (!in_array($relative, $endpoints_publicos, true)) {

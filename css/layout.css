@@ -1,6 +1,8 @@
 /* --- HEADER E ÍCONES (CORREÇÃO AQUI) --- */
 
 header {
+     /* Fallback */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
     background: var(--laranja-fenda);
     position: relative;
     border-radius: 0 0 10px 10px;
@@ -687,6 +689,8 @@ body.modal-aberto .fab-postar {
 }
 
 .btn-feed-toolbar:hover {
+     /* Fallback */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
     background: var(--laranja-fenda);
     color: #000;
     box-shadow: 0 0 15px rgba(255, 99, 71, 0.5);
@@ -2047,9 +2051,11 @@ textarea[name="bio"] {
 }
 
 .notif-avatar {
-    width: 36px;
-    height: 36px;
-    background: var(--laranja-fenda, linear-gradient(165deg, #fc5f21, #9b5ab9d2));
+    width: 38px;
+    height: 38px;
+     /* Fallback */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
+    background: var(--laranja-fenda);
     border-radius: 50%;
     display: flex;
     flex-shrink: 0;
