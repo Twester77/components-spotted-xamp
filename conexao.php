@@ -35,7 +35,7 @@ if (!function_exists('str_ends_with')) {
 // ============================================================
 function obterIPReal() {
     $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-    
+
     // Verifica cabeçalhos de proxy reverso (Vercel, Cloudflare, etc.)
     $headers = [
         'HTTP_X_FORWARDED_FOR',
@@ -43,7 +43,7 @@ function obterIPReal() {
         'HTTP_CF_CONNECTING_IP',
         'HTTP_CLIENT_IP'
     ];
-    
+
     foreach ($headers as $header) {
         if (!empty($_SERVER[$header])) {
             $ips = explode(',', $_SERVER[$header]);
@@ -51,12 +51,12 @@ function obterIPReal() {
             break;
         }
     }
-    
+
     // Valida se o IP é válido (fallback para REMOTE_ADDR se não for)
     if (!filter_var($ip, FILTER_VALIDATE_IP)) {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     }
-    
+
     return $ip;
 }
 
@@ -93,7 +93,7 @@ if ($is_real_production) {
     $certPath     = __DIR__ . '/config/isrgrootx1.pem';
     $ssl_flag     = MYSQLI_CLIENT_SSL;
     $cookieDomain = $is_real_production ? '.fendauniversity.com.br' : null;
-    
+
     fenda_log('🔵 [CONEXAO] Modo PRODUÇÃO: host=' . $host . ', banco=' . $banco . ', porta=' . $porta);
 } else {
     // Ambiente local
@@ -189,6 +189,60 @@ if (!function_exists('fenda_decrypt_state')) {
 }
 
 // ============================================================
+// 🔥 IARA – 2026-09-23 (auditoria v5.0)
+// Função utilitária para detectar requisições AJAX.
+// Reutilizada em toda a base para padronizar respostas de erro.
+// ============================================================
+if (!function_exists('fenda_is_ajax')) {
+    function fenda_is_ajax(): bool {
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+    }
+}
+
+// ============================================================
+// 🔥 IARA – 2026-09-23 (auditoria v5.0)
+// Resposta padronizada de sessão expirada, diferenciando AJAX
+// de navegação tradicional. Corrige o 403/302 intermitente que
+// aparecia nas chamadas assíncronas (exclusão de comentário,
+// envio de post, avaliações, etc).
+// ============================================================
+if (!function_exists('fenda_resposta_sessao_expirada')) {
+    function fenda_resposta_sessao_expirada($cookieDomain = null, $isProduction = false): void {
+        // Destrói a sessão PHP
+        $_SESSION = [];
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+
+        // Limpa o cookie cifrado
+        setcookie('fenda_state_token', '', [
+            'expires'  => time() - 86400,
+            'path'     => '/',
+            'domain'   => $cookieDomain,
+            'secure'   => $isProduction,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+
+        // Resposta diferenciada por tipo de requisição
+        if (fenda_is_ajax()) {
+            http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode([
+                'status'  => 'error',
+                'message' => 'Sessão expirada. Faça login novamente.'
+            ]);
+            exit;
+        }
+
+        // Navegação tradicional: redireciona
+        header("Location: index.php?erro=sessao_expirada");
+        exit;
+    }
+}
+
+// ============================================================
 // ⏰ FUNÇÃO UNIVERSAL PARA EXIBIR DATAS NO FUSO BRASILEIRO
 // ============================================================
 if (!function_exists('exibirDataHoraBrasil')) {
@@ -252,6 +306,9 @@ if (session_status() === PHP_SESSION_NONE) {
 // Esta verificação garante que, mesmo que a sessão PHP já esteja ativa,
 // o token ainda seja validado no banco. Se o token estiver inativo,
 // a sessão é destruída e o usuário é redirecionado para o login.
+//
+// 🔥 IARA – 2026-09-23: agora usa fenda_resposta_sessao_expirada()
+// que responde JSON 401 em AJAX e redirect em navegação normal.
 if (!empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
     if ($decrypted_payload) {
@@ -265,22 +322,10 @@ if (!empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                 $res = $stmt_check->get_result();
                 $row = $res->fetch_assoc();
                 $stmt_check->close();
-                
+
                 if (!$row || $row['ativo'] != 1) {
-                    fenda_log('🔴 [VALIDACAO] Token INATIVO para usuário ' . $user_data['id'] . '. Destruindo sessão.');
-                    $_SESSION = [];
-                    session_destroy();
-                    setcookie('fenda_state_token', '', [
-                        'expires' => time() - 86400,
-                        'path' => '/',
-                        'domain' => $cookieDomain,
-                        'secure' => $is_real_production,
-                        'httponly' => true,
-                        'samesite' => 'Lax'
-                    ]);
-                    // Redireciona para o login com uma mensagem
-                    header("Location: index.php?erro=sessao_expirada");
-                    exit;
+                    fenda_log('🔴 [VALIDACAO] Token INATIVO para usuário ' . $user_data['id'] . '. Encerrando sessão.');
+                    fenda_resposta_sessao_expirada($cookieDomain, $is_real_production);
                 }
             }
         }
@@ -293,17 +338,17 @@ if (!empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
 if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
     fenda_log('🔵 [HYDRATION] Cookie fenda_state_token encontrado. Tentando decriptar...');
     $decrypted_payload = fenda_decrypt_state($_COOKIE['fenda_state_token']);
-    
+
     if ($decrypted_payload) {
         $user_data = json_decode($decrypted_payload, true);
-        
+
         // 🔥 FALLBACK: aceita tanto 'token_sessao' (padrão) quanto 'token' (legado)
         if (is_array($user_data) && !empty($user_data['id'])) {
             $token_sessao = $user_data['token_sessao'] ?? $user_data['token'] ?? null;
-            
+
             if ($token_sessao) {
                 fenda_log('🔵 [HYDRATION] Payload decriptado: user_id=' . $user_data['id'] . ', token_sessao=' . substr($token_sessao, 0, 16) . '...');
-                
+
                 // 🔥 VERIFICA SE O TOKEN DA SESSÃO AINDA ESTÁ ATIVO NA TABELA
                 $stmt_check_token = $conn->prepare("
                     SELECT id, ativo 
@@ -335,7 +380,7 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                 } else {
                     // Token ativo, prossegue com a hidratação
                     fenda_log('🟢 [HYDRATION] Token de sessão ATIVO na tabela. Prosseguindo...');
-                    
+
                     // Busca dados do usuário no banco
                     $stmt = $conn->prepare("
                         SELECT id, nome, username, email 
@@ -359,20 +404,6 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
 
                         // ============================================================
                         // 🔥 CSRF TOKEN (auditoria Pérola – 2026-09-18)
-                        // ============================================================
-                        // PROBLEMA: em serverless, a $_SESSION morre entre requests.
-                        // O token que veio no HTML (request N) não sobrevive até o
-                        // POST (request N+1), gerando 403 em todos os endpoints que
-                        // validam CSRF (avaliações, depoimentos, exclusão de
-                        // comentário, gerenciador de sessões).
-                        //
-                        // SOLUÇÃO: o csrf_token viaja cifrado dentro do cookie
-                        // `fenda_state_token` (que sobrevive entre requests) e é
-                        // restaurado aqui na hidratação.
-                        //
-                        // Usuários com cookie antigo (pré-fix): geramos um novo
-                        // csrf e forçamos a renovação do cookie para que ele seja
-                        // salvo para os próximos requests.
                         // ============================================================
                         $csrf_from_cookie = $user_data['csrf_token'] ?? null;
                         $precisa_renovar_cookie = false;
@@ -399,7 +430,7 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                                 'email'        => $usuario['email'] ?? '',
                                 'persistente'  => $is_persistente,
                                 'token_sessao' => $token_sessao,
-                                'csrf_token'   => $_SESSION['csrf_token'], // 🔥 NOVO
+                                'csrf_token'   => $_SESSION['csrf_token'],
                                 'exp'          => $new_expires_in
                             ]);
                             $new_encrypted_payload = fenda_encrypt_state($new_cookie_payload);
@@ -417,7 +448,7 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                         } else {
                             fenda_log('🟡 [HYDRATION] Cookie não persistente e csrf já presente. Sem renovação.');
                         }
-                        
+
                         // 🔥 ATUALIZA A ÚLTIMA ATIVIDADE DA SESSÃO NA TABELA
                         $stmt_update_sessao = $conn->prepare("
                             UPDATE sessoes_ativas 
@@ -428,7 +459,7 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                         $stmt_update_sessao->execute();
                         $stmt_update_sessao->close();
                         fenda_log('🟢 [HYDRATION] ultima_atividade atualizada para sessão ' . substr($token_sessao, 0, 16) . '...');
-                        
+
                     } else {
                         fenda_log('🔴 [HYDRATION] Usuário não encontrado ou inativo. Removendo cookie.');
                         setcookie('fenda_state_token', '', [
@@ -464,19 +495,19 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
 // ============================================================
 if (!empty($_SESSION['usuario_id'])) {
     $id_logado = mysqli_real_escape_string($conn, $_SESSION['usuario_id']);
-    
+
     $stmt_last = $conn->prepare("SELECT ultima_atividade FROM usuarios WHERE id = ?");
     $stmt_last->bind_param("i", $id_logado);
     $stmt_last->execute();
     $res_last = $stmt_last->get_result();
     $row_last = $res_last->fetch_assoc();
     $stmt_last->close();
-    
+
     if ($row_last) {
         $ultima = strtotime($row_last['ultima_atividade']);
         $agora = time();
         $diferenca = $agora - $ultima;
-        
+
         if ($diferenca > 300) {
             mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
             fenda_log('🔵 [CONEXAO] Atualizada ultima_atividade para usuário ' . $_SESSION['usuario_id'] . ' (throttle de 5min)');

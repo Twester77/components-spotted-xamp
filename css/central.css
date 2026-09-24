@@ -232,7 +232,7 @@
     max-height: 70dvh;
     padding-right: 4px;
     scrollbar-width: thin;
-    scrollbar-color: #ffbc00;
+    scrollbar-color:  #ffffffe6 #ffbc00e6;
     scroll-behavior: smooth;
 }
 
@@ -246,7 +246,6 @@
 }
 
 .central-conteudo .container-feed::-webkit-scrollbar-thumb {
-    background: #ffbc00;
     border-radius: 4px;
 }
 
