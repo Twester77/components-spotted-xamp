@@ -2504,7 +2504,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     color: #fff;
     color: oklch(100% 0 0);
     font-size: 0.8rem;
-    font-size: clamp(0.85rem, 1.1vw, 1rem);
+    font-size: clamp(0.85rem, 1.1vw, 1.05rem);
     transition: border-color 0.3s ease;
     box-sizing: border-box;
 }

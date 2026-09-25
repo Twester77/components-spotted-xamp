@@ -2432,70 +2432,182 @@ window.exibirBalaoFenda = function (mensagem, tipo, elementoRef, duracao = 2500)
 };
 
 // ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
+// ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
+// 🐚 IARA – 2026-09-25 (auditoria v5.0)
+//    - Unifica duas responsabilidades: validação de uploads de imagem
+//      (já existia) + validação em tempo real dos campos nome e
+//      username (novo).
+//    - Movido pra cá porque o <script> inline do perfil.php não
+//      executa quando o HTML é injetado via innerHTML no drawer.
+//      Como esta função é chamada tanto no DOMContentLoaded (página
+//      avulsa) quanto no abrirPerfilDrawer, cobre os dois contextos.
 window.configurarFormularioPerfil = function () {
     console.log('[PERFIL] Configurando formulário de perfil...');
 
-    // Busca inputs de arquivo em qualquer contexto (drawer ou página direta)
+    // ============================================================
+    // PARTE 1: VALIDAÇÃO DE UPLOADS DE IMAGEM
+    // ============================================================
     const inputsFile = document.querySelectorAll(
         '#perfil-drawer input[type="file"], ' +
         '.main-perfil-container-config input[type="file"], ' +
         'form[action="processa-perfil.php"] input[type="file"]'
     );
 
-    if (inputsFile.length === 0) {
+    if (inputsFile.length > 0) {
+        console.log('[PERFIL] Encontrados', inputsFile.length, 'inputs de arquivo.');
+        inputsFile.forEach(input => {
+            if (input._fendaListenerAdded) return;
+            input._fendaListenerAdded = true;
+
+            input.addEventListener('change', function () {
+                if (!this.files || !this.files[0]) return;
+
+                const file = this.files[0];
+                const tamanhoMB = file.size / 1024 / 1024;
+                const tipo = this.name; // 'foto' ou 'capa'
+                const anchor = this.closest('label') || this;
+
+                if (tamanhoMB > 2) {
+                    window.exibirBalaoFenda(
+                        `Arquivo muito grande (${tamanhoMB.toFixed(2)}MB). Limite: 2MB.`,
+                        'erro',
+                        anchor
+                    );
+                    this.value = '';
+                    return;
+                }
+
+                const formatosPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+                if (!formatosPermitidos.includes(file.type)) {
+                    window.exibirBalaoFenda(
+                        'Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
+                        'erro',
+                        anchor
+                    );
+                    this.value = '';
+                    return;
+                }
+
+                const tamanhoKB = Math.round(file.size / 1024);
+                const label = tipo === 'capa' ? 'Capa' : 'Foto de perfil';
+                window.exibirBalaoFenda(
+                    `✅ ${label} selecionada (${tamanhoKB} KB)`,
+                    'sucesso',
+                    anchor
+                );
+            });
+        });
+    } else {
         console.log('[PERFIL] Nenhum input de arquivo encontrado.');
-        return;
     }
 
-    console.log('[PERFIL] Encontrados', inputsFile.length, 'inputs de arquivo.');
-
-    inputsFile.forEach(input => {
-        // Evita duplicação de listener (reentrância)
-        if (input._fendaListenerAdded) return;
-        input._fendaListenerAdded = true;
-
-        input.addEventListener('change', function () {
-            if (!this.files || !this.files[0]) return;
-
-            const file = this.files[0];
-            const tamanhoMB = file.size / 1024 / 1024;
-            const tipo = this.name; // 'foto' ou 'capa'
-            const anchor = this.closest('label') || this;
-
-            // Validação de tamanho
-            if (tamanhoMB > 2) {
-                window.exibirBalaoFenda(
-                    `Arquivo muito grande (${tamanhoMB.toFixed(2)}MB). Limite: 2MB.`,
-                    'erro',
-                    anchor
-                );
-                this.value = '';
-                return;
-            }
-
-            // Validação de formato
-            const formatosPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-            if (!formatosPermitidos.includes(file.type)) {
-                window.exibirBalaoFenda(
-                    'Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
-                    'erro',
-                    anchor
-                );
-                this.value = '';
-                return;
-            }
-
-            // Sucesso
-            const tamanhoKB = Math.round(file.size / 1024);
-            const label = tipo === 'capa' ? 'Capa' : 'Foto de perfil';
-            window.exibirBalaoFenda(
-                `✅ ${label} selecionada (${tamanhoKB} KB)`,
-                'sucesso',
-                anchor
-            );
-        });
-    });
+    // ============================================================
+    // PARTE 2: VALIDAÇÃO EM TEMPO REAL – NOME E USERNAME
+    // ============================================================
+    configurarValidacaoNomeUsername();
 };
+
+/**
+ * Valida em tempo real os campos "nome" e "username" do perfil.
+ * Aplica borda vermelha + helper colorido quando inválido, e limpa
+ * quando válido. Bloqueia o submit com balão de erro se algum
+ * estiver inválido.
+ *
+ * Reentrante: pode ser chamada múltiplas vezes (página avulsa +
+ * drawer) sem duplicar listeners.
+ */
+function configurarValidacaoNomeUsername() {
+    const inputNome = document.getElementById('nome');
+    const helperNome = document.getElementById('nome-helper');
+    const inputUsername = document.getElementById('username');
+    const helperUsername = document.getElementById('username-helper');
+    const formPerfil = document.getElementById('form-perfil');
+
+    if (!inputNome || !inputUsername || !formPerfil) return;
+
+    const REGEX_NOME = /^[a-zA-ZÀ-ÿ\s]{2,25}$/;
+    const REGEX_USERNAME = /^[a-z0-9_\.]{5,18}$/;
+
+    const HELPER_NOME_PADRAO = 'Apenas letras e espaços. De 2 a 25 caracteres. Sem números nem símbolos.';
+    const HELPER_NOME_ERRO = '⚠️ Apenas letras e espaços, entre 2 e 25 caracteres.';
+    const HELPER_USER_PADRAO = 'Apenas letras minúsculas, números, underline (_) ou ponto (.). Sem espaços. (5 a 18 caracteres)';
+    const HELPER_USER_ERRO = '⚠️ Apenas letras minúsculas, números, _ ou . (5 a 18 caracteres).';
+
+    function aplicarEstado(input, helper, valido, helperPadrao, helperErro) {
+        if (valido) {
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+            if (helper) {
+                helper.style.color = '#777';
+                helper.textContent = helperPadrao;
+            }
+        } else {
+            input.style.borderColor = '#ff4757';
+            input.style.boxShadow = '0 0 0 2px rgba(255, 71, 87, 0.15)';
+            if (helper) {
+                helper.style.color = '#ff4757';
+                helper.textContent = helperErro;
+            }
+        }
+    }
+
+    function validarNome() {
+        const valido = REGEX_NOME.test(inputNome.value.trim());
+        aplicarEstado(inputNome, helperNome, valido, HELPER_NOME_PADRAO, HELPER_NOME_ERRO);
+        return valido;
+    }
+
+    function validarUsername() {
+        const valido = REGEX_USERNAME.test(inputUsername.value.trim());
+        aplicarEstado(inputUsername, helperUsername, valido, HELPER_USER_PADRAO, HELPER_USER_ERRO);
+        return valido;
+    }
+
+    // Listeners (com guard pra não duplicar)
+    if (!inputNome._fendaValidacaoNome) {
+        inputNome._fendaValidacaoNome = true;
+        inputNome.addEventListener('input', validarNome);
+    }
+    if (!inputUsername._fendaValidacaoUsername) {
+        inputUsername._fendaValidacaoUsername = true;
+        inputUsername.addEventListener('input', validarUsername);
+    }
+    if (!formPerfil._fendaValidacaoPerfil) {
+        formPerfil._fendaValidacaoPerfil = true;
+        formPerfil.addEventListener('submit', function (e) {
+            const okNome = validarNome();
+            const okUser = validarUsername();
+
+            if (!okNome || !okUser) {
+                e.preventDefault();
+
+                if (!okNome) {
+                    inputNome.focus();
+                    if (typeof window.exibirBalaoFenda === 'function') {
+                        window.exibirBalaoFenda(
+                            'O nome só pode ter letras e espaços (2 a 25 caracteres).',
+                            'erro',
+                            inputNome
+                        );
+                    }
+                } else if (!okUser) {
+                    inputUsername.focus();
+                    if (typeof window.exibirBalaoFenda === 'function') {
+                        window.exibirBalaoFenda(
+                            'O username aceita só letras minúsculas, números, _ ou . (5 a 18 caracteres).',
+                            'erro',
+                            inputUsername
+                        );
+                    }
+                }
+            }
+        });
+    }
+
+    // Aplica estado inicial (caso o valor do banco já seja inválido)
+    validarNome();
+    validarUsername();
+}
 
 // ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
 window.deslogarUsuario = async function () {

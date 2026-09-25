@@ -1913,29 +1913,26 @@ select:focus {
 
  .btn-acao-vivo:hover {
     background: rgba(255, 188, 0, 0.08);
-    border-color: #ffbc00;
-    color: #fff;
+    border-color: #fff;
+    color: #fc900c;
+    color: oklch(75.332% 0.17358 60.488);
     transform: scale(1.03);
 }
 
  .btn-acao-vivo i {
     font-size: 1.1rem;
     color: #ffbc00;
+    color: oklch(83.462% 0.1717 82.566);;
 }
-
 
 /* Bio: Centralizada e com limite de largura */
 .campo-grupo textarea#bio,
 textarea[name="bio"] {
-    width: 100% !important;
-    /* Ocupa a largura disponível... */
+    width: 100% ;
     max-width: 100%;
-    /* ...mas não passa disso no Tablet/PC */
-    margin: 0 auto !important;
-    /* CENTRALIZA no meio do formulário */
+    margin: 0 auto ;
     display: block;
     box-sizing: border-box;
-    /* Garante que o padding não estique a caixa */
     padding: 15px;
     background: rgba(255, 255, 255, 0.05);
     color: #fff;
@@ -1944,6 +1941,7 @@ textarea[name="bio"] {
     line-height: 1.5;
     resize: none;
 }
+
 
 .container,
 .login-form,
@@ -1982,12 +1980,6 @@ form[action="confirma-login.php"] {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-
-.campo-grupo {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
 
 .campo-grupo label {
     text-align: left;
@@ -2033,22 +2025,40 @@ form[action="confirma-login.php"] {
 /* Wrapper do Username (Onde tem o @) */
 .input-username-wrapper {
     display: flex;
+    flex: 1 ;
     align-items: center;
-    background: #1a1a1a;
     border: 1px solid #333;
     border-radius: 8px;
     overflow: hidden;
     transition: 0.3s;
     /* Correção do campo @Username */
-    height: 45px;
+    height: 100%;
     align-items: center;
     padding: 0;
+    margin: 0;
+    white-space: nowrap;
+    /* Impede que o @ pule pra baixo */
+    flex-shrink: 0;
+    /* Não deixa o @ espremer */
+
+}
+
+
+.input-username-wrapper input {
+    border: none ;
+    background: transparent ;
+    appearance: none;
+}
+
+/* Quando foca no campo de username, destaca o wrapper inteiro */
+.input-username-wrapper:focus-within {
+    border-color: #ffb11fe7;
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
 
 .input-username-wrapper span {
-    background: #333;
     color: var(--dourado);
-    padding: 0 12px;
+    padding: 0 10px;
     font-weight: bold;
     border-right: 1px solid #444;
     background: rgba(255, 255, 255, 0.12);
@@ -2182,34 +2192,8 @@ form[action="confirma-login.php"] {
 }
 
 
-.btn-acao-vivo:hover {
-    background: rgba(255, 188, 0, 0.08);
-    border-color: #ffbc00;
-    color: #fff;
-    transform: scale(1.03);
-}
 
-.btn-acao-vivo i {
-    font-size: 1.1rem;
-    color: #ffbc00;
-}
 
-/* Bio: Centralizada e com limite de largura */
-.campo-grupo textarea#bio,
-textarea[name="bio"] {
-    width: 100% ;
-    max-width: 100%;
-    margin: 0 auto ;
-    display: block;
-    box-sizing: border-box;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    line-height: 1.5;
-    resize: none;
-}
 
 /* Centraliza o rótulo "Bio" também */
 .campo-grupo label[for="bio"] {
@@ -2249,12 +2233,6 @@ form[action="confirma-login.php"] {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-
-.campo-grupo {
-    margin-bottom: 20px;
-    text-align: left;
-}
-
 
 /* Textarea (Bio) */
 .campo-grupo textarea {
@@ -2305,28 +2283,6 @@ textarea {
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
 
-/* Wrapper do Username (Onde tem o @) */
-.input-username-wrapper {
-    display: flex;
-    align-items: center;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: 0.3s;
-}
-
-.input-username-wrapper input {
-    border: none ;
-    background: transparent ;
-    appearance: none;
-}
-
-/* Quando foca no campo de username, destaca o wrapper inteiro */
-.input-username-wrapper:focus-within {
-    border-color: #ffb11fe7;
-    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
-}
 
 /* Página perdidos */
 .painel-sessao {
@@ -2848,11 +2804,6 @@ section.sessao-publicar {
 
 
 
-.btn-acao-vivo:hover {
-    color: #fc900c;
-}
-
-
 /* ============================================================
    BOTÃO PUBLICAR
    ============================================================ */
@@ -3306,8 +3257,6 @@ form[action="confirma-login.php"] a {
     max-width: 800px;
     background: #0d0d0db4;
 }
-
-
 /*  O CONTAINER PAI (Atualizado para Row Responsivo) */
 .perfil-controles {
     display: flex;
@@ -3340,9 +3289,20 @@ form[action="confirma-login.php"] a {
 /* 3. Garantir que cada campo ocupe 100% da largura disponível */
 .campo-grupo {
     width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
     display: flex;
     flex-direction: column;
     grid-column: span 1;
+   
+}
+#username-helper,
+#nome-helper {
+  color:#777; 
+  color: oklch(56.926% 0.00006 271.152);
+  font-size: 0.8rem;
+  font-size: clamp(0.75rem, 0.7vw , 1rem);
+  transition: color 0.2s;
 }
 
 /* 4. Estilo dos Inputs para não vazarem */
@@ -3355,8 +3315,6 @@ textarea {
     box-sizing: border-box;
     padding: 8px;
 }
-
-
 
 /* SISTEMA DE MENÇÕES E FUNÇÃO DE AUTOCOMPLETE */
 
@@ -3401,8 +3359,9 @@ textarea {
 }
 
 .lista-mencoes-flutuante.modal-theme div:hover {
-    background: var(--dourado);
-    color: #000;
+    background: #ffdb0054;
+    background: oklch(0.9 0.21 95.91 / 0.33);
+    color: #e3e3e3;
 }
 
 /* Container que vai segurar as sugestões abaixo do input buscar usuarios */

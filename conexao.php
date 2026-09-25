@@ -524,12 +524,33 @@ if (!empty($_SESSION['usuario_id'])) {
 // ============================================================
 // ⚙️ MOTOR DE MENÇÕES
 // ============================================================
+// 🐚 IARA – 2026-09-25 (auditoria v5.0)
+//    - Regex refeita. Antes: [^\s]+ capturava QUALQUER coisa sem
+//      espaço — incluindo vírgula, ponto, exclamação. Resultado:
+//      "@fulano, tudo bem?" virava link pra perfil de "fulano,"
+//      (com vírgula), que não existe.
+//    - Agora: só caracteres válidos de username (a-z, 0-9, _, ., -).
+//    - Adicionado urlencode() no href (defesa em profundidade).
+//    - Trocado preg_replace por preg_replace_callback para poder
+//      aplicar urlencode() no username de forma limpa.
 if (!function_exists('formatarMencoes')) {
     function formatarMencoes($texto) {
         $texto = $texto ?? '';
         if ($texto === '') return '';
-        $texto_seguro = htmlspecialchars($texto);
-        return preg_replace('/@([^\s]+)/', '<a href="ver-perfil.php?user=$1" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@$1</a>', $texto_seguro);
+
+        // Escapa o texto primeiro (proteção XSS)
+        $texto_seguro = htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
+
+        // Substitui apenas @username válidos
+        return preg_replace_callback(
+            '/@([a-zA-Z0-9_.-]+)/',
+            function ($matches) {
+                $username = $matches[1];
+                $url = 'ver-perfil.php?user=' . urlencode($username);
+                return '<a href="' . $url . '" style="color: #ffbc00; font-weight: bold; text-decoration: none;">@' . $username . '</a>';
+            },
+            $texto_seguro
+        );
     }
 }
 fenda_log('🔵 [CONEXAO] formatarMencoes definida');

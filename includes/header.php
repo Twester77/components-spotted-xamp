@@ -267,7 +267,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     ?>
         <div id="toast-fenda-global" class="toast-fenda <?php echo $toast_classe; ?>" role="alert" aria-live="assertive" aria-atomic="true">
             <i class="<?php echo $toast_icone; ?>" aria-hidden="true"></i>
-            <span style="margin-left: 10px;"><?php echo $toast_mensagem; ?></span>
+            <span style="margin-left: 10px; z-index:999999;"><?php echo $toast_mensagem; ?></span>
         </div>
 
         <script>

@@ -1993,18 +1993,6 @@ textarea {
 }
 
 
-.input-username-wrapper input {
-    flex: 1 !important;
-    border: none;
-    background: transparent !important;
-    height: 100%;
-    margin: 0;
-    white-space: nowrap;
-    /* Impede que o @ pule pra baixo */
-    flex-shrink: 0;
-    /* Não deixa o @ espremer */
-}
-
 /* Bio Ajustada */
 .campo-grupo textarea {
     min-height: 120px;

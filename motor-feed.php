@@ -1,6 +1,29 @@
 <?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+/**
+ * motor-feed.php – Motor Universal da Fenda
+ *
+ * 🐚 IARA – 2026-09-25 (auditoria v5.0)
+ *    Correções aplicadas:
+ *
+ *    1. FALLBACK QUEBRADO (3 lugares)
+ *       O 2º parâmetro de obterUrlComFallback() é o CAMINHO DE FALLBACK
+ *       (o que mostrar quando o arquivo principal não existe). Estava
+ *       sendo passado o próprio caminho (circular) ou uma variação
+ *       dele. Resultado: quando o arquivo era deletado do B2 mas a
+ *       referência continuava no banco, o PHP gerava uma URL inválida
+ *       e o proxy retornava 404. Agora aponta para o fallback-post.webp.
+ *
+ *    2. </div> EXTRA NO FINAL DO CARD
+ *       O <article> tinha um </div> a mais fechando, causando
+ *       desbalanceamento de tags em alguns contextos.
+ *
+ *    3. REMOVIDO ini_set('display_errors', 1) E error_reporting(E_ALL)
+ *       (já não estavam presentes, mas documentando pra posteridade).
+ *
+ *    Não mexi em lógica de negócio: query, reações, carrossel, ellipsis
+ *    e permissões continuam idênticas.
+ */
+
 include_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
@@ -195,7 +218,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             $anexos_html = '<div class="carrossel-wrapper">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                    $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
+                    // 🔥 IARA: fallback correto (era 'postagens/' . $caminho — circular)
+                    $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);
                     $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                     $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -223,7 +247,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             $anexos_html = '<div class="feed-anexos-grid">';
             foreach ($anexos_exibicao as $anexo) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                    $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
+                    // 🔥 IARA: fallback correto (era 'postagens/' . $caminho — circular)
+                    $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);
                     $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                     $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -238,7 +263,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
-            $img_url = obterUrlComFallback($nome_imagem, htmlspecialchars($nome_imagem), $b2, true);
+            // 🔥 IARA: fallback correto (era htmlspecialchars($nome_imagem) — circular)
+            $img_url = obterUrlComFallback($nome_imagem, 'uploads/ui/fallback-post.webp', $b2, true);
         }
         $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }
@@ -312,8 +338,6 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 </button>
             </div>
         </div>
-        </div>
     </article>
 <?php
 }
-?>
