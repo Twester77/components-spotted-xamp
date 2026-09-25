@@ -165,13 +165,31 @@ if ($erro === 'ja_existe') {
                         </small>
                     </div>
 
-                    <!-- Campo Nome -->
+                    <!-- ============================================================
+                         Campo Nome
+                         🔥 IARA – 2026-09-24: alinhado ao pattern do drawer (perfil.php).
+                         Antes o signup aceitava números, mas o drawer não — o usuário
+                         ficava travado ao tentar editar o perfil depois. Agora os dois
+                         usam o mesmo pattern. Feedback visual adicionado.
+                    ============================================================ -->
                     <div class="campo-grupo-fenda">
                         <label for="nome">Nome ou Apelido</label>
                         <div class="fenda-reg-box">
                             <i class="fas fa-user"></i>
-                            <input type="text" id="nome" name="nome" placeholder="Ex: Fulano, Furlas..." maxlength="30" autocomplete="given-name" required>
+                            <input type="text" 
+                                id="nome" 
+                                name="nome" 
+                                placeholder="Ex: Fulano, Furlas..." 
+                                required
+                                minlength="2"
+                                maxlength="25"
+                                pattern="[a-zA-ZÀ-ÿ\s]{2,25}"
+                                title="Apenas letras e espaços (2 a 25 caracteres). Sem números nem símbolos."
+                                autocomplete="given-name">
                         </div>
+                        <small style="color:#777; font-size:0.75rem; display:block; margin-top:4px;">
+                            Apenas letras e espaços. De 2 a 25 caracteres. Sem números nem símbolos.
+                        </small>
                     </div>
 
                     <!-- Campo E-mail -->

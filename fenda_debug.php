@@ -21,6 +21,7 @@ function fenda_log($mensagem) {
         PHP_SESSION_NONE     => 'NÃO INICIADA',
         PHP_SESSION_ACTIVE   => 'ATIVA'
     };
+
     $usuarioId = $_SESSION['usuario_id'] ?? 'NÃO LOGADO';
     
     // 🔥 Formata a mensagem e envia para o log do sistema
@@ -29,4 +30,3 @@ function fenda_log($mensagem) {
     // 🔥 error_log envia para o stdout/stderr – a Vercel captura automaticamente
     error_log($linha);
 }
-?>

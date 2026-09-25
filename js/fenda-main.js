@@ -384,17 +384,35 @@ function inicializarPreferenciasAPartirDoDOM() {
 
 // ==================== NOTIFICAÇÕES E ALERTAS ====================
 // ==================== TOAST SIMPLES (sem redirecionamento) ====================
+// 🐚 IARA – 2026-09-24 (auditoria v5.0)
+//    - Trocado innerHTML por textContent (defesa contra XSS).
+//      A mensagem pode vir de notificação de outro usuário ou de
+//      resposta do servidor — nunca deve ser interpretada como HTML.
 window.exibirToast = function (mensagem) {
     const toast = document.createElement('div');
     toast.className = 'notificacao-popup';
     toast.style.cursor = 'default';
-    toast.innerHTML = `
-        <div style="font-size: 20px;"></div>
-        <div style="flex-grow: 1;">
-            <strong style="display: block; font-size: 14px; color: #ddc80e;">Aviso!</strong>
-            <span>${mensagem}</span>
-        </div>
-    `;
+
+    const iconeDiv = document.createElement('div');
+    iconeDiv.style.fontSize = '20px';
+
+    const conteudoDiv = document.createElement('div');
+    conteudoDiv.style.flexGrow = '1';
+
+    const strongEl = document.createElement('strong');
+    strongEl.style.display = 'block';
+    strongEl.style.fontSize = '14px';
+    strongEl.style.color = '#ddc80e';
+    strongEl.textContent = 'Aviso!';
+
+    const spanEl = document.createElement('span');
+    spanEl.textContent = mensagem;
+
+    conteudoDiv.appendChild(strongEl);
+    conteudoDiv.appendChild(spanEl);
+
+    toast.appendChild(iconeDiv);
+    toast.appendChild(conteudoDiv);
     document.body.appendChild(toast);
 
     setTimeout(() => {
@@ -404,6 +422,12 @@ window.exibirToast = function (mensagem) {
 };
 
 // ==================== NOTIFICAÇÕES EM PiP ====================
+// 🐚 IARA – 2026-09-24 (auditoria v5.0)
+//    - Substituído innerHTML com interpolação por:
+//      1. Estrutura vazia via innerHTML (sem dados do usuário)
+//      2. Preenchimento via textContent (imune a XSS)
+//      3. Listener programático no botão "Ver" (link nunca vai pra
+//         atributo onclick inline — o vetor mais perigoso).
 window.abrirPipNotificacao = async function (titulo, mensagem, link, icone = '🔔') {
     // 1. Verifica se o usuário ativou o PiP
     const prefPipInput = document.getElementById('input_pref_pip');
@@ -447,10 +471,10 @@ window.abrirPipNotificacao = async function (titulo, mensagem, link, icone = '�
             height: 140,
         });
 
-        // Conteúdo HTML do PiP
+        // 🔥 Estrutura vazia (só CSS e esqueletos — nenhum dado do usuário)
         pipWindow.document.body.innerHTML = `
             <style>
-                body { margin: 0; padding: 0; background: #1a1a2e; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+                body { margin: 0; padding: 0; background: #1a1a2e; color: #fff; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
                 .pip-container { padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; height: 100%; box-sizing: border-box; }
                 .pip-icone { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
                 .pip-conteudo { flex: 1; min-width: 0; }
@@ -463,17 +487,30 @@ window.abrirPipNotificacao = async function (titulo, mensagem, link, icone = '�
                 .pip-acoes .btn-ver-pip:hover { background: #ffd44d; border-color: #ffd44d; }
             </style>
             <div class="pip-container">
-                <div class="pip-icone">${icone}</div>
+                <div class="pip-icone" id="pip-icone"></div>
                 <div class="pip-conteudo">
-                    <span class="pip-titulo">${titulo}</span>
-                    <div class="pip-mensagem">${mensagem}</div>
+                    <span class="pip-titulo" id="pip-titulo"></span>
+                    <div class="pip-mensagem" id="pip-mensagem"></div>
                     <div class="pip-acoes">
-                        <button onclick="window.parent.fecharPipNotificacao()">✕ Ignorar</button>
-                        <button class="btn-ver-pip" onclick="window.parent.irParaLinkPip('${link}')">👀 Ver</button>
+                        <button id="pip-btn-ignorar">✕ Ignorar</button>
+                        <button id="pip-btn-ver" class="btn-ver-pip">👀 Ver</button>
                     </div>
                 </div>
             </div>
         `;
+
+        // 🔥 Preenche com textContent (imune a injeção)
+        pipWindow.document.getElementById('pip-icone').textContent = icone;
+        pipWindow.document.getElementById('pip-titulo').textContent = titulo;
+        pipWindow.document.getElementById('pip-mensagem').textContent = mensagem;
+
+        // 🔥 Listeners programáticos (link nunca vai pra inline onclick)
+        pipWindow.document.getElementById('pip-btn-ignorar').addEventListener('click', function () {
+            window.fecharPipNotificacao();
+        });
+        pipWindow.document.getElementById('pip-btn-ver').addEventListener('click', function () {
+            window.irParaLinkPip(link);
+        });
 
         window._pipAtivo = pipWindow;
 
@@ -646,6 +683,10 @@ window.atualizarBadgingPWA = function (total) {
 };
 
 // ==================== POPUPS E NOTIFICAÇÕES (COM SOM TEMATIZADO) ====================
+// 🐚 IARA – 2026-09-24 (auditoria v5.0)
+//    - Trocado innerHTML por textContent no bloco final (defesa contra XSS).
+//      A 'mensagem' pode vir de notificação de outro usuário ou de
+//      resposta do servidor — nunca deve ser interpretada como HTML.
 function mostrarPopup(mensagem) {
     let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
     let tempoExibicao = 5000;
@@ -702,13 +743,30 @@ function mostrarPopup(mensagem) {
     const popup = document.createElement('div');
     popup.className = 'notificacao-popup';
     popup.style.cursor = 'pointer';
-    popup.innerHTML = `
-        <div style="font-size: 20px;">🔔</div>
-        <div style="flex-grow: 1;">
-            <strong style="display: block; font-size: 14px; color: #ddc80e;">Nova Interação!</strong>
-            <span>${mensagem}</span>
-        </div>
-    `;
+
+    // 🔥 Montagem segura via DOM (textContent em vez de innerHTML)
+    const iconeDiv = document.createElement('div');
+    iconeDiv.style.fontSize = '20px';
+    iconeDiv.textContent = '🔔';
+
+    const conteudoDiv = document.createElement('div');
+    conteudoDiv.style.flexGrow = '1';
+
+    const strongEl = document.createElement('strong');
+    strongEl.style.display = 'block';
+    strongEl.style.fontSize = '14px';
+    strongEl.style.color = '#ddc80e';
+    strongEl.textContent = 'Nova Interação!';
+
+    const spanEl = document.createElement('span');
+    spanEl.textContent = mensagem;
+
+    conteudoDiv.appendChild(strongEl);
+    conteudoDiv.appendChild(spanEl);
+
+    popup.appendChild(iconeDiv);
+    popup.appendChild(conteudoDiv);
+
     popup.onclick = () => window.location.href = 'notificacoes.php';
     document.body.appendChild(popup);
     setTimeout(() => {

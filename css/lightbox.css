@@ -12,14 +12,14 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 999999;
     display: none;
-    justify-content: center;
+    justify-content: safe center;
     padding: 8px;
     padding: clamp(10px, 3vmin, 25px);
     box-sizing: border-box;
     overflow-y: auto;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
-    align-items: center;
+    align-items: safe center;
 }
 
 /* 2. CONTEÚDO DO MODAL (card principal) */
@@ -262,6 +262,7 @@ body.modo-swipe-ativo .lightbox-post-body .container-img-post {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
+    border-radius: 6px;
     border-radius: clamp(8px, 2cqi, 16px);
     margin: 0 auto;
     background: rgba(0, 0, 0, 0.2);
@@ -390,8 +391,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-comentarios-lista  .comentario-item .comentario-meta .avatar-p {
     width: 32px;
     height: 32px;
-    width: clamp(30px, 10cqi, 70px);
-    height: clamp(30px, 10cqi, 70px);
+    width: clamp(30px, 10cqi, 60px);
+    height: clamp(30px, 10cqi, 60px);
     border-radius: 50%;
     object-fit: cover;
 }
@@ -399,7 +400,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-comentarios-lista .comentario-item .comentario-texto {
     font-size: 0.9rem;
-    font-size: clamp(0.85rem, 1.6cqi, 1.2rem);
+    font-size: clamp(0.85rem, 2.5cqi, 1.2rem);
     line-height: 1.4;
     color: #ddd;
     white-space: pre-wrap;
@@ -410,7 +411,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-comentarios-lista .comentario-item .comentario-meta .comentario-autor {
     font-weight: 600;
-    font-size: clamp(0.8rem, 3cqi, 1.2rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 3cqi, 1.3rem);
     color: var(--cor-borda-glow, #70cde4);
     white-space: nowrap;
     overflow: hidden;
@@ -418,9 +420,11 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 }
 
 .lightbox-comentarios-lista  .comentario-item  .comentario-meta .comentario-data {
-    font-size: clamp(0.75rem, 2cqi, 1rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 2.5cqi, 1rem);
     opacity: 0.7;
     color: #cccc;
+    color: oklch(84.522% 0.0001 271.152 / 0.8);
 }
 
 

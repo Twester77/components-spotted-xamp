@@ -646,7 +646,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
 }
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.38);
     border-radius: 8px;

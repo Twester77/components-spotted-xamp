@@ -84,7 +84,7 @@
     /* Mantém cada card no seu tamanho real */
     padding: 15px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 20px;
     max-width: 1600px; /* LIMITE MÁXIMO para telas grandes */
     margin: 20px auto;
@@ -980,7 +980,7 @@ span.category-tag {
 .main-perdidos .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(80px, 120px));
-    grid-template-columns: repeat(2, minmax(18cqi, 28cqi));
+    grid-template-columns: repeat(2, minmax(15cqi, 30cqi));
     gap: 8px;
     margin-top: 5px;
     overflow: hidden;
@@ -996,7 +996,7 @@ span.category-tag {
 }
 
 .main-perdidos .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-    max-height: 360px;
+    max-height: 380px;
     max-width: 100%;
     height: 100%;
     width: 100%;
@@ -1006,7 +1006,9 @@ span.category-tag {
 }
 
 .feed-anexo-item {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     overflow: hidden;
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1017,7 +1019,7 @@ span.category-tag {
 .feed-anexo-item img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     display: block;
 
 }
@@ -1031,22 +1033,27 @@ span.category-tag {
     padding: 0;
 }
 
-body:not(.modo-swipe-ativo)  .feed-anexo-item:only-child img {
+body:not(.modo-swipe-ativo) .feed-anexo-item:only-child img {
     background: #0a0a0a;
     height: 100%;
     width: 100%;
     display: block;
-    max-height: 260px;
-    max-height: clamp(180px, 60cqh, 350px);
+    object-fit: contain;
+    object-position: center;
+    max-height: 250px;
+    max-height: clamp(160px, 70cqi, 320px);
 }
 
 .feed-anexo-item:only-child  {
-    object-fit: cover;
+    object-position: center;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     box-shadow: none;
+    object-fit: cover;
+    aspect-ratio: auto;
+    max-height: 100%;
     max-width: 100%;
 }
 

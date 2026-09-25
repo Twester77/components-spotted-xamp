@@ -90,14 +90,14 @@
     width: clamp(60px, 15cqi, 150px);
     height: clamp(60px, 15cqi, 150px);
     z-index: 15;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
 }
 
 .avatar-main {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
     border-radius: 50%;
     border: 3px solid var(--aura-user, #ffbc00);
     box-shadow: 0 0 8px var(--aura-user, #ffbc00)55;
@@ -381,8 +381,8 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-in-out;
-    background: #0a0a1202;
-    background: oklch(0.35 0 0 / 0.5);
+    background: #3a3a3a73;
+    background: oklch(0.35 0 0 / 0.45);
     border-radius: 20px;
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
@@ -853,15 +853,19 @@
 .depoimento-form-container textarea {
     width: 100%;
     background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0.00011 271.152 / 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
     border-radius: clamp(10px, 1.2vw, 14px);
     padding: clamp(12px, 1.5vw, 18px) clamp(14px, 1.8vw, 20px);
     color: #f0f0f0;
+    color: oklch(95.514% 0.00011 271.152);
     font-size: clamp(0.95rem, 1.1vw, 1.1rem);
     transition: border 0.25s ease, box-shadow 0.25s ease;
     resize: vertical;
     box-sizing: border-box;
-    min-height: 140px;
+    min-height: 80px;
+    max-height: 160px;
     font-family: 'Inter', sans-serif;
     line-height: 1.6;
 }
@@ -1188,7 +1192,7 @@
     border-color: var(--aura-user, #70cde4) ;
     box-shadow: 0 0 8px var(--aura-user, #70cde4) ;
     transform: scale(1.0);
-    opacity: 1;
+    opacity: 0.8;
 }
 
 @keyframes ads-neon-glow-pulse {
@@ -1246,7 +1250,7 @@
         radial-gradient(circle at 50% 50%, rgba(90, 180, 240, 0.18) 0%, transparent 60%),
         radial-gradient(circle at 90% 20%, rgba(200, 230, 255, 0.12) 0%, transparent 45%);
     background-size: 150% 150%, 180% 180%, 130% 130%, 160% 160%;
-    opacity: 0.9;
+    opacity: 0.8;
     mix-blend-mode: screen;
     animation: nevoa-volumetrica 15s ease-in-out infinite alternate;
 }
@@ -1717,7 +1721,7 @@
     }
 
     .modal-depoimento-overlay {
-        padding-top: 10%;
+        padding-top: 12%;
     }
 }
 
@@ -1751,9 +1755,9 @@
     display: none;
     /*  CORREÇÃO: Alinha no topo com padding para não ficar colado no topo */
     align-items: flex-start;
-    justify-content: center;
-    padding-top: 30dvh;
-    padding-top: clamp(15%, 25vh, 45%);
+    justify-content: safe center;
+    padding-top: 25vh;
+    padding-top: clamp(15%, 25dvh, 45%);
     padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
@@ -1762,19 +1766,19 @@
 
 .modal-depoimento-content {
     background: rgba(20, 20, 30, 0.92);
+    background: oklch(19.623% 0.02004 284.397 / 0.92);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
     max-width: 550px;
     width: 100%;
-    max-height: 80vh;
+    max-height: 75vh;
     overflow-y: auto;
     padding: 30px 24px 24px 24px;
     position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
     animation: modalDepoimentoIn 0.25s ease-out;
     /*  CORREÇÃO: Não deixa o modal esticar verticalmente */
     align-self: flex-start;
-    margin: 0 auto;
 }
 
 /*  CORREÇÃO: Scroll interno só se o conteúdo for muito grande */

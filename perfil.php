@@ -90,6 +90,12 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
         <div class="form-perfil-corpo">
             <h2 class="titulo-pagina">Configurações de Habitante</h2>
 
+            <!-- ============================================================
+                 Campo Nome
+                 🔥 IARA – 2026-09-24: adicionado <small> de ajuda com as
+                 mesmas regras do signup (cad-usuario.php). Pattern já
+                 existia, agora o usuário vê o que é aceito antes de errar.
+            ============================================================ -->
             <div class="campo-grupo">
                 <label for="nome"><i class="fas fa-user-tag" aria-hidden="true"></i> Nome de Exibição</label>
                 <input type="text" id="nome" name="nome"
@@ -97,6 +103,9 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     placeholder="Como quer ser chamado no feed?"
                     pattern="[a-zA-ZÀ-ÿ\s]{2,25}" minlength="2" maxlength="25"
                     title="Digite um nome válido de 2 a 25 letras." required>
+                <small style="color:#777; font-size:0.75rem; display:block; margin-top:4px;">
+                    Apenas letras e espaços. De 2 a 25 caracteres. Sem números nem símbolos.
+                </small>
             </div>
 
             <div class="campo-grupo">

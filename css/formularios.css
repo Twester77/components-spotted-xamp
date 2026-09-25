@@ -2593,51 +2593,6 @@ section.sessao-publicar {
 }
 
 
-/* Toggle de Perdi/Achei */
-.toggle-perdidos-vivo {
-    display: flex;
-    gap: 15px;
-    justify-content: space-between;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-    align-self: flex-start;
-}
-
-.btn-toggle-perdido {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 30px;
-    padding: 4px 16px;
-    color: #aaa;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.2s;
-    flex: 1;
-    max-width: 200px;
-    min-width: 100px;
-}
-
-.btn-toggle-perdido:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-}
-
-.btn-toggle-perdido.ativo[data-valor="perdi"] {
-    background: rgba(204, 66, 12, 0.329);
-    border-color: #cc420c;
-    color: #ff8a5e;
-    box-shadow: 0 0 20px rgba(204, 66, 12, 0.08);
-}
-
-.btn-toggle-perdido.ativo[data-valor="achei"] {
-    background: rgba(46, 204, 112, 0.247);
-    border-color: #2ecc71;
-    color: #5dffa0;
-    box-shadow: 0 0 20px rgba(46, 204, 113, 0.08);
-}
-
 /* Caixa de Texto */
 .form-perdidos-vivo .area-perdidos-vivo {
     border-radius: 12px ;
@@ -2720,23 +2675,25 @@ section.sessao-publicar {
     background: #7cd632e8 ;
     color: #000 ;
     border: none ;
-    padding: 8px 14px ;
-    border-radius: 30px ;
-    font-weight: 800 ;
-    text-transform: uppercase ;
-    font-size: 0.75rem;
-    font-size: clamp(0.8rem, 1.041cqw, 1.05rem);
-    cursor: pointer ;
-    transition: color 0.3s ease ;
-    height: auto ;
-    max-width: 300px;
-    margin-top: 0 ;
     display: flex;
     justify-content: center;
     flex: 1;
     flex-wrap: wrap;
     white-space: nowrap;
+    margin-top: 0 ;
+    padding: 8px 14px ;
+    border-radius: 30px ;
+    font-weight: 800 ;
+    text-transform: uppercase ;
+    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 1.041cqw, 1.05rem);
+    cursor: pointer ;
+    transition: color 0.3s ease ;
+    height: auto ;
+    max-width: 250px;
+    
 }
+    
 
 .form-perdidos-vivo .btn-lancar-perdidos:hover {
     background: #c8ff00d3 ;
@@ -2767,10 +2724,16 @@ section.sessao-publicar {
 /* ============================================================
    BOTÕES DE TOGGLE (PERDI / ACHEI)
    ============================================================ */
+/* Toggle de Perdi/Achei */
 .toggle-perdidos-vivo {
     display: flex;
-    gap: 10px;
+    gap: 15px;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+    align-self: flex-start;
 }
+
 
 .btn-toggle-perdido {
     background: rgba(255, 255, 255, 0.04);
@@ -2778,18 +2741,25 @@ section.sessao-publicar {
     border-radius: 30px;
     padding: 8px 16px;
     color: #aaa;
-    font-size: 0.95rem;
+    color: oklch(73.802% 0.00008 271.152);
+    font-size: 0.9rem;
+    font-size: clamp(0.75rem, 2cqi, 1rem);
+    font-weight: 500;
     font-weight: 600;
     cursor: pointer;
+    text-align: center;
+    align-content: center;
     transition: 0.2s;
     flex: 1;
-    text-align: center;
+    max-width: 200px;
+    min-width: 80px;
 }
 
 .btn-toggle-perdido:hover {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
 }
 
 .btn-toggle-perdido.ativo[data-valor="perdi"] {
@@ -2805,6 +2775,7 @@ section.sessao-publicar {
     color: #5dffa0;
     box-shadow: 0 0 15px rgba(46, 204, 113, 0.15);
 }
+
 
 /* ============================================================
    ÁREA DE TEXTO (GANHA VISUAL DE CAIXA UNIFICADA)
@@ -3194,11 +3165,13 @@ input[type="checkbox"]:focus {
     height: 100%;
     aspect-ratio: 1/1;
     object-fit: cover;
-    border: 3px solid #fa7116b2;
+    border: rgba(250, 113, 22, 0.698);
+    border: 3px solid var(--aura-user, #fa7116b2 );
     background: #000;
+    background: oklch(0% 0 0);
     border-radius: 50%;
-    display: block !important;
-    margin: 0 auto !important;
+    display: block ;
+    margin: 0 auto ;
     box-sizing: border-box;
 }
 
@@ -3623,13 +3596,16 @@ textarea {
     margin: 0 0 8px 0;
     color: #ffbc00;
     font-size: 1rem;
+    font-size: clamp(0.95rem, 2.5cqi, 1.3rem);
     font-weight: 600;
 }
 
 .dialog-conteudo p {
     margin: 0 0 16px 0;
     color: #fff;
-    font-size: 0.9rem;
+    color: oklch(1 0 0);
+    font-size: 0.85rem;
+    font-size: clamp(0.9rem, 2cqi, 1.2rem);
     line-height: 1.4;
 }
 

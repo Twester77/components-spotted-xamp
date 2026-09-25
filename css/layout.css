@@ -9,16 +9,25 @@ header {
     z-index: 9994;
     display: flex;
     max-height: 100px;
+    /* Camada 2: O cálculo matemático preciso baseado no crescimento do H1 */
+    /* 2. REMOVA o 'max-height' fixo ou o 'height' que limitam o contêiner */
+    height: auto;
     justify-content: space-between;
     /* Empurra o menu pra esquerda e o perfil pra direita */
     align-items: center;
-    padding: 8px;
+    /* 3. O PADDING EM 'em' CRIA A MAGIA DINÂMICA: */
+    /* Conforme a fonte estica, o padding cresce junto na mesma proporção. */
+    /* O primeiro valor cuida do topo/base, o segundo das laterais. */
+    padding: 0.5em 6px; 
     max-width: 100%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
     container-type: inline-size;
     container-name: header-fixo;
+    /* ──── A ÂNCORA MODERNA ──── */
+    /* Registra o elemento no ecossistema do navegador como um ponto de ancoragem físico */
+    anchor-name: --ancora-header;
 
 }
 
@@ -33,14 +42,16 @@ header {
 
 header h1 {
     font-size: 0.95rem;
-    font-size: clamp(0.9rem, 3.5cqi, 2.1rem);
+    font-size: var(--tamanho-fonte-header, clamp(0.95rem, 4.5cqi, 2.1rem));
     letter-spacing: 0.5px;
-    line-height: 1.5;
+    line-height: 1.3;
     text-transform: uppercase;
     color: #fff;
+    color: oklab(100% 0 -0.00011);
     font-family: 'Urbanist', sans-serif;
-    font-weight: bold;
-    height: auto;
+    font-weight: bold; 
+    margin: 0; /* Remove margens padrões que possam empurrar o header */
+
 }
 
 
@@ -579,6 +590,7 @@ body.modal-aberto .fab-postar {
     left: 0;
     width: 100%;
     height: 100%;
+    z-index: 999;
     background: rgba(0, 0, 0, 0.473);
     display: flex;
     justify-content: center;
@@ -1943,8 +1955,10 @@ textarea {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 12px;
+    padding: 10px;
     border-radius: 10px;
+    border: none;
+    outline: none;
 }
 
 
@@ -2346,7 +2360,9 @@ textarea[name="bio"] {
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         /* Fallback estrutural e visual para navegadores velhos */
         background: #ffffff;
+        border: 2px solid #ff8c00;;
     }
+
 
     /* O contorno "motosserra" que corre perfeitamente fixo no eixo */
     body:not(.modo-swipe-ativo) #btn-abrir-filtros::before {
@@ -2359,7 +2375,7 @@ textarea[name="bio"] {
         /* Fallback de degradê estático para navegadores velhos */
         background: linear-gradient(90deg, #ff8c00, #ff007f);
         /* O segredo: passamos a variável do ângulo aqui dentro */
-        background: conic-gradient(from var(--angulo-motoserra), #ff8c00, #ff007f, #00f0ff, #ff8c00);
+        background: conic-gradient(from var(--angulo-motoserra), oklab(75.053% 0.09416 0.15231), oklab(64.50399999999999% 0.25982 0.01255), oklab(87.006% -0.13649 -0.05769), oklab(75.053% 0.09416 0.15231));
         /* Máscara para manter o centro do botão limpo (branco) */
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -2497,6 +2513,12 @@ textarea[name="bio"] {
 
 }
 
+    /* O efeito motosserra completo isolado para navegadores modernos */
+@supports (background: conic-gradient(from 0deg, red, blue)) and (mask-composite: exclude) {
+    body:not(.modo-swipe-ativo) #btn-abrir-filtros {
+        border: none; /* Remove a borda simples se o navegador for moderno */
+    }
+}
 
 @media (min-width: 769px) {
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
@@ -2579,7 +2601,7 @@ textarea[name="bio"] {
         bottom: clamp(-70px, 10cqi, -110px);
         width: clamp(70px, 10cqi, 110px);
         height: clamp(70px, 10cqi, 110px);
-        aspect-ratio: 1 / 1;
+        aspect-ratio: 1/1;
     }
 
 }
@@ -2612,10 +2634,11 @@ body.modal-aberto #fenda-nexus {
 
 /* O Botão Principal (O "Leque" fechado) */
 .nexus-trigger {
+    width: 60px;
     width: clamp(40px, 8vmin, 95px);
     background: var(--dourado, #ffbc00);
     border-radius: 50% !important;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
     border: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     display: flex;

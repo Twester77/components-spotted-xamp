@@ -461,8 +461,8 @@ if ($stmt->execute()) {
         $trecho = '';
         if ($parent_data) {
             $texto_puro = strip_tags($parent_data['comentario']);
-            $texto_cortado = mb_substr($texto_puro, 0, 50);
-            $trecho = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
+            $texto_cortado = mb_substr($texto_puro, 0, 80);
+            $trecho = mb_strlen($texto_puro) > 80 ? $texto_cortado . '...' : $texto_cortado;
         }
         $reply_indicator = '<div class="indicador-resposta" onclick="irParaMensagem(' . $parent_id . ')">
                                 <i class="fas fa-reply"></i> <small>' . htmlspecialchars($trecho) . '</small>

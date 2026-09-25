@@ -417,34 +417,58 @@
 /* 🔥 BOTÃO DE FILTRO FIXO NO SWIPE (mantido do original) */
 
 .modo-tinder-ativo .bt-controles {
-    top: 20%;
-    top: calc(18% + 20px);
     left: 50%;
-    transform: translate3d(-50%, -50%, 0px);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0); 
+    
+    /* 3. Espaçamento controlado em relação ao header */
+    margin-block: 15px;
+    margin-block-end: 10px;
+    margin-inline: auto; /* Garante centralização perfeita no PC */
     justify-content: safe center;
     align-items: center;
-    width: 100%;
+    width: 95%;
     z-index: 98;
     background: #16162dc0 ;
-    margin: 10px auto;
     max-width: 800px;
-    max-height: 18vh;
-    max-height: 18dvh;
+    /* Evita colapsar e virar fita (seu bug anterior) */
+    min-height: clamp(60px, 15cqi, 180px); 
+    max-height: calc(100dvh - var(--altura-estimada-header) - 30px);
     overflow: hidden;
     overflow-y: auto;
     scrollbar-width: none;
     display: flex;
-    position: absolute ;
+    /* 1. MUDANÇA CRUCIAL: De absolute/fixed para relative ou static no fluxo */
+    /* Isso faz ela nascer AUTOMATICAMENTE encostada na base do header, sem adivinhar pixels! */
+    position: absolute;
     flex-direction: column;
-    gap: 8px;
-    padding: 15px 5px 15px 5px;
+    gap: 6px;
+    padding: 15px 10px;
     border-radius: 16px;
     font-weight: bold;
     flex-wrap: unset;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
- }
-    
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+     /* ════════════ CAMADAS DE POSICIONAMENTO EVOLUTIVO ════════════ */
+
+    /* [CAMADA 1] O seu clássico e estável de guerra (Pra nada quebrar de primeira) */
+    top: 100px;
+    transform: translate(-50%, 0);
+
+    /* [CAMADA 2] O Híbrido Avançado (Se o browser entender variáveis complexas) */
+    /* Usa a nossa variável baseada na unidade 'lh' para adivinhar a folga perfeita */
+    @supports (top: calc(var(--altura-estimada-header) + 8px)) {
+        top: calc(var(--altura-estimada-header) + 8px);
+        transform: translate(-50%, 0);
+    }
+
+    /* [CAMADA 3] O Estado da Arte Experimental (Anchor Positioning) */
+    /* Se o navegador for de última geração, ele ignora os cálculos matemáticos acima */
+    /* e simplesmente amarra o topo da gaveta ao fundo físico do header, pixel por pixel! */
+    @supports (top: anchor(any bottom)) {
+        top: anchor(--ancora-header bottom);
+        margin-top: 10px; /* Controla o distanciamento da âncora de forma limpa */
+        transform: translate(-50%, 0);
+    }
+}
 
 .modo-tinder-ativo .bt-btn-filtro {
     display: inline-flex;
@@ -482,7 +506,6 @@
 }
 
 
-
 .modo-tinder-ativo  .bt-gaveta-filtros {
     display: none;
     position: relative;
@@ -499,7 +522,6 @@
     max-width: 800px;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
  }
-
 
 
 /*  ANIMAÇÃO DE ENTRADA DOS CARDS */
@@ -899,14 +921,16 @@
     border-radius: clamp(10px, 1.5vw, 16px);
     background: var(--bt-fundo-escuro);
     background: oklch(5% 0 0);
+    margin-bottom: 12px;
     margin-bottom: clamp(16px, 2vw, 28px);
 }
 
 .bt-detalhes-capa img {
     width: 100%;
     height: 100%;
-    max-height: 300px;
+    max-height: 320px;
     background: #1e1a1a1c;
+    background: oklab(22.242% 0.00601 0.00188 / 0.11);
     object-fit: contain;
     display: block;
 }
@@ -1178,7 +1202,7 @@
     width: 100%;
     height: 100%;
     justify-self: center; /* Centraliza a foto se a coluna do grid ficar maior que 300px */
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 1/1;
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid var(--bt-borda-sutil);
@@ -2283,7 +2307,7 @@ padding-bottom: env(safe-area-inset-bottom);
     }
 
     .bt-detalhes-capa {
-        max-height: 220px;
+        max-height: 200px;
         aspect-ratio: auto;
     }
 }
