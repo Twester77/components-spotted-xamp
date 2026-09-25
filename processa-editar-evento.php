@@ -10,6 +10,11 @@
  *     Suporte a resposta AJAX com JSON e redirecionamento suave.
  *     Rollback atômico em caso de falha."
  * - Nereida & Djê, as guardiãs das águas
+ *
+ * 🐚 IARA – 2026-09-24 (auditoria v5.0)
+ *    - Trocado strlen() por mb_strlen() na validação do nome do evento.
+ *      Em UTF-8, um acento ocupa 2 bytes — a validação de "mínimo 3
+ *      caracteres" ficava furada para nomes com acentuação.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -95,7 +100,8 @@ if (!is_array($anexos_remover)) $anexos_remover = [];
 // ============================================================
 // 2. VALIDAÇÕES BÁSICAS
 // ============================================================
-if (empty($nome) || strlen($nome) < 3) {
+// 🔥 IARA: mb_strlen (conta CARACTERES, não bytes)
+if (empty($nome) || mb_strlen($nome) < 3) {
     $_SESSION['erro_evento'] = 'O nome do evento deve ter pelo menos 3 caracteres.';
     header("Location: editar-evento.php?id=" . $evento_id);
     exit;

@@ -1281,7 +1281,6 @@ body.pagina-post .header-principal {
 .comentario-deletado-msg {
     text-align: center;
     justify-content: left;
-    word-break: break-word;
     letter-spacing: 0.5px;
     overflow: hidden;
     align-self: flex-start;
@@ -1298,10 +1297,10 @@ body.pagina-post .header-principal {
     font-style: italic;
     background-color: rgba(0, 0, 0, 0.05);
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 0.382vw + 0.625rem, 1rem);
+    font-size: clamp(0.75rem, 0.382cqw + 0.625rem, 1rem);
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
-    min-width: 200px;
     min-height: 50px;
+    max-width: 200px;
 }
 
 .comentario-deletado-msg i {

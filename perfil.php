@@ -60,7 +60,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
 <main class="main-perfil-container-config <?php echo $classe_presenca; ?>">
 
-    <form action="processa-perfil.php" method="POST" enctype="multipart/form-data">
+    <form action="processa-perfil.php" method="POST" enctype="multipart/form-data" id="form-perfil">
         <div class="perfil-header-container">
             <div class="capa-wrapper">
                 <?php if (!empty($dados['capa'])): ?>
@@ -92,18 +92,21 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
 
             <!-- ============================================================
                  Campo Nome
-                 🔥 IARA – 2026-09-24: adicionado <small> de ajuda com as
-                 mesmas regras do signup (cad-usuario.php). Pattern já
-                 existia, agora o usuário vê o que é aceito antes de errar.
+                 🔥 IARA – 2026-09-24 (auditoria v5.0)
+                 - Adicionado <small> de ajuda (antes invisível para mobile).
+                 - Feedback visual em tempo real: borda vermelha + texto
+                   vermelho + balão quando tenta salvar inválido.
+                 - Regex JS espelha o pattern HTML (mesmas regras).
             ============================================================ -->
-            <div class="campo-grupo">
+            <div class="campo-grupo" id="campo-nome-wrap">
                 <label for="nome"><i class="fas fa-user-tag" aria-hidden="true"></i> Nome de Exibição</label>
                 <input type="text" id="nome" name="nome"
                     value="<?php echo htmlspecialchars($dados['nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                     placeholder="Como quer ser chamado no feed?"
                     pattern="[a-zA-ZÀ-ÿ\s]{2,25}" minlength="2" maxlength="25"
-                    title="Digite um nome válido de 2 a 25 letras." required>
-                <small style="color:#777; font-size:0.75rem; display:block; margin-top:4px;">
+                    title="Digite um nome válido de 2 a 25 letras." required
+                    autocomplete="name">
+                <small id="nome-helper" style="color:#777; font-size:0.75rem; display:block; margin-top:4px; transition: color 0.2s;">
                     Apenas letras e espaços. De 2 a 25 caracteres. Sem números nem símbolos.
                 </small>
             </div>
@@ -275,6 +278,85 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
     </form>
 </main>
 
+<script>
+// ============================================================
+// 🔥 IARA – 2026-09-24 (auditoria v5.0)
+// FEEDBACK VISUAL EM TEMPO REAL – Campo Nome
+// ============================================================
+// Espelha o pattern HTML `[a-zA-ZÀ-ÿ\s]{2,25}` em JS.
+// Regras:
+//   - Só letras (com acento) e espaços
+//   - 2 a 25 caracteres
+// Aplica:
+//   - Borda vermelha + texto vermelho quando inválido
+//   - Balão de erro quando tenta salvar inválido
+//   - Limpa tudo quando fica válido
+(function() {
+    'use strict';
+
+    const inputNome  = document.getElementById('nome');
+    const helper     = document.getElementById('nome-helper');
+    const formPerfil = document.getElementById('form-perfil');
+
+    if (!inputNome || !helper || !formPerfil) return;
+
+    const REGEX_NOME = /^[a-zA-ZÀ-ÿ\s]{2,25}$/;
+    const HELPER_PADRAO = 'Apenas letras e espaços. De 2 a 25 caracteres. Sem números nem símbolos.';
+    const HELPER_ERRO   = '⚠️ Apenas letras e espaços, entre 2 e 25 caracteres.';
+
+    // Aplica estado visual do input
+    function aplicarEstado(valido) {
+        if (valido) {
+            inputNome.style.borderColor = '';
+            inputNome.style.boxShadow   = '';
+            helper.style.color = '#777';
+            helper.textContent = HELPER_PADRAO;
+        } else {
+            inputNome.style.borderColor = '#ff4757';
+            inputNome.style.boxShadow   = '0 0 0 2px rgba(255, 71, 87, 0.15)';
+            helper.style.color = '#ff4757';
+            helper.textContent = HELPER_ERRO;
+        }
+    }
+
+    // Valida o valor atual
+    function validarNome() {
+        const valido = REGEX_NOME.test(inputNome.value.trim());
+        aplicarEstado(valido);
+        return valido;
+    }
+
+    // Feedback em tempo real
+    inputNome.addEventListener('input', validarNome);
+
+    // Aplica estado inicial (caso o nome do banco já seja inválido,
+    // ex: usuário antigo com "Fulano123")
+    validarNome();
+
+    // Bloqueia o submit se inválido + balão de erro
+    formPerfil.addEventListener('submit', function(e) {
+        if (!validarNome()) {
+            e.preventDefault();
+            inputNome.focus();
+
+            // Balão de erro (usa o global, com fallback)
+            if (typeof window.exibirBalaoFenda === 'function') {
+                window.exibirBalaoFenda(
+                    'O nome só pode ter letras e espaços (2 a 25 caracteres).',
+                    'erro',
+                    inputNome
+                );
+            } else if (typeof window.exibirBalao === 'function') {
+                window.exibirBalao(
+                    'O nome só pode ter letras e espaços (2 a 25 caracteres).',
+                    'erro',
+                    inputNome
+                );
+            }
+        }
+    });
+})();
+</script>
 
 <?php
 // SÉTIMO: Footer condicional

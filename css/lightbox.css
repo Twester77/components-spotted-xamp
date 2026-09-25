@@ -502,7 +502,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     align-items: center;
     line-height: 1.6;
     flex: unset;
-    gap: 25px;
+    gap: 20px;
+    gap: clamp(15px, 3vw, 30px);
 }
 
 

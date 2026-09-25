@@ -5,7 +5,14 @@
  * 🔔 Notificação: tipo = 'depoimento' (adicionado pela Lua)
  * 
  * Suporta requisições normais (POST) e AJAX (com redirecionamento ou JSON)
+ *
+ * 🐚 IARA – 2026-09-24 (auditoria v5.0)
+ *    - Trocado strlen() por mb_strlen() nas validações de tamanho.
+ *      strlen conta BYTES, não caracteres. Em UTF-8, um acento ocupa 2
+ *      bytes e um emoji até 4 — a validação de "3 a 500 caracteres"
+ *      ficava furada para texto com acentuação.
  */
+
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
 
@@ -115,7 +122,8 @@ if ($destinatario_id <= 0 || empty($mensagem)) {
     exit();
 }
 
-if (strlen($mensagem) < 3) {
+// 🔥 IARA: mb_strlen (conta CARACTERES, não bytes)
+if (mb_strlen($mensagem) < 3) {
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
         header('Content-Type: application/json');
         echo json_encode(['success' => false, 'message' => 'O depoimento deve ter pelo menos 3 caracteres.']);
@@ -126,7 +134,8 @@ if (strlen($mensagem) < 3) {
     exit();
 }
 
-if (strlen($mensagem) > 500) {
+// 🔥 IARA: mb_strlen (conta CARACTERES, não bytes)
+if (mb_strlen($mensagem) > 500) {
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
         header('Content-Type: application/json');
         echo json_encode(['success' => false, 'message' => 'O depoimento excede o limite de 500 caracteres.']);
