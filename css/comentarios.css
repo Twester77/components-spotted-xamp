@@ -202,7 +202,19 @@
     scroll-behavior: smooth;
     scrollbar-width: thin;
     margin: 0;
+    /* ============================================================
+   🐚 IARA – 2026-09-25
+   Defesa extra contra teclado mobile.
+   Padrão "fallback duplo": navegador antigo pega a 1ª linha,
+   moderno sobrescreve com a 2ª. Já é o padrão do projeto.
+   ============================================================ */
+    padding-bottom: 20px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: 80px;
+    scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+
 }
+
 
 /* FOOTER fixo */
 .fixed-input {
@@ -405,8 +417,7 @@
     width: 100%;
     position: relative; /* Necessário para o posicionamento dos comentários */
     overflow-x: hidden;
-    margin: 30px auto;
-    margin: calc(20px + 40px) auto;
+    margin: 20px auto;
     gap: 10px;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -466,8 +477,9 @@
     /* MUDANÇA CHAVE: O balão agora se ajusta ao texto de forma inteligente */
     width: fit-content; 
     /* Removemos o max-width: min-content; pois o @container já dita o limite real */
-    min-width: 120px;
-    min-height: 55px;
+    min-width: 140px;
+    min-width: clamp(120px , 49cqi, 180px);
+    min-height: 50px;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -1578,12 +1590,10 @@ body.pagina-post .header-principal {
 }
 
 
-
-
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
 .comentario-item.comentario-selecionado {
     position: relative ;
-    border: none!important ;
+    border: none;
     background: rgba(255, 187, 0, 0.075) ;
     background: oklch(0.832757 0.171572 82.0575 / 7.5%);
     transition: background 0.3s ease;

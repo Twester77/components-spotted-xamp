@@ -599,28 +599,42 @@ window.atualizarContadorAlertas = function () {
         .then(res => res.json())
         .then(data => {
             const badge = document.getElementById('badge-alertas');
-            if (badge && data.total !== undefined) {
-                // 1. ATUALIZA O BADGE DO ÍCONE (INTERNO E EXTERNO) – CHAMADA UNIFICADA
-                window.atualizarBadgingPWA(data.total);
+            if (!badge || data.total === undefined) return;
 
-                // 2. LÓGICA DO PiP E SONS (JÁ EXISTENTE)
-                let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
-                if (data.total > ultimoAviso && data.ultima) {
-                    // Nova notificação!
-                    const titulo = 'Nova interação!';
-                    const mensagem = data.ultima.mensagem || 'Alguém interagiu com você.';
-                    const link = data.ultima.post_id ? '/comentarios-post.php?id=' + data.ultima.post_id : '/notificacoes.php';
+            // Atualiza o badge visual (sempre)
+            window.atualizarBadgingPWA(data.total);
+            badge.innerText = data.total;
+            badge.style.display = data.total > 0 ? 'flex' : 'none';
 
-                    if (typeof abrirPipNotificacao === 'function') {
-                        abrirPipNotificacao(titulo, mensagem, link);
-                    } else {
-                        mostrarPopup(titulo + ' ' + mensagem);
-                    }
+            // Verifica se há notificação nova
+            let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
+            if (data.total > ultimoAviso && data.ultima) {
+
+                // 🔥 IARA – 2026-09-25
+                // Se o usuário está VENDO o post da notificação, não dispara
+                // som/PiP (o polling já mostrou o comentário na tela).
+                const postVendo = parseInt(sessionStorage.getItem('fenda_post_sendo_visto')) || 0;
+                const notifPostId = parseInt(data.ultima.post_id) || 0;
+
+                if (postVendo > 0 && notifPostId > 0 && postVendo === notifPostId) {
+                    console.log('[RADAR] Silenciando notificação do post sendo visto:', notifPostId);
+                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                    return;
                 }
-                sessionStorage.setItem('fenda_ultimo_aviso', data.total);
-                badge.innerText = data.total;
-                badge.style.display = data.total > 0 ? 'flex' : 'none';
+
+                // Nova notificação de outro contexto → dispara
+                const titulo = 'Nova interação!';
+                const mensagem = data.ultima.mensagem || 'Alguém interagiu com você.';
+                const link = data.ultima.post_id ? '/comentarios-post.php?id=' + data.ultima.post_id : '/notificacoes.php';
+
+                if (typeof abrirPipNotificacao === 'function') {
+                    abrirPipNotificacao(titulo, mensagem, link);
+                } else {
+                    mostrarPopup(titulo + ' ' + mensagem);
+                }
             }
+
+            sessionStorage.setItem('fenda_ultimo_aviso', data.total);
         })
         .catch(err => console.warn("[RADAR] Erro:", err));
 };

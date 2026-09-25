@@ -54,7 +54,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
     <meta name="theme-color" content="#1a1a2e">
     <meta name="description" content="A Fenda - Spotted Universitário da UNIFEV. Compartilhe ideias, comentários e interaja com a comunidade de forma anônima ou pública.">
     <meta name="keywords" content="spotted, unifev, spotted universitário, fenda, comunidade, votuporanga">

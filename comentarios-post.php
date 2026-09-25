@@ -1062,6 +1062,164 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
         verificarConteudo();
 
+                // ============================================================
+        // 🔥 IARA – 2026-09-25 (auditoria v5.0)
+        // POLLING DE COMENTÁRIOS EM TEMPO REAL (estilo WhatsApp)
+        //
+        // - A cada 4s pergunta ao servidor: tem comentário novo?
+        // - Pausa quando: aba em background, modal aberto, swipe, gaveta
+        // - Insere no DOM sem roubar foco do textarea
+        // - Rola suave só se o usuário já está no final da lista
+        //
+        // 🐚 IARA – 2026-09-25 (v2 – fix "infernalização")
+        //    Registra em sessionStorage que o post atual está sendo visto.
+        //    O atualizarContadorAlertas (fenda-main.js) lê essa flag e
+        //    silencia o som/PiP para notificações DO MESMO POST (evita
+        //    dupla sensação: polling mostra na tela + radar toca som).
+        // ============================================================
+        (function inicializarPollingComentarios() {
+            const listaComentarios = document.querySelector('.lista-comentarios-social');
+            if (!listaComentarios) return;
+
+            const POST_ID = <?php echo (int)$id; ?>;
+            const INTERVALO_MS = 4000;
+            const MAX_ULTIMO_ID = 9999999999;
+
+            // 🔥 Marca o post atual como "sendo visto" (silencia radar)
+            sessionStorage.setItem('fenda_post_sendo_visto', String(POST_ID));
+
+            // Limpa ao sair da página
+            window.addEventListener('beforeunload', () => {
+                const atual = parseInt(sessionStorage.getItem('fenda_post_sendo_visto')) || 0;
+                if (atual === POST_ID) {
+                    sessionStorage.removeItem('fenda_post_sendo_visto');
+                }
+            });
+
+            // Descobre o último ID já renderizado
+            let ultimoId = 0;
+            const itens = listaComentarios.querySelectorAll('.comentario-item');
+            itens.forEach(el => {
+                const match = el.id && el.id.match(/^comentario-(\d+)$/);
+                if (match) {
+                    const num = parseInt(match[1], 10);
+                    if (!isNaN(num) && num > ultimoId) ultimoId = num;
+                }
+            });
+
+            console.log('[POLLING] Iniciado. Post:', POST_ID, '| Último ID:', ultimoId);
+
+            let intervaloAtivo = null;
+            let abortAtual = null;
+
+            function contextoEstaOk() {
+                if (document.hidden) return false;
+                if (document.body.classList.contains('modal-aberto')) return false;
+                if (document.body.classList.contains('modo-swipe-ativo')) return false;
+                const gaveta = document.getElementById('gaveta-opcoes');
+                if (gaveta && gaveta.style.display === 'flex') return false;
+                return true;
+            }
+
+            function buscarNovos() {
+                if (!contextoEstaOk()) return;
+
+                if (abortAtual) abortAtual.abort();
+                abortAtual = new AbortController();
+
+                const url = `includes/comentarios-novos.php?id_mensagem=${POST_ID}&ultimo_id=${ultimoId}&_=${Date.now()}`;
+
+                fetch(url, {
+                    signal: abortAtual.signal,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    if (!data || data.status !== 'success') return;
+                    if (data.post_inativo) {
+                        console.log('[POLLING] Post foi encerrado. Parando polling.');
+                        pararPolling();
+                        return;
+                    }
+                    if (!data.novos || data.novos.length === 0) return;
+
+                    console.log('[POLLING] ' + data.novos.length + ' comentário(s) novo(s).');
+
+                    // Detecta se o usuário está no final da lista (para rolar suave)
+                    const main = document.querySelector('.lista-scrollavel');
+                    const pertoDoFim = main
+                        ? (main.scrollTop + main.clientHeight) >= (main.scrollHeight - 120)
+                        : true;
+
+                    // Remove mensagem "sem-comentarios" se existir
+                    const semComentarios = listaComentarios.querySelector('.sem-comentarios');
+                    if (semComentarios) semComentarios.remove();
+
+                    // Insere cada novo comentário
+                    data.novos.forEach(novo => {
+                        // Segurança: evita duplicata se o ID já existe no DOM
+                        if (document.getElementById('comentario-' + novo.id)) return;
+                        listaComentarios.insertAdjacentHTML('beforeend', novo.html);
+                    });
+
+                    ultimoId = data.ultimo_id;
+
+                    // Atualiza lightbox (pra imagens novas)
+                    if (typeof initLightbox === 'function') initLightbox();
+
+                    // Scroll suave apenas se já estava no fim
+                    if (pertoDoFim && main) {
+                        const ultimoEl = listaComentarios.lastElementChild;
+                        if (ultimoEl) {
+                            ultimoEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                })
+                .catch(err => {
+                    if (err.name === 'AbortError') return;
+                    console.warn('[POLLING] Erro:', err.message);
+                });
+            }
+
+            function pararPolling() {
+                if (intervaloAtivo) {
+                    clearInterval(intervaloAtivo);
+                    intervaloAtivo = null;
+                }
+            }
+
+            function iniciarPolling() {
+                if (intervaloAtivo) return;
+                intervaloAtivo = setInterval(buscarNovos, INTERVALO_MS);
+                // Primeira chamada imediata (caso alguém tenha postado entre o render e o JS carregar)
+                setTimeout(buscarNovos, 500);
+            }
+
+            // Inicia
+            iniciarPolling();
+
+            // Pausa/retoma baseado em visibilidade
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    pararPolling();
+                } else {
+                    iniciarPolling();
+                    buscarNovos();
+                }
+            });
+
+            // Expor função pra debug manual no console
+            window._pollingComentarios = {
+                buscarAgora: buscarNovos,
+                parar: pararPolling,
+                iniciar: iniciarPolling,
+                get ultimoId() { return ultimoId; }
+            };
+        })();
+
     <?php endif; ?>
 
     // ============================================================

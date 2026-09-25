@@ -1,5 +1,14 @@
 // fenda-mencoes.js - Versão consolidada com Autocomplete + Contador
-window.timerBusca = window.timerBusca || null; // Evita redeclaração
+// 🐚 IARA – 2026-09-25 (auditoria v5.0)
+//    - Lista flutuante agora posiciona ACIMA do input quando não tem
+//      espaço embaixo (evita ser coberta pelo teclado mobile).
+//    - Removido window.scrollY/scrollX do cálculo (position: fixed
+//      é relativo ao viewport, não ao documento).
+//    - Usa visualViewport.height pra medir o espaço "visível" real
+//      (considera teclado aberto).
+
+window.timerBusca = window.timerBusca || null;
+
 document.addEventListener('input', (e) => {
     if (e.target.tagName.toLowerCase() === 'textarea') {
         const campo = e.target;
@@ -12,45 +21,44 @@ document.addEventListener('input', (e) => {
             contador.textContent = restante;
             contador.style.color = restante < 50 ? '#fa2f2f' : '#ffffff';
         }
-        
+
         // 2. Autocomplete de @ com Debounce (os 200ms)
         clearTimeout(timerBusca);
         timerBusca = setTimeout(() => {
             const textoAteCursor = campo.value.substring(0, campo.selectionStart);
             const match = textoAteCursor.match(/@(\w*)$/);
-            
+
             if (match) {
                 mostrarSugestoes(match[1], campo);
             } else {
                 esconderSugestoes();
             }
-        }, 200); 
+        }, 200);
     }
 });
 
-// --- Funções de Suporte (As mesmas que você criou) ---
+// --- Funções de Suporte ---
 
 function mostrarSugestoes(termo, campo) {
     fetch('buscar-mencoes.php?q=' + encodeURIComponent(termo))
-    .then(response => response.text())
-    .then(texto => {
-        if (!texto || texto.trim() === "") return;
+        .then(response => response.text())
+        .then(texto => {
+            if (!texto || texto.trim() === "") return;
 
-        try {
-            const data = JSON.parse(texto);
-            if (data.length > 0) {
-                // CORRIGIDO: Agora chama o nome real da função estruturada abaixo
-                renderizarLista(data, campo); 
-            } else {
-                esconderSugestoes();
+            try {
+                const data = JSON.parse(texto);
+                if (data.length > 0) {
+                    renderizarLista(data, campo);
+                } else {
+                    esconderSugestoes();
+                }
+            } catch (e) {
+                console.warn("Resposta não é JSON válido, ignorando...");
             }
-        } catch (e) {
-            console.warn("Resposta não é JSON válido, ignorando...");
-        }
-    })
-    .catch(error => {
-        console.error('Erro na conexão:', error);
-    });
+        })
+        .catch(error => {
+            console.error('Erro na conexão:', error);
+        });
 }
 
 function renderizarLista(usuarios, campo) {
@@ -63,17 +71,19 @@ function renderizarLista(usuarios, campo) {
     }
 
     const isModal = campo.closest('.form-container') !== null;
-    divLista.classList.toggle('modal-theme', isModal); 
+    divLista.classList.toggle('modal-theme', isModal);
 
     divLista.innerHTML = '';
     const rect = campo.getBoundingClientRect();
-    
-    divLista.style.top = (rect.bottom + window.scrollY + 5) + 'px';
-    divLista.style.left = (rect.left + window.scrollX) + 'px';
+
+    // 🔥 IARA: primeiro renderiza vazio pra medir a altura
+    divLista.style.visibility = 'hidden';
     divLista.style.display = 'block';
+    divLista.style.top = '0px';
+    divLista.style.left = '0px';
 
     usuarios.forEach(user => {
-        let item = document.createElement('div');
+        const item = document.createElement('div');
         item.textContent = '@' + user;
         item.onclick = (e) => {
             e.stopPropagation();
@@ -83,6 +93,41 @@ function renderizarLista(usuarios, campo) {
         };
         divLista.appendChild(item);
     });
+
+    // 🔥 IARA: medir depois de renderizar
+    const listHeight = divLista.offsetHeight;
+    const listWidth = divLista.offsetWidth || 200;
+
+    // 🔥 IARA: usar visualViewport (considera teclado aberto no mobile)
+    const vvHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+
+    // Espaços disponíveis em cada direção
+    const spaceBelow = vvHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    const GAP = 5;
+
+    // Decisão: cabe embaixo? Se sim, usa. Senão, usa cima (se couber).
+    let top;
+    if (spaceBelow >= listHeight + GAP) {
+        top = rect.bottom + GAP;
+    } else if (spaceAbove >= listHeight + GAP) {
+        top = rect.top - listHeight - GAP;
+    } else {
+        // Não cabe em nenhum lado — usa o lado com mais espaço
+        top = (spaceBelow >= spaceAbove) ? (vvHeight - listHeight - GAP) : GAP;
+    }
+
+    // Horizontal: alinha com o input, mas não deixa vazar da tela
+    let left = rect.left;
+    if (left + listWidth > window.innerWidth - 10) {
+        left = window.innerWidth - listWidth - 10;
+    }
+    if (left < 10) left = 10;
+
+    // 🔥 IMPORTANTE: position:fixed = NÃO somar scrollY/scrollX
+    divLista.style.top = top + 'px';
+    divLista.style.left = left + 'px';
+    divLista.style.visibility = 'visible';
 }
 
 function esconderSugestoes() {
@@ -105,6 +150,3 @@ window.addEventListener('scroll', function() {
         esconderSugestoes();
     }
 }, true);
-
-
-

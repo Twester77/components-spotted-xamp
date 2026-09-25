@@ -217,7 +217,9 @@ if (strpos($relative, 'includes/') === 0) {
         'includes/checar-notificacoes.php',
         'includes/reagir.php',
         'includes/comunidade-actions.php',
+        'includes/comentarios-novos.php',   // 🔥 ADICIONADO endpoint novo de comentarios
     ];
+    
     if (!in_array($relative, $endpoints_publicos, true)) {
         responder404($path);
     }
