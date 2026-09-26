@@ -535,7 +535,7 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     background: rgba(255, 255, 255, 0.192);
     border-left-style: solid !important;
     max-width: 150px;
-    max-width: clamp(15cqi, 18vw, 50cqi);
+    max-width: clamp(15cqi, 25vw, 50cqi);
 
 }
 
@@ -634,14 +634,6 @@ span.category-tag {
     background: rgba(46, 204, 113, 0.05);
 }
 
-
-/* --- CONTAINER PRINCIPAL --- */
-.container-pilulas-reacoes {
-    display: flex;
-    gap: 10px;
-    gap: clamp(8px, 2cqi, 16px);
-    padding: 15px 0;
-}
 
 /* --- CONTAINER PRINCIPAL --- */
 .container-pilulas-reacoes {

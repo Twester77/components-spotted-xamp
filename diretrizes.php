@@ -38,11 +38,11 @@ include 'includes/bolhas.php';
     <article style="color: #ebdc0fee; color: oklch(0.8788 0.1842 104.51 / 93.3%); font-size: 16px; text-align: left; justify-content: center; margin-bottom: 10px; margin-top: 30px; line-height: 1.6; letter-spacing: 1px; "> 
        
        <h3> 1. Natureza e Vínculo Institucional</h3>
-       <p>O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institutional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.</p>
+       <p>O site "A Fenda - Spotted Universitário" é uma plataforma independente gerida por alunos/terceiros. Fica expressamente declarado que não existe qualquer vínculo administrativo, jurídico ou institucional com o Centro Universitário de Votuporanga (UNIFEV). O uso do nome da instituição ( UNIFEV ) visa apenas a identificação geográfica/comunitária do público-alvo, não configurando uso comercial indevido da mesma marca.</p>
        <p>Toda e qualquer opinião expressa é de inteira responsabilidade de quem a publicou.</p>
        
        <h3> 2. Elegibilidade e sua Veracidade (Maioridade)</h3>
-       <p>Acesando e interagir com a plataforma, o usuário declara:</p>
+       <p>Ao acessar e interagir com a plataforma, o usuário declara:</p>
        <p>Ser maior de 18 anos: O ambiente pode conter discussões de cunho adulto ou voltadas à vida universitária madura.</p>
        <p>Capacidade Civil: O usuário afirma estar em pleno gozo de suas capacidades para assumir responsabilidades civis e penais sobre suas publicações.</p>
        
@@ -50,7 +50,7 @@ include 'includes/bolhas.php';
        <p>Para garantir a segurança dos alunos:</p>
        <p>Proibição de Dados Acadêmicos: É estritamente proibida a divulgação de RA (Registro Acadêmico), CPF, número de celular pessoal ou endereços residenciais sem autorização expressa da pessoa citada.</p>
        <p>* Sigilo de Identidade: A plataforma se compromete com o anonimato nas ferramentas "Mensagem Anônima", porém, cooperará com autoridades judiciais caso haja crimes de calúnia, injúria ou difamação, conforme a legislação brasileira * . </p>
-       <p> A administração reserva-se o direito de remover, sem aviso prévio, qualquer mensagem anônima que contenha ataques diretos a honra, exposição de RAs ou dados privados, visando manter a integridade da comunidade universitária. </p>
+       <p> A administração reserva-se o direito de remover, sem aviso prévio, qualquer mensagem anônima que contenha ataques diretos à honra, exposição de RAs ou dados privados, visando manter a integridade da comunidade universitária. </p>
        <p><strong> * Os registros de acesso (IP, data e hora) serão mantidos por 180 dias, conforme exigido pelo Art. 15 da Lei 12.965/14 (Marco Civil da Internet)*. </strong></p>
        
        <h3> 4. Código de Conduta e Crimes Virtuais</h3>

@@ -17,10 +17,24 @@
 //    Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
 // 🐚 ÍRIS – 2026-08-28
 //    Adicionada rota para aba "sessoes" usando motor-sessoes.php.
+//
+// 🐚 MARESIA – 2026-09-25 (Sprint 1, item 3/7)
+//    - Defesa em profundidade contra vazamento de display_errors. As abas
+//      da Central incluem arquivos-filhos (motor-feed.php, motor-notificacoes.php,
+//      etc.). Se algum deles tentar sobrescrever a config de produção do
+//      conexao.php via `ini_set('display_errors', 1)`, este roteador
+//      reafirma a config correta para o ambiente. Respeita o local
+//      (onde display_errors = 1 é útil pra debugar).
 
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
 require_once __DIR__ . '/includes/upload_engine.php';
+
+// 🐚 MARESIA – 2026-09-25: reafirma config após os includes.
+if (!empty($is_real_production)) {
+    ini_set('display_errors', 0);
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+}
 
 // ============================================================
 // 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
@@ -28,7 +42,7 @@ require_once __DIR__ . '/includes/upload_engine.php';
 if (isset($_GET['notif_id'])) {
     $notif_id = (int)$_GET['notif_id'];
     $user_id = $_SESSION['usuario_id'] ?? 0;
-    
+
     error_log("[MOTOR-CENTRAL] notif_id recebido: $notif_id, user_id: $user_id");
 
     if ($user_id > 0) {
@@ -42,7 +56,7 @@ if (isset($_GET['notif_id'])) {
 
         if ($row) {
             error_log("[MOTOR-CENTRAL] Notificação encontrada: ID {$row['id']}, lida: {$row['lida']}");
-            
+
             // Se não estiver lida, marca como lida
             if ($row['lida'] == 0) {
                 $stmt_update = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
@@ -105,10 +119,10 @@ if ($aba === 'comunidades') {
     echo '<div class="central-comunidades-grid">';
     while ($com = $res->fetch_assoc()) {
         $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
-        
+
         // 🔥 CAPA DA COMUNIDADE COM FALLBACK CENTRALIZADO
         $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
-        
+
         echo '<div class="central-comunidade-card">';
         echo '  <a href="comunidade.php?id=' . $com['id'] . '" style="text-decoration:none; color:inherit;">';
         echo '    <img src="' . htmlspecialchars($capa_exibicao) . '" alt="' . htmlspecialchars($com['nome']) . '" loading="lazy" onerror="this.src=\'uploads/ui/default_comunidade.webp\'">';
@@ -155,10 +169,10 @@ if ($aba === 'depoimentos') {
     while ($dep = $res->fetch_assoc()) {
         // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
         $avatar = obterUrlComFallback($dep['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
-        
+
         // 🔥 DATA DO DEPOIMENTO AGORA COM FUSO BRASILEIRO
         $data = exibirDataHoraBrasil($dep['data_criacao'], 'd/m/Y H:i');
-        
+
         $mensagem = nl2br(htmlspecialchars($dep['mensagem']));
 
         echo '<div class="central-depoimento-pendente-item" data-id="' . $dep['id'] . '">';

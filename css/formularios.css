@@ -1214,7 +1214,7 @@ select:focus {
 
 .main-perfil-container-publico.vibe-ads p {
     color: var(--cor-aura);
-    color: oklch(from var(--cor-aura) 0.92 0.03 h);
+    color: oklch(from var(--aura-user, #70cde4) 0.92 0.04 h);
 }
 
 
@@ -1940,15 +1940,6 @@ textarea[name="bio"] {
     border-radius: 12px;
     line-height: 1.5;
     resize: none;
-}
-
-
-.container,
-.login-form,
-form[action="confirma-login.php"] {
-    max-width: 500px;
-    margin: 0 auto;
-    width: 100%;
 }
 
 
@@ -3201,7 +3192,8 @@ form[action="confirma-login.php"] .input-group {
 }
 
 form[action="confirma-login.php"] input[type="email"],
-form[action="confirma-login.php"] input[type="password"] {
+form[action="confirma-login.php"] input[type="password"],
+input:-internal-autofill-selected {
     width: 100%;
     background: rgba(255, 255, 255, 0.08);
     background: oklch(0.96 0 0 / 0.08);
@@ -3219,7 +3211,8 @@ form[action="confirma-login.php"] input[type="password"] {
 }
 
 /* 4. Efeito de Foco */
-form[action="confirma-login.php"] input:focus {
+form[action="confirma-login.php"] input:focus
+ {
     border-color: #ddbe0e;
     background: rgba(255, 255, 255, 0.027);
     box-shadow: 0 0 8px rgba(221, 200, 14, 0.3);

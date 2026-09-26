@@ -14,7 +14,7 @@
    --------------------------------------------------------------- */
 
 :root {
-    --hacker-green:oklch(0.861283 0.293072 142.4953);
+    --hacker-green:oklch(0.86 0.19 142);
     --hacker-bg: oklch(0 0 0);
     --hacker-font: 'Courier New', 'Courier', monospace;
     --boot-duration: 3.5s; /* Ajuste para tornar o boot mais lento */
@@ -104,7 +104,7 @@ body.hacker-mode::after {
 /* ---------------------------------------------------------------
    4. SCROLLBAR ESTILO TERMINAL
    --------------------------------------------------------------- */
-body.hacker-mode { scrollbar-width: 2px ; scrollbar-color:#000000 #00fd00; ; border-radius: 0; 
+body.hacker-mode { scrollbar-width: 2px ; scrollbar-color:#000000 #00fd00; border-radius: 0; 
 }
 body.hacker-mode::-webkit-scrollbar {  width: 2px ; }
 body.hacker-mode::-webkit-scrollbar-track { background: #000 ; }
@@ -502,7 +502,7 @@ body.hacker-mode .capa-wrapper,
 body.hacker-mode .avatar-central,
 body.hacker-mode .comentario-media-wrapper-grid,
 body.hacker-mode .avatar-wrapper,
-body.hacker-mode .header-miniatura .miniatura-avatar
+body.hacker-mode .header-miniatura .miniatura-avatar,
 body.hacker-mode .link-do-avatar,
 body.hacker-mode .insignia-atletica-link {
     border-radius: 0;

@@ -8,6 +8,12 @@
 //      sobreviva entre requests serverless. Sem isso, o token do HTML
 //      nunca batia com o token da $_SESSION no próximo POST, causando
 //      403 em avaliações, depoimentos, exclusão de comentário e sessões.
+//
+// 🐚 MARESIA – 2026-09-25 (v1.5 – Sprint 1, item 2/7)
+//    - Substituído $_SERVER['REMOTE_ADDR'] por obterIPReal().
+//      Em serverless da Vercel, REMOTE_ADDR aponta pro proxy interno
+//      (127.0.0.1 / 10.x), então todo registro de sessão caía no mesmo IP.
+//      obterIPReal() lê X-Forwarded-For / CF-Connecting-IP / X-Real-IP.
 
 include_once __DIR__ . '/conexao.php';
 include_once __DIR__ . '/fenda_debug.php';
@@ -118,8 +124,9 @@ $session_token = bin2hex(random_bytes(32)); // 64 caracteres hex
 // ============================================================
 // 5. REGISTRA A SESSÃO NA TABELA `sessoes_ativas`
 // ============================================================
+// 🐚 MARESIA – 2026-09-25: IP via obterIPReal() em vez de REMOTE_ADDR.
 $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-$ip = $_SERVER['REMOTE_ADDR'] ?? null;
+$ip = function_exists('obterIPReal') ? obterIPReal() : ($_SERVER['REMOTE_ADDR'] ?? null);
 
 $stmt_insert = $conn->prepare("
     INSERT INTO sessoes_ativas (usuario_id, token, user_agent, ip, ativo, data_criacao, ultima_atividade)
@@ -129,7 +136,7 @@ $stmt_insert->bind_param("isss", $usuario['id'], $session_token, $user_agent, $i
 $stmt_insert->execute();
 $stmt_insert->close();
 
-fenda_log('🟢 Sessão ativa registrada para usuário ' . $usuario['id'] . ' com token ' . substr($session_token, 0, 16) . '...');
+fenda_log('🟢 Sessão ativa registrada para usuário ' . $usuario['id'] . ' com token ' . substr($session_token, 0, 16) . '... | IP: ' . $ip);
 
 // ============================================================
 // 6. CRIA COOKIE PERSISTENTE COM O TOKEN NO PAYLOAD

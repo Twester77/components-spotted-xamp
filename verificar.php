@@ -23,10 +23,13 @@ if (isset($_GET['token'])) {
             $status = "erro";
         }
     } else {
-        // Apenas checa se o token existe no banco para exibir a tela
-        $sql_check = "SELECT id, nome FROM usuarios WHERE token = '$token'";
+        // 🐚 MARESIA – 2026-09-25 (Sprint 1, item 1/7)
+        //    - Adicionado AND ativo = 0 na checagem do GET. Antes, um link
+        //      de conta já ativada ainda mostrava a tela "Quase lá!". Agora
+        //      o GET respeita o estado real da conta, igual ao POST.
+        $sql_check = "SELECT id, nome FROM usuarios WHERE token = '$token' AND ativo = 0";
         $res_check = mysqli_query($conn, $sql_check);
-        
+
         if (mysqli_num_rows($res_check) > 0) {
             $status = "pronto";
         } else {

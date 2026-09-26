@@ -57,7 +57,7 @@ include 'includes/navbar.php';
 
             <div style="text-align: center;">
                 <a href="https://www.instagram.com/atleticaenfermagemvotu/" target="_blank" class="atletica-item" aria-label="Siga a Atlética de Enfermagem no Instagram">
-                    <img src="badges/enfermagem.webp" class="insignia-atletica-link" title="Siga a Atlética de Enfermagem " alt="Instagram da Atlética de Agronomia" >
+                    <img src="badges/enfermagem.webp" class="insignia-atletica-link" title="Siga a Atlética de Enfermagem " alt="Instagram da Atlética de Enfermagem" >
                 </a>
                 <p style="color: #ff8c00; font-size: 0.9rem; margin-top: 10px; font-weight: 800;">ENFERMAGEM</p>
             </div>

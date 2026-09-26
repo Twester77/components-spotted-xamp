@@ -165,7 +165,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     -webkit-font-smoothing: antialiased;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-content-visibility: auto;
     content-visibility: auto;
     touch-action: none;
     -webkit-user-select: none ;
@@ -485,12 +484,6 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     animation: slideDown-filtro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-@media (orientation: landscape) and (max-height: 500px) {
-    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        max-height: 55vh;
-    }
-}
-
 /* Animação do ângulo da motosserra */
 @keyframes rodarMotoserraSwipe {
     to {
@@ -594,6 +587,10 @@ body.modo-swipe-ativo .container-feed article {
 @media (orientation: landscape) and (max-height: 500px) {
     .container-feed.feed-empilhado {
         margin-top: 0 ;
+    }
+
+     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
+        max-height: 55vh;
     }
 }
 

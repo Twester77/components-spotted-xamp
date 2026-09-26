@@ -1565,6 +1565,7 @@
     }
 }
 
+
     @media (min-width: 769px) {
     .main-perfil-container-publico.vibe-ads::after {
         background-color: var(--aura-user, #70cde4);

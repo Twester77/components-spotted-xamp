@@ -1155,7 +1155,8 @@
 }
 
 .bt-avatar-item span {
-    font-size: clamp(0.65rem, 0.8vw, 0.95rem);
+    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
     color: var(--bt-texto-cinza);
     color: oklch(0.75 0 0);
     position: relative;
