@@ -215,7 +215,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 #btn-load-more {
     transition: transform 0.2s ease, background 0.3s ease;
     font-size: 0.8rem;
-    font-size: clamp(0.8rem, 1.85vw, 1rem);
+    font-size: clamp(0.75rem, 1.85vw, 1rem);
     -webkit-user-select: none;
     user-select: none;
 }
@@ -529,13 +529,13 @@ span.category-tag {
     display: inline-flex;
     border: none;
     font-size: 0.85rem;
-    font-size: clamp(0.8rem, 3.2cqi, 1.3rem);
+    font-size: clamp(0.8rem, 2.5cqi, 1.3rem);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     hyphens: auto;
     vertical-align: middle;
-    opacity: 0.7;
+    opacity: 0.75;
 }
 
 .post-time {
@@ -543,8 +543,8 @@ span.category-tag {
     color: #ffff;
     color: oklch(95.815% 0.00011 271.152);
     margin-left: auto;
-    font-size: 0.8rem;
-    font-size: clamp(0.75rem, 3cqi, 1.05rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2.5cqi, 1.1rem);
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.75;
@@ -575,7 +575,7 @@ span.category-tag {
     bottom: 100%;
     background: #252542;
     padding: 6px 10px;
-    padding: clamp(4px, 1cqi, 10px) clamp(10px, 2cqi, 16px);
+    padding: clamp(4px, 0.8cqi, 10px) clamp(10px, 1.5cqi, 16px);
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     z-index: 9999 !important;
@@ -588,18 +588,44 @@ span.category-tag {
     will-change: transform, opacity;
 }
 
+/* Grid das reações: até quatro colunas, sem altura reservada quando vazio */
 .reacoes-gravadas {
-    display: flex;
-    flex-shrink: 0;
-    min-width: 26px;
-    min-width: clamp(5px, 2.5cqi, 40px);
-    min-height: 26px;
-    min-height: clamp(5px, 2.5cqi, 40px);
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    justify-content: center;
-    margin: 6px auto;
-    align-content: center;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(28px, auto);
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 6px 0;
+    overflow: hidden;
+    align-content: start;
+}
+
+/* Cada pílula fica no próprio espaço; contagens longas são truncadas */
+.reacoes-gravadas .reacao-item {
+    display: block;
+    justify-self: start;
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Fallback para navegadores sem :has(): oculta container realmente vazio */
+.reacoes-gravadas:empty {
+    display: none;
+}
+
+/* Navegadores com :has(): oculta também se não houver pílulas */
+@supports selector(:has(*)) {
+    .reacoes-gravadas:not(:has(.reacao-item)) {
+        display: none;
+    }
 }
 
 .reacao-wrapper {
@@ -645,7 +671,7 @@ span.category-tag {
     background: rgba(169, 197, 218, 0.15);
     background: oklch(0.85 0.04 282.05 / 0.15);
     padding: 6px;
-    transition: background 0.2s ease, font-size 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), padding 0.2s ease;
+    transition: background 0.2s ease, font-size 0.2s cubic-bezier(0.34, 1.56, 0.5, 1), padding 0.2s ease;
 }
 
 .reacao-item {
@@ -657,17 +683,16 @@ span.category-tag {
     align-content: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.08);
-    /* 🔥 Padding mais enxuto pra aguentar o cenário extremo */
-    padding: 3px 5px;
-    padding: clamp(2px, 0.8cqi, 6px) clamp(4px, 1.2cqi, 8px);
-    border-radius: 8px;
-    font-size: 0.8rem;
+    /* Padding enxuto para contagens grandes */
+    padding: 3px 6px;
+    padding: 0.3em 0.55em;
+    font-size: clamp(0.82rem, calc(0.76rem + 0.25cqi), 1rem);
     font-size: clamp(0.75em, 3.5cqi, 1.2em);
+    border-radius: 8px;
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
     color: oklch(94.912% 0.00011 271.152);
     cursor: pointer;
-    /* 🔥 Margin mais enxuta entre pílulas */
     margin: 0 3px;
     transition: transform 0.2s ease, background 0.2s ease;
     -webkit-user-select: none;
@@ -730,6 +755,7 @@ span.category-tag {
     pointer-events: auto !important;
 }
 
+
 /* ============================================================
    12. AVATAR E MENÇÕES
    ============================================================ */
@@ -757,7 +783,7 @@ span.category-tag {
     margin-bottom: auto;
     font-weight: bold;
     align-items: center;
-    justify-content: space-between;
+    justify-content: left;
 }
 
 .user-anonimo {
@@ -1052,3 +1078,6 @@ span.category-tag {
     justify-content: center;
     background: transparent;
 }
+
+
+

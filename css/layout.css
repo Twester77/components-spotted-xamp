@@ -8,12 +8,14 @@ header {
     border-radius: 0 0 10px 10px;
     z-index: 9994;
     display: flex;
-    max-height: 100px;
+    flex: 0 1 auto; 
+    /* o primeiro encolhe com flex grow 0 o segundo ocupa espaço pela direita 
+    empurrando o primeiro á esquerda se não houver espaço */
     /* Camada 2: O cálculo matemático preciso baseado no crescimento do H1 */
     /* 2. REMOVA o 'max-height' fixo ou o 'height' que limitam o contêiner */
     height: auto;
-    justify-content: space-between;
-    /* Empurra o menu pra esquerda e o perfil pra direita */
+    justify-content:center;
+    /* Centraliza os dois se houver espaço*/
     align-items: center;
     /* 3. O PADDING EM 'em' CRIA A MAGIA DINÂMICA: */
     /* Conforme a fonte estica, o padding cresce junto na mesma proporção. */
@@ -1529,11 +1531,12 @@ form[action="confirma-login.php"] input[type="password"] {
     color: #fff; 
     color: oklch(100% 0.00011 271.152);
     margin: 25px auto;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
 }
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
 h2.titulo-home {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     font-size: clamp(1.4rem, 1.5vw, 2rem);
     text-align: center;
     margin: 30px auto;

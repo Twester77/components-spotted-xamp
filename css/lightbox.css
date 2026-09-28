@@ -28,7 +28,7 @@
     max-width: 500px;
     max-width: clamp(300px, 90cqi, 600px);
     max-height: 80vh;
-    max-height: clamp(250px, 85dvh, 600px);
+    max-height: clamp(250px, 85dvh, 550px);
     width: 100%;
     background: rgba(25, 25, 38, 0.84);
     background: oklch(21.985% 0.02532 284.121 / 0.84);
@@ -326,14 +326,14 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     background: rgba(255, 255, 255, 0.05);
     background: oklch(100% 0.00011 271.152 / 0.05);
     padding: 4px 10px;
-    padding:  clamp(4px, 1cqi, 8px) clamp(10px, 1.5cqi, 16px);
+    padding: clamp(4px, 1cqi, 8px) clamp(10px, 1.5cqi, 16px);
     min-width: 30px;
     min-width: clamp(28px, 2vw, 42px);
     min-height: 30px;
     min-height: clamp(28px, 5vw, 42px);
     border-radius: 20px;
-    font-size: 0.9rem;
-    font-size: clamp(0.7em, 4.5cqi, 1.1em);
+    font-size: 0.85rem;
+    font-size: clamp(0.65em, 4.5cqi, 1.1em);
     color: #ffffffe7;
     color: oklch(100% 0.00011 271.152 / 0.904);
     border: 1px solid rgba(255, 255, 255, 0.05);

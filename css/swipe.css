@@ -592,8 +592,8 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     letter-spacing: 0.2em;
 
     background: linear-gradient(135deg,
-        rgba(56, 189, 248, 0.92) 0%,
-        rgba(56, 189, 248, 0.98) 50%,
+        rgba(56, 191, 248, 0.70) 0%,
+        rgba(56, 189, 248, 0.85) 50%,
         rgba(56, 189, 248, 1) 100%);
 
     border-radius: 100px;
@@ -996,15 +996,15 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         --ls-pad-x: 12px;
         --ls-gap: 6px;
         --ls-radius: 6px;
-        --ls-avatar: 32px;
+        --ls-avatar: 40px;
         --ls-text-font: 0.82rem;
 
         --ls-pad-y: 0.6em;
         --ls-pad-x: 0.75em;
         --ls-gap: 0.35em;
         --ls-radius: clamp(6px, 2cqi, 14px);
-        --ls-avatar: clamp(30px, 7dvh, 50px);
-        --ls-text-font: clamp(0.72em, 2.2dvh, 1.1em);
+        --ls-avatar: clamp(36px, 7dvh, 50px);
+        --ls-text-font: clamp(0.75em, 2.2dvh, 1.1em);
 
         width: var(--card-width, 420px);
         max-width: min(var(--card-width, 640px), 680px);
@@ -1090,6 +1090,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         border-radius: 4px;
         display: flex;
         align-items: center;
+        place-self: center;
         justify-content: center;
     }
 
@@ -1215,6 +1216,348 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 }
 
+/* RESPONSIVIDADE PARA TELAS MAIORES*/
+
+/* Tablet e telas maiores: mídia e conteúdo lado a lado */
+@media (min-width: 600px) and (min-height: 601px) {
+
+    /* Navegadores modernos com suporte a :has() */
+    @supports selector(:has(*)) {
+
+        /* Card com mídia */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) {
+            display: grid;
+            grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
+            grid-template-rows: auto auto minmax(0, 1fr) auto;
+            column-gap: clamp(12px, 2vw, 20px);
+            row-gap: clamp(8px, 1.2vh, 14px);
+            align-items: center;
+            align-content: center;
+            box-sizing: border-box;
+            width: min(92vw, 800px);
+            max-width: min(92vw, 800px);
+            height: min(68vh, 520px);
+            height: min(68dvh, 520px);
+            min-height: 320px;
+            max-height: 82vh;
+            max-height: 82dvh;
+            overflow: hidden;
+        }
+
+        /* Faz os filhos do card-body participarem do grid do card */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .card-body {
+            display: contents;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .card-actions-ellipsis,
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .footer-links {
+            display: none;
+        }
+
+        /* Mídia centralizada na primeira coluna */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid,
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .container-img-post,
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .carrossel-wrapper {
+            grid-column: 1;
+            grid-row: 1 / -1;
+            align-self: center;
+            justify-self: center;
+            width: 100%;
+            height: auto;
+            min-width: 0;
+            min-height: 0;
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 1 / 1;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+            border-radius: clamp(6px, 1vw, 12px);
+        }
+
+        /* Grade padrão para mosaicos */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid {
+            display: grid;
+            width: 100%;
+            height: auto;
+            min-width: 0;
+            min-height: 0;
+            max-width: 100%;
+            max-height: 100%;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            grid-auto-rows: minmax(0, 1fr);
+            gap: clamp(4px, 0.7vw, 8px);
+            align-content: stretch;
+            justify-content: stretch;
+            place-items: stretch;
+            aspect-ratio: 1 / 1;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            background: transparent;
+        }
+
+        /* Uma imagem: célula quadrada centralizada */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr);
+            aspect-ratio: 1 / 1;
+        }
+
+        /* Duas imagens: lado a lado */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: minmax(0, 1fr);
+            aspect-ratio: 2 / 1;
+        }
+
+        /* Três imagens: uma maior e duas empilhadas */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            aspect-ratio: 1 / 1;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child)
+        .feed-anexo-item:first-child {
+            grid-column: 1;
+            grid-row: 1 / span 2;
+        }
+
+        /* Quatro imagens: mosaico 2 × 2 */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            aspect-ratio: 1 / 1;
+        }
+
+        /* Cinco ou mais: mosaico horizontal */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-rows: repeat(2, minmax(0, 1fr));
+            aspect-ratio: 2 / 1;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexos-grid:has(.feed-anexo-item:nth-child(5))
+        .feed-anexo-item:first-child {
+            grid-column: 1 / span 2;
+            grid-row: 1 / span 2;
+        }
+
+        /* Cada imagem fica centralizada na própria célula */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            aspect-ratio: auto;
+            background: #0a0a0a;
+            border-radius: clamp(4px, 0.6vw, 8px);
+        }
+
+        /* Mostra a imagem inteira sem distorcer ou cortar */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .feed-anexo-item img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .container-img-post img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .carrossel-item img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            margin: 0;
+            object-fit: contain;
+            object-position: center;
+            background: #0a0a0a;
+        }
+
+        /* Cabeçalho na coluna direita */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .card-header {
+            grid-column: 2;
+            grid-row: 1;
+            align-self: center;
+            min-width: 0;
+            margin: 0;
+        }
+
+        /* Autor na coluna direita, separado do texto pelo row-gap */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .user-info-post {
+            grid-column: 2;
+            grid-row: 2;
+            align-self: center;
+            min-width: 0;
+            margin: 0;
+        }
+
+        /* Texto começa no topo da área e não estica entre palavras */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .post-content {
+            grid-column: 2;
+            grid-row: 3;
+            align-self: start;
+            justify-self: stretch;
+            min-width: 0;
+            min-height: 0;
+            max-height: 100%;
+            margin: 0;
+            overflow: hidden;
+            text-align: left;
+            overflow-wrap: anywhere;
+            word-break: normal;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 6;
+            line-clamp: 6;
+        }
+
+        /* As reações ficam numa linha própria abaixo do texto */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .reacoes-gravadas {
+            grid-column: 2;
+            grid-row: 4;
+            align-self: center;
+            justify-self: start;
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(6px, 1vw, 10px);
+            min-width: 0;
+            margin: 0;
+        }
+
+        /* Card sem mídia: altura acompanha o texto, com limite e rolagem */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: clamp(8px, 1.2vh, 14px);
+            box-sizing: border-box;
+            width: min(92vw, 800px);
+            max-width: min(92vw, 800px);
+            height: auto;
+            min-height: 0;
+            max-height: 82vh;
+            max-height: 82dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper))
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 1.2vh, 14px);
+            min-width: 0;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper))
+        .post-content {
+            align-self: stretch;
+            min-width: 0;
+            max-height: min(45dvh, 18rem);
+            margin: 0;
+            overflow: auto;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    /* Fallback: navegadores sem suporte a :has() */
+    @supports not selector(:has(*)) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+            box-sizing: border-box;
+            width: min(92vw, 800px);
+            max-width: min(92vw, 800px);
+            max-height: 82vh;
+            overflow: auto;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexos-grid {
+            display: grid;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            min-height: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexo-item img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .container-img-post img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+    }
+}
+
+
 /* ============================================================
    18. OUTROS BREAKPOINTS DE LANDSCAPE
    ============================================================ */
@@ -1235,7 +1578,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 
     .spotted-card {
-        max-width: min(var(--card-width, 620px), 620px);
+        max-width: min(var(--card-width, 650px), 650px);
     }
 }
 

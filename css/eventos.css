@@ -26,7 +26,7 @@
     --bt-dourado-oklch: oklch(83.276% 0.17139 82.036);
     --bt-fundo-escuro: #0a0a0a;
     --bt-fundo-card: #1a1a2ee0;
-    --img-bg:rgba(255, 255, 255, 0);
+    --img-bg: rgba(255, 255, 255, 0);
     --bt-texto-claro: #eee;
     --bt-texto-cinza: #aaa;
     --bt-borda-sutil: rgba(255, 255, 255, 0.06);
@@ -37,7 +37,7 @@
     --bt-card-font-size: clamp(0.85rem, 1.5cqi, 1.4rem);
     --bt-titulo-size: clamp(1rem, 3cqi, 2rem);
     /* será sobrescrito pelo JS */
-    --bt-meta-size: clamp(0.75rem, 2.6cqi, 1.2rem);
+    --bt-meta-size: clamp(0.8em, 4.5cqi, 1.3em);
     /* será sobrescrito pelo JS */
     --bt-text-max-height: 80px;
     /* será sobrescrito pelo JS */
@@ -57,7 +57,8 @@
     max-width: 1600px;
     margin: 20px auto;
     padding: 0px 10px;
-    min-height: 70vh;
+    min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     box-sizing: border-box;
 }
@@ -66,20 +67,40 @@
    3. CONTAINER DOS CARDS (GRID + SWIPE ISOLADO)
    ================================================================ */
 
+
+#bt-container-eventos>div {
+    width: 100%;
+    box-sizing: border-box;
+    height: auto;
+}
+
 /* 🔥 Container padrão: GRID (sempre ativo, a menos que .bt-empilhado esteja presente) */
 #bt-container-eventos {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 25px;
     max-width: 1600px;
-    margin: 0 auto;
-    padding: 0;
+    margin: 15px auto;
+    padding: 10px;
     width: 100%;
     box-sizing: border-box;
     align-items: flex-start;
     background: transparent;
+    box-sizing: border-box;
     position: relative;
+    column-count: auto;
 }
+
+#bt-container-eventos article {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    margin: 20px auto;
+    top: auto;
+    left: auto;
+}
+
 
 /* ================================================================
    MODO SWIPE – ESTILO IDÊNTICO AO SWIPE.CSS (ADAPTADO)
@@ -143,11 +164,11 @@
     --swipe-rot: 0deg;
 
     /* 🔥 LARGURA DINÂMICA (CONTROLADA PELO JS) */
-    width: var(--bt-card-width, 280px) ;
-    max-width: var(--bt-card-width, 650px) ;
-    padding: var(--bt-card-padding, clamp(10px, 2cqi, 20px)) ;
-    font-size: var(--bt-card-font-size, clamp(0.85rem, 2.5cqi, 1.1rem)) ;
-    max-height: var(--bt-card-max-height, 600px) ;
+    width: var(--bt-card-width, 280px);
+    max-width: var(--bt-card-width, 650px);
+    padding: var(--bt-card-padding, clamp(10px, 2cqi, 20px));
+    font-size: var(--bt-card-font-size, clamp(0.85rem, 2.5cqi, 1.1rem));
+    max-height: var(--bt-card-max-height, 600px);
     height: auto;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -162,8 +183,8 @@
 /* 🔥 TRANSFORMS COM VARIÁVEIS (IGUAL AO FEED) */
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
     .modo-tinder-ativo #bt-container-eventos .bt-card {
-       transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot)) ;
-        transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot))) ;
+        transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot));
+        transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot)));
         transition: none;
     }
 }
@@ -217,14 +238,14 @@
 
 /*  EMPILHAMENTO VISUAL */
 .modo-tinder-ativo #bt-container-eventos .bt-card:first-child {
-    z-index: 100 ;
-    opacity: 1 ;
+    z-index: 100;
+    opacity: 1;
     pointer-events: auto;
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-card:not(:first-child) {
-    pointer-events: none ;
-    user-select: none ;
+    pointer-events: none;
+    user-select: none;
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-card:nth-child(2) {
@@ -266,18 +287,18 @@
 .modo-tinder-ativo #bt-container-eventos .bt-dragging {
     transition: none;
     will-change: transform, opacity;
-    z-index: 9999 ;
+    z-index: 9999;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
     -webkit-font-smoothing: antialiased;
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-dragging:hover {
-    box-shadow: none ;
-    border-color: rgba(255, 255, 255, 0.15) ;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.15);
     background: #1a1a2ed8;
 }
 
@@ -382,11 +403,10 @@
     display: flex;
     justify-content: center;
     align-content: center;
-    margin: 5px auto ;
+    margin: 5px auto;
     gap: 8px;
     width: 100%;
     position: relative
-
 }
 
 
@@ -418,20 +438,21 @@
 
 .modo-tinder-ativo .bt-controles {
     left: 50%;
-    transform: translate(-50%, 0); 
-    
+    transform: translate(-50%, 0);
+
     /* 3. Espaçamento controlado em relação ao header */
     margin-block: 15px;
     margin-block-end: 10px;
-    margin-inline: auto; /* Garante centralização perfeita no PC */
+    margin-inline: auto;
+    /* Garante centralização perfeita no PC */
     justify-content: safe center;
     align-items: center;
     width: 95%;
     z-index: 98;
-    background: #16162dc0 ;
+    background: #16162dc0;
     max-width: 800px;
     /* Evita colapsar e virar fita (seu bug anterior) */
-    min-height: clamp(60px, 15cqi, 180px); 
+    min-height: clamp(60px, 15cqi, 180px);
     max-height: calc(100dvh - var(--altura-estimada-header) - 30px);
     overflow: hidden;
     overflow-y: auto;
@@ -447,7 +468,7 @@
     font-weight: bold;
     flex-wrap: unset;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-     /* ════════════ CAMADAS DE POSICIONAMENTO EVOLUTIVO ════════════ */
+    /* ════════════ CAMADAS DE POSICIONAMENTO EVOLUTIVO ════════════ */
 
     /* [CAMADA 1] O seu clássico e estável de guerra (Pra nada quebrar de primeira) */
     top: 100px;
@@ -465,7 +486,8 @@
     /* e simplesmente amarra o topo da gaveta ao fundo físico do header, pixel por pixel! */
     @supports (top: anchor(any bottom)) {
         top: anchor(--ancora-header bottom);
-        margin-top: 10px; /* Controla o distanciamento da âncora de forma limpa */
+        margin-top: 10px;
+        /* Controla o distanciamento da âncora de forma limpa */
         transform: translate(-50%, 0);
     }
 }
@@ -496,7 +518,6 @@
     background: rgba(255, 255, 255, 0.1);
     background: oklch(1 0 0 / 0.1);
     border: 1px solid rgba(255, 255, 255, 0.5)
-
 }
 
 .modo-tinder-ativo .bt-btn-filtro:active {
@@ -506,7 +527,7 @@
 }
 
 
-.modo-tinder-ativo  .bt-gaveta-filtros {
+.modo-tinder-ativo .bt-gaveta-filtros {
     display: none;
     position: relative;
     z-index: 9994;
@@ -521,7 +542,7 @@
     width: 100%;
     max-width: 800px;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
- }
+}
 
 
 /*  ANIMAÇÃO DE ENTRADA DOS CARDS */
@@ -538,7 +559,7 @@
 }
 
 .modo-tinder-ativo .bt-card.swipe-distribuicao {
-    animation: btSwipeEntrada 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards!important;
+    animation: btSwipeEntrada 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
 }
 
 /*  FEEDBACK VISUAL DO SWIPE (flutuante) – mantido do original */
@@ -593,7 +614,7 @@
     background: oklch(0.23 0.03 250 / 0.6);
     border: 1px solid var(--bt-borda-sutil);
     border-radius: clamp(10px, 1.5vw, 16px);
-    padding: 10px ;
+    padding: 10px;
     padding: clamp(8px, 1.5vw, 20px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     display: flex;
@@ -766,9 +787,9 @@
     line-height: 1.35;
     width: 100%;
     /* 2. Suporte para navegadores antigos (Internet Explorer/Edge antigo) */
-     word-break: break-word; 
-     /* 3. Padrão moderno que substituiu o 'word-wrap' */
-    overflow-wrap: anywhere; 
+    word-break: break-word;
+    /* 3. Padrão moderno que substituiu o 'word-wrap' */
+    overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     line-clamp: 4;
@@ -781,7 +802,7 @@
     display: flex;
     gap: 10px;
     gap: clamp(10px, 1.5vw, 20px);
-    font-size: clamp(0.75rem, 1cqw, 0.9rem);
+    font-size: clamp(0.75rem, 1cqi, 0.95rem);
     color: var(--bt-texto-cinza);
     color: oklch(0.75 0 0);
     margin: 6px 0;
@@ -790,10 +811,11 @@
 }
 
 .bt-participacao span {
-    font-size: var(--bt-meta-size, clamp(0.7rem, 1cqi, 0.95rem));
+    font-size: 0.85rem;
+    font-size: var(--bt-meta-size, clamp(0.75rem, 1cqi, 0.95rem));
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
 }
 
 /* ================================================================
@@ -1154,6 +1176,8 @@
 }
 
 .bt-avatar-item img {
+    width: 40px;
+    height: 40px;
     width: clamp(38px, 6vw, 60px);
     height: clamp(38px, 6vw, 60px);
     border-radius: 50%;
@@ -1163,8 +1187,8 @@
 
 .bt-avatar-item span {
     font-size: 0.75rem;
-    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
-    color: var(--bt-texto-cinza);
+    font-size: clamp(0.75rem, 0.85vw, 0.95rem);
+    color: var(--bt-texto-cinza, #aeaeae );
     color: oklch(0.75 0 0);
     position: relative;
     display: flex;
@@ -1209,7 +1233,8 @@
 .bt-galeria-grid img {
     width: 100%;
     height: 100%;
-    justify-self: center; /* Centraliza a foto se a coluna do grid ficar maior que 300px */
+    justify-self: center;
+    /* Centraliza a foto se a coluna do grid ficar maior que 300px */
     aspect-ratio: 1/1;
     object-fit: cover;
     border-radius: 8px;
@@ -1227,7 +1252,8 @@
 
 .bt-galeria-grid img:hover {
     transform: scale(1.02);
-    cursor: pointer;        /* Transforma o mouse na mãozinha de clique */
+    cursor: pointer;
+    /* Transforma o mouse na mãozinha de clique */
 }
 
 /* ================================================================
@@ -1287,7 +1313,7 @@
     border-radius: 12px;
     padding: 10px 14px;
     margin-bottom: 15px;
-    border-left: 3px solid var(--bt-dourado,#ffbc00);
+    border-left: 3px solid var(--bt-dourado, #ffbc00);
     border-left: 3px solid oklch(83.276% 0.17139 82.036);
     transition: background 0.2s;
 }
@@ -1305,6 +1331,8 @@
 }
 
 .bt-comentario-avatar {
+    width: 40px;
+    height: 40px;
     width: clamp(36px, 5cqi, 60px);
     height: clamp(36px, 5cqi, 60px);
     border-radius: 50%;
@@ -1363,7 +1391,7 @@
     display: flex;
     align-items: flex-end;
     gap: 10px;
-    resize:vertical;
+    resize: vertical;
     max-height: 220px;
     min-height: 60px;
     margin-top: 15px;
@@ -1374,8 +1402,8 @@
     border: 1px solid var(--bt-borda-sutil);
 }
 
-#bt-form-comentario{
-padding-bottom: env(safe-area-inset-bottom); 
+#bt-form-comentario {
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .bt-textarea-container {
@@ -1408,7 +1436,7 @@ padding-bottom: env(safe-area-inset-bottom);
     height: 40px;
     border: none;
     border-radius: 50%;
-     /* Fallback */
+    /* Fallback */
     background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
     background: var(--laranja-fenda);
     color: #000;
@@ -1494,15 +1522,13 @@ padding-bottom: env(safe-area-inset-bottom);
     inset: -3px;
     border-radius: inherit;
     z-index: -1;
-    background: conic-gradient(
-        from var(--angulo-balada), 
-        oklch(83.276% 0.17139 82.036), 
-        #ff007f,                       
-        #00f0ff,                       
-        oklch(83.276% 0.17139 82.036)
-    );
+    background: conic-gradient(from var(--angulo-balada),
+            oklch(83.276% 0.17139 82.036),
+            #ff007f,
+            #00f0ff,
+            oklch(83.276% 0.17139 82.036));
     filter: blur(4px);
-    animation: 
+    animation:
         girarLuzesBalada 4s linear infinite,
         strobeBalada 0.6s ease-in-out infinite alternate;
 }
@@ -1588,6 +1614,7 @@ padding-bottom: env(safe-area-inset-bottom);
         opacity: 0.3;
         filter: blur(4px);
     }
+
     100% {
         opacity: 0.9;
         filter: blur(8px);
@@ -1846,8 +1873,9 @@ padding-bottom: env(safe-area-inset-bottom);
 /* ================================================================
    12. ESTADO VAZIO (bt-empty) E BOTÃO CARREGAR MAIS
    ================================================================ */
-.bt-empty {
+#bt-container-eventos .bt-empty {
     display: block;
+    grid-column: 1 / -1;
     position: relative;
     text-align: center;
     top: calc(25% - 50px);
@@ -1909,7 +1937,7 @@ padding-bottom: env(safe-area-inset-bottom);
     padding: 20px 0 40px 0;
 }
 
-.bt-btn-load-more ,
+.bt-btn-load-more,
 .btn-load-more-comunidades.btn-fenda-padrao {
     background: #faba0d;
     background: oklch(0.8 0.19 76.05);
@@ -1938,7 +1966,7 @@ padding-bottom: env(safe-area-inset-bottom);
     cursor: not-allowed;
     transform: none;
 }
-               
+
 
 .bt-radar {
     text-align: center;
@@ -1954,18 +1982,26 @@ padding-bottom: env(safe-area-inset-bottom);
 }
 
 .bt-radar .fa-search:before {
-    font-size:clamp(3rem, 8vw, 7rem); color:var(--bt-dourado, #ffbc00); display:block; margin-bottom:16px;
+    font-size: clamp(3rem, 8vw, 7rem);
+    color: var(--bt-dourado, #ffbc00);
+    display: block;
+    margin-bottom: 16px;
 }
 
 .bt-radar strong {
-    font-size:clamp(1.1rem, 2.5vw, 1.6rem); display:block; margin-bottom:8px; color:#fff;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
     color: oklch(0.95 0 1);
 }
 
 .bt-radar p {
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 1.7vw, 1.2rem); color:#888;
-    color: oklch(0.65 0 0); margin-bottom: 20px;
+    font-size: clamp(0.9rem, 1.7vw, 1.2rem);
+    color: #888;
+    color: oklch(0.65 0 0);
+    margin-bottom: 20px;
 }
 
 /* ================================================================
@@ -1973,14 +2009,14 @@ padding-bottom: env(safe-area-inset-bottom);
    ================================================================ */
 
 /* Prévia da capa */
-.bt-capa-preview ,
+.bt-capa-preview,
 #bt-capa-preview {
     margin: 10px auto;
     width: 100%;
-    height: 100%;  
+    height: 100%;
 }
 
-.bt-capa-preview img, 
+.bt-capa-preview img,
 #bt-capa-preview-img {
     border-radius: 4px;
     width: 100%;
@@ -1995,8 +2031,13 @@ padding-bottom: env(safe-area-inset-bottom);
 
 .bt-btn-secundario-anexo {
     flex-wrap: wrap;
-    align-items:center; gap:6px;
-    cursor:pointer; display:inline-flex; align-items:center; gap:6px; padding:6px 14px;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
 }
 
 /* Itens da galeria na edição */
