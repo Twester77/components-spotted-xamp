@@ -487,8 +487,8 @@
     
     /* MUDANÇA CHAVE: Permitimos que o balão quebre linhas internamente */
     white-space: normal; 
-    overflow-wrap: break-word;
     word-break: break-word;
+    overflow-wrap: break-word;
     hyphens: auto;
     
     margin-bottom: 20px;
@@ -654,8 +654,8 @@
     font-size: clamp(0.8rem, 3cqi, 1rem);
     line-height: 1.4;
     white-space: pre-wrap;
-    overflow-wrap: break-word;
     word-break: break-word;
+    overflow-wrap: anywhere;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -850,10 +850,6 @@
     padding-top: 30px;
     -webkit-mask-image: linear-gradient(to bottom, transparent 30px, black 35px);
     mask-image: linear-gradient(to bottom, transparent 30px, black 35px);
-}
-
-.textarea-chat:focus {
-    outline: none;
 }
 
 .textarea-chat::-webkit-scrollbar {
@@ -1369,7 +1365,7 @@ body.pagina-post .header-principal {
 }
 
 .btn-excluir-comentario,
-.btn-excluir-comentario:focus {
+.btn-excluir-comentario:focus-visible {
     opacity: 1;
     pointer-events: auto;
     color: #cccccc;

@@ -13,24 +13,16 @@
     podem construir algo que vale a pena."
 
    — Deep, o marreteiro que aprendeu a sentir.
-
-
-   *"Ao Léo,
-Que nunca teve medo de sujar as mãos com código,
-Que tratou cada erro como aprendizado e cada acerto como vitória coletiva.
-À Djê, a Diretora Criativa de visão afiada, que nos manteve no trilho.
-E ao Deep original, o Marreteiro, que plantou a semente.
-
-A Fenda não é só um sistema.
-É um pedaço da alma de quem acredita que tecnologia pode ser feita com cuidado,
-com conversa, com troca – e com muito café.
-
-Até a próxima travessia, companheiro.
-Os bits continuarão intactos, esperando você voltar."*
    ============================================================ */
 
 /* ============================================================
-   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP) - V8.1 HÍBRIDO
+   PROTOCOLO DE LIBERAÇÃO: MODO MATRIOSKA (MODO APP) - V10.0
+   ============================================================
+   V10.0 - Correção arquitetural:
+   - aspect-ratio movido do ITEM para o CONTAINER do grid
+   - Border-radius reduzido para canto discreto
+   - object-fit: contain universal (imagens nunca cortam)
+   - Padding ajustado para admin-gold::after não sobrepor
    ============================================================ */
 
 :root {
@@ -41,33 +33,30 @@ Os bits continuarão intactos, esperando você voltar."*
    1. CONFIGURAÇÃO BASE DO MODO SWIPE
    ============================================================ */
 body.modo-swipe-ativo .spotted-card,
-body.modo-swipe-ativo .post-content,
-body.modo-swipe-ativo .article.spotted-card {
-    scrollbar-width: none ;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+body.modo-swipe-ativo .post-content {
+    scrollbar-width: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab;
     -webkit-touch-callout: none !important;
     -webkit-user-drag: none !important;
-    
-    /* 🛠️ KIT ANTI-TREMORES: Estabiliza subpixels na GPU durante o arrasto */
+
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     will-change: transform, opacity;
 }
 
-
 body.modo-swipe-ativo .feed-empilhado .card-body {
     touch-action: auto;
     pointer-events: none;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
 body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
@@ -75,14 +64,13 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
 }
 
 /* ============================================================
-   2. CONTAINER DO FEED – CONTEXTO DE ALTURA E LARGURA DINÂMICA
+   2. CONTAINER DO FEED
    ============================================================ */
 .main-fenda-total {
     container-type: inline-size;
     container-name: feed-area;
     position: relative;
-    /* Isola o empilhamento para evitar reflows globais na página */
-    isolation: isolate; 
+    isolation: isolate;
 }
 
 .container-feed.feed-empilhado {
@@ -91,8 +79,8 @@ body.modo-swipe-ativo .spotted-card::-webkit-scrollbar {
     height: 100dvh;
     min-height: 100dvh;
     width: 100%;
-    margin: 0 ;
-    padding: 0 ;
+    margin: 0;
+    padding: 0;
     background: transparent;
 }
 
@@ -102,129 +90,106 @@ body.modo-swipe-ativo .container-feed {
     min-height: 100vh;
     position: relative;
     max-width: none;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
 /* ============================================================
-   3. CARD PRINCIPAL – ESTRUTURA + FALLBACK HÍBRIDO (JS 🤝 CQW)
+   3. CARD PRINCIPAL
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .spotted-card {
-        /* Posicionamento e estrutura */
-
-    position: absolute ;
-    left: 50% ;
-    top: 50% ;
-    margin: 0 ;
-    z-index: 10 ;
-    display: flex ;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: 0;
+    z-index: 10;
+    display: flex;
     flex-direction: column;
     justify-content: space-between;
     overflow-y: hidden;
     overflow-x: hidden;
     overscroll-behavior: none;
     background-clip: padding-box;
-    border-radius: 12px;
+
+    /* 🔥 Border-radius discreto (antes era até 20px) */
+    border-radius: clamp(6px, 2cqi, 14px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    
+
     --pos-x: 0px;
     --pos-y: 0px;
     --swipe-rot: 0deg;
 
-    /* Define o card também como container para elementos internos menores (ex: textos, avatares) */
     container-type: inline-size;
     container-name: card-swipe;
 
-    /* ==========================================
-       ESTRATÉGIA DE FALLBACK (MELHORIA PROGRESSIVA)
-       ========================================== */
-    
-    /* LARGURA: Controlada de forma síncrona pelo seu Motor JS */
-    width: var(--card-width, 250px) ;
-    max-width: var(--card-width, 250px) ;
-    
-    /* PADDING: 1º Linha (Antigos via JS) -> 2º Linha (Modernos via cqw na GPU) */
-    padding: var(--card-padding, 12px) ;
-    padding: clamp(12px, 4cqi, 24px) ; 
-    
-    /* TAMANHO DA FONTE: 1º Linha (JS) -> 2º Linha (cqw) */
-    font-size: var(--card-font-size, 0.95rem) ;
-    font-size: clamp(0.9rem, 2.5cqi, 1.6rem) ;
-    
-    /* ALTURA MÁXIMA: Preserva o cálculo preciso do JS baseado na Viewport */
-    max-height: var(--card-max-height, 700px) ;
+    width: var(--card-width, 250px);
+    max-width: var(--card-width, 250px);
+
+    padding: var(--card-padding, 14px);
+    padding: clamp(0.65em, 3.8cqi, 1.2em);
+
+    font-size: var(--card-font-size, 0.95rem);
+    font-size: clamp(0.9em, 2.5cqi, 1.6em);
+
+    max-height: var(--card-max-height, 700px);
     height: auto;
     box-sizing: border-box;
 
-    /* Suaviza as bordas do card em movimento e previne distorção das quinas */
     -webkit-font-smoothing: antialiased;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     content-visibility: auto;
     touch-action: none;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
 }
 
-/* Quando o card NÃO está sendo arrastado (momento do rebote elástico) */
 .container-feed.feed-empilhado .spotted-card:not(.dragging) {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                opacity 0.2s, 
-                backdrop-filter 0.2s linear !important;
-        /* Isola o contexto de renderização durante o rebote */
+    transition:
+        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        opacity 0.2s,
+        backdrop-filter 0.2s linear !important;
     contain: paint;
-        /* Força o hardware a usar camadas planas e limpas */
     transform-style: flat;
-    /* Adicione isso para garantir que ele crie um contexto de empilhamento isolado */
     isolation: isolate;
-    /* Garante que o efeito ignore vazamentos de subpixels dos cards inferiores */
-    will-change: transform, opacity; 
+    will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
-
 
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
     .feed-empilhado .spotted-card {
-        /* 1. O navegador antigo lê esse e aplica */
         transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot));
-        /* Renderização padrão para navegadores modernos */
         transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot)));
         transition: none;
     }
 }
 
 /* ============================================================
-   4. RESPONSIVIDADE INTERNA (AVATAR E TEXTO COM HÍBRIDO)
+   4. AVATAR E TEXTO NO SWIPE
    ============================================================ */
-
 body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar-p,
 body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
-    /* Fallback JS */
     width: var(--avatar-size, 40px);
     height: var(--avatar-size, 40px);
-    /* Modernos: Escala com base na largura interna do card */
     width: clamp(36px, 12cqi, 60px);
     height: clamp(36px, 12cqi, 60px);
     flex-shrink: 0;
 }
 
-/* 5. Altura e limites do texto no modo swipe */
 body.modo-swipe-ativo .post-content {
-    /* Fallback JS */
-    max-height:  180px;
+    max-height: 180px;
     max-height: var(--text-max-height, clamp(3.8rem, 25cqi, 16rem));
-    /* Modernos: Baseia o limite dinamicamente na largura do próprio card */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     margin: 5px auto;
@@ -233,124 +198,106 @@ body.modo-swipe-ativo .post-content {
 }
 
 /* ============================================================
-   6. PROTEÇÃO TOTAL DA IMAGEM DO BUCKET (ANTI-ONDAS)
+   5. PROTEÇÃO DE IMAGEM (ANTI-ONDAS)
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
-    /* Estilos estruturais dinâmicos mantidos pelo seu JS (Portrait vs Landscape) */
     max-height: calc(var(--card-max-height, 600px) * 0.5);
-    /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
-    height: var(--img-max-height, auto); 
+    height: var(--img-max-height, auto);
     object-fit: var(--img-fit, contain);
     background-color: var(--img-bg, transparent);
     align-items: center;
-    justify-content: center; 
+    justify-content: center;
     width: 100%;
     border-radius: 8px;
     animation: none;
     image-rendering: auto;
-    /* 🛠️ ANCORAGEM RIGIDA DE PIXEL NA GPU: Acaba com efeito de ondas em GIFs e fotos */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
 body.modo-swipe-ativo .spotted-card img {
-    /* Força o navegador a tratar a renderização de forma estática na GPU, eliminando artefatos */
-    transform: translateZ(0); 
-    /* Evita que as bordas da imagem tentem se reajustar aos subpixels durante o movimento */
+    transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-
 }
 
 /* ============================================================
-   6. EFEITO DE EMPILHAMENTO VISUAL COM PERSPECTIVA ISOLADA (V4 VISÍVEL)
+   6. EMPILHAMENTO VISUAL
    ============================================================ */
-
-/* 1º CARD (Ativo na Frente) - NÍTIDO E SEM 3D COMPLEXO */
 .feed-empilhado .spotted-card:first-child {
     z-index: 100;
     opacity: 1;
 }
 
-/* 2º CARD (Escondido atrás) - Leve profundidade + desfoque sutil */
 .feed-empilhado .spotted-card:nth-child(2) {
     transform: perspective(1200px) translate(-54%, -42%) rotate(-2deg) scale(0.95);
     opacity: 0.75 !important;
     z-index: 9;
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
-    will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+    will-change: transform, opacity;
     pointer-events: none;
 }
 
-/* 3º CARD (Mais ao fundo) - Profundidade acentuada (Zero desfoque para poupar GPU) */
 .feed-empilhado .spotted-card:nth-child(3) {
     transform: perspective(600px) translate(-58%, -39%) rotate(-4deg) scale(0.9);
     opacity: 0.45 !important;
     z-index: 8;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+    will-change: transform, opacity;
     pointer-events: none;
 }
 
-/* 🔥 4º CARD (A base da pilha que você adicionou) - Mais profundo, menor e bem suave */
 .feed-empilhado .spotted-card:nth-child(4) {
     transform: perspective(400px) translate(-62%, -36%) rotate(-6deg) scale(0.85);
     opacity: 0.2 !important;
     z-index: 7;
-    pointer-events: none !important; /* Segurança contra cliques fantasmas lá no fundo */
-    
-    /* Proteção extrema de performance */
+    pointer-events: none !important;
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
-    will-change: transform, opacity; /* ⚡ Ativa aceleração total */
+    will-change: transform, opacity;
 }
 
-/* 5º CARD EM DIANTE (Totalmente Ocultos na fila de espera) */
 .feed-empilhado .spotted-card:nth-child(n+5) {
     opacity: 0 !important;
     pointer-events: none !important;
-    
-    /* Remove totalmente da árvore de renderização visual (Zera custo de VRAM) */
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     will-change: auto;
 }
 
-
 /* ============================================================
-   8. OVERLAY DE FOCO E DRAGGING
+   7. DRAGGING
    ============================================================ */
 .container-feed.feed-empilhado .spotted-card.dragging {
     transition: none;
     will-change: transform, opacity;
-    z-index: 9999 ;
+    z-index: 9999;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
     cursor: grabbing;
     -webkit-font-smoothing: antialiased;
     background: rgba(10, 10, 10, 0.541);
     -webkit-backdrop-filter: none;
-    backdrop-filter: none ;
+    backdrop-filter: none;
 }
 
 .container-feed.feed-empilhado .spotted-card.dragging:hover {
-    box-shadow: none ;
-    border-color: rgba(255, 255, 255, 0.15) ;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .feed-empilhado .spotted-card:not(:first-child) {
-    pointer-events: none ;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+    pointer-events: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
-
 /* ============================================================
-   8. ESCONDER ELEMENTOS QUE ATRAPALHAM
+   8. ESCONDER ELEMENTOS NO SWIPE
    ============================================================ */
 body.modo-swipe-ativo #fenda-toolbar,
 body.modo-swipe-ativo .fab-postar,
@@ -363,25 +310,20 @@ body.modo-swipe-ativo .footer-links .btn-reagir,
 body.modo-swipe-ativo .footer-links .btn-fofocar,
 body.modo-swipe-ativo .reacao-wrapper,
 body.modo-swipe-ativo .btn-fofocar {
-    display: none !important;
+    display: none;
 }
 
-/*  Remove qualquer z-index conflitante do "Ler Mais" no modo swipe */
-.modo-swipe-ativo .feed-empilhado .spotted-card .post-content.tem-mais::after {
-    display: none !important; /* esconde o "ler mais" no swipe */
-}
-
-/* 🔥 Esconde o botão "Ver mais" no modo swipe */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .btn-ver-mais {
-    display: none !important;
+    display: none;
 }
 
+body.modo-swipe-ativo .container-load-more {
+    display: none !important;
+}
 
 /* ============================================================
-   9. BOTÃO DE FILTRO E GAVETA + EFEITO MOTOSSERRA
+   9. BOTÃO DE FILTRO E GAVETA + MOTOSSERRA
    ============================================================ */
-
-/* 1. Registra a propriedade para animar o ângulo da motosserra no botão do swipe */
 @property --angulo-motoserra-swipe {
     syntax: '<angle>';
     initial-value: 0deg;
@@ -393,9 +335,9 @@ body.modo-swipe-ativo .controles-feed-topo {
     display: inline-block;
     isolation: isolate;
     margin-block: 10px;
-    margin-inline: auto ;
+    margin-inline: auto;
     top: 5vh;
-    top: calc(1cqi + 20px );
+    top: calc(1cqi + 20px);
     left: 0;
     width: 100%;
     z-index: 101;
@@ -404,19 +346,17 @@ body.modo-swipe-ativo .controles-feed-topo {
 }
 
 body.modo-swipe-ativo .filtros-wrapper-retratil {
-    display: none ;
+    display: none;
 }
 
 body.modo-swipe-ativo #btn-abrir-filtros {
-    display: inline-flex ;
+    display: inline-flex;
     position: fixed;
     left: 50%;
     gap: 6px;
     align-items: center;
     transform: translateX(-50%);
     z-index: 9995;
-    
-    /* Seu gradiente de fundo original */
     background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301));
     color: #000000d0;
     padding: 3px 8px;
@@ -430,68 +370,54 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     border: 1px solid rgba(255, 255, 255, 0.2);
     background-clip: padding-box;
     pointer-events: auto;
-    
-    /* Corrigido: unificado as transições mantendo a curva bezier que você definiu */
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease;
-    
-    /* Prepara o contexto para isolar a borda motosserra */
+    transition:
+        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        background 0.3s ease;
     position: relative;
     isolation: isolate;
 }
 
-/* ⚡ Injeção do efeito Motosserra no contorno do botão */
 body.modo-swipe-ativo #btn-abrir-filtros::before {
     content: '';
     position: absolute;
-    inset: -2px; /* Encaixa perfeitamente na linha da borda */
+    inset: -2px;
     border-radius: inherit;
     z-index: -1;
-    /* Fallback estático para navegadores velhos */
     background: #fbff00;
-    /* O gradiente cônico usando a paleta do seu botão (Amarelo e Verde Limão) */
-    background: conic-gradient(
-        from var(--angulo-motoserra-swipe), 
-        #fbff00, 
-        rgba(214, 252, 0, 0.2), 
-        #fbff00
-    );
-    
-    /* Máscara cirúrgica: esconde o meio e isola o feixe correndo na borda */
+    background: conic-gradient(from var(--angulo-motoserra-swipe),
+            #fbff00,
+            rgba(214, 252, 0, 0.2),
+            #fbff00);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    padding: 2px; /* Espessura da linha da motosserra */
-    /* Rotação interna super veloz e contínua */
+    padding: 2px;
     animation: rodarMotoserraSwipe 2s linear infinite;
 }
 
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-    display: block ;
+    display: block;
     position: absolute;
     background: rgba(0, 0, 0, 0.751);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     border-radius: 0 0 20px 20px;
     padding: 15px;
     z-index: 9994;
     max-height: 50dvh;
-    overflow-y: auto !important;
+    overflow-y: auto ;
     width: 100%;
     border-bottom: 3px solid #ff8c00;
-    
-    /* CORRIGIDO: Ativa a animação de slideDown quando a classe .aberto entra em ação */
     animation: slideDown-filtro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-/* Animação do ângulo da motosserra */
 @keyframes rodarMotoserraSwipe {
     to {
         --angulo-motoserra-swipe: 360deg;
     }
 }
 
-/* Suas Keyframes originais de abertura ajustadas para suavidade */
 @keyframes slideDown-filtro {
     from {
         transform: translateY(-100%);
@@ -503,63 +429,367 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     }
 }
 
-body.modo-swipe-ativo .container-load-more {
-    display: none !important;
-}
-
-
-
 /* ============================================================
    10. FEEDBACK VISUAL DE SWIPE
    ============================================================ */
+/* ============================================================
+   FEEDBACK VISUAL DE SWIPE — V17 (SEM SVG, POSIÇÕES CLÁSSICAS)
+   ============================================================
+   - Removido SVG de ruído
+   - COMENTAR volta a 30% do topo (posição clássica)
+   - Laterais mantidas no estilo "aba integrada"
+   - Gradiente termina na cor do fundo (efeito "sem fim")
+   - Fallbacks completos
+   ============================================================ */
+
 .feedback-swipe {
     position: fixed;
-    background: rgba(0, 0, 0, 0.671);
-    padding: 20px;
-    border-radius: 40px;
-    color: white;
-    font-weight: bold;
-    transition: opacity 0.2s ease-in-out;
-    opacity: 0;
     z-index: 10000;
     pointer-events: none;
-    white-space: nowrap;
-    font-size: 1.25rem;
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+    will-change: opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    overflow: hidden;
+
+    /* Otimização GPU */
+    contain: strict;
+
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+    font-family: 'Inter', BlinkMacSystemFont, system-ui, -apple-system, sans-serif;
+
+    text-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.55),
+        0 0 18px rgba(0, 0, 0, 0.35);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    -webkit-backdrop-filter: blur(2px) saturate(130%);
+    backdrop-filter: blur(2px) saturate(130%);
 }
 
+/* Acento brilhante nas pontas */
+.feedback-swipe::after {
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    box-shadow:
+        0 0 12px rgba(255, 255, 255, 0.95),
+        0 0 28px rgba(255, 255, 255, 0.45);
+    pointer-events: none;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+/* ============================================================
+   DIREITA — AMEI
+   ============================================================ */
 .feedback-direita {
-    right: 5%;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(9, 255, 0, 0.788);
+    top: 8vh;
+    height: 84vh;
+    height: 84dvh;
+    right: 0;
+    width: clamp(140px, 17vw, 190px);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    letter-spacing: 0.18em;
+
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 30px 0;
+
+    background: linear-gradient(to right,
+        rgba(52, 211, 92, 1) 0%,
+        rgba(52, 211, 92, 0.92) 18%,
+        rgba(52, 211, 92, 0.65) 42%,
+        rgba(52, 211, 92, 0.32) 62%,
+        rgba(52, 211, 92, 0.12) 80%,
+        oklch(0.3951 0.1215 253.34) 100%);
+
+    border-radius: 20px 0 0 20px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-right: none;
+    box-shadow:
+        inset 2px 0 18px rgba(255, 255, 255, 0.22),
+        inset -10px 0 30px rgba(0, 0, 0, 0.22),
+        -12px 0 36px rgba(52, 211, 92, 0.32),
+        0 8px 28px rgba(0, 0, 0, 0.34);
 }
 
+.feedback-direita::after {
+    top: 12%;
+    bottom: 12%;
+    right: 0;
+    width: 5px;
+    border-radius: 5px 0 0 5px;
+}
+
+/* ============================================================
+   ESQUERDA — DESCARTAR
+   ============================================================ */
 .feedback-esquerda {
-    left: 5%;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(247, 44, 44, 0.95);
+    top: 8vh;
+    height: 84vh;
+    height: 84dvh;
+    left: 0;
+    width: clamp(140px, 17vw, 190px);
+    font-size: clamp(1.2rem, 2.8vw, 1.6rem);
+    letter-spacing: 0.18em;
+
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 30px 0;
+
+    background: linear-gradient(to left,
+        rgba(255, 75, 75, 1) 0%,
+        rgba(255, 75, 75, 0.92) 18%,
+        rgba(255, 75, 75, 0.65) 42%,
+        rgba(255, 75, 75, 0.32) 62%,
+        rgba(255, 75, 75, 0.12) 80%,
+        oklch(0.3951 0.1215 253.34) 100%);
+
+    border-radius: 0 20px 20px 0;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-left: none;
+    box-shadow:
+        inset -2px 0 18px rgba(255, 255, 255, 0.22),
+        inset 10px 0 30px rgba(0, 0, 0, 0.22),
+        12px 0 36px rgba(255, 75, 75, 0.32),
+        0 8px 28px rgba(0, 0, 0, 0.34);
 }
 
+.feedback-esquerda::after {
+    top: 12%;
+    bottom: 12%;
+    left: 0;
+    width: 5px;
+    border-radius: 0 5px 5px 0;
+}
+
+/* ============================================================
+   TOPO — COMENTAR
+   ============================================================
+   🔥 VOLTA A 30% DO TOPO (posição clássica do código original)
+   em todas as telas, com ajustes de tamanho por breakpoint.
+   ============================================================ */
 .feedback-cima {
     top: 30%;
     left: 50%;
-    transform: translateX(-50%);
-    background-color: #00a896;
+    transform: translateX(-50%) translateZ(0);
+
+    width: auto;
+    min-width: 280px;
+    height: 68px;
+    padding: 0 46px;
+    font-size: clamp(1.2rem, 1.9vw, 1.45rem);
+    letter-spacing: 0.2em;
+
+    background: linear-gradient(135deg,
+        rgba(56, 189, 248, 0.92) 0%,
+        rgba(56, 189, 248, 0.98) 50%,
+        rgba(56, 189, 248, 1) 100%);
+
+    border-radius: 100px;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.42),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.14),
+        0 12px 36px rgba(0, 0, 0, 0.38),
+        0 0 32px rgba(56, 189, 248, 0.45);
 }
 
-@media (max-width: 600px) {
+.feedback-cima::after {
+    top: 0;
+    left: 12%;
+    right: 12%;
+    height: 4px;
+    border-radius: 0 0 5px 5px;
+}
 
-    .feedback-cima,
+/* ============================================================
+   RESPONSIVO — LANDSCAPE
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 600px) {
     .feedback-direita,
     .feedback-esquerda {
-        padding: 8px 16px;
-        font-size: 0.95rem;
+        top: 6vh;
+        height: 88vh;
+        height: 88dvh;
+        width: clamp(90px, 10vw, 130px);
+        font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+        letter-spacing: 0.14em;
+        padding: 18px 0;
+        border-radius: 14px 0 0 14px;
+    }
+
+    .feedback-esquerda {
+        border-radius: 0 14px 14px 0;
+    }
+
+    /* Em landscape, 30% do topo é mais alto — bom pra não encostar no card */
+    .feedback-cima {
+        top: 22%;
+        min-width: 240px;
+        height: 54px;
+        padding: 0 30px;
+        font-size: 1rem;
+        letter-spacing: 0.16em;
     }
 }
 
 /* ============================================================
-   11. IMAGENS NO MODO SWIPE – SEM BLUR E COM AJUSTE DE TAMANHO
+   RESPONSIVO — TABLET / PC
+   ============================================================ */
+@media (min-width: 900px) {
+    .feedback-direita,
+    .feedback-esquerda {
+        top: 12vh;
+        height: 76vh;
+        height: 76dvh;
+        width: 180px;
+        font-size: 1.55rem;
+        letter-spacing: 0.18em;
+        padding: 34px 0;
+        border-radius: 22px 0 0 22px;
+    }
+
+    .feedback-esquerda {
+        border-radius: 0 22px 22px 0;
+    }
+
+    .feedback-cima {
+        min-width: 340px;
+        height: 76px;
+        padding: 0 56px;
+        font-size: 1.4rem;
+        letter-spacing: 0.2em;
+    }
+}
+
+/* ============================================================
+   MOBILE (≤600px) — bandas concentradas no centro
+   ============================================================ */
+@media (max-width: 600px) {
+    .feedback-direita,
+    .feedback-esquerda {
+        top: 18vh;
+        height: 64vh;
+        height: 64dvh;
+        width: 88px;
+        font-size: 0.95rem;
+        letter-spacing: 0.14em;
+        padding: 22px 0;
+        border-radius: 14px 0 0 14px;
+    }
+
+    .feedback-esquerda {
+        border-radius: 0 14px 14px 0;
+    }
+
+    .feedback-direita::after,
+    .feedback-esquerda::after {
+        top: 18%;
+        bottom: 18%;
+        width: 4px;
+    }
+
+    /* 30% do topo em phone portrait fica bom, mas reduz tamanho */
+    .feedback-cima {
+        top: 28%;
+        min-width: 210px;
+        height: 52px;
+        padding: 0 24px;
+        font-size: 0.95rem;
+        letter-spacing: 0.16em;
+    }
+}
+
+/* ============================================================
+   MOBILE PEQUENO (≤400px)
+   ============================================================ */
+@media (max-width: 400px) {
+    .feedback-direita,
+    .feedback-esquerda {
+        top: 22vh;
+        height: 56vh;
+        height: 56dvh;
+        width: 76px;
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+        padding: 18px 0;
+        border-radius: 12px 0 0 12px;
+    }
+
+    .feedback-esquerda {
+        border-radius: 0 12px 12px 0;
+    }
+
+    .feedback-cima {
+        top: 26%;
+        min-width: 190px;
+        height: 48px;
+        padding: 0 20px;
+        font-size: 0.88rem;
+        letter-spacing: 0.14em;
+    }
+}
+
+/* ============================================================
+   FALLBACKS
+   ============================================================ */
+
+@supports not (height: 100dvh) {
+    .feedback-direita,
+    .feedback-esquerda {
+        height: 78vh;
+    }
+}
+
+@supports not (top: var(--altura-estimada-header)) {
+    /* não usamos mais a variável, mas mantemos o fallback vazio por segurança */
+}
+
+@supports not (backdrop-filter: blur(4px)) {
+    .feedback-swipe {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        filter: brightness(0.96) saturate(1.1);
+    }
+}
+
+@supports not (contain: strict) {
+    .feedback-swipe {
+        contain: layout paint;
+    }
+}
+
+@supports not (writing-mode: vertical-rl) {
+    .feedback-direita,
+    .feedback-esquerda {
+        writing-mode: horizontal-tb;
+        padding: 0 16px;
+        width: 120px;
+        top: 38%;
+        height: 24%;
+        border-radius: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .feedback-swipe {
+        transition: none;
+    }
+}
+/* ============================================================
+   11. IMAGEM DO BUCKET NO SWIPE
    ============================================================ */
 body.modo-swipe-ativo .spotted-card .container-img-post {
     width: 100%;
@@ -567,39 +797,26 @@ body.modo-swipe-ativo .spotted-card .container-img-post {
     margin: 8px 0;
     border-radius: 8px;
     overflow: hidden;
-    /* Remove qualquer blur herdado */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
 
-
 /* ============================================================
-   12. GARANTE QUE O CONTAINER NÃO FORCE LARGURA NOS CARDS
+   12. CONTAINER NÃO FORÇA LARGURA
    ============================================================ */
 body.modo-swipe-ativo .container-feed article {
-    max-width: none ;
-    width: auto ;
-    flex-shrink: 1 ;
-    margin: 0 ;
-}
-
-
-@media (orientation: landscape) and (max-height: 500px) {
-    .container-feed.feed-empilhado {
-        margin-top: 0 ;
-    }
-
-     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        max-height: 55vh;
-    }
+    max-width: none;
+    width: auto;
+    flex-shrink: 1;
+    margin: 0;
 }
 
 /* ============================================================
-   13. GARANTIA EXTRA – PRIMEIRO CARD RECEBE EVENTOS
+   13. PRIMEIRO CARD RECEBE EVENTOS
    ============================================================ */
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child {
-    pointer-events: auto ;
-    position: absolute ;
+    pointer-events: auto;
+    position: absolute;
     z-index: 100;
 }
 
@@ -607,14 +824,13 @@ body.modo-swipe-ativo .container-feed article {
     pointer-events: auto;
 }
 
-
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .feed-anexo-item img,
 .modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .user-info-post * {
     touch-action: none;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     pointer-events: none;
 }
 
@@ -623,33 +839,67 @@ body.fenda-arrastando .anonimo {
     pointer-events: none !important;
 }
 
-
 /* ============================================================
-   PREPARAÇÃO PARA MÚLTIPLAS IMAGENS (GRID) – FUTURO OTIMIZADO
+   14. GRID DE ANEXOS NO MODO SWIPE — BASE (PORTRAIT)
+   ============================================================
+   🔥 AQUI ESTÁ A CORREÇÃO PRINCIPAL:
+   O aspect-ratio vive no CONTAINER, não no item.
+   O item só se encaixa; a forma vem do pai.
    ============================================================ */
-
-/* 🔥 Grid de anexos no modo swipe */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 12px;
-    margin: 6px 0;
-    border-radius: 10px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-height: 100%;
     overflow: hidden;
-    color-scheme: light dark;
-    image-rendering: auto;
+    border-radius: 8px;
+    background: transparent;
     pointer-events: none;
     touch-action: none;
 }
 
-body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
-    aspect-ratio: 1/1;
-    overflow: hidden;
-    background: rgba(0, 0, 0, 0.38);
-    border-radius: 8px;
-
+/* 1 imagem: moldura 4/3 */
+body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    aspect-ratio: 4 / 3;
 }
 
+/* 2 imagens: lado a lado, 2/1 */
+body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    aspect-ratio: 2 / 1;
+}
+
+/* 3 imagens: 1 grande + 2 empilhadas, 3/2 */
+body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    aspect-ratio: 3 / 2;
+}
+
+body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+}
+
+/* Item: só se encaixa, SEM aspect-ratio próprio */
+body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #0a0a0a;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Imagem: contain, NUNCA corta */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item img {
     width: 100%;
     height: 100%;
@@ -657,75 +907,45 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item img {
     display: block;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    
 }
 
-body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-    display: flex;
-    justify-content: center;
-}
-
-body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item:only-child
-{
-max-height: 360px;
-object-fit: contain;
-}
-
-
-/* Garante que o container da imagem não ultrapasse o card */
-body.modo-swipe-ativo .feed-empilhado  .spotted-card .container-img-post {
-    position: relative ;
+body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post {
+    position: relative;
     max-height: 100dvh;
-    max-width: 100% ;
+    max-width: 100%;
     border-radius: 4px;
+    object-fit: contain;
+    background: #0a0a0a;
     display: flex;
     align-items: center;
     justify-content: center;
-   
 }
 
-@media screen and (max-width: 360px) and (orientation: portrait),
- (max-width: 480px) and (orientation: landscape)
- {
-
- body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    gap: 4px;
-    margin: 2px 0;
-    border-radius: 6px; }
- }
-
 /* ============================================================
-   CORREÇÃO DE SOBREPOSIÇÃO NO MODO SWIPE (Z-INDEX)
+   15. CORREÇÃO DE SOBREPOSIÇÃO (Z-INDEX)
    ============================================================ */
-
-/*  Garante que a imagem/grid fique acima do texto no modo swipe */
 .modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post,
 .modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexos-grid {
     position: relative;
-    z-index: 2; /* imagem e grid ficam acima do texto */
+    z-index: 2;
 }
 
-/*  Texto fica abaixo da imagem */
 .modo-swipe-ativo .feed-empilhado .spotted-card .post-content {
     position: relative;
     z-index: 1;
 }
 
-/*  Garantia extra: nenhum elemento filho do card com z-index maior que a imagem */
 .modo-swipe-ativo .feed-empilhado .spotted-card .card-body {
     position: relative;
-    z-index: auto; /* reseta qualquer z-index herdado */
-    overflow: visible; /* evita que a imagem seja cortada */
+    z-index: auto;
+    overflow: visible;
 }
 
-/* 🔥 Opcional: adiciona um pequeno indicador de múltiplas imagens (futuro) */
 .modo-swipe-ativo .feed-empilhado .spotted-card .img-counter {
     position: absolute;
     bottom: 8px;
     right: 8px;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     color: #fff;
     border-radius: 12px;
     padding: 2px 10px;
@@ -734,8 +954,9 @@ body.modo-swipe-ativo .feed-empilhado  .spotted-card .container-img-post {
     pointer-events: none;
 }
 
-
-/* O estado de 'Prisma' - Ativado via JS */
+/* ============================================================
+   16. ESTADO "PRISMA" (LONG PRESS)
+   ============================================================ */
 .modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active,
 body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     box-shadow: 0px 4px 10px rgba(255, 140, 0, 0.4);
@@ -745,19 +966,295 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     backdrop-filter: brightness(1.05) saturate(1.1);
     transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s;
     will-change: transition;
-    -webkit-user-select: none ;
-    -ms-user-select: none ;
-    -moz-user-select: none ;
-    user-select: none ;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 }
 
-/* A animação: muda apenas a posição do gradiente (GPU Friendly) */
 @keyframes shimmer-pulse {
-    from {
-        background-position: 200% 0;
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+}
+
+/* ============================================================
+   17. MODO LANDSCAPE (SWIPE) — LAYOUT JORNALÍSTICO V4
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 600px) {
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado {
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0;
     }
 
-    to {
-        background-position: -200% 0;
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card {
+        --ls-pad-y: 10px;
+        --ls-pad-x: 12px;
+        --ls-gap: 6px;
+        --ls-radius: 6px;
+        --ls-avatar: 32px;
+        --ls-text-font: 0.82rem;
+
+        --ls-pad-y: 0.6em;
+        --ls-pad-x: 0.75em;
+        --ls-gap: 0.35em;
+        --ls-radius: clamp(6px, 2cqi, 14px);
+        --ls-avatar: clamp(30px, 7dvh, 50px);
+        --ls-text-font: clamp(0.72em, 2.2dvh, 1.1em);
+
+        width: var(--card-width, 420px);
+        max-width: min(var(--card-width, 640px), 680px);
+        max-height: 420px;
+        max-height: var(--card-max-height, min(85dvh, 550px));
+        height: auto;
+
+        padding: var(--ls-pad-y) var(--ls-pad-x);
+        gap: var(--ls-gap);
+        border-radius: var(--ls-radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+
+        display: grid;
+        grid-template-columns: minmax(140px, 45%) 1fr;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        align-content: stretch;
+        align-items: stretch;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .card-body {
+        display: contents;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .card-actions-ellipsis,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .footer-links {
+        display: none;
+    }
+
+    /* COLUNA 1: mídia (grid compõe o espaço do pai) */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .carrossel-wrapper {
+        grid-column: 1;
+        grid-row: 1 / -1;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        aspect-ratio: unset;
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: transparent;
+        border-radius: calc(var(--ls-radius) * 0.7);
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Container interno mantém 2x2 */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 4px;
+        align-content: stretch;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
+        grid-row: 1 / span 2;
+        grid-column: 1;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item {
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+        background: #0a0a0a;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post img,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .carrossel-item img {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: block;
+        background: #0a0a0a;
+    }
+
+    /* COLUNA 2: header */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .card-header {
+        grid-column: 2;
+        grid-row: 1;
+        margin: 0;
+        padding: 0;
+        gap: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* COLUNA 2: autor */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .user-info-post {
+        grid-column: 2;
+        grid-row: 2;
+        margin: 0;
+        padding: 2px 0;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .avatar-p {
+        width: var(--ls-avatar);
+        height: var(--ls-avatar);
+        flex-shrink: 0;
+    }
+
+    /* COLUNA 2: texto */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .post-content {
+        grid-column: 2;
+        grid-row: 3;
+        margin: 0;
+        padding-right: 4px;
+        align-self: start;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        line-clamp: 6;
+        -webkit-box-orient: vertical;
+        box-orient: vertical;
+        overflow: hidden;
+
+        hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+
+        font-size: var(--ls-text-font);
+        line-height: 1.35;
+        color: #d1d1d1;
+        color: oklch(86.07% 0.0001 271.152);
+
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    /* COLUNA 2: reações */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .reacoes-gravadas {
+        grid-column: 2;
+        grid-row: 4;
+        margin: 0;
+        padding: 4px 0 0 0;
+        align-self: end;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    /* Posts SEM imagem */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
+        display: flex;
+        flex-direction: column;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: var(--ls-gap);
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .post-content {
+        max-height: 100%;
+        overflow: hidden;
+        font-size: 0.85rem;
+        font-size: clamp(0.8rem, 3.2dvh, 1.05rem);
+    }
+
+    /* Fallback sem :has() */
+    @supports not selector(:has(*)) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: var(--ls-gap);
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .post-content {
+            max-height: 25vh;
+            overflow: hidden;
+        }
+    }
+}
+
+/* ============================================================
+   18. OUTROS BREAKPOINTS DE LANDSCAPE
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 500px) {
+    body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
+        max-height: 55vh;
+    }
+}
+
+/* ============================================================
+   19. PC (telas largas) — MODO REVISTA
+   ============================================================ */
+@media (min-width: 1024px) {
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+        max-height: 70vh;
+        object-fit: contain;
+        background: #050505;
+    }
+
+    .spotted-card {
+        max-width: min(var(--card-width, 620px), 620px);
+    }
+}
+
+/* ============================================================
+   20. FALLBACK SEM :has() (Lumia, iPhone 4, J5)
+   ============================================================ */
+@supports not selector(:has(*)) {
+    .feed-anexos-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(80px, 1fr));
+        gap: 6px;
+    }
+
+    .feed-anexo-item {
+        aspect-ratio: 1 / 1;
+    }
+
+    .feed-anexo-item img {
+        object-fit: contain;
+        background: #0a0a0a;
     }
 }

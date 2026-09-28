@@ -109,7 +109,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <?php endif; ?>
 
     <!-- Lightbox -->
-    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'balanga-teras.php' || $pagina_atual == 'comentarios-post.php'): ?>
+    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'balanga-teras.php' || $pagina_atual == 'comentarios-post.php'|| $pagina_atual == 'central.php'|| $pagina_atual == 'comunidade.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/lightbox.css') ?>">
     <?php endif; ?>
 

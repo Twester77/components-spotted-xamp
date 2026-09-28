@@ -266,8 +266,6 @@ window.abrirGavetaControle = function () {
 
 // ==================== POSTS E MENUS ====================
 window.configurarPosts = function () {
-    // 🔥 Só executa se NÃO estiver no modo swipe
-    if (document.body.classList.contains('modo-swipe-ativo')) return;
 
     const posts = document.querySelectorAll('.post-content');
     posts.forEach(post => {

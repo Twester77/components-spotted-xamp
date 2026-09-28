@@ -242,4 +242,3 @@ if ($aba === 'sessoes') {
 
 // Fallback
 echo '<p style="text-align:center; color:#aaa; padding:30px;">Aba não encontrada.</p>';
-?>

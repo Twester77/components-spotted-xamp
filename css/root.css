@@ -29,6 +29,18 @@
 
 }
 
+/* Fallback para navegadores que não conhecem :focus-visible */
+@supports not selector(:focus-visible) {
+    input:focus,
+    textarea:focus,
+    select:focus,
+    button:focus,
+    a:focus {
+        outline: 2px solid #ffbc00;
+        outline-offset: 2px;
+    }
+}
+
 html, body {
     min-height: 100dvh; 
     height: 100vh;

@@ -20,7 +20,7 @@ option {
 
 }
 
-select:focus {
+select:focus-visible {
     background-color: #00000071;
     color: #ffbf0fec;
 }
@@ -145,9 +145,6 @@ select:focus {
     filter: brightness(1.1);
 }
 
-.login-btn:focus {
-    outline: none !important;
-}
 
 /* ============================================================
    LINK DE CADASTRO
@@ -1943,7 +1940,6 @@ textarea[name="bio"] {
 }
 
 
-.post-content,
 .card-body p,
 .perfil-info-publica p {
     word-wrap: break-word;
@@ -2004,8 +2000,8 @@ textarea[name="bio"] {
 
 
 /* Efeito de foco (quando clica para digitar) */
-.campo-grupo input:focus,
-.campo-grupo textarea:focus {
+.campo-grupo input:focus-visible,
+.campo-grupo textarea:focus-visible {
     outline: none;
     border-color: var(--dourado , #ffbc00);
     background: #222;
@@ -2201,19 +2197,6 @@ form[action="confirma-login.php"] {
     width: 100%;
 }
 
-.post-content,
-.card-body p,
-.perfil-info-publica p {
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    white-space: pre-wrap;
-    width: 100%;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    flex-grow: 1;
-}
-
 /* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
 .titulo-pagina {
     color: var(--dourado);
@@ -2266,8 +2249,8 @@ textarea {
 }
 
 /* Efeito de foco (quando clica para digitar) */
-.campo-grupo input:focus,
-.campo-grupo textarea:focus {
+.campo-grupo input:focus-visible,
+.campo-grupo textarea:focus-visible {
     outline: none;
     border-color: var(--dourado, #ffbc00);
     background: #222;
@@ -2470,8 +2453,8 @@ section.sessao-publicar {
     resize: vertical;
 }
 
-.form-publicar select:focus,
-.form-publicar textarea:focus {
+.form-publicar select:focus-visible,
+.form-publicar textarea:focus-visible {
     border-color: #ffbc00;
     outline: none;
 }
@@ -2489,7 +2472,7 @@ section.sessao-publicar {
     transition: 0.3s;
 }
 
-.fenda-input:focus {
+.fenda-input:focus-visible {
     border-color: var(--dourado);
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
 }
@@ -2686,12 +2669,11 @@ section.sessao-publicar {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 30px;
-    padding: 8px 16px;
+    padding: 8px 14px;
     color: #aaa;
     color: oklch(73.802% 0.00008 271.152);
-    font-size: 0.9rem;
-    font-size: clamp(0.75rem, 2cqi, 1rem);
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-size: clamp(0.7em, 1.8cqi, 0.95em);
     font-weight: 600;
     cursor: pointer;
     text-align: center;
@@ -2699,7 +2681,7 @@ section.sessao-publicar {
     transition: 0.2s;
     flex: 1;
     max-width: 200px;
-    min-width: 80px;
+    min-width: 100px;
 }
 
 .btn-toggle-perdido:hover {
@@ -2997,13 +2979,9 @@ section.sessao-publicar {
 }
 
 
-.login-btn:focus,
-.container input:focus {
-    outline: none !important;
-}
 
 /* Tira o azul chato do Checkbox no Mobile */
-input[type="checkbox"]:focus {
+input[type="checkbox"]:focus-visible {
     outline: none;
     box-shadow: none;
 }
@@ -3211,7 +3189,7 @@ input:-internal-autofill-selected {
 }
 
 /* 4. Efeito de Foco */
-form[action="confirma-login.php"] input:focus
+form[action="confirma-login.php"] input:focus-visible
  {
     border-color: #ddbe0e;
     background: rgba(255, 255, 255, 0.027);

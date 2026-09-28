@@ -4,8 +4,9 @@
     box-sizing: border-box;
 }
 
-
-/* --- ESTILIZAÇÃO DOS NOVOS FILTROS --- */
+/* ============================================================
+   1. FILTROS
+   ============================================================ */
 .filtros-container {
     border: none;
     justify-content: center;
@@ -17,7 +18,6 @@
     padding: 20px 10px 30px 10px;
     font-size: 0.85rem;
     font-size: clamp(0.9rem, 1.5cqw, 1.2rem);
-
 }
 
 .filtro-btn {
@@ -36,7 +36,6 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: 0.3s;
     text-transform: uppercase;
-
 }
 
 .filtro-btn.ativo,
@@ -53,23 +52,20 @@
     justify-content: center;
     gap: 8px;
     margin: 20px 0;
-
 }
 
-/*  O CONTAINER  */
-
+/* ============================================================
+   2. CONTAINER DO FEED
+   ============================================================ */
 .container-feed>div {
-    /* Alvo nos cards gerados pelo motor-feed */
-    width: 100% ;
+    width: 100%;
     box-sizing: border-box;
-    height: auto ;
-    /* Deixa o card crescer com o conteúdo */
+    height: auto;
 }
 
 .main-fenda-total {
     max-width: 100%;
     padding: 0;
-    /* Zera o padding que estava empurrando o feed */
     margin: 10px auto;
 }
 
@@ -81,55 +77,53 @@
 
 .container-feed {
     align-items: flex-start;
-    /* Mantém cada card no seu tamanho real */
     padding: 15px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 20px;
-    max-width: 1600px; /* LIMITE MÁXIMO para telas grandes */
+    max-width: 1600px;
     margin: 20px auto;
     width: 100%;
     box-sizing: border-box;
     column-count: auto;
-
 }
 
-/* O CARD - vai respeitar o espaço */
 .container-feed article {
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* Deixa o Grid controlar a largura */
     position: relative;
     margin: 20px auto;
     top: auto;
     left: auto;
 }
 
-
-/* --- SISTEMA DE EXPANSÃO (ESTÁVEL PARA O TRABALHO) --- */
+/* ============================================================
+   3. POST CONTENT (expansão "ler mais")
+   ============================================================ */
 .post-content {
-    display: flex;
     position: relative;
     word-break: break-word;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    flex-grow: 1;
     white-space: pre-wrap;
     text-rendering: optimizeLegibility;
     color: #f2f2f2;
-    color: oklch(0.96 0 0 );
-    display: -webkit-box;
-    max-height: 7rem;
+    color: oklch(0.96 0 0);
+    max-height: 4.5rem;
     -webkit-line-clamp: 4;
     line-clamp: 4;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     transition: max-height 0.4s ease-in-out;
     overflow: hidden;
-    pointer-events: auto;
 }
 
 body:not(.modo-swipe-ativo) .post-content {
-    display: flex;
+    display: -webkit-box;
     margin: 5px 0;
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.041vw, 1.05rem);
@@ -140,14 +134,11 @@ body:not(.modo-swipe-ativo) .post-content {
     user-select: text;
 }
 
-/* Quando expandido, mostra todo o conteúdo */
 .post-content.expandido {
     max-height: 2000px;
-    /* valor alto para caber todo o texto */
     overflow: visible;
 }
 
-/* O 'Ler Mais' aparece apenas se não estiver expandido */
 .post-content.tem-mais:not(.expandido)::after {
     content: '... ler mais';
     position: absolute;
@@ -157,11 +148,13 @@ body:not(.modo-swipe-ativo) .post-content {
     padding-left: 30px;
     color: var(--dourado);
     font-weight: bold;
-    font-size: 0.7rem;
-    font-size: clamp(0.7rem, 1cqi, 0.9rem);
-    pointer-events: auto;
+    font-size: 0.75rem;
+    font-size: clamp(0.7rem, 0.8cqi, 0.9rem);
 }
 
+/* ============================================================
+   4. SPOTTED-CARD (base)
+   ============================================================ */
 .spotted-card {
     background: rgba(17, 17, 17, 0.32);
     background: oklch(17.764% 0.00002 271.152 / 0.32);
@@ -175,16 +168,12 @@ body:not(.modo-swipe-ativo) .post-content {
     flex-direction: column;
     width: 100%;
     max-width: 400px;
-     /* Suaviza as bordas do card em movimento de forma contínua */
     -webkit-font-smoothing: antialiased;
     height: auto;
     scrollbar-width: none;
     container-type: inline-size;
-    /* 2. Impede o "arraste nativo" de imagens (o fantasma que você vê no PC) */
     container-name: container-card;
-
 }
-
 
 .spotted-card::-webkit-scrollbar {
     display: none;
@@ -193,12 +182,6 @@ body:not(.modo-swipe-ativo) .post-content {
 body.modo-swipe-ativo .spotted-card * {
     pointer-events: none;
 }
-
-
-/* ==========================================================================
-   BLINDAGEM DO HOVER - FIM DA TREMEDEIRA SUPREMA
-   O hover SÓ vai existir se a página NÃO estiver no Modo Swipe/App!
-   ========================================================================== */
 
 body:not(.modo-swipe-ativo) .spotted-card:hover {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
@@ -213,13 +196,14 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
         -webkit-backdrop-filter: blur(3px);
         backdrop-filter: blur(3px);
         border-color: rgba(255, 255, 255, 0.144);
-        transform: translateY(-8px);
+        transform: translateY(-6px);
         transition: 0.3s ease;
     }
 }
 
-
-/* Ajuste no Carregar Mais Resultados */
+/* ============================================================
+   5. CARREGAR MAIS / FIM / BOTÕES GENÉRICOS
+   ============================================================ */
 .container-load-more {
     width: 100%;
     display: flex;
@@ -229,19 +213,16 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 }
 
 #btn-load-more {
-    transition: transform 0.2s ease, background 0.3s ease ;
+    transition: transform 0.2s ease, background 0.3s ease;
     font-size: 0.8rem;
     font-size: clamp(0.8rem, 1.85vw, 1rem);
-    -moz-user-select: none;
-    -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
 }
 
 #btn-load-more:hover {
-transform: translateY(-6px);
-filter: brightness(1.03);
-
+    transform: translateY(-6px);
+    filter: brightness(1.03);
 }
 
 #btn-load-more:disabled {
@@ -250,33 +231,42 @@ filter: brightness(1.03);
     transform: none;
 }
 
-
 .fim-dos-cards-vibe {
     display: block;
-    text-align: center; justify-content: center; 
-    padding: 40px 20px; 
+    text-align: center;
+    justify-content: center;
+    padding: 40px 20px;
     margin: 20px auto;
     top: calc(20% - 50px);
-    color:#ccc;
+    color: #ccc;
     color: oklch(0.8452 0 0);
     position: relative;
 }
 
-.fim-dos-cards-vibe .fa-ghost:before { 
-    font-size:clamp(3.5rem, 10vh, 7rem); 
-    color:#ff8c00; color:oklch(75.053% 0.17907 58.273); margin-bottom:15px; display:block;
+.fim-dos-cards-vibe .fa-ghost:before {
+    font-size: clamp(3.5rem, 10vh, 7rem);
+    color: #ff8c00;
+    color: oklch(75.053% 0.17907 58.273);
+    margin-bottom: 15px;
+    display: block;
 }
 
 .fim-dos-cards-vibe strong {
-font-size: 0.9rem;
-font-size:clamp(0.95rem, 1.5vw, 1.6rem); display:block; margin-bottom:8px; color:rgba(255, 255, 255, 0.89); color:oklch(100% 0.00011 271.152 / 0.89); }
-
-.fim-dos-cards-vibe p {
-font-size: 0.85rem;
-font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007 271.152); margin-bottom:20px;
+    font-size: 0.9rem;
+    font-size: clamp(0.95rem, 1.5vw, 1.6rem);
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.89);
+    color: oklch(100% 0.00011 271.152 / 0.89);
 }
 
-
+.fim-dos-cards-vibe p {
+    font-size: 0.85rem;
+    font-size: clamp(0.9rem, 1.3vw, 1.4rem);
+    color: #888;
+    color: oklch(62.675% 0.00007 271.152);
+    margin-bottom: 20px;
+}
 
 .btn-fenda-padrao {
     padding: 10px 24px;
@@ -286,132 +276,82 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
-    font-size:  clamp(0.85rem, 1.3vw, 1.2rem);
+    font-size: clamp(0.85rem, 1.3vw, 1.2rem);
     transition: 0.3s;
 }
 
-
-/* Cores das Categorias */
-
-/* ==========================================================================
-   CORES HARMONIZADAS, FLUIDAS E MAIS TRANSPARENTES
-   ========================================================================== */
-
-/* SPOTTED / RANCO - Vermelho/coral mais suave, sem forçar muito */
-.spotted-card.tenho-ranco { 
-  background: linear-gradient(145deg, rgba(207, 60, 60, 0.85), rgba(126, 47, 47, 0.233)); 
+/* ============================================================
+   6. CORES DAS CATEGORIAS
+   ============================================================ */
+.spotted-card.tenho-ranco {
+    background: linear-gradient(145deg, rgba(207, 60, 60, 0.85), rgba(126, 47, 47, 0.233));
 }
 
-/* COMUNIDADE - Efeito leitoso, translúcido e esbranquiçado (Glassmorphism limpo) */
-.spotted-card.comunidade { 
-  background: linear-gradient(145deg, rgba(179, 179, 179, 0.35), rgba(137, 137, 137, 0.14)); 
+.spotted-card.comunidade {
+    background: linear-gradient(145deg, rgba(179, 179, 179, 0.35), rgba(137, 137, 137, 0.14));
 }
 
-/* ACABA PELO AMOR DE DEUS - Laranja âmbar bem dissolvido */
-.spotted-card.acaba-pelo-amor-de-deus { 
-  background: linear-gradient(145deg, rgba(201, 120, 14, 0.7), rgba(145, 68, 37, 0.42)); 
+.spotted-card.acaba-pelo-amor-de-deus {
+    background: linear-gradient(145deg, rgba(201, 120, 14, 0.7), rgba(145, 68, 37, 0.42));
 }
 
-/* PERDIDOS - Amarelo suave que não queima os olhos e nem apaga a tag amarela */
-.spotted-card.perdidos { 
-  background: linear-gradient(275deg, rgba(221, 203, 38, 0.68), rgb(255, 235, 59, 0.12)); 
+.spotted-card.perdidos {
+    background: linear-gradient(275deg, rgba(221, 203, 38, 0.68), rgb(255, 235, 59, 0.12));
 }
 
-/* ELOGIOS - Rosa/magenta mais escuro e bem transparente para contrastar bem com a tag */
-.spotted-card.elogio { 
-  background: linear-gradient(145deg, rgba(210, 90, 130, 0.75), rgba(80, 20, 40, 0.15)); 
+.spotted-card.elogio {
+    background: linear-gradient(145deg, rgba(210, 90, 130, 0.75), rgba(80, 20, 40, 0.15));
 }
 
-/* ESPORTES - Verde folha translúcido */
-.spotted-card.esportes { 
-  background: linear-gradient(145deg, rgba(19, 252, 97, 0.288), rgba(53, 85, 45, 0.315)); 
+.spotted-card.esportes {
+    background: linear-gradient(145deg, rgba(19, 252, 97, 0.288), rgba(53, 85, 45, 0.315));
 }
 
-/* GAMES - Ciano/Aqua místico e suave */
-.spotted-card.games { 
-  background: linear-gradient(145deg, rgb(27, 155, 165, 0.85), rgba(8, 45, 57, 0.22)); 
+.spotted-card.games {
+    background: linear-gradient(145deg, rgb(27, 155, 165, 0.85), rgba(8, 45, 57, 0.22));
 }
 
-/* CARONAS - Azul acinzentado bem sutil e discreto */
-.spotted-card.caronas { 
-  background: linear-gradient(145deg, rgba(214, 214, 214, 0.63), rgba(10, 10, 10, 0.62)); 
+.spotted-card.caronas {
+    background: linear-gradient(145deg, rgba(214, 214, 214, 0.63), rgba(10, 10, 10, 0.62));
 }
 
-/* ESTUDOS / ACADÊMICO - Roxo/violeta profundo e transparente */
-.spotted-card.academico { 
-  background: linear-gradient(145deg, rgba(135, 26, 179, 0.22), rgba(61, 6, 78, 0.12)); 
+.spotted-card.academico {
+    background: linear-gradient(145deg, rgba(135, 26, 179, 0.22), rgba(61, 6, 78, 0.12));
 }
 
-/* DESAPEGO / MARKETPLACE - Azul céu suave */
-.spotted-card.desapego { 
-  background: linear-gradient(145deg, rgba(0, 191, 255, 0.22), rgba(10, 40, 60, 0.12)); 
+.spotted-card.desapego {
+    background: linear-gradient(145deg, rgba(0, 191, 255, 0.22), rgba(10, 40, 60, 0.12));
 }
 
-
-/* Ícones no canto do Card */
+/* ============================================================
+   7. ÍCONES DE CATEGORIA (::after do user-info-post)
+   ============================================================ */
 .spotted-card .user-info-post::after {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    right: 10px;
+    margin-left: auto;
     font-size: 1rem;
-    font-size: var(--user-info-font-size, clamp(0.8rem, 5cqi, 1.4rem));
-    opacity: 0.6;
-    position: absolute;
+    font-size: var(--user-info-font-size, clamp(0.9rem, 3.5cqi, 1.2rem));
+    opacity: 0.7;
+    align-self: center;
+    position: relative;
     display: flex;
 }
 
-/* Ícones específicos por categoria */
+.spotted-card.comunidade .user-info-post::after { content: '\f0c0'; color: #ffffffb6; }
+.spotted-card.tenho-ranco .user-info-post::after { content: "\f071"; color: #ff6417; }
+.spotted-card.elogio .user-info-post::after { content: "\f004"; color: #ff4fd0; }
+.spotted-card.games .user-info-post::after { content: "\f11b"; color: #08ccef; }
+.spotted-card.academico .user-info-post::after { content: "\f518"; color: #b822f3b7; }
+.spotted-card.caronas .user-info-post::after { content: "\f1b9"; color: #000000cc; }
+.spotted-card.perdidos .user-info-post::after { content: "\f002"; color: #504f05ee; }
+.spotted-card.esportes .user-info-post::after { content: "\f45f"; color: #0db344; }
+.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after { content: "\f253"; color: #f78605; }
+.spotted-card.desapego .user-info-post::after { content: "\f02b"; color: #00bfff; }
 
-.spotted-card.comunidade .user-info-post::after {
-    content: '\f0c0';
-    color: #ffffffb6;
-}
-
-.spotted-card.tenho-ranco .user-info-post::after {
-    content: "\f071";
-    color: #ff6417;
-}
-
-.spotted-card.elogio .user-info-post::after {
-    content: "\f004";
-    color: #ff4fd0;
-}
-
-.spotted-card.games .user-info-post::after {
-    content: "\f11b";
-    color: #08ccef;
-}
-
-.spotted-card.academico .user-info-post::after {
-    content: "\f518";
-    color: #b822f3b7;
-}
-
-.spotted-card.caronas .user-info-post::after {
-    content: "\f1b9";
-    color: #000000cc;
-}
-
-.spotted-card.perdidos .user-info-post::after {
-    content: "\f002";
-    color: #504f05ee;
-}
-
-.spotted-card.esportes .user-info-post::after {
-    content: "\f45f";
-    color: #0db344;
-}
-
-.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after {
-    content: "\f253";
-    color: #f78605;
-}
-
-.spotted-card.desapego .user-info-post::after {
-    content: "\f02b";
-    color: #00bfff;
-}
-
+/* ============================================================
+   8. HEADER, BODY E ESTRUTURA DO CARD
+   ============================================================ */
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -419,17 +359,18 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     width: 100%;
     gap: 8px;
     flex-wrap: wrap;
-    padding: 6px 0;
+    padding: 4px 0;
+    margin-block-end: 5px;
     -webkit-user-select: none;
     -ms-user-select: none;
-    -moz-user-select: none;
     user-select: none;
 }
 
 .card-body {
-    overflow-wrap: break-word;
+    
     word-wrap: break-word;
     word-break: break-word;
+    overflow-wrap: anywhere;
     white-space: normal;
     letter-spacing: 0.5px;
     margin-bottom: auto;
@@ -439,7 +380,6 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     gap: 5px;
 }
 
-
 .spotted-card .card-body {
     overflow: visible;
 }
@@ -448,11 +388,8 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
 .spotted-card .container-img-post {
     position: relative;
     z-index: 1;
-    
-    /* imagem abaixo do texto */
 }
 
-/* Garante que a imagem não fique atrás de nada */
 .spotted-card .feed-anexo-item img,
 .spotted-card .container-img-post img {
     display: block;
@@ -460,8 +397,9 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     z-index: 1;
 }
 
-/* BOTÃO FILTRO PERDIDOS */
-
+/* ============================================================
+   9. BOTÃO FILTRO PERDIDOS E BADGES
+   ============================================================ */
 .btn-filtro {
     padding: 5px 14px;
     background: rgba(255, 255, 255, 0.05);
@@ -475,7 +413,6 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     max-width: min-content;
     margin-top: 20px;
     align-content: center;
-
 }
 
 .btn-filtro:hover {
@@ -492,8 +429,6 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     padding: clamp(4px, 0.5vw + 2px, 10px) 14px;
     align-content: center;
 }
-
-/* APROVEITANDO AS BADGES */
 
 .badge-perdido {
     background-color: #ff4b2b !important;
@@ -527,7 +462,6 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     overflow: hidden;
     text-overflow: ellipsis;
     gap: 4px;
-    
 }
 
 .badge-perdido,
@@ -536,7 +470,6 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     border-left-style: solid !important;
     max-width: 150px;
     max-width: clamp(15cqi, 25vw, 50cqi);
-
 }
 
 .perdidos-item .link-fofoca {
@@ -563,14 +496,12 @@ font-size:clamp(0.9rem, 1.3vw, 1.4rem); color:#888; color: oklch(62.675% 0.00007
     align-items: center;
     padding-top: 10px;
     margin-top: auto;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 
 .link-fofoca:hover {
     color: #fff;
     transform: translateX(2px);
-    /* Efeito de setinha andando */
 }
 
 span.data-post {
@@ -582,51 +513,43 @@ span.data-post {
     opacity: 0.75;
 }
 
-
-/* --- COMPONENTES DO CARD/PERFIL --- */
-
+/* ============================================================
+   10. TAGS, TIMESTAMP E STATUS
+   ============================================================ */
 span.category-tag {
     color: #ffc801ec;
     color: oklch(85.748% 0.17506 88.476 / 0.925);
     font-weight: bold;
-    flex: 1;
+    flex: 0 1 auto; /* pode encolher se precisar, mas não cresce */
     min-width: 0;
-    gap: 6px;
+    gap: 5px;
+    margin-right: auto;
     align-content: center;
     align-items: center;
-    min-height: 30px;
-    margin: 5px auto;
-    display: inline-flex ;
+    display: inline-flex;
     border: none;
-    /* Limita a largura da tag */
-    font-size: 0.9rem;
-    font-size: clamp(0.85rem, 4.5cqi, 1.15rem);
-    white-space: nowrap ;
-    /* Impede que ela quebre em duas linhas */
-    overflow: hidden ;
-    /* Esconde o que sobrar */
-    text-overflow: ellipsis ;
-    hyphens: auto;
-    /* Coloca os "..." se o nome for gigante */
-    vertical-align: middle;
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 3.2cqi, 1.3rem);
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    hyphens: auto;
+    vertical-align: middle;
     opacity: 0.7;
 }
-
 
 .post-time {
     position: relative;
     color: #ffff;
     color: oklch(95.815% 0.00011 271.152);
+    margin-left: auto;
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 3.5cqi, 1.05rem);
+    font-size: clamp(0.75rem, 3cqi, 1.05rem);
     white-space: nowrap;
     flex-shrink: 0;
-    opacity: 0.7;
-    order: 2;
+    opacity: 0.75;
     padding: 6px;
     font-weight: bold;
-
 }
 
 .status-resolvido {
@@ -634,8 +557,9 @@ span.category-tag {
     background: rgba(46, 204, 113, 0.05);
 }
 
-
-/* --- CONTAINER PRINCIPAL --- */
+/* ============================================================
+   11. REAÇÕES — POPUP, PÍLULAS E ANIMAÇÃO
+   ============================================================ */
 .container-pilulas-reacoes {
     display: flex;
     gap: 10px;
@@ -643,8 +567,6 @@ span.category-tag {
     padding: 15px 0;
 }
 
-/* --- POPUP DE REAÇÕES (O MENU) --- */
-/* o popup para fica sempre do DOM, apenas invisível */
 .reacoes-popup {
     visibility: hidden;
     opacity: 0;
@@ -661,10 +583,7 @@ span.category-tag {
     white-space: nowrap;
     -webkit-user-select: none;
     -ms-user-select: none;
-    -moz-user-select: none;
     user-select: none;
-    
-    /* REVERTIDO: Voltando exatamente para a física e o tempo de transição do seu código original */
     transition: all 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;
     will-change: transform, opacity;
 }
@@ -676,41 +595,34 @@ span.category-tag {
     min-width: clamp(5px, 2.5cqi, 40px);
     min-height: 26px;
     min-height: clamp(5px, 2.5cqi, 40px);
+    word-break: break-word;
+    overflow-wrap: anywhere;
     justify-content: center;
     margin: 6px auto;
     align-content: center;
-
 }
 
-/* 1. O Wrapper deve ser relativo para segurar o popup absoluta */
 .reacao-wrapper {
     position: relative;
     display: inline-block;
-    /* Garante que o wrapper não colapse */
 }
 
-/* 3. A classe que o JS ativa */
 .reacao-wrapper.popup-ativo .reacoes-popup {
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
-    /* REVERTIDO: Mantendo sua translação original de ativação para a direita/cima */
     transform: translateX(-30%) translateY(0px);
-
 }
 
-/*  Aumente a ponte para o menu não sumir */
 .reacoes-popup::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 40px;
-    /* Dobramos a altura da ponte para dar mais margem de erro */
     bottom: -30px;
     left: 0;
 }
 
-/* --- ITEMS DO POPUP (EMOJIS) --- */
 .reacoes-popup span {
     cursor: pointer;
     font-size: 0.95rem;
@@ -721,24 +633,23 @@ span.category-tag {
     aspect-ratio: 1/1;
     border-radius: 8px;
     padding: 4px;
-    transition: 
-        background 0.2s ease, 
-        font-size 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+    transition:
+        background 0.2s ease,
+        font-size 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
         padding 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     will-change: font-size, padding;
 }
 
 .reacoes-popup span:hover {
     font-size: calc(clamp(0.9rem, 6cqw, 1.4rem) * 1.3);
-    background: rgba(169, 197, 218, 0.15); 
+    background: rgba(169, 197, 218, 0.15);
     background: oklch(0.85 0.04 282.05 / 0.15);
     padding: 6px;
     transition: background 0.2s ease, font-size 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), padding 0.2s ease;
 }
 
-/* --- PÍLULAS DE REAÇÃO (NO FEED) --- */
 .reacao-item {
-    display: inline-flex ;
+    display: inline-flex;
     opacity: 1 !important;
     visibility: visible !important;
     position: relative;
@@ -746,64 +657,48 @@ span.category-tag {
     align-content: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.08);
-    padding: 4px 6px;
-    padding: clamp(4px, 1.7cqi, 8px) clamp(6px, 2.5cqi, 10px);
-    border-radius: 10px;
+    /* 🔥 Padding mais enxuto pra aguentar o cenário extremo */
+    padding: 3px 5px;
+    padding: clamp(2px, 0.8cqi, 6px) clamp(4px, 1.2cqi, 8px);
+    border-radius: 8px;
     font-size: 0.8rem;
-    font-size: clamp(0.85rem, 2cqw, 1.4rem);
+    font-size: clamp(0.75em, 3.5cqi, 1.2em);
     border: 1px solid rgba(255, 188, 0, 0.2);
     color: #eee;
+    color: oklch(94.912% 0.00011 271.152);
     cursor: pointer;
-    margin: 0 6px;
+    /* 🔥 Margin mais enxuta entre pílulas */
+    margin: 0 3px;
     transition: transform 0.2s ease, background 0.2s ease;
     -webkit-user-select: none;
     -ms-user-select: none;
-    -moz-user-select: none;
     user-select: none;
     pointer-events: auto;
 }
 
-/* --- ANIMAÇÃO DE FEEDBACK PREMIUM (CHIQUE) --- */
-
-/* 1. A Pílula Votada: Pulinho elegante e brilho de ouro fluido */
 .reacao-item.voted {
     background: rgba(255, 188, 0, 0.25);
     border: 1px solid #ffbb00d5;
     font-weight: bold;
-    /* Animação que simula o botão sendo pressionado para dentro e saltando */
     animation: cliqueChique 0.45s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
-/* 2. O EFEITO VITRAL: Quando o container tem um item votado, as OUTRAS pílulas se desfazem como vidro */
 .container-pilulas-reacoes:has(.reacao-item.voted) .reacao-item:not(.voted) {
     opacity: 0.35;
-    filter: blur(1px); /* Efeito de vidro jateado perdendo o foco */
-    transform: scale(0.92) translateY(2px); /* Elas encolhem e "descem" levemente */
-    pointer-events: none; /* Desativa cliques extras enquanto o usuário processa a escolha */
-    transition: 
-        opacity 0.4s ease, 
-        filter 0.4s ease, 
+    filter: blur(1px);
+    transform: scale(0.92) translateY(2px);
+    pointer-events: none;
+    transition:
+        opacity 0.4s ease,
+        filter 0.4s ease,
         transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* --- KEYFRAMES DO CLIQUE PREMIUM --- */
 @keyframes cliqueChique {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 rgba(255, 188, 0, 0);
-    }
-    30% {
-        /* Um pulo elegante, sem exageros */
-        transform: scale(1.08); 
-        box-shadow: 0 0 20px rgba(255, 188, 0, 0.45), inset 0 0 8px rgba(255, 255, 255, 0.2);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 4px 12px rgba(255, 188, 0, 0.2), inset 0 0 4px rgba(255, 255, 255, 0.1);
-    }
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 188, 0, 0); }
+    30% { transform: scale(1.08); box-shadow: 0 0 20px rgba(255, 188, 0, 0.45), inset 0 0 8px rgba(255, 255, 255, 0.2); }
+    100% { transform: scale(1); box-shadow: 0 4px 12px rgba(255, 188, 0, 0.2), inset 0 0 4px rgba(255, 255, 255, 0.1); }
 }
-
-
 
 @media (hover: none) {
     .reacoes-popup span:active {
@@ -811,13 +706,9 @@ span.category-tag {
     }
 }
 
-/* --- AJUSTE ESPECÍFICO DO ANÔNIMO --- */
-/* Se a popup estiver dentro de um card anônimo, forçamos o tamanho */
 .spotted-card-anonimo .reacoes-popup span {
     font-size: 1.2rem;
 }
-
-
 
 .footer-links {
     text-transform: uppercase;
@@ -833,26 +724,25 @@ span.category-tag {
     gap: 10px;
 }
 
-
 .btn-reagir,
 .btn-fofocar,
 .reacao-wrapper {
     pointer-events: auto !important;
 }
 
-/*  ELEMENTOS DE USUÁRIO (AVATARES E MENÇÕES) */
-
+/* ============================================================
+   12. AVATAR E MENÇÕES
+   ============================================================ */
 .avatar-p {
     border: 1px solid #ff9f0f;
-    width: clamp(38px, 8vw, 60px);
-    height: clamp(38px, 8vw, 60px);
+    width: 40px;
+    height: 40px;
+    width: clamp(38px, 12cqi, 60px);
+    height: clamp(38px, 12cqi, 60px);
     border-radius: 50%;
     -moz-background-clip: padding-box;
-    /* Firefox 3.6 and earlier */
     -webkit-background-clip: padding-box;
-    /* Safari 3-4, iOS 3-4 */
     background-clip: padding-box;
-    /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
     object-fit: cover;
     flex-shrink: 0;
     display: flex;
@@ -863,10 +753,11 @@ span.category-tag {
     display: flex;
     gap: 8px;
     font-size: 0.85rem;
-    font-size: var(--user-info-font-size, clamp(0.9rem, 5cqi, 1.3rem));
+    font-size: var(--user-info-font-size, clamp(0.8rem, 3.5cqi, 1.2rem));
     margin-bottom: auto;
     font-weight: bold;
     align-items: center;
+    justify-content: space-between;
 }
 
 .user-anonimo {
@@ -885,7 +776,7 @@ span.category-tag {
 }
 
 .user-mention {
-    color:#ff9d0b;
+    color: #ff9d0b;
     color: oklch(83.276% 0.17139 82.036);
     text-decoration: none;
     font-weight: bold;
@@ -895,11 +786,13 @@ span.category-tag {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem;
-    font-size: clamp(0.8rem, 1.5cqi + 0.5rem, 1.05rem);
+    font-size: clamp(0.8rem, 1.5cqi + 0.3em, 1.05rem);
     pointer-events: auto;
 }
 
-/* Definição base dos botões */
+/* ============================================================
+   13. BOTÕES DE AÇÃO DO CARD
+   ============================================================ */
 .btn-reagir,
 .btn-fofocar,
 .btn-ver-mais {
@@ -908,7 +801,6 @@ span.category-tag {
     background: rgba(255, 255, 255, 0.06);
     border-radius: 16px;
     cursor: pointer;
-    /* MUDANÇA: Agora o navegador mostra a mãozinha */
     transition: all 0.3s ease-in-out;
     gap: 8px;
     display: inline-flex;
@@ -918,15 +810,11 @@ span.category-tag {
     font-weight: 600;
     text-transform: uppercase;
     background: transparent;
-    /* Garante que não tenha cor de fundo estranha */
     border: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    -moz-user-select: none;
     user-select: none;
-    /* Evita selecionar o texto sem querer */
 }
-
 
 .btn-reagir:hover,
 .btn-fofocar:hover,
@@ -944,21 +832,21 @@ span.category-tag {
     margin: 20px 0;
     text-align: center;
     word-wrap: break-word;
-    overflow-wrap: break-word;
+    overflow-wrap: anywhere;
     display: block;
-    /* Garante que não vire flex e quebre */
     line-height: 1.5;
     font-style: italic;
 }
 
-/* ==================================================
-   GRID DE ANEXOS NO FEED (ESTILO INSTAGRAM/FACEBOOK)
-   ================================================== */
+/* ============================================================
+   14. GRID DE ANEXOS — BASE E GALERIA INTELIGENTE
+   ============================================================ */
+
+/* --- 14.1. Grid base (fallback / navegadores sem :has()) --- */
 .feed-anexos-grid {
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(2, minmax(70px, 100px));
-      /* Substitui os pixels fixos por unidades cqi combinadas com clamp ou minmax */
     grid-template-columns: repeat(2, minmax(15cqi, 25cqi));
     gap: 15px;
     margin-top: 5px;
@@ -967,7 +855,6 @@ span.category-tag {
     border: 2px solid rgba(255, 255, 255, 0.06);
     padding: 4px 2px;
 }
-
 
 .main-perdidos .feed-anexos-grid {
     display: grid;
@@ -997,60 +884,144 @@ span.category-tag {
     border-radius: 4px;
 }
 
+/* --- 14.2. Item base (agora ÚNICA definição — sem duplicação) --- */
 .feed-anexo-item {
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.28);
+    border-radius: 8px;
+    position: relative;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    overflow: hidden;
-    border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.15s ease;
 }
-
 
 .feed-anexo-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
-
+    transition: transform 0.25s ease;
 }
 
-/* Se houver apenas 1 item, centraliza e limita tamanho */
+/* --- 14.3. 1 imagem: full bleed, sem cortes absurdos --- */
 .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-    display: flex;
-    justify-content: center;
-    background: transparent;
+    display: block;
+    padding: 0;
     border: none;
+    background: transparent;
+    max-height: 100%;
+}
+
+.feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
+    aspect-ratio: auto;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    background: #0a0a0a;
+    box-shadow: none;
+}
+
+.feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    background: #0a0a0a;
+}
+
+/* --- 14.4. 2 imagens: lado a lado --- */
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 6px;
+    aspect-ratio: 2 / 1;
+    border: none;
+    background: transparent;
     padding: 0;
 }
 
-body:not(.modo-swipe-ativo) .feed-anexo-item:only-child img {
-    background: #0a0a0a;
-    height: 100%;
-    width: 100%;
-    display: block;
-    object-fit: contain;
-    object-position: center;
-    max-height: 250px;
-    max-height: clamp(160px, 70cqi, 320px);
-}
-
-.feed-anexo-item:only-child  {
-    object-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* --- 14.5. 3 imagens: 1 grande + 2 empilhadas (Google Drive) --- */
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    aspect-ratio: 3 / 2;
     border: none;
-    box-shadow: none;
-    object-fit: cover;
-    aspect-ratio: auto;
-    max-height: 100%;
-    max-width: 100%;
+    background: transparent;
+    padding: 0;
 }
 
-/*  Imagens no grid (feed e perfil) */
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    aspect-ratio: auto;
+}
 
+/* --- 14.6. 4 imagens: mural 2x2 --- */
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 5px;
+    aspect-ratio: 1 / 1;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+/* --- 14.7. 5+ imagens: hero 2x2 + resto --- */
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 5px;
+    aspect-ratio: 2 / 1;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) .feed-anexo-item:first-child {
+    grid-row: 1 / span 2;
+    grid-column: 1 / span 2;
+    aspect-ratio: auto;
+}
+
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(6)) .feed-anexo-item:nth-child(6) {
+    grid-column: span 2;
+}
+
+/* --- 14.8. PC: modo revista --- */
+@media (min-width: 1024px) {
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+        max-height: 70vh;
+        object-fit: contain;
+        background: #050505;
+    }
+}
+
+/* --- 14.9. Fallback: navegadores sem :has() --- */
+@supports not selector(:has(*)) {
+    .feed-anexos-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(80px, 1fr));
+        gap: 6px;
+    }
+    .feed-anexo-item {
+        aspect-ratio: 1 / 1;
+    }
+    .feed-anexo-item img {
+        object-fit: cover;
+    }
+}
+
+/* ============================================================
+   15. IMAGEM ÚNICA (container-img-post — posts sem grid)
+   ============================================================ */
 .spotted-card .container-img-post img {
     display: block;
     width: 100%;
@@ -1060,25 +1031,16 @@ body:not(.modo-swipe-ativo) .feed-anexo-item:only-child img {
     align-items: center;
     justify-content: center;
     max-height: 250px;
-    max-height: calc(var(--card-max-height, 500px) * 0.6);
-    /* Substitui o cálculo estático pelas variáveis dinâmicas do seu JS */
+    max-height: calc(var(--card-max-height, 550px) * 0.6);
     height: var(--img-max-height, auto);
     object-fit: var(--img-fit, contain);
     background: #0a0a0a;
-
-
-    /* Garante suavidade no redimensionamento */
     image-rendering: auto;
-
-    /* Remove heranças pesadas */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     will-change: transform;
-    /* Ajuda o WebKit a não re-renderizar a imagem do zero no resize/swipe */
 }
 
-
-/* Garante que o container da imagem não ultrapasse o card */
 .spotted-card .container-img-post {
     position: relative;
     max-height: 100dvh;

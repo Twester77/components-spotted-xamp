@@ -49,15 +49,16 @@ include 'includes/bolhas.php';
      // ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
 function recalcFeedLayout() {
     if (!document.body.classList.contains('modo-swipe-ativo')) return;
-
+// 🔥 TEMPORÁRIO: mede performance
+    console.time('recalcFeedLayout');
     var vw = window.innerWidth;
     var vh = window.innerHeight;
     var isLandscape = vw > vh;
 
     // 🔥 ARREDONDAMENTO DE PIXEL (ACABA COM O EFEITO ONDULATÓRIO)
-    var cardWidth = isLandscape ?
-        Math.round(Math.max(300, Math.min(vw * 0.60, 600))) :
-        Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
+   var cardWidth = isLandscape ?
+    Math.round(Math.max(450, Math.min(vw * 0.72, 720))) : // 🔥 Aumentamos de 600 para 850 de máximo, e o mínimo foi para 450
+    Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
     // 🔥 Altura máxima do card: limitada e mais generosa no portrait
     var maxCardHeight;
@@ -89,6 +90,8 @@ function recalcFeedLayout() {
 
     root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
     root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
+     // 🔥 TEMPORÁRIO: fecha a medição
+    console.timeEnd('recalcFeedLayout');
 }
 
 var layoutTimeout;

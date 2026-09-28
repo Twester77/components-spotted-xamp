@@ -37,7 +37,7 @@
     --bt-card-font-size: clamp(0.85rem, 1.5cqi, 1.4rem);
     --bt-titulo-size: clamp(1rem, 3cqi, 2rem);
     /* será sobrescrito pelo JS */
-    --bt-meta-size: clamp(0.75rem, 4cqw, 1.2rem);
+    --bt-meta-size: clamp(0.75rem, 2.6cqi, 1.2rem);
     /* será sobrescrito pelo JS */
     --bt-text-max-height: 80px;
     /* será sobrescrito pelo JS */
@@ -69,7 +69,7 @@
 /* 🔥 Container padrão: GRID (sempre ativo, a menos que .bt-empilhado esteja presente) */
 #bt-container-eventos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 25px;
     max-width: 1600px;
     margin: 0 auto;
@@ -340,7 +340,7 @@
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.bt-select-comunidade:focus {
+.bt-select-comunidade:focus-visible {
     outline: none;
     border-color: var(--bt-dourado, #ffbc00);
     background-color: rgba(255, 255, 255, 0.06);
@@ -364,14 +364,14 @@
    ============================================================ */
 /* 1. SELECT COM ESTILO "GLOW" NO MODO SWIPE */
 .modo-tinder-ativo .bt-select-comunidade {
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     border-color: rgba(255, 188, 0, 0.25);
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.05);
 }
 
 
-.modo-tinder-ativo .bt-select-comunidade:focus {
+.modo-tinder-ativo .bt-select-comunidade:focus-visible {
     border-color: var(--bt-dourado, #ffbc00);
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.15);
 }
@@ -594,7 +594,7 @@
     border: 1px solid var(--bt-borda-sutil);
     border-radius: clamp(10px, 1.5vw, 16px);
     padding: 10px ;
-    padding: clamp(12px, 1.5vw, 20px);
+    padding: clamp(8px, 1.5vw, 20px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
@@ -733,6 +733,7 @@
     max-width: 100%;
     text-overflow: ellipsis;
     word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .bt-local,
@@ -756,16 +757,21 @@
 
 .bt-descricao {
     font-size: 0.9rem;
-    font-size: clamp(0.85rem, 2cqw, 1rem);
+    font-size: clamp(0.85rem, 2cqi, 1rem);
     color: #ccc;
     color: oklch(0.85 0 0);
     margin: 4px 0;
     max-height: var(--bt-text-max-height, 80px);
     overflow: hidden;
-    line-height: 1.4;
+    line-height: 1.35;
+    width: 100%;
+    /* 2. Suporte para navegadores antigos (Internet Explorer/Edge antigo) */
+     word-break: break-word; 
+     /* 3. Padrão moderno que substituiu o 'word-wrap' */
+    overflow-wrap: anywhere; 
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
     box-orient: vertical;
 }
@@ -980,6 +986,7 @@
     overflow-wrap: break-word;
     -ms-word-break: break-word;
     word-break: break-word;
+    overflow-wrap: anywhere;
     white-space: pre-wrap;
 }
 
@@ -1341,6 +1348,7 @@
     margin: 0;
     white-space: pre-wrap;
     word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .bt-sem-comentarios {
@@ -1669,9 +1677,9 @@ padding-bottom: env(safe-area-inset-bottom);
     font-family: inherit;
 }
 
-.bt-campo-grupo input:focus,
-.bt-campo-grupo textarea:focus,
-.bt-campo-grupo select:focus {
+.bt-campo-grupo input:focus-visible,
+.bt-campo-grupo textarea:focus-visible,
+.bt-campo-grupo select:focus-visible {
     outline: none;
     border-color: var(--bt-dourado);
     border-color: oklch(83.276% 0.17139 82.036);
@@ -2276,7 +2284,7 @@ padding-bottom: env(safe-area-inset-bottom);
     .bt-empilhado #bt-container-eventos .bt-card {
         width: 90%;
         max-width: 300px;
-        padding: 10px;
+        padding: 8px;
     }
 
     .bt-galeria-grid {
@@ -2298,11 +2306,12 @@ padding-bottom: env(safe-area-inset-bottom);
 
 @media (orientation: landscape) and (max-height: 500px) {
     .bt-empilhado #bt-container-eventos .bt-card {
-        max-height: 75vh;
+        max-height: 70vh;
     }
 
     .bt-descricao {
         max-height: 40px;
+        display: -webkit-box;
         -webkit-line-clamp: 2;
         line-clamp: 2;
     }
