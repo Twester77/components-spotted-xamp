@@ -45,8 +45,7 @@ include 'includes/bolhas.php';
             <?php include 'includes/login.php'; ?>
         <?php else: ?>
             <div class="card-boas-vindas-fenda">
-                <div style="font-size: 32px; margin-bottom: 15px;">🎓</div>
-                <p style="color: #fff; margin-bottom: 25px; font-size: 1.4rem; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
+                <div style="font-size: 36px; margin-bottom: 15px;">🎓</div>
                     <span class="<?php echo $classe_saudacao; ?>">
                         <?php echo $saudacao; ?>
                         <span style="color: #ffbc00; font-weight: bold;">
@@ -55,7 +54,7 @@ include 'includes/bolhas.php';
                     </span>
                 </p>
                 <p>
-                    <span style="font-size: 20px; opacity: 0.8; color: <?php echo $cor_extra; ?>">
+                    <span style="font-size: 20px; margin-top: 15px; opacity: 0.8; color: <?php echo $cor_extra; ?>">
                         <?php echo $extra; ?>
                     </span>
                 </p>

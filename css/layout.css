@@ -114,7 +114,11 @@ header h1 {
 
 .fenda-saudacao {
     margin: 20px auto;
-    padding: 15px;
+    font-size: 1.4rem; 
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-family: 'Segoe UI', BlinkMacSystemFont, system-ui, -apple-system, Roboto, sans-serif; 
+    letter-spacing: 1px;
+    padding: 12px;
     width: 100%;
     justify-content: center;
 }
@@ -1522,15 +1526,18 @@ form[action="confirma-login.php"] input[type="password"] {
 /* Card de boas-vindas para não ficar colado */
 .card-boas-vindas-fenda {
     text-align: center;
-    margin-bottom: 30px;
+    color: #fff; 
+    color: oklch(100% 0.00011 271.152);
+    margin: 25px auto;
 }
 
 /* AJUSTES PARA COMPLEMENTAR O MODO HACKER */
 h2.titulo-home {
     font-size: 1.7rem;
+    font-size: clamp(1.4rem, 1.5vw, 2rem);
     text-align: center;
-    margin-top: 40px;
-    margin-bottom: 20px;
+    margin: 30px auto;
+   
 }
 
 .img-home-capa {
