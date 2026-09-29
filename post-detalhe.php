@@ -80,12 +80,15 @@ try {
                 m.anexos, 
                 m.data_post,
                 m.status,
+                m.comunidade_id,
+                com.tipo AS comunidade_tipo,
                 u.id as usuario_id,
                 u.username, 
                 u.foto,
                 u.pref_cor_padrao,
                 u.pref_vibe_padrao
             FROM mensagens m
+            LEFT JOIN comunidades com ON com.id = m.comunidade_id
             INNER JOIN usuarios u ON m.usuario_id = u.id
             WHERE m.id = ? AND m.status = 'ativo'
             LIMIT 1";
@@ -101,6 +104,26 @@ try {
         http_response_code(404);
         echo '<div class="lightbox-erro">❌ Post não encontrado ou foi removido.</div>';
         exit();
+    }
+
+    if ($post['comunidade_tipo'] === 'privada') {
+        $comunidade_id = (int)$post['comunidade_id'];
+        $usuario_id = (int)($_SESSION['usuario_id'] ?? 0);
+        $stmt_membro = $conn->prepare(
+            "SELECT 1 FROM comunidade_membros
+             WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+             LIMIT 1"
+        );
+        $stmt_membro->bind_param("ii", $comunidade_id, $usuario_id);
+        $stmt_membro->execute();
+        $eh_membro = $stmt_membro->get_result()->fetch_row() !== null;
+        $stmt_membro->close();
+
+        if (!$eh_membro) {
+            http_response_code(404);
+            echo '<div class="lightbox-erro">❌ Post não encontrado ou foi removido.</div>';
+            exit();
+        }
     }
 } catch (Exception $e) {
     http_response_code(500);

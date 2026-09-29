@@ -382,14 +382,14 @@
 .comunidade-page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 15px;
+    padding: 10px;
 }
 
 .comunidade-capa {
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 8px;
     background: #111;
     background: oklch(10% 0 0);
     margin-bottom: 20px;
@@ -2000,8 +2000,8 @@ textarea#descricao{
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .avatar-p {
     width: 38px;
     height: 38px;
-    width: clamp(36px, 8cqh, 72px);
-    height: clamp(38px, 8cqh, 72px);
+    width: clamp(36px, 8cqh, 70px);
+    height: clamp(36px, 8cqh, 70px);
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border: 1px solid oklch(100% 0 0 / 0.1);
@@ -2069,11 +2069,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item {
     overflow: hidden;
 }
 
- body:not(.modo-swipe-ativo) .comunidade-page .spotted-card:has(.feed-anexo-item:only-child img) {
-    display: block;
-    justify-self: center;
-    border: none;
-}
 
 body:not(.modo-swipe-ativo) .comunidade-page .feed-anexo-item:only-child img {
     width: 100%;
@@ -2169,6 +2164,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     border: none;
     border-radius: 50%;
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
     font-size: 1.5rem;
     font-size: clamp(0.75em, 5cqi, 1.1em);
     width: 44px;
@@ -2177,10 +2173,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     height: clamp(36px, 8cqi, 44px);
     cursor: pointer;
     display: flex;
+    -webkit-user-select: none;
+    user-select: none;
     align-items: center;
     justify-content: center;
     transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     z-index: 2;
 }
 .carrossel-nav button:hover {
@@ -2195,51 +2193,40 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
 /* Footer do card – reações e comentários */
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     padding-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-top: 1px solid oklch(100% 0 0 / 0.06);
-    margin-top: 6px;
+    margin-top: 5px;
 }
 
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir,
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar {
-    background: transparent;
-    border: none;
-    color: #aaa;
-    color: oklch(68% 0 0);
-    font-size: clamp(0.85rem, 1vw, 1.1rem);
-    font-weight: 500;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: background 0.2s, color 0.2s;
-}
-
-
-
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-reagir:hover,
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-fofocar:hover {
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0 0 / 0.04);
-    color: #fff;
-    color: oklch(100% 0 0);
-}
-
-/* Reações (emojis) */
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacoes-gravadas {
+/* Reações (emojis) gravadas */
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacoes-gravadas {
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
+    min-height: 36px;
+    align-items: center;
+    align-content: center;
     gap: 6px;
-    margin: 6px 0;
+    margin: 4px 0;
+    box-sizing: border-box;
 }
 
-    body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
+    display: block;
+    flex: 0 1 auto;
+    width: fit-content;
+    max-width: min(100%, 10em);
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.2;
     background: rgba(255, 255, 255, 0.04);
     background: oklch(100% 0 0 / 0.04);
+    border: 1px solid transparent;
     border-radius: 20px;
     padding: 4px 8px;
     padding: clamp(4px, 2cqi, 8px) clamp(10px, 3cqi, 14px);
@@ -2247,7 +2234,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     font-size: clamp(0.85em, 3cqi, 1.15em);
     color: #ddd;
     color: oklch(88% 0 0);
-    border: 1px solid transparent;
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item.voted {
@@ -2537,7 +2523,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     background: oklch(100% 0 0 / 0.03);
     border: 2px dashed rgba(255, 255, 255, 0.1);
     border: 2px dashed oklch(100% 0 0 / 0.1);
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -2645,7 +2631,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     text-decoration: none;
     text-align: center;
     transition: 0.3s;
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
 }
 
 .btn-secundario:hover {
@@ -2710,7 +2696,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
 .feed-comunidade .post-admin-gold::after {
     top: 20px;
     right: 60px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 /* ============================================================
@@ -2872,42 +2858,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     }
 }
 
-/* ==================================================
-   8. CORREÇÃO PARA O MODAL DE POST (EMOJIS ALINHADOS)
-   ================================================== */
-.comunidade-page .modal-body-ajuste .main-novo-post .reacoes-gravadas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    justify-content: center;
-}
-
-.comunidade-page .modal-body-ajuste .reacao-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0 0 / 0.04);
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
-    color: #ddd;
-    color: oklch(88% 0 0);
-    border: 1px solid transparent;
-}
-
-.comunidade-page .modal-body-ajuste .reacao-item.voted {
-    background: rgba(255, 188, 0, 0.15);
-    background: oklch(83.276% 0.17139 82.036 / 0.15);
-    border-color: #ffbc00;
-    border-color: oklch(83.276% 0.17139 82.036);
-}
-
-
-
-/* ============================================================
-   CONTEÚDO DO POST + BOTÃO EXPANDIR (Portrait / Base)
-   ============================================================ */
+/* =======================================================
+   8. CONTEÚDO DO POST + BOTÃO EXPANDIR (Portrait / Base)
+   ======================================================= */
 
 body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
     position: relative; /*  Necessário para o "ler mais" ancorar certo */
@@ -2943,25 +2896,43 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content.tem-mai
     cursor: pointer;
 }
 
-/* Botão Expandir (Base / Portrait) */
-body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais {
+/* Botões do rodapé – estilo padronizado no portrait */
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
+.btn-reagir,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
+.btn-fofocar,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
+.btn-ver-mais {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-size: clamp(0.7rem, 2.5cqi, 0.9rem);
-    font-weight: 500;
+    padding: 5px 10px;
     border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
     color: #aaa;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    font-weight: 500;
     line-height: 1.4;
-    /*  SEM margin-left: auto — vai ser centralizado pelo rodapé */
+    font-family: inherit;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
+.btn-reagir:hover,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
+.btn-fofocar:hover,
+body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
+.btn-ver-mais:hover {
+    background: rgba(255, 255, 255, 0.1);
+    background: oklch(100% 0.00011 271.152 / 0.1);
+    color: #fff;
+    color: oklch(100% 0.00011 271.152);
+    border-color: rgba(255, 255, 255, 0.16);
 }
 
 body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais:hover {
@@ -2991,47 +2962,54 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     margin-top: 6px;
 }
 
+
+
 /* ============================================================
    MODO LANDSCAPE (CELULARES DEITADOS) - CARDS DE COMUNIDADE
    ============================================================
-   Versão 13.0 - 100% Fluido com clamp() + dvh
-   Um único breakpoint. Adapta do iPhone SE ao iPad.
-   Fallbacks em px para navegadores de museu.
+   Versão 15.0 - Ajustes de reações, rodapé e navegação
    ============================================================ */
 
-/* ============================================================
-   LANDSCAPE — cards de comunidade, swipe desativado
-   ============================================================ */
 @media (orientation: landscape) and (max-height: 600px) {
 
     /* Fallbacks em px */
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
         --ls-pad: 8px;
+        --ls-pad-x: 12px;
+        --ls-body-inset: 4px;
         --ls-gap: 6px;
+        --ls-gap-x: 6px;
         --ls-nav-row: 36px;
-        --ls-reactions-row: 32px;
+        --ls-reactions-row: 36px;
         --ls-footer-row: 44px;
         --ls-text-max: 7rem;
-        --ls-nav-btn: 36px;
+        --ls-nav-btn: 32px;
         --ls-btn-pad-y: 4px;
         --ls-btn-pad-x: 8px;
-        --ls-btn-font: 0.8rem;
+        --ls-btn-font: 0.85rem;
+        --ls-content-font: 0.75rem;
+        --ls-reaction-font: 0.85rem;
         --ls-avatar: 40px;
     }
 
     /* Medidas fluidas */
     @supports (height: 1dvh) {
         body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
+            --ls-pad-x: clamp(10px, 1.8vw, 16px);
             --ls-pad: clamp(6px, 1.4dvh, 12px);
-            --ls-gap: clamp(5px, 1.2dvh, 10px);
-            --ls-nav-row: clamp(34px, 8dvh, 42px);
-            --ls-reactions-row: clamp(30px, 7dvh, 40px);
-            --ls-footer-row: clamp(40px, 10dvh, 50px);
+            --ls-gap: clamp(6px, 1.2dvh, 12px);
+            --ls-nav-row: clamp(36px, 8dvh, 42px);
+            --ls-reactions-row: clamp(36px, 9dvh, 44px);
+            --ls-footer-row: clamp(40px, calc(32px + 3dvh), 52px);
             --ls-text-max: clamp(5.5rem, 23dvh, 9rem);
             --ls-nav-btn: clamp(32px, 8.5dvh, 44px);
             --ls-btn-pad-y: clamp(3px, 0.8dvh, 5px);
             --ls-btn-pad-x: clamp(7px, 1.5dvh, 12px);
-            --ls-btn-font: clamp(0.7rem, 1.8dvh, 1.05rem);
+            --ls-btn-font: clamp(
+                0.78rem,
+                calc(0.62rem + 0.6dvh + 0.35vw),
+                1.05rem
+            );
             --ls-avatar: clamp(36px, 10dvh, 52px);
         }
     }
@@ -3044,17 +3022,18 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         flex-direction: column;
         justify-content: flex-start;
         width: 100%;
-        max-width: 800px;
+        max-width: 850px;
         height: min(96vh, 440px);
         max-height: 96vh;
         margin: var(--ls-gap) auto;
-        padding: var(--ls-pad);
+        padding: var(--ls-pad) var(--ls-pad-x);
         box-sizing: border-box;
         overflow: hidden;
         border-radius: 8px;
         background: #14141a;
         background: oklch(19.405% 0.01204 285.207);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        container-type: inline-size;
     }
 
     @supports (height: 1dvh) {
@@ -3082,17 +3061,16 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
     .card-header {
         margin-bottom: var(--ls-gap);
-        padding-right: calc(var(--ls-avatar) * 1.1);
         padding-inline-end: calc(var(--ls-avatar) * 1.1);
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
     .user-info-post {
-        gap: var(--ls-gap);
+        gap: var(--ls-gap-x);
         margin: 0 0 var(--ls-gap);
         padding-inline: 0;
-        font-size: var(--ls-btn-font);
+        font-size: var(--ls-content-font);
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3126,14 +3104,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card.post-admin-gold:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
     .card-header {
-        padding-top: calc(var(--ls-btn-font) + 8px);
-        padding-block-start: calc(var(--ls-btn-font) + 8px);
+        padding-block-start: calc(var(--ls-content-font) + 8px);
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card.post-admin-gold:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)::after {
         top: var(--ls-pad);
-        right: calc(var(--ls-avatar) * 1.15);
         inset-inline-end: calc(var(--ls-avatar) * 1.15);
         z-index: 51;
         padding: 2px 6px;
@@ -3142,10 +3118,10 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         border-radius: 6px;
         background: rgba(255, 215, 0, 0.1);
         background: color-mix(in srgb, #ffd700 10%, transparent);
-        font-size: calc(var(--ls-btn-font) * 0.85);
+        font-size: calc(var(--ls-content-font) * 0.85);
     }
 
-    /* Corpo: mídia ocupa a primeira faixa; navegação fica abaixo */
+    /* Corpo: mídia à esquerda, conteúdo à direita */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
     .card-body {
@@ -3156,14 +3132,26 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         grid-template-rows:
             minmax(0, 1fr)
             var(--ls-nav-row);
-        column-gap: var(--ls-gap);
+        column-gap: var(--ls-gap-x);
         row-gap: 0;
+        padding: var(--ls-body-inset);
+        box-sizing: border-box;
         align-items: stretch;
         width: 100%;
         min-width: 0;
         min-height: 0;
         overflow: hidden;
         letter-spacing: normal;
+    }
+
+    /* cqw é calculado em relação ao card */
+    @supports (width: 1cqw) {
+        body:not(.modo-swipe-ativo) .comunidade-page
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .card-body {
+            --ls-gap-x: clamp(6px, 1.2cqw, 12px);
+            --ls-reaction-font: clamp(0.8rem, 2cqw, 1.1rem);
+        }
     }
 
     /* Imagem e galeria */
@@ -3305,7 +3293,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         margin: 0;
         padding: 0;
         overflow: hidden;
-        font-size: var(--ls-btn-font);
+        font-size: var(--ls-content-font);
         line-height: 1.45;
         letter-spacing: normal;
         overflow-wrap: anywhere;
@@ -3324,12 +3312,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         background: linear-gradient(to left, oklch(15% 0 0) 70%, transparent);
         color: #ffbc00;
         color: oklch(83.276% 0.17139 82.036);
-        font-size: var(--ls-btn-font);
+        font-size: var(--ls-content-font);
         font-weight: bold;
         cursor: pointer;
     }
 
-    /* Setas e indicadores: faixa abaixo da imagem */
+    /* Setas e indicadores abaixo da imagem */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .carrossel-nav,
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3350,6 +3338,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         align-items: center;
         justify-content: space-between;
         z-index: 2;
+        margin-top: 3px;
         pointer-events: none;
     }
 
@@ -3369,7 +3358,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         pointer-events: auto;
         border: 1px solid rgba(255, 255, 255, 0.12);
         border-radius: 50%;
-        background: rgba(0, 0, 0, 0.65);
+        background: rgba(0, 0, 0, 0.192);
         color: #fff;
         font-size: calc(var(--ls-nav-btn) * 0.48);
         line-height: 1;
@@ -3389,7 +3378,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         outline-offset: 2px;
     }
 
-    /* Indicadores centralizados entre as setas */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .carrossel-indicadores {
         display: flex;
@@ -3409,7 +3397,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        gap: var(--ls-gap);
+        gap: var(--ls-gap-x);
         width: 100%;
         height: var(--ls-reactions-row);
         min-width: 0;
@@ -3421,12 +3409,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         scrollbar-width: none;
     }
 
-    /* Reações fora do grid somente quando há carrossel */
+    /* Reações posicionadas fora do grid no carrossel */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .reacoes-gravadas {
         position: absolute;
-        left: calc(45% + var(--ls-gap));
-        right: 0;
+        left: calc(45% + var(--ls-gap-x) + var(--ls-body-inset));
+        right: var(--ls-body-inset);
         bottom: var(--ls-footer-row);
         width: auto;
         grid-column: auto;
@@ -3439,21 +3427,25 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
-    .spotted-card .reacao-item {
-        display: inline-flex;
-        flex: 0 0 auto;
-        align-items: center;
-        gap: 4px;
-        margin: 0;
-        padding: var(--ls-btn-pad-y) var(--ls-btn-pad-x);
-        border: 1px solid transparent;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.04);
-        background: oklch(100% 0 0 / 0.04);
-        color: #ddd;
-        font-size: var(--ls-btn-font);
-        white-space: nowrap;
-    }
+.spotted-card .reacao-item {
+    display: block;
+    flex: 0 0 auto;
+    width: fit-content;
+    max-width: min(100%, 10em);
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin: 0;
+    padding: var(--ls-btn-pad-y) var(--ls-btn-pad-x);
+    border: 1px solid transparent;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    background: oklch(100% 0 0 / 0.04);
+    color: #ddd;
+    font-size: var(--ls-reaction-font, 0.9rem);
+}
 
     /* Botões do rodapé */
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3466,7 +3458,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         flex-wrap: nowrap;
         align-items: center;
         justify-content: center;
-        gap: var(--ls-gap);
+        gap: var(--ls-gap-x);
         width: 100%;
         min-width: 0;
         min-height: 0;
@@ -3476,12 +3468,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    /* Botões fora do grid somente quando há carrossel */
+    /* Rodapé posicionado fora do grid no carrossel */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .footer-links {
         position: absolute;
-        left: calc(45% + var(--ls-gap));
-        right: 0;
+        left: calc(45% + var(--ls-gap-x) + var(--ls-body-inset));
+        right: var(--ls-body-inset);
         bottom: 0;
         width: auto;
         height: var(--ls-footer-row);
@@ -3516,6 +3508,26 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         cursor: pointer;
     }
 
+    /* Evita que os três rótulos se sobreponham em cards estreitos */
+    @media (max-width: 500px) {
+        body:not(.modo-swipe-ativo) .comunidade-page
+        .spotted-card .footer-links {
+            gap: 3px;
+        }
+
+        body:not(.modo-swipe-ativo) .comunidade-page
+        .spotted-card .btn-reagir,
+        body:not(.modo-swipe-ativo) .comunidade-page
+        .spotted-card .btn-fofocar,
+        body:not(.modo-swipe-ativo) .comunidade-page
+        .spotted-card .btn-ver-mais {
+            flex: 1 1 0;
+            gap: 2px;
+            padding-inline: 2px;
+            font-size: 0.62rem;
+        }
+    }
+
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card .btn-reagir:focus-visible,
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3526,7 +3538,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         outline-offset: 2px;
     }
 
-    /* Sem carrossel: mantém as faixas originais */
+    /* Sem carrossel */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.feed-anexos-grid, .container-img-post):not(:has(.carrossel-wrapper))
     .card-body {
@@ -3534,6 +3546,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
             minmax(0, 1fr)
             var(--ls-reactions-row)
             var(--ls-footer-row);
+        flex: 1 1 auto;
+        min-height: 0;
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3587,10 +3601,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
         .carrossel-item img {
             max-width: 100%;
-            max-height: 200px;
+            max-height: 250px;
             object-fit: contain;
             object-position: center;
         }
     }
 }
-

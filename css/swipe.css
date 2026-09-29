@@ -992,25 +992,22 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card {
-        --ls-pad-y: 10px;
-        --ls-pad-x: 12px;
-        --ls-gap: 6px;
-        --ls-radius: 6px;
-        --ls-avatar: 40px;
-        --ls-text-font: 0.82rem;
+        /* Fallback em pixels */
+        --ls-pad-y: 6px;
+        --ls-pad-x: 8px;
+        --ls-gap: 5px;
+        --ls-gap-x: 8px;
+        --ls-radius: 8px;
+        --ls-avatar: 36px;
+        --ls-text-font: 0.78rem;
+        --ls-reaction-font: 0.78rem;
 
-        --ls-pad-y: 0.6em;
-        --ls-pad-x: 0.75em;
-        --ls-gap: 0.35em;
-        --ls-radius: clamp(6px, 2cqi, 14px);
-        --ls-avatar: clamp(36px, 7dvh, 50px);
-        --ls-text-font: clamp(0.75em, 2.2dvh, 1.1em);
-
-        width: var(--card-width, 420px);
-        max-width: min(var(--card-width, 640px), 680px);
+        width: min(var(--card-width, 420px), calc(100vw - 16px));
+        max-width: min(var(--card-width, 640px), 680px, calc(100vw - 16px));
         max-height: 420px;
         max-height: var(--card-max-height, min(85dvh, 550px));
         height: auto;
+        box-sizing: border-box;
 
         padding: var(--ls-pad-y) var(--ls-pad-x);
         gap: var(--ls-gap);
@@ -1019,10 +1016,23 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         overflow: hidden;
 
         display: grid;
-        grid-template-columns: minmax(140px, 45%) 1fr;
+        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
         grid-template-rows: auto auto minmax(0, 1fr) auto;
+        column-gap: var(--ls-gap-x);
         align-content: stretch;
         align-items: stretch;
+    }
+
+    @supports (height: 1dvh) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card {
+            --ls-pad-y: clamp(4px, 1.2dvh, 8px);
+            --ls-pad-x: clamp(6px, 1.6vw, 12px);
+            --ls-gap: clamp(4px, 1.2dvh, 8px);
+            --ls-gap-x: clamp(6px, 1.4vw, 10px);
+            --ls-avatar: clamp(30px, 8dvh, 42px);
+            --ls-text-font: clamp(0.72rem, 2.2dvh, 0.95rem);
+            --ls-reaction-font: clamp(0.7rem, 1.8dvh, 0.85rem);
+        }
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .card-body {
@@ -1034,7 +1044,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         display: none;
     }
 
-    /* COLUNA 1: mídia (grid compõe o espaço do pai) */
+    /* COLUNA 1: mídia */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid,
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post,
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .carrossel-wrapper {
@@ -1043,6 +1053,8 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         width: 100%;
         height: 100%;
         max-height: 100%;
+        min-width: 0;
+        min-height: 0;
         aspect-ratio: unset;
         margin: 0;
         padding: 0;
@@ -1053,80 +1065,93 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    /* Container interno mantém 2x2 */
+    /* Mosaico de anexos */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
         gap: 4px;
         align-content: stretch;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr;
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: minmax(0, 1fr);
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
-        grid-template-columns: 2fr 1fr;
-        grid-template-rows: 1fr 1fr;
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+        grid-template-rows: repeat(2, minmax(0, 1fr));
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child)
+    .feed-anexo-item:first-child {
         grid-row: 1 / span 2;
         grid-column: 1;
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        place-self: center;
         min-width: 0;
         min-height: 0;
         overflow: hidden;
         background: #0a0a0a;
         border-radius: 4px;
-        display: flex;
-        align-items: center;
-        place-self: center;
-        justify-content: center;
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img,
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post img,
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .carrossel-item img {
+        display: block;
         width: 100%;
         height: 100%;
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
-        display: block;
         background: #0a0a0a;
     }
 
-    /* COLUNA 2: header */
+    /* COLUNA 2: cabeçalho */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .card-header {
         grid-column: 2;
         grid-row: 1;
-        margin: 0;
-        padding: 0;
-        gap: 4px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 4px;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+    .spotted-card.post-admin-gold .card-header {
+        padding-block-start: 1.5rem;
+        padding-block-start: calc(clamp(0.6rem, 1.6cqi, 0.95rem) + 8px);
     }
 
     /* COLUNA 2: autor */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .user-info-post {
         grid-column: 2;
         grid-row: 2;
-        margin: 0;
-        padding: 2px 0;
         display: flex;
         align-items: center;
         gap: 5px;
+        min-width: 0;
+        margin: 0;
+        padding: 2px 0;
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .avatar-p {
@@ -1139,44 +1164,64 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .post-content {
         grid-column: 2;
         grid-row: 3;
+        align-self: start;
+        min-width: 0;
         margin: 0;
         padding-right: 4px;
-        align-self: start;
 
         display: -webkit-box;
+        -webkit-box-orient: vertical;
         -webkit-line-clamp: 6;
         line-clamp: 6;
-        -webkit-box-orient: vertical;
-        box-orient: vertical;
         overflow: hidden;
 
         hyphens: auto;
         -webkit-hyphens: auto;
         -ms-hyphens: auto;
-
         font-size: var(--ls-text-font);
         line-height: 1.35;
         color: #d1d1d1;
         color: oklch(86.07% 0.0001 271.152);
-
         word-break: break-word;
         overflow-wrap: anywhere;
     }
 
-    /* COLUNA 2: reações */
+    /* COLUNA 2: reações gravadas */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .reacoes-gravadas {
         grid-column: 2;
         grid-row: 4;
-        margin: 0;
-        padding: 4px 0 0 0;
         align-self: end;
         display: flex;
         justify-content: flex-start;
+        align-content: flex-end;
         flex-wrap: wrap;
         gap: 4px;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 4px 0 0;
+        box-sizing: border-box;
     }
 
-    /* Posts SEM imagem */
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .reacoes-gravadas .reacao-item {
+        display: block;
+        flex: 0 1 auto;
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+        box-sizing: border-box;
+        padding: 3px 6px;
+        border-radius: 20px;
+        color: #ddd;
+        color: oklch(89.755% 0.0001 271.152);
+        font-size: var(--ls-reaction-font);
+    }
+
+    /* Posts sem imagem */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
         display: flex;
         flex-direction: column;
@@ -1184,8 +1229,8 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .card-body {
         display: flex;
-        flex-direction: column;
         flex: 1;
+        flex-direction: column;
         gap: var(--ls-gap);
     }
 
@@ -1216,12 +1261,19 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 }
 
-/* RESPONSIVIDADE PARA TELAS MAIORES*/
+/* ============================================================
+   RESPONSIVIDADE PARA TELAS MAIORES
+   ============================================================ */
 
 /* Tablet e telas maiores: mídia e conteúdo lado a lado */
 @media (min-width: 600px) and (min-height: 601px) {
 
-    /* Navegadores modernos com suporte a :has() */
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+    .spotted-card.post-admin-gold .card-header {
+        padding-block-start: 1.5rem;
+        padding-block-start: calc(clamp(0.6rem, 1.6cqi, 0.95rem) + 8px);
+    }
+
     @supports selector(:has(*)) {
 
         /* Card com mídia */
@@ -1237,15 +1289,15 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             box-sizing: border-box;
             width: min(92vw, 800px);
             max-width: min(92vw, 800px);
-            height: min(68vh, 520px);
-            height: min(68dvh, 520px);
+            height: min(68vh, 550px);
+            height: min(68dvh, 550px);
             min-height: 320px;
             max-height: 82vh;
             max-height: 82dvh;
             overflow: hidden;
         }
 
-        /* Faz os filhos do card-body participarem do grid do card */
+        /* Filhos do card-body participam do grid do card */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .card-body {
@@ -1261,7 +1313,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             display: none;
         }
 
-        /* Mídia centralizada na primeira coluna */
+        /* Mídia na primeira coluna */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexos-grid,
@@ -1314,17 +1366,23 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             background: transparent;
         }
 
-        /* Uma imagem: célula quadrada centralizada */
+        /* Uma imagem */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexos-grid:has(.feed-anexo-item:only-child) {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
             grid-template-rows: minmax(0, 1fr);
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 4 / 3;
         }
 
-        /* Duas imagens: lado a lado */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.container-img-post)
+        .container-img-post {
+            aspect-ratio: 4 / 3;
+        }
+
+        /* Duas imagens */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
@@ -1333,7 +1391,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             aspect-ratio: 2 / 1;
         }
 
-        /* Três imagens: uma maior e duas empilhadas */
+        /* Três imagens */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
@@ -1350,7 +1408,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             grid-row: 1 / span 2;
         }
 
-        /* Quatro imagens: mosaico 2 × 2 */
+        /* Quatro imagens */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
@@ -1359,7 +1417,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             aspect-ratio: 1 / 1;
         }
 
-        /* Cinco ou mais: mosaico horizontal */
+        /* Cinco ou mais imagens */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
@@ -1376,7 +1434,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             grid-row: 1 / span 2;
         }
 
-        /* Cada imagem fica centralizada na própria célula */
+        /* Imagens centralizadas nas células */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexo-item {
@@ -1391,7 +1449,6 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             border-radius: clamp(4px, 0.6vw, 8px);
         }
 
-        /* Mostra a imagem inteira sem distorcer ou cortar */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .feed-anexo-item img,
@@ -1423,7 +1480,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             margin: 0;
         }
 
-        /* Autor na coluna direita, separado do texto pelo row-gap */
+        /* Autor na coluna direita */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .user-info-post {
@@ -1434,7 +1491,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             margin: 0;
         }
 
-        /* Texto começa no topo da área e não estica entre palavras */
+        /* Texto na coluna direita */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .post-content {
@@ -1452,11 +1509,11 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             word-break: normal;
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            -webkit-line-clamp: 6;
-            line-clamp: 6;
+            -webkit-line-clamp: 8;
+            line-clamp: 8;
         }
 
-        /* As reações ficam numa linha própria abaixo do texto */
+        /* Reações abaixo do texto */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
         .reacoes-gravadas {
@@ -1467,11 +1524,23 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             display: flex;
             flex-wrap: wrap;
             gap: clamp(6px, 1vw, 10px);
+            width: 100%;
             min-width: 0;
             margin: 0;
         }
 
-        /* Card sem mídia: altura acompanha o texto, com limite e rolagem */
+        body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+        .reacoes-gravadas .reacao-item {
+            flex: 0 1 auto;
+            min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        /* Card sem mídia */
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
             display: flex;
@@ -1557,7 +1626,6 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 }
 
-
 /* ============================================================
    18. OUTROS BREAKPOINTS DE LANDSCAPE
    ============================================================ */
@@ -1571,13 +1639,15 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
    19. PC (telas largas) — MODO REVISTA
    ============================================================ */
 @media (min-width: 1024px) {
-    .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
-        max-height: 70vh;
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+        max-height: 80vh;
         object-fit: contain;
         background: #050505;
     }
 
-    .spotted-card {
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .spotted-card {
         max-width: min(var(--card-width, 650px), 650px);
     }
 }
@@ -1586,17 +1656,20 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
    20. FALLBACK SEM :has() (Lumia, iPhone 4, J5)
    ============================================================ */
 @supports not selector(:has(*)) {
-    .feed-anexos-grid {
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexos-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(80px, 1fr));
         gap: 6px;
     }
 
-    .feed-anexo-item {
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexo-item {
         aspect-ratio: 1 / 1;
     }
 
-    .feed-anexo-item img {
+    body.modo-swipe-ativo .container-feed.feed-empilhado
+        .spotted-card .feed-anexo-item img {
         object-fit: contain;
         background: #0a0a0a;
     }

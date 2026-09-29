@@ -46,35 +46,32 @@ include 'includes/bolhas.php';
 <script src="js/fenda-init.js"></script>
 
 <script>
-     // ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
+
+// ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
 function recalcFeedLayout() {
     if (!document.body.classList.contains('modo-swipe-ativo')) return;
-// 🔥 TEMPORÁRIO: mede performance
-    console.time('recalcFeedLayout');
+
     var vw = window.innerWidth;
     var vh = window.innerHeight;
     var isLandscape = vw > vh;
 
-    // 🔥 ARREDONDAMENTO DE PIXEL (ACABA COM O EFEITO ONDULATÓRIO)
-   var cardWidth = isLandscape ?
-    Math.round(Math.max(450, Math.min(vw * 0.72, 720))) : // 🔥 Aumentamos de 600 para 850 de máximo, e o mínimo foi para 450
-    Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
+    // Mantém a largura responsiva sem ultrapassar as bordas da tela.
+    var larguraDisponivel = Math.max(1, vw - 32);
+    var larguraAlvo = isLandscape
+        ? Math.min(vw * 0.72, 680)
+        : Math.min(vw * 0.70, 550);
+    var cardWidth = Math.round(Math.min(larguraDisponivel, Math.max(240, larguraAlvo)));
 
-    // 🔥 Altura máxima do card: limitada e mais generosa no portrait
-    var maxCardHeight;
-    if (isLandscape) {
-        maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
-    } else {
-        maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
-    }
+    // Compatível com o limite do card definido no CSS para swipe landscape.
+    var maxCardHeight = isLandscape
+        ? Math.round(Math.min(vh * 0.85, 550))
+        : Math.round(Math.min(vh * 0.92, 700));
 
-    var cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
+    var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
     var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
     var fontSizeInfo = Math.max(0.75, Math.min(cardWidth / 260, 1.3));
     var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
-    var avatarSize = Math.round(Math.max(36, cardWidth * 0.12));
-
-    // 🔥 Altura dinâmica para imagens em landscape (55% da altura do card)
+    var avatarSize = Math.round(Math.max(36, Math.min(cardWidth * 0.12, 56)));
     var innerDynamicHeight = Math.round(maxCardHeight * 0.55);
 
     var root = document.documentElement;
@@ -87,21 +84,17 @@ function recalcFeedLayout() {
     root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
     root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
     root.style.setProperty('--user-info-font-size', fontSizeInfo + 'rem');
-
     root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
     root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
-     // 🔥 TEMPORÁRIO: fecha a medição
-    console.timeEnd('recalcFeedLayout');
 }
 
 var layoutTimeout;
 
 function debounceLayout() {
     clearTimeout(layoutTimeout);
-    layoutTimeout = setTimeout(recalcFeedLayout, 120); // 120ms para melhor resposta
+    layoutTimeout = setTimeout(recalcFeedLayout, 120);
 }
 
-// 🔥 Eventos que disparam o recálculo
 window.addEventListener('load', recalcFeedLayout);
 window.addEventListener('resize', debounceLayout);
 window.addEventListener('orientationchange', debounceLayout);

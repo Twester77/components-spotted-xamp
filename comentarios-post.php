@@ -137,6 +137,33 @@ if (!$post) {
     exit();
 }
 
+if (!empty($post['comunidade_id'])) {
+    $comunidade_id = (int)$post['comunidade_id'];
+    $stmt_comunidade = $conn->prepare("SELECT tipo FROM comunidades WHERE id = ? LIMIT 1");
+    $stmt_comunidade->bind_param("i", $comunidade_id);
+    $stmt_comunidade->execute();
+    $comunidade = $stmt_comunidade->get_result()->fetch_assoc();
+    $stmt_comunidade->close();
+
+    if (($comunidade['tipo'] ?? null) === 'privada') {
+        $usuario_id = (int)($_SESSION['usuario_id'] ?? 0);
+        $stmt_membro = $conn->prepare(
+            "SELECT 1 FROM comunidade_membros
+             WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+             LIMIT 1"
+        );
+        $stmt_membro->bind_param("ii", $comunidade_id, $usuario_id);
+        $stmt_membro->execute();
+        $eh_membro = $stmt_membro->get_result()->fetch_row() !== null;
+        $stmt_membro->close();
+
+        if (!$eh_membro) {
+            header("Location: feed.php");
+            exit();
+        }
+    }
+}
+
 // 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
 $post_esta_ativo = ($post['status'] === 'ativo');
 

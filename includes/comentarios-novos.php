@@ -75,7 +75,12 @@ $stmt_log->close();
 // ============================================================
 // 3. VERIFICA SE O POST EXISTE E É PÚBLICO/PRIVADO
 // ============================================================
-$stmt_post = $conn->prepare("SELECT id, categoria, status FROM mensagens WHERE id = ?");
+$stmt_post = $conn->prepare(
+    "SELECT m.id, m.categoria, m.status, m.comunidade_id, c.tipo AS comunidade_tipo
+     FROM mensagens m
+     LEFT JOIN comunidades c ON c.id = m.comunidade_id
+     WHERE m.id = ?"
+);
 $stmt_post->bind_param("i", $id_mensagem);
 $stmt_post->execute();
 $post = $stmt_post->get_result()->fetch_assoc();
@@ -95,6 +100,27 @@ if (!$is_perdidos && !isset($_SESSION['usuario_id'])) {
     http_response_code(401);
     echo json_encode(['status' => 'error', 'message' => 'Login necessário.']);
     exit;
+}
+
+if ($post['comunidade_tipo'] === 'privada') {
+    $comunidade_id = (int)$post['comunidade_id'];
+    $usuario_id = (int)($_SESSION['usuario_id'] ?? 0);
+    $stmt_membro = $conn->prepare(
+        "SELECT 1 FROM comunidade_membros
+         WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+         LIMIT 1"
+    );
+    $stmt_membro->bind_param("ii", $comunidade_id, $usuario_id);
+    $stmt_membro->execute();
+    $eh_membro = $stmt_membro->get_result()->fetch_row() !== null;
+    $stmt_membro->close();
+
+    if (!$eh_membro) {
+        ob_clean();
+        http_response_code(403);
+        echo json_encode(['status' => 'error', 'message' => 'Acesso negado.']);
+        exit;
+    }
 }
 
 // Se o post não está mais ativo, para de pollar

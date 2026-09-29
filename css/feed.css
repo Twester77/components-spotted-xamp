@@ -190,11 +190,11 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     transition: 0.3s ease;
 }
 
-@supports (backdrop-filter: blur(3px)) {
+@supports (backdrop-filter: blur(2px)) {
     body:not(.modo-swipe-ativo) .spotted-card:hover {
         background: rgba(0, 0, 0, 0.45);
-        -webkit-backdrop-filter: blur(3px);
-        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
         border-color: rgba(255, 255, 255, 0.144);
         transform: translateY(-6px);
         transition: 0.3s ease;
@@ -331,7 +331,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     font-weight: 900;
     margin-left: auto;
     font-size: 1rem;
-    font-size: var(--user-info-font-size, clamp(0.9rem, 3.5cqi, 1.2rem));
+    font-size: var(--user-info-font-size, clamp(0.95rem, 3.5cqi, 1.4rem));
     opacity: 0.7;
     align-self: center;
     position: relative;
@@ -651,8 +651,8 @@ span.category-tag {
 
 .reacoes-popup span {
     cursor: pointer;
-    font-size: 0.95rem;
-    font-size: clamp(0.9rem, 6cqw, 1.4rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 6cqw, 1.3rem);
     display: inline-flex;
     align-items: center;
     justify-content: center;

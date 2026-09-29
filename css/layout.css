@@ -9,6 +9,7 @@ header {
     z-index: 9994;
     display: flex;
     flex: 0 1 auto; 
+    gap: 15px;
     /* o primeiro encolhe com flex grow 0 o segundo ocupa espaço pela direita 
     empurrando o primeiro á esquerda se não houver espaço */
     /* Camada 2: O cálculo matemático preciso baseado no crescimento do H1 */
@@ -20,6 +21,7 @@ header {
     /* 3. O PADDING EM 'em' CRIA A MAGIA DINÂMICA: */
     /* Conforme a fonte estica, o padding cresce junto na mesma proporção. */
     /* O primeiro valor cuida do topo/base, o segundo das laterais. */
+    padding: 3px 6px ;
     padding: 0.5em 6px; 
     max-width: 100%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -44,7 +46,7 @@ header {
 
 header h1 {
     font-size: 0.95rem;
-    font-size: var(--tamanho-fonte-header, clamp(0.95rem, 4.5cqi, 2.1rem));
+    font-size: var(--tamanho-fonte-header, clamp(0.95rem, 4.5cqi, 2rem));
     letter-spacing: 0.5px;
     line-height: 1.3;
     text-transform: uppercase;
@@ -2222,7 +2224,7 @@ textarea[name="bio"] {
     }
 
     header {
-        padding: 6px 3px;
+        padding: 4px 2px;
     }
 
     .area-perdidos-vivo {
