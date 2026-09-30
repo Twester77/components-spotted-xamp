@@ -90,8 +90,9 @@ include 'includes/bolhas.php';
                     <li> O diploma é só o papel: o aprendizado, o trauma;</li>
                     <li> Faculdade é igual o Titanic: se for pra afundar, que seja de primeira classe e com música tocando;</li>
                     <li> Invistam em Bitcoin;</li>
-                    <li> NÃO é NÃO;</li>
-                    <li> Bebam água e, é claro... DIVIRTAM-SE!</li>
+                    <li> Estudar para a prova no dia anterior não é falta de organização, é focar na memória de curto prazo para não acumular trauma a longo prazo;</li>
+                    <li> Se o seu curso não te fez questionar a sua sanidade pelo menos três vezes na semana, você está fazendo o curso errado;</li>
+                    <li> Bebam água e, é claro... DIVIRTAM-SE ! (ou sobrevivam)</li>
                 </ul>
             </article>
         </article>

@@ -927,6 +927,8 @@
    7. PÁGINA DE DETALHES (evento.php)
    ================================================================ */
 .bt-detalhes-page {
+    display: flex;
+    flex-direction: column;
     max-width: 900px;
     margin: 0 auto;
     padding: 12px 8px;
@@ -1068,14 +1070,21 @@
     background: oklch(1 0 0 / 0.03);
     border-radius: clamp(10px, 1.2vw, 14px);
     padding: clamp(12px, 1.5vw, 20px);
+    margin: 20px 0;
     margin: clamp(16px, 2vw, 28px) 0;
+    max-width: 800px;
+    width: 100%;
+    place-self: center;
+    align-items: center;
     border: 1px solid var(--bt-borda-sutil);
 }
 
 .bt-barra-item {
     display: flex;
     align-items: center;
+    gap: 10px;
     gap: clamp(8px, 1vw, 16px);
+    margin-bottom: 10px;
     margin-bottom: clamp(6px, 0.8vw, 10px);
 }
 
@@ -1086,7 +1095,8 @@
 .bt-barra-rotulo {
     min-width: 70px;
     font-weight: 600;
-    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.9rem, 1.4vw, 1rem);
     color: #ddd;
     color: oklch(0.85 0 0);
 }
@@ -1112,7 +1122,7 @@
     align-items: center;
     justify-content: flex-end;
     padding-right: 6px;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.9);
     color: oklch(1 0 0 / 0.9);
@@ -1394,7 +1404,7 @@
     resize: vertical;
     max-height: 220px;
     min-height: 60px;
-    margin-top: 15px;
+    margin: 20px auto 40px auto;
     background: rgba(255, 255, 255, 0.03);
     background: oklch(1 0 0 / 0.03);
     border-radius: 16px;
@@ -2290,6 +2300,7 @@
 @media (max-width: 480px) {
     .bt-acoes {
         flex-direction: column;
+        flex-wrap: nowrap;
     }
 
     .bt-btn-resposta {
