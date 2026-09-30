@@ -108,9 +108,11 @@
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    text-rendering: auto; /* Garante performance máxima no scroll */
     flex-grow: 1;
     white-space: pre-wrap;
-    text-rendering: optimizeLegibility;
     color: #f2f2f2;
     color: oklch(0.96 0 0);
     max-height: 4.5rem;
@@ -331,7 +333,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     font-weight: 900;
     margin-left: auto;
     font-size: 1rem;
-    font-size: var(--user-info-font-size, clamp(0.95rem, 3.5cqi, 1.4rem));
+    font-size: var(--category-icon-font-size, clamp(1rem, 3.5cqi, 1.4rem));
     opacity: 0.7;
     align-self: center;
     position: relative;
@@ -530,6 +532,9 @@ span.category-tag {
     border: none;
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 2.5cqi, 1.3rem);
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    text-rendering: auto; /* Garante performance máxima no scroll */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -545,6 +550,11 @@ span.category-tag {
     margin-left: auto;
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 2.5cqi, 1.1rem);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    text-rendering: auto; /* Garante performance máxima no scroll */
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.75;
@@ -797,7 +807,7 @@ span.category-tag {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 1.3vw, 1rem);
+    font-size: var(--user-info-font-size, clamp(0.75rem, 1.3vw, 1rem));
     width: fit-content;
 }
 
@@ -812,7 +822,7 @@ span.category-tag {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.8rem;
-    font-size: clamp(0.8rem, 1.5cqi + 0.3em, 1.05rem);
+    font-size: var(--user-info-font-size, clamp(0.8rem, 1.5cqi + 0.3em, 1.05rem));
     pointer-events: auto;
 }
 
@@ -822,6 +832,7 @@ span.category-tag {
 .btn-reagir,
 .btn-fofocar,
 .btn-ver-mais {
+    color: oklch(84.522% 0.0001 271.152);
     color: #ccc;
     text-decoration: none;
     background: rgba(255, 255, 255, 0.06);
@@ -831,8 +842,8 @@ span.category-tag {
     gap: 8px;
     display: inline-flex;
     align-items: center;
-    font-size: 0.75rem;
-    font-size: clamp(0.7rem, 4cqi, 1rem);
+    font-size: 0.78rem;
+    font-size: clamp(0.7em, 4.2cqi, 1em);
     font-weight: 600;
     text-transform: uppercase;
     background: transparent;
@@ -1079,5 +1090,77 @@ span.category-tag {
     background: transparent;
 }
 
+/* Mantém a proporção da mídia sem depender da altura dinâmica da viewport. */
+@media (max-width: 1024px) {
+    body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+    .spotted-card .container-img-post {
+        width: min(100%, 420px);
+        max-height: none;
+        overflow: visible;
+        margin-inline: auto;
+    }
 
+    body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+    .spotted-card .container-img-post img {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 350px;
+        margin-inline: auto;
+        object-fit: contain;
+    }
 
+    @supports selector(:has(*)) {
+        body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+        .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+            width: min(100%, 420px);
+            height: auto;
+            max-height: none;
+            overflow: visible;
+            margin-inline: auto;
+        }
+
+        body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+        .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            max-height: 350px;
+            margin-inline: auto;
+            object-fit: contain;
+        }
+
+        body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+        .feed-anexos-grid:not(:has(.feed-anexo-item:only-child)) {
+            width: min(100%, 350px);
+            max-height: none;
+            margin-inline: auto;
+        }
+    }
+}
+
+@media (max-width: 1024px) and (orientation: landscape) {
+    body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+    .spotted-card .container-img-post {
+        width: min(100%, 520px);
+    }
+
+    body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+    .spotted-card .container-img-post img,
+    body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+        max-height: 240px;
+    }
+
+    @supports selector(:has(*)) {
+        body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+        .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+            width: min(100%, 520px);
+        }
+
+        body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
+        .feed-anexos-grid:not(:has(.feed-anexo-item:only-child)) {
+            width: min(100%, 320px);
+        }
+    }
+}

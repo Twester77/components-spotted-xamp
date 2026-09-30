@@ -543,52 +543,50 @@ window.irParaLinkPip = function (link) {
 };
 
 // ==================== BADGING (Ícone com número) ====================
+let badgeApiFalhaReportada = false;
+let badgeApiAusenteReportada = false;
+
+function atualizarBadgeApp(total, habilitado = true) {
+    const quantidade = Math.max(0, Math.floor(Number(total) || 0));
+    const usarContagem = habilitado && quantidade > 0;
+    const metodo = usarContagem ? navigator.setAppBadge : navigator.clearAppBadge;
+
+    if (typeof metodo !== 'function') {
+        if (usarContagem && !badgeApiAusenteReportada) {
+            console.info('[BADGE] Este navegador ou sistema não oferece suporte ao badge do app.');
+            badgeApiAusenteReportada = true;
+        }
+        return;
+    }
+
+    try {
+        const resultado = usarContagem
+            ? navigator.setAppBadge(quantidade)
+            : navigator.clearAppBadge();
+
+        Promise.resolve(resultado).catch(err => {
+            if (!badgeApiFalhaReportada) {
+                console.warn('[BADGE] Não foi possível atualizar o badge do app:', err);
+                badgeApiFalhaReportada = true;
+            }
+        });
+    } catch (err) {
+        if (!badgeApiFalhaReportada) {
+            console.warn('[BADGE] Não foi possível atualizar o badge do app:', err);
+            badgeApiFalhaReportada = true;
+        }
+    }
+}
+
 window.atualizarBadge = function (total) {
-    // 1. Verifica se o usuário ativou o badge
     const prefBadgeInput = document.getElementById('input_pref_badge');
-    if (prefBadgeInput && prefBadgeInput.value !== '1') {
-        // Usuário desativou o badge
-        if (navigator.clearAppBadge) {
-            navigator.clearAppBadge();
-        }
-        return;
-    }
-
-    // 2. Verifica suporte da API
-    if (!navigator.setAppBadge) {
-        console.log('[BADGE] API não suportada neste navegador.');
-        return;
-    }
-
-    // 3. Atualiza o badge com o total de notificações
-    if (total > 0) {
-        try {
-            navigator.setAppBadge(total);
-            console.log('[BADGE] Badge atualizado:', total);
-        } catch (err) {
-            console.warn('[BADGE] Erro ao atualizar badge:', err);
-        }
-    } else {
-        // Limpa o badge se total for 0
-        try {
-            navigator.clearAppBadge();
-            console.log('[BADGE] Badge limpo.');
-        } catch (err) {
-            console.warn('[BADGE] Erro ao limpar badge:', err);
-        }
-    }
+    const habilitado = !prefBadgeInput || prefBadgeInput.value === '1';
+    atualizarBadgeApp(total, habilitado);
 };
 
 // Limpa o badge em eventos de interação
 window.limparBadge = function () {
-    if (navigator.clearAppBadge) {
-        try {
-            navigator.clearAppBadge();
-            console.log('[BADGE] Badge limpo por interação do usuário.');
-        } catch (err) {
-            console.warn('[BADGE] Erro ao limpar badge:', err);
-        }
-    }
+    atualizarBadgeApp(0, false);
 };
 
 // ==================== NOTIFICAÇÕES E ALERTAS (COM BADGE + PWA) ====================
@@ -671,19 +669,11 @@ window.atualizarBadgingPWA = function (total) {
 
     // 2. Sincronização Externa (PWA Badge)
     // Verifica a preferência do usuário (via config ou input hidden)
-    const badgeAtivo = (window.FendaConfig && window.FendaConfig.badgeAtivo === true) ||
-        (document.getElementById('input_pref_badge') && document.getElementById('input_pref_badge').value === '1');
-
-    if (badgeAtivo && navigator.setAppBadge) {
-        if (total > 0) {
-            navigator.setAppBadge(total);
-        } else {
-            navigator.clearAppBadge();
-        }
-    } else if (!badgeAtivo && navigator.clearAppBadge) {
-        // Se o usuário desativou, limpa o badge externo
-        navigator.clearAppBadge();
-    }
+    const prefBadgeInput = document.getElementById('input_pref_badge');
+    const badgeAtivo = prefBadgeInput
+        ? prefBadgeInput.value === '1'
+        : Boolean(window.FendaConfig && window.FendaConfig.badgeAtivo === true);
+    atualizarBadgeApp(total, badgeAtivo);
 
     // 3. Gancho para o futuro balão flutuante (Messenger-style)
     if (total > 0) {
@@ -823,7 +813,7 @@ window.marcarTodasComoLidas = function () {
                     badge.textContent = '0';
                     badge.style.display = 'none';
                 }
-                if (navigator.clearAppBadge) navigator.clearAppBadge();
+                atualizarBadgeApp(0, false);
 
                 // 🔥 AJUSTE DA DJÊ: Zera o radar de alertas no sessionStorage
                 sessionStorage.setItem('fenda_ultimo_aviso', '0');

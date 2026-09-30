@@ -216,6 +216,12 @@
     font-size: clamp(0.9rem, 0.2cqi + 0.5rem, 1.5rem);
     width: 100%;
     max-width: 800px;
+    /* Fallback para navegadores antigos que entendem apenas o motor SVG */
+    text-rendering: optimizeLegibility;
+    /* Ativa o kerning (espaçamento) de alta qualidade */
+    font-kerning: normal;
+    /* Ativa as ligaduras padrão (ex: fi, fl) e evita ligaduras raras/decorativas */
+    font-variant-ligatures: common-ligatures no-discretionary-ligatures;
     margin: clamp(8px, 1.5cqi, 20px) auto;
     display: inline-block;
     text-align: center;
@@ -227,8 +233,8 @@
     /*IE/Edge */
     hyphens: auto;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.85);
-    color: oklch(96.115% 0.00011 271.152 / 0.85)
+    color: rgba(255, 255, 255, 0.9);
+    color: oklch(96.115% 0.00011 271.152 / 0.9)
 }
 
 
@@ -366,20 +372,11 @@
    COLLAPSE SOCIAL (Compatibilidade Universal: do Lumia ao iPhone 4+)
    ================================================================ */
 
-.social-collapse-container {
-    will-change: auto;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    transform: translateZ(0);
-}
-
 /* Fallback base (Navegadores antigos / Dinossauros da web) */
 .social-collapse {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-in-out;
+    transition: max-height 0.4s ease-out;
     background: #3a3a3a73;
     background: oklch(0.35 0 0 / 0.45);
     border-radius: 20px;
@@ -393,7 +390,7 @@
 
 .social-collapse.aberto {
     max-height: 2500px; /* Altura de segurança alta para os antigos */
-    transition: max-height 0.4s ease-in-out;
+    transition: max-height 0.4s ease-out;
 }
 
 /* Navegadores modernos: entra o Grid Layout fluido e sem travamentos */
@@ -402,7 +399,7 @@
         max-height: none; 
         display: grid;
         grid-template-rows: 0fr;
-        transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: grid-template-rows 0.28s ease-out;
     }
 
     .social-collapse > div {
@@ -412,6 +409,12 @@
     .social-collapse.aberto {
         max-height: none;
         grid-template-rows: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .social-collapse {
+        transition-duration: 0.01ms;
     }
 }
 
@@ -452,8 +455,8 @@
 .depoimento-avatar {
     width: 32px;
     height: 32px;
-    width: clamp(32px, 6vw, 60px);
-    height: clamp(32px, 6vw, 60px);
+    width: clamp(32px, 5vw, 60px);
+    height: clamp(32px, 5vw, 60px);
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid var(--aura-user, #ffbc00);

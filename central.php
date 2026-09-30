@@ -19,16 +19,25 @@
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
-// 🔥 MARCA NOTIFICAÇÃO COMO LIDA DIRETAMENTE (fallback seguro)
-if (isset($_GET['notif_id'])) {
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA DIRETAMENTE (fallback assinado)
+// 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     $notif_id = (int)$_GET['notif_id'];
-    $user_id = $_SESSION['usuario_id'] ?? 0;
-    if ($user_id > 0) {
-        $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
-        $stmt_notif->bind_param("ii", $notif_id, $user_id);
-        $stmt_notif->execute();
-        $stmt_notif->close();
-        error_log("[CENTRAL] Notificação $notif_id marcada como lida (fallback)");
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
+
+    if ($notif_id > 0 && $user_id > 0) {
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
+
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+            $stmt_notif->bind_param("ii", $notif_id, $user_id);
+            $stmt_notif->execute();
+            $stmt_notif->close();
+            error_log("[CENTRAL] Notificação $notif_id marcada como lida (HMAC validado)");
+        } else {
+            error_log("[CENTRAL] Assinatura HMAC inválida (notif_id=$notif_id, user_id=$user_id)");
+        }
     }
 }
 

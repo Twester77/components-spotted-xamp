@@ -550,7 +550,7 @@ body.hacker-mode .far,
 body.hacker-mode .fab {
     color: #00ff00 ;
     color: oklch(0.861283 0.293072 142.4953);
-    text-shadow: 0 0 4px #00ff00 ;
+    text-shadow: 0 0 2px #00ff00 ;
     opacity: 1 ;
     visibility: visible ;
     display: inline-block ;
@@ -722,7 +722,7 @@ body.hacker-mode .comentario-item.vibe-light .indicador-resposta,
 
 body.hacker-mode .comentario-item.vibe-light .comentario-data {
     color: #4dc44d ;  /* Verde mais escuro para a data */
-    opacity: 0.8;
+    opacity: 0.92;
 }
 
 body.hacker-mode .comentario-item.vibe-light .comentario-texto {
@@ -1366,7 +1366,6 @@ body.hacker-mode .hacker-booting {
     50% { opacity: 0.3; filter: blur(4px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
-
 
 
 

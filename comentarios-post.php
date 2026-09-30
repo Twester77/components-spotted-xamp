@@ -56,17 +56,28 @@ if (!function_exists('sanitizarCorBorda')) {
 }
 
 // ============================================================
-// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (notif_id assinado)
+// 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+//    A assinatura HMAC impede que um site terceiro marque notificações
+//    como lidas apenas por incluir este URL em uma requisição GET.
 // ============================================================
-if (isset($_GET['notif_id'])) {
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     $notif_id = (int)$_GET['notif_id'];
-    $user_id = $_SESSION['usuario_id'] ?? 0;
-    if ($user_id > 0) {
-        $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
-        $stmt_notif->bind_param("ii", $notif_id, $user_id);
-        $stmt_notif->execute();
-        $stmt_notif->close();
-        fenda_log("🟢 Notificação $notif_id marcada como lida para usuário $user_id (via comentarios-post)");
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
+
+    if ($notif_id > 0 && $user_id > 0) {
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
+
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+            $stmt_notif->bind_param("ii", $notif_id, $user_id);
+            $stmt_notif->execute();
+            $stmt_notif->close();
+            fenda_log("🟢 Notificação $notif_id marcada como lida para usuário $user_id (via comentarios-post)");
+        } else {
+            fenda_log("[NOTIFICACOES] Assinatura HMAC inválida em comentarios-post.php (notif_id=$notif_id, user_id=$user_id)");
+        }
     }
 }
 

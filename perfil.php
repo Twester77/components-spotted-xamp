@@ -229,7 +229,7 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <input type="checkbox" name="pref_badge" value="1" <?php echo (isset($dados['pref_badge']) && $dados['pref_badge'] == 1) ? 'checked' : ''; ?>>
                     <span class="slider round"></span>
                 </label>
-                <small>Exibe o número de notificações no ícone do app (desktop/Android, em breve)</small>
+                <small>Em apps instalados e sistemas compatíveis, mostra notificações não lidas no ícone enquanto a Fenda está aberta. Com o app fechado, a atualização exige notificações push.</small>
             </div>
 
             <!-- Notificações da Comunidade -->

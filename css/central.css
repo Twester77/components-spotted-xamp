@@ -257,7 +257,7 @@
 .central-conteudo .spotted-card {
     word-wrap: break-word;
     overflow-wrap: anywhere;
-    max-width: 400px;
+    max-width: 500px;
     scroll-snap-align: start;
     scroll-margin-top: 20px;
     border-radius: 10px;

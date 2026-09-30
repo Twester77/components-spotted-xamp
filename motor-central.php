@@ -37,42 +37,48 @@ if (!empty($is_real_production)) {
 }
 
 // ============================================================
-// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (se veio com notif_id)
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (notif_id assinado)
+// 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
 // ============================================================
-if (isset($_GET['notif_id'])) {
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     $notif_id = (int)$_GET['notif_id'];
-    $user_id = $_SESSION['usuario_id'] ?? 0;
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
 
     error_log("[MOTOR-CENTRAL] notif_id recebido: $notif_id, user_id: $user_id");
 
-    if ($user_id > 0) {
-        // Primeiro, verifica se a notificação existe e está pendente
-        $stmt_check = $conn->prepare("SELECT id, lida FROM notificacoes WHERE id = ? AND usuario_id = ?");
-        $stmt_check->bind_param("ii", $notif_id, $user_id);
-        $stmt_check->execute();
-        $res_check = $stmt_check->get_result();
-        $row = $res_check->fetch_assoc();
-        $stmt_check->close();
+    if ($notif_id > 0 && $user_id > 0) {
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
 
-        if ($row) {
-            error_log("[MOTOR-CENTRAL] Notificação encontrada: ID {$row['id']}, lida: {$row['lida']}");
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            // Primeiro, verifica se a notificação existe e está pendente
+            $stmt_check = $conn->prepare("SELECT id, lida FROM notificacoes WHERE id = ? AND usuario_id = ?");
+            $stmt_check->bind_param("ii", $notif_id, $user_id);
+            $stmt_check->execute();
+            $res_check = $stmt_check->get_result();
+            $row = $res_check->fetch_assoc();
+            $stmt_check->close();
 
-            // Se não estiver lida, marca como lida
-            if ($row['lida'] == 0) {
-                $stmt_update = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
-                $stmt_update->bind_param("ii", $notif_id, $user_id);
-                $stmt_update->execute();
-                $affected = $stmt_update->affected_rows;
-                $stmt_update->close();
-                error_log("[MOTOR-CENTRAL] Notificação $notif_id marcada como lida. affected_rows: $affected");
+            if ($row) {
+                error_log("[MOTOR-CENTRAL] Notificação encontrada: ID {$row['id']}, lida: {$row['lida']}");
+
+                // Se não estiver lida, marca como lida
+                if ($row['lida'] == 0) {
+                    $stmt_update = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+                    $stmt_update->bind_param("ii", $notif_id, $user_id);
+                    $stmt_update->execute();
+                    $affected = $stmt_update->affected_rows;
+                    $stmt_update->close();
+                    error_log("[MOTOR-CENTRAL] Notificação $notif_id marcada como lida. affected_rows: $affected");
+                } else {
+                    error_log("[MOTOR-CENTRAL] Notificação $notif_id já estava lida.");
+                }
             } else {
-                error_log("[MOTOR-CENTRAL] Notificação $notif_id já estava lida.");
+                error_log("[MOTOR-CENTRAL] Notificação $notif_id NÃO encontrada para o usuário $user_id");
             }
         } else {
-            error_log("[MOTOR-CENTRAL] Notificação $notif_id NÃO encontrada para o usuário $user_id");
+            error_log("[MOTOR-CENTRAL] Assinatura HMAC inválida (notif_id=$notif_id, user_id=$user_id)");
         }
-    } else {
-        error_log("[MOTOR-CENTRAL] Usuário não logado (user_id = 0)");
     }
 }
 

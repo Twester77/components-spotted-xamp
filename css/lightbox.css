@@ -223,8 +223,8 @@
 
 /* 7.1 Texto do post – centralizado com boa legibilidade */
 .lightbox-post-texto {
-    font-size: 0.9rem;
-    font-size: clamp(0.9rem, 3cqi, 1.15rem);
+    font-size: 0.95rem;
+    font-size: clamp(0.9rem, 2.5cqi, 1.2rem);
     line-height: 1.6;
     color: #eee;
     display: flex;
@@ -346,7 +346,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     display:flex ;
     flex-direction: column;
     gap: 10px;
-    align-items: center;
+    align-content: center;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding-top: clamp(10px, 1.5cqi, 25px);
     margin-top: 15px;
@@ -354,30 +354,35 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 
 .lightbox-comentarios-titulo {
-    font-size: clamp(0.95rem, 3.5cqi, 1.3rem);
+    font-size: 1rem;
+    font-size: clamp(1rem, 3.5cqi, 1.5rem);
     color: #aaa;
+    color: oklch(73.802% 0.00008 271.152);
     margin: 15px 0;
     margin: clamp(15px, 5cqi, 30px) 0 clamp(8px, 2.5cqi, 20px) 0;
-    text-align: center;
+    text-align: left;
 }
 
 .lightbox-comentarios-lista {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: 10px;
+    gap: 10px;
     gap: clamp(8px, 1.5cqi, 20px);
     width: 100%;
 }
 
 .lightbox-comentarios-lista .comentario-item {
     margin: 0;
+    padding: 6px 10px;
     padding: clamp(6px, 1cqi, 12px) clamp(10px, 1.5cqi, 16px);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.06);
     border-right: none;
     border-left: 3px solid var(--cor-borda-glow, #70cde4);
     min-width: 0;
-    max-width: fit-content;
+    max-width: 100%;
 }
 
 .lightbox-comentarios-lista .comentario-item .comentario-meta {
@@ -402,8 +407,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 
 .lightbox-comentarios-lista .comentario-item .comentario-texto {
-    font-size: 0.9rem;
-    font-size: clamp(0.85rem, 2.5cqi, 1.2rem);
+    font-size: 0.95rem;
+    font-size: clamp(0.95rem, 2.4cqi, 1.05rem);
     line-height: 1.4;
     color: #ddd;
     white-space: pre-wrap;
@@ -414,8 +419,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-comentarios-lista .comentario-item .comentario-meta .comentario-autor {
     font-weight: 600;
-    font-size: 0.85rem;
-    font-size: clamp(0.8rem, 3cqi, 1.3rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.9rem, 2.2cqi, 1rem);
     color: var(--cor-borda-glow, #70cde4);
     white-space: nowrap;
     overflow: hidden;
@@ -424,8 +429,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-comentarios-lista  .comentario-item  .comentario-meta .comentario-data {
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 2.5cqi, 1rem);
-    opacity: 0.7;
+    font-size: clamp(0.8rem, 2cqi, 0.9rem);
+    opacity: 0.88;
     color: #ccc;
     color: oklch(84.522% 0.0001 271.152 / 0.8);
 }
@@ -576,7 +581,7 @@ body.modo-swipe-ativo .lightbox-apenas-post .lightbox-post-body .feed-anexos-gri
         border-radius: 8px;
     }
     .lightbox-post-texto {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         line-height: 1.4;
     }
     .lightbox-autor .avatar-p {

@@ -215,12 +215,20 @@
 
 }
 
+@media (hover: none) {
+    .lista-scrollavel {
+        scroll-behavior: auto;
+    }
+}
+
 
 /* FOOTER fixo */
 .fixed-input {
     background: transparent ;
     align-content: center;
     padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border: none;
@@ -639,8 +647,11 @@
 /* META DADOS */
 
 .comentario-data {
-    font-size: clamp(0.7rem, 2.5cqi, 0.95rem);
-    opacity: 0.75;
+    font-size: 0.8rem;
+    font-size: clamp(0.8rem, 2cqi, 0.9rem);
+    color: #d6d6d6;
+    color: oklch(88% 0.0001 271.152);
+    opacity: 0.88;
     font-weight: bold;
     white-space: nowrap;
     flex-shrink: 0;
@@ -651,7 +662,8 @@
 .comentario-texto {
     color: #ddd;
     color: oklch(0.92 0 0);
-    font-size: clamp(0.8rem, 3cqi, 1rem);
+    font-size: 1rem;
+    font-size: clamp(0.95rem, 2.4cqi, 1.05rem);
     line-height: 1.4;
     white-space: pre-wrap;
     word-break: break-word;
@@ -1066,12 +1078,14 @@
     }
 
     .comentario-item .comentario-autor {
-        font-size: 0.75rem;
+        font-size: 0.9rem;
+        font-size: clamp(0.9rem, 2.2cqi, 1rem);
     }
 
     .comentario-texto {
-        font-size: 0.85rem;
-        line-height: 1.3;
+        font-size: 0.95rem;
+        font-size: clamp(0.95rem, 2.4cqi, 1.05rem);
+        line-height: 1.4;
     }
 }
 
@@ -1472,9 +1486,9 @@ body.pagina-post .header-principal {
 }
 
 .comentario-autor {
-    color: var(--cor-borda-glow);
-    font-size: 0.75rem;
-    font-size: clamp(0.8rem, 3.5cqi, 1rem);
+    color: var(--cor-borda-glow, #70cde4);
+    font-size: 0.9rem;
+    font-size: clamp(0.9rem, 2.2cqi, 1rem);
     font-weight: bold;
     flex: 1;
     overflow: hidden;

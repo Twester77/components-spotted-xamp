@@ -466,14 +466,14 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 
     text-shadow:
         0 2px 6px rgba(0, 0, 0, 0.55),
-        0 0 18px rgba(0, 0, 0, 0.35);
+        0 0 15px rgba(0, 0, 0, 0.35);
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    -webkit-backdrop-filter: blur(2px) saturate(130%);
-    backdrop-filter: blur(2px) saturate(130%);
+    -webkit-backdrop-filter: blur(1px) saturate(130%);
+    backdrop-filter: blur(1px) saturate(130%);
 }
 
 /* Acento brilhante nas pontas */
@@ -497,7 +497,9 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     height: 84vh;
     height: 84dvh;
     right: 0;
+    width: 150px;
     width: clamp(140px, 17vw, 190px);
+    font-size: 1rem;
     font-size: clamp(1.2rem, 2.8vw, 1.6rem);
     letter-spacing: 0.18em;
 
@@ -1078,6 +1080,24 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     .feed-anexos-grid:has(.feed-anexo-item:only-child) {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: minmax(0, 1fr);
+        aspect-ratio: unset;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item img {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
@@ -1212,7 +1232,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        line-height: 1.2;
+        line-height: 1.25;
         box-sizing: border-box;
         padding: 3px 6px;
         border-radius: 20px;
@@ -1259,6 +1279,22 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             overflow: hidden;
         }
     }
+
+}
+
+@media (orientation: portrait) and (max-width: 380px) and (max-height: 600px) {
+    body.modo-swipe-ativo .feed-empilhado .spotted-card .post-content {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        flex: 0 1 auto;
+        min-height: 0;
+        max-height: 5rem;
+        margin: 2px 0;
+        line-height: 1.25;
+        overflow: hidden;
+    }
 }
 
 /* ============================================================
@@ -1272,6 +1308,12 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     .spotted-card.post-admin-gold .card-header {
         padding-block-start: 1.5rem;
         padding-block-start: calc(clamp(0.6rem, 1.6cqi, 0.95rem) + 8px);
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
+    .reacoes-gravadas .reacao-item {
+        font-size: clamp(1rem, 2.7cqi, 1.25rem);
+        padding: 0.3em 0.5em;
     }
 
     @supports selector(:has(*)) {
@@ -1373,13 +1415,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
             grid-template-rows: minmax(0, 1fr);
-            aspect-ratio: 4 / 3;
-        }
-
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.container-img-post)
-        .container-img-post {
-            aspect-ratio: 4 / 3;
+            aspect-ratio: 1 / 1;
         }
 
         /* Duas imagens */

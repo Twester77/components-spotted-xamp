@@ -69,7 +69,8 @@ function recalcFeedLayout() {
 
     var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
     var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
-    var fontSizeInfo = Math.max(0.75, Math.min(cardWidth / 260, 1.3));
+    var fontSizeUser = Math.max(0.68, Math.min(cardWidth / 600, 0.92));
+    var fontSizeCategory = Math.max(0.82, Math.min(cardWidth / 480, 1.15));
     var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
     var avatarSize = Math.round(Math.max(36, Math.min(cardWidth * 0.12, 56)));
     var innerDynamicHeight = Math.round(maxCardHeight * 0.55);
@@ -83,7 +84,8 @@ function recalcFeedLayout() {
     root.style.setProperty('--avatar-size', avatarSize + 'px');
     root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
     root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
-    root.style.setProperty('--user-info-font-size', fontSizeInfo + 'rem');
+    root.style.setProperty('--user-info-font-size', fontSizeUser + 'rem');
+    root.style.setProperty('--category-icon-font-size', fontSizeCategory + 'rem');
     root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
     root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
 }

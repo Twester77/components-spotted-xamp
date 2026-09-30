@@ -8,6 +8,7 @@ vendor/
 *.log
 lixeira_postagens
 postagens
+planejamento
 .vercel
 .env*
 relatorios

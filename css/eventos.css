@@ -1577,7 +1577,7 @@
 
 .bt-filtro {
     text-decoration: none;
-    font-size: clamp(0.8rem, 1.2vw, 1.05rem);
+    font-size: clamp(0.8rem, 1.75vw, 1.05rem);
     font-weight: 700;
     padding: clamp(4px, 0.6vw, 8px) clamp(10px, 1.5vw, 18px);
     border-radius: 30px;
