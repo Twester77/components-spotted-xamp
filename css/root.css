@@ -15,10 +15,10 @@
     --vibe-ads-pulse-duration: 5s;
     --vibe-ads-header-offset: 80px;
     /* 1. Criamos a variável da fonte de forma isolada para usar nos cálculos futuros */
-    --tamanho-fonte-header: clamp(0.9em, 4cqi, 2rem);
+    --tamanho-fonte-header: clamp(0.86em, 4cqi, 2rem);
     /* Mágica 1: Estimativa matemática ultra-precisa usando a nova unidade 'lh' (Line Height) */
-    /* Isso calcula: (Tamanho da fonte calculada pelo clamp * 1.5 de linha) + margens de padding */
-    --altura-estimada-header: calc((clamp(0.95rem, 4cqi, 2rem) * 1.3) + 2lh + 16px);
+    /* Isso calcula: (Tamanho da fonte calculada pelo clamp * 1.3) + margens de padding */
+    --altura-estimada-header: calc((clamp(0.9rem, 4cqi, 2rem) * 1.3) + 2lh + 15px);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }

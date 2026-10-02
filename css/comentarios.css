@@ -208,7 +208,9 @@
    Padrão "fallback duplo": navegador antigo pega a 1ª linha,
    moderno sobrescreve com a 2ª. Já é o padrão do projeto.
    ============================================================ */
-    padding-bottom: 20px;
+    padding: 8px 8px 20px 8px;
+    padding-left: max(8px + env(safe-area-inset-left, 0px));
+    padding-right: max(8px + env(safe-area-inset-right, 0px));
     padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
     scroll-padding-bottom: 80px;
     scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
@@ -233,6 +235,8 @@
     backdrop-filter: blur(2px);
     border: none;
     display: flex;
+    position: relative;
+    bottom: 0;
 }
 
 #lingoteContainer.minimizado .fixed-input {
@@ -648,10 +652,10 @@
 
 .comentario-data {
     font-size: 0.8rem;
-    font-size: clamp(0.8rem, 2cqi, 0.9rem);
+    font-size: clamp(0.75rem, 2cqi, 0.95rem);
     color: #d6d6d6;
     color: oklch(88% 0.0001 271.152);
-    opacity: 0.88;
+    opacity: 0.85;
     font-weight: bold;
     white-space: nowrap;
     flex-shrink: 0;
@@ -717,7 +721,7 @@
     background: #00000d;
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius:6px;
-    padding: 8px 12px;
+    padding: 6px 10px;
     position: relative;
     width: 100%;
     max-width: 900px;
@@ -1266,9 +1270,12 @@ body.pagina-post .header-principal {
     color: #ffffff;
     transition: background 0.3s;
     min-width: 60px;
+    min-height: 28px;
+    align-content: center;
     max-width: fit-content;
     word-break: break-all;
-    font-size: clamp(0.8rem, 0.6cqi + 0.625rem, 1.1rem);
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 0.8cqi + 0.65rem, 1.1rem);
     font-weight: bold;
     padding: 3px 8px;
     opacity: 0.75;

@@ -65,7 +65,7 @@ unset($_SESSION['erro_evento']);
 
         <div class="bt-campo-grupo">
             <label for="descricao"><i class="fas fa-align-left"></i> Descrição</label>
-            <textarea name="descricao" id="descricao" rows="4" maxlength="500" placeholder="Descreva o evento..."><?= htmlspecialchars($_POST['descricao'] ?? '') ?></textarea>
+            <textarea name="descricao" id="descricao" rows="4" maxlength="800" placeholder="Descreva o evento..."><?= htmlspecialchars($_POST['descricao'] ?? '') ?></textarea>
         </div>
 
         <div class="bt-campo-grupo">

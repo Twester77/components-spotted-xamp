@@ -105,7 +105,7 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
     padding: 0 20px 40px 20px;
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -178,12 +178,14 @@
 }
 
 .comunidade-card .info-comunidade .descricao {
+    font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.2vw, 1rem);
     color: #aaa;
     color: oklch(68% 0 0);
     display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    max-height: 3.5rem;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     overflow: hidden;
@@ -2269,7 +2271,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     /* Listagem */
     .comunidades-grid {
         grid-template-columns: 1fr;
-        padding: 0 10px 30px 10px;
+        padding: 0 12px 25px 12px;
     }
 
     .comunidade-page {

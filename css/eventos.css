@@ -759,7 +759,8 @@
 
 .bt-local,
 .bt-data {
-    font-size: var(--bt-meta-size, clamp(0.75rem, 2.5cqw, 1.1rem));
+    font-size: 0.88rem;
+    font-size: clamp(0.84rem, 1.8cqh, 1.15rem);
     color: var(--bt-texto-cinza, #aaa);
     color: oklch(0.75 0 0);
     margin: 0;
@@ -841,7 +842,7 @@
     color: #fff;
     color: oklch(1 0 0);
     cursor: pointer;
-    font-size: var(--bt-meta-size, clamp(0.75rem, 0.8vw, 1.05rem));
+    font-size: clamp(0.9rem, 1.8vw, 1.25rem);
     transition: background 0.2s, transform 0.15s;
     font-family: inherit;
     font-weight: 600;
@@ -958,10 +959,10 @@
 .bt-detalhes-capa img {
     width: 100%;
     height: 100%;
-    max-height: 320px;
+    max-height: 350px;
     background: #1e1a1a1c;
     background: oklab(22.242% 0.00601 0.00188 / 0.11);
-    object-fit: contain;
+    object-fit: cover;
     display: block;
 }
 
@@ -1030,13 +1031,9 @@
 .bt-btn-editar {
     background: rgba(255, 188, 0, 0.15);
     border: 1px solid rgba(255, 188, 0, 0.3);
-    border-radius: 30px;
-    padding: 6px 18px;
     color: var(--bt-dourado);
     text-decoration: none;
-    font-weight: 600;
-    font-size: clamp(0.8rem, 1vw, 1.05rem);
-    transition: 0.2s;
+
 }
 
 .bt-btn-editar:hover {
@@ -1048,13 +1045,7 @@
 .bt-btn-cancelar {
     background: rgba(255, 50, 50, 0.15);
     border: 1px solid rgba(255, 50, 50, 0.3);
-    border-radius: 30px;
-    padding: 6px 16px;
     color: #ff6b6b;
-    font-weight: 600;
-    font-size: clamp(0.8rem, 1vw, 1.05rem);
-    cursor: pointer;
-    transition: 0.2s;
     font-family: inherit;
 }
 
@@ -1064,14 +1055,26 @@
     color: #ff8a8a;
 }
 
+.bt-btn-editar,
+.bt-btn-cancelar {
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+    transition: 0.2s;
+    font-weight: 600;
+    border-radius: 30px;
+    padding: 6px 16px;
+}
+
 /* Barra de participação */
 .bt-barramento {
     background: rgba(255, 255, 255, 0.03);
     background: oklch(1 0 0 / 0.03);
+    border-radius: 10px;
     border-radius: clamp(10px, 1.2vw, 14px);
     padding: clamp(12px, 1.5vw, 20px);
     margin: 20px 0;
-    margin: clamp(16px, 2vw, 28px) 0;
+    margin: clamp(12px, 2vw, 25px) 0;
     max-width: 800px;
     width: 100%;
     place-self: center;
@@ -1198,7 +1201,7 @@
 .bt-avatar-item span {
     font-size: 0.75rem;
     font-size: clamp(0.75rem, 0.85vw, 0.95rem);
-    color: var(--bt-texto-cinza, #aeaeae );
+    color: var(--bt-texto-cinza, #aeaeae);
     color: oklch(0.75 0 0);
     position: relative;
     display: flex;
@@ -1851,6 +1854,7 @@
     pointer-events: none;
     white-space: nowrap;
     font-size: 1.25rem;
+    font-size: clamp(1.2rem, 2.5cqw, 1.5rem);
 }
 
 .bt-feedback-direita {
@@ -2358,8 +2362,174 @@
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
-    .bt-empilhado #bt-container-eventos .bt-card {
-        max-height: 70vh;
+    .modo-tinder-ativo .bt-controles {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: safe center;
+        align-content: safe center;
+        gap: 8px;
+        min-height: 0;
+        max-height: min(45vh, calc(100vh - var(--altura-estimada-header) - 30px));
+        padding: 6px 8px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    @supports (height: 1dvh) {
+        .modo-tinder-ativo .bt-controles {
+            max-height: min(45dvh, calc(100dvh - var(--altura-estimada-header) - 30px));
+        }
+    }
+
+    .modo-tinder-ativo .bt-filtro-comunidade {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
+        margin: 0;
+    }
+
+    .modo-tinder-ativo .bt-select-comunidade {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        margin: 0;
+        padding: 6px 30px 6px 12px;
+        font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+    }
+
+    .modo-tinder-ativo .bt-btn-filtro {
+        flex: 0 0 auto;
+        max-width: none;
+        padding: 6px 10px;
+        font-size: clamp(0.68rem, 1.5vw, 0.85rem);
+    }
+
+    .modo-tinder-ativo .bt-gaveta-filtros {
+        flex: 1 0 100%;
+        min-width: 0;
+        padding: 2px 0;
+    }
+
+    #bt-container-eventos {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 1100px;
+        margin-inline: auto;
+    }
+
+    #bt-container-eventos .bt-card {
+        flex-direction: row;
+        align-items: stretch;
+        width: min(100%, 1000px);
+        max-width: 1000px;
+        min-height: 240px;
+        margin: 8px auto;
+        padding: clamp(8px, 1.8dvh, 14px);
+        gap: clamp(10px, 2vw, 22px);
+        text-align: left;
+    }
+
+    #bt-container-eventos .bt-card .bt-capa {
+        flex: 0 0 40%;
+        width: 40%;
+        min-height: 220px;
+        height: auto;
+        aspect-ratio: auto;
+        align-self: stretch;
+    }
+
+    #bt-container-eventos .bt-card .bt-capa img {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .modo-tinder-ativo #bt-container-eventos .bt-card {
+        flex-direction: row;
+        align-items: stretch;
+    }
+
+    .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa {
+        flex: 0 0 40%;
+        width: 40%;
+        min-height: 0;
+        height: auto;
+        aspect-ratio: auto;
+        align-self: stretch;
+    }
+
+    .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa img {
+        height: 100%;
+        max-height: none;
+        object-fit: contain;
+    }
+
+    #bt-container-eventos .bt-card .bt-info {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 0;
+        justify-content: center;
+        gap: clamp(4px, 1dvh, 8px);
+    }
+
+    #bt-container-eventos .bt-card .bt-titulo {
+        font-size: clamp(1rem, 2.6vw, 1.5rem);
+    }
+
+    #bt-container-eventos .bt-card .bt-descricao {
+        max-height: 4.2em;
+        margin-block: 2px;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+    }
+
+    #bt-container-eventos .bt-card .bt-participacao {
+        gap: clamp(8px, 1.5vw, 16px);
+        margin-block: 2px;
+    }
+
+    #bt-container-eventos .bt-card .bt-acoes {
+        width: 100%;
+        margin-block: 2px;
+        gap: 6px;
+    }
+
+    #bt-container-eventos .bt-card .bt-btn-resposta {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 6px 8px;
+        font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+    }
+
+    .modo-tinder-ativo #bt-container-eventos .bt-card {
+        top: calc(50% + 44px);
+        height: min(68vh, 360px);
+        height: min(68dvh, 360px);
+        min-height: min(200px, 60vh);
+        min-height: min(200px, 60dvh);
+        max-height: 68vh;
+        max-height: 68dvh;
+    }
+
+    .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa {
+        min-height: 0;
+    }
+
+    #bt-container-eventos .bt-card .bt-participacao {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    #bt-container-eventos .bt-card .bt-participacao span {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+        font-size: clamp(0.68rem, 1.5vw, 0.9rem);
     }
 
     .bt-descricao {

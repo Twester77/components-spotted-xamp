@@ -77,19 +77,26 @@
         const vw = window.innerWidth;
         const vh = window.innerHeight;
         const isLandscape = vw > vh;
+        const isCompactLandscape = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
 
-        const cardWidth = isLandscape
+        const cardWidth = isCompactLandscape
+            ? Math.round(Math.max(320, Math.min(vw * 0.90, 1000)))
+            : isLandscape
             ? Math.round(Math.max(320, Math.min(vw * 0.60, 600)))
             : Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
 
         let maxCardHeight;
-        if (isLandscape) {
+        if (isCompactLandscape) {
+            maxCardHeight = Math.round(Math.min(vh * 0.82, 420));
+        } else if (isLandscape) {
             maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
         } else {
             maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
         }
 
-        const cardPadding = Math.round(Math.max(12, cardWidth * 0.05));
+        const cardPadding = isCompactLandscape
+            ? Math.round(Math.max(10, Math.min(24, cardWidth * 0.035)))
+            : Math.round(Math.max(12, cardWidth * 0.05));
         const fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
 
         const tituloSize = fontSize * 1.2;

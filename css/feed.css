@@ -23,7 +23,7 @@
 .filtro-btn {
     text-decoration: none;
     font-size: 13px;
-    font-size: clamp(13px, 1.5cqw, 18px);
+    font-size: clamp(14px, 1.5cqw, 18px);
     font-weight: 800;
     padding: 5px 10px;
     padding: clamp(6px, 8px, 12px) 12px;
@@ -957,7 +957,7 @@ span.category-tag {
     aspect-ratio: auto;
     width: 100%;
     height: auto;
-    border-radius: 10px;
+    border-radius: 8px;
     background: #0a0a0a;
     box-shadow: none;
 }
@@ -1095,7 +1095,7 @@ span.category-tag {
 @media (max-width: 1024px) {
     body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
     .spotted-card .container-img-post {
-        width: min(100%, 420px);
+        width: min(100%, 300px);
         max-height: none;
         overflow: visible;
         margin-inline: auto;
@@ -1114,7 +1114,7 @@ span.category-tag {
     @supports selector(:has(*)) {
         body:not(.modo-swipe-ativo) .main-fenda-total .container-feed
         .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-            width: min(100%, 420px);
+            width: min(100%, 300px);
             height: auto;
             max-height: none;
             overflow: visible;
