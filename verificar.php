@@ -16,8 +16,9 @@ if (isset($_GET['token'])) {
         $mensagem = "Token não fornecido.";
         $status = "erro";
     } else {
-        // POST = usuário clicou no botão "Ativar"
-        if (isset($_POST['confirmar_ativacao'])) {
+        // O botão é desabilitado no submit para evitar duplo clique e, por isso,
+        // seu name pode não ser enviado pelo navegador. O método identifica a confirmação.
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $csrf = $_POST['csrf_token'] ?? '';
 
             if (!hash_equals($_SESSION['csrf_token'], $csrf)) {
