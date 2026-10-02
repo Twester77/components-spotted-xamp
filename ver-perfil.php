@@ -126,12 +126,16 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     <div class="perfil-header-container">
         <div class="capa-container">
             <?php if (!empty($dados['capa'])): ?>
-                <img src="<?= htmlspecialchars($capa_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="capa-img" alt="Sua capa" onerror="this.src='uploads/ui/default_capa_masculino.webp';">
+                <button type="button" class="perfil-imagem-trigger capa-imagem-trigger" aria-label="Ampliar capa do perfil">
+                    <img src="<?= htmlspecialchars($capa_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="capa-img" alt="Capa do perfil" onerror="this.src='uploads/ui/default_capa_masculino.webp';">
+                </button>
             <?php else: ?>
                 <div class="capa-default" style="background: linear-gradient(135deg, <?php echo $cor_user; ?>88 0%, #000 100%); width: 100%; height: 100%;"></div>
             <?php endif; ?>
             <div class="avatar-posicionador">
-                <img src="<?= htmlspecialchars($foto_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="avatar-main" alt="Sua foto de perfil" onerror="this.src='uploads/ui/default_masculino.webp';">
+                <button type="button" class="perfil-imagem-trigger avatar-imagem-trigger" aria-label="Ampliar foto de perfil">
+                    <img src="<?= htmlspecialchars($foto_user ?? '', ENT_QUOTES, 'UTF-8') ?>" class="avatar-main" alt="Foto de perfil" onerror="this.src='uploads/ui/default_masculino.webp';">
+                </button>
                 <?php if ($is_presenca): ?>
                     <div class="badge-presenca-bottom"><i class="fa-solid fa-crown"></i></div>
                 <?php endif; ?>
@@ -244,11 +248,45 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
     </section>
 </main>
 
+<dialog id="perfil-imagem-lightbox" class="perfil-imagem-lightbox" aria-label="Imagem ampliada do perfil">
+    <button type="button" class="perfil-imagem-lightbox-fechar" aria-label="Fechar imagem ampliada">&times;</button>
+    <img class="perfil-imagem-lightbox-conteudo" alt="">
+</dialog>
+
 <script>
     // ============================================================
     // LOG DE INICIALIZAÇÃO
     // ============================================================
     console.log('[VER-PERFIL] 🟢 Página carregada. Inicializando módulos...');
+
+    // Copilot (VS Code) — 2026-10-02: lightbox isolado para foto e capa do perfil.
+    (function() {
+        const dialog = document.getElementById('perfil-imagem-lightbox');
+        const imagemAmpliada = dialog?.querySelector('.perfil-imagem-lightbox-conteudo');
+        const botaoFechar = dialog?.querySelector('.perfil-imagem-lightbox-fechar');
+        if (!dialog || !imagemAmpliada || !botaoFechar) return;
+
+        function abrirImagem(imagem) {
+            imagemAmpliada.src = imagem.currentSrc || imagem.src;
+            imagemAmpliada.alt = imagem.alt;
+            dialog.showModal();
+            botaoFechar.focus();
+        }
+
+        document.querySelectorAll('.main-perfil-container-publico .perfil-imagem-trigger').forEach(botao => {
+            const imagem = botao.querySelector('img');
+            if (imagem) botao.addEventListener('click', () => abrirImagem(imagem));
+        });
+
+        botaoFechar.addEventListener('click', () => dialog.close());
+        dialog.addEventListener('click', event => {
+            if (event.target === dialog) dialog.close();
+        });
+        dialog.addEventListener('close', () => {
+            imagemAmpliada.removeAttribute('src');
+            imagemAmpliada.alt = '';
+        });
+    })();
 
     // ============================================================
     // 🔥 CSRF FIX: SEGUIR/DESSEGUIR VIA POST (auditoria Pérola – 2026-09-18)

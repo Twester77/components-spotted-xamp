@@ -1036,7 +1036,7 @@ span.category-tag {
 /* --- 14.8. PC: modo revista --- */
 @media (min-width: 1024px) {
     .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
-        max-height: 380px;
+        max-height: 360px;
         object-fit: contain;
         background: #050505;
     }

@@ -193,8 +193,8 @@ nav {
 .sidebar-fenda {
     position: fixed;
     top: 0;
-    left: -350px !important;
-    /* Começa escondida */
+    left: 0;
+    transform: translate3d(-100%, 0, 0);
     max-width: 350px;
     height: 100dvh;
     /* Força a barra a ter EXATAMENTE a altura da tela */
@@ -211,7 +211,8 @@ nav {
     padding: 15px;
     /* Camada acima de tudo */
     z-index: 999999;
-    transition: left 0.3s ease;
+    /* Copilot (VS Code) — 2026-10-02: acompanha o padrão transform da Fenda Toolbar. */
+    transition: transform 0.35s ease-out;
     overflow-y: auto ;
 
 }
@@ -251,8 +252,7 @@ nav {
 }
 
 .sidebar-fenda.ativa {
-    left: 0 !important;
-    /* Aparece */
+    transform: translate3d(0, 0, 0);
     background: rgba(10, 25, 47, 0.95);
     border: 1px solid #029687;
     padding: 12px;
@@ -312,8 +312,8 @@ nav {
 .btn-menu-hamburguer {
     width: 32px;
     height: 32px;
-    width: clamp(30px, 10vmin, 65px);
-    height: clamp(30px, 10vmin, 65px);
+    width: clamp(32px, 10vmin, 70px);
+    height: clamp(32px, 10vmin, 70px);
     display: block;
     stroke: currentColor;
 }
@@ -439,7 +439,8 @@ nav {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #fenda-toolbar {
+    #fenda-toolbar,
+    .sidebar-fenda {
         transition-duration: 0.01ms;
     }
 }

@@ -104,6 +104,104 @@
     background: #0a0a0a;
 }
 
+.perfil-imagem-trigger {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+    line-height: 0;
+}
+
+.perfil-imagem-trigger:focus-visible {
+    outline: 3px solid var(--aura-user, #ffbc00);
+    outline-offset: 3px;
+}
+
+.capa-imagem-trigger {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    height: 100%;
+}
+
+.avatar-imagem-trigger {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.perfil-imagem-lightbox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    width: auto;
+    width: fit-content;
+    height: auto;
+    max-width: 94vw;
+    max-width: min(94vw, 75rem);
+    max-height: 92vh;
+    max-height: 92dvh;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+}
+
+.perfil-imagem-lightbox[open] {
+    display: grid;
+    place-items: center;
+}
+
+.perfil-imagem-lightbox::backdrop {
+    background: rgb(0 0 0 / 88%);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+}
+
+.perfil-imagem-lightbox-conteudo {
+    display: block;
+    max-width: 94vw;
+    max-width: min(94vw, 75rem);
+    max-height: 88vh;
+    max-height: 88dvh;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgb(0 0 0 / 65%);
+}
+
+.perfil-imagem-lightbox-fechar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+    display: grid;
+    width: 38px;
+    height: 38px;
+    width: clamp(32px, 8vmin, 40px);
+    height: clamp(32px, 8vmin, 40px);
+    place-items: center;
+    border: 1px solid rgb(255 255 255 / 35%);
+    border-radius: 50%;
+    background: rgb(0 0 0 / 68%);
+    color: #fff;
+    font-size: 28px;
+    font-size: clamp(26px, 5vmin, 32px);
+    line-height: 1;
+    cursor: pointer;
+}
+
+.perfil-imagem-lightbox-fechar:hover,
+.perfil-imagem-lightbox-fechar:focus-visible {
+    background: #ffbc00;
+    color: #111;
+}
+
 /* Badge de presença (coroa) */
 .badge-presenca-bottom {
     position: absolute;
@@ -742,7 +840,7 @@
 /* ================================================================
    FEED PESSOAL (DENTRO DO PERFIL)
    ================================================================ */
-.feed-usuario-fenda {
+.feed-usuario-fenda .container-feed {
     width: 100%;
     max-width: 1200px;
     margin: 15px auto;
@@ -1138,8 +1236,8 @@
     /* Padrão de hexágono via máscara estêncil */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
-    -webkit-mask-size: 70px 70px;
-    mask-size: 70px 70px;
+    -webkit-mask-size: 80px 80px;
+    mask-size: 80px 80px;
     -webkit-mask-repeat: repeat;
     mask-repeat: repeat;
     -webkit-mask-position: 0 0;
@@ -1151,13 +1249,13 @@
 
 @keyframes static-pulse-opacity {
     0% {
-        opacity: 0.3;
+        opacity: 0.25;
     }
     50% {
-        opacity: 0.75;
+        opacity: 0.6;
     }
     100% {
-        opacity: 0.3;
+        opacity: 0.25;
     }
 }
 
@@ -1174,7 +1272,7 @@
     pointer-events: none;
     overflow: hidden;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     grid-auto-rows: 56px;
     gap: 15px;
     padding: 0;
@@ -1231,6 +1329,7 @@
     position: relative;
     overflow: hidden;
     /* Trocamos o fundo sólido por uma névoa escura fixa usando OKLCH */
+    background: #010203;
     background: radial-gradient(circle at 50% 30%, oklch(0.15 0.02 280) 0%, oklch(0.08 0.01 260) 100%);
     border-top: 4px solid rgba(255, 0, 50, 0.4);
     border-radius: 14px;
@@ -1261,14 +1360,14 @@
     height: 100%;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.25; /* Um pouco mais sutil para combinar com o breu do castelo */
+    opacity: 0.2; /* Um pouco mais sutil para combinar com o breu do castelo */
     background-color: var(--cor-aura, var(--aura-user, #70cde4));
     
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
     
-    -webkit-mask-size: 140px 140px;
-    mask-size: 140px 140px;
+    -webkit-mask-size: 180px 180px;
+    mask-size: 180px 180px;
     -webkit-mask-repeat: repeat;
     mask-repeat: repeat;
     
@@ -1399,7 +1498,11 @@
 }
 
 .main-perfil-container-publico.vibe-glass .depoimento-item,
-.main-perfil-container-publico.vibe-glass .avaliacao-item {
+.main-perfil-container-publico.vibe-glass .avaliacao-item,
+.main-perfil-container-publico.vibe-glass .depoimento-form-container,
+.main-perfil-container-publico.vibe-glass .gerenciar-depoimentos-container,
+.main-perfil-container-publico.vibe-glass .preview-conteudo,
+.main-perfil-container-publico.vibe-glass .spotted-card {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
@@ -1510,7 +1613,7 @@
     .main-perfil-container-publico.vibe-ads .hex-bg {
         top: 50px;
         height: calc(100vh - 50px);
-        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
         grid-auto-rows: 44px;
         gap: 10px;
         opacity: 0.4;
@@ -1520,8 +1623,8 @@
         background-color: var(--aura-user, #70cde4);
         -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E");
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E");
-        -webkit-mask-size: 65px 65px;
-        mask-size: 65px 65px;
+        -webkit-mask-size: 70px 70px;
+        mask-size: 70px 70px;
         -webkit-mask-repeat: repeat;
         mask-repeat: repeat;
 
@@ -1580,8 +1683,8 @@
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
 
         
-        -webkit-mask-size: 120px 120px;
-        mask-size: 120px 120px;
+        -webkit-mask-size: 150px 150px;
+        mask-size: 150px 150px;
         
         -webkit-mask-repeat: repeat;
         mask-repeat: repeat;
