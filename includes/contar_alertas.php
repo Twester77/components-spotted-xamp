@@ -37,7 +37,8 @@ $response = ['total' => $total];
 // 3. SE HOUVER NOTIFICAÇÕES, BUSCA A ÚLTIMA (PARA O PiP)
 // ============================================================
 if ($total > 0) {
-    $sql_ultima = "SELECT id, mensagem, post_id FROM notificacoes 
+    // Copilot (VS Code) — 2026-10-02: expõe o tipo para direcionar o PiP ao módulo correto.
+    $sql_ultima = "SELECT id, mensagem, post_id, tipo FROM notificacoes
                    WHERE usuario_id = ? AND lida = 0 
                    ORDER BY id DESC LIMIT 1";
     $stmt_ultima = $conn->prepare($sql_ultima);
@@ -49,7 +50,8 @@ if ($total > 0) {
         $response['ultima'] = [
             'id'       => (int)$ultima['id'],
             'mensagem' => $ultima['mensagem'],
-            'post_id'  => $ultima['post_id'] ? (int)$ultima['post_id'] : null
+            'post_id'  => $ultima['post_id'] ? (int)$ultima['post_id'] : null,
+            'tipo'     => $ultima['tipo']
         ];
     }
 }

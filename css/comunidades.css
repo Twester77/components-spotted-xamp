@@ -442,16 +442,38 @@
     padding: 12px 18px;
 }
 
+/* Copilot (VS Code) — 2026-10-02: ajusta os botões administrativos para quebrar responsivamente. */
+.comunidade-actions .btn-entrar-comunidade,
+.comunidade-actions .btn-editar-comunidade,
+.comunidade-actions .btn-gerenciar-membros {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: 0.3s;
+}
+
 .comunidade-actions .btn-entrar-comunidade {
     width: auto;
     padding: 8px 25px;
 }
 
+.comunidade-actions .btn-editar-comunidade,
+.comunidade-actions .btn-gerenciar-membros {
+    display: inline-flex;
+    flex: 1 1 170px;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 250px;
+    text-align: center;
+}
+
 .comunidade-actions .contador-membros {
     color: #aaa;
     color: oklch(68% 0 0);
-    font-size: 0.8rem;
-    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
 }
 
 .comunidade-info-actions {
@@ -464,8 +486,6 @@
 .comunidade-info-actions .criador-info {
     color: #aaa;
     color: oklch(68% 0 0);
-    font-size: 0.85rem;
-    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
 }
 
 .btn-editar-comunidade {
@@ -473,7 +493,6 @@
     background: oklch(100% 0 0 / 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border: 1px solid oklch(100% 0 0 / 0.1);
-    border-radius: 30px;
     padding: 8px 20px;
     justify-content: center;
     align-content: center;
@@ -483,7 +502,6 @@
     text-decoration: none;
     transition: 0.3s;
     font-size: 0.85rem;
-    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
 }
 
 .btn-editar-comunidade:hover {
@@ -872,7 +890,7 @@ textarea#descricao{
     }
 
     .modal-header {
-        padding: 10px 14px;
+        padding: 8px 12px;
     }
     .modal-body {
         padding: 6px 10px;
@@ -1099,7 +1117,7 @@ textarea#descricao{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: clamp(12px, 1.5vw, 20px) clamp(14px, 2vw, 24px);
+    padding: clamp(10px, 1.5vw, 20px) clamp(14px, 2vw, 24px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     flex-shrink: 0;
 }
@@ -1168,9 +1186,9 @@ textarea#descricao{
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: clamp(6px, 0.9cqw, 10px) clamp(6px, 1.5cqw, 14px);
+    padding: clamp(4px, 0.9cqw, 10px) clamp(6px, 1.5cqw, 14px);
     background: rgba(255, 255, 255, 0.03);
-    border-radius: clamp(6px, 0.8cqw, 10px);
+    border-radius: clamp(5px, 0.8cqw, 10px);
     border-left: 3px solid transparent;
     transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
     flex-wrap: wrap;
@@ -2269,6 +2287,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 
     .comunidade-actions .btn-entrar-comunidade {
         width: 100%;
+    }
+
+    .comunidade-actions .btn-editar-comunidade,
+    .comunidade-actions .btn-gerenciar-membros {
+        flex: 0 1 auto;
+        width: 100%;
+        max-width: 200px;
     }
 
     /* Formulário inline */

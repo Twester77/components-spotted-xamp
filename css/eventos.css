@@ -823,7 +823,7 @@
    ================================================================ */
 .bt-acoes {
     display: flex;
-    gap: clamp(8px, 1vw, 16px);
+    gap: clamp(6px, 1vw, 16px);
     flex-wrap: wrap;
     margin: 6px auto;
     margin: clamp(4px, 0.5vw, 10px) auto;
@@ -1336,7 +1336,8 @@
 .bt-comentario-meta {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    gap: clamp(6px, 1vw, 10px);
     margin-bottom: 6px;
 }
 

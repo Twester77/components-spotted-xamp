@@ -12,6 +12,13 @@
  *    "Substituição de obterUrlImagem() por obterUrlComFallback() no avatar do comentário
  *     para fallback centralizado no retorno AJAX."
  * - Ondina
+ *
+ * 🐚 MARESIA – 2026-09-29 (Sprint 1, item 5/7)
+ *    - Removido double escape no HTML do comentário. O `htmlspecialchars`
+ *      era aplicado uma vez no capture (sanitização de entrada) e outra
+ *      vez no render (dentro de nl2br). Resultado: `Amor & Ódio` virava
+ *      `Amor &amp;amp; Ódio` na tela, e aspas duplicavam entities.
+ *      A sanitização de entrada já é suficiente — o render só formata.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -70,7 +77,7 @@ if (empty($comentario_sanitizado) && !isset($_FILES['anexos'])) {
     exit;
 }
 
-if (strlen($comentario_sanitizado) > 500) {
+if (mb_strlen($comentario_sanitizado) > 500) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Comentário excede 500 caracteres.']);
     exit;
@@ -185,7 +192,7 @@ if ($stmt->execute()) {
                 $destinatario_id = $alvo['id'];
                 if ($destinatario_id != $autor_id) {
                     $mensagem_notif = "@$autor_nome mencionou você em um comentário no evento \"$evento_nome\"";
-                    
+
                     // 🔥 INSERE COM TIPO 'evento' E post_id = evento_id
                     $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida) VALUES (?, ?, 'evento', ?, 0)");
                     $stmt_notif->bind_param("iis", $destinatario_id, $evento_id, $mensagem_notif);
@@ -208,10 +215,13 @@ if ($stmt->execute()) {
     $user = $stmt_user->get_result()->fetch_assoc();
     $stmt_user->close();
 
-    // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO (substitui obterUrlImagem)
+    // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
     $avatar = obterUrlComFallback($user['foto'] ?? null, 'uploads/ui/default.webp', null, true);
     $avatar_html = '<img src="' . htmlspecialchars($avatar) . '" class="avatar-p" style="border-radius:50%; width: 40px; height: 40px; margin-right:8px;" onerror="this.src=\'uploads/ui/default.webp\'">';
 
+    // 🐚 MARESIA – 2026-09-29 (item 5/7): removido htmlspecialchars() duplicado
+    // no texto. O $comentario_sanitizado já passou por htmlspecialchars no
+    // bloco 2. Reaplicar aqui causava double escape visual.
     $html = '
     <div class="bt-comentario-item" style="--cor-borda-glow: #ffbc00;">
         <div class="bt-comentario-meta">
@@ -219,7 +229,7 @@ if ($stmt->execute()) {
             <strong class="bt-comentario-autor">@' . htmlspecialchars($user['username']) . '</strong>
             <span class="bt-comentario-data">' . date('H:i') . '</span>
         </div>
-        <p class="bt-comentario-texto">' . nl2br(htmlspecialchars($comentario_sanitizado)) . '</p>
+        <p class="bt-comentario-texto">' . nl2br($comentario_sanitizado) . '</p>
     </div>';
 
     fenda_log("🟢 Comentário ID $com_id inserido com sucesso para evento $evento_id");

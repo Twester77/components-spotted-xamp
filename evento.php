@@ -35,6 +35,14 @@
  * "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
  *  em capa, galeria, avatar dos participantes e comentários."
  * - Ondina
+ *
+ * 🐚 MARESIA – 2026-10-02 (Sprint 1, item 7/7)
+ *    - Adicionada verificação de acesso antes do header. Antes, um usuário
+ *      sem vínculo com a comunidade privada podia acessar o evento via link
+ *      direto (?id=X), mesmo com a listagem (swipe-eventos.php) já filtrando.
+ *    - Adicionada verificação de banimento. Um usuário banido também podia
+ *      acessar via link direto.
+ *    - Ambas redirecionam pra balanga-teras.php com mensagem em sessão.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -79,6 +87,57 @@ if ($evento['status'] === 'cancelado') {
     fenda_log("🔴 Evento ID $id está cancelado. Redirecionando.");
     header("Location: balanga-teras.php");
     exit;
+}
+
+// ============================================================
+// 🐚 MARESIA – 2026-10-02 (Sprint 1, item 7/7)
+// VERIFICAÇÃO DE ACESSO
+// 1. Se o evento pertence a comunidade PRIVADA e o usuário não é
+//    membro ativo → bloqueia (IDOR — mesmo padrão do swipe-eventos.php).
+// 2. Se o usuário está BANIDO de qualquer comunidade (pública ou privada)
+//    → bloqueia (banir não deve permitir acesso via link direto).
+// ============================================================
+if (!empty($evento['comunidade_id'])) {
+    $comunidade_id_ev = (int)$evento['comunidade_id'];
+    $usuario_id_ev = (int)($_SESSION['usuario_id'] ?? 0);
+
+    // Busca tipo da comunidade + status do usuário (se logado)
+    $stmt_com = $conn->prepare("SELECT tipo FROM comunidades WHERE id = ? LIMIT 1");
+    $stmt_com->bind_param("i", $comunidade_id_ev);
+    $stmt_com->execute();
+    $comunidade = $stmt_com->get_result()->fetch_assoc();
+    $stmt_com->close();
+
+    $tipo_comunidade = $comunidade['tipo'] ?? 'publica';
+    $status_membro = null;
+
+    if ($usuario_id_ev > 0) {
+        $stmt_membro = $conn->prepare(
+            "SELECT status FROM comunidade_membros
+             WHERE comunidade_id = ? AND usuario_id = ? LIMIT 1"
+        );
+        $stmt_membro->bind_param("ii", $comunidade_id_ev, $usuario_id_ev);
+        $stmt_membro->execute();
+        $membro = $stmt_membro->get_result()->fetch_assoc();
+        $stmt_membro->close();
+        $status_membro = $membro['status'] ?? null;
+    }
+
+    // 1. Banido de qualquer comunidade → bloqueia
+    if ($status_membro === 'banido') {
+        $_SESSION['erro_evento'] = 'Você foi banido desta comunidade e não pode acessar este evento.';
+        fenda_log("🚫 Usuário $usuario_id_ev banido da comunidade $comunidade_id_ev. Bloqueando evento $id.");
+        header("Location: balanga-teras.php");
+        exit;
+    }
+
+    // 2. Comunidade privada + sem vínculo ativo → bloqueia (IDOR)
+    if ($tipo_comunidade === 'privada' && $status_membro !== 'ativo') {
+        $_SESSION['erro_evento'] = 'Este evento pertence a uma comunidade privada.';
+        fenda_log("🚫 Usuário $usuario_id_ev sem acesso à comunidade privada $comunidade_id_ev. Bloqueando evento $id.");
+        header("Location: balanga-teras.php");
+        exit;
+    }
 }
 
 // Calcula status (agendado, em-andamento, expirado)
@@ -229,7 +288,6 @@ if (empty($_SESSION['csrf_token'])) {
                 $res_part = $stmt_part->get_result();
                 if ($res_part->num_rows > 0):
                     while ($part = $res_part->fetch_assoc()):
-                        // 🔥 AVATAR DOS PARTICIPANTES COM FALLBACK CENTRALIZADO
                         $avatar = obterUrlComFallback($part['foto'] ?? null, 'uploads/ui/default.webp', null, true);
                 ?>
                         <div class="bt-avatar-item">
@@ -261,7 +319,6 @@ if (empty($_SESSION['csrf_token'])) {
             $res_com = $stmt_com->get_result();
             if ($res_com->num_rows > 0):
                 while ($com = $res_com->fetch_assoc()):
-                    // 🔥 AVATAR DOS COMENTÁRIOS COM FALLBACK CENTRALIZADO
                     $avatar = obterUrlComFallback($com['foto'] ?? null, 'uploads/ui/default.webp', null, true);
             ?>
                     <div class="bt-comentario-item" style="--cor-borda-glow: #ffbc00;">
@@ -429,11 +486,9 @@ if (empty($_SESSION['csrf_token'])) {
             const imgSrc = e.currentTarget.src;
             if (!imgSrc) return;
 
-            // Remove modal existente
             const modalExistente = document.getElementById('modal-lightbox-fenda');
             if (modalExistente) modalExistente.remove();
 
-            // Cria o modal
             const modal = document.createElement('div');
             modal.id = 'modal-lightbox-fenda';
             modal.style.cssText = `
@@ -468,12 +523,10 @@ if (empty($_SESSION['csrf_token'])) {
             modal.appendChild(btnFechar);
             document.body.appendChild(modal);
 
-            // Fecha ao clicar no fundo
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) fecharLightbox();
             });
 
-            // Anima entrada
             requestAnimationFrame(() => {
                 modal.style.opacity = '1';
             });
@@ -483,12 +536,10 @@ if (empty($_SESSION['csrf_token'])) {
                 setTimeout(() => modal.remove(), 200);
             }
 
-            // Fecha com ESC
             function escHandler(e) {
                 if (e.key === 'Escape') fecharLightbox();
             }
             document.addEventListener('keydown', escHandler);
-            // Remove o listener quando o modal for removido
             const observer = new MutationObserver(() => {
                 if (!document.getElementById('modal-lightbox-fenda')) {
                     document.removeEventListener('keydown', escHandler);
@@ -500,7 +551,6 @@ if (empty($_SESSION['csrf_token'])) {
             });
         }
 
-        // Aplica a todas as imagens da galeria (dinamicamente)
         function initGaleriaLightbox() {
             document.querySelectorAll('.bt-galeria-grid img, .bt-detalhes-capa img').forEach(img => {
                 img.removeEventListener('click', abrirLightboxImagem);
@@ -509,10 +559,8 @@ if (empty($_SESSION['csrf_token'])) {
             });
         }
 
-        // Inicializa ao carregar a página e também quando novas imagens forem adicionadas
         document.addEventListener('DOMContentLoaded', initGaleriaLightbox);
 
-        // Observa mudanças na galeria (caso seja carregada via AJAX)
         const observer = new MutationObserver(() => initGaleriaLightbox());
         const galeria = document.querySelector('.bt-galeria-grid');
         if (galeria) observer.observe(galeria, {
@@ -520,7 +568,6 @@ if (empty($_SESSION['csrf_token'])) {
             subtree: true
         });
 
-        // Também observa a capa
         const capa = document.querySelector('.bt-detalhes-capa');
         if (capa) observer.observe(capa, {
             childList: true,

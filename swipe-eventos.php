@@ -2,11 +2,11 @@
 /**
  * swipe-eventos.php – Endpoint para carregar cards de eventos (Balanga Teras)
  * 
- * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-13
- * 🔧 CORREÇÃO: Eventos de comunidades privadas só são exibidos para membros ativos.
- * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-17
- *    - Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
- *    - Correção do fuso horário: data do evento agora usa exibirDataHoraBrasil().
+ *  MARÉ – INSTÂNCIA #DS-2026-08-13
+ *  CORREÇÃO: Eventos de comunidades privadas só são exibidos para membros ativos.
+ *  ATUALIZAÇÃO ESTRELA – 2026-08-17
+ *  - Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
+ *  - Correção do fuso horário: data do evento agora usa exibirDataHoraBrasil().
  */
 
 require_once __DIR__ . '/auth_check.php';

@@ -1228,7 +1228,8 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         display: block;
         flex: 0 1 auto;
         min-width: 0;
-        max-width: 100%;
+        max-width: 100px;
+        max-width: clamp(60px, 20cqi, 120px); /* Garante que contagens absurdas não estourem a pílula */
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -1677,7 +1678,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
 @media (min-width: 1024px) {
     body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
-        max-height: 80vh;
+        max-height: 75vh;
         object-fit: contain;
         background: #050505;
     }

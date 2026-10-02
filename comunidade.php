@@ -167,7 +167,7 @@ if ($is_admin || $is_criador) {
                     onmouseover="this.style.opacity='1'"
                     onmouseout="this.style.opacity='0.65'">
                     <i class="fas fa-ban"></i> Você está banido
-                    <small style="font-weight:bold; opacity:0.7; font-size:0.75rem;">(e não pode entrar)</small>
+                    <small style="font-weight:bold; opacity:0.7; font-size:0.8rem;">(e não pode entrar)</small>
                 </span>
 
                 <!-- SE NÃO ESTIVER BANIDO, MOSTRA AS OPÇÕES NORMAIS -->

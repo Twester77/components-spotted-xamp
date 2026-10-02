@@ -18,8 +18,12 @@
  *
  * 🐚 IARA – 2026-09-24 (auditoria v5.0)
  *    - Trocado strlen() por mb_strlen() na validação do nome do evento.
- *      Em UTF-8, um acento ocupa 2 bytes — a validação de "mínimo 3
- *      caracteres" ficava furada para nomes com acentuação.
+ *
+ * 🐚 MARESIA – 2026-10-02 (Sprint 1, item 6/7)
+ *    - Adicionada validação de `comunidade_id` no backend. Antes, o
+ *      POST aceitava qualquer ID, permitindo criar eventos em comunidades
+ *      que o usuário não administra (IDOR de associação).
+ *    - Moveu $is_ajax para o topo, pra reutilizar nos erros de validação.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -27,6 +31,9 @@ require_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
 fenda_log('🟢 INÍCIO processa-evento.php');
+
+// 🐚 MARESIA – 2026-10-02: movido pro topo
+$is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: balanga-teras.php");
@@ -57,9 +64,59 @@ fenda_log("📝 Nome recebido: '$nome'");
 fenda_log("📝 Comunidade ID: " . ($comunidade_id ?? 'NENHUMA'));
 
 // ============================================================
+// 🐚 MARESIA – 2026-10-02 (Sprint 1, item 6/7)
+// VALIDAÇÃO DE COMUNIDADE
+// Se `comunidade_id` foi informado, verifica que existe E que o
+// usuário é admin/criador dela. Sem isso, qualquer autenticado podia
+// criar evento em comunidade alheia manipulando o POST.
+// ============================================================
+if ($comunidade_id !== null) {
+    // 1.1 Comunidade existe?
+    $stmt_com = $conn->prepare("SELECT id FROM comunidades WHERE id = ?");
+    $stmt_com->bind_param("i", $comunidade_id);
+    $stmt_com->execute();
+    $comunidade_existe = $stmt_com->get_result()->num_rows > 0;
+    $stmt_com->close();
+
+    if (!$comunidade_existe) {
+        fenda_log("❌ Comunidade $comunidade_id não existe.");
+        if ($is_ajax) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Comunidade inválida.']);
+            exit;
+        }
+        $_SESSION['erro_evento'] = 'Comunidade inválida.';
+        header("Location: criar-evento.php");
+        exit;
+    }
+
+    // 1.2 Usuário é admin/criador?
+    $stmt_role = $conn->prepare(
+        "SELECT papel FROM comunidade_membros
+         WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+         LIMIT 1"
+    );
+    $stmt_role->bind_param("ii", $comunidade_id, $usuario_id);
+    $stmt_role->execute();
+    $membro = $stmt_role->get_result()->fetch_assoc();
+    $stmt_role->close();
+
+    if (!$membro || !in_array($membro['papel'], ['criador', 'admin'], true)) {
+        fenda_log("🚫 Usuário $usuario_id não é admin/criador da comunidade $comunidade_id.");
+        if ($is_ajax) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Você não tem permissão para criar eventos nesta comunidade.']);
+            exit;
+        }
+        $_SESSION['erro_evento'] = 'Você não tem permissão para criar eventos nesta comunidade.';
+        header("Location: criar-evento.php");
+        exit;
+    }
+}
+
+// ============================================================
 // 2. VALIDAÇÕES
 // ============================================================
-// 🔥 IARA: mb_strlen (conta CARACTERES, não bytes)
 if (empty($nome) || mb_strlen($nome) < 3) {
     fenda_log("❌ Nome inválido: '$nome'");
     $_SESSION['erro_evento'] = 'O nome do evento deve ter pelo menos 3 caracteres.';
@@ -96,23 +153,16 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
 $anexos = [];
 $anexos_enviados = [];
 
-// 🔥 4.1 - GIFs externos (via POST)
+// 4.1 - GIFs externos
 $gif_urls = isset($_POST['gif_urls']) && is_array($_POST['gif_urls']) ? $_POST['gif_urls'] : [];
 if (!empty($gif_urls)) {
     fenda_log("🎬 GIFs recebidos: " . count($gif_urls));
     foreach ($gif_urls as $gif_url) {
         $gif_url = trim($gif_url);
-        if (count($anexos) >= 4) {
-            fenda_log("⚠️ Limite de 4 anexos atingido (GIFs)");
-            break;
-        }
+        if (count($anexos) >= 4) break;
         if (filter_var($gif_url, FILTER_VALIDATE_URL) &&
             (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false)) {
-            $anexos[] = [
-                'id' => 'anexo-' . uniqid(),
-                'tipo' => 'gif',
-                'url' => $gif_url
-            ];
+            $anexos[] = ['id' => 'anexo-' . uniqid(), 'tipo' => 'gif', 'url' => $gif_url];
             fenda_log("✅ GIF adicionado: $gif_url");
         } else {
             fenda_log("⚠️ GIF ignorado (URL inválida): $gif_url");
@@ -120,7 +170,7 @@ if (!empty($gif_urls)) {
     }
 }
 
-// 4.2 - Múltiplos arquivos (imagens) – 🔥 USANDO $nome_anexo
+// 4.2 - Múltiplos arquivos (imagens)
 if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name'])) {
     $files = array_filter($_FILES['anexos']['name']);
     if (!empty($files)) {
@@ -134,8 +184,6 @@ if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name'])) {
                 'error'    => $_FILES['anexos']['error'][$key],
                 'size'     => $_FILES['anexos']['size'][$key]
             ];
-
-            // 🔥 CORREÇÃO: usar $nome_anexo em vez de $nome
             $nome_anexo = processarUploadSeguro($file_data, 'uploads', 'evento', 2 * 1024 * 1024, $usuario_id);
             if ($nome_anexo !== false) {
                 $anexos[] = ['id' => 'anexo-' . uniqid(), 'tipo' => 'imagem', 'caminho' => $nome_anexo];
@@ -156,8 +204,6 @@ $sql = "INSERT INTO eventos (criador_id, comunidade_id, nome, descricao, local, 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'ativo', NOW())";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("iissssss", $usuario_id, $comunidade_id, $nome, $descricao, $local, $data_evento, $capa_nome, $anexos_json);
-
-$is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 if ($stmt->execute()) {
     $evento_id = $conn->insert_id;
@@ -203,7 +249,7 @@ if ($stmt->execute()) {
     $stmt->close();
     fenda_log("❌ Erro no banco: $erro");
 
-    // Rollback: deleta os arquivos já enviados para o B2
+    // Rollback
     if ($capa_enviada && !empty($capa_nome)) {
         rollbackUpload($capa_nome, $usuario_id);
         fenda_log("🔄 Rollback da capa: $capa_nome");

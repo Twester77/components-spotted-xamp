@@ -621,7 +621,35 @@ window.atualizarContadorAlertas = function () {
                 // Nova notificação de outro contexto → dispara
                 const titulo = 'Nova interação!';
                 const mensagem = data.ultima.mensagem || 'Alguém interagiu com você.';
-                const link = data.ultima.post_id ? '/comentarios-post.php?id=' + data.ultima.post_id : '/notificacoes.php';
+                // Copilot (VS Code) — 2026-10-02: resolve dentro da pasta da aplicação,
+                // funcionando tanto em subdiretório local quanto na raiz de produção.
+                const appBaseUrl = new URL('.', window.location.href);
+                const postId = data.ultima.post_id;
+                const encodedPostId = postId === null || postId === undefined
+                    ? ''
+                    : encodeURIComponent(postId);
+                let linkPath = 'notificacoes.php';
+
+                switch (data.ultima.tipo) {
+                    case 'post':
+                        if (encodedPostId) {
+                            linkPath = 'comentarios-post.php?id=' + encodedPostId + '#fofocar';
+                        }
+                        break;
+                    case 'evento':
+                        if (encodedPostId) {
+                            linkPath = 'evento.php?id=' + encodedPostId;
+                        }
+                        break;
+                    case 'depoimento':
+                        linkPath = 'central.php?aba=depoimentos';
+                        break;
+                    case 'solicitacao':
+                        linkPath = 'central.php?aba=solicitacoes';
+                        break;
+                }
+
+                const link = new URL(linkPath, appBaseUrl).href;
 
                 if (typeof abrirPipNotificacao === 'function') {
                     abrirPipNotificacao(titulo, mensagem, link);

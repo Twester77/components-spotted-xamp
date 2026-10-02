@@ -13,8 +13,14 @@
  *
  * 🐚 IARA – 2026-09-24 (auditoria v5.0)
  *    - Trocado strlen() por mb_strlen() na validação do nome do evento.
- *      Em UTF-8, um acento ocupa 2 bytes — a validação de "mínimo 3
- *      caracteres" ficava furada para nomes com acentuação.
+ *
+ * 🐚 MARESIA – 2026-10-02 (Sprint 1, item 6/7)
+ *    - Adicionada validação de `comunidade_id` no backend. Se o usuário
+ *      está MOVENDO o evento pra outra comunidade (ou associando pela
+ *      primeira vez), verifica que ele é admin/criador da nova.
+ *      Antes, qualquer autenticado podia mover evento pra comunidade
+ *      alheia manipulando o POST.
+ *    - Moveu $is_ajax para o topo.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -22,6 +28,9 @@ require_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
 fenda_log('🟢 INÍCIO processa-editar-evento.php');
+
+// 🐚 MARESIA – 2026-10-02: movido pro topo
+$is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: balanga-teras.php");
@@ -60,7 +69,7 @@ if (!$evento_atual) {
     exit;
 }
 
-// Verifica permissão
+// Verifica permissão (criador do evento OU admin/criador da comunidade atual)
 $usuario_id = $_SESSION['usuario_id'];
 $permitido = ($evento_atual['criador_id'] == $usuario_id);
 if (!$permitido && $evento_atual['comunidade_id'] > 0) {
@@ -93,14 +102,65 @@ $local = trim($_POST['local'] ?? '');
 $data_evento = $_POST['data_evento'] ?? '';
 $comunidade_id = isset($_POST['comunidade_id']) && (int)$_POST['comunidade_id'] > 0 ? (int)$_POST['comunidade_id'] : null;
 
-// 🔥 Lista de anexos a remover (JSON enviado pelo front-end)
+// Anexos a remover (JSON enviado pelo front-end)
 $anexos_remover = isset($_POST['anexos_remover']) ? json_decode($_POST['anexos_remover'], true) : [];
 if (!is_array($anexos_remover)) $anexos_remover = [];
 
 // ============================================================
+// 🐚 MARESIA – 2026-10-02 (Sprint 1, item 6/7)
+// VALIDAÇÃO DE COMUNIDADE
+// Se `comunidade_id` foi informado E é DIFERENTE da atual, valida
+// que a nova existe E que o usuário é admin/criador dela. Evita
+// mover evento pra comunidade alheia via POST forjado.
+// ============================================================
+$comunidade_atual = (int)($evento_atual['comunidade_id'] ?? 0);
+if ($comunidade_id !== null && $comunidade_id !== $comunidade_atual) {
+    // 1.1 Comunidade existe?
+    $stmt_com = $conn->prepare("SELECT id FROM comunidades WHERE id = ?");
+    $stmt_com->bind_param("i", $comunidade_id);
+    $stmt_com->execute();
+    $comunidade_existe = $stmt_com->get_result()->num_rows > 0;
+    $stmt_com->close();
+
+    if (!$comunidade_existe) {
+        fenda_log("❌ Comunidade $comunidade_id não existe.");
+        if ($is_ajax) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Comunidade inválida.']);
+            exit;
+        }
+        $_SESSION['erro_evento'] = 'Comunidade inválida.';
+        header("Location: editar-evento.php?id=" . $evento_id);
+        exit;
+    }
+
+    // 1.2 Usuário é admin/criador da nova comunidade?
+    $stmt_role = $conn->prepare(
+        "SELECT papel FROM comunidade_membros
+         WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+         LIMIT 1"
+    );
+    $stmt_role->bind_param("ii", $comunidade_id, $usuario_id);
+    $stmt_role->execute();
+    $membro = $stmt_role->get_result()->fetch_assoc();
+    $stmt_role->close();
+
+    if (!$membro || !in_array($membro['papel'], ['criador', 'admin'], true)) {
+        fenda_log("🚫 Usuário $usuario_id não é admin/criador da comunidade $comunidade_id (tentou mover evento).");
+        if ($is_ajax) {
+            http_response_code(403);
+            echo json_encode(['status' => 'error', 'message' => 'Você não tem permissão para mover este evento para esta comunidade.']);
+            exit;
+        }
+        $_SESSION['erro_evento'] = 'Você não tem permissão para mover este evento para esta comunidade.';
+        header("Location: editar-evento.php?id=" . $evento_id);
+        exit;
+    }
+}
+
+// ============================================================
 // 2. VALIDAÇÕES BÁSICAS
 // ============================================================
-// 🔥 IARA: mb_strlen (conta CARACTERES, não bytes)
 if (empty($nome) || mb_strlen($nome) < 3) {
     $_SESSION['erro_evento'] = 'O nome do evento deve ter pelo menos 3 caracteres.';
     header("Location: editar-evento.php?id=" . $evento_id);
@@ -131,18 +191,15 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
 // ============================================================
 // 4. ANEXOS – REMOÇÃO E ADIÇÃO (COM GIFs)
 // ============================================================
-// 4.1 Decodifica os anexos atuais do evento
 $anexos_atuais = [];
 if (!empty($evento_atual['anexos'])) {
     $anexos_atuais = json_decode($evento_atual['anexos'], true);
     if (!is_array($anexos_atuais)) $anexos_atuais = [];
 }
 
-// 4.2 Remove os anexos marcados (atualiza $anexos_mantidos)
 $anexos_mantidos = [];
 foreach ($anexos_atuais as $item) {
     if (in_array($item['id'], $anexos_remover)) {
-        // Se for imagem, deleta do B2 (GIFs são URLs externas, não deletamos)
         if (!empty($item['caminho']) && $item['tipo'] === 'imagem') {
             rollbackUpload($item['caminho'], $usuario_id);
             fenda_log("🔄 Anexo removido (imagem): " . $item['caminho']);
@@ -154,10 +211,9 @@ foreach ($anexos_atuais as $item) {
     }
 }
 
-// 4.3 Inicializa array de novos anexos
 $novos_anexos = [];
 
-// 🔥 4.4 - GIFs externos (via POST)
+// 4.4 - GIFs externos
 $gif_urls = isset($_POST['gif_urls']) && is_array($_POST['gif_urls']) ? $_POST['gif_urls'] : [];
 if (!empty($gif_urls)) {
     fenda_log("🎬 GIFs recebidos na edição: " . count($gif_urls));
@@ -169,19 +225,13 @@ if (!empty($gif_urls)) {
         }
         if (filter_var($gif_url, FILTER_VALIDATE_URL) &&
             (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false)) {
-            $novos_anexos[] = [
-                'id' => 'anexo-' . uniqid(),
-                'tipo' => 'gif',
-                'url' => $gif_url
-            ];
+            $novos_anexos[] = ['id' => 'anexo-' . uniqid(), 'tipo' => 'gif', 'url' => $gif_url];
             fenda_log("✅ GIF adicionado na edição: $gif_url");
-        } else {
-            fenda_log("⚠️ GIF ignorado (URL inválida): $gif_url");
         }
     }
 }
 
-// 4.5 - Múltiplos arquivos (imagens) – 🔥 USANDO $nome_anexo
+// 4.5 - Múltiplos arquivos
 if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name'])) {
     $files = array_filter($_FILES['anexos']['name']);
     if (!empty($files)) {
@@ -203,27 +253,18 @@ if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name'])) {
                     'size'     => $_FILES['anexos']['size'][$key]
                 ];
 
-                // 🔥 CORREÇÃO: usar $nome_anexo em vez de $nome
                 $nome_anexo = processarUploadSeguro($file_data, 'uploads', 'evento', 2 * 1024 * 1024, $usuario_id);
                 if ($nome_anexo !== false) {
-                    $novos_anexos[] = [
-                        'id' => 'anexo-' . uniqid(),
-                        'tipo' => 'imagem',
-                        'caminho' => $nome_anexo
-                    ];
+                    $novos_anexos[] = ['id' => 'anexo-' . uniqid(), 'tipo' => 'imagem', 'caminho' => $nome_anexo];
                     fenda_log("🆕 Nova imagem adicionada (edição): $nome_anexo");
                     $limite_restante--;
-                } else {
-                    fenda_log("❌ Falha ao processar anexo: " . $file_data['name']);
                 }
             }
-        } else {
-            fenda_log("⚠️ Limite de anexos atingido (já existem 4 fotos/GIFs na galeria).");
         }
     }
 }
 
-// 4.6 - Monta o array final de anexos
+// 4.6 - Monta o array final
 $anexos_finais = array_merge($anexos_mantidos, $novos_anexos);
 $anexos_json = !empty($anexos_finais) ? json_encode($anexos_finais) : null;
 
@@ -237,11 +278,8 @@ $sql = "UPDATE eventos
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssssissi", $nome, $descricao, $local, $data_evento, $comunidade_id, $capa_nome, $anexos_json, $evento_id);
 
-$is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-
 if ($stmt->execute()) {
     $stmt->close();
-    // Se nova capa foi enviada e é diferente da antiga, deleta a antiga do B2
     if ($nova_capa_enviada && !empty($evento_atual['imagem_url']) && $evento_atual['imagem_url'] !== $capa_nome) {
         try {
             rollbackUpload($evento_atual['imagem_url'], $usuario_id);
@@ -264,12 +302,10 @@ if ($stmt->execute()) {
     $stmt->close();
     fenda_log("❌ Erro no banco: $erro");
 
-    // Rollback: deleta os arquivos já enviados para o B2
     if ($nova_capa_enviada && !empty($capa_nome) && $capa_nome !== $evento_atual['imagem_url']) {
         rollbackUpload($capa_nome, $usuario_id);
         fenda_log("🔄 Rollback da nova capa: $capa_nome");
     }
-    // Rollback das novas imagens
     foreach ($novos_anexos as $item) {
         if (!empty($item['caminho']) && $item['tipo'] === 'imagem') {
             rollbackUpload($item['caminho'], $usuario_id);

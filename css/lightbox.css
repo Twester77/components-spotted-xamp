@@ -521,6 +521,45 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 }
 
 
+.btn-fechar-erro {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-size: clamp(0.85rem, 5cqw, 1.2rem);
+  border: none;
+  box-shadow: none;
+  text-decoration: none;
+  outline: none;
+  appearance: none;
+  cursor: pointer; 
+  /* Cores padrão */
+  background: #ff8a8a;
+  background: oklch(0.7615 0.1421 20.94);
+  color: #0d0d0d;   
+  color: oklch(15.907% 0.00002 271.152);
+  border-radius: 10px;
+  margin: 8px auto;
+  display: block; /* Garante que o margin auto centralize o botão */
+
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efeito ao passar o mouse */
+.btn-fechar-erro:hover {
+  background: #f97678;
+  background: oklch(0.72 0.16 20.94);
+  filter: brightness(1.05);  
+  transform: translateY(-2px);         
+  
+  /* Uma sombra suave moderna que combina com o movimento de subida */
+  box-shadow: 0 4px 10px oklch(0.7615 0.1421 20.94 / 0.4); 
+}
+
+/* Efeito ao CLICAR no botão (Sensação de clique real) */
+.btn-fechar-erro:active {
+  transform: translateY(1px); 
+  box-shadow: 0 2px 4px oklch(0.7615 0.1421 20.94 / 0.2); 
+}
+
 .lightbox-apenas-post .lightbox-content ,
 .lightbox-apenas-post .lightbox-post-body {
     background: #000000;
