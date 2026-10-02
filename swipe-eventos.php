@@ -139,8 +139,8 @@ while ($evento = $res->fetch_assoc()) {
     $total_talvez = $evento['total_talvez'] ?? 0;
     $total_nao_vou = $evento['total_nao_vou'] ?? 0;
     
-    // 🔥 DATA DO EVENTO COM FUSO BRASILEIRO
-    $data_formatada = exibirDataHoraBrasil($evento['data_evento'], 'd/m/Y H:i');
+    // Copilot (VS Code) — 2026-10-02: data_evento é armazenada como horário local, não UTC.
+    $data_formatada = date('d/m/Y H:i', strtotime($evento['data_evento']));
 ?>
     <!-- 🔥 CARD DE EVENTO -->
     <div class="bt-card <?php echo $status; ?>" data-id="<?php echo $evento['id']; ?>" data-criador="<?php echo $evento['criador_id']; ?>">

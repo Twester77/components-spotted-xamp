@@ -218,7 +218,8 @@ if (empty($_SESSION['csrf_token'])) {
         <h1 class="bt-detalhes-titulo"><?= htmlspecialchars($evento['nome']) ?></h1>
         <div class="bt-detalhes-meta">
             <span><i class="fas fa-map-pin"></i> <?= htmlspecialchars($evento['local'] ?? 'Local a definir') ?></span>
-            <span><i class="fas fa-calendar-alt"></i> <?= exibirDataHoraBrasil($evento['data_evento'], 'd/m/Y H:i') ?></span>
+            <?php // Copilot (VS Code) — 2026-10-02: data_evento é armazenada como horário local, não UTC. ?>
+            <span><i class="fas fa-calendar-alt"></i> <?= date('d/m/Y H:i', strtotime($evento['data_evento'])) ?></span>
             <span><i class="fas fa-user"></i> Criado por @<?= htmlspecialchars($evento['criador_username'] ?? 'Anônimo') ?></span>
         </div>
         <div class="bt-detalhes-descricao"><?= nl2br(htmlspecialchars($evento['descricao'] ?? '')) ?></div>
