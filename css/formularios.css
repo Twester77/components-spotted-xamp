@@ -3250,10 +3250,10 @@ form[action="confirma-login.php"] a {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    padding: 10px;
+    padding: 10px 6px;
     box-sizing: border-box;
     margin: 10px auto;
-    gap: 20px;
+    gap: 15px;
 
 }
 

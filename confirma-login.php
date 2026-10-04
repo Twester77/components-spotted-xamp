@@ -46,7 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             // ============================================================
             $token_sessao = bin2hex(random_bytes(32)); // 64 caracteres hex
             $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+            $ip = function_exists('obterIPReal')
+                ? obterIPReal()
+                : ($_SERVER['REMOTE_ADDR'] ?? '');
 
             // Insere na tabela sessoes_ativas
             $stmt_insert = $conn->prepare("INSERT INTO sessoes_ativas (usuario_id, token, user_agent, ip) VALUES (?, ?, ?, ?)");
