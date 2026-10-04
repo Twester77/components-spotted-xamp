@@ -122,8 +122,6 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
     CONTEÚDO PRINCIPAL (CARREGADO VIA AJAX)
     ============================================================ -->
     <main class="central-conteudo" id="central-conteudo">
-        <!-- 🔥 CSRF Token (para depoimentos e ações AJAX) -->
-        <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?? '' ?>">
         <div id="central-loading" style="display: none; text-align: center; ">
             <i class="fas fa-spinner fa-spin"></i>
             <p>Carregando...</p>

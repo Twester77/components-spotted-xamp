@@ -29,11 +29,12 @@ if ($usuario_id === 0) {
 }
 
 $limite = isset($_GET['limite']) ? (int)$_GET['limite'] : 5;
+$na_central = $limite > 5;
 
 // ============================================================
 // CABEÇALHO COM BOTÃO "MARCAR TODAS" (apenas se limite > 5)
 // ============================================================
-if ($limite > 5) {
+if ($na_central) {
     echo '<div class="notif-actions" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; grid-column: 1 / -1;">';
     echo '  <span style="color: #333333d9; font-weight: bold; font-family: inherit; font-size: 0.8rem; font-size:clamp(0.85rem, 2cqw, 1.2rem);">Suas notificações</span>';
     echo '  <button id="btn-marcar-todas-lidas" class="btn-fenda-padrao" style=" pointer-events:auto ; cursor:pointer;">';
@@ -86,15 +87,42 @@ while ($n = $res->fetch_assoc()):
             break;
     }
 ?>
-    <a href="<?= htmlspecialchars($link) ?>" class="item-notif-rapida <?= $lida_classe ?>">
-        <div class="notif-avatar">
-            <i class="fa-solid fa-water"></i>
-        </div>
-        <div class="notif-txt">
-            <span><?= htmlspecialchars($n['mensagem']) ?></span>
-            <small><?= exibirDataHoraBrasil($n['data_criacao'], 'd/m H:i') ?></small>
-        </div>
-    </a>
+    <div class="item-notif-rapida-wrap notificacao-item" data-notif-id="<?= (int)$n['id'] ?>">
+        <a href="<?= htmlspecialchars($link) ?>" class="item-notif-rapida <?= $lida_classe ?>" aria-label="Abrir notificação">
+            <div class="notif-avatar">
+                <i class="fa-solid fa-water"></i>
+            </div>
+            <div class="notif-txt">
+                <span><?= htmlspecialchars($n['mensagem']) ?></span>
+                <small><?= exibirDataHoraBrasil($n['data_criacao'], 'd/m H:i') ?></small>
+            </div>
+        </a>
+        <?php if ($na_central): ?>
+            <div
+                class="notificacao-acoes"
+                id="notificacao-acoes-<?= (int)$n['id'] ?>"
+                inert>
+                <button
+                    type="button"
+                    class="btn-excluir-notificacao"
+                    data-notif-id="<?= (int)$n['id'] ?>"
+                    aria-label="Excluir notificação: <?= htmlspecialchars(mb_substr($n['mensagem'], 0, 50, 'UTF-8')) ?>"
+                    title="Excluir notificação"
+                    disabled>
+                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                </button>
+            </div>
+            <button
+                type="button"
+                class="btn-notificacao-acoes-toggle"
+                aria-label="Mostrar ações da notificação: <?= htmlspecialchars(mb_substr($n['mensagem'], 0, 50, 'UTF-8')) ?>"
+                aria-controls="notificacao-acoes-<?= (int)$n['id'] ?>"
+                aria-expanded="false"
+                title="Mostrar ações">
+                <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+            </button>
+        <?php endif; ?>
+    </div>
 <?php
 endwhile;
 

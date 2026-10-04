@@ -167,13 +167,10 @@ body.hacker-mode .spotted-card:hover {
 }
 
 
-body.hacker-mode .sessao-fofoca-focada {
-    border: 1px solid var(--hacker-green,#00ff41) ;
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-    background-color: #323232 ;
-}
 
-body.hacker-mode .fixed-input::after , .footer {
+
+body.hacker-mode .fixed-input::after, 
+footer {
     display: none;
 }
 
@@ -322,9 +319,10 @@ body.hacker-mode .textarea-fenda {
     font-family: 'Courier New', 'Courier', monospace ;
 }
 
+
 /*  O SEGREDO: Aplicar o fundo preto e borda reta no CONTAINER do chat, não no textarea */
 body.hacker-mode .textarea-container {
-    background: #000000 !important; 
+    background: #000000 ; 
     border: 1px solid #00ff00 ; 
     border-radius: 0px ; /* Remove o arredondamento no modo hacker */
 }
@@ -336,9 +334,31 @@ body.hacker-mode .resposta-indicador {
     background: rgba(0, 0, 0, 0.95) ;
 }
 
+body.hacker-mode .comentario-menu-toggle,
+body.hacker-mode .comentario-ellipsis-menu {
+    border: 1px double #00ff41;
+    background: #000;
+    color: #00ff41;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.32);
+}
+
+body.hacker-mode .comentario-menu-item {
+    color: #00ff41;
+}
+
+body.hacker-mode .comentario-menu-item:hover,
+body.hacker-mode .comentario-menu-item:focus-visible {
+    background: #00ff0d50;
+    transition: background 0.2s ease;
+}
+
+body.hacker-mode .comentario-menu-item[data-accion="excluir"] {
+    color: #00ff41;
+}
+
 /* Efeito de typing / cursor piscando focado no container do prompt */
 body.hacker-mode .textarea-container:focus-within {
-    outline: none !important;
+    outline: none ;
     animation: blink-cursor-input 1s step-end infinite !important;
 }
 
@@ -356,7 +376,6 @@ body.hacker-mode .btn,
 body.hacker-mode .fenda-btn-glow,
 body.hacker-mode .btn-fenda-padrao,
 body.hacker-mode .btn-responder-bolha,
-body.hacker-mode .btn-enviar-fenda,
 body.hacker-mode .btn-sair-fenda,
 body.hacker-mode .btn-seguir-fenda,
 body.hacker-mode #btn-load-more,
@@ -374,7 +393,7 @@ body.hacker-mode .link-fofoca {
     background: oklch(0 0 0);
     color: #00ff00 ;
     color: oklch(0.861283 0.293072 142.4953);
-    border: 2px double var(--hacker-green,#00ff41) ;
+    border: 1px double var(--hacker-green,#00ff41) ;
     border-radius: 0 ;
     font-family: monospace ;
     text-transform: uppercase ;
@@ -383,7 +402,7 @@ body.hacker-mode .link-fofoca {
     cursor: crosshair !important;
     overflow: visible ;
     letter-spacing: 1px ;
-    text-decoration: none !important;
+    text-decoration: none ;
 }
 
 body.hacker-mode #btn-menu-hamburguer:hover {
@@ -393,8 +412,35 @@ body.hacker-mode #btn-menu-hamburguer:hover {
     color: oklch(0.8613 0.176 89.44);
 }
 
+body.hacker-mode .btn-enviar-chat,
+body.hacker-mode .btn-attach-gaveta {
+    background: #000 ;
+    background: oklch(0 0 0);
+    color: #00ff00 ;
+    color: oklch(0.861283 0.293072 142.4953);
+    border: 2px double var(--hacker-green,#00ff41) ;
+    font-family: monospace ;
+    text-transform: uppercase ;
+    position: relative ;
+    transition: none ;
+    cursor: crosshair ;
+}
+
+body.hacker-mode .btn-enviar-chat i:hover,
+body.hacker-mode .btn-attach-gaveta i:hover {
+    color: #000 ;
+    color: oklch(0 0 0);
+}
+
+body.hacker-mode .btn-attach-gaveta:hover {
+    background: #00ff00 ;
+    background: oklch(0.861283 0.293072 142.4953);
+}
+
+
 body.hacker-mode .perdidos-item .link-fofoca:hover,
 body.hacker-mode .btn-lancar:hover,
+body.hacker-mode .btn-editar-atalho:hover,
 body.hacker-mode .btn-voltar-fenda:hover {
     color:#000;
     color: oklch(0 0 0);
@@ -749,7 +795,7 @@ body.hacker-mode .comentario-item.vibe-ads {
 /* Texto do comentário em matriz verde fosforescente */
 body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
     color: var(--hacker-green,#00ff41) ;
-    text-shadow: 0 0 6px var(--hacker-green,#00ff41) ;
+    text-shadow: 0 0 2px var(--hacker-green,#00ff41) ;
     font-family: var(--hacker-font) ;
 }
 
@@ -1366,8 +1412,6 @@ body.hacker-mode .hacker-booting {
     50% { opacity: 0.3; filter: blur(4px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
-
-
 
 
 

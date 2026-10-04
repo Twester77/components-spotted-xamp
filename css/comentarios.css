@@ -208,7 +208,7 @@
    Padrão "fallback duplo": navegador antigo pega a 1ª linha,
    moderno sobrescreve com a 2ª. Já é o padrão do projeto.
    ============================================================ */
-    padding: 8px 8px 20px 8px;
+    padding: 8px;
     padding-left: max(8px + env(safe-area-inset-left, 0px));
     padding-right: max(8px + env(safe-area-inset-right, 0px));
     padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
@@ -228,21 +228,30 @@
 .fixed-input {
     background: transparent ;
     align-content: center;
-    padding: 0;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-bottom: 8px;
+    padding-bottom: env(safe-area-inset-bottom, 6px);
     box-sizing: border-box;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border: none;
     display: flex;
-    position: relative;
+    position: absolute;
     bottom: 0;
 }
 
+#lingoteContainer .layout-wrapper > footer.fixed-input:not(.fixed-input-bloqueado) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 8px;
+    padding-bottom: env(safe-area-inset-bottom, 6px);
+}
+
 #lingoteContainer.minimizado .fixed-input {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    border: none !important;
+    background: transparent ;
+    backdrop-filter: none ;
+    border: none ;
     flex-shrink: 0;
     max-height: none; /* Ajuste conforme a altura do formulário */
     position: fixed;
@@ -254,8 +263,8 @@
 /* ---------- MINIATURA DO POST (ESTILO BARRINHA) – LEGADO, MANTIDO PARA COMPATIBILIDADE ---------- */
 .post-miniatura {
     background: rgba(20, 20, 30, 0.92);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     border: 1px solid rgba(255, 188, 0, 0.2);
     border-radius: 12px;
     padding: 10px 16px;
@@ -272,7 +281,7 @@
 
 .post-miniatura:hover {
     border-color: rgba(255, 188, 0, 0.4);
-    box-shadow: 0 0 20px rgba(255, 188, 0, 0.05);
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.05);
 }
 
 .miniatura-conteudo {
@@ -291,7 +300,7 @@
     transform: none;
     object-fit: cover;
     flex-shrink: 0;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .miniatura-info {
@@ -481,9 +490,9 @@
     padding-inline-end: 8px;
     padding-inline-start: 9px;
     border-radius: 16px 16px 16px 4px;
-    border-right: 3px solid var(--cor-borda-glow);
+    border-right: 1px solid var(--cor-borda-glow);
     background: rgba(255, 255, 255, 0.062);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     align-self: flex-start;
     justify-content: center;
     /* MUDANÇA CHAVE: O balão agora se ajusta ao texto de forma inteligente */
@@ -503,19 +512,41 @@
     overflow-wrap: break-word;
     hyphens: auto;
     
-    margin-bottom: 20px;
-    scroll-snap-align: start;
-    scroll-margin-top: 20px;
+    margin: 0;
     overflow: visible;
     will-change: transform;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.comentario-linha {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+    scroll-margin-top: 20px;
+}
+
+.comentario-linha-proprio {
+    flex-direction: row-reverse;
+}
+
+.comentario-linha-filha {
+    width: calc(100% - 40px);
+    margin-left: 40px;
 }
 
 .comentario-item.meu-comentario {
     border: none;
     border-radius: 15px 15px 5px 15px;
-    align-self: flex-end;
-    margin-left: auto;
-    margin-right: 0;
+    margin: 0;
     
     /* MUDANÇA CHAVE: Igualado ao comportamento do comentário padrão */
     width: fit-content; 
@@ -549,7 +580,7 @@
     font-weight: bold;
     opacity: 1;
     color: oklch(from var(--cor-borda-glow) 0.30 c h);
-    border-left: 3px solid oklch(from var(--cor-borda-glow) 0.30 c h);
+    border-left: 1px solid oklch(from var(--cor-borda-glow) 0.30 c h);
     background: rgba(0, 0, 0, 0.06);
     border-radius: 10px;
 }
@@ -623,7 +654,7 @@
 
 .comentario-item.vibe-ads {
     background-color: #161625;
-    border: 2px solid var(--cor-borda-glow);
+    border: 1px solid var(--cor-borda-glow);
     position: relative;
     animation: pulsar-luz 3s infinite ease-in-out;
     color: var(--cor-borda-glow);
@@ -680,7 +711,7 @@
 
 /* COMENTÁRIOS FILHOS */
 .comentario-filho {
-    margin-left: 40px;
+    margin-left: 0;
     max-width: 58%;
     position: relative;
 }
@@ -718,10 +749,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    background: #00000d;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius:6px;
-    padding: 6px 10px;
+    border-radius: 16px;
+    padding: 4px 8px;
     position: relative;
     width: 100%;
     max-width: 900px;
@@ -733,30 +762,41 @@
 .textarea-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 4px;
+    border: 1px solid rgba(255, 188, 0, 0.22);
+    border-radius: 999px;
+    background: rgba(20, 20, 30, 0.88);
+    background: linear-gradient(135deg, rgba(35, 28, 39, 0.96), rgba(12, 14, 25, 0.96));
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea-wrapper:focus-within {
+    border-color: var(--cor-borda-glow, #ffbc00);
+    box-shadow: 0 0 0 2px rgba(255, 188, 0, 0.12), 0 3px 14px rgba(0, 0, 0, 0.28);
 }
 
 /* ==================================================
-   CONTAINER PRINCIPAL – com borda e fundo
+   CONTAINER PRINCIPAL – integrado à pílula
    ================================================== */
 .textarea-container {
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-width: 0;
     position: relative;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 16px;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
     min-height: 40px;
     max-height: 120px;
-    resize: vertical;
     overflow: hidden;
-    transition: border-color 0.2s;
-}
-
-.textarea-container:focus-within {
-    border-color: var(--cor-borda-glow, #70cde4);
 }
 
 /* ==================================================
@@ -771,10 +811,12 @@
     align-items: center;
     gap: 4px;
     background: rgba(20, 20, 30, 0.92);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border: 1px solid rgba(255, 188, 0, 0.25);
     border-radius: 20px;
     padding: 4px 10px 4px 12px;
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 2.5cqi, 1rem);
     color: #ffbc00;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -842,10 +884,10 @@
 .textarea-chat {
     flex: 1;
     display: flex;
-    padding: 4px 10px;
+    padding: 4px 6px;
     padding-top: 8px;
     padding-right: 35px;
-    background: transparent !important;
+    background: transparent ;
     border: none;
     color: #fff;
     color: oklch(0.97 0 0.9);
@@ -857,7 +899,7 @@
     scrollbar-width: none;
     width: 100%;
     max-width: 100%;
-    line-height: 1.4;
+    line-height: 1.35;
     box-sizing: border-box;
     transition: padding-top 0.2s ease;
 }
@@ -875,40 +917,58 @@
 .char-counter-inline {
     position: absolute;
     bottom: 5px;
-    right: 5px;
-    font-size: 0.75rem;
-    font-size: clamp(0.7rem, 0.8vw, 0.95rem);
-    color: #aaaaaa;
+    right: 6px;
+    font-size: 0.7rem;
+    font-size: clamp(0.65rem, 0.8vw, 0.8rem);
+    color: #ffe09a;
     pointer-events: none;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 2px 4px;
+    background: rgba(255, 188, 0, 0.12);
+    border: 1px solid rgba(255, 188, 0, 0.2);
+    padding: 2px 6px;
     border-radius: 10px;
     z-index: 2;
+    line-height: 1.2;
 }
 
 .char-counter-inline.alerta {
     color: #ff8a00;
+    background: rgba(255, 138, 0, 0.14);
+    border-color: rgba(255, 138, 0, 0.32);
 }
 
 .char-counter-inline.critico {
     color: #ff4b4b;
+    background: rgba(255, 75, 75, 0.14);
+    border-color: rgba(255, 75, 75, 0.32);
 }
 
 .btn-attach-gaveta {
     background: rgba(255, 255, 255, 0.06);
+    background: oklch(100% 0.00011 271.152 / 0.06);
     border: none;
     border-radius: 50%;
-    width: clamp(32px, 8vmin, 70px);
-    height: clamp(32px, 8vmin, 70px);
-    font-size: clamp(1rem, 3vmin, 1.6rem);
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
     display: flex;
+    flex-shrink: 0;
+    transition: 0.2s;
+}
+
+.btn-attach-gaveta,
+.btn-enviar-chat {
+    width: 32px;
+    height: 32px;
+    width: clamp(34px, 8vmin, 60px);
+    height: clamp(34px, 8vmin, 60px);
+    display: none;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
-    transition: 0.2s;
+    font-size: 1rem;
+    font-size: clamp(0.95rem, 3.5vmin, 1.25rem);
 }
+
 
 .btn-attach-gaveta:hover {
     background: #77c9ddc5;
@@ -922,15 +982,9 @@
     background: var(--laranja-fenda);
     border: none;
     border-radius: 50%;
-    width: clamp(32px, 8vmin, 70px);
-    height: clamp(32px, 8vmin, 70px);
     display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
     color: #000;
-    font-size: clamp(0.95rem, 3.5vmin, 1.7rem);
+    color: oklch(0 0 0 / 0.6);
 }
 
 .btn-enviar-chat.visivel {
@@ -944,8 +998,9 @@
     left: 5px;
     right: 0;
     max-height: 50vh;
-    max-width: 250px;
+    max-width: 260px;
     background: rgba(0, 0, 0, 0.92);
+    background: oklch(0 0 0 / 0.92);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     overflow-y: auto;
@@ -969,6 +1024,7 @@
     cursor: pointer;
     padding: 6px 10px;
     font-size: 0.95rem;
+    font-size: clamp(0.9rem, 2.5cqi, 1.05rem);
     border-radius: 8px;
     transition: 0.2s;
 }
@@ -991,6 +1047,8 @@
     padding: 6px 12px;
     color: #fff;
     font-size: 0.85rem;
+    font-size: clamp(0.8rem, 2.5cqi, 1rem);
+    width: 100%;
 }
 
 .color-mini {
@@ -1077,8 +1135,13 @@
     }
 
     .comentario-filho {
-        margin-left: 20px;
+        margin-left: 0;
         max-width: 63%;
+    }
+
+    .comentario-linha-filha {
+        width: calc(100% - 20px);
+        margin-left: 20px;
     }
 
     .comentario-item .comentario-autor {
@@ -1099,8 +1162,13 @@
     }
 
     .comentario-filho {
-        margin-left: 35px;
+        margin-left: 0;
         max-width: 57%;
+    }
+
+    .comentario-linha-filha {
+        width: calc(100% - 35px);
+        margin-left: 35px;
     }
 }
 
@@ -1110,8 +1178,13 @@
     }
 
     .comentario-filho {
-        margin-left: 35px;
+        margin-left: 0;
         max-width: 60%;
+    }
+
+    .comentario-linha-filha {
+        width: calc(100% - 35px);
+        margin-left: 35px;
     }
 }
 
@@ -1125,8 +1198,13 @@
     }
 
     .comentario-filho {
-        margin-left: 40px;
+        margin-left: 0;
         max-width: 52%;
+    }
+
+    .comentario-linha-filha {
+        width: calc(100% - 40px);
+        margin-left: 40px;
     }
 }
 
@@ -1490,6 +1568,95 @@ body.pagina-post .header-principal {
     gap: 6px;
     width: 100%;
     /* REMOVIDO: white-space: nowrap; */
+}
+
+.comentario-autor,
+.comentario-texto {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.comentario-menu-toggle {
+    display: inline-flex;
+    flex: 0 0 28px;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid rgba(255, 188, 0, 0.25);
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.18);
+    background: oklch(0.1 0.0001 271.152 / 0.18);
+    color: var(--cor-borda-glow, #ffbc00);
+    font: inherit;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.comentario-menu-toggle:hover,
+.comentario-menu-toggle:focus-visible {
+    background: rgba(255, 188, 0, 0.16);
+    border-color: currentColor;
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+.comentario-menu-toggle:active {
+    transform: scale(0.92);
+}
+
+.comentario-ellipsis-menu {
+    position: fixed;
+    z-index: 100001;
+    display: flex;
+    flex-direction: column;
+    min-width: 156px;
+    max-width: min(240px, calc(100vw - 16px));
+    padding: 5px;
+    border: 1px solid rgba(255, 188, 0, 0.28);
+    border-radius: 12px;
+    background: rgba(20, 20, 30, 0.97);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+.comentario-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 11px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.comentario-menu-item:hover,
+.comentario-menu-item:focus-visible {
+    background: rgba(255, 255, 255, 0.09);
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+}
+
+.comentario-menu-item[data-accion="excluir"] {
+    color: #ff7777;
+}
+
+.comentario-menu-item i {
+    width: 1em;
+    text-align: center;
 }
 
 .comentario-autor {

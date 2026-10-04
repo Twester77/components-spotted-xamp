@@ -68,6 +68,8 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
 }
 ?>
 
+<div id="notificacao-status-global" class="sr-only" aria-live="polite" role="status" aria-atomic="true"></div>
+
 <?php if (isset($_SESSION['usuario_id'])): ?>
     <button type="button" class="fab-postar" onclick="abrirModalPost()" title="Sussurrar para a Fenda" aria-label="Sussurrar para a Fenda (Criar nova publicação)">
         <i class="fas fa-plus" aria-hidden="true"></i>

@@ -893,14 +893,254 @@ window.marcarTodasComoLidas = function () {
         });
 };
 
+window.excluirNotificacao = function (notifId, triggerEl) {
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        if (typeof exibirToast === 'function') {
+            exibirToast('❌ Token de segurança não encontrado.');
+        }
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', String(notifId));
+    formData.append('csrf_token', csrfToken);
+
+    if (triggerEl) {
+        triggerEl.disabled = true;
+        triggerEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+
+    fetch('excluir-notificacao.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Erro ao excluir notificação.');
+            }
+            return data;
+        })
+        .then(data => {
+            if (data.status !== 'success') {
+                throw new Error(data.message || 'Erro ao excluir notificação.');
+            }
+
+            const item = document.querySelector(`#central-body .notificacao-item[data-notif-id="${notifId}"]`);
+            if (item) item.remove();
+
+            const badge = document.getElementById('badge-alertas');
+            const totalNaoLidas = Number(data.unread_count);
+            if (Number.isInteger(totalNaoLidas) && totalNaoLidas >= 0) {
+                if (badge) {
+                    badge.textContent = String(totalNaoLidas);
+                    badge.style.display = totalNaoLidas > 0 ? 'flex' : 'none';
+                }
+                if (typeof window.atualizarBadgingPWA === 'function') {
+                    window.atualizarBadgingPWA(totalNaoLidas);
+                }
+                try {
+                    sessionStorage.setItem('fenda_ultimo_aviso', String(totalNaoLidas));
+                } catch (err) {
+                    console.warn('[NOTIF] Não foi possível sincronizar o aviso da sessão:', err);
+                }
+            } else if (badge) {
+                window.atualizarContadorAlertas?.();
+            }
+
+            if (item && !document.querySelector('#central-body .notificacao-item')) {
+                const vazio = document.createElement('div');
+                vazio.className = 'notificacao-empty notificacoes-vazio-central';
+                const texto = document.createElement('p');
+                texto.textContent = 'A Fenda está silenciosa. Nenhuma notificação por aqui.';
+                vazio.appendChild(texto);
+                document.getElementById('central-body')?.appendChild(vazio);
+            }
+
+            const status = document.getElementById('notificacao-status-global');
+            if (status) {
+                status.textContent = 'Notificação excluída.';
+            }
+
+            if (typeof exibirToast === 'function') {
+                exibirToast('✅ Notificação removida.');
+            }
+        })
+        .catch(err => {
+            console.error('[NOTIF] Erro ao excluir notificação:', err);
+            if (typeof exibirToast === 'function') {
+                exibirToast('❌ ' + (err.message || 'Erro de conexão. Tente novamente.'));
+            }
+        })
+        .finally(() => {
+            if (triggerEl) {
+                triggerEl.disabled = false;
+                triggerEl.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+            }
+        });
+};
+
+function definirAcoesNotificacao(item, abertas) {
+    if (!item) return;
+
+    const toggle = item.querySelector('.btn-notificacao-acoes-toggle');
+    const painel = item.querySelector('.notificacao-acoes');
+    const btnExcluir = item.querySelector('.btn-excluir-notificacao');
+    item.classList.toggle('is-actions-revealed', abertas);
+    item.classList.toggle('has-keyboard-actions', abertas && item.dataset.keyboardActions === 'true');
+    if (toggle) toggle.setAttribute('aria-expanded', abertas ? 'true' : 'false');
+    if (painel) painel.toggleAttribute('inert', !abertas);
+    if (btnExcluir) btnExcluir.disabled = !abertas;
+}
+
 // Delegação de evento (captura mesmo se o botão for injetado depois)
 document.addEventListener('click', function (e) {
+    const swipeItem = e.target.closest('#central-body .item-notif-rapida-wrap[data-suppress-swipe-click="true"]');
+    if (swipeItem) {
+        swipeItem.removeAttribute('data-suppress-swipe-click');
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+    }
+
     const btn = e.target.closest('#btn-marcar-todas-lidas');
     if (btn) {
         e.preventDefault();
         e.stopPropagation();
         window.marcarTodasComoLidas();
+        return;
     }
+
+    const toggleAcoes = e.target.closest('#central-body .btn-notificacao-acoes-toggle');
+    if (toggleAcoes) {
+        e.preventDefault();
+        e.stopPropagation();
+        const item = toggleAcoes.closest('.item-notif-rapida-wrap');
+        const abrir = toggleAcoes.getAttribute('aria-expanded') !== 'true';
+
+        document.querySelectorAll('#central-body .item-notif-rapida-wrap.is-actions-revealed')
+            .forEach(outroItem => definirAcoesNotificacao(outroItem, false));
+        definirAcoesNotificacao(item, abrir);
+
+        if (abrir && e.detail === 0) {
+            item?.querySelector('.btn-excluir-notificacao')?.focus();
+        }
+        return;
+    }
+
+    const btnExcluir = e.target.closest('.btn-excluir-notificacao');
+    if (btnExcluir) {
+        e.preventDefault();
+        e.stopPropagation();
+        const notifId = Number(btnExcluir.dataset.notifId || 0);
+        if (notifId > 0) {
+            window.excluirNotificacao(notifId, btnExcluir);
+        }
+    }
+});
+
+let notificacaoSwipeAtivo = null;
+
+document.addEventListener('pointerdown', function (event) {
+    const item = event.target.closest('#central-body .item-notif-rapida-wrap');
+    if (!item || event.button !== 0 || event.target.closest('button, input, textarea, select')) {
+        return;
+    }
+
+    notificacaoSwipeAtivo = {
+        item,
+        pointerId: event.pointerId,
+        inicioX: event.clientX,
+        inicioY: event.clientY,
+        deslocamentoInicial: item.classList.contains('is-actions-revealed') ? -64 : 0,
+        deltaX: 0,
+        reconhecido: false
+    };
+}, { passive: true });
+
+document.addEventListener('pointermove', function (event) {
+    const gesto = notificacaoSwipeAtivo;
+    if (!gesto || event.pointerId !== gesto.pointerId) return;
+
+    const deltaX = event.clientX - gesto.inicioX;
+    const deltaY = event.clientY - gesto.inicioY;
+    if (Math.abs(deltaY) > 12 && Math.abs(deltaY) >= Math.abs(deltaX)) {
+        notificacaoSwipeAtivo = null;
+        return;
+    }
+    if (Math.abs(deltaX) <= 12 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    gesto.reconhecido = true;
+    gesto.deltaX = deltaX;
+    const anchor = gesto.item.querySelector('.item-notif-rapida');
+    if (anchor) {
+        const deslocamento = Math.max(-64, Math.min(0, gesto.deslocamentoInicial + deltaX));
+        anchor.style.transform = `translateX(${deslocamento}px)`;
+    }
+    if (event.cancelable) event.preventDefault();
+}, { passive: false });
+
+function finalizarSwipeNotificacao(event) {
+    const gesto = notificacaoSwipeAtivo;
+    if (!gesto || (event && event.pointerId !== gesto.pointerId)) return;
+
+    notificacaoSwipeAtivo = null;
+    const anchor = gesto.item.querySelector('.item-notif-rapida');
+    if (anchor) anchor.style.removeProperty('transform');
+
+    if (!gesto.reconhecido) return;
+
+    gesto.item.dataset.suppressSwipeClick = 'true';
+    window.setTimeout(() => {
+        if (gesto.item?.dataset.suppressSwipeClick === 'true') {
+            delete gesto.item.dataset.suppressSwipeClick;
+        }
+    }, 500);
+    document.querySelectorAll('#central-body .item-notif-rapida-wrap.is-actions-revealed')
+        .forEach(outroItem => {
+            if (outroItem !== gesto.item) definirAcoesNotificacao(outroItem, false);
+        });
+    definirAcoesNotificacao(gesto.item, gesto.deslocamentoInicial + gesto.deltaX <= -32);
+}
+
+document.addEventListener('pointerup', finalizarSwipeNotificacao);
+document.addEventListener('pointercancel', finalizarSwipeNotificacao);
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('#central-body .item-notif-rapida-wrap')
+            .forEach(item => {
+                delete item.dataset.keyboardActions;
+                definirAcoesNotificacao(item, false);
+            });
+    }
+});
+
+document.addEventListener('focusin', function (event) {
+    const button = event.target.closest('#central-body .btn-excluir-notificacao');
+    if (button) {
+        const item = button.closest('.item-notif-rapida-wrap');
+        if (item) {
+            item.dataset.keyboardActions = 'true';
+            definirAcoesNotificacao(item, true);
+        }
+    }
+});
+
+document.addEventListener('focusout', function (event) {
+    const item = event.target.closest('#central-body .item-notif-rapida-wrap');
+    if (item && !item.contains(event.relatedTarget)) {
+        delete item.dataset.keyboardActions;
+        if (item.classList.contains('has-keyboard-actions')) {
+            definirAcoesNotificacao(item, false);
+        }
+    }
+});
+
+document.addEventListener('click', function (event) {
+    if (event.target.closest('#central-body .item-notif-rapida-wrap')) return;
+    document.querySelectorAll('#central-body .item-notif-rapida-wrap.is-actions-revealed')
+        .forEach(item => definirAcoesNotificacao(item, false));
 });
 
 // ==================== LIMPEZA DO BADGE EM INTERAÇÕES ====================
@@ -1356,6 +1596,11 @@ window.excluirComentario = async function (commentId, btnElement) {
             console.log('[excluirComentario] ✅ Exclusão bem-sucedida!');
             comentarioDiv.classList.remove('is-loading');
             comentarioDiv.classList.add('comentario-deletado');
+            const botaoAcoes = comentarioDiv.parentElement?.querySelector('.comentario-menu-toggle');
+            if (botaoAcoes) {
+                botaoAcoes.hidden = true;
+                botaoAcoes.disabled = true;
+            }
             comentarioDiv.innerHTML = `
                 <div class="comentario-deletado-msg">
                     <i class="fas fa-trash-alt"></i> Comentário removido pelo autor.
@@ -1946,6 +2191,11 @@ const HeaderManager = {
     _transitionTimeout: null,
     _faixaElement: null,          // Referência para a faixa de destaque
     _faixaUpdateHandler: null,    // Referência para o handler de scroll/resize
+    _initialized: false,
+    _activePress: null,
+    _suppressClickForElement: null,
+    _menuElement: null,
+    _menuTrigger: null,
 
     // Dados da miniatura (preenchidos pelo PHP via atributos data)
     postId: null,
@@ -1955,7 +2205,8 @@ const HeaderManager = {
 
     init() {
         this.container = document.getElementById(this.containerId);
-        if (!this.container) return;
+        if (!this.container || this._initialized) return;
+        this._initialized = true;
 
         this.postId = this.container.dataset.postId || null;
         this.postAvatar = this.container.dataset.postAvatar || 'uploads/ui/default.webp';
@@ -1964,23 +2215,271 @@ const HeaderManager = {
 
         this._mostrarMiniatura(false);
 
-        // Evento delegado para cliques em comentários
-        document.addEventListener('click', (e) => {
-            const comentario = e.target.closest('.comentario-item');
-            if (comentario) {
-                const id = comentario.id.replace('comentario-', '');
-                if (id) {
-                    this.setContext('comentario', { comentarioId: id, element: comentario });
-                }
-            }
-        });
+        document.addEventListener('pointerdown', (event) => this._iniciarPressao(event), { passive: true });
+        document.addEventListener('pointermove', (event) => this._moverPressao(event), { passive: true });
+        document.addEventListener('pointerup', (event) => this._cancelarPressao(event));
+        document.addEventListener('pointercancel', (event) => this._cancelarPressao(event));
 
-        // Fecha o contexto ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.comentario-item') && !e.target.closest('.header-actions-fixo')) {
+        document.addEventListener('click', (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            if (!target) return;
+
+            const comentario = target.closest('.comentario-item');
+            if (this._suppressClickForElement && comentario === this._suppressClickForElement) {
+                this._suppressClickForElement = null;
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+
+            const toggle = target.closest('.comentario-menu-toggle');
+            const comentarioDoMenu = toggle?.closest('.comentario-linha')?.querySelector('.comentario-item');
+            if (toggle && comentarioDoMenu) {
+                event.preventDefault();
+                event.stopPropagation();
+                this._alternarMenuComentario(comentarioDoMenu, toggle);
+                return;
+            }
+
+            const menuItem = target.closest('[data-comentario-acao]');
+            if (menuItem && this._menuElement?.contains(menuItem)) {
+                event.preventDefault();
+                event.stopPropagation();
+                this._executarAcaoComentario(menuItem.dataset.comentarioAcao);
+                return;
+            }
+
+            if (this._menuElement && !this._menuElement.contains(target)) {
+                this._fecharMenuComentario(false);
+            }
+
+            if (comentario) {
+                if (this.contexto && this.dados?.element !== comentario) this.limpar();
+                return;
+            }
+
+            if (!target.closest('.header-actions-fixo')) {
                 this.limpar();
             }
         });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape' || !this._menuElement) return;
+            event.preventDefault();
+            this._fecharMenuComentario(true);
+        });
+
+        document.addEventListener('scroll', () => this._fecharMenuComentario(false), true);
+        window.addEventListener('resize', () => this._fecharMenuComentario(false));
+        window.addEventListener('blur', () => this._cancelarPressao());
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) this._cancelarPressao();
+        });
+    },
+
+    _iniciarPressao(event) {
+        if (event.button !== undefined && event.button !== 0) return;
+        const target = event.target instanceof Element ? event.target : null;
+        if (
+            this._menuElement
+            && target
+            && !this._menuElement.contains(target)
+            && !target.closest('.comentario-menu-toggle')
+        ) {
+            this._fecharMenuComentario(false);
+        }
+        const comentario = target?.closest('.comentario-item');
+        if (!comentario || target.closest('button, a, input, textarea, select, [role="button"], .indicador-resposta')) return;
+
+        this._cancelarPressao();
+        this._suppressClickForElement = null;
+        const press = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            element: comentario,
+            timer: null
+        };
+        this._activePress = press;
+        press.timer = window.setTimeout(() => {
+            if (this._activePress !== press || !press.element.isConnected) return;
+            this._activePress = null;
+            this._suppressClickForElement = press.element;
+            window.setTimeout(() => {
+                if (this._suppressClickForElement === press.element) {
+                    this._suppressClickForElement = null;
+                }
+            }, 900);
+            const id = press.element.id.replace(/^comentario-/, '');
+            if (id) this.setContext('comentario', { comentarioId: id, element: press.element });
+        }, 550);
+    },
+
+    _moverPressao(event) {
+        const press = this._activePress;
+        if (!press || event.pointerId !== press.pointerId) return;
+        const dx = event.clientX - press.startX;
+        const dy = event.clientY - press.startY;
+        if ((dx * dx) + (dy * dy) > 100) this._cancelarPressao();
+    },
+
+    _cancelarPressao(event) {
+        if (event && this._activePress && event.pointerId !== this._activePress.pointerId) return;
+        if (this._activePress?.timer) window.clearTimeout(this._activePress.timer);
+        this._activePress = null;
+    },
+
+    _alternarMenuComentario(comentario, trigger) {
+        if (this._menuTrigger === trigger) {
+            this._fecharMenuComentario(false);
+            return;
+        }
+        this._fecharMenuComentario(false);
+        if (this.contexto) this.limpar();
+
+        const menu = document.createElement('div');
+        menu.className = 'comentario-ellipsis-menu';
+        menu.id = trigger.getAttribute('aria-controls') || `comentario-menu-${comentario.id.replace(/^comentario-/, '')}`;
+        menu.setAttribute('role', 'group');
+        menu.setAttribute('aria-label', 'Ações do comentário');
+        menu.setAttribute('aria-labelledby', trigger.id);
+
+        const criarItem = (acao, icone, texto) => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'comentario-menu-item';
+            item.dataset.comentarioAcao = acao;
+            item.innerHTML = `<i class="fas ${icone}" aria-hidden="true"></i><span>${texto}</span>`;
+            menu.appendChild(item);
+        };
+
+        criarItem('responder', 'fa-reply', 'Responder');
+        criarItem('copiar', 'fa-copy', 'Copiar');
+        if (comentario.classList.contains('meu-comentario')) {
+            criarItem('excluir', 'fa-trash-alt', 'Excluir');
+        }
+
+        document.body.appendChild(menu);
+        this._menuElement = menu;
+        this._menuTrigger = trigger;
+        trigger.setAttribute('aria-expanded', 'true');
+        menu.addEventListener('focusout', () => {
+            window.setTimeout(() => {
+                if (
+                    this._menuElement === menu
+                    && !menu.contains(document.activeElement)
+                    && document.activeElement !== trigger
+                ) {
+                    this._fecharMenuComentario(false);
+                }
+            }, 0);
+        });
+
+        menu.style.visibility = 'hidden';
+        const triggerRect = trigger.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        const margem = 8;
+        const left = Math.min(
+            Math.max(margem, triggerRect.right - menuRect.width),
+            window.innerWidth - menuRect.width - margem
+        );
+        let top = triggerRect.bottom + 6;
+        if (top + menuRect.height > window.innerHeight - margem) {
+            top = triggerRect.top - menuRect.height - 6;
+        }
+        top = Math.max(margem, Math.min(top, window.innerHeight - menuRect.height - margem));
+        menu.style.left = `${left}px`;
+        menu.style.top = `${top}px`;
+        menu.style.visibility = 'visible';
+        menu.querySelector('.comentario-menu-item')?.focus();
+    },
+
+    _fecharMenuComentario(restaurarFoco) {
+        if (!this._menuElement) return;
+        this._menuElement.remove();
+        this._menuElement = null;
+        if (this._menuTrigger) {
+            this._menuTrigger.setAttribute('aria-expanded', 'false');
+            if (restaurarFoco) {
+                try {
+                    this._menuTrigger.focus({ preventScroll: true });
+                } catch {
+                    this._menuTrigger.focus();
+                }
+            }
+        }
+        this._menuTrigger = null;
+    },
+
+    async _executarAcaoComentario(acao) {
+        const comentario = this._menuTrigger?.closest('.comentario-linha')?.querySelector('.comentario-item');
+        const id = comentario?.id.replace(/^comentario-/, '');
+        const autor = comentario?.querySelector('.comentario-autor')?.textContent.trim() || '';
+        const texto = comentario?.querySelector('.comentario-texto')?.textContent.trim() || '';
+        const ehProprio = comentario?.classList.contains('meu-comentario') || false;
+        this._fecharMenuComentario(false);
+        if (!comentario || !id) return;
+
+        if (acao === 'responder') {
+            if (typeof window.prepararResposta === 'function') {
+                window.prepararResposta(id, autor);
+            } else {
+                console.error('[HEADER] Função prepararResposta não está disponível.');
+            }
+            return;
+        }
+
+        if (acao === 'copiar') {
+            if (!texto) {
+                window.exibirBalaoFenda?.('Este comentário não tem texto para copiar.', 'info');
+                return;
+            }
+
+            let copiado = false;
+            if (navigator.clipboard?.writeText) {
+                try {
+                    await navigator.clipboard.writeText(texto);
+                    copiado = true;
+                } catch (error) {
+                    console.warn('[HEADER] Clipboard API falhou; tentando fallback compatível.', error);
+                }
+            }
+            if (!copiado) {
+                const campo = document.createElement('textarea');
+                campo.value = texto;
+                campo.setAttribute('readonly', '');
+                campo.style.position = 'fixed';
+                campo.style.opacity = '0';
+                document.body.appendChild(campo);
+                campo.select();
+                try {
+                    copiado = document.execCommand('copy');
+                } catch (error) {
+                    console.error('[HEADER] Fallback de cópia falhou.', error);
+                } finally {
+                    campo.remove();
+                }
+            }
+            if (copiado) {
+                window.exibirBalaoFenda?.('Comentário copiado!', 'sucesso');
+            } else {
+                console.error('[HEADER] Não foi possível copiar o comentário.');
+                window.exibirBalaoFenda?.('Não foi possível copiar o comentário.', 'erro');
+            }
+            return;
+        }
+
+        if (acao === 'excluir') {
+            if (!ehProprio) {
+                console.error('[HEADER] A exclusão do menu foi bloqueada: o comentário não pertence ao usuário.');
+                return;
+            }
+            if (typeof window.excluirComentario === 'function') {
+                window.excluirComentario(id);
+            } else {
+                console.error('[HEADER] Função excluirComentario não está disponível.');
+            }
+        }
     },
 
     setContext(contexto, dados) {
@@ -1991,6 +2490,7 @@ const HeaderManager = {
 
         if (contexto === 'comentario' && dados.element) {
             setTimeout(() => {
+                if (this.contexto !== contexto || this.dados?.element !== dados.element) return;
                 document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
                 dados.element.classList.add('comentario-selecionado');
                 // 🔥 Cria a faixa de destaque

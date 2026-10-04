@@ -209,6 +209,7 @@ while ($c = $res->fetch_assoc()) {
 
     // Monta HTML do comentário (mesma estrutura do comentarios-post.php)
     $comentario_html = '
+    <div class="comentario-linha ' . ($sou_eu === 'meu-comentario' ? 'comentario-linha-proprio' : '') . ' ' . ($classe_filho ? 'comentario-linha-filha' : '') . '">
     <div class="comentario-item ' . $vibe . ' ' . $classe_filho . ' ' . $sou_eu . '" id="comentario-' . (int)$c['id'] . '" style="--cor-borda-glow: ' . $cor_borda . '; ' . $estilo_filho . '">
         <div class="comentario-meta">
             <strong class="comentario-autor" style="color: var(--cor-borda-glow);">' . $nome_autor . '</strong>
@@ -216,7 +217,7 @@ while ($c = $res->fetch_assoc()) {
 
     if (!empty($c['parent_id'])) {
         $comentario_html .= '
-        <div class="indicador-resposta" onclick="irParaMensagem(' . (int)$c['parent_id'] . ')">
+        <div class="indicador-resposta" onclick="event.stopPropagation(); irParaMensagem(' . (int)$c['parent_id'] . ')">
             <i class="fas fa-reply"></i> <small>' . htmlspecialchars($trecho_resposta, ENT_QUOTES, 'UTF-8') . '</small>
         </div>';
     }
@@ -227,6 +228,10 @@ while ($c = $res->fetch_assoc()) {
         <div class="comentario-rodape">
             <span class="comentario-data">' . exibirDataHoraBrasil($c['data_comentario'], 'H:i') . '</span>
         </div>
+    </div>
+    <button type="button" id="comentario-acoes-' . (int)$c['id'] . '" class="comentario-menu-toggle" aria-label="Ações do comentário" aria-haspopup="true" aria-expanded="false" aria-controls="comentario-menu-' . (int)$c['id'] . '" title="Ações do comentário">
+        <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+    </button>
     </div>';
 
     $novos[] = [

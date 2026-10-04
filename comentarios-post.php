@@ -336,6 +336,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             $trecho_resposta = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
                         }
                 ?>
+                        <div class="comentario-linha <?php echo $sou_eu === 'meu-comentario' ? 'comentario-linha-proprio' : ''; ?> <?php echo $classe_filho ? 'comentario-linha-filha' : ''; ?>">
                         <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
 
                             <div class="comentario-meta">
@@ -345,7 +346,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             </div>
 
                             <?php if (!empty($c['parent_id'])): ?>
-                                <div class="indicador-resposta" onclick="irParaMensagem(<?php echo $c['parent_id']; ?>)">
+                                <div class="indicador-resposta" onclick="event.stopPropagation(); irParaMensagem(<?php echo $c['parent_id']; ?>)">
                                     <i class="fas fa-reply"></i> <small><?php echo htmlspecialchars($trecho_resposta); ?></small>
                                 </div>
                             <?php endif; ?>
@@ -401,6 +402,10 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                 <span class="comentario-data"><?= exibirDataHoraBrasil($c['data_comentario'], 'H:i') ?></span>
                             </div>
 
+                        </div>
+                        <button type="button" id="comentario-acoes-<?php echo (int)$c['id']; ?>" class="comentario-menu-toggle" aria-label="Ações do comentário" aria-haspopup="true" aria-expanded="false" aria-controls="comentario-menu-<?php echo (int)$c['id']; ?>" title="Ações do comentário">
+                            <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+                        </button>
                         </div>
                     <?php
                     endwhile;

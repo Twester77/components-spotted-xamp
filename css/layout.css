@@ -2355,7 +2355,7 @@ textarea[name="bio"] {
     }
 
     body:not(.modo-swipe-ativo) #btn-abrir-filtros {
-        display: inline-flex;
+        display: block;
         position: fixed;
         top: calc(10% + 10px);
         gap: 6px;
@@ -2598,8 +2598,8 @@ textarea[name="bio"] {
 
 @media (orientation: landscape) and (max-height: 500px) {
     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
-        top: 40px;
-        max-height: 40dvh;
+        top: 30px;
+        max-height: 45dvh;
     }
 
     .main-perfil-container-publico .capa-container {
@@ -2998,18 +2998,77 @@ section.sessao-publicar .form-publicar .anexos-grid {
     gap: clamp(6px, 1.5vw, 14px);
 }
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.notificacao-item {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+}
+
 /* Link que envolve o card */
 .notificacao-link {
     text-decoration: none;
     color: inherit;
     display: block;
+    flex: 1;
+    min-width: 0;
     transition: transform 0.15s ease;
 }
 
 .notificacao-link:hover .notificacao-card {
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateX(3px);
-    transform: translateX(clamp(2px, 0.5vw, 6px));
+    transform: none;
+}
+
+.btn-excluir-notificacao {
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    color: #ffb4b4;
+    border-radius: 10px;
+    width: 38px;
+    min-width: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-excluir-notificacao:focus-visible {
+    outline: 2px solid #ffbc00;
+    outline-offset: 2px;
+}
+
+.item-notif-rapida-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+}
+
+.item-notif-rapida-wrap .item-notif-rapida {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #central-body .item-notif-rapida,
+    #central-body .item-notif-rapida-wrap,
+    #central-body .btn-excluir-notificacao {
+        transition: none;
+    }
 }
 
 /* Card individual */

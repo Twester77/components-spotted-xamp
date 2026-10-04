@@ -451,6 +451,7 @@ if ($stmt->execute()) {
     }
 
     $classe_filho = ($parent_id > 0) ? 'comentario-filho' : '';
+    $classe_linha_filha = $parent_id > 0 ? 'comentario-linha-filha' : '';
 
     $reply_indicator = '';
     if ($parent_id > 0) {
@@ -464,12 +465,13 @@ if ($stmt->execute()) {
             $texto_cortado = mb_substr($texto_puro, 0, 80);
             $trecho = mb_strlen($texto_puro) > 80 ? $texto_cortado . '...' : $texto_cortado;
         }
-        $reply_indicator = '<div class="indicador-resposta" onclick="irParaMensagem(' . $parent_id . ')">
+        $reply_indicator = '<div class="indicador-resposta" onclick="event.stopPropagation(); irParaMensagem(' . $parent_id . ')">
                                 <i class="fas fa-reply"></i> <small>' . htmlspecialchars($trecho) . '</small>
                             </div>';
     }
 
     $comentarioHtml = '
+    <div class="comentario-linha comentario-linha-proprio ' . $classe_linha_filha . '">
     <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" id="comentario-' . $novo_id . '" style="--cor-borda-glow: ' . $cor_borda . ';">
         <div class="comentario-meta">
             <strong class="comentario-autor" style="color: ' . $cor_borda . ';">' . $nomeExibicao . '</strong>
@@ -480,6 +482,10 @@ if ($stmt->execute()) {
         <div class="comentario-rodape">
             <span class="comentario-data">' . date('H:i') . '</span>
         </div>
+    </div>
+    <button type="button" id="comentario-acoes-' . $novo_id . '" class="comentario-menu-toggle" aria-label="Ações do comentário" aria-haspopup="true" aria-expanded="false" aria-controls="comentario-menu-' . $novo_id . '" title="Ações do comentário">
+        <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+    </button>
     </div>
 ';
 
