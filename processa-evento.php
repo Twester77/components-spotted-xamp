@@ -34,19 +34,42 @@ fenda_log('🟢 INÍCIO processa-evento.php');
 
 // 🐚 MARESIA – 2026-10-02: movido pro topo
 $is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+$responder_erro_ajax = static function (int $status_code, string $message): void {
+    http_response_code($status_code);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(
+        ['status' => 'error', 'message' => $message],
+        JSON_UNESCAPED_UNICODE
+    );
+    exit;
+};
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    if ($is_ajax) {
+        $responder_erro_ajax(405, 'Método não permitido.');
+    }
     header("Location: balanga-teras.php");
     exit;
 }
 
 // CSRF
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+if (
+    !isset($_POST['csrf_token'], $_SESSION['csrf_token']) ||
+    !is_string($_POST['csrf_token']) ||
+    !is_string($_SESSION['csrf_token']) ||
+    !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+) {
+    if ($is_ajax) {
+        $responder_erro_ajax(403, 'Token de segurança inválido. Recarregue a página e tente novamente.');
+    }
     die('Token de segurança inválido.');
 }
 
 // Honeypot
 if (!empty($_POST['honeypot'])) {
+    if ($is_ajax) {
+        $responder_erro_ajax(400, 'Requisição inválida.');
+    }
     die('Acesso negado.');
 }
 
@@ -81,9 +104,7 @@ if ($comunidade_id !== null) {
     if (!$comunidade_existe) {
         fenda_log("❌ Comunidade $comunidade_id não existe.");
         if ($is_ajax) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'Comunidade inválida.']);
-            exit;
+            $responder_erro_ajax(400, 'Comunidade inválida.');
         }
         $_SESSION['erro_evento'] = 'Comunidade inválida.';
         header("Location: criar-evento.php");
@@ -104,9 +125,7 @@ if ($comunidade_id !== null) {
     if (!$membro || !in_array($membro['papel'], ['criador', 'admin'], true)) {
         fenda_log("🚫 Usuário $usuario_id não é admin/criador da comunidade $comunidade_id.");
         if ($is_ajax) {
-            http_response_code(403);
-            echo json_encode(['status' => 'error', 'message' => 'Você não tem permissão para criar eventos nesta comunidade.']);
-            exit;
+            $responder_erro_ajax(403, 'Você não tem permissão para criar eventos nesta comunidade.');
         }
         $_SESSION['erro_evento'] = 'Você não tem permissão para criar eventos nesta comunidade.';
         header("Location: criar-evento.php");
@@ -119,12 +138,18 @@ if ($comunidade_id !== null) {
 // ============================================================
 if (empty($nome) || mb_strlen($nome) < 3) {
     fenda_log("❌ Nome inválido: '$nome'");
+    if ($is_ajax) {
+        $responder_erro_ajax(400, 'O nome do evento deve ter pelo menos 3 caracteres.');
+    }
     $_SESSION['erro_evento'] = 'O nome do evento deve ter pelo menos 3 caracteres.';
     header("Location: criar-evento.php");
     exit;
 }
 if (empty($data_evento) || strtotime($data_evento) < time()) {
     fenda_log("❌ Data inválida: '$data_evento'");
+    if ($is_ajax) {
+        $responder_erro_ajax(400, 'A data do evento deve ser futura.');
+    }
     $_SESSION['erro_evento'] = 'A data do evento deve ser futura.';
     header("Location: criar-evento.php");
     exit;
@@ -139,6 +164,9 @@ if (isset($_FILES['capa']) && $_FILES['capa']['error'] === 0) {
     $capa_nome = processarUploadSeguro($_FILES['capa'], 'uploads', 'evento', 2 * 1024 * 1024, $usuario_id);
     if ($capa_nome === false) {
         fenda_log("❌ Falha no upload da capa");
+        if ($is_ajax) {
+            $responder_erro_ajax(400, 'Erro ao enviar a capa (formato/tamanho inválido).');
+        }
         $_SESSION['erro_evento'] = 'Erro ao enviar a capa (formato/tamanho inválido).';
         header("Location: criar-evento.php");
         exit;
@@ -236,7 +264,7 @@ if ($stmt->execute()) {
     }
 
     if ($is_ajax) {
-        header('Content-Type: application/json');
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode(['status' => 'success', 'redirect' => "evento.php?id={$evento_id}"]);
         exit;
     }
@@ -262,7 +290,7 @@ if ($stmt->execute()) {
     }
 
     if ($is_ajax) {
-        header('Content-Type: application/json');
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode(['status' => 'error', 'message' => 'Erro ao criar evento: ' . $erro]);
         exit;
     }

@@ -389,7 +389,21 @@ unset($_SESSION['erro_evento']);
             body: formData,
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
-        .then(response => response.json())
+        .then(async response => {
+            const contentType = response.headers.get('content-type') || '';
+            if (!contentType.toLowerCase().includes('application/json')) {
+                const message = response.redirected
+                    ? 'Sua sessão pode ter expirado. Confira se o evento foi criado antes de enviar novamente.'
+                    : `O servidor retornou uma resposta inesperada (HTTP ${response.status}). Confira se o evento foi criado antes de enviar novamente.`;
+                throw new Error(message);
+            }
+
+            try {
+                return await response.json();
+            } catch {
+                throw new Error(`O servidor retornou um JSON inválido (HTTP ${response.status}). Confira se o evento foi criado antes de enviar novamente.`);
+            }
+        })
         .then(data => {
             if (data.status === 'success') {
                 exibirBalao('Evento criado com sucesso! 🎉', 'sucesso', btn);

@@ -39,7 +39,15 @@ $comunidade_id = isset($_GET['comunidade_id']) ? (int)$_GET['comunidade_id'] : 0
 // ==================================================
 $sql = "SELECT m.*, u.username, u.foto, u.pref_vibe_padrao, u.pref_cor_padrao,
         (SELECT COUNT(c.id) FROM comentarios c WHERE c.id_mensagem = m.id) as total_comentarios,
-        (SELECT COUNT(r.id) FROM curtidas r WHERE r.mensagem_id = m.id) as total_reacoes
+        (SELECT COUNT(r.id) FROM curtidas r WHERE r.mensagem_id = m.id) as total_reacoes,
+        EXISTS (
+            SELECT 1
+            FROM comunidade_membros cm
+            WHERE cm.comunidade_id = m.comunidade_id
+              AND cm.usuario_id = m.usuario_id
+              AND cm.papel = 'admin'
+              AND cm.status = 'ativo'
+        ) AS autor_admin_comunidade
         FROM mensagens m 
         INNER JOIN usuarios u ON m.usuario_id = u.id
         WHERE m.status = 'ativo'";
@@ -177,6 +185,13 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $cor_post = $sou_eu ? '#ffbb00' : ($linha['pref_cor_padrao'] ?? '#70cde4');
     $vibe_post = $linha['pref_vibe_padrao'] ?? 'vibe-glass';
     $classe_admin = $sou_eu ? 'post-admin-gold' : '';
+    $autor_id = (int)$linha['usuario_id'];
+    $exibir_selo_adm = $categoria_atual !== 'anonimo'
+        && (
+            in_array($autor_id, [1, 60002], true)
+            || !empty($linha['autor_admin_comunidade'])
+        );
+    $classe_selo_adm = $exibir_selo_adm ? 'selo-adm' : '';
 
     // Dados do autor
     if ($categoria_atual === 'anonimo') {
@@ -290,7 +305,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     // 🔥 Atributo para o feed identificar posts de comunidade (útil para o futuro)
     $data_comunidade_attr = ($comunidade_do_post > 0) ? 'data-comunidade-id="' . $comunidade_do_post . '"' : '';
 ?>
-    <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?>"
+    <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?> <?php echo $classe_selo_adm; ?>"
         data-id="<?php echo $post_id_atual; ?>"
         <?php echo $data_comunidade_attr; ?>
         style="border: 2px solid <?php echo $cor_post; ?>">

@@ -154,7 +154,7 @@
 .lightbox-autor-nome {
     font-weight: 600;
     font-size: 0.85rem;
-    font-size: clamp(0.8rem, 2.5cqi, 1.3rem);
+    font-size: clamp(0.8rem, 2vw, 1.3rem);
     color: #fff;
     white-space: nowrap;
     overflow: hidden;
@@ -163,8 +163,8 @@
 
 
 .lightbox-autor .avatar-p {
-    width: clamp(40px, 12cqi, 75px);
-    height: clamp(40px, 12cqi, 75px);
+    width: clamp(40px, 10cqi, 62px);
+    height: clamp(40px, 10cqi, 62px);
     border-radius: 50%;
     flex-shrink: 0;
     object-fit: cover;

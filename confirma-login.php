@@ -37,6 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario_nome'] = $usuario['nome'];
             $_SESSION['usuario_username'] = $usuario['username'];
+            if (empty($_SESSION['csrf_token'])) {
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            }
 
             // ============================================================
             // 🔥 NOVO: Gera token único para esta sessão
@@ -66,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
                 'nome' => $usuario['nome'],
                 'username' => $usuario['username'],
                 'token_sessao' => $token_sessao, // 🔥 agora usa token_sessao
+                'csrf_token' => $_SESSION['csrf_token'],
                 'persistente' => $manter,
                 'exp' => $expires_in
             ]);

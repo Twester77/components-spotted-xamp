@@ -1157,7 +1157,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado
-    .spotted-card.post-admin-gold .card-header {
+    .spotted-card.selo-adm .card-header {
         padding-block-start: 1.5rem;
         padding-block-start: calc(clamp(0.6rem, 1.6cqi, 0.95rem) + 8px);
     }
@@ -1306,7 +1306,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
 @media (min-width: 600px) and (min-height: 601px) {
 
     body.modo-swipe-ativo .container-feed.feed-empilhado
-    .spotted-card.post-admin-gold .card-header {
+    .spotted-card.selo-adm .card-header {
         padding-block-start: 1.5rem;
         padding-block-start: calc(clamp(0.6rem, 1.6cqi, 0.95rem) + 8px);
     }

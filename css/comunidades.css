@@ -2721,7 +2721,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     transform: scale(0.9);
 }
 
-.feed-comunidade .post-admin-gold::after {
+.feed-comunidade .spotted-card.selo-adm::after {
     top: 20px;
     right: 60px;
     font-size: 0.8rem;
@@ -3130,13 +3130,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
 
     /* Selo ADM */
     body:not(.modo-swipe-ativo) .comunidade-page
-    .spotted-card.post-admin-gold:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
+    .spotted-card.selo-adm:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
     .card-header {
         padding-block-start: calc(var(--ls-content-font) + 8px);
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
-    .spotted-card.post-admin-gold:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)::after {
+    .spotted-card.selo-adm:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)::after {
         top: var(--ls-pad);
         inset-inline-end: calc(var(--ls-avatar) * 1.15);
         z-index: 51;
