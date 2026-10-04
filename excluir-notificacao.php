@@ -56,9 +56,9 @@ try {
     $stmt_rate = $conn->prepare("
         SELECT
             (SELECT COUNT(*) FROM fenda_rate_limits
-             WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 1 HOUR) AS user_total,
+             WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 5 MINUTE) AS user_total,
             (SELECT COUNT(*) FROM fenda_rate_limits
-             WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 1 HOUR) AS ip_total
+             WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 5 MINUTE) AS ip_total
     ");
     $stmt_rate->bind_param('siis', $endpoint, $usuario_id, $endpoint, $ip);
     $stmt_rate->execute();
