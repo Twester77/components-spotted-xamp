@@ -748,8 +748,13 @@ span.category-tag {
 
 .footer-links {
     text-transform: uppercase;
-    padding: clamp(3px, 3cqi, 10px) clamp(6px, 3cqi, 10px);
+    padding: 4px 6px;
+    padding: clamp(3px, 3cqi, 10px) clamp(6px, 3cqi, 12px);
     display: inline-flex;
+    -ms-touch-action: none;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    user-select: none;
     flex-wrap: wrap;
     flex-shrink: 0;
     justify-content: center;

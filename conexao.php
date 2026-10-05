@@ -168,6 +168,32 @@ if (!defined('FENDA_CRYPT_KEY')) {
     define('FENDA_CRYPT_KEY', hash('sha256', (getenv('SUPABASE_ANON_KEY') ?: 'Fenda_Fallback_Sec_Key_2026_!!!')));
 }
 
+// ============================================================
+// 🐚 MARESIA – 2026-10-04 (Sprint 2, item 2 – Bloco A)
+//    Chave HMAC dedicada e secreta.
+//
+//    MOTIVO: a FENDA_CRYPT_KEY é derivada da SUPABASE_ANON_KEY,
+//    que é pública (vai no HTML). Usá-la para assinar HMAC dava
+//    uma falsa sensação de segurança — qualquer pessoa com
+//    DevTools podia recalcular a assinatura.
+//
+//    SOLUÇÃO: criar FENDA_HMAC_KEY como env var dedicada, secreta
+//    de verdade. Assinatura HMAC passa a usar essa chave.
+//
+//    TRANSIÇÃO SUAVE: se a env var não existir (local/dev), cai
+//    no fallback da FENDA_CRYPT_KEY. Assim nada quebra até você
+//    configurar FENDA_HMAC_KEY na Vercel. Depois disso, os blocos
+//    B e C vão trocar as referências nos 5 arquivos que fazem HMAC.
+//
+//    IMPORTANTE: HMAC é stateless — não é persistido no banco.
+//    Links antigos com sig antiga só falham se ainda estiverem
+//    abertos numa aba. Recarregar a página regenera com a chave
+//    nova. Sem migração, sem transição dupla, sem dor.
+// ============================================================
+if (!defined('FENDA_HMAC_KEY')) {
+    define('FENDA_HMAC_KEY', getenv('FENDA_HMAC_KEY') ?: FENDA_CRYPT_KEY);
+}
+
 if (!function_exists('fenda_encrypt_state')) {
     function fenda_encrypt_state($plain_text) {
         $iv_len = openssl_cipher_iv_length('aes-256-cbc');
