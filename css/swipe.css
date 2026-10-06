@@ -117,7 +117,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     background-clip: padding-box;
 
     /* 🔥 Border-radius discreto (antes era até 20px) */
-    border-radius: clamp(6px, 2cqi, 14px);
+    border-radius: clamp(6px, 1.8cqi, 14px);
     border: 1px solid rgba(255, 255, 255, 0.15);
 
     --pos-x: 0px;
@@ -131,10 +131,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     max-width: var(--card-width, 250px);
 
     padding: var(--card-padding, 14px);
-    padding: clamp(0.65em, 3.8cqi, 1.2em);
+    padding: clamp(0.65em, 3.8cqi, 1.1em);
 
     font-size: var(--card-font-size, 0.95rem);
-    font-size: clamp(0.9em, 2.5cqi, 1.6em);
+    font-size: clamp(0.9em, 2.5cqi, 1.5em);
 
     max-height: var(--card-max-height, 700px);
     height: auto;
@@ -447,7 +447,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     z-index: 10000;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+    transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1);
     will-change: opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -1014,7 +1014,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         padding: var(--ls-pad-y) var(--ls-pad-x);
         gap: var(--ls-gap);
         border-radius: var(--ls-radius);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
         overflow: hidden;
 
         display: grid;
@@ -1030,7 +1030,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             --ls-pad-y: clamp(4px, 1.2dvh, 8px);
             --ls-pad-x: clamp(6px, 1.6vw, 12px);
             --ls-gap: clamp(4px, 1.2dvh, 8px);
-            --ls-gap-x: clamp(6px, 1.4vw, 10px);
+            --ls-gap-x: clamp(6px, 1.4vw, 12px);
             --ls-avatar: clamp(30px, 8dvh, 42px);
             --ls-text-font: clamp(0.72rem, 2.2dvh, 0.95rem);
             --ls-reaction-font: clamp(0.7rem, 1.8dvh, 0.85rem);
@@ -1061,7 +1061,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         margin: 0;
         padding: 0;
         border: none;
-        background: transparent;
+        background: #0000004f;
         border-radius: calc(var(--ls-radius) * 0.7);
         overflow: hidden;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -1191,8 +1191,8 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
 
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 6;
-        line-clamp: 6;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
         overflow: hidden;
 
         hyphens: auto;
@@ -1229,7 +1229,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         flex: 0 1 auto;
         min-width: 0;
         max-width: 100px;
-        max-width: clamp(60px, 20cqi, 120px); /* Garante que contagens absurdas não estourem a pílula */
+        max-width: clamp(55px, 16cqi, 120px); /* Garante que contagens absurdas não estourem a pílula */
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -1323,7 +1323,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         body.modo-swipe-ativo .container-feed.feed-empilhado
         .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) {
             display: grid;
-            grid-template-columns: minmax(0, 42%) minmax(0, 1fr);
+            grid-template-columns: minmax(0, 48%) minmax(0, 1fr);
             grid-template-rows: auto auto minmax(0, 1fr) auto;
             column-gap: clamp(12px, 2vw, 20px);
             row-gap: clamp(8px, 1.2vh, 14px);
@@ -1558,8 +1558,6 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             grid-row: 4;
             align-self: center;
             justify-self: start;
-            display: flex;
-            flex-wrap: wrap;
             gap: clamp(6px, 1vw, 10px);
             width: 100%;
             min-width: 0;

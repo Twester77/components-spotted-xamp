@@ -12,6 +12,14 @@
  *      e marcar notificações do usuário logado como lidas (CSRF via GET).
  *      Os links são gerados por motor-notificacoes.php com a assinatura.
  *    - Usa hash_equals (evita timing attack).
+ *
+ * 🐚 MARESIA – 2026-10-05 (Sprint 2, item 2/4 – Bloco B)
+ *    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY em DOIS pontos:
+ *        (1) validação do sig recebido, (2) geração dos links na listagem.
+ *      Se só a validação fosse trocada, esta página geraria links com
+ *      a chave antiga e o receptor validaria com a nova — quebrando
+ *      assim que a env var do Bloco D fosse configurada.
+ *      O fallback (FENDA_HMAC_KEY → FENDA_CRYPT_KEY) mora em conexao.php.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -19,12 +27,13 @@ require_once __DIR__ . '/auth_check.php';
 $user_id = $_SESSION['usuario_id'];
 
 // 🐚 MARESIA – 2026-09-27: valida assinatura HMAC antes de marcar como lida.
+//    Sprint 2, Bloco B (2026-10-05): FENDA_HMAC_KEY em vez de FENDA_CRYPT_KEY.
 if (isset($_GET['notif_id']) && isset($_GET['sig'])) {
     $notif_id = (int)$_GET['notif_id'];
     $sig_recebida = $_GET['sig'];
 
     // Recalcula a assinatura esperada
-    $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
+    $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
 
     // Só marca se a assinatura bater (timing-safe)
     if (hash_equals($sig_esperada, $sig_recebida)) {
@@ -63,7 +72,8 @@ include 'includes/navbar.php';
         <?php if ($res_notificacoes_lista && $res_notificacoes_lista->num_rows > 0): ?>
             <?php while ($row = $res_notificacoes_lista->fetch_assoc()):
                 // 🐚 MARESIA – 2026-09-27: assinatura HMAC nos links também.
-                $sig = hash_hmac('sha256', $row['id'] . '|' . $user_id, FENDA_CRYPT_KEY);
+                //    Sprint 2, Bloco B (2026-10-05): FENDA_HMAC_KEY em vez de FENDA_CRYPT_KEY.
+                $sig = hash_hmac('sha256', $row['id'] . '|' . $user_id, FENDA_HMAC_KEY);
 
                 // 🔥 LINK BASEADO NO TIPO (SEM CONSULTAS EXTRAS!)
                 switch ($row['tipo']) {

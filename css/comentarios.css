@@ -564,21 +564,63 @@
 /* ==================================================
    VIBES (mantido integral)
    ================================================== */
-.comentario-item.vibe-light {
+/* ==========================================================================
+   VIBE LIGHT - BLOCO COMPLETO REESTRUTURADO (COM CONDICIONAL DELETADO)
+   ========================================================================== */
+
+/* 1. COMPORTAMENTO PADRÃO (Quando o comentário NÃO está deletado) */
+.comentario-item.vibe-light:not(.comentario-deletado) {
+    /*  Fallbacks antigos */
     background: #f1f1f1;
-    background: oklch(from var(--cor-borda-glow) 0.95 0.04 h);
     border: 1px solid #fffccf;
+
+    /*  Visual moderno */
+    background: oklch(from var(--cor-borda-glow) 0.95 0.04 h);
     border: 1px solid oklch(from var(--cor-borda-glow) 0.88 0.06 h);
 }
 
-.comentario-item.vibe-light .comentario-texto,
-.comentario-item.vibe-light .comentario-data,
-.comentario-item.vibe-light .comentario-autor,
-.comentario-item.vibe-light .btn-responder-fenda {
-    color: #111111;
-    color: oklch(0 0 0 / 0.89);
+/* 2. COMPORTAMENTO EXCEÇÃO (Quando o comentário ESTÁ deletado) */
+.comentario-item.vibe-light.comentario-deletado {
+    /* Deixa transparente para o background cinza do seu .comentario-deletado brilhar livre */
+    background: transparent ;
+    border: none ;
+    box-shadow: none ;
+}
+
+/* 3. CORES DOS TEXTOS PARA O MODO ATIVO (Seu bloco original) */
+.comentario-item.vibe-light:not(.comentario-deletado) .comentario-texto,
+.comentario-item.vibe-light:not(.comentario-deletado) .comentario-data,
+.comentario-item.vibe-light:not(.comentario-deletado) .comentario-autor,
+.comentario-item.vibe-light:not(.comentario-deletado) .btn-responder-fenda {
+    /*  Fallback antigo */
+    color: #111111 ;
+    /*  Visual moderno */
+    color: oklch(0 0 0 / 0.89) ;
     font-weight: bold;
 }
+
+/* 4. CORES DOS TEXTOS PARA O MODO DELETADO (Texto escuro para destacar no cinza/branco) */
+.comentario-item.vibe-light.comentario-deletado .comentario-texto,
+.comentario-item.vibe-light.comentario-deletado .comentario-data,
+.comentario-item.vibe-light.comentario-deletado .comentario-autor,
+.comentario-item.vibe-light.comentario-deletado .comentario-deletado-msg {
+    /*  Fallback antigo */
+    color: #222222 ;
+    /*  Visual moderno */
+    color: oklch(0.15 0 0) ; 
+    font-weight: bold ;
+}
+
+/* 5. INDICADOR DE RESPOSTA INTERNO (Apenas para o modo ativo) */
+.comentario-item.vibe-light:not(.comentario-deletado) .indicador-resposta {
+    font-weight: bold;
+    opacity: 1;
+    color: oklch(from var(--cor-borda-glow) 0.30 c h);
+    border-left: 1px solid oklch(from var(--cor-borda-glow) 0.30 c h);
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 10px;
+}
+
 
 .comentario-item.vibe-light .indicador-resposta {
     font-weight: bold;
@@ -632,15 +674,42 @@
     }
 }
 
-.comentario-item.vibe-glass {
+/* ==========================================================================
+   VIBE GLASS - EFEITO DE VIDRO ALARANJADO COM ARQUITETURA DE FALLBACKS
+   O seletor :not(.comentario-deletado) impede conflitos com comentários deletados.
+   ========================================================================== */
+.comentario-item.vibe-glass:not(.comentario-deletado) {
+    /* FALLBACKS DE SEGURANÇA (Para navegadores antigos) */
     background: rgb(255 255 255 / 5%);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
     color: #fff;
-    border-bottom: 1px solid #11111141;
-    border-top: 1px solid #11111141;
-    border-left: 1px solid #11111141;
+    border: 1px solid #11111141;
+
+    /*  VISUAL MODERNO (Subscreve o fallback em navegadores atuais) */
+    background: oklch(from var(--cor-borda-glow) 0.65 0.03 h / 0.3);
+    color: oklch(100% 0.00011 271.152);
+    border: 1px solid oklch(from var(--cor-borda-glow) 0.65 0.05 h / 0.2);
+    box-shadow: inset 0 1px 1px oklch(from var(--cor-borda-glow) 1 0 h / 0.1);
+    
+    /* Efeito de desfoque jateado (Glassmorphism) */
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
+
+/* Efeito de flutuação e brilho neon dinâmico ao passar o mouse */
+.comentario-item.vibe-glass:hover:not(.comentario-deletado) {
+    transition: box-shadow 0.3s ease;
+    
+    /* 🛡️ Fallback de sombra estável para navegadores antigos */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    
+    /* 🚀 Sombra neon moderna com a cor dinâmica do usuário */
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.5), 
+        0 0 15px oklch(from var(--cor-borda-glow) 0.65 0.1 h / 0.2);
+}
+
+
+
 
 @keyframes pulsar-luz {
     0% {
@@ -678,10 +747,7 @@
     font-weight: bold;
 }
 
-.comentario-item.vibe-glass:hover {
-    transition: 0.3 ease;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(112, 205, 228, 0.2);
-}
+
 
 /* META DADOS */
 
@@ -755,6 +821,7 @@
     gap: 6px;
     border-radius: 16px;
     padding: 4px 8px;
+    background: transparent;
     position: relative;
     width: 100%;
     max-width: 900px;
@@ -1150,13 +1217,13 @@
     }
 
     .comentario-item .comentario-autor {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         font-size: clamp(0.9rem, 2.2cqi, 1rem);
     }
 
     .comentario-texto {
-        font-size: 0.95rem;
-        font-size: clamp(0.95rem, 2.4cqi, 1.05rem);
+        font-size: 0.92rem;
+        font-size: clamp(0.86rem, 2cqi, 1.05rem);
         line-height: 1.4;
     }
 }
@@ -1336,7 +1403,6 @@ body.pagina-post .header-principal {
 
 .comentario-item.comentario-highlight {
     animation: highlightFade 3s ease-out forwards;
-    border-radius: 8px;
     padding: 5px;
 }
 
@@ -1409,7 +1475,7 @@ body.pagina-post .header-principal {
     font-style: italic;
     background-color: rgba(0, 0, 0, 0.05);
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 0.382cqw + 0.625rem, 1rem);
+    font-size: clamp(0.76rem, 0.382cqw + 0.625rem, 1rem);
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
     min-height: 50px;
     max-width: 200px;
@@ -1627,9 +1693,10 @@ body.pagina-post .header-principal {
     border-radius: 12px;
     background: rgba(20, 20, 30, 0.97);
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 .comentario-menu-item {
@@ -1737,7 +1804,7 @@ body.pagina-post .header-principal {
 
 .comentario-media-item img.gif-externo {
     object-fit: contain;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.88);
     display: flex;
     justify-content: center;
 }

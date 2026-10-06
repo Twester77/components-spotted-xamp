@@ -16,6 +16,15 @@
  *      e marcar notificações do usuário logado como lidas (CSRF via GET).
  *      Os receptores (notificacoes.php, comentarios-post.php, central.php,
  *      motor-central.php) validam a assinatura antes de marcar.
+ *
+ * 🐚 MARESIA – 2026-10-05 (Sprint 2, item 2/4 – Bloco B)
+ *    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY na assinatura HMAC.
+ *      A FENDA_CRYPT_KEY deriva da SUPABASE_ANON_KEY (pública), então
+ *      assinar com ela dava falsa sensação de segurança. A FENDA_HMAC_KEY
+ *      é env var dedicada e secreta (definida em conexao.php, Bloco A,
+ *      com fallback pra FENDA_CRYPT_KEY se ainda não configurada na Vercel).
+ *    - HMAC é stateless — links antigos em abas abertas falham ao validar;
+ *      recarregar a página regenera com a chave nova. Sem migração.
  */
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -63,9 +72,11 @@ while ($n = $res->fetch_assoc()):
     $lida_classe = ($n['lida'] == 0) ? 'notif-nova' : '';
 
     // 🐚 MARESIA – 2026-09-27: assinatura HMAC pra links com notif_id.
-    //    Fórmula: hash_hmac('sha256', "<id>|<user_id>", FENDA_CRYPT_KEY).
+    //    Fórmula: hash_hmac('sha256', "<id>|<user_id>", FENDA_HMAC_KEY).
     //    O receptor recalcula e compara com hash_equals.
-    $sig = hash_hmac('sha256', $n['id'] . '|' . $usuario_id, FENDA_CRYPT_KEY);
+    //    Sprint 2, Bloco B (2026-10-05): usa FENDA_HMAC_KEY em vez de
+    //    FENDA_CRYPT_KEY. Fallback pra FENDA_CRYPT_KEY mora em conexao.php.
+    $sig = hash_hmac('sha256', $n['id'] . '|' . $usuario_id, FENDA_HMAC_KEY);
 
     // 🔥 LINK BASEADO NO TIPO (SEM CONSULTAS EXTRAS!)
     switch ($n['tipo']) {

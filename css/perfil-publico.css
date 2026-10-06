@@ -87,8 +87,8 @@
     bottom: clamp(-60px, 15cqi, -150px);
     left: 50%;
     transform: translateX(-50%);
-    width: clamp(60px, 15cqi, 150px);
-    height: clamp(60px, 15cqi, 150px);
+    width: clamp(65px, 15cqi, 150px);
+    height: clamp(65px, 15cqi, 150px);
     z-index: 15;
     aspect-ratio: 1/1;
 }
@@ -159,7 +159,7 @@
 }
 
 .perfil-imagem-lightbox::backdrop {
-    background: rgb(0 0 0 / 88%);
+    background: #000000e0;
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
 }
@@ -181,25 +181,29 @@
     right: 10px;
     z-index: 1;
     display: grid;
-    width: 38px;
-    height: 38px;
-    width: clamp(32px, 8vmin, 40px);
-    height: clamp(32px, 8vmin, 40px);
+    width: 36px;
+    height: 36px;
+    width: clamp(32px, 8vmin, 44px);
+    height: clamp(32px, 8vmin, 44px);
     place-items: center;
     border: 1px solid rgb(255 255 255 / 35%);
     border-radius: 50%;
     background: rgb(0 0 0 / 68%);
+    background: oklch(0% 0 0 / 0.68) ;
     color: #fff;
     font-size: 28px;
-    font-size: clamp(26px, 5vmin, 32px);
+    font-size: clamp(24px, 5vmin, 32px);
     line-height: 1;
+    user-select: none;
     cursor: pointer;
 }
 
 .perfil-imagem-lightbox-fechar:hover,
 .perfil-imagem-lightbox-fechar:focus-visible {
     background: #ffbc00;
+    background: oklch(83.462% 0.1717 82.566);
     color: #111;
+    color: oklch(17.764% 0.00002 271.152);
 }
 
 /* Badge de presença (coroa) */
@@ -209,12 +213,14 @@
     right: 2px;
     background: var(--dourado, #ffbc00);
     color: #000;
+    color:oklch(0% 0 0);
     width: clamp(20px, 2.5cqi, 35px);
     height: clamp(20px, 2.5cqi, 35px);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 12px;
     font-size: clamp(10px, 1.2cqi, 16px);
     border: 2px solid #000;
     box-shadow: 0 0 10px rgba(255, 188, 0, 0.6);
@@ -841,6 +847,8 @@
    FEED PESSOAL (DENTRO DO PERFIL)
    ================================================================ */
 .feed-usuario-fenda .container-feed {
+    position: relative;
+    z-index: 2;
     width: 100%;
     max-width: 1200px;
     margin: 15px auto;
@@ -1212,7 +1220,7 @@
     background-position: 0% 0%;
 
     border: 1px solid rgba(255, 255, 255, 0.04);
-    border-top: 6px solid var(--aura-user) ;
+    border-top: 4px solid var(--aura-user) ;
     will-change: box-shadow, background-position, opacity, animation;
     animation: ads-neon-glow-pulse var(--vibe-ads-pulse-duration) infinite ease-in-out alternate;
 }
@@ -1227,11 +1235,11 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: 1;
     pointer-events: none;
 
     /* A cor salva no TiDB pinta a máscara dos hexágonos de forma 100% garantida */
-    background-color: var(--aura-user,#70cde4) !important;
+    background-color: var(--aura-user,#70cde4);
 
     /* Padrão de hexágono via máscara estêncil */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
@@ -1252,7 +1260,7 @@
         opacity: 0.25;
     }
     50% {
-        opacity: 0.6;
+        opacity: 0.5;
     }
     100% {
         opacity: 0.25;
@@ -1485,9 +1493,9 @@
     
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border: 1px solid oklch(1 0 0 / 0.35) !important;
+    border: 1px solid oklch(1 0 0 / 0.35) ;
     border-radius: 12px 12px 0 0;
-    box-shadow: 0 6px 10px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+    box-shadow: 0 4px 8px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) ;
     overflow: hidden;
     position: relative;
     animation: none;
@@ -1707,7 +1715,7 @@
         background: var(--aura-user, #70cde4) ;
         border-color: var(--aura-user, #70cde4) ;
         box-shadow: 0 0 15px var(--aura-user, #70cde4) ;
-        opacity: 0.7;
+        opacity: 0.65;
     }
 
     @keyframes ads-neon-glow-pulse {
@@ -1793,9 +1801,9 @@
 @media (orientation: portrait) and (max-height: 500px) {
 
     .avatar-posicionador {
-        bottom: -72px;
-        width: 72px;
-        height: 72px;
+        bottom: -45px;
+        width: 56px;
+        height: 56px;
     }
 
 

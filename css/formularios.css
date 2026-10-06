@@ -2048,8 +2048,6 @@ textarea[name="bio"] {
     padding: 0 10px;
     font-weight: bold;
     border-right: 1px solid #444;
-    background: rgba(255, 255, 255, 0.12);
-    background: oklch(100% 0.00011 271.152 / 0.12);
     height: 100%;
     display: flex;
     align-items: center;
@@ -2668,20 +2666,22 @@ section.sessao-publicar {
 .btn-toggle-perdido {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 30px;
-    padding: 8px 14px;
+    border-radius: 28px;
+    padding: 6px 12px;
+    padding: clamp(6px, 1.2vw, 10px) clamp(10px, 1.5vw, 12px);
     color: #aaa;
     color: oklch(73.802% 0.00008 271.152);
     font-size: 0.85rem;
-    font-size: clamp(0.7em, 1.8cqi, 0.95em);
+    font-size: clamp(0.77em, 1.8cqi, 0.95em);
     font-weight: 600;
     cursor: pointer;
     text-align: center;
     align-content: center;
     transition: 0.2s;
     flex: 1;
-    max-width: 200px;
-    min-width: 100px;
+    max-width: 150px;
+    min-width: 90px;
+    width: clamp(90px, 15cqi, 150px);
 }
 
 .btn-toggle-perdido:hover {

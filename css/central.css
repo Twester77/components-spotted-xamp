@@ -79,8 +79,8 @@
 .avatar-central {
     width: 42px;
     height: 42px;
-    width: clamp(48px, 12cqw, 72px);
-    height: clamp(48px, 12cqw, 72px);
+    width: clamp(46px, 10cqw, 72px);
+    height: clamp(46px, 10cqi, 72px);
     border-radius: 50%;
     object-fit: cover;
     -moz-background-clip: padding-box;
@@ -276,7 +276,6 @@
     box-sizing: border-box;
     scrollbar-width: none;
     container-type: inline-size;
-    will-change: opacity;
     transition: box-shadow 0.2s ease;
 }
 
@@ -1075,7 +1074,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     height: clamp(36px, 4vw, 48px);
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #ffbc00;
+    border: 1px solid #ff9900;
 }
 
 .central-depoimento-pendente-autor strong {
@@ -1150,13 +1149,16 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .central-empty-state {
     text-align: center;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
     padding: 20px 10px;
     padding: clamp(20px, 4vw, 50px) clamp(10px, 2vw, 30px);
 
 }
 
 .central-empty-state i {
-    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-size: clamp(2.8rem, 8vw, 4rem);
     color: #4caf50;
     margin-bottom: 15px;
 }

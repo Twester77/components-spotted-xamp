@@ -197,7 +197,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
         background: rgba(0, 0, 0, 0.45);
         -webkit-backdrop-filter: blur(2px);
         backdrop-filter: blur(2px);
-        border-color: rgba(255, 255, 255, 0.144);
+        border-color: rgba(255, 255, 255, 0.14);
         transform: translateY(-6px);
         transition: 0.3s ease;
     }
@@ -507,6 +507,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 }
 
 span.data-post {
+    display: flex;
+    margin-left: auto;
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 3.5cqi, 0.95rem);
     color: #fffff4;
@@ -518,7 +520,7 @@ span.data-post {
 /* ============================================================
    10. TAGS, TIMESTAMP E STATUS
    ============================================================ */
-span.category-tag {
+.category-tag {
     color: #ffc801ec;
     color: oklch(85.748% 0.17506 88.476 / 0.925);
     font-weight: bold;
@@ -530,8 +532,9 @@ span.category-tag {
     align-items: center;
     display: inline-flex;
     border: none;
-    font-size: 0.85rem;
-    font-size: clamp(0.8rem, 2.5cqi, 1.3rem);
+    padding: 2px ;
+    font-size: 0.86rem;
+    font-size: clamp(0.82rem, 3cqi, 1.3rem);
     font-kerning: normal;
     font-variant-ligatures: common-ligatures;
     text-rendering: auto; /* Garante performance máxima no scroll */
@@ -540,7 +543,6 @@ span.category-tag {
     text-overflow: ellipsis;
     hyphens: auto;
     vertical-align: middle;
-    opacity: 0.75;
 }
 
 .post-time {
@@ -548,8 +550,8 @@ span.category-tag {
     color: #ffff;
     color: oklch(95.815% 0.00011 271.152);
     margin-left: auto;
-    font-size: 0.85rem;
-    font-size: clamp(0.8rem, 2.5cqi, 1.1rem);
+    font-size: 0.88rem;
+    font-size: clamp(0.8rem, 2.3cqi, 1.1rem);
     word-break: break-word;
     overflow-wrap: anywhere;
     font-kerning: normal;
@@ -558,7 +560,7 @@ span.category-tag {
     white-space: nowrap;
     flex-shrink: 0;
     opacity: 0.75;
-    padding: 6px;
+    padding: 4px;
     font-weight: bold;
 }
 
@@ -648,6 +650,8 @@ span.category-tag {
     opacity: 1 !important;
     visibility: visible !important;
     transform: translateX(-30%) translateY(0px);
+    margin-left: max(8px + env(safe-area-inset-left, 0px));
+    margin-right: max(8px + env(safe-area-inset-right, 0px));
 }
 
 .reacoes-popup::before {

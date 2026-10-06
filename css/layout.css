@@ -41,6 +41,7 @@ header {
     display: flex;
     align-items: center;
     gap: 8px;
+    gap: clamp(6px, 1.5cqi, 15px);
     /* Espaço entre o botão hamburguer e o título */
 }
 
@@ -614,8 +615,8 @@ body.modal-aberto .fab-postar {
 }
 
 .fenda-modal-content {
-    box-shadow: 0 0 25px rgba(255, 188, 0, 0.2);
-    animation: surgimentoModal 0.3s ease-out;
+    box-shadow: 0 0 20px rgba(255, 188, 0, 0.2);
+    animation: surgimentoModalBase 0.3s ease-out;
     padding: 15px;
     max-width: 95%;
     -webkit-backdrop-filter: blur(3px);
@@ -623,7 +624,7 @@ body.modal-aberto .fab-postar {
 }
 
 
-@keyframes surgimentoModal {
+@keyframes surgimentoModalBase {
     from {
         transform: scale(0.8);
         opacity: 0;
@@ -726,7 +727,6 @@ body.modal-aberto .fab-postar {
 }
 
 
-
 .menu {
     display: flex;
     flex-wrap: wrap;
@@ -740,7 +740,6 @@ body.modal-aberto .fab-postar {
     z-index: 100;
 
 }
-
 
 .menu-item:hover>a {
     background: rgba(255, 255, 255, 0.11);
@@ -924,6 +923,7 @@ footer {
     border-top: 1px solid rgba(255, 188, 0, 0.2);
     color: rgba(250, 202, 44, 0.719);
     font-size: 0.9rem;
+    z-index: 1;
     flex-shrink: 0;
     /* Impede o footer de ser "esmagado" */
 }
@@ -2573,15 +2573,15 @@ textarea[name="bio"] {
 
     .central-conteudo #central-body {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
         align-items: flex-start;
-        gap: 20px;
+        gap: 15px;
 
     }
 
     .central-conteudo {
         border-radius: 12px;
-        padding: 15px;
+        padding: 10px;
         margin: 10px auto;
         min-height: 200px;
     }
@@ -3270,7 +3270,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     }
 
     .main-perfil-container-publico.vibe-dark::after {
-        opacity: 0.1;
+        opacity: 0.2;
         background-position: 0px 0px;
     }
 

@@ -271,7 +271,7 @@ body.hacker-mode .submenu li a:hover {
     padding-left: 25px !important;
     box-shadow: 0 0 12px #00ff00 !important;
     text-shadow: none ;
-    cursor: crosshair !important;
+    cursor: url('imagensfoto/crosshair.cur'), auto ;
 }
 
 /* Seta ">" no hover */
@@ -399,7 +399,7 @@ body.hacker-mode .link-fofoca {
     text-transform: uppercase ;
     position: relative ;
     transition: none ;
-    cursor: crosshair !important;
+    cursor: url('imagensfoto/crosshair.cur'), auto ;
     overflow: visible ;
     letter-spacing: 1px ;
     text-decoration: none ;
@@ -423,7 +423,7 @@ body.hacker-mode .btn-attach-gaveta {
     text-transform: uppercase ;
     position: relative ;
     transition: none ;
-    cursor: crosshair ;
+    cursor: url('imagensfoto/crosshair.cur'), auto ;
 }
 
 body.hacker-mode .btn-enviar-chat i:hover,
@@ -655,10 +655,7 @@ body.hacker-mode .badge-alertas {
    --------------------------------------------------------------- */
 
 body.hacker-mode .comentario-item, body.hacker-mode .comentario-item.comentario-filho  {
-    border-left: 1px solid #0f0 !important;
-    border-right: 1px solid #0f0 !important;
-    border-top: 1px solid #0f0 !important;
-    border-bottom: 1px solid #0f0 !important;
+    border: 1px solid #0f0 ;
     border-radius: 10px 10px 10px 2px;
 
 }
@@ -697,9 +694,9 @@ body.hacker-mode .comentario-item.vibe-dark .comentario-autor {
 
 /* 2. VIBE GLASS - Efeito Matrix translúcido */
 body.hacker-mode .comentario-item.vibe-glass {
-    background: rgba(0, 30, 0, 0.7) ;
-    -webkit-backdrop-filter: blur(3px) ;
-    backdrop-filter: blur(3px) ;
+    background: rgba(50, 81, 50, 0.53) ;
+    -webkit-backdrop-filter: blur(6px) ;
+    backdrop-filter: blur(6px) ;
     color: #00ff00 ;
     color: oklch(0.861283 0.293072 142.4953);
 }
