@@ -21,10 +21,18 @@
 // 🐚 MARESIA – 2026-09-25 (Sprint 1, item 3/7)
 //    - Defesa em profundidade contra vazamento de display_errors. As abas
 //      da Central incluem arquivos-filhos (motor-feed.php, motor-notificacoes.php,
-//      etc.). Se algum deles tentar sobrescrever a config de produção do
+//      etc). Se algum deles tentar sobrescrever a config de produção do
 //      conexao.php via `ini_set('display_errors', 1)`, este roteador
 //      reafirma a config correta para o ambiente. Respeita o local
 //      (onde display_errors = 1 é útil pra debugar).
+//
+// 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+//    - Marca notificação como lida via notif_id assinado (HMAC).
+//
+// 🐚 CALMARIA – 2026-10-06 (Sprint 2, item 2/4 – Bloco C)
+//    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY na validação HMAC
+//      do notif_id. Mesma justificativa do Bloco B. O fallback mora em
+//      conexao.php (Bloco A).
 
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -48,7 +56,8 @@ if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     error_log("[MOTOR-CENTRAL] notif_id recebido: $notif_id, user_id: $user_id");
 
     if ($notif_id > 0 && $user_id > 0) {
-        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
+        // 🐚 CALMARIA – 2026-10-06 (Bloco C): FENDA_HMAC_KEY em vez de FENDA_CRYPT_KEY.
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
 
         if (hash_equals($sig_esperada, $sig_recebida)) {
             // Primeiro, verifica se a notificação existe e está pendente

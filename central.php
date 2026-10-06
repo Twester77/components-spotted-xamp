@@ -16,6 +16,15 @@
 // 🐚 ÍRIS – 2026-08-28
 // "Adicionada aba 'Sessões' para gerenciar sessões ativas e encerramento remoto."
 
+// 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+//    Validação HMAC no notif_id (fallback assinado).
+
+// 🐚 CALMARIA – 2026-10-06 (Sprint 2, item 2/4 – Bloco C)
+//    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY na validação HMAC
+//      do notif_id. Mesma justificativa do Bloco B: FENDA_CRYPT_KEY
+//      deriva da SUPABASE_ANON_KEY (pública). O fallback mora em
+//      conexao.php (Bloco A).
+
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
@@ -27,7 +36,8 @@ if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     $user_id = (int)($_SESSION['usuario_id'] ?? 0);
 
     if ($notif_id > 0 && $user_id > 0) {
-        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
+        // 🐚 CALMARIA – 2026-10-06 (Bloco C): FENDA_HMAC_KEY em vez de FENDA_CRYPT_KEY.
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
 
         if (hash_equals($sig_esperada, $sig_recebida)) {
             $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");

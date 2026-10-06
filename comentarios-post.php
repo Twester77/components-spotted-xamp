@@ -23,6 +23,17 @@
  *      proteger mesmo se um valor malicioso entrar no banco por outra via
  *      (SQL direto, migração, etc). O enviar-comentario.php já sanitiza
  *      na entrada; aqui é a segunda camada.
+ *
+ * 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+ *    A assinatura HMAC impede que um site terceiro marque notificações
+ *    como lidas apenas por incluir este URL em uma requisição GET.
+ *
+ * 🐚 CALMARIA – 2026-10-06 (Sprint 2, item 2/4 – Bloco C)
+ *    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY na validação HMAC.
+ *      Mesma justificativa do Bloco B: FENDA_CRYPT_KEY deriva da
+ *      SUPABASE_ANON_KEY (pública), então assinar com ela dá falsa
+ *      sensação de segurança. O fallback (FENDA_HMAC_KEY → FENDA_CRYPT_KEY)
+ *      mora em conexao.php (Bloco A).
  */
 
 include_once 'conexao.php';
@@ -67,7 +78,8 @@ if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     $user_id = (int)($_SESSION['usuario_id'] ?? 0);
 
     if ($notif_id > 0 && $user_id > 0) {
-        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_CRYPT_KEY);
+        // 🐚 CALMARIA – 2026-10-06 (Bloco C): FENDA_HMAC_KEY em vez de FENDA_CRYPT_KEY.
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
 
         if (hash_equals($sig_esperada, $sig_recebida)) {
             $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
