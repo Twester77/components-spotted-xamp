@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO v1.6.13 – Cache busting para proxy.php
-const CACHE_VERSION = 'fenda-v1.6.13';
+// 🛡️ VERSÃO v1.6.14 – Cache busting para proxy.php
+const CACHE_VERSION = 'fenda-v1.6.14';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const STATIC_FILES = [

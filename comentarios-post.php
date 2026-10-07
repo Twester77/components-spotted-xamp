@@ -34,6 +34,14 @@
  *      SUPABASE_ANON_KEY (pública), então assinar com ela dá falsa
  *      sensação de segurança. O fallback (FENDA_HMAC_KEY → FENDA_CRYPT_KEY)
  *      mora em conexao.php (Bloco A).
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #20)
+ *    - Mini-header (barra fixa do HeaderManager) vazava a identidade do
+ *      autor em posts anônimos. `data-post-avatar` e `data-post-nome`
+ *      recebiam a foto + username reais mesmo em categoria `anonimo`,
+ *      contradizendo a promessa da plataforma. Agora replica o padrão
+ *      do motor-feed.php: avatar padrão + "Habitante Anônimo".
+ *      Correlato: post-detalhe.php tem o mesmo problema (item #21).
  */
 
 include_once 'conexao.php';
@@ -291,9 +299,16 @@ $total_reacoes = array_sum($reacoes_detalhes);
 
         <!-- 🔥 BARRA DE AÇÕES FIXA (HEADER) – FORA DO STICKY HEADER -->
         <?php
-        // Dados da miniatura (já calculados antes, mas reforçamos aqui)
-        $avatar_miniatura = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
-        $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
+        // 🐚 CALMARIA – 2026-10-07 (item #20): respeita categoria 'anonimo'.
+        //    Antes: mostrava foto + username reais mesmo em post anônimo.
+        //    Agora replica o padrão do motor-feed.php.
+        if (($post['categoria'] ?? '') === 'anonimo') {
+            $avatar_miniatura = 'uploads/ui/anonimo-default.webp';
+            $nome_miniatura = 'Habitante Anônimo';
+        } else {
+            $avatar_miniatura = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
+            $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
+        }
         $texto_miniatura = htmlspecialchars(mb_substr($post['mensagem'], 0, 80));
         if (mb_strlen($post['mensagem']) > 80) $texto_miniatura .= '...';
         ?>
