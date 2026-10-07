@@ -15,7 +15,7 @@
  *      Sem isso, um site terceiro podia fazer `<img src=".../notificacoes.php?notif_id=X">`
  *      e marcar notificações do usuário logado como lidas (CSRF via GET).
  *      Os receptores (notificacoes.php, comentarios-post.php, central.php,
- *      motor-central.php) validam a assinatura antes de marcar.
+ *      motor-central.php, evento.php) validam a assinatura antes de marcar.
  *
  * 🐚 MARESIA – 2026-10-05 (Sprint 2, item 2/4 – Bloco B)
  *    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY na assinatura HMAC.
@@ -25,6 +25,16 @@
  *      com fallback pra FENDA_CRYPT_KEY se ainda não configurada na Vercel).
  *    - HMAC é stateless — links antigos em abas abertas falham ao validar;
  *      recarregar a página regenera com a chave nova. Sem migração.
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #18)
+ *    - Notificações de evento agora usam a coluna `evento_id` (criada por
+ *      migração) em vez de `post_id` para montar o link do dropdown.
+ *      Motivo: `post_id` é sempre NULL em notificações de evento, e o link
+ *      gerado (`evento.php?id=`) redirecionava pra balanga-teras.php porque
+ *      o `evento.php` recebia id vazio. Agora o SELECT inclui `evento_id`
+ *      e o switch case 'evento' usa essa coluna — link correto.
+ *      Os outros tipos (post, depoimento, solicitacao, sistema) continuam
+ *      usando `post_id` (vivem em `mensagens`, está correto).
  */
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/conexao.php';
@@ -53,7 +63,8 @@ if ($na_central) {
 }
 
 // 🔥 INCLUI O CAMPO `tipo` NA CONSULTA
-$sql = "SELECT id, post_id, tipo, mensagem, lida, data_criacao 
+// 🐚 CALMARIA – 2026-10-07: adicionado evento_id (item #18)
+$sql = "SELECT id, post_id, evento_id, tipo, mensagem, lida, data_criacao 
         FROM notificacoes 
         WHERE usuario_id = ? 
         ORDER BY data_criacao DESC 
@@ -79,9 +90,10 @@ while ($n = $res->fetch_assoc()):
     $sig = hash_hmac('sha256', $n['id'] . '|' . $usuario_id, FENDA_HMAC_KEY);
 
     // 🔥 LINK BASEADO NO TIPO (SEM CONSULTAS EXTRAS!)
+    // 🐚 CALMARIA – 2026-10-07: case 'evento' usa evento_id (item #18).
     switch ($n['tipo']) {
         case 'evento':
-            $link = "evento.php?id=" . $n['post_id'] . "&notif_id=" . $n['id'] . "&sig=" . $sig;
+            $link = "evento.php?id=" . $n['evento_id'] . "&notif_id=" . $n['id'] . "&sig=" . $sig;
             break;
         case 'post':
             $link = "comentarios-post.php?id=" . $n['post_id'] . "&notif_id=" . $n['id'] . "&sig=" . $sig . "#fofocar";
