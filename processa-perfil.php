@@ -65,7 +65,7 @@ $nova_trilha   = $_POST['pref_som_trilha'] ?? 'off';
 $nova_notif    = $_POST['pref_som_notif'] ?? 'padrao';
 $novo_pip      = isset($_POST['pref_pip']) ? (int)$_POST['pref_pip'] : 0;
 $novo_badge    = isset($_POST['pref_badge']) ? (int)$_POST['pref_badge'] : 0;
-$nova_notif_comunidade = isset($_POST['pref_notif_comunidade']) ? (int)$_POST['pref_notif_comunidade'] : 1;
+$nova_notif_comunidade = isset($_POST['pref_notif_comunidade']) ? (int)$_POST['pref_notif_comunidade'] : 0;
 
 // 🔥 NOVA PREFERÊNCIA
 $novo_swipe_balanga = isset($_POST['pref_swipe_balanga']) ? (int)$_POST['pref_swipe_balanga'] : 0;

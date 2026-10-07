@@ -20,6 +20,13 @@
  *      a chave antiga e o receptor validaria com a nova — quebrando
  *      assim que a env var do Bloco D fosse configurada.
  *      O fallback (FENDA_HMAC_KEY → FENDA_CRYPT_KEY) mora em conexao.php.
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #18)
+ *    - Notificações de evento agora usam `evento_id` em vez de `post_id`
+ *      para montar o link. Mesma correção do motor-notificacoes.php —
+ *      o link apontava pra `evento.php?id=` (vazio) e redirecionava pra
+ *      balanga-teras.php. Agora o SELECT inclui `evento_id` e o case
+ *      'evento' usa essa coluna. Outros tipos continuam com `post_id`.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -47,7 +54,8 @@ if (isset($_GET['notif_id']) && isset($_GET['sig'])) {
 }
 
 // 🔥 INCLUI O CAMPO `tipo` NA CONSULTA
-$stmt_list = $conn->prepare("SELECT id, post_id, tipo, mensagem, lida, data_criacao 
+// 🐚 CALMARIA – 2026-10-07: adicionado evento_id (item #18)
+$stmt_list = $conn->prepare("SELECT id, post_id, evento_id, tipo, mensagem, lida, data_criacao 
                              FROM notificacoes 
                              WHERE usuario_id = ? 
                              ORDER BY data_criacao DESC 
@@ -76,9 +84,10 @@ include 'includes/navbar.php';
                 $sig = hash_hmac('sha256', $row['id'] . '|' . $user_id, FENDA_HMAC_KEY);
 
                 // 🔥 LINK BASEADO NO TIPO (SEM CONSULTAS EXTRAS!)
+                // 🐚 CALMARIA – 2026-10-07: case 'evento' usa evento_id (item #18).
                 switch ($row['tipo']) {
                     case 'evento':
-                        $link = "evento.php?id=" . $row['post_id'] . "&notif_id=" . $row['id'] . "&sig=" . $sig;
+                        $link = "evento.php?id=" . $row['evento_id'] . "&notif_id=" . $row['id'] . "&sig=" . $sig;
                         break;
                     case 'post':
                         $link = "comentarios-post.php?id=" . $row['post_id'] . "&notif_id=" . $row['id'] . "&sig=" . $sig . "#fofocar";
