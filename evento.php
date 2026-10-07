@@ -43,6 +43,18 @@
  *    - Adicionada verificação de banimento. Um usuário banido também podia
  *      acessar via link direto.
  *    - Ambas redirecionam pra balanga-teras.php com mensagem em sessão.
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #15)
+ *    - Adicionada validação HMAC para marcar notificação de evento como lida.
+ *      Bug: o evento.php recebia links assinados (`&notif_id=X&sig=Y` gerados
+ *      por motor-notificacoes.php e notificacoes.php), mas não tinha o bloco
+ *      de validação HMAC que os outros 4 receptores (notificacoes.php,
+ *      comentarios-post.php, central.php, motor-central.php) possuem.
+ *      Resultado: a notificação de evento ficava presa no dropdown pra
+ *      sempre, mesmo depois de o usuário clicar nela.
+ *    - Bloco posicionado ANTES da validação do $id, pra que a notificação
+ *      seja marcada como lida mesmo se o evento tiver sido cancelado/removido
+ *      (o usuário viu, o clique cumpriu seu papel).
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -50,6 +62,34 @@ require_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 
 fenda_log('🟢 INÍCIO evento.php');
+
+// ============================================================
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (notif_id assinado)
+// 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #15)
+//    Mesmo padrão dos 4 receptores que já têm validação HMAC.
+//    Fórmula: hash_hmac('sha256', "<id>|<user_id>", FENDA_HMAC_KEY).
+//    O emissor (motor-notificacoes.php) assina; este receptor valida.
+//    HMAC é stateless — links antigos falham; recarregar regenera.
+// ============================================================
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
+    $notif_id = (int)$_GET['notif_id'];
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
+
+    if ($notif_id > 0 && $user_id > 0) {
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
+
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+            $stmt_notif->bind_param("ii", $notif_id, $user_id);
+            $stmt_notif->execute();
+            $stmt_notif->close();
+            fenda_log("🟢 Notificação $notif_id marcada como lida para usuário $user_id (via evento.php)");
+        } else {
+            fenda_log("[NOTIFICACOES] Assinatura HMAC inválida em evento.php (notif_id=$notif_id, user_id=$user_id)");
+        }
+    }
+}
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) {
