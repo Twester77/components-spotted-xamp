@@ -1079,11 +1079,15 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .central-depoimento-pendente-autor strong {
     color: #fff;
+    color: oklch(100% 0.00011 271.152);
+    font-size: 0.9rem;
     font-size: clamp(0.95rem, 1.1vw, 1.1rem);
 }
 
 .central-depoimento-pendente-autor .depoimento-pendente-data {
+    color: #9e9e9e;
     color: oklch(0.7 0 0);
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     display: block;
 }

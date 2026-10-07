@@ -3278,3 +3278,68 @@ section.sessao-publicar .form-publicar .anexos-grid {
         display: none;
     }
 }
+
+/* ================================================================
+   🚨 REANIMAMENTO DO IPHONE 5C (iOS 10) - VERSÃO LIMPA (SEM !IMPORTANT)
+   ================================================================ */
+
+/* Seletor ultra-específico baseado no motor WebKit antigo */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+
+    /* Força a rolagem com aceleração de hardware no motor antigo */
+    body html .lista-scrollavel, 
+    body html .central-conteudo, 
+    body html #bt-lista-comentarios, 
+    body html .sidebar-fenda {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ganha do wrapper moderno mudando para bloco */
+    body .layout-wrapper {
+        display: block;
+        position: relative;
+        height: 100%;
+        isolation: auto;
+    }
+
+    /* Corrige o sumiço do header resetando grid interno */
+    body .layout-wrapper .sticky-header, 
+    body .layout-wrapper header {
+        position: relative;
+        display: block;
+        width: 100%;
+        max-height: none;
+        top: 0;
+        clear: both;
+    }
+
+    /* Neutraliza o flexbox problemático da sidebar móvel */
+    body .central-usuario-container, 
+    body .perfil-resumo-central, 
+    body .menu-central-abas {
+        display: block;
+    }
+
+    /* Resolve o bug do 'fit-content' definindo largura fixa pro balão */
+    body .lista-comentarios-social .comentario-item, 
+    body html .dialog-confirmacao {
+        width: 90%;
+        max-width: 320px;
+        margin: 10px auto;
+        display: block;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+    }
+
+    /* Força a pílula de input e o rodapé a respeitarem o fluxo de blocos */
+    body .layout-wrapper .fixed-input, 
+    body .layout-wrapper footer {
+        position: relative;
+        bottom: auto;
+        display: block;
+        width: 100%;
+    }
+}
