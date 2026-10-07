@@ -2601,6 +2601,9 @@ textarea[name="bio"] {
         top: 30px;
         max-height: 45dvh;
     }
+    .drawer-perfil-container {
+        max-width: 70%;
+    }
 
     .main-perfil-container-publico .capa-container {
         width: 100%;

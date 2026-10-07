@@ -1237,7 +1237,7 @@
 .bt-galeria-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    grid-template-columns: repeat(auto-fill, minmax(10cqi, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(15cqi, 1fr));
     gap: 10px;
     justify-content: center;
     align-items: center;
@@ -2303,10 +2303,6 @@
    16. RESPONSIVIDADE
    ================================================================ */
 @media (max-width: 480px) {
-    .bt-acoes {
-        flex-direction: column;
-        flex-wrap: nowrap;
-    }
 
     .bt-btn-resposta {
         flex: 1 1 100%;
@@ -2400,9 +2396,10 @@
 
     .modo-tinder-ativo .bt-btn-filtro {
         flex: 0 0 auto;
-        max-width: none;
+        max-width: fit-content;
         padding: 6px 10px;
-        font-size: clamp(0.68rem, 1.5vw, 0.85rem);
+        font-size: 0.65rem;
+        font-size: clamp(0.68rem, 1.5vw, 0.88rem);
     }
 
     .modo-tinder-ativo .bt-gaveta-filtros {

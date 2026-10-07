@@ -24,6 +24,19 @@
  *      POST aceitava qualquer ID, permitindo criar eventos em comunidades
  *      que o usuário não administra (IDOR de associação).
  *    - Moveu $is_ajax para o topo, pra reutilizar nos erros de validação.
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #18)
+ *    - Corrigido INSERT de notificação de evento: usa coluna `evento_id`
+ *      (nova, criada por migração) em vez de `post_id`.
+ *      Motivo: `post_id` tem FK pra `mensagens(id)`, e eventos vivem em
+ *      `eventos(id)`. Isso bloqueava silenciosamente o INSERT via
+ *      `mysqli_report(MYSQLI_REPORT_OFF)` — nenhuma notificação de evento
+ *      era criada desde que a FK foi adicionada. Bug arqueológico,
+ *      descoberto via SQL manual em produção. Migration: adiciona
+ *      `evento_id INT NULL` + FK `notificacoes_ibfk_3` com ON DELETE SET NULL.
+ *      O bind_param continua o mesmo (`issii`) — só o nome da coluna mudou.
+ *      `post_id` fica NULL por default (notificações de evento não se
+ *      referem a um post).
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -239,6 +252,10 @@ if ($stmt->execute()) {
     fenda_log("✅ Evento criado com sucesso! ID: $evento_id, Nome: '$nome'");
 
     // 🔔 NOTIFICAÇÕES (se houver comunidade)
+    // 🐚 CALMARIA – 2026-10-07 (item #18): trocado post_id → evento_id.
+    //    Antes: post_id tinha FK pra mensagens(id) → INSERT falhava
+    //    silenciosamente porque eventos vivem em eventos(id). Agora usa
+    //    a coluna dedicada evento_id (FK pra eventos).
     if ($comunidade_id !== null) {
         $stmt_nome = $conn->prepare("SELECT nome FROM comunidades WHERE id = ?");
         $stmt_nome->bind_param("i", $comunidade_id);
@@ -250,7 +267,7 @@ if ($stmt->execute()) {
         if ($comunidade) {
             $nome_comunidade = $comunidade['nome'];
             $stmt_notif = $conn->prepare("
-                INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida, data_criacao)
+                INSERT INTO notificacoes (usuario_id, evento_id, tipo, mensagem, lida, data_criacao)
                 SELECT cm.usuario_id, ?, 'evento', CONCAT('📢 Novo evento em \"', ?, '\": ', ?), 0, NOW()
                 FROM comunidade_membros cm
                 WHERE cm.comunidade_id = ? AND cm.status = 'ativo' AND cm.usuario_id != ?

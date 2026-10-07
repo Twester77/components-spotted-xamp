@@ -3469,7 +3469,7 @@ textarea {
 /* Responsivo – em telas pequenas, fica mais compacto */
 @media (max-width: 480px) {
     .balao-fenda {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         padding: 10px 14px 10px 12px;
         max-width: 240px;
         border-radius: 12px 12px 12px 2px;
