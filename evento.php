@@ -55,6 +55,17 @@
  *    - Bloco posicionado ANTES da validação do $id, pra que a notificação
  *      seja marcada como lida mesmo se o evento tiver sido cancelado/removido
  *      (o usuário viu, o clique cumpriu seu papel).
+ *
+ * 🐚 CALMARIA – 2026-10-08 (Sprint 2, item #5)
+ *    - Defesa em profundidade contra o bug do CSRF rolling token.
+ *      O `<script>` inline lia o token do input hidden a cada clique, mas
+ *      NUNCA atualizava esse input quando o backend rotacionava o token
+ *      (resposta JSON de enviar-resposta-evento.php). Resultado: 2ª resposta
+ *      sem recarregar página recebia 403 "Token inválido".
+ *      Agora o script lê `data.csrf_token` da resposta e atualiza TODOS os
+ *      `input[name="csrf_token"]` da página — front e backend sempre em sincronia.
+ *      Fix complementar ao do enviar-resposta-evento.php (que agora só
+ *      rotaciona após validações passarem, no sucesso).
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -419,6 +430,16 @@ if (empty($_SESSION['csrf_token'])) {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    // 🐚 CALMARIA – 2026-10-08 (item #5): defesa em profundidade.
+                    //    Atualiza todos os hidden csrf_token com o valor devolvido
+                    //    pelo backend (novo no sucesso, atual no erro). Assim o
+                    //    próximo clique usa o token certo, sem 403 "Token inválido".
+                    if (data && typeof data.csrf_token === 'string' && data.csrf_token !== '') {
+                        document.querySelectorAll('input[name="csrf_token"]').forEach(inp => {
+                            inp.value = data.csrf_token;
+                        });
+                    }
+
                     if (data.success) {
                         const grupo = this.closest('.bt-acoes');
                         if (grupo) {

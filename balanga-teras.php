@@ -19,6 +19,18 @@
  * - Este arquivo não possui chamadas diretas a obterUrlImagem() ou obterUrlComFallback.
  * - A renderização dos cards é feita via swipe-eventos.php (já corrigido).
  * - Nenhuma alteração necessária neste arquivo.
+ *
+ * 🐚 CALMARIA – 2026-10-08 (Sprint 2, item #5)
+ *    - Defesa em profundidade contra o bug do CSRF rolling token.
+ *      A função btHandlerResposta (usada no modo grid, sem swipe) não lia
+ *      `data.csrf_token` da resposta do enviar-resposta-evento.php. Em
+ *      erros de validação, o backend rotacionava o token, mas o front
+ *      seguia com o antigo — a próxima resposta sem recarregar a página
+ *      recebia 403 "Token inválido".
+ *      Agora lê `data.csrf_token` e atualiza TODOS os input[name="csrf_token"]
+ *      da página. Fix complementar ao do enviar-resposta-evento.php (que
+ *      agora só rotaciona após validações passarem, no sucesso) e ao
+ *      do evento.php inline.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -246,6 +258,16 @@ $stmt_com->close();
             })
             .then(response => response.json())
             .then(data => {
+                // 🐚 CALMARIA – 2026-10-08 (item #5): defesa em profundidade.
+                //    Atualiza todos os hidden csrf_token com o valor devolvido
+                //    pelo backend (novo no sucesso, atual no erro). Assim o
+                //    próximo clique usa o token certo, sem 403 "Token inválido".
+                if (data && typeof data.csrf_token === 'string' && data.csrf_token !== '') {
+                    document.querySelectorAll('input[name="csrf_token"]').forEach(inp => {
+                        inp.value = data.csrf_token;
+                    });
+                }
+
                 if (data.success) {
                     const card = btn.closest('.bt-card');
                     if (card) {

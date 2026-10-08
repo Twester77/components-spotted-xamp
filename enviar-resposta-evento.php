@@ -11,6 +11,19 @@
  *      para o front-end atualizar o <input id="csrf_token"> dinamicamente.
  *      Isso resolve o "CSRF stale" em sessões contínuas de swipe.
  *      (Recomendação da Djê na auditoria do bt-swipe.js.)
+ *
+ * 🐚 CALMARIA – 2026-10-08 (Sprint 2, item #5)
+ *    - Reordenada a rotação do CSRF: agora acontece APÓS todas as validações
+ *      (evento existe, não cancelado, não expirado, não banido) e ANTES do
+ *      INSERT. Antes, rotacionava imediatamente após validar o token antigo,
+ *      o que fazia com que erros de negócio devolvessem um token novo mas
+ *      o front (evento.php inline, modo grid) não o lesse — a próxima
+ *      tentativa usava o token antigo e recebia 403 "Token inválido".
+ *      Bug visível como "segunda resposta sem recarregar a página falha".
+ *      O `bt-swipe.js` já lê `data.csrf_token`, então não era afetado.
+ *    - Em caso de falha de validação, NÃO rotaciona (token antigo continua
+ *      válido) e devolve o token ATUAL (não um novo) pra consistência.
+ *    - Docblock do sucesso mantém `csrf_token` no JSON para o bt-swipe.js.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -30,28 +43,35 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+// ============================================================
+// VALIDAÇÃO DO CSRF (com hash_equals para timing-safe)
+// ============================================================
+$csrf_enviado = $_POST['csrf_token'] ?? '';
+$csrf_sessao  = $_SESSION['csrf_token'] ?? '';
+
+if (!is_string($csrf_enviado) || $csrf_enviado === '' ||
+    !is_string($csrf_sessao)  || $csrf_sessao === '' ||
+    !hash_equals($csrf_sessao, $csrf_enviado)) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Token de segurança inválido.']);
     exit;
 }
 
-// ============================================================
-// 🔥 ROTACIONA O CSRF TOKEN (rolling token)
-// ============================================================
-// Gera um novo token a cada requisição válida. O token antigo é
-// imediatamente invalidado, e o novo é enviado no JSON de sucesso
-// para o front-end atualizar seu <input id="csrf_token">.
-$novo_csrf_token = bin2hex(random_bytes(32));
-$_SESSION['csrf_token'] = $novo_csrf_token;
-
 $evento_id = isset($_POST['evento_id']) ? (int)$_POST['evento_id'] : 0;
 $opcao = isset($_POST['opcao']) ? $_POST['opcao'] : '';
 $usuario_id = $_SESSION['usuario_id'];
 
-if ($evento_id <= 0 || !in_array($opcao, ['vou', 'nao_vou', 'talvez'])) {
+// 🐚 CALMARIA – 2026-10-08 (item #5): em erros de validação, devolve o
+//    token ATUAL (não rotacionado). O front pode tentar novamente sem 403.
+$csrf_atual = $csrf_sessao;
+
+if ($evento_id <= 0 || !in_array($opcao, ['vou', 'nao_vou', 'talvez'], true)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Dados inválidos.', 'csrf_token' => $novo_csrf_token]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Dados inválidos.',
+        'csrf_token' => $csrf_atual
+    ]);
     exit;
 }
 
@@ -67,13 +87,21 @@ $stmt->close();
 
 if (!$evento) {
     http_response_code(404);
-    echo json_encode(['success' => false, 'message' => 'Evento não encontrado.', 'csrf_token' => $novo_csrf_token]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Evento não encontrado.',
+        'csrf_token' => $csrf_atual
+    ]);
     exit;
 }
 
 if ($evento['status'] === 'cancelado') {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Este evento foi cancelado.', 'csrf_token' => $novo_csrf_token]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Este evento foi cancelado.',
+        'csrf_token' => $csrf_atual
+    ]);
     exit;
 }
 
@@ -86,7 +114,11 @@ if ($data_evento < time() && $evento['status'] !== 'encerrado') {
     $stmt_upd->close();
 
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Este evento já foi encerrado.', 'csrf_token' => $novo_csrf_token]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Este evento já foi encerrado.',
+        'csrf_token' => $csrf_atual
+    ]);
     exit;
 }
 
@@ -102,7 +134,11 @@ if ($evento['comunidade_id'] > 0) {
 
     if (!$membro || $membro['status'] !== 'ativo') {
         http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'Você não tem permissão para responder a este evento porque foi banido da comunidade.', 'csrf_token' => $novo_csrf_token]);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Você não tem permissão para responder a este evento porque foi banido da comunidade.',
+            'csrf_token' => $csrf_atual
+        ]);
         exit;
     }
 }
@@ -118,6 +154,15 @@ $stmt->execute();
 
 if ($stmt->affected_rows >= 0) {
     $stmt->close();
+
+    // ============================================================
+    // 🔥 ROTACIONA O CSRF TOKEN (rolling token) — SÓ AGORA, NO SUCESSO
+    // 🐚 CALMARIA – 2026-10-08 (item #5): movida de cima pra cá.
+    //    Se qualquer validação acima tivesse falhado, o token antigo
+    //    continuaria válido — o front pode tentar de novo sem 403.
+    // ============================================================
+    $novo_csrf_token = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = $novo_csrf_token;
 
     // Busca contagens atualizadas
     $stmt_count = $conn->prepare("SELECT 
@@ -135,11 +180,15 @@ if ($stmt->affected_rows >= 0) {
         'success' => true,
         'message' => 'Resposta registrada!',
         'contagens' => $counts,
-        'csrf_token' => $novo_csrf_token  // 🔥 Renovação do CSRF token
+        'csrf_token' => $novo_csrf_token
     ]);
 } else {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Erro ao registrar resposta.', 'csrf_token' => $novo_csrf_token]);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro ao registrar resposta.',
+        'csrf_token' => $csrf_atual
+    ]);
 }
 
 exit;

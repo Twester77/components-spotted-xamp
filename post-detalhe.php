@@ -1,5 +1,4 @@
 <?php
-
 /**
  * post-detalhe.php – Endpoint para Lightbox Universal
  * 
@@ -22,6 +21,13 @@
  * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-17
  *    - Substituído obterUrlImagem() por obterUrlComFallback() para fallback centralizado.
  *    - Correção do fuso horário: data do post agora usa exibirDataHoraBrasil().
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #21)
+ *    - Vazamento de identidade em post anônimo: o lightbox mostrava foto +
+ *      username reais do autor, contradizendo a categoria `anonimo`. Correlato
+ *      ao item #20 (que corrigiu o mesmo problema no mini-header do
+ *      comentarios-post.php). Agora respeita a categoria e exibe
+ *      'Habitante Anônimo' + avatar anônimo.
  */
 
 /**
@@ -311,11 +317,21 @@ $mensagem = nl2br(htmlspecialchars($post['mensagem'] ?? '', ENT_QUOTES, 'UTF-8')
 // 🔥 DATA DO POST COM FUSO BRASILEIRO
 $data_post = exibirDataHoraBrasil($post['data_post'], 'd/m H:i');
 
-$username = htmlspecialchars($post['username'] ?? '', ENT_QUOTES, 'UTF-8');
-$cor_autor = htmlspecialchars($post['pref_cor_padrao'] ?? '#70cde4', ENT_QUOTES, 'UTF-8');
+// 🐚 CALMARIA – 2026-10-07 (item #21): respeita categoria 'anonimo'.
+//    Antes: lightbox mostrava foto + @username reais mesmo em post anônimo.
+//    Agora replica o padrão do motor-feed.php e do comentarios-post.php (#20).
+$is_anonimo = (($post['categoria'] ?? '') === 'anonimo');
 
-// 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
-$avatar_autor = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+if ($is_anonimo) {
+    $nome_exibicao = 'Habitante Anônimo';
+    $avatar_autor  = 'uploads/ui/anonimo-default.webp';
+} else {
+    $username_atual = htmlspecialchars($post['username'] ?? '', ENT_QUOTES, 'UTF-8');
+    $nome_exibicao  = !empty($username_atual) ? '@' . $username_atual : 'Usuário';
+    $avatar_autor   = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+}
+
+$cor_autor = htmlspecialchars($post['pref_cor_padrao'] ?? '#70cde4', ENT_QUOTES, 'UTF-8');
 
 // Anexos
 $anexos_html = renderizarAnexos($post, $b2);
@@ -339,7 +355,7 @@ $total_comentarios = $apenas_post ? 0 : count($comentarios);
         <div class="lightbox-autor">
             <img src="<?php echo $avatar_autor; ?>" class="avatar-p" onerror="this.src='uploads/ui/default_masculino.webp'">
             <div class="lightbox-autor-info">
-                <span class="lightbox-autor-nome" style="color: <?php echo $cor_autor; ?>;">@<?php echo $username; ?></span>
+                <span class="lightbox-autor-nome" style="color: <?php echo $cor_autor; ?>;"><?php echo $nome_exibicao; ?></span>
                 <span class="lightbox-autor-data"><?php echo $data_post; ?></span>
             </div>
             <span class="lightbox-categoria">#<?php echo $categoria; ?></span>
