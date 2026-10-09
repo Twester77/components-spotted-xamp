@@ -1436,7 +1436,7 @@ textarea#descricao{
     font-size: clamp(0.9rem, 0.8vw, 1.1rem);
     background: rgba(255, 255, 255, 0.25);
     text-decoration: none;
-    border: #1111;
+    border: 1px solid #1111;
     font-weight: 600;
     color: #ffffcf;
     color: oklch(0.9882 0.0617 107.48);
@@ -2252,7 +2252,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     background: oklch(100% 0 0 / 0.04);
     border: 1px solid transparent;
     border-radius: 10px;
-    border-radius: (8px, 1.3vw, 14px);
+    border-radius: clamp(8px, 1.3vw, 14px);
     padding: 4px 8px;
     padding: clamp(4px, 1.3cqi, 8px) clamp(10px, 2cqi, 14px);
     font-size: 0.8rem;

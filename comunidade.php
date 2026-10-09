@@ -624,7 +624,7 @@ if ($is_admin || $is_criador) {
     const observerModoSwipe = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             if (mutation.attributeName === 'class') {
-                if (!document.body.classList.contains('modo-swipe-atiativo')) {
+                if (!document.body.classList.contains('modo-swipe-ativo')) {
                     if (typeof configurarPosts === 'function') {
                         configurarPosts();
                     }

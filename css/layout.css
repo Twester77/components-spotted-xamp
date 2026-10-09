@@ -64,7 +64,7 @@ header h1 {
 .header-icons {
     display: flex;
     gap: 5px;
-    gap: (0.5rem, 1vw, 1.2em);
+    gap: clamp(0.5rem, 1vw, 1.2em);
     align-items: center;
     padding: 2px 3px;
     -webkit-user-select: none;
@@ -381,7 +381,7 @@ nav {
     flex-wrap: nowrap;
     word-break: break-word;
     overflow-wrap: anywhere;
-    display: 1 ;
+    display: block ;
     margin-bottom: 20px;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     text-transform: uppercase;
@@ -450,13 +450,12 @@ nav {
 /* O Gatilho (Bússola) */
 .toolbar-trigger {
     position: fixed;
-    left: -35px;
     top: 10%;
     background: #001a1a;
     border: 1px solid #00ff00;
     border-radius: 5px 0 0 5px;
     cursor: pointer;
-    display: none !important;
+    display: none ;
     align-items: center;
     justify-content: center;
     border-radius: 10px 0 0 10px;
@@ -464,12 +463,11 @@ nav {
     width: clamp(40px, 8vmin, 65px);
     height: clamp(40px, 8vmin, 65px);
     padding: 6px;
-    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
     background: #004d40;
     color: #00ffcc;
     transform: translateY(-50%);
     margin: auto;
-
 
 }
 
@@ -733,7 +731,7 @@ body.modal-aberto .fab-postar {
     list-style: none;
     padding: 5px;
     gap: 8px;
-    border-bottom: 2px rgba(255, 255, 255, 0.37);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.37);
     width: 100%;
     justify-content: center;
     position: relative;
@@ -2053,7 +2051,7 @@ textarea[name="bio"] {
     backdrop-filter: blur(1px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px 6px 12px 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
     /* A MÁGICA AQUI: */
     z-index: 10000;
     /* Valor absurdamente alto para ganhar da navbar */
@@ -2619,6 +2617,10 @@ textarea[name="bio"] {
         width: clamp(70px, 10cqi, 110px);
         height: clamp(70px, 10cqi, 110px);
         aspect-ratio: 1/1;
+    }
+
+    .bt-galeria-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
 
 }

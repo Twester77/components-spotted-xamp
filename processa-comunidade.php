@@ -23,7 +23,7 @@ fenda_log('🔵 INÍCIO processa-comunidade.php');
 // ============================================================
 // 🔥 0. VERIFICAÇÃO CSRF (OBRIGATÓRIA)
 // ============================================================
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+if (!isset($_POST['csrf_token'], $_SESSION['csrf_token']) || !hash_equals((string)$_SESSION['csrf_token'], (string)$_POST['csrf_token'])) {
     fenda_log('🔴 CSRF inválido em processa-comunidade.php');
     $_SESSION['erro_comunidade'] = 'Token de segurança inválido. Recarregue a página e tente novamente.';
     // Redireciona para a página anterior (criação ou edição)

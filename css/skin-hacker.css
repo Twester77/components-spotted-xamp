@@ -65,9 +65,9 @@ body.hacker-mode *::after {
 
 /* Scanlines horizontais */
 body.hacker-mode::before {
-    content: " " !important;
+    content: "" ;
     display: block ;
-    position: fixed !important ;
+    position: fixed  ;
     top: 0 ;
     left: 0 ;
     bottom: 0 ;
@@ -104,9 +104,9 @@ body.hacker-mode::after {
 /* ---------------------------------------------------------------
    4. SCROLLBAR ESTILO TERMINAL
    --------------------------------------------------------------- */
-body.hacker-mode { scrollbar-width: 2px ; scrollbar-color:#000000 #00fd00; border-radius: 0; 
+body.hacker-mode { scrollbar-width: thin ; scrollbar-color:#000000 #00fd00; border-radius: 0; 
 }
-body.hacker-mode::-webkit-scrollbar {  width: 2px ; }
+body.hacker-mode::-webkit-scrollbar {  width: thin ; }
 body.hacker-mode::-webkit-scrollbar-track { background: #000 ; }
 body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00 ; border-radius: 0 ; }
 
@@ -915,7 +915,7 @@ body.hacker-mode .filtro-btn:hover {
 
 body.hacker-mode .bt-btn-filtro:active{
     background: #00ff00 ;
-    background: conic-gradient 45deg(oklch(0.861283 0.293072 142.4953), oklch(0.861283 0.293072 142.4953)) ;
+    background: conic-gradient( from 45deg, oklch(0.861283 0.293072 142.4953), oklch(0.861283 0.293072 142.4953)) ;
     text-shadow: 0 0 4px #00ff00 ;
     color: #000000 ;
     color: oklch(0 0 0) ;

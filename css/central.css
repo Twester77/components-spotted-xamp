@@ -1528,6 +1528,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     .solicitacao-central-item {
         padding: 3px 8px;
         gap: 5px;
+        min-height: 50px;
     }
 
     .solicitacao-central-item .solicitante-avatar {

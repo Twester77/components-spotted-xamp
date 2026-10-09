@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ============================================================
     // 2.2 CSRF Token (falha → registra tentativa)
     // ============================================================
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    if (!isset($_POST['csrf_token'], $_SESSION['csrf_token']) || !hash_equals((string)$_SESSION['csrf_token'], (string)$_POST['csrf_token'])) {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
         registrarTentativaFalha($ip, $conn);
         http_response_code(403);

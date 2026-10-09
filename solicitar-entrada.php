@@ -16,6 +16,14 @@
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-11 (estrutura)
  * 🌙 LUZ – ATUALIZAÇÃO 2026-08-13: adicionado campo `tipo` nas notificações.
+ *
+ * 🐚 CALMARIA – 2026-10-09 (Sprint 2, rate limits persistentes)
+ *    - Rate limit trocado de $_SESSION (efêmera em serverless — nunca disparava
+ *      em produção Vercel) por tabela `fenda_rate_limits`. Mesmo padrão do Snap
+ *      (excluir-notificacao.php). Duas camadas:
+ *        • por usuário: 1 por 60s (mantém regra original)
+ *        • por IP: 5 por 60s (protege contra multi-conta)
+ *    - Sem transação: INSERT simples + SELECT COUNT, suficiente.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -34,14 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // CSRF
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+if (!isset($_POST['csrf_token'], $_SESSION['csrf_token']) || !hash_equals((string)$_SESSION['csrf_token'], (string)$_POST['csrf_token'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Token de segurança inválido.']);
     exit;
 }
 
 // ============================================================
-// 2. CAPTURA DOS PARÂMETROS E RATE LIMITING POR USUÁRIO
+// 2. CAPTURA DOS PARÂMETROS E RATE LIMITING PERSISTENTE
 // ============================================================
 $comunidade_id = isset($_POST['comunidade_id']) ? (int)$_POST['comunidade_id'] : 0;
 $usuario_id = $_SESSION['usuario_id'];
@@ -52,14 +60,47 @@ if ($comunidade_id <= 0) {
     exit;
 }
 
-// 🔥 RATE LIMITING: agora usa o ID do usuário, não o IP (evita bloqueios em redes compartilhadas)
-$chave_rate = 'solicitar_entrada_' . $usuario_id;
-if (isset($_SESSION[$chave_rate]) && $_SESSION[$chave_rate] > time() - 60) {
+// 🐚 CALMARIA – 2026-10-09: rate limit persistente (tabela).
+//    Mesmo padrão do Snap (excluir-notificacao.php).
+$ip = function_exists('obterIPReal')
+    ? obterIPReal()
+    : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+$endpoint = 'solicitar_entrada';
+
+$conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(64) NOT NULL,
+    usuario_id INT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_endpoint (endpoint),
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_ip (ip_address),
+    INDEX idx_tentativa (tentativa)
+)");
+
+$stmt_rate = $conn->prepare("
+    SELECT
+        (SELECT COUNT(*) FROM fenda_rate_limits
+         WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS user_total,
+        (SELECT COUNT(*) FROM fenda_rate_limits
+         WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS ip_total
+");
+$stmt_rate->bind_param('siis', $endpoint, $usuario_id, $endpoint, $ip);
+$stmt_rate->execute();
+$result_rate = $stmt_rate->get_result()->fetch_assoc();
+$stmt_rate->close();
+
+if ((int)($result_rate['user_total'] ?? 0) >= 1 || (int)($result_rate['ip_total'] ?? 0) >= 5) {
     http_response_code(429);
     echo json_encode(['success' => false, 'message' => 'Aguarde um minuto antes de solicitar novamente.']);
     exit;
 }
-$_SESSION[$chave_rate] = time();
+
+$stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+$stmt_log_rate->bind_param('sis', $endpoint, $usuario_id, $ip);
+$stmt_log_rate->execute();
+$stmt_log_rate->close();
 
 // ============================================================
 // 3. VERIFICA SE A COMUNIDADE EXISTE E É PRIVADA

@@ -35,7 +35,7 @@
     --bt-card-width: 280px;
     --bt-card-padding: clamp(10px, 1.5cqi, 30px);
     --bt-card-font-size: clamp(0.85rem, 1.5cqi, 1.4rem);
-    --bt-titulo-size: clamp(1rem, 3cqi, 2rem);
+    --bt-titulo-size: clamp(1rem, 3cqi, 1.7rem);
     /* será sobrescrito pelo JS */
     --bt-meta-size: clamp(0.8em, 4.5cqi, 1.3em);
     /* será sobrescrito pelo JS */
@@ -348,6 +348,7 @@
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     font-family: inherit;
+    z-index: 9992;
     -webkit-appearance: none;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23aaa' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
@@ -677,16 +678,17 @@
     position: absolute;
     top: clamp(6px, 1vw, 12px);
     right: clamp(6px, 1vw, 12px);
+    padding: 4px 8px;
     padding: clamp(4px, 0.6vw, 8px) clamp(10px, 1.2vw, 16px);
     border-radius: 30px;
-    font-size: clamp(0.65rem, 1vw, 0.85rem);
+    font-size: clamp(0.63rem, 1vw, 0.86rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background: rgba(0, 0, 0, 0.7);
     background: oklch(0% 0 0 / 0.7);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     color: #fff;
     color: oklch(1 0 0);
     z-index: 2;
@@ -1237,7 +1239,7 @@
 .bt-galeria-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    grid-template-columns: repeat(auto-fill, minmax(15cqi, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(12cqi, 1fr));
     gap: 10px;
     justify-content: center;
     align-items: center;
@@ -1255,7 +1257,7 @@
     transition: transform 0.2s;
 }
 
-.bt-galeria-grid.has:only-child img {
+.bt-galeria-grid:has(img:only-child) {
     height: 100%;
     width: 100%;
     justify-content: center;
@@ -1489,7 +1491,7 @@
     max-width: 600px;
     padding: 0 12px;
     position: relative;
-    z-index: 9995;
+    z-index: 9993;
 }
 
 /* 1. Registra a propriedade para animar o ângulo das luzes da pista sem mover o botão */
@@ -1523,7 +1525,7 @@
     transition: 0.2s;
     font-family: inherit;
     /* volta ao fluxo normal */
-    z-index: 9995;
+    z-index: 9994;
 
     /* Apenas isola o contexto para o brilho ficar estritamente atrás do botão */
     isolation: isolate;
@@ -1563,7 +1565,7 @@
     margin-top: 35px;
     transform: translate3d(-50%, -50%, 0px);
     transform: translate(-50%, -50%);
-    z-index: 9994;
+    z-index: 9992;
     background: rgba(0, 0, 0, 0.6);
     background: oklch(0% 0 0 / 0.6);
     -webkit-backdrop-filter: blur(2px);
@@ -2341,7 +2343,7 @@
     }
 
     .bt-galeria-grid {
-        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
     }
 
     .bt-form-comentario {
@@ -2473,7 +2475,7 @@
     }
 
     #bt-container-eventos .bt-card .bt-descricao {
-        max-height: 4.2em;
+        max-height: 4.5em;
         margin-block: 2px;
         -webkit-line-clamp: 4;
         line-clamp: 4;
@@ -2493,8 +2495,8 @@
     #bt-container-eventos .bt-card .bt-btn-resposta {
         flex: 1 1 0;
         min-width: 0;
-        padding: 6px 8px;
-        font-size: clamp(0.72rem, 1.6vw, 0.95rem);
+        padding: 4px 8px;
+        font-size: clamp(0.72rem, 1.65vw, 0.95rem);
     }
 
     .modo-tinder-ativo #bt-container-eventos .bt-card {
@@ -2530,7 +2532,7 @@
     }
 
     .bt-descricao {
-        max-height: 40px;
+        max-height: 4.5em;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         line-clamp: 2;

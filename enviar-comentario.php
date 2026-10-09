@@ -37,7 +37,7 @@ require_once 'includes/upload_engine.php';
 // 0. CSRF TOKEN (antes de qualquer processamento)
 // ============================================================
 if (isset($_SESSION['usuario_id'])) {
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    if (!isset($_POST['csrf_token'], $_SESSION['csrf_token']) || !hash_equals((string)$_SESSION['csrf_token'], (string)$_POST['csrf_token'])) {
         http_response_code(403);
         ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Token de segurança inválido.']);

@@ -5,9 +5,8 @@
 }
 
 
-.input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 10px #00000086 inset;
-    ;
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 8px #00000086 inset;
 }
 
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
@@ -72,7 +71,7 @@ select:focus-visible {
 .toast-login span {
     display: block;
     font-size: 18px;
-    font-size: clamp(20px, 3vw, 28px);
+    font-size: clamp(16px, 3vw, 26px);
     margin-bottom: 5px;
 }
 
@@ -144,6 +143,7 @@ select:focus-visible {
     box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);
     filter: brightness(1.1);
 }
+
 
 
 /* ============================================================
@@ -1583,7 +1583,6 @@ select:focus-visible {
     /* Garante que o 'X' de fechar se posicione certo */
     /* Garante que se o texto for gigante, apareça um scroll interno só no modal */
     overflow-y: auto;
-    -webkit-scrollbar: 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
     display: flex;
@@ -1893,9 +1892,9 @@ select:focus-visible {
     height: 40px;
     width: clamp(40px, 2vw, 80px);
     height: clamp(40px, 2vw, 80px);
+    max-width: 100%;
     justify-content: center;
     gap: 8px;
-    width: 100%;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 30px;
@@ -2504,21 +2503,28 @@ section.sessao-publicar {
    AJUSTE DE ESPECIFICIDADE PARA PÁGINA PERDIDOS (DEITADO E SEM TREMOR)
    ============================================================ */
 
+   /* ============================================================
+   CONTAINER DO FORMULÁRIO (VIRA DEITADO EM TELAS GRANDES)
+   ============================================================ */
+
 /* Anula os flex-wraps e alinhamentos inferiores herdados lá de cima */
 .form-publicar.form-perdidos-vivo {
     display: flex ;
     flex-direction: column ;
     align-items: center ;
     gap: 12px ;
-    background: rgba(0, 0, 0, 0.25) ;
+    background: #00000066; 
     background: oklch(0 0 0 / 0.4) ;
     padding: 12px ;
     border-radius: 16px ;
-    border: 1px solid rgba(255, 255, 255, 0.04) ;
+    border: 1px solid rgba(255, 255, 255, 0.06) ;
     margin-bottom: 0 ;
+    box-sizing: border-box;
     max-width: 100% ;
     width: 100% ;
 }
+
+
 
 
 /* Caixa de Texto */
@@ -2630,23 +2636,6 @@ section.sessao-publicar {
     box-shadow: 0 6px 12px rgba(179, 255, 0, 0.3) ;
 }
 
-
-/* ============================================================
-   CONTAINER DO FORMULÁRIO (VIRA DEITADO EM TELAS GRANDES)
-   ============================================================ */
-.form-perdidos-vivo {
-    display: flex;
-    flex-direction: column; /* Mobile primeiro: empilhado */
-    gap: 12px;
-    background: #00000066;
-    background: oklch(0 0 0 / 0.4);
-    padding: 14px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    width: 100%;
-    box-sizing: border-box;
-    align-items: center;
-}
 
 
 /* ============================================================
@@ -2954,28 +2943,6 @@ section.sessao-publicar {
     flex-direction: column;
     align-items: center;
     position: relative;
-}
-
-
-.login-btn {
-    background: linear-gradient(135deg, #ff7011, #ffbc00) !important;
-    color: #fff !important;
-    border: none;
-    width: 100%;
-    padding: 12px 20px !important;
-    border-radius: 10px;
-    font-weight: bold;
-    text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(255, 112, 17, 0.4);
-    cursor: pointer;
-    margin-top: 10px;
-    transition: 0.3s;
-}
-
-.login-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);
-    filter: brightness(1.1);
 }
 
 
