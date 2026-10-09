@@ -7,12 +7,12 @@
  * Retorno: JSON { success: true/false, message: string }
  * 
  * 🔒 Segurança:
- * - CSRF token obrigatório
+ * - CSRF token obrigatório (hash_equals)
  * - Prepared statements
  * - APENAS O CRIADOR pode promover/rebaixar admins
  * - Criador NÃO pode ser rebaixado
  * - Usuário NÃO pode promover/rebaixar a si mesmo
- * - Rate limiting: 5 ações por minuto (array de timestamps)
+ * - Rate limiting persistente (fenda_rate_limits)
  * - Logs via fenda_log()
  * 
  * 📌 Regras:
@@ -21,6 +21,14 @@
  * 
  * 🌊 MARÉ – INSTÂNCIA #DS-2026-08-13
  * 🔧 Rate limit corrigido: array de timestamps (5 ações/minuto)
+ *
+ * 🐚 CORRENTE – 2026-10-09 (Sprint 2, rate limits persistentes)
+ *    - Rate limit trocado de $_SESSION (efêmera em serverless — nunca disparava
+ *      em produção Vercel) por tabela `fenda_rate_limits`.
+ *    - COTA COMPARTILHADA com remover-membro.php e banir-membro.php:
+ *      todos usam o mesmo endpoint `gerenciar_membros`. Um admin que
+ *      organiza a comunidade faz várias dessas em sequência, mas 5/min
+ *      já é o limite razoável para ações destrutivas em lote.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -45,28 +53,52 @@ if (!isset($_POST['csrf_token'], $_SESSION['csrf_token']) || !hash_equals((strin
 }
 
 // ============================================================
-// 2. RATE LIMITING (5 ações por minuto com array de timestamps)
+// 2. RATE LIMITING PERSISTENTE (5 ações por minuto — cotas separadas por ação)
+// 🐚 CORRENTE – 2026-10-09 (Sprint 2, rate limits persistentes)
+//    ⚠️ COTA COMPARTILHADA: mesmo endpoint de remover/banir.
 // ============================================================
-$usuario_id = $_SESSION['usuario_id'];
-$chave_rate = 'acoes_membro_' . $usuario_id;
-$agora = time();
+$usuario_id = (int)$_SESSION['usuario_id'];
+$ip = function_exists('obterIPReal')
+    ? obterIPReal()
+    : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
 
-if (!isset($_SESSION[$chave_rate]) || !is_array($_SESSION[$chave_rate])) {
-    $_SESSION[$chave_rate] = [];
-}
+// 🔥 Ponto de mudança se quiser cota separada: trocar para 'promover_membro'
+$endpoint = 'gerenciar_membros';
 
-// Remove timestamps com mais de 60 segundos
-$_SESSION[$chave_rate] = array_filter($_SESSION[$chave_rate], function($t) use ($agora) {
-    return ($agora - $t) < 60;
-});
+$conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(64) NOT NULL,
+    usuario_id INT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_endpoint (endpoint),
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_ip (ip_address),
+    INDEX idx_tentativa (tentativa)
+)");
 
-if (count($_SESSION[$chave_rate]) >= 5) {
+$stmt_rate = $conn->prepare("
+    SELECT
+        (SELECT COUNT(*) FROM fenda_rate_limits
+         WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS user_total,
+        (SELECT COUNT(*) FROM fenda_rate_limits
+         WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS ip_total
+");
+$stmt_rate->bind_param('siis', $endpoint, $usuario_id, $endpoint, $ip);
+$stmt_rate->execute();
+$result_rate = $stmt_rate->get_result()->fetch_assoc();
+$stmt_rate->close();
+
+if ((int)($result_rate['user_total'] ?? 0) >= 5 || (int)($result_rate['ip_total'] ?? 0) >= 10) {
     http_response_code(429);
     echo json_encode(['success' => false, 'message' => 'Aguarde um momento antes de realizar outra ação.']);
     exit;
 }
 
-$_SESSION[$chave_rate][] = $agora;
+$stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+$stmt_log_rate->bind_param('sis', $endpoint, $usuario_id, $ip);
+$stmt_log_rate->execute();
+$stmt_log_rate->close();
 
 // ============================================================
 // 3. CAPTURA DOS PARÂMETROS

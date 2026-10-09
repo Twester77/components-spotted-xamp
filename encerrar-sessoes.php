@@ -7,13 +7,21 @@
  * Retorno: JSON com success, message e forcar_logout (se a atual foi encerrada)
  * 
  * 🔒 Segurança:
- * - CSRF token obrigatório
+ * - CSRF token obrigatório (hash_equals)
  * - Apenas usuário logado
- * - Rate limiting: 5 ações por minuto
+ * - Rate limiting persistente (fenda_rate_limits)
  * - Logs estruturados via fenda_log()
  * - Se a sessão atual for encerrada acidentalmente, retorna forcar_logout: true
  * 
  * 🐚 BRISA – 2026-09-01 (v3 – com logs e contrato JSON refinado)
+ *
+ * 🐚 CORRENTE – 2026-10-09 (Sprint 2, rate limits persistentes)
+ *    - Rate limit trocado de $_SESSION (efêmera em serverless — nunca disparava
+ *      em produção Vercel) por tabela `fenda_rate_limits`. Mesmo padrão do Snap
+ *      (excluir-notificacao.php) e do solicitar-entrada.php (Calmaria).
+ *    - Duas camadas:
+ *        • por usuário: 3 por 60s (ação destrutiva em lote — mais restritiva)
+ *        • por IP: 6 por 60s (protege contra multi-conta)
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -44,25 +52,48 @@ $usuario_id = (int)$_SESSION['usuario_id'];
 fenda_log("🔵 Recebida solicitação para encerrar todas as sessões do usuário $usuario_id");
 
 // ============================================================
-// 2. RATE LIMITING (5 ações por minuto)
+// 2. RATE LIMITING PERSISTENTE (3 ações por minuto)
+// 🐚 CORRENTE – 2026-10-09 (Sprint 2, rate limits persistentes)
 // ============================================================
-$chave_rate = 'encerrar_sessoes_' . $usuario_id;
-$agora = time();
+$ip = function_exists('obterIPReal')
+    ? obterIPReal()
+    : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+$endpoint = 'encerrar_sessoes';
 
-if (!isset($_SESSION[$chave_rate]) || !is_array($_SESSION[$chave_rate])) {
-    $_SESSION[$chave_rate] = [];
-}
+$conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(64) NOT NULL,
+    usuario_id INT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_endpoint (endpoint),
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_ip (ip_address),
+    INDEX idx_tentativa (tentativa)
+)");
 
-$_SESSION[$chave_rate] = array_filter($_SESSION[$chave_rate], function($t) use ($agora) {
-    return ($agora - $t) < 60;
-});
+$stmt_rate = $conn->prepare("
+    SELECT
+        (SELECT COUNT(*) FROM fenda_rate_limits
+         WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS user_total,
+        (SELECT COUNT(*) FROM fenda_rate_limits
+         WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS ip_total
+");
+$stmt_rate->bind_param('siis', $endpoint, $usuario_id, $endpoint, $ip);
+$stmt_rate->execute();
+$result_rate = $stmt_rate->get_result()->fetch_assoc();
+$stmt_rate->close();
 
-if (count($_SESSION[$chave_rate]) >= 5) {
+if ((int)($result_rate['user_total'] ?? 0) >= 3 || (int)($result_rate['ip_total'] ?? 0) >= 6) {
     http_response_code(429);
     echo json_encode(['success' => false, 'error' => 'rate_limited', 'message' => 'Aguarde um momento antes de realizar outra ação.']);
     exit;
 }
-$_SESSION[$chave_rate][] = $agora;
+
+$stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+$stmt_log_rate->bind_param('sis', $endpoint, $usuario_id, $ip);
+$stmt_log_rate->execute();
+$stmt_log_rate->close();
 
 // ============================================================
 // 3. OBTÉM O TOKEN DA SESSÃO ATUAL (para preservá-la)
