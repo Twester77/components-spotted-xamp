@@ -110,7 +110,7 @@ $stmt_rate->execute();
 $result_rate = $stmt_rate->get_result()->fetch_assoc();
 $stmt_rate->close();
 
-if ((int)($result_rate['user_total'] ?? 0) >= 1 || (int)($result_rate['ip_total'] ?? 0) >= 5) {
+if ((int)($result_rate['user_total'] ?? 0) >= 3 || (int)($result_rate['ip_total'] ?? 0) >= 5) {
     http_response_code(429);
     echo json_encode(['success' => false, 'message' => 'Aguarde um minuto antes de solicitar novamente.']);
     exit;

@@ -26,7 +26,7 @@
  *      mas não é mais populado. Migração completa fica pro Sprint 3.
  */
 
-require_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/../conexao.php';
 header('Content-Type: application/json');
 
 // ==================== 1. VERIFICAÇÃO DE SESSÃO ====================
@@ -69,7 +69,7 @@ $stmt_rate->execute();
 $result_rate = $stmt_rate->get_result()->fetch_assoc();
 $stmt_rate->close();
 
-if ((int)($result_rate['user_total'] ?? 0) >= 30 || (int)($result_rate['ip_total'] ?? 0) >= 60) {
+if ((int)($result_rate['user_total'] ?? 0) >= 40 || (int)($result_rate['ip_total'] ?? 0) >= 60) {
     http_response_code(429);
     echo json_encode([
         'status' => 'error',

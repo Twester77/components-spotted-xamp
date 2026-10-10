@@ -418,7 +418,7 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
                                     }
                                 }, 300);
                             }
-                            if (typeof exibirToast === 'function') exibirToast('❌ Solicitação rejeitada.', 'info');
+                            if (typeof exibirToast === 'function') exibirToast('❌ Solicitação rejeitada com sucesso.', 'info');
                         } else {
                             alert(data.message || 'Erro ao rejeitar.');
                             btnRejeitar.disabled = false;
