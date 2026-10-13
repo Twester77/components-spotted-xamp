@@ -1,39 +1,53 @@
 /* --- HEADER E ÍCONES (CORREÇÃO AQUI) --- */
+/* --- HEADER E ÍCONES (OTIMIZADO) --- */
 
 header {
-     /* Fallback */
-    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
-    background: var(--laranja-fenda);
     position: relative;
-    border-radius: 0 0 10px 10px;
     z-index: 9994;
     display: flex;
     flex: 0 1 auto; 
     gap: 15px;
-    /* o primeiro encolhe com flex grow 0 o segundo ocupa espaço pela direita 
-    empurrando o primeiro á esquerda se não houver espaço */
-    /* Camada 2: O cálculo matemático preciso baseado no crescimento do H1 */
-    /* 2. REMOVA o 'max-height' fixo ou o 'height' que limitam o contêiner */
     height: auto;
-    justify-content:center;
-    /* Centraliza os dois se houver espaço*/
+    justify-content: center;
     align-items: center;
-    /* 3. O PADDING EM 'em' CRIA A MAGIA DINÂMICA: */
-    /* Conforme a fonte estica, o padding cresce junto na mesma proporção. */
-    /* O primeiro valor cuida do topo/base, o segundo das laterais. */
-    padding: 3px 6px ;
     padding: 0.5em 6px; 
     max-width: 100%;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(1.5px);
-    backdrop-filter: blur(1.5px);
+    
+    /* Mantém o isolamento de layout */
+    contain: layout inline-size; 
     container-type: inline-size;
     container-name: header-fixo;
-    /* ──── A ÂNCORA MODERNA ──── */
-    /* Registra o elemento no ecossistema do navegador como um ponto de ancoragem físico */
     anchor-name: --ancora-header;
-
+    
+    /* Removemos o fundo, bordas e blur daqui para não pesar no scroll */
+    background: transparent;
 }
+
+/* O TRUQUE DA MÁGICA: Camada isolada apenas para o visual */
+header::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1; /* Fica atrás dos ícones e textos */
+    
+    /* Bordas e Sombra */
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    /* Efeitos Visuais (Gradiente + Blur) */
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
+    
+    /* IMPULSIONADORES DE HARDWARE (GPU) */
+    /* Isolam o blur e o gradiente em uma folha de vidro na placa de vídeo */
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform, backdrop-filter;
+}
+
 
 /* Nova classe para alinhar o que está dentro do header */
 .header-left,
@@ -1008,17 +1022,19 @@ footer a {
     right: 25px;
     background: rgba(10, 10, 10, 0.95);
     color: white;
-    padding: 18px 25px;
-    border-radius: 15px;
+    padding: 16px 25px;
+    border-radius: 16px;
     border: 1px solid rgba(255, 188, 0, 0.3);
     border-left: 5px solid var(--dourado);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.8);
     z-index: 10000001;
     /* Está bem alto, então não é problema de sobreposição */
     display: flex;
     align-items: center;
     gap: 15px;
-    min-width: 250px;
+    max-width: 350px;
+    width:auto;
+    min-width: 180px;
     cursor: pointer;
     animation: entrarNotif 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     transition: all 0.3s ease;
@@ -1945,15 +1961,15 @@ article.conteudo-principal {
     justify-content: center;
     align-content: center;
     font-family: -apple-system, 'Urbanist', sans-serif;
-    font-size: 0.9rem;
-    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    font-size: 0.87rem;
+    font-size: clamp(0.92rem, 1.5vw, 1.1rem);
 }
 
 input[type="checkbox" i] {
     height: 12px;
     width: 12px;
-    height: clamp(13px, 2.1cqi, 20px);
-    width: clamp(13px, 2.1cqi, 20px);
+    height: clamp(13px, 1.3cqi, 18px);
+    width: clamp(13px, 1.3cqi, 18px);
     margin: 4px auto;
     accent-color: #efb71c;
     accent-color: oklch(80.867% 0.16047 85.448);
@@ -2314,7 +2330,7 @@ textarea[name="bio"] {
     .sidebar-fenda {
         display: block !important;
         visibility: visible !important;
-        max-width: 240px;
+        max-width: 250px;
         max-height: 100vh;
         position: fixed !important;
         top: 0;
@@ -2411,17 +2427,13 @@ textarea[name="bio"] {
         display: inline-flex;
         background: #111;
         background: oklch(0.1 0 0);
-        margin-block: 20px;
-        /* Cuida do eixo vertical (topo/base) */
-        margin-inline: auto;
-        /* Cuida do eixo horizontal (laterais) */
         color: #000;
         color: oklch(0 0 0);
         gap: 10px;
         padding: 40px 15px 25px 15px;
         border-radius: 0 0 20px 20px;
-        font-size: 0.75rem;
-        font-size: clamp(0.8rem, 1.5cqw, 1rem);
+        font-size: 0.76rem;
+        font-size: clamp(0.8rem, 1.5cqi, 1rem);
         font-weight: bold;
         white-space: nowrap;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -2431,7 +2443,6 @@ textarea[name="bio"] {
         overflow-y: auto;
         border-bottom: 3px solid #ff8c00;
         will-change: opacity, animation;
-
         /* CORRIGIDO: Injeta a animação clássica de abertura controlada pela curva cubic-bezier */
         animation: slideDownFiltro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }

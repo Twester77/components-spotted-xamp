@@ -1030,7 +1030,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             --ls-pad-y: clamp(4px, 1.2dvh, 8px);
             --ls-pad-x: clamp(6px, 1.6vw, 12px);
             --ls-gap: clamp(4px, 1.2dvh, 8px);
-            --ls-gap-x: clamp(6px, 1.4vw, 12px);
+            --ls-gap-x: clamp(6px, 1.4vw, 14px);
             --ls-avatar: clamp(30px, 8dvh, 42px);
             --ls-text-font: clamp(0.72rem, 2.2dvh, 0.95rem);
             --ls-reaction-font: clamp(0.7rem, 1.8dvh, 0.85rem);
@@ -1098,6 +1098,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
+        aspect-ratio: 1 / 1;
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card

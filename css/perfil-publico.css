@@ -166,10 +166,10 @@
 
 .perfil-imagem-lightbox-conteudo {
     display: block;
-    max-width: 94vw;
-    max-width: min(94vw, 75rem);
-    max-height: 88vh;
-    max-height: 88dvh;
+    max-width: 95vw;
+    max-width: min(95vw, 75rem);
+    max-height: 90vh;
+    max-height: 90dvh;
     object-fit: contain;
     border-radius: 10px;
     box-shadow: 0 12px 30px rgb(0 0 0 / 65%);
@@ -1495,11 +1495,10 @@
     backdrop-filter: blur(3px);
     border: 1px solid oklch(1 0 0 / 0.35) ;
     border-radius: 12px 12px 0 0;
-    box-shadow: 0 4px 8px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) ;
     overflow: hidden;
     position: relative;
     animation: none;
-    
+    background-blend-mode: soft-light;
     /* Força aceleração estável por hardware sem estourar o buffer de textura do iOS */
     transform: translateZ(0);
     will-change: opacity;

@@ -106,7 +106,7 @@
     gap: 20px;
     padding: 0 20px 40px 20px;
     max-width: 1600px;
-    margin: 0 auto;
+    margin: 20px auto;
 }
 
 .comunidade-card {
@@ -237,7 +237,7 @@
    ============================================================ */
 
 .comunidades-search {
-    max-width: 600px;
+    max-width: 800px;
     width: 100%;
     margin: 0 auto 30px auto;
     padding: 0 12px;
@@ -254,6 +254,7 @@
 .search-input {
     flex: 1;
     padding: 8px 16px;
+    min-height: 40px;
     border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.15);
@@ -275,13 +276,16 @@
 }
 
 .search-btn {
+    min-height: 40px;
     flex-shrink: 0;
-    padding: 8px 20px;
+    padding: 8px 16px;
     background: #4caf50;
     background: oklch(67.311% 0.16242 144.231);
+    font-size: 0.9rem;
+    font-size: clamp(0.86rem, 1.1cqi, 1.05rem);
     color: #000;
     border: none;
-    border-radius: 30px;
+    border-radius: 25px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s;
@@ -382,7 +386,7 @@
    2. PÁGINA INDIVIDUAL DA COMUNIDADE (comunidade.php)
    ================================================== */
 .comunidade-page {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0;
 }
@@ -390,11 +394,14 @@
 .comunidade-capa {
     position: relative;
     aspect-ratio: 16 / 9;
+    max-width: 1080px;
     overflow: hidden;
     border-radius: 8px;
     background: #111;
     background: oklch(10% 0 0);
     margin-bottom: 20px;
+    align-self: center;
+    justify-self: center;
     justify-content: center;
     align-content: center;
 }
@@ -402,6 +409,8 @@
 .comunidade-capa img {
     width: 100%;
     height: 100%;
+    transform: translateZ(0);
+    image-rendering: auto;
     object-fit: cover;
 }
 
@@ -459,13 +468,14 @@
 
 .comunidade-actions .btn-entrar-comunidade {
     width: auto;
-    padding: 8px 25px;
+    padding: 8px 18px;
 }
 
+.comunidade-actions .btn-entrar-comunidade,
 .comunidade-actions .btn-editar-comunidade,
 .comunidade-actions .btn-gerenciar-membros {
     display: inline-flex;
-    flex: 1 1 170px;
+    flex: 1 1 auto;
     align-items: center;
     justify-content: center;
     min-width: 0;
@@ -503,7 +513,6 @@
     color: oklch(68% 0 0);
     text-decoration: none;
     transition: 0.3s;
-    font-size: 0.85rem;
 }
 
 .btn-editar-comunidade:hover {
@@ -531,7 +540,7 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     width: 100%;
-    max-width: 700px;
+    max-width: 1200px;
     padding: 20px 15px;
     margin: 0 auto 20px auto;
 }
@@ -951,14 +960,11 @@ textarea#descricao{
         justify-content: center;
     }
 
-      .search-container {
-        flex-wrap: wrap;
-    }
     .search-input {
         flex: 1 1 100%;
     }
     .search-btn {
-        flex: 1 1 auto;
+        flex: 0;
         width: 100%;
         justify-content: center;
     }
@@ -1054,7 +1060,8 @@ textarea#descricao{
     color: #ffbc00;
     border: 1px solid rgba(255, 188, 0, 0.2);
     border-radius: clamp(20px, 3vw, 30px);
-    padding: clamp(6px, 0.8vw, 10px) clamp(12px, 1.5vw, 20px);
+    padding: 8px 20px;
+    padding: clamp(8px, 0.8vw, 10px) clamp(12px, 1.5vw, 20px);
     font-size: clamp(0.8rem, 1vw, 1rem);
     font-weight: 600;
     cursor: pointer;
@@ -1453,7 +1460,7 @@ textarea#descricao{
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 25px 0;
+    padding: 20px 0;
     margin-bottom: 20px;
 }
 
@@ -1990,14 +1997,13 @@ textarea#descricao{
     background: #272733;
     background: oklch(27.801% 0.02203 284.867);
     border: none!important;
-    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 8px;
     border-radius: clamp(6px , 1.2vw, 14px);
     display: flex;
     justify-content: center;
     padding: 2px;
     margin: 0;
-    max-width: 650px;
+    max-width: 700px;
     width: 100%;
     box-shadow: none;
     transition: background 0.2s ease;
@@ -2024,8 +2030,8 @@ textarea#descricao{
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .avatar-p {
     width: 38px;
     height: 38px;
-    width: clamp(36px, 8cqh, 70px);
-    height: clamp(36px, 8cqh, 70px);
+    width: clamp(36px, 6cqh, 72px);
+    height: clamp(36px, 6cqh, 72px);
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.1);
     border: 1px solid oklch(100% 0 0 / 0.1);
@@ -2231,6 +2237,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacoes-gravadas {
     width: 100%;
     min-width: 0;
     min-height: 36px;
+    justify-content: safe center;
     align-items: center;
     align-content: center;
     gap: 6px;
@@ -2256,7 +2263,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     padding: 4px 8px;
     padding: clamp(4px, 1.3cqi, 8px) clamp(10px, 2cqi, 14px);
     font-size: 0.8rem;
-    font-size: clamp(0.86rem, 3cqi, 1.15em);
+    font-size: clamp(0.86rem, 3cqi, 1em);
     color: #ddd;
     color: oklch(88% 0 0);
 }
@@ -2276,7 +2283,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     /* Listagem */
     .comunidades-grid {
         grid-template-columns: 1fr;
-        padding: 0 12px 25px 12px;
+        padding: 0 12px 20px 12px;
     }
 
     .comunidade-page {
@@ -2288,19 +2295,16 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     }
 
     .comunidade-actions {
-        flex-direction: column;
         align-items: stretch;
     }
 
-    .comunidade-actions .btn-entrar-comunidade {
-        width: 100%;
-    }
 
+    .comunidade-actions .btn.entrar-comunidade-membro, 
     .comunidade-actions .btn-editar-comunidade,
     .comunidade-actions .btn-gerenciar-membros {
         flex: 0 1 auto;
         width: 100%;
-        max-width: 200px;
+        max-width: 180px;
     }
 
     /* Formulário inline */
@@ -2345,7 +2349,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     }
 
     .comunidade-page .comunidade-actions {
-        padding: 10px 14px;
+        padding: 6px 12px;
     }
 }
 
@@ -2387,14 +2391,14 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     color: oklch(0% 0 0);
     padding: 5px 10px;
     padding: clamp(6px, 0.8vw, 12px) clamp(10px, 1.3vw, 16px);
-    border-radius: 30px;
+    border-radius: 25px;
     gap: 6px;
     font-weight: bold;
     align-items: center;
     align-content: center;
     text-decoration: none;
     transition: 0.3s;
-    font-size: clamp(0.8rem, 1.1vw, 1.05rem);
+    font-size: clamp(0.78rem, 1.1vw, 1.05rem);
 }
 
 .btn-criar-comunidade:hover {
@@ -2446,6 +2450,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     background: #0a0a0a;
     background: oklch(5% 0 0);
     min-height: 100vh;
+    height: auto;
     padding-top: 20px;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -2464,11 +2469,11 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 25px 5px;
-    max-width: 700px;
+    padding: 8px;
+    max-width: 900px;
     margin: 0 auto;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border: 1px solid oklch(100% 0 0 / 0.05);
     border-radius: 10px;
@@ -3034,7 +3039,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
             --ls-nav-row: clamp(36px, 8dvh, 42px);
             --ls-reactions-row: clamp(36px, 9dvh, 44px);
             --ls-footer-row: clamp(40px, calc(32px + 3dvh), 52px);
-            --ls-text-max: clamp(5.5rem, 23dvh, 9rem);
+            --ls-text-max: clamp(5.3rem, 25dvh, 12rem);
             --ls-nav-btn: clamp(28px, 8.5dvh, 44px);
             --ls-btn-pad-y: clamp(3px, 0.8dvh, 5px);
             --ls-btn-pad-x: clamp(7px, 1.5dvh, 12px);
@@ -3442,13 +3447,14 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     /* Reações posicionadas fora do grid no carrossel */
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .reacoes-gravadas {
-        position: absolute;
-        left: calc(45% + var(--ls-gap-x) + var(--ls-body-inset));
-        right: var(--ls-body-inset);
+        position: relative;
         bottom: var(--ls-footer-row);
         width: auto;
         grid-column: auto;
         grid-row: auto;
+        display:flex;
+        justify-content: safe center;
+        overflow-x: auto;
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page

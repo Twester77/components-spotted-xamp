@@ -11,6 +11,17 @@
 
 (function exorcizarServiceWorkers() {
     const EXORCISM_TOKEN = 'fenda_sw_exorcism_done_v1';
+
+    // 🐚 CORRENTE – 2026-10-10 (Sprint 2, Bloco 3.4): o token era setado mas
+    //    nunca checado. Resultado: a cada visita, o exorcismo desregistrava
+    //    o SW que o footer.php tinha acabado de registrar (porque o footer
+    //    só registra se o token NÃO existir). O PWA ficava sem SW ativo
+    //    a partir da 2ª visita. Agora, se o exorcismo já rodou uma vez,
+    //    ele pula e deixa o SW do footer trabalhar em paz.
+    if (localStorage.getItem(EXORCISM_TOKEN)) {
+        return;
+    }
+
     if ('serviceWorker' in navigator) {
         console.log('[EXORCISMO] Varrendo Service Workers antigos...');
         navigator.serviceWorker.getRegistrations()
@@ -202,8 +213,11 @@ window.fecharPerfilDrawer = function () {
 
 function abrirModalPost() {
     // 🔓 Destrava o swipe caso esteja bloqueado (ex.: menu de long press não fechado)
-    if (window.SwipeEngine && typeof window.SwipeEngine.unlock === 'function') {
-        window.SwipeEngine.unlock();
+    // 🐚 CORRENTE – 2026-10-10 (Sprint 2, Bloco 3.3): SwipeEngine.unlock() não
+    //    existe mais. O swipe atual vive em fenda-swipe-pc.js / fenda-swipe-mobile.js,
+    //    que expõem window.forcarParadaSwipe() — este é o substituto correto.
+    if (typeof window.forcarParadaSwipe === 'function') {
+        window.forcarParadaSwipe();
     }
     const modal = document.getElementById('modal-postar-fenda');
     if (modal) {
@@ -215,8 +229,8 @@ function abrirModalPost() {
 
 function fecharModalPost() {
     // 🔓 Destrava o swipe novamente ao fechar o modal
-    if (window.SwipeEngine && typeof window.SwipeEngine.unlock === 'function') {
-        window.SwipeEngine.unlock();
+    if (typeof window.forcarParadaSwipe === 'function') {
+        window.forcarParadaSwipe();
     }
     const modal = document.getElementById('modal-postar-fenda');
     if (modal) {
@@ -386,13 +400,26 @@ function inicializarPreferenciasAPartirDoDOM() {
 //    - Trocado innerHTML por textContent (defesa contra XSS).
 //      A mensagem pode vir de notificação de outro usuário ou de
 //      resposta do servidor — nunca deve ser interpretada como HTML.
-window.exibirToast = function (mensagem) {
+window.exibirToast = function (mensagem, tipo = 'info') {
+    // 🐚 CORRENTE – 2026-10-10 (Sprint 2, Bloco 3.5): a função aceitava só 1
+    //    parâmetro, mas era chamada em toda a base como exibirToast(msg, 'sucesso')
+    //    ou exibirToast(msg, 'erro'). O 2º parâmetro era ignorado, então TODO
+    //    toast exibia o mesmo título "Aviso!" e o mesmo ícone. Agora respeita
+    //    o tipo: título, ícone e cor variam.
+    const VARIACOES = {
+        sucesso: { titulo: 'Sucesso!', icone: '✅', cor: '#4caf50' },
+        erro: { titulo: 'Erro', icone: '❌', cor: '#ff4b4b' },
+        info: { titulo: 'Aviso!', icone: '🔔', cor: '#ddc80e' },
+    };
+    const v = VARIACOES[tipo] || VARIACOES.info;
+
     const toast = document.createElement('div');
     toast.className = 'notificacao-popup';
     toast.style.cursor = 'default';
 
     const iconeDiv = document.createElement('div');
     iconeDiv.style.fontSize = '20px';
+    iconeDiv.textContent = v.icone;
 
     const conteudoDiv = document.createElement('div');
     conteudoDiv.style.flexGrow = '1';
@@ -400,8 +427,8 @@ window.exibirToast = function (mensagem) {
     const strongEl = document.createElement('strong');
     strongEl.style.display = 'block';
     strongEl.style.fontSize = '14px';
-    strongEl.style.color = '#ddc80e';
-    strongEl.textContent = 'Aviso!';
+    strongEl.style.color = v.cor;
+    strongEl.textContent = v.titulo;
 
     const spanEl = document.createElement('span');
     spanEl.textContent = mensagem;
@@ -625,11 +652,21 @@ window.atualizarContadorAlertas = function () {
                 // funcionando tanto em subdiretório local quanto na raiz de produção.
                 const appBaseUrl = new URL('.', window.location.href);
                 const postId = data.ultima.post_id;
+                const eventoId = data.ultima.evento_id;
                 const encodedPostId = postId === null || postId === undefined
                     ? ''
                     : encodeURIComponent(postId);
+                const encodedEventoId = eventoId === null || eventoId === undefined
+                    ? ''
+                    : encodeURIComponent(eventoId);
                 let linkPath = 'notificacoes.php';
 
+                // 🐚 CORRENTE – 2026-10-10 (Sprint 2, Bloco 3.2): notificações de
+                //    evento têm post_id = NULL e vivem em evento_id. Antes, o
+                //    case 'evento' tentava usar `encodedPostId` (vazio) e caía no
+                //    fallback notificacoes.php — o link do PiP apontava pra lugar
+                //    errado. Agora usa `encodedEventoId`, espelhando a correção
+                //    da Calmaria em motor-notificacoes.php/notificacoes.php (item #18).
                 switch (data.ultima.tipo) {
                     case 'post':
                         if (encodedPostId) {
@@ -637,8 +674,8 @@ window.atualizarContadorAlertas = function () {
                         }
                         break;
                     case 'evento':
-                        if (encodedPostId) {
-                            linkPath = 'evento.php?id=' + encodedPostId;
+                        if (encodedEventoId) {
+                            linkPath = 'evento.php?id=' + encodedEventoId;
                         }
                         break;
                     case 'depoimento':
@@ -859,12 +896,16 @@ window.marcarTodasComoLidas = function () {
                         .catch(err => console.error('[MARCAR LIDAS] Erro ao recarregar dropdown:', err));
                 } else {
                     // Se estiver na central, recarrega a aba
+                    // 🐚 CORRENTE – 2026-10-10 (Sprint 2, Bloco 3.1): carregarAba()
+                    //    é função local dentro do IIFE de central.php e nunca foi
+                    //    exposta globalmente. A função disponível é
+                    //    window.recarregarAbaCentral() (exposta pelo próprio
+                    //    central.php no fim do IIFE). Antes disso, marcar todas
+                    //    como lidas limpava o badge mas NÃO recarregava a lista.
                     const abaAtual = document.querySelector('.aba-central.ativa');
                     if (abaAtual && abaAtual.dataset.aba === 'notificacoes') {
-                        const url = abaAtual.dataset.url;
-                        const abaId = abaAtual.dataset.aba;
-                        if (typeof window.carregarAba === 'function') {
-                            window.carregarAba(url, abaId);
+                        if (typeof window.recarregarAbaCentral === 'function') {
+                            window.recarregarAbaCentral();
                         }
                     }
                 }
@@ -2950,7 +2991,7 @@ window.exibirBalaoFenda = function (mensagem, tipo, elementoRef, duracao = 2500)
     }
 
     document.body.appendChild(balao);
-     // 🔥 Garante que o balão fique acima de drawers/modais (z-index do drawer = 999999)
+    // 🔥 Garante que o balão fique acima de drawers/modais (z-index do drawer = 999999)
     balao.style.zIndex = '1000000';
 
     setTimeout(() => {

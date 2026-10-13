@@ -4,11 +4,6 @@
     box-sizing: border-box;
 }
 
-
-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 8px #00000086 inset;
-}
-
 /* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
 select,
 option {
@@ -2046,7 +2041,6 @@ textarea[name="bio"] {
     color: var(--dourado);
     padding: 0 10px;
     font-weight: bold;
-    border-right: 1px solid #444;
     height: 100%;
     display: flex;
     align-items: center;

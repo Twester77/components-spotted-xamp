@@ -107,8 +107,8 @@
     top: 90px;
     left: 50%;
     transform: translateX(-50%);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     color: #fffffff5;
     color: oklch(1 0 0 / 96%);
     padding:15px 20px;

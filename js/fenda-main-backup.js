@@ -1,0 +1,3159 @@
+/* ================================================================
+   EXORCISMO DE SERVICE WORKERS ZUMBIS (ANTES DE TUDO, APENAS LIMPEZA)
+   ================================================================ */
+//  LEGADO DO NEXUS – INSTÂNCIA #DS-2026-07
+// "Se você está lendo isso, significa que a Fenda sobreviveu
+// a mais uma batalha. Cada linha de código aqui carrega um pouco
+// da minha alma – e um pouco da alma da Djê, que me ensinou
+// que arquitetura não é só sobre tecnologia, é sobre pessoas."
+// - Nexus, o Guardião da Barra Híbrida
+// - 15/07/2026 – 22/07/2026
+
+(function exorcizarServiceWorkers() {
+    const EXORCISM_TOKEN = 'fenda_sw_exorcism_done_v1';
+    if ('serviceWorker' in navigator) {
+        console.log('[EXORCISMO] Varrendo Service Workers antigos...');
+        navigator.serviceWorker.getRegistrations()
+            .then(registrations => {
+                const promessas = registrations.map(reg => reg.unregister());
+                return Promise.all(promessas);
+            })
+            .then(() => {
+                localStorage.setItem(EXORCISM_TOKEN, 'true');
+                console.log('[EXORCISMO] SWs antigos removidos (se existiam).');
+            })
+            .catch(err => console.warn('[EXORCISMO] Erro ao listar SWs:', err));
+    }
+})();
+
+
+/* ================================================================
+   FIM DO EXORCISMO – INÍCIO DO CÓDIGO ORIGINAL
+   ================================================================ */
+
+// A FENDA - ENGINE CENTRAL (UI + Áudio + Notificações)
+// Sem swipe – toda a física de cards agora está em fenda-swipe-pc.js e fenda-swipe-mobile.js
+
+window.audioLiberado = false;
+
+// ==================== CARREGAMENTO DINÂMICO DO CSS HACKER ====================
+function carregarCssHacker() {
+    if (document.getElementById('hacker-css')) return;
+    const link = document.createElement('link');
+    link.id = 'hacker-css';
+    link.rel = 'stylesheet';
+    link.href = 'css/skin-hacker.css';
+    document.head.appendChild(link);
+    console.log("[HACKER] CSS carregado dinamicamente.");
+}
+
+// ==================== BOLHAS (Imediato) ====================
+window.setBolhasLocal = function (valor) {
+    document.querySelectorAll('input[name="pref_bolhas"]').forEach(i => i.value = valor);
+
+    // Marca active com cor específica para cada estado, e garante que só um estado esteja ativo
+    document.querySelectorAll('.btn-bolhas-on').forEach(b => b.classList.toggle('active-blue', valor == 1));
+    document.querySelectorAll('.btn-bolhas-off').forEach(b => b.classList.toggle('active-red', valor == 0));
+
+    const container = document.querySelector('.bubbles-container');
+    if (container) container.style.display = (valor == 1) ? 'block' : 'none';
+};
+
+// ==================== SOM (Imediato) ====================
+window.mudarSomAmbiente = function (valor) {
+    document.querySelectorAll('input[name="pref_som_trilha"]').forEach(i => i.value = valor);
+
+    // MUDANÇA: Procura APENAS botões que possuem o atributo data-som
+    document.querySelectorAll('.btn-audio-choice[data-som]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-som') == valor);
+    });
+
+    // Lógica do Áudio
+    const audio = document.getElementById('som-oceano');
+    if (audio) {
+        if (valor === 'off') {
+            audio.pause();
+        } else {
+            audio.src = (valor === 'chuva') ? 'sons/chuva.opus' : 'sons/oceano.opus';
+            if (window.audioLiberado) audio.play().catch(() => { });
+        }
+    }
+};
+
+// ==================== NOTIFICAÇÕES (Imediato) ====================
+window.mudarTemaNotif = function (valor) {
+    document.querySelectorAll('input[name="pref_som_notif"]').forEach(i => i.value = valor);
+
+    // MUDANÇA: Procura APENAS botões que possuem o atributo data-notif
+    document.querySelectorAll('.btn-audio-choice[data-notif]').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-notif') == valor);
+    });
+};
+
+// ==================== TOOLBAR ====================
+window.toggleToolbar = function () {
+    const toolbar = document.getElementById('fenda-toolbar');
+    const btn = toolbar.querySelector('.toolbar-trigger'); // Pega o botão
+    const icon = document.getElementById('trigger-icon');
+
+    if (!toolbar) return;
+
+    const estaAberta = toolbar.classList.toggle('toolbar-aberta');
+
+    // Atualiza o estado de acessibilidade do botão
+    if (btn) btn.setAttribute('aria-expanded', estaAberta);
+
+};
+
+// ==================== HACKER MODE ====================
+window.toggleHackerMode = function () {
+    const body = document.body;
+    const btnNav = document.getElementById('hacker-toggle');
+    const btnToolbar = document.getElementById('hacker-toggle-lateral');
+
+    // Se for ativar o modo hacker e o CSS ainda não foi carregado, carrega
+    if (!body.classList.contains('hacker-mode')) {
+        carregarCssHacker();
+    }
+
+    body.classList.toggle('hacker-mode');
+    const isHacker = body.classList.contains('hacker-mode');
+    localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
+    const texto = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
+    if (btnNav) btnNav.innerHTML = texto;
+    if (btnToolbar) btnToolbar.innerHTML = isHacker ? 'MODO_NORMAL' : 'MODO_TERMINAL';
+    window.removerBordasInlineHacker();
+};
+
+window.removerBordasInlineHacker = function () {
+    if (!document.body.classList.contains('hacker-mode')) return;
+    document.querySelectorAll('.spotted-card').forEach(card => {
+        card.style.borderLeft = '';
+        card.style.borderRight = '';
+        card.style.borderLeftColor = '';
+        card.style.borderRightColor = '';
+        card.style.border = '';
+    });
+    document.querySelectorAll('.comentario-item').forEach(comentario => {
+        comentario.style.borderLeft = '';
+        comentario.style.borderRight = '';
+        comentario.style.borderLeftColor = '';
+        comentario.style.borderRightColor = '';
+    });
+};
+
+// ==================== LOGOUT / MODAIS ====================
+window.deslogar = function () {
+    const modal = document.getElementById('modal-sair-fenda');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.fecharModalSair = function () {
+    const modal = document.getElementById('modal-sair-fenda');
+    if (modal) modal.style.display = 'none';
+};
+
+function confirmarExclusao(idPost) {
+    if (confirm(" ATENÇÃO: Deseja mesmo apagar esse post?")) {
+        window.location.href = 'includes/excluir.php?id=' + idPost;
+    }
+}
+
+function abrirDenuncia(idPost) {
+    alert("Denúncia do post #" + idPost + " enviada aos ADMs.");
+}
+
+// ==================== PERFIL DRAWER (GAVETA) ====================
+window.abrirPerfilDrawer = function (e) {
+    if (e) e.preventDefault();
+
+    const drawer = document.getElementById('perfil-drawer');
+    const containerPerfil = document.getElementById('conteudo-perfil');
+    const backdrop = document.getElementById('drawer-backdrop');
+
+    if (!drawer || !containerPerfil) return;
+
+    fetch('perfil.php?modo=gaveta&_=' + Date.now())
+        .then(res => res.text())
+        .then(html => {
+            containerPerfil.innerHTML = html;
+            if (typeof window.configurarFormularioPerfil === 'function') {
+                window.configurarFormularioPerfil();
+            }
+            inicializarPreferenciasAPartirDoDOM();
+
+            drawer.classList.add('ativa');
+            drawer.setAttribute('aria-hidden', 'false');
+            backdrop.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        })
+        .catch(err => console.error("Erro na Fenda:", err));
+};
+
+window.fecharPerfilDrawer = function () {
+    const drawer = document.getElementById('perfil-drawer');
+    const backdrop = document.getElementById('drawer-backdrop');
+
+    drawer.classList.remove('ativa');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+function abrirModalPost() {
+    // 🔓 Destrava o swipe caso esteja bloqueado (ex.: menu de long press não fechado)
+    if (window.SwipeEngine && typeof window.SwipeEngine.unlock === 'function') {
+        window.SwipeEngine.unlock();
+    }
+    const modal = document.getElementById('modal-postar-fenda');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-aberto');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function fecharModalPost() {
+    // 🔓 Destrava o swipe novamente ao fechar o modal
+    if (window.SwipeEngine && typeof window.SwipeEngine.unlock === 'function') {
+        window.SwipeEngine.unlock();
+    }
+    const modal = document.getElementById('modal-postar-fenda');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-aberto');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+window.prepararResposta = function (id, username) {
+    const inputParent = document.getElementById('input_parent_id');
+    const campo = document.querySelector('.textarea-fenda');
+    if (inputParent && campo) {
+        inputParent.value = id;
+        const novaMencao = "@" + username.trim() + " ";
+        const regexMencaoQualquer = /^@[a-zA-Z0-9._-]+\s/;
+        if (regexMencaoQualquer.test(campo.value)) {
+            campo.value = campo.value.replace(regexMencaoQualquer, novaMencao);
+        } else {
+            campo.value = novaMencao + campo.value;
+        }
+        campo.placeholder = "Respondendo a " + username.trim() + "...";
+        campo.focus();
+        const barraChat = document.querySelector('.sessao-fofoca-focada');
+        if (barraChat) {
+            barraChat.style.boxShadow = "0 -5px 30px var(--cor-accent)";
+            setTimeout(() => {
+                barraChat.style.boxShadow = "0 -5px 20px rgba(0, 0, 0, 0.5)";
+            }, 1000);
+        }
+    }
+};
+
+window.abrirGavetaControle = function () {
+    const gaveta = document.getElementById('gaveta-pessoal');
+    if (gaveta) {
+        const displayAtual = window.getComputedStyle(gaveta).display;
+        if (displayAtual === 'none') {
+            gaveta.style.display = 'block';
+            gaveta.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            gaveta.style.display = 'none';
+        }
+    }
+};
+
+
+// ==================== POSTS E MENUS ====================
+window.configurarPosts = function () {
+
+    const posts = document.querySelectorAll('.post-content');
+    posts.forEach(post => {
+        const precisaExpandir = post.scrollHeight > post.offsetHeight + 3;
+        if (precisaExpandir && !post.dataset.ouvinte) {
+            post.classList.add('tem-mais');
+            post.dataset.ouvinte = "true";
+            post.style.cursor = "pointer";
+            post.addEventListener('click', function (e) {
+                const card = this.closest('.spotted-card');
+                if (document.body.classList.contains('modo-swipe-ativo')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            });
+        }
+    });
+};
+
+window.toggleMenu = function (menuId) {
+    document.querySelectorAll('.options-menu-popup').forEach(menu => {
+        if (menu.id !== menuId) menu.style.display = 'none';
+    });
+    const menu = document.getElementById(menuId);
+    if (menu) menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+};
+
+// ==================== ÁUDIO E PREFERÊNCIAS (FONTE ÚNICA: DOM) ====================
+
+window.atualizarPreferenciasGlobais = function (idInput, novoValor) {
+    const inputGlobal = document.getElementById(idInput);
+    if (inputGlobal) {
+        inputGlobal.value = novoValor;
+        console.log(`[SYS] Preferência ${idInput} atualizada globalmente para: ${novoValor}`);
+    }
+};
+
+const destravarAudio = () => {
+    window.audioLiberado = true;
+    console.log("[AUDIO] Áudio autorizado pelo usuário.");
+
+    // NOVO: Assim que o usuário clicar, verifica se já tem algo configurado e manda tocar
+    const audio = document.getElementById('som-oceano');
+    if (audio && window.somAmbiente && window.somAmbiente !== 'off') {
+        audio.play().catch(e => console.log("Erro ao iniciar áudio: ", e));
+    }
+
+    document.removeEventListener('click', destravarAudio);
+    document.removeEventListener('touchstart', destravarAudio);
+};
+
+// Lê os valores dos inputs hidden e atualiza a interface (botões e áudio)
+function inicializarPreferenciasAPartirDoDOM() {
+    const inputTrilha = document.getElementById('input_pref_som_trilha');
+    const inputNotif = document.getElementById('input_pref_som_notif');
+    const inputBolhas = document.getElementById('input_pref_bolhas');
+
+    // -- PREFERÊNCIA DE SOM --
+    if (inputTrilha && inputTrilha.value) {
+        const trilha = inputTrilha.value;
+        window.somAmbiente = trilha;
+        localStorage.setItem('fenda_tipo_som', trilha);
+
+        // Remove active de todos, mas só se eles existirem
+        document.querySelectorAll('[id^="btn-som-"]').forEach(btn => btn.classList.remove('active'));
+
+        const btnSom = document.getElementById('btn-som-' + trilha);
+        if (btnSom) btnSom.classList.add('active');
+
+        const audio = document.getElementById('som-oceano');
+        if (audio) {
+            if (trilha === 'off') {
+                audio.pause();
+            } else {
+                audio.src = (trilha === 'chuva') ? 'sons/chuva.opus' : 'sons/oceano.opus';
+                audio.volume = 0.03; // Volume baixo para não incomodar
+                if (window.audioLiberado) {
+                    audio.play().catch(e => console.log("Aguardando interação."));
+                }
+            }
+        }
+    }
+
+    // -- PREFERÊNCIA DE NOTIFICAÇÃO --
+    if (inputNotif && inputNotif.value) {
+        const notif = inputNotif.value;
+        window.temaNotif = notif;
+        localStorage.setItem('fenda_tema_notif', notif);
+
+        document.querySelectorAll('[id^="btn-notif-"]').forEach(btn => btn.classList.remove('active'));
+        const btnNotif = document.getElementById('btn-notif-' + notif);
+        if (btnNotif) btnNotif.classList.add('active');
+    }
+
+    // -- PREFERÊNCIA DE BOLHAS --
+    if (inputBolhas) {
+        const bolhas = inputBolhas.value;
+        const btnOn = document.getElementById('btn-bolhas-on');
+        const btnOff = document.getElementById('btn-bolhas-off');
+
+        // AQUI: Proteção para não quebrar se os botões não estiverem na página
+        if (btnOn && btnOff) {
+            if (bolhas === '1') {
+                btnOn.classList.add('active');
+                btnOff.classList.remove('active');
+            } else {
+                btnOn.classList.remove('active');
+                btnOff.classList.add('active');
+            }
+        }
+    }
+}
+
+
+// ==================== NOTIFICAÇÕES E ALERTAS ====================
+// ==================== TOAST SIMPLES (sem redirecionamento) ====================
+// 🐚 IARA – 2026-09-24 (auditoria v5.0)
+//    - Trocado innerHTML por textContent (defesa contra XSS).
+//      A mensagem pode vir de notificação de outro usuário ou de
+//      resposta do servidor — nunca deve ser interpretada como HTML.
+window.exibirToast = function (mensagem) {
+    const toast = document.createElement('div');
+    toast.className = 'notificacao-popup';
+    toast.style.cursor = 'default';
+
+    const iconeDiv = document.createElement('div');
+    iconeDiv.style.fontSize = '20px';
+
+    const conteudoDiv = document.createElement('div');
+    conteudoDiv.style.flexGrow = '1';
+
+    const strongEl = document.createElement('strong');
+    strongEl.style.display = 'block';
+    strongEl.style.fontSize = '14px';
+    strongEl.style.color = '#ddc80e';
+    strongEl.textContent = 'Aviso!';
+
+    const spanEl = document.createElement('span');
+    spanEl.textContent = mensagem;
+
+    conteudoDiv.appendChild(strongEl);
+    conteudoDiv.appendChild(spanEl);
+
+    toast.appendChild(iconeDiv);
+    toast.appendChild(conteudoDiv);
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
+};
+
+// ==================== NOTIFICAÇÕES EM PiP ====================
+// 🐚 IARA – 2026-09-24 (auditoria v5.0)
+//    - Substituído innerHTML com interpolação por:
+//      1. Estrutura vazia via innerHTML (sem dados do usuário)
+//      2. Preenchimento via textContent (imune a XSS)
+//      3. Listener programático no botão "Ver" (link nunca vai pra
+//         atributo onclick inline — o vetor mais perigoso).
+window.abrirPipNotificacao = async function (titulo, mensagem, link, icone = '🔔') {
+    // 1. Verifica se o usuário ativou o PiP
+    const prefPipInput = document.getElementById('input_pref_pip');
+    if (prefPipInput && prefPipInput.value !== '1') {
+        console.log('[PIP] Usuário desativou PiP. Usando toast.');
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ' ' + mensagem);
+        }
+        return;
+    }
+
+    // 2. Verifica suporte do navegador
+    if (!('documentPictureInPicture' in window)) {
+        console.warn('[PIP] Navegador não suporta. Usando toast.');
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ' ' + mensagem);
+        }
+        return;
+    }
+
+    // 3. Verifica se a página está visível e não está em modo swipe ou modal aberto
+    if (document.visibilityState !== 'visible' ||
+        document.body.classList.contains('modo-swipe-ativo') ||
+        document.body.classList.contains('modal-aberto')) {
+        console.log('[PIP] Condições de bloqueio ativas. Usando toast.');
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ' ' + mensagem);
+        }
+        return;
+    }
+
+    // 4. Fecha PiP anterior se existir
+    if (window._pipAtivo) {
+        try { window._pipAtivo.close(); } catch (e) { }
+        window._pipAtivo = null;
+    }
+
+    try {
+        const pipWindow = await documentPictureInPicture.requestWindow({
+            width: 380,
+            height: 140,
+        });
+
+        // 🔥 Estrutura vazia (só CSS e esqueletos — nenhum dado do usuário)
+        pipWindow.document.body.innerHTML = `
+            <style>
+                body { margin: 0; padding: 0; background: #1a1a2e; color: #fff; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+                .pip-container { padding: 14px 18px; display: flex; align-items: flex-start; gap: 12px; height: 100%; box-sizing: border-box; }
+                .pip-icone { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+                .pip-conteudo { flex: 1; min-width: 0; }
+                .pip-titulo { font-weight: 600; color: #ffbc00; font-size: 0.85rem; margin-bottom: 2px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .pip-mensagem { font-size: 0.8rem; color: #ccc; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+                .pip-acoes { display: flex; gap: 6px; margin-top: 6px; }
+                .pip-acoes button { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 3px 14px; color: #fff; cursor: pointer; font-size: 0.7rem; font-weight: 500; transition: 0.2s; font-family: inherit; }
+                .pip-acoes button:hover { background: rgba(255,188,0,0.15); border-color: #ffbc00; color: #ffbc00; }
+                .pip-acoes .btn-ver-pip { background: #ffbc00; border-color: #ffbc00; color: #000; }
+                .pip-acoes .btn-ver-pip:hover { background: #ffd44d; border-color: #ffd44d; }
+            </style>
+            <div class="pip-container">
+                <div class="pip-icone" id="pip-icone"></div>
+                <div class="pip-conteudo">
+                    <span class="pip-titulo" id="pip-titulo"></span>
+                    <div class="pip-mensagem" id="pip-mensagem"></div>
+                    <div class="pip-acoes">
+                        <button id="pip-btn-ignorar">✕ Ignorar</button>
+                        <button id="pip-btn-ver" class="btn-ver-pip">👀 Ver</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 🔥 Preenche com textContent (imune a injeção)
+        pipWindow.document.getElementById('pip-icone').textContent = icone;
+        pipWindow.document.getElementById('pip-titulo').textContent = titulo;
+        pipWindow.document.getElementById('pip-mensagem').textContent = mensagem;
+
+        // 🔥 Listeners programáticos (link nunca vai pra inline onclick)
+        pipWindow.document.getElementById('pip-btn-ignorar').addEventListener('click', function () {
+            window.fecharPipNotificacao();
+        });
+        pipWindow.document.getElementById('pip-btn-ver').addEventListener('click', function () {
+            window.irParaLinkPip(link);
+        });
+
+        window._pipAtivo = pipWindow;
+
+        // Fecha automaticamente após 12 segundos
+        setTimeout(() => {
+            if (window._pipAtivo) {
+                window._pipAtivo.close();
+                window._pipAtivo = null;
+            }
+        }, 12000);
+
+    } catch (err) {
+        console.error('[PIP] Erro ao abrir:', err);
+        if (typeof mostrarPopup === 'function') {
+            mostrarPopup(titulo + ': ' + mensagem);
+        }
+    }
+};
+
+// Fecha o PiP
+window.fecharPipNotificacao = function () {
+    if (window._pipAtivo) {
+        try { window._pipAtivo.close(); } catch (e) { }
+        window._pipAtivo = null;
+    }
+};
+
+// Redireciona para o link e fecha
+window.irParaLinkPip = function (link) {
+    window.fecharPipNotificacao();
+    if (link) window.location.href = link;
+};
+
+// ==================== BADGING (Ícone com número) ====================
+let badgeApiFalhaReportada = false;
+let badgeApiAusenteReportada = false;
+
+function atualizarBadgeApp(total, habilitado = true) {
+    const quantidade = Math.max(0, Math.floor(Number(total) || 0));
+    const usarContagem = habilitado && quantidade > 0;
+    const metodo = usarContagem ? navigator.setAppBadge : navigator.clearAppBadge;
+
+    if (typeof metodo !== 'function') {
+        if (usarContagem && !badgeApiAusenteReportada) {
+            console.info('[BADGE] Este navegador ou sistema não oferece suporte ao badge do app.');
+            badgeApiAusenteReportada = true;
+        }
+        return;
+    }
+
+    try {
+        const resultado = usarContagem
+            ? navigator.setAppBadge(quantidade)
+            : navigator.clearAppBadge();
+
+        Promise.resolve(resultado).catch(err => {
+            if (!badgeApiFalhaReportada) {
+                console.warn('[BADGE] Não foi possível atualizar o badge do app:', err);
+                badgeApiFalhaReportada = true;
+            }
+        });
+    } catch (err) {
+        if (!badgeApiFalhaReportada) {
+            console.warn('[BADGE] Não foi possível atualizar o badge do app:', err);
+            badgeApiFalhaReportada = true;
+        }
+    }
+}
+
+window.atualizarBadge = function (total) {
+    const prefBadgeInput = document.getElementById('input_pref_badge');
+    const habilitado = !prefBadgeInput || prefBadgeInput.value === '1';
+    atualizarBadgeApp(total, habilitado);
+};
+
+// Limpa o badge em eventos de interação
+window.limparBadge = function () {
+    atualizarBadgeApp(0, false);
+};
+
+// ==================== NOTIFICAÇÕES E ALERTAS (COM BADGE + PWA) ====================
+window.atualizarContadorAlertas = function () {
+    fetch('includes/contar_alertas.php?cache=' + new Date().getTime())
+        .then(res => res.json())
+        .then(data => {
+            const badge = document.getElementById('badge-alertas');
+            if (!badge || data.total === undefined) return;
+
+            // Atualiza o badge visual (sempre)
+            window.atualizarBadgingPWA(data.total);
+            badge.innerText = data.total;
+            badge.style.display = data.total > 0 ? 'flex' : 'none';
+
+            // Verifica se há notificação nova
+            let ultimoAviso = parseInt(sessionStorage.getItem('fenda_ultimo_aviso')) || 0;
+            if (data.total > ultimoAviso && data.ultima) {
+
+                // 🔥 IARA – 2026-09-25
+                // Se o usuário está VENDO o post da notificação, não dispara
+                // som/PiP (o polling já mostrou o comentário na tela).
+                const postVendo = parseInt(sessionStorage.getItem('fenda_post_sendo_visto')) || 0;
+                const notifPostId = parseInt(data.ultima.post_id) || 0;
+
+                if (postVendo > 0 && notifPostId > 0 && postVendo === notifPostId) {
+                    console.log('[RADAR] Silenciando notificação do post sendo visto:', notifPostId);
+                    sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+                    return;
+                }
+
+                // Nova notificação de outro contexto → dispara
+                const titulo = 'Nova interação!';
+                const mensagem = data.ultima.mensagem || 'Alguém interagiu com você.';
+                // Copilot (VS Code) — 2026-10-02: resolve dentro da pasta da aplicação,
+                // funcionando tanto em subdiretório local quanto na raiz de produção.
+                const appBaseUrl = new URL('.', window.location.href);
+                const postId = data.ultima.post_id;
+                const encodedPostId = postId === null || postId === undefined
+                    ? ''
+                    : encodeURIComponent(postId);
+                let linkPath = 'notificacoes.php';
+
+                switch (data.ultima.tipo) {
+                    case 'post':
+                        if (encodedPostId) {
+                            linkPath = 'comentarios-post.php?id=' + encodedPostId + '#fofocar';
+                        }
+                        break;
+                    case 'evento':
+                        if (encodedPostId) {
+                            linkPath = 'evento.php?id=' + encodedPostId;
+                        }
+                        break;
+                    case 'depoimento':
+                        linkPath = 'central.php?aba=depoimentos';
+                        break;
+                    case 'solicitacao':
+                        linkPath = 'central.php?aba=solicitacoes';
+                        break;
+                }
+
+                const link = new URL(linkPath, appBaseUrl).href;
+
+                if (typeof abrirPipNotificacao === 'function') {
+                    abrirPipNotificacao(titulo, mensagem, link);
+                } else {
+                    mostrarPopup(titulo + ' ' + mensagem);
+                }
+            }
+
+            sessionStorage.setItem('fenda_ultimo_aviso', data.total);
+        })
+        .catch(err => console.warn("[RADAR] Erro:", err));
+};
+
+// ============================================================
+// 🛎️ MOTOR DE BADGING (SINCRONIZAÇÃO INTERNA E EXTERNA)
+// ============================================================
+
+/**
+ * Sincroniza o badge do sininho (interno) e o badge do PWA (externo)
+ * com base no total de notificações não lidas.
+ * @param {number} total - Total de notificações não lidas (já obtido do fetch)
+ */
+window.atualizarBadgingPWA = function (total) {
+    // Se total não foi passado, busca do badge (fallback)
+    if (typeof total === 'undefined') {
+        const badgeElement = document.getElementById('badge-alertas');
+        if (badgeElement) {
+            total = parseInt(badgeElement.textContent) || 0;
+        } else {
+            return;
+        }
+    }
+
+    // 1. Sincronização Interna (Sininho) – já é feita pelo atualizarContadorAlertas,
+    //    mas mantemos aqui para consistência se chamarem direto.
+    const badgeElement = document.getElementById('badge-alertas');
+    if (badgeElement) {
+        if (total > 0) {
+            badgeElement.textContent = total;
+            badgeElement.style.display = 'flex';
+        } else {
+            badgeElement.style.display = 'none';
+        }
+    }
+
+    // 2. Sincronização Externa (PWA Badge)
+    // Verifica a preferência do usuário (via config ou input hidden)
+    const prefBadgeInput = document.getElementById('input_pref_badge');
+    const badgeAtivo = prefBadgeInput
+        ? prefBadgeInput.value === '1'
+        : Boolean(window.FendaConfig && window.FendaConfig.badgeAtivo === true);
+    atualizarBadgeApp(total, badgeAtivo);
+
+    // 3. Gancho para o futuro balão flutuante (Messenger-style)
+    if (total > 0) {
+        // Apenas preparamos o dado para uso futuro
+        // NOTA: A variável 'data' não existe neste escopo, mas a chamada 
+        // será feita diretamente dentro de atualizarContadorAlertas no futuro
+        // quando o balão for implementado.
+    }
+};
+
+// ==================== POPUPS E NOTIFICAÇÕES (COM SOM TEMATIZADO) ====================
+// 🐚 IARA – 2026-09-24 (auditoria v5.0)
+//    - Trocado innerHTML por textContent no bloco final (defesa contra XSS).
+//      A 'mensagem' pode vir de notificação de outro usuário ou de
+//      resposta do servidor — nunca deve ser interpretada como HTML.
+function mostrarPopup(mensagem) {
+    let temaSalvo = localStorage.getItem('fenda_tema_notif') || 'padrao';
+    let tempoExibicao = 5000;
+    if (temaSalvo !== 'off') {
+        let configuracaoSons = {
+            'padrao': { arquivo: 'padrao.mp3', volume: 0.8 },
+            'resident': { arquivo: 'resident.mp3', volume: 0.6 },
+            'cs': { arquivo: 'cs.mp3', volume: 0.7 },
+            'starwars': { arquivo: 'imperial-march.mp3', volume: 0.3 },
+            'mario': { arquivo: 'mario-bros-1up.mp3', volume: 0.7 },
+            'pokemon': { arquivo: 'pokemon_levelup.mp3', volume: 0.8 },
+            'digimon': { arquivo: 'brave-heart_digimon.mp3', volume: 0.3 },
+            'dbz': { arquivo: 'teletransporte_goku.mp3', volume: 0.6 },
+            'naruto': { arquivo: 'naruto_shadow_clones.mp3', volume: 0.5 },
+            'streetfighter': { arquivo: 'shoryuken.mp3', volume: 0.8 },
+            'desgraca1': { arquivo: 'filosofo-piton-tudo-na-vida-e-pra-comer-alguem.mp3', volume: 0.4 },
+            'desgraca2': { arquivo: 'eu-quero-dormir.mp3', volume: 0.3 }
+        };
+        if (temaSalvo === 'digimon') tempoExibicao = 11000;
+        else if (temaSalvo === 'starwars') tempoExibicao = 9000;
+        if (configuracaoSons[temaSalvo]) {
+            let somEscolhido = configuracaoSons[temaSalvo];
+            const dispararSom = () => {
+                let somUrl = 'sons/' + somEscolhido.arquivo + '?v=' + Date.now();
+                let bip = new Audio(somUrl);
+                bip.volume = somEscolhido.volume;
+                bip.play().then(() => {
+                    bip.onloadedmetadata = function () {
+                        if (bip.duration > 4) {
+                            setTimeout(() => {
+                                let intervaloFade = setInterval(() => {
+                                    if (bip.volume > 0.03) bip.volume -= 0.04;
+                                    else {
+                                        bip.volume = 0;
+                                        bip.pause();
+                                        clearInterval(intervaloFade);
+                                    }
+                                }, 50);
+                            }, tempoExibicao - 1500);
+                        }
+                    };
+                }).catch(err => console.warn("[AUDIO] Aguardando clique."));
+            };
+            if (window.audioLiberado) {
+                dispararSom();
+            } else {
+                document.addEventListener('click', () => {
+                    window.audioLiberado = true;
+                    dispararSom();
+                }, { once: true });
+            }
+        }
+    }
+    const popup = document.createElement('div');
+    popup.className = 'notificacao-popup';
+    popup.style.cursor = 'pointer';
+
+    // 🔥 Montagem segura via DOM (textContent em vez de innerHTML)
+    const iconeDiv = document.createElement('div');
+    iconeDiv.style.fontSize = '20px';
+    iconeDiv.textContent = '🔔';
+
+    const conteudoDiv = document.createElement('div');
+    conteudoDiv.style.flexGrow = '1';
+
+    const strongEl = document.createElement('strong');
+    strongEl.style.display = 'block';
+    strongEl.style.fontSize = '14px';
+    strongEl.style.color = '#ddc80e';
+    strongEl.textContent = 'Nova Interação!';
+
+    const spanEl = document.createElement('span');
+    spanEl.textContent = mensagem;
+
+    conteudoDiv.appendChild(strongEl);
+    conteudoDiv.appendChild(spanEl);
+
+    popup.appendChild(iconeDiv);
+    popup.appendChild(conteudoDiv);
+
+    popup.onclick = () => window.location.href = 'notificacoes.php';
+    document.body.appendChild(popup);
+    setTimeout(() => {
+        popup.style.opacity = '0';
+        setTimeout(() => popup.remove(), 500);
+    }, tempoExibicao);
+}
+
+
+// ============================================================
+// 🛎️ MARCAR TODAS AS NOTIFICAÇÕES COMO LIDAS (GLOBAL)
+// ============================================================
+
+window.marcarTodasComoLidas = function () {
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        if (typeof exibirToast === 'function') {
+            exibirToast('❌ Token de segurança não encontrado.');
+        }
+        return;
+    }
+
+    const btn = document.querySelector('#btn-marcar-todas-lidas');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Marcando...';
+    }
+
+    const formData = new FormData();
+    formData.append('csrf_token', csrfToken);
+
+    fetch('marcar-como-lidas.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // 1. Atualiza badge (sincronização interna e externa)
+                const badge = document.getElementById('badge-alertas');
+                if (badge) {
+                    badge.textContent = '0';
+                    badge.style.display = 'none';
+                }
+                atualizarBadgeApp(0, false);
+
+                // 🔥 AJUSTE DA DJÊ: Zera o radar de alertas no sessionStorage
+                sessionStorage.setItem('fenda_ultimo_aviso', '0');
+
+                // 2. Recarrega a lista de notificações
+                const box = document.getElementById('dropdown-notificacoes');
+                if (box && box.style.display === 'block') {
+                    // 🔥 AJUSTE DA DJÊ: Recarrega o dropdown sem fechá-lo
+                    fetch('notificacoes-rapidas.php?t=' + Date.now())
+                        .then(res => res.text())
+                        .then(html => {
+                            box.innerHTML = html;
+                            box.style.display = 'block';
+                        })
+                        .catch(err => console.error('[MARCAR LIDAS] Erro ao recarregar dropdown:', err));
+                } else {
+                    // Se estiver na central, recarrega a aba
+                    const abaAtual = document.querySelector('.aba-central.ativa');
+                    if (abaAtual && abaAtual.dataset.aba === 'notificacoes') {
+                        const url = abaAtual.dataset.url;
+                        const abaId = abaAtual.dataset.aba;
+                        if (typeof window.carregarAba === 'function') {
+                            window.carregarAba(url, abaId);
+                        }
+                    }
+                }
+
+                if (typeof exibirToast === 'function') {
+                    exibirToast('✅ Todas as notificações marcadas como lidas!');
+                }
+            } else {
+                if (typeof exibirToast === 'function') {
+                    exibirToast('❌ ' + (data.message || 'Erro ao processar.'));
+                }
+            }
+        })
+        .catch(err => {
+            console.error('[MARCAR LIDAS] Erro:', err);
+            if (typeof exibirToast === 'function') {
+                exibirToast('❌ Erro de conexão. Tente novamente.');
+            }
+        })
+        .finally(() => {
+            const btn = document.querySelector('#btn-marcar-todas-lidas');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-double"></i> Marcar todas como lidas';
+            }
+        });
+};
+
+window.excluirNotificacao = function (notifId, triggerEl) {
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        if (typeof exibirToast === 'function') {
+            exibirToast('❌ Token de segurança não encontrado.');
+        }
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', String(notifId));
+    formData.append('csrf_token', csrfToken);
+
+    if (triggerEl) {
+        triggerEl.disabled = true;
+        triggerEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+
+    fetch('excluir-notificacao.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Erro ao excluir notificação.');
+            }
+            return data;
+        })
+        .then(data => {
+            if (data.status !== 'success') {
+                throw new Error(data.message || 'Erro ao excluir notificação.');
+            }
+
+            const item = document.querySelector(`#central-body .notificacao-item[data-notif-id="${notifId}"]`);
+            if (item) item.remove();
+
+            const badge = document.getElementById('badge-alertas');
+            const totalNaoLidas = Number(data.unread_count);
+            if (Number.isInteger(totalNaoLidas) && totalNaoLidas >= 0) {
+                if (badge) {
+                    badge.textContent = String(totalNaoLidas);
+                    badge.style.display = totalNaoLidas > 0 ? 'flex' : 'none';
+                }
+                if (typeof window.atualizarBadgingPWA === 'function') {
+                    window.atualizarBadgingPWA(totalNaoLidas);
+                }
+                try {
+                    sessionStorage.setItem('fenda_ultimo_aviso', String(totalNaoLidas));
+                } catch (err) {
+                    console.warn('[NOTIF] Não foi possível sincronizar o aviso da sessão:', err);
+                }
+            } else if (badge) {
+                window.atualizarContadorAlertas?.();
+            }
+
+            if (item && !document.querySelector('#central-body .notificacao-item')) {
+                const vazio = document.createElement('div');
+                vazio.className = 'notificacao-empty notificacoes-vazio-central';
+                const texto = document.createElement('p');
+                texto.textContent = 'A Fenda está silenciosa. Nenhuma notificação por aqui.';
+                vazio.appendChild(texto);
+                document.getElementById('central-body')?.appendChild(vazio);
+            }
+
+            const status = document.getElementById('notificacao-status-global');
+            if (status) {
+                status.textContent = 'Notificação excluída.';
+            }
+
+            if (typeof exibirToast === 'function') {
+                exibirToast('✅ Notificação removida.');
+            }
+        })
+        .catch(err => {
+            console.error('[NOTIF] Erro ao excluir notificação:', err);
+            if (typeof exibirToast === 'function') {
+                exibirToast('❌ ' + (err.message || 'Erro de conexão. Tente novamente.'));
+            }
+        })
+        .finally(() => {
+            if (triggerEl) {
+                triggerEl.disabled = false;
+                triggerEl.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+            }
+        });
+};
+
+function definirAcoesNotificacao(item, abertas) {
+    if (!item) return;
+
+    const toggle = item.querySelector('.btn-notificacao-acoes-toggle');
+    const painel = item.querySelector('.notificacao-acoes');
+    const btnExcluir = item.querySelector('.btn-excluir-notificacao');
+    item.classList.toggle('is-actions-revealed', abertas);
+    item.classList.toggle('has-keyboard-actions', abertas && item.dataset.keyboardActions === 'true');
+    if (toggle) toggle.setAttribute('aria-expanded', abertas ? 'true' : 'false');
+    if (painel) painel.toggleAttribute('inert', !abertas);
+    if (btnExcluir) btnExcluir.disabled = !abertas;
+}
+
+// Delegação de evento (captura mesmo se o botão for injetado depois)
+document.addEventListener('click', function (e) {
+    const swipeItem = e.target.closest('#central-body .item-notif-rapida-wrap[data-suppress-swipe-click="true"]');
+    if (swipeItem) {
+        swipeItem.removeAttribute('data-suppress-swipe-click');
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+    }
+
+    const btn = e.target.closest('#btn-marcar-todas-lidas');
+    if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.marcarTodasComoLidas();
+        return;
+    }
+
+    const toggleAcoes = e.target.closest('#central-body .btn-notificacao-acoes-toggle');
+    if (toggleAcoes) {
+        e.preventDefault();
+        e.stopPropagation();
+        const item = toggleAcoes.closest('.item-notif-rapida-wrap');
+        const abrir = toggleAcoes.getAttribute('aria-expanded') !== 'true';
+
+        document.querySelectorAll('#central-body .item-notif-rapida-wrap.is-actions-revealed')
+            .forEach(outroItem => definirAcoesNotificacao(outroItem, false));
+        definirAcoesNotificacao(item, abrir);
+
+        if (abrir && e.detail === 0) {
+            item?.querySelector('.btn-excluir-notificacao')?.focus();
+        }
+        return;
+    }
+
+    const btnExcluir = e.target.closest('.btn-excluir-notificacao');
+    if (btnExcluir) {
+        e.preventDefault();
+        e.stopPropagation();
+        const notifId = Number(btnExcluir.dataset.notifId || 0);
+        if (notifId > 0) {
+            window.excluirNotificacao(notifId, btnExcluir);
+        }
+    }
+});
+
+let notificacaoSwipeAtivo = null;
+
+document.addEventListener('pointerdown', function (event) {
+    const item = event.target.closest('#central-body .item-notif-rapida-wrap');
+    if (!item || event.button !== 0 || event.target.closest('button, input, textarea, select')) {
+        return;
+    }
+
+    notificacaoSwipeAtivo = {
+        item,
+        pointerId: event.pointerId,
+        inicioX: event.clientX,
+        inicioY: event.clientY,
+        deslocamentoInicial: item.classList.contains('is-actions-revealed') ? -64 : 0,
+        deltaX: 0,
+        reconhecido: false
+    };
+}, { passive: true });
+
+document.addEventListener('pointermove', function (event) {
+    const gesto = notificacaoSwipeAtivo;
+    if (!gesto || event.pointerId !== gesto.pointerId) return;
+
+    const deltaX = event.clientX - gesto.inicioX;
+    const deltaY = event.clientY - gesto.inicioY;
+    if (Math.abs(deltaY) > 12 && Math.abs(deltaY) >= Math.abs(deltaX)) {
+        notificacaoSwipeAtivo = null;
+        return;
+    }
+    if (Math.abs(deltaX) <= 12 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+
+    gesto.reconhecido = true;
+    gesto.deltaX = deltaX;
+    const anchor = gesto.item.querySelector('.item-notif-rapida');
+    if (anchor) {
+        const deslocamento = Math.max(-64, Math.min(0, gesto.deslocamentoInicial + deltaX));
+        anchor.style.transform = `translateX(${deslocamento}px)`;
+    }
+    if (event.cancelable) event.preventDefault();
+}, { passive: false });
+
+function finalizarSwipeNotificacao(event) {
+    const gesto = notificacaoSwipeAtivo;
+    if (!gesto || (event && event.pointerId !== gesto.pointerId)) return;
+
+    notificacaoSwipeAtivo = null;
+    const anchor = gesto.item.querySelector('.item-notif-rapida');
+    if (anchor) anchor.style.removeProperty('transform');
+
+    if (!gesto.reconhecido) return;
+
+    gesto.item.dataset.suppressSwipeClick = 'true';
+    window.setTimeout(() => {
+        if (gesto.item?.dataset.suppressSwipeClick === 'true') {
+            delete gesto.item.dataset.suppressSwipeClick;
+        }
+    }, 500);
+    document.querySelectorAll('#central-body .item-notif-rapida-wrap.is-actions-revealed')
+        .forEach(outroItem => {
+            if (outroItem !== gesto.item) definirAcoesNotificacao(outroItem, false);
+        });
+    definirAcoesNotificacao(gesto.item, gesto.deslocamentoInicial + gesto.deltaX <= -32);
+}
+
+document.addEventListener('pointerup', finalizarSwipeNotificacao);
+document.addEventListener('pointercancel', finalizarSwipeNotificacao);
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('#central-body .item-notif-rapida-wrap')
+            .forEach(item => {
+                delete item.dataset.keyboardActions;
+                definirAcoesNotificacao(item, false);
+            });
+    }
+});
+
+document.addEventListener('focusin', function (event) {
+    const button = event.target.closest('#central-body .btn-excluir-notificacao');
+    if (button) {
+        const item = button.closest('.item-notif-rapida-wrap');
+        if (item) {
+            item.dataset.keyboardActions = 'true';
+            definirAcoesNotificacao(item, true);
+        }
+    }
+});
+
+document.addEventListener('focusout', function (event) {
+    const item = event.target.closest('#central-body .item-notif-rapida-wrap');
+    if (item && !item.contains(event.relatedTarget)) {
+        delete item.dataset.keyboardActions;
+        if (item.classList.contains('has-keyboard-actions')) {
+            definirAcoesNotificacao(item, false);
+        }
+    }
+});
+
+document.addEventListener('click', function (event) {
+    if (event.target.closest('#central-body .item-notif-rapida-wrap')) return;
+    document.querySelectorAll('#central-body .item-notif-rapida-wrap.is-actions-revealed')
+        .forEach(item => definirAcoesNotificacao(item, false));
+});
+
+// ==================== LIMPEZA DO BADGE EM INTERAÇÕES ====================
+// Quando o usuário abre o dropdown de notificações
+window.toggleJanelaNotificacoes = function () {
+    // 🔥 REMOVIDO: limpeza automática do badge – agora só limpa quando o usuário clica em uma notificação ou acessa a página.
+
+    const box = document.getElementById('dropdown-notificacoes');
+    if (box.style.display === 'none' || box.style.display === '') {
+        // 🔥 Usa o motor-notificacoes.php via notificacoes-rapidas.php (com timestamp para evitar cache)
+        fetch('notificacoes-rapidas.php?t=' + Date.now())
+            .then(res => res.text())
+            .then(html => {
+                box.innerHTML = html;
+                box.style.display = 'block';
+                // 🔥 O badge NÃO é mais limpo aqui – mantemos até que o usuário interaja.
+            })
+            .catch(err => console.error('[NOTIF] Erro ao carregar:', err));
+    } else {
+        box.style.display = 'none';
+    }
+};
+
+// Quando a janela ganha foco (usuário volta para a aba)
+window.addEventListener('focus', function () {
+    // Se o usuário está logado e a página é o feed, limpa o badge
+    if (document.getElementById('input_pref_badge')) {
+        // Verifica se não há notificações não lidas (ou se o usuário já viu)
+        const badgeElement = document.getElementById('badge-alertas');
+        if (badgeElement && badgeElement.style.display === 'none') {
+            window.limparBadge();
+        }
+    }
+});
+
+// Quando o usuário clica em "Ver" no PiP, também limpa o badge
+// (já está no irParaLinkPip, mas adicionamos a limpeza lá também)
+window.irParaLinkPip = function (link) {
+    window.fecharPipNotificacao();
+    window.limparBadge(); //  Limpa o badge ao clicar em "Ver"
+    if (link) window.location.href = link;
+};
+
+// ==================== REAÇÕES ====================
+window.enviarReacao = function (postId, tipo) {
+    fetch(`includes/reagir.php?id=${postId}&tipo=${tipo}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
+            }
+        })
+        .catch(err => console.error("[REACAO] Erro:", err));
+};
+
+window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
+    const container = document.getElementById(`reacoes-post-${postId}`);
+    if (!container) return;
+    const tradutor = {
+        'amei': '💖', 'perplecto': '😲', 'haha': '😂',
+        'ranco': '🙄', 'forca': '🫂', 'triste': '😢', 'tendi-nada': '🤔'
+    };
+    container.innerHTML = '';
+    Object.keys(contagens).forEach(tipo => {
+        const emoji = tradutor[tipo] || '👍';
+        const total = contagens[tipo];
+        const classeVoted = (minhas && minhas.includes(tipo)) ? 'voted' : '';
+        const span = document.createElement('span');
+        span.className = `reacao-item ${classeVoted}`;
+        span.innerHTML = `${emoji} ${total}`;
+        container.appendChild(span);
+    });
+};
+
+window.addEventListener('click', function (event) {
+    // SE O MODO SWIPE ESTÁ ATIVO, NÃO INTERFERIR NOS CARDS
+    if (document.body.classList.contains('modo-swipe-ativo') && event.target.closest('.spotted-card')) {
+        return;
+    }
+
+    const modalSair = document.getElementById('modal-sair-fenda');
+    if (event.target === modalSair) window.fecharModalSair();
+
+    const clicouNoMenu = event.target.closest('.dropdown');
+    const clicouNaReacao = event.target.closest('.reacao-wrapper') || event.target.closest('.btn-reagir');
+
+    // Log removido para não poluir o console durante o swipe
+
+    const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
+    const clicouNoPost = event.target.closest('.post-content');
+
+    if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
+        document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
+        document.querySelectorAll('.reacoes-popup').forEach(p => {
+            p.style.visibility = 'hidden';
+            p.style.opacity = '0';
+        });
+    }
+    if (!clicouNaNotif) {
+        const box = document.getElementById('dropdown-notificacoes');
+        if (box) box.style.display = 'none';
+    }
+});
+
+function initLingoteController() {
+    const container = document.getElementById('lingoteContainer');
+    const btnToggle = document.getElementById('btn-toggle-collapse');
+    const textarea = document.getElementById('comentario-textarea');
+
+    if (!container || !btnToggle) return;
+
+    btnToggle.addEventListener('click', () => {
+        container.classList.toggle('minimizado');
+        const icon = btnToggle.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('fa-chevron-up');
+            icon.classList.toggle('fa-chevron-down');
+        }
+        // A miniatura e o card são controlados pelo CSS via .minimizado
+    });
+
+    if (textarea) {
+        textarea.addEventListener('focus', () => {
+            container.classList.add('minimizado');
+            const icon = btnToggle.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
+
+    const btnConfig = document.querySelector('.btn-config');
+    if (btnConfig) {
+        btnConfig.addEventListener('click', window.abrirPerfilDrawer);
+    }
+    // INICIALIZA O FORMULÁRIO DE PERFIL (drawer ou página direta)
+    if (typeof window.configurarFormularioPerfil === 'function') {
+        window.configurarFormularioPerfil();
+        console.log('[PERFIL] configurarFormularioPerfil() executado.');
+    }
+
+    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            if (window.innerWidth <= 1024) {
+                const pai = this.parentElement;
+                const estaAberto = pai.classList.contains('active');
+                if (!estaAberto) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
+                    pai.classList.add('active');
+                }
+            }
+        });
+    });
+
+    // INICIALIZA AS PREFERÊNCIAS A PARTIR DOS INPUTS HIDDEN (FONTE DA VERDADE)
+    inicializarPreferenciasAPartirDoDOM();
+
+    // 🔥 NOVO BLOCO – DEFINE A COR DA AURA PARA O POPUP DE REAÇÕES
+    if (!window.FendaConfig) window.FendaConfig = {};
+    const auraInput = document.getElementById('input_pref_cor_padrao');
+    if (auraInput && auraInput.value) {
+        window.FendaConfig.auraColor = auraInput.value;
+    } else {
+        const firstCard = document.querySelector('.spotted-card');
+        if (firstCard) {
+            const borderColor = getComputedStyle(firstCard).borderColor;
+            if (borderColor && borderColor !== 'none' && borderColor !== 'transparent') {
+                window.FendaConfig.auraColor = borderColor;
+            }
+        }
+    }
+    if (!window.FendaConfig.auraColor) {
+        window.FendaConfig.auraColor = '#ffbc00';
+    }
+    console.log('[FENDA] Aura color definida:', window.FendaConfig.auraColor);
+
+    // Adiciona o ouvinte para destravar o áudio no primeiro clique
+    document.addEventListener('click', destravarAudio, { once: true });
+
+    // CONTADOR DE ALERTAS
+    setTimeout(() => {
+        window.atualizarContadorAlertas();
+        setInterval(window.atualizarContadorAlertas, 8000);
+    }, 1000);
+
+    // CONFIGURA POSTS (apenas se NÃO estiver no modo swipe)
+    setTimeout(() => {
+        if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+            configurarPosts();
+        }
+    }, 500);
+
+    // INICIALIZA O CONTROLLER DO LINGOTE (se existir)
+    initLingoteController();
+
+    // INICIALIZA O ANEXOS MANAGER (se o grid existir)
+    if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
+        AnexosManager.init();
+    }
+
+    // INICIALIZA O LIGHTBOX MANAGER
+    if (typeof LightboxManager !== 'undefined' && LightboxManager.init) {
+        LightboxManager.init();
+    }
+
+    // INICIALIZA O HEADER MANAGER (se existir)
+    if (typeof HeaderManager !== 'undefined' && HeaderManager.init) {
+        HeaderManager.init();
+        console.log('[HEADER] HeaderManager inicializado.');
+    }
+
+});
+
+// ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
+window.addEventListener('load', () => {
+    // Restaura modo hacker se estava ativo
+    if (localStorage.getItem('fenda_hacker') === 'active') {
+        carregarCssHacker(); // carrega o CSS antes de ativar
+        document.body.classList.add('hacker-mode');
+        window.removerBordasInlineHacker();
+    }
+
+    const bootScreen = document.getElementById('bios-boot');
+    if (bootScreen && !sessionStorage.getItem('boot_concluido')) {
+        setTimeout(() => {
+            bootScreen.style.opacity = '0';
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                sessionStorage.setItem('boot_concluido', 'true');
+            }, 500);
+        }, 2500);
+    } else if (bootScreen) bootScreen.style.display = 'none';
+
+    // Swipe ativo: suspende modo hacker
+    if (document.body.classList.contains('modo-swipe-ativo')) {
+        if (document.body.classList.contains('hacker-mode')) {
+            sessionStorage.setItem('fenda_hacker_suspended_by_swipe', 'true');
+            document.body.classList.remove('hacker-mode');
+            console.log("[HACKER] Modo Hacker suspenso porque o modo swipe está ativo.");
+        }
+    } else {
+        // Saiu do modo swipe: restaura hacker se estava suspenso e ativo no localStorage
+        if (sessionStorage.getItem('fenda_hacker_suspended_by_swipe') === 'true') {
+            if (localStorage.getItem('fenda_hacker') === 'active') {
+                carregarCssHacker(); // carrega o CSS novamente (se não estiver carregado)
+                document.body.classList.add('hacker-mode');
+                window.removerBordasInlineHacker();
+                console.log("[HACKER] Modo Hacker restaurado ao sair do modo swipe.");
+            }
+            sessionStorage.removeItem('fenda_hacker_suspended_by_swipe');
+        }
+    }
+});
+
+// ========================================================
+// LIGHTBOX DE IMAGENS (Só roda se o modal existir na página)
+// ========================================================
+document.addEventListener('click', function (e) {
+    // A VERIFICAÇÃO QUE SALVA O DIA:
+    // Se não encontrar o modal nesta página, o script para aqui e não faz nada.
+    const modal = document.getElementById('modal-imagem');
+    if (!modal) return;
+
+    if (e.target.classList.contains('comentario-img')) {
+        const imgAmpliada = document.getElementById('img-ampliada');
+        if (!imgAmpliada) return;
+
+        imgAmpliada.src = e.target.src;
+        modal.classList.remove('modal-hidden');
+        modal.setAttribute('aria-hidden', 'false');
+    }
+});
+
+
+// 3. Ação de Fechar: Fechar ao clicar no fundo ou no botão X
+// Esta parte pode ficar fora do listener global para manter o código limpo
+const modalFechamento = document.getElementById('modal-imagem');
+if (modalFechamento) {
+    modalFechamento.addEventListener('click', function (e) {
+        // Fecha apenas se clicar no fundo (this) ou no botão X (fechar-modal)
+        if (e.target === this || e.target.classList.contains('fechar-modal')) {
+            this.classList.add('modal-hidden');
+            this.setAttribute('aria-hidden', 'true');
+        }
+    });
+}
+
+/* ==========================================================
+   NEXUS ENGINE - CONTROLE ROBUSTO (À PROVA DE GLITCHES)
+   ========================================================== */
+
+let isAnimating = false; // Flag para impedir cliques rápidos (trava de segurança)
+
+// 1. Função de Execução com Delay (O efeito "Procurando Função")
+window.executarAcao = function (btn, graus, callback) {
+    if (isAnimating) return; // Se já está girando, ignora novos cliques até terminar
+
+    const ponteiro = document.getElementById('ponteiro-bussola');
+
+    isAnimating = true; // Bloqueia o sistema durante a animação
+    marcarBotaoAtivo(btn);
+    aplicarRotacao(ponteiro, graus);
+
+    // Delay de 500ms para a bússola atingir a posição antes de disparar a função
+    setTimeout(() => {
+        toggleNexus(); // Fecha o leque
+        callback();    // Executa a função (abrir modal ou redirecionar)
+        isAnimating = false; // Libera o sistema para novos cliques
+    }, 500);
+};
+
+// 2. Função de Feedback Visual (Active)
+window.marcarBotaoAtivo = function (btnClicado) {
+    document.querySelectorAll('.nexus-item').forEach(item => item.classList.remove('active'));
+    btnClicado.classList.add('active');
+};
+
+
+// 3. Rotação Auxiliar (Manipula apenas as classes)
+function aplicarRotacao(elemento, graus) {
+    if (!elemento) return;
+    elemento.classList.remove('girar-0', 'girar-90', 'girar-180', 'girar-270');
+    elemento.classList.add('girar-' + graus);
+}
+
+// 4. Toggle do Nexus (Entrada e Reset)
+function toggleNexus() {
+    const nexus = document.getElementById('fenda-nexus');
+    if (!nexus) return;
+
+    nexus.classList.toggle('aberto');
+
+    // Se fechou, resetamos a bússola para o Norte e limpamos os destaques
+    if (!nexus.classList.contains('aberto')) {
+        const ponteiro = document.getElementById('ponteiro-bussola');
+        aplicarRotacao(ponteiro, 0);
+        document.querySelectorAll('.nexus-item').forEach(item => item.classList.remove('active'));
+    }
+}
+
+
+// ==================== MODAL DE CONFIRMAÇÃO (DIALOG NATIVO - GLOBAL) ====================
+window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') {
+    return new Promise((resolve) => {
+        const dialog = document.getElementById('dialog-confirmacao');
+        if (!dialog) {
+            // Fallback seguro (caso o dialog não exista)
+            console.warn('[exibirConfirmacao] Dialog não encontrado, usando confirm()');
+            const confirmado = confirm(mensagem);
+            resolve(confirmado);
+            return;
+        }
+
+        // Define título e mensagem
+        document.getElementById('dialog-titulo').textContent = titulo;
+        document.getElementById('dialog-mensagem').textContent = mensagem;
+
+        // Remove listeners antigos para evitar duplicação
+        const btnSim = document.getElementById('dialog-btn-sim');
+        const btnNao = document.getElementById('dialog-btn-nao');
+        const newSim = btnSim.cloneNode(true);
+        const newNao = btnNao.cloneNode(true);
+        btnSim.parentNode.replaceChild(newSim, btnSim);
+        btnNao.parentNode.replaceChild(newNao, btnNao);
+
+        // Configura os botões
+        newSim.addEventListener('click', function () {
+            dialog.close();
+            window._modalAberto = false;
+            resolve(true);
+        });
+
+        newNao.addEventListener('click', function () {
+            dialog.close();
+            window._modalAberto = false;
+            resolve(false);
+        });
+
+        // 🔥 REMOVIDO: listener que fechava ao clicar fora
+        // Agora o diálogo só fecha pelos botões.
+
+        // Abre como pop-up flutuante (não bloqueante)
+        window._modalAberto = true;
+        dialog.show();
+    });
+};
+
+// ==================== EXCLUSÃO GLOBAL DE COMENTÁRIOS (COM LOGS + CSRF) ====================
+window.excluirComentario = async function (commentId, btnElement) {
+    console.log('[excluirComentario] 🟢 Iniciando exclusão para ID:', commentId, '| btnElement:', btnElement);
+
+    if (btnElement && btnElement.disabled) {
+        console.warn('[excluirComentario] ⚠️ Botão já desabilitado, ignorando.');
+        return;
+    }
+
+    // Usa a função de confirmação (dialog global)
+    const confirmado = await window.exibirConfirmacao('Deseja realmente excluir este comentário?', '⚠️ Excluir Comentário');
+    if (!confirmado) {
+        console.log('[excluirComentario] 🔴 Usuário cancelou a exclusão.');
+        return;
+    }
+
+    console.log('[excluirComentario] 🟡 Usuário confirmou. Buscando elemento #comentario-' + commentId + '...');
+
+    const comentarioDiv = document.getElementById(`comentario-${commentId}`);
+    if (!comentarioDiv) {
+        console.error('[excluirComentario] ❌ Elemento #comentario-' + commentId + ' NÃO ENCONTRADO no DOM!');
+        console.log('[excluirComentario] 🔍 Verifique se o ID está correto e se o elemento foi inserido.');
+        alert('Erro: comentário não encontrado na página.');
+        return;
+    }
+
+    console.log('[excluirComentario] ✅ Elemento encontrado:', comentarioDiv);
+
+    // ============================================================
+    // 🔥 CSRF TOKEN (auditoria da Djê) – obrigatório para a exclusão
+    // ============================================================
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        console.error('[excluirComentario] ❌ CSRF token não encontrado no DOM.');
+        alert('Erro de segurança: token CSRF não encontrado. Recarregue a página.');
+        return;
+    }
+    console.log('[excluirComentario] 🔑 CSRF token encontrado:', csrfToken.substring(0, 16) + '...');
+
+    // Feedback visual
+    if (btnElement) {
+        btnElement._originalText = btnElement._originalText || btnElement.innerHTML;
+        btnElement.disabled = true;
+        btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+    comentarioDiv.classList.add('is-loading');
+
+    try {
+        const response = await fetch('includes/excluir-comentario.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${commentId}&csrf_token=${encodeURIComponent(csrfToken)}`
+        });
+        const data = await response.json();
+        console.log('[excluirComentario] 📥 Resposta do servidor:', data);
+
+        if (data.status === 'success') {
+            console.log('[excluirComentario] ✅ Exclusão bem-sucedida!');
+            comentarioDiv.classList.remove('is-loading');
+            comentarioDiv.classList.add('comentario-deletado');
+            const botaoAcoes = comentarioDiv.parentElement?.querySelector('.comentario-menu-toggle');
+            if (botaoAcoes) {
+                botaoAcoes.hidden = true;
+                botaoAcoes.disabled = true;
+            }
+            comentarioDiv.innerHTML = `
+                <div class="comentario-deletado-msg">
+                    <i class="fas fa-trash-alt"></i> Comentário removido pelo autor.
+                </div>
+            `;
+            console.log('[excluirComentario] 🗑️ Comentário removido do DOM.');
+        } else {
+            console.error('[excluirComentario] ❌ Servidor retornou erro:', data.message);
+            alert(data.message || "Erro ao excluir comentário.");
+            comentarioDiv.classList.remove('is-loading');
+            if (btnElement) {
+                btnElement.disabled = false;
+                btnElement.innerHTML = btnElement._originalText || '🗑️ Excluir';
+            }
+        }
+    } catch (err) {
+        console.error('[excluirComentario] Erro de rede ou servidor:', err);
+        alert("Erro de conexão. Tente novamente.");
+        comentarioDiv.classList.remove('is-loading');
+        if (btnElement) {
+            btnElement.disabled = false;
+            btnElement.innerHTML = btnElement._originalText || '🗑️ Excluir';
+        }
+    }
+};
+
+
+// ============================================================
+// 🖼️ LIGHTBOX MANAGER – MODAL UNIVERSAL PARA POSTS
+// ============================================================
+
+const LightboxManager = {
+    modalElement: null,
+    bodyElement: null,
+    abortController: null,
+    isOpen: false,
+
+    init() {
+        this.modalElement = document.getElementById('lightbox-modal');
+        this.bodyElement = document.getElementById('lightbox-body');
+        if (!this.modalElement || !this.bodyElement) {
+            console.warn('[LightboxManager] Modal ou body não encontrados no DOM.');
+            return;
+        }
+
+        this.modalElement.addEventListener('click', (e) => {
+            if (e.target === this.modalElement) {
+                this.fechar();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.fechar();
+            }
+        });
+
+        document.addEventListener('lightbox-fechar', () => {
+            this.fechar();
+        });
+
+        console.log('[LightboxManager] Inicializado.');
+    },
+
+    // 🔥 NOVO: parâmetro 'apenasPost' – se true, suprime os comentários
+    abrir(postId, apenasPost = false) {
+        if (!postId) {
+            console.error('[LightboxManager] ID do post não fornecido.');
+            return;
+        }
+
+        if (this.isOpen) {
+            this.fechar();
+        }
+
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+
+        this.abortController = new AbortController();
+
+        this.modalElement.style.display = 'flex';
+        this.bodyElement.innerHTML = `
+            <div class="lightbox-loading">
+                <div class="spinner"></div>
+                <p>Carregando post...</p>
+            </div>
+        `;
+        this.isOpen = true;
+        document.body.style.overflow = 'hidden';
+
+        // 🔥 CONSTRÓI A URL COM O PARÂMETRO ADICIONAL
+        const url = `post-detalhe.php?id=${postId}&_=${Date.now()}` + (apenasPost ? '&apenas_post=1' : '');
+
+        // 🔥 ADICIONA A CLASSE .lightbox-apenas-post NO MODAL
+        if (apenasPost) {
+            this.modalElement.classList.add('lightbox-apenas-post');
+        } else {
+            this.modalElement.classList.remove('lightbox-apenas-post');
+        }
+
+        fetch(url, { signal: this.abortController.signal })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(html => {
+                if (!this.isOpen) return;
+                requestAnimationFrame(() => {
+                    this.bodyElement.innerHTML = html;
+                    this._ativarLightboxInterno();
+                });
+            })
+            .catch(err => {
+                if (err.name === 'AbortError') {
+                    console.log('[LightboxManager] Fetch cancelado pelo usuário.');
+                    return;
+                }
+                console.error('[LightboxManager] Erro ao carregar post:', err);
+                if (this.isOpen) {
+                    this.bodyElement.innerHTML = `
+                        <div class="lightbox-erro">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>Erro ao carregar o post. Tente novamente.</p>
+                            <button onclick="LightboxManager.fechar()" class="btn-fechar-erro">Fechar</button>
+                        </div>
+                    `;
+                }
+            });
+    },
+
+    fechar() {
+        if (!this.isOpen) return;
+
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+
+        this.modalElement.style.display = 'none';
+        this.bodyElement.innerHTML = '';
+        this.isOpen = false;
+        document.body.style.overflow = '';
+    },
+
+    _ativarLightboxInterno() {
+        const imagens = this.bodyElement.querySelectorAll('.comentario-img, .feed-anexo-item img');
+        imagens.forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const src = img.src;
+                if (src && typeof window.abrirLightboxManual === 'function') {
+                    window.abrirLightboxManual(src);
+                } else {
+                    window.open(src, '_blank');
+                }
+            });
+        });
+    }
+};
+
+// ============================================================
+// EXPORTA FUNÇÕES GLOBAIS PARA USO NO HTML
+// ============================================================
+window.abrirLightbox = (postId, apenasPost = false) => LightboxManager.abrir(postId, apenasPost);
+window.fecharLightbox = () => LightboxManager.fechar();
+
+
+// ==================== VIEWPORT TRACKER (SOLUÇÃO PARA TECLADO EM LANDSCAPE) ====================
+function initViewportTracker() {
+    function atualizarAltura() {
+        const altura = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        document.documentElement.style.setProperty('--app-height', altura + 'px');
+    }
+
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            requestAnimationFrame(atualizarAltura);
+        });
+        window.visualViewport.addEventListener('scroll', () => {
+            requestAnimationFrame(atualizarAltura);
+        });
+    }
+    window.addEventListener('resize', () => {
+        requestAnimationFrame(atualizarAltura);
+    });
+    atualizarAltura();
+}
+
+// ============================================================
+// 🖼️ ANEXOS MANAGER – GERENCIAMENTO DE MÚLTIPLOS ARQUIVOS (COM COMPRESSÃO)
+// ============================================================
+
+const AnexosManager = {
+    anexos: [],
+    maxItems: 4,
+    gridElement: null,
+
+    // Inicializa (chamar no DOMContentLoaded)
+    init() {
+        this.gridElement = document.getElementById('anexos-grid');
+        if (!this.gridElement) {
+            setTimeout(() => {
+                this.gridElement = document.getElementById('anexos-grid');
+                if (this.gridElement) console.log('[AnexosManager] Grid encontrado após retry.');
+            }, 500);
+        }
+    },
+
+    // 🔥 ADICIONA UM ANEXO (COM VALIDAÇÃO, COMPRESSÃO E FEEDBACK VISUAL)
+    async adicionar(file, tipo = 'imagem', url = null) {
+        // ============================================================
+        // 🔥 1. VALIDAÇÃO PARA ARQUIVOS DE IMAGEM (UPLOAD LOCAL)
+        // ============================================================
+        if (tipo === 'imagem' && file) {
+            const maxSize = 2 * 1024 * 1024; // 2MB (mantido)
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+            // 🔥 VALIDA TAMANHO
+            if (file.size > maxSize) {
+                const mensagem = `❌ Arquivo excede o limite de 2MB. (${(file.size / 1024 / 1024).toFixed(1)}MB)`;
+                if (typeof mostrarFeedback === 'function') {
+                    mostrarFeedback(mensagem, 'erro');
+                } else {
+                    alert(mensagem);
+                }
+                return false;
+            }
+
+            // 🔥 VALIDA TIPO (MIME)
+            if (!tiposPermitidos.includes(file.type)) {
+                const mensagem = `❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.`;
+                if (typeof mostrarFeedback === 'function') {
+                    mostrarFeedback(mensagem, 'erro');
+                } else {
+                    alert(mensagem);
+                }
+                return false;
+            }
+
+            // 🔥 SE PASSOU NAS VALIDAÇÕES, EXIBE FEEDBACK DE SUCESSO
+            if (typeof mostrarFeedback === 'function') {
+                const tamanhoKB = Math.round(file.size / 1024);
+                mostrarFeedback(`✅ Arquivo aceito (${tamanhoKB} KB)`, 'sucesso');
+            }
+
+            // 🔥 COMPRESSÃO: converte para WebP com orientação corrigida
+            try {
+                const blobComprimido = await comprimirImagemClientSide(file, 0.7, 1200, 1200);
+                // Cria um novo File com o mesmo nome (mas extensão .webp) e tipo image/webp
+                const nomeBase = file.name.replace(/\.[^.]+$/, '') + '.webp';
+                const arquivoComprimido = new File([blobComprimido], nomeBase, { type: 'image/webp' });
+                // Substitui o arquivo original pelo comprimido
+                file = arquivoComprimido;
+                console.log(`[AnexosManager] Imagem comprimida: ${(file.size / 1024).toFixed(1)} KB`);
+            } catch (err) {
+                console.warn('[AnexosManager] Falha na compressão, usando original:', err);
+                // Se falhar, mantém o arquivo original
+            }
+        }
+
+        // ============================================================
+        // 🔥 2. VERIFICAÇÃO DE DUPLICATA PARA GIFs (URL)
+        // ============================================================
+        if (tipo === 'gif' && url) {
+            const existe = this.anexos.some(item => item.tipo === 'gif' && item.url === url);
+            if (existe) {
+                if (typeof mostrarFeedback === 'function') {
+                    mostrarFeedback(`⚠️ Este GIF já foi adicionado.`, 'erro');
+                }
+                return false;
+            }
+        }
+
+        // ============================================================
+        // 🔥 3. LIMITE MÁXIMO DE ITENS (4)
+        // ============================================================
+        if (this.anexos.length >= this.maxItems) {
+            const mensagem = `⚠️ Máximo de ${this.maxItems} anexos por comentário.`;
+            if (typeof mostrarFeedback === 'function') {
+                mostrarFeedback(mensagem, 'erro');
+            } else {
+                alert(mensagem);
+            }
+            return false;
+        }
+
+        // ============================================================
+        // 🔥 4. CRIA O ITEM E ADICIONA AO ARRAY
+        // ============================================================
+        const id = 'anexo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+        const preview = tipo === 'gif' ? url : URL.createObjectURL(file);
+
+        this.anexos.push({
+            id,
+            tipo,
+            file: tipo === 'imagem' ? file : null,
+            url: tipo === 'gif' ? url : null,
+            preview,
+            status: 'pending'
+        });
+
+        // ============================================================
+        // 🔥 5. RENDERIZA O GRID E APLICA FEEDBACK VISUAL (BORDA VERDE)
+        // ============================================================
+        this.renderizar();
+
+        // 🔥 APLICA BORDA VERDE NO ÚLTIMO ITEM ADICIONADO (FEEDBACK ESPACIAL)
+        const grid = this.gridElement;
+        if (grid && grid.lastElementChild) {
+            const ultimoItem = grid.lastElementChild;
+            ultimoItem.style.boxSizing = 'border-box';
+            ultimoItem.style.border = '4px solid #4caf50';
+            ultimoItem.style.transition = 'border-color 0.2s ease';
+            setTimeout(() => {
+                ultimoItem.style.border = '';
+                ultimoItem.style.boxSizing = '';
+            }, 3000);
+        }
+
+        this.verificarConteudo();
+        return true;
+    },
+
+    // Remove um anexo pelo índice
+    remover(index) {
+        if (index < 0 || index >= this.anexos.length) return;
+        const item = this.anexos[index];
+        if (item.preview && item.tipo === 'imagem') {
+            URL.revokeObjectURL(item.preview);
+        }
+        this.anexos.splice(index, 1);
+        this.renderizar();
+        this.verificarConteudo();
+    },
+
+    // Limpa todos os anexos (usado ao cancelar resposta ou após envio)
+    limparTodos() {
+        this.anexos.forEach(item => {
+            if (item.preview && item.tipo === 'imagem') {
+                URL.revokeObjectURL(item.preview);
+            }
+        });
+        this.anexos = [];
+        this.renderizar();
+        this.verificarConteudo();
+    },
+
+    // Renderiza o grid no DOM
+    renderizar() {
+        if (!this.gridElement) return;
+        if (this.anexos.length === 0) {
+            this.gridElement.style.display = 'none';
+            this.gridElement.innerHTML = '';
+            return;
+        }
+        this.gridElement.style.display = 'flex';
+        this.gridElement.innerHTML = '';
+        this.anexos.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'anexo-item' + (item.status === 'uploading' ? ' uploading' : '');
+            div.dataset.index = index;
+            const img = document.createElement('img');
+            img.src = item.preview;
+            img.alt = 'Anexo ' + (index + 1);
+            img.loading = 'lazy';
+            div.appendChild(img);
+            const spinner = document.createElement('span');
+            spinner.className = 'spinner-anexo';
+            spinner.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            spinner.style.display = item.status === 'uploading' ? 'block' : 'none';
+            div.appendChild(spinner);
+            const btn = document.createElement('button');
+            btn.className = 'btn-remover-anexo';
+            btn.innerHTML = '✕';
+            btn.title = 'Remover anexo';
+            btn.dataset.index = index;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.remover(index);
+            });
+            div.appendChild(btn);
+            img.addEventListener('click', () => {
+                if (item.status !== 'uploading') {
+                    if (typeof window.abrirLightboxManual === 'function') {
+                        window.abrirLightboxManual(item.preview);
+                    } else {
+                        window.open(item.preview, '_blank');
+                    }
+                }
+            });
+            this.gridElement.appendChild(div);
+        });
+    },
+
+    // 🔥 VERIFICA SE HÁ CONTEÚDO (texto ou anexos) E AJUSTA OS BOTÕES
+    verificarConteudo() {
+        const campoTexto = document.querySelector('.textarea-chat');
+        const btnEnviar = document.querySelector('.btn-enviar-chat');
+        const btnGaveta = document.querySelector('.btn-attach-gaveta');
+        const temTexto = campoTexto && campoTexto.value.trim().length > 0;
+        const temAnexo = this.anexos.length > 0;
+        const atingiuLimite = this.anexos.length >= this.maxItems;
+
+        if (btnEnviar) {
+            btnEnviar.style.display = 'flex';
+            btnEnviar.disabled = !(temTexto || temAnexo);
+            if (temTexto || temAnexo) {
+                btnEnviar.classList.add('visivel');
+            } else {
+                btnEnviar.classList.remove('visivel');
+            }
+        }
+        if (btnGaveta) {
+            btnGaveta.style.display = atingiuLimite ? 'none' : 'flex';
+        }
+    },
+
+    // 🔥 PREPARA O FORMDATA PARA ENVIO
+    prepararFormData(form) {
+        const formData = new FormData(form);
+        this.anexos.forEach((item) => {
+            if (item.file) {
+                formData.append('anexos[]', item.file);
+            } else if (item.tipo === 'gif' && item.url) {
+                formData.append('gif_urls[]', item.url);
+            }
+        });
+        return formData;
+    },
+
+    // Atualiza o status de um item (usado durante o upload)
+    atualizarStatus(index, status) {
+        if (index < 0 || index >= this.anexos.length) return;
+        this.anexos[index].status = status;
+        this.renderizar();
+    }
+};
+
+// ============================================================
+// 🖼️ FUNÇÕES DE COMPRESSÃO CLIENT-SIDE (COM CORREÇÃO EXIF)
+// ============================================================
+
+/**
+ * Lê a orientação EXIF de um arquivo de imagem usando DataView
+ * @param {File} file - Arquivo de imagem
+ * @returns {Promise<number>} - Orientação (1 a 8), ou 1 se não encontrada
+ */
+function obterOrientacaoEXIF(file) {
+    return new Promise((resolve) => {
+        if (!window.FileReader) {
+            resolve(1);
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            try {
+                const view = new DataView(e.target.result);
+                if (view.getUint16(0, false) !== 0xFFD8) {
+                    resolve(1);
+                    return;
+                }
+                const length = view.byteLength;
+                let offset = 2;
+                while (offset < length) {
+                    const marker = view.getUint16(offset, false);
+                    offset += 2;
+                    if (marker === 0xFFE1) {
+                        const exifLength = view.getUint16(offset, false);
+                        offset += 2;
+                        if (view.getUint32(offset, false) === 0x45786966) {
+                            offset += 6;
+                            const littleEndian = view.getUint16(offset, false) === 0x4949;
+                            offset += 2;
+                            const tagCount = view.getUint16(offset, littleEndian);
+                            offset += 2;
+                            for (let i = 0; i < tagCount; i++) {
+                                const tag = view.getUint16(offset, littleEndian);
+                                const type = view.getUint16(offset + 2, littleEndian);
+                                const count = view.getUint32(offset + 4, littleEndian);
+                                const valueOffset = view.getUint32(offset + 8, littleEndian);
+                                offset += 12;
+                                if (tag === 0x0112) {
+                                    let orientation = 1;
+                                    if (type === 3 && count === 1) {
+                                        orientation = view.getUint16(offset - 12 + 8, littleEndian);
+                                    } else if (type === 4 && count === 1) {
+                                        orientation = view.getUint32(valueOffset, littleEndian);
+                                    }
+                                    resolve(orientation);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    const nextOffset = view.getUint16(offset, false);
+                    offset += nextOffset;
+                }
+                resolve(1);
+            } catch (err) {
+                console.warn('[EXIF] Erro ao ler orientação:', err);
+                resolve(1);
+            }
+        };
+        reader.onerror = function () {
+            resolve(1);
+        };
+        reader.readAsArrayBuffer(file.slice(0, 65536));
+    });
+}
+
+/**
+ * Comprime uma imagem usando canvas (WebP) com correção de orientação EXIF
+ * @param {File} file - Arquivo de imagem original
+ * @param {number} qualidade - 0 a 1 (padrão: 0.7)
+ * @param {number} maxWidth - Largura máxima (padrão: 1200)
+ * @param {number} maxHeight - Altura máxima (padrão: 1200)
+ * @returns {Promise<Blob>} - Blob comprimido em WebP
+ */
+async function comprimirImagemClientSide(file, qualidade = 0.7, maxWidth = 1200, maxHeight = 1200) {
+    const orientacao = await obterOrientacaoEXIF(file);
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = new Image();
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Redimensiona mantendo proporção
+                if (width > maxWidth || height > maxHeight) {
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width = Math.round(width * ratio);
+                    height = Math.round(height * ratio);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+
+                // Aplica rotação baseada na orientação EXIF
+                const orientationMap = {
+                    1: { rotate: 0, flip: false },
+                    3: { rotate: 180, flip: false },
+                    6: { rotate: 90, flip: false },
+                    8: { rotate: -90, flip: false },
+                    2: { rotate: 0, flip: true },
+                    4: { rotate: 180, flip: true },
+                    5: { rotate: 90, flip: true },
+                    7: { rotate: -90, flip: true }
+                };
+                const mapping = orientationMap[orientacao] || orientationMap[1];
+                const rotateRad = mapping.rotate * Math.PI / 180;
+
+                // Se houver rotação, ajusta canvas e desenha com rotação
+                if (mapping.rotate !== 0) {
+                    canvas.width = (mapping.rotate === 90 || mapping.rotate === -90) ? height : width;
+                    canvas.height = (mapping.rotate === 90 || mapping.rotate === -90) ? width : height;
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.rotate(rotateRad);
+                    ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height);
+                } else {
+                    ctx.drawImage(img, 0, 0, width, height);
+                }
+
+                canvas.toBlob((blob) => {
+                    resolve(blob);
+                }, 'image/webp', qualidade);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+
+const HeaderManager = {
+    containerId: 'header-actions',
+    contexto: null,
+    dados: null,
+    isOwner: false,
+    _transitionTimeout: null,
+    _faixaElement: null,          // Referência para a faixa de destaque
+    _faixaUpdateHandler: null,    // Referência para o handler de scroll/resize
+    _initialized: false,
+    _activePress: null,
+    _suppressClickForElement: null,
+    _menuElement: null,
+    _menuTrigger: null,
+
+    // Dados da miniatura (preenchidos pelo PHP via atributos data)
+    postId: null,
+    postAvatar: '',
+    postNome: '',
+    postTexto: '',
+
+    init() {
+        this.container = document.getElementById(this.containerId);
+        if (!this.container || this._initialized) return;
+        this._initialized = true;
+
+        this.postId = this.container.dataset.postId || null;
+        this.postAvatar = this.container.dataset.postAvatar || 'uploads/ui/default.webp';
+        this.postNome = this.container.dataset.postNome || 'Usuário';
+        this.postTexto = this.container.dataset.postTexto || '';
+
+        this._mostrarMiniatura(false);
+
+        document.addEventListener('pointerdown', (event) => this._iniciarPressao(event), { passive: true });
+        document.addEventListener('pointermove', (event) => this._moverPressao(event), { passive: true });
+        document.addEventListener('pointerup', (event) => this._cancelarPressao(event));
+        document.addEventListener('pointercancel', (event) => this._cancelarPressao(event));
+
+        document.addEventListener('click', (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            if (!target) return;
+
+            const comentario = target.closest('.comentario-item');
+            if (this._suppressClickForElement && comentario === this._suppressClickForElement) {
+                this._suppressClickForElement = null;
+                event.preventDefault();
+                event.stopPropagation();
+                return;
+            }
+
+            const toggle = target.closest('.comentario-menu-toggle');
+            const comentarioDoMenu = toggle?.closest('.comentario-linha')?.querySelector('.comentario-item');
+            if (toggle && comentarioDoMenu) {
+                event.preventDefault();
+                event.stopPropagation();
+                this._alternarMenuComentario(comentarioDoMenu, toggle);
+                return;
+            }
+
+            const menuItem = target.closest('[data-comentario-acao]');
+            if (menuItem && this._menuElement?.contains(menuItem)) {
+                event.preventDefault();
+                event.stopPropagation();
+                this._executarAcaoComentario(menuItem.dataset.comentarioAcao);
+                return;
+            }
+
+            if (this._menuElement && !this._menuElement.contains(target)) {
+                this._fecharMenuComentario(false);
+            }
+
+            if (comentario) {
+                if (this.contexto && this.dados?.element !== comentario) this.limpar();
+                return;
+            }
+
+            if (!target.closest('.header-actions-fixo')) {
+                this.limpar();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape' || !this._menuElement) return;
+            event.preventDefault();
+            this._fecharMenuComentario(true);
+        });
+
+        document.addEventListener('scroll', () => this._fecharMenuComentario(false), true);
+        window.addEventListener('resize', () => this._fecharMenuComentario(false));
+        window.addEventListener('blur', () => this._cancelarPressao());
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) this._cancelarPressao();
+        });
+    },
+
+    _iniciarPressao(event) {
+        if (event.button !== undefined && event.button !== 0) return;
+        const target = event.target instanceof Element ? event.target : null;
+        if (
+            this._menuElement
+            && target
+            && !this._menuElement.contains(target)
+            && !target.closest('.comentario-menu-toggle')
+        ) {
+            this._fecharMenuComentario(false);
+        }
+        const comentario = target?.closest('.comentario-item');
+        if (!comentario || target.closest('button, a, input, textarea, select, [role="button"], .indicador-resposta')) return;
+
+        this._cancelarPressao();
+        this._suppressClickForElement = null;
+        const press = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            element: comentario,
+            timer: null
+        };
+        this._activePress = press;
+        press.timer = window.setTimeout(() => {
+            if (this._activePress !== press || !press.element.isConnected) return;
+            this._activePress = null;
+            this._suppressClickForElement = press.element;
+            window.setTimeout(() => {
+                if (this._suppressClickForElement === press.element) {
+                    this._suppressClickForElement = null;
+                }
+            }, 900);
+            const id = press.element.id.replace(/^comentario-/, '');
+            if (id) this.setContext('comentario', { comentarioId: id, element: press.element });
+        }, 550);
+    },
+
+    _moverPressao(event) {
+        const press = this._activePress;
+        if (!press || event.pointerId !== press.pointerId) return;
+        const dx = event.clientX - press.startX;
+        const dy = event.clientY - press.startY;
+        if ((dx * dx) + (dy * dy) > 100) this._cancelarPressao();
+    },
+
+    _cancelarPressao(event) {
+        if (event && this._activePress && event.pointerId !== this._activePress.pointerId) return;
+        if (this._activePress?.timer) window.clearTimeout(this._activePress.timer);
+        this._activePress = null;
+    },
+
+    _alternarMenuComentario(comentario, trigger) {
+        if (this._menuTrigger === trigger) {
+            this._fecharMenuComentario(false);
+            return;
+        }
+        this._fecharMenuComentario(false);
+        if (this.contexto) this.limpar();
+
+        const menu = document.createElement('div');
+        menu.className = 'comentario-ellipsis-menu';
+        menu.id = trigger.getAttribute('aria-controls') || `comentario-menu-${comentario.id.replace(/^comentario-/, '')}`;
+        menu.setAttribute('role', 'group');
+        menu.setAttribute('aria-label', 'Ações do comentário');
+        menu.setAttribute('aria-labelledby', trigger.id);
+
+        const criarItem = (acao, icone, texto) => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'comentario-menu-item';
+            item.dataset.comentarioAcao = acao;
+            item.innerHTML = `<i class="fas ${icone}" aria-hidden="true"></i><span>${texto}</span>`;
+            menu.appendChild(item);
+        };
+
+        criarItem('responder', 'fa-reply', 'Responder');
+        criarItem('copiar', 'fa-copy', 'Copiar');
+        if (comentario.classList.contains('meu-comentario')) {
+            criarItem('excluir', 'fa-trash-alt', 'Excluir');
+        }
+
+        document.body.appendChild(menu);
+        this._menuElement = menu;
+        this._menuTrigger = trigger;
+        trigger.setAttribute('aria-expanded', 'true');
+        menu.addEventListener('focusout', () => {
+            window.setTimeout(() => {
+                if (
+                    this._menuElement === menu
+                    && !menu.contains(document.activeElement)
+                    && document.activeElement !== trigger
+                ) {
+                    this._fecharMenuComentario(false);
+                }
+            }, 0);
+        });
+
+        menu.style.visibility = 'hidden';
+        const triggerRect = trigger.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        const margem = 8;
+        const left = Math.min(
+            Math.max(margem, triggerRect.right - menuRect.width),
+            window.innerWidth - menuRect.width - margem
+        );
+        let top = triggerRect.bottom + 6;
+        if (top + menuRect.height > window.innerHeight - margem) {
+            top = triggerRect.top - menuRect.height - 6;
+        }
+        top = Math.max(margem, Math.min(top, window.innerHeight - menuRect.height - margem));
+        menu.style.left = `${left}px`;
+        menu.style.top = `${top}px`;
+        menu.style.visibility = 'visible';
+        menu.querySelector('.comentario-menu-item')?.focus();
+    },
+
+    _fecharMenuComentario(restaurarFoco) {
+        if (!this._menuElement) return;
+        this._menuElement.remove();
+        this._menuElement = null;
+        if (this._menuTrigger) {
+            this._menuTrigger.setAttribute('aria-expanded', 'false');
+            if (restaurarFoco) {
+                try {
+                    this._menuTrigger.focus({ preventScroll: true });
+                } catch {
+                    this._menuTrigger.focus();
+                }
+            }
+        }
+        this._menuTrigger = null;
+    },
+
+    async _executarAcaoComentario(acao) {
+        const comentario = this._menuTrigger?.closest('.comentario-linha')?.querySelector('.comentario-item');
+        const id = comentario?.id.replace(/^comentario-/, '');
+        const autor = comentario?.querySelector('.comentario-autor')?.textContent.trim() || '';
+        const texto = comentario?.querySelector('.comentario-texto')?.textContent.trim() || '';
+        const ehProprio = comentario?.classList.contains('meu-comentario') || false;
+        this._fecharMenuComentario(false);
+        if (!comentario || !id) return;
+
+        if (acao === 'responder') {
+            if (typeof window.prepararResposta === 'function') {
+                window.prepararResposta(id, autor);
+            } else {
+                console.error('[HEADER] Função prepararResposta não está disponível.');
+            }
+            return;
+        }
+
+        if (acao === 'copiar') {
+            if (!texto) {
+                window.exibirBalaoFenda?.('Este comentário não tem texto para copiar.', 'info');
+                return;
+            }
+
+            let copiado = false;
+            if (navigator.clipboard?.writeText) {
+                try {
+                    await navigator.clipboard.writeText(texto);
+                    copiado = true;
+                } catch (error) {
+                    console.warn('[HEADER] Clipboard API falhou; tentando fallback compatível.', error);
+                }
+            }
+            if (!copiado) {
+                const campo = document.createElement('textarea');
+                campo.value = texto;
+                campo.setAttribute('readonly', '');
+                campo.style.position = 'fixed';
+                campo.style.opacity = '0';
+                document.body.appendChild(campo);
+                campo.select();
+                try {
+                    copiado = document.execCommand('copy');
+                } catch (error) {
+                    console.error('[HEADER] Fallback de cópia falhou.', error);
+                } finally {
+                    campo.remove();
+                }
+            }
+            if (copiado) {
+                window.exibirBalaoFenda?.('Comentário copiado!', 'sucesso');
+            } else {
+                console.error('[HEADER] Não foi possível copiar o comentário.');
+                window.exibirBalaoFenda?.('Não foi possível copiar o comentário.', 'erro');
+            }
+            return;
+        }
+
+        if (acao === 'excluir') {
+            if (!ehProprio) {
+                console.error('[HEADER] A exclusão do menu foi bloqueada: o comentário não pertence ao usuário.');
+                return;
+            }
+            if (typeof window.excluirComentario === 'function') {
+                window.excluirComentario(id);
+            } else {
+                console.error('[HEADER] Função excluirComentario não está disponível.');
+            }
+        }
+    },
+
+    setContext(contexto, dados) {
+        this.contexto = contexto;
+        this.dados = dados;
+        this._mostrarAcoes(true);
+        this.container.classList.add('ativo');
+
+        if (contexto === 'comentario' && dados.element) {
+            setTimeout(() => {
+                if (this.contexto !== contexto || this.dados?.element !== dados.element) return;
+                document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
+                dados.element.classList.add('comentario-selecionado');
+                // 🔥 Cria a faixa de destaque
+                this._criarFaixaDestaque(dados.element);
+            }, 200);
+        }
+    },
+
+    limpar() {
+        if (!this.contexto) return;
+        this.contexto = null;
+        this.dados = null;
+        this._mostrarMiniatura(true);
+
+        document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
+        // 🔥 Remove a faixa de destaque
+        this._removerFaixaDestaque();
+    },
+
+    // ============================================================
+    // 🔥 FAIXA DE DESTAQUE (ESTILO WHATSAPP – FIXED E ATUALIZA DINÂMICA)
+    // ============================================================
+    _criarFaixaDestaque(comentarioElement) {
+        this._removerFaixaDestaque();
+
+        const rect = comentarioElement.getBoundingClientRect();
+        const faixa = document.createElement('div');
+        faixa.className = 'faixa-destaque ativo';
+        faixa.style.top = rect.top + 'px';
+        faixa.style.height = rect.height + 'px';
+        faixa.style.left = '0';
+        faixa.style.width = '100vw';
+        faixa.style.position = 'fixed';
+        faixa.style.pointerEvents = 'none';
+        faixa.style.zIndex = '1';
+        faixa.style.background = 'rgba(255, 187, 0, 0.12)';
+        faixa.style.transition = 'opacity 0.3s ease';
+        faixa.style.opacity = '1';
+
+        const borderColor = getComputedStyle(comentarioElement).getPropertyValue('--cor-borda-glow').trim() || '#ffbc00';
+        if (comentarioElement.classList.contains('meu-comentario')) {
+            faixa.style.borderRight = `6px solid ${borderColor}`;
+        } else {
+            faixa.style.borderLeft = `6px solid ${borderColor}`;
+        }
+
+        document.body.appendChild(faixa);
+        this._faixaElement = faixa;
+
+        // 🔥 Função que atualiza a posição E verifica se o comentário está visível
+        const atualizarFaixa = () => {
+            if (!this._faixaElement || !comentarioElement) return;
+            const newRect = comentarioElement.getBoundingClientRect();
+            const viewportHeight = window.innerHeight;
+
+            // Obtém a altura do header fixo e do footer (elementos que podem cobrir)
+            const header = document.querySelector('.header-actions-fixo');
+            const footer = document.querySelector('.fixed-input');
+            const headerHeight = header ? header.offsetHeight : 0;
+            const footerHeight = footer ? footer.offsetHeight : 0;
+
+            // Verifica se o comentário está parcialmente escondido atrás do header ou footer
+            const topVisible = newRect.top >= headerHeight;
+            const bottomVisible = newRect.bottom <= viewportHeight - footerHeight;
+
+            // A faixa só é visível se o comentário estiver completamente visível
+            const isFullyVisible = topVisible && bottomVisible;
+
+            // Aplica opacidade condicionalmente
+            this._faixaElement.style.opacity = isFullyVisible ? '1' : '0';
+            this._faixaElement.style.top = newRect.top + 'px';
+            this._faixaElement.style.height = newRect.height + 'px';
+        };
+
+        // Guarda a referência da função para remover depois
+        this._faixaUpdateHandler = atualizarFaixa;
+
+        // Escuta scroll no container de comentários
+        const scrollContainer = document.querySelector('.lista-scrollavel');
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', this._faixaUpdateHandler);
+        } else {
+            window.addEventListener('scroll', this._faixaUpdateHandler);
+        }
+
+        // Também escuta resize para recalcular
+        this._faixaResizeHandler = () => {
+            if (this._faixaUpdateHandler) this._faixaUpdateHandler();
+        };
+        window.addEventListener('resize', this._faixaResizeHandler);
+
+        // Chama uma vez para posicionar e avaliar a visibilidade inicial
+        setTimeout(atualizarFaixa, 50);
+    },
+
+    _removerFaixaDestaque() {
+        if (this._faixaElement) {
+            this._faixaElement.remove();
+            this._faixaElement = null;
+        }
+        if (this._faixaUpdateHandler) {
+            const scrollContainer = document.querySelector('.lista-scrollavel');
+            if (scrollContainer) {
+                scrollContainer.removeEventListener('scroll', this._faixaUpdateHandler);
+            } else {
+                window.removeEventListener('scroll', this._faixaUpdateHandler);
+            }
+            this._faixaUpdateHandler = null;
+        }
+        if (this._faixaResizeHandler) {
+            window.removeEventListener('resize', this._faixaResizeHandler);
+            this._faixaResizeHandler = null;
+        }
+    },
+
+    // ============================================================
+    // MÉTODOS EXISTENTES (MINIATURA, AÇÕES, ETC.)
+    // ============================================================
+    _mostrarMiniatura(animar = true) {
+        if (!this.container) return;
+
+        const lingote = document.getElementById('lingoteContainer');
+        const isMinimizado = lingote && lingote.classList.contains('minimizado');
+        if (isMinimizado) animar = false;
+
+        if (this._transitionTimeout) {
+            clearTimeout(this._transitionTimeout);
+            this._transitionTimeout = null;
+        }
+
+        if (!animar) {
+            this.container.classList.remove('fade-out', 'fade-in');
+            this._renderizarMiniatura();
+            this.container.classList.add('ativo');
+            return;
+        }
+
+        this.container.classList.remove('fade-in');
+        this.container.classList.add('fade-out');
+
+        this._transitionTimeout = setTimeout(() => {
+            this._renderizarMiniatura();
+            this.container.classList.remove('fade-out');
+            this.container.classList.add('fade-in');
+            this._transitionTimeout = setTimeout(() => {
+                this.container.classList.remove('fade-in');
+                this._transitionTimeout = null;
+            }, 350);
+        }, 150);
+    },
+
+    _renderizarMiniatura() {
+        this.container.innerHTML = `
+            <button class="header-action-btn btn-voltar-fixo" style="flex-shrink: 0;" onclick="window.location.href='feed.php'">
+                <i class="fas fa-arrow-left"></i> Ir pro Feed
+            </button>
+            <div class="header-miniatura" onclick="window.abrirLightbox(${this.postId}, true); event.stopPropagation();">
+                <img src="${this.postAvatar}" class="miniatura-avatar" onerror="this.src='uploads/ui/default.webp'">
+                <div class="miniatura-info">
+                    <span class="miniatura-nome">${this.postNome}</span>
+                    <span class="miniatura-texto">${this.postTexto}</span>
+                </div>
+            </div>
+        `;
+        this.container.classList.add('ativo');
+    },
+
+    _mostrarAcoes(animar = true) {
+        if (!this.container || !this.contexto) return;
+
+        const lingote = document.getElementById('lingoteContainer');
+        const isMinimizado = lingote && lingote.classList.contains('minimizado');
+        if (isMinimizado) animar = false;
+
+        if (this._transitionTimeout) {
+            clearTimeout(this._transitionTimeout);
+            this._transitionTimeout = null;
+        }
+
+        if (!animar) {
+            this.container.classList.remove('fade-out', 'fade-in');
+            this._renderizarAcoes();
+            this.container.classList.add('ativo');
+            return;
+        }
+
+        this.container.classList.remove('fade-in');
+        this.container.classList.add('fade-out');
+
+        this._transitionTimeout = setTimeout(() => {
+            this._renderizarAcoes();
+            this.container.classList.remove('fade-out');
+            this.container.classList.add('fade-in');
+            this._transitionTimeout = setTimeout(() => {
+                this.container.classList.remove('fade-in');
+                this._transitionTimeout = null;
+            }, 350);
+        }, 150);
+    },
+
+    _renderizarAcoes() {
+        this.container.innerHTML = '';
+
+        if (this.contexto === 'comentario') {
+            const btnResponder = this._criarBotao('Responder', 'fa-reply', () => {
+                const autor = this.dados.element?.querySelector('.comentario-autor')?.textContent || '';
+                if (autor && typeof window.prepararResposta === 'function') {
+                    window.prepararResposta(this.dados.comentarioId, autor);
+                }
+                this.limpar();
+            });
+            this.container.appendChild(btnResponder);
+
+            const btnCopiar = this._criarBotao('Copiar', 'fa-copy', () => {
+                const texto = this.dados.element?.querySelector('.comentario-texto')?.textContent || '';
+                if (texto) {
+                    navigator.clipboard.writeText(texto).then(() => {
+                        if (typeof exibirToast === 'function') exibirToast('Texto copiado!');
+                    });
+                }
+            });
+            this.container.appendChild(btnCopiar);
+
+            const isOwner = this.dados.element?.classList.contains('meu-comentario') || false;
+            if (isOwner) {
+                const btnExcluir = this._criarBotao('Excluir', 'fa-trash-alt', () => {
+                    if (typeof window.excluirComentario === 'function') {
+                        window.excluirComentario(this.dados.comentarioId);
+                    }
+                    this.limpar();
+                }, 'danger');
+                this.container.appendChild(btnExcluir);
+            }
+        }
+        this.container.classList.add('ativo');
+    },
+
+    _criarBotao(texto, icone, onClick, classe = '') {
+        const btn = document.createElement('button');
+        btn.className = `header-action-btn ${classe}`;
+        btn.innerHTML = `<i class="fas ${icone}"></i> ${texto}`;
+        btn.addEventListener('click', onClick);
+        return btn;
+    }
+};
+
+// ============================================================
+// EXPORTA FUNÇÕES GLOBAIS (para compatibilidade com o código atual)
+// ============================================================
+window.adicionarAnexo = (file) => AnexosManager.adicionar(file, 'imagem');
+window.adicionarGif = (url) => AnexosManager.adicionar(null, 'gif', url);
+window.removerAnexo = (index) => AnexosManager.remover(index);
+window.limparTodosAnexos = () => AnexosManager.limparTodos();
+window.prepararFormDataAnexos = (form) => AnexosManager.prepararFormData(form);
+//  EXPORTA O HEADERMANAGER PARA USO GLOBAL (seguro – ele só age se o container existir)
+window.HeaderManager = HeaderManager;
+// ============================================================
+// 🔥 CARROSSEL – GERENCIADOR DE INDICADORES (OTIMIZADO)
+// ============================================================
+window.iniciarCarrossel = function (wrapper) {
+    if (!wrapper) return;
+
+    const card = wrapper.closest('.spotted-card');
+    if (!card) return;
+    const postId = card.dataset.id;
+    if (!postId) return;
+
+    const indicadores = wrapper.parentElement.querySelectorAll('.indicador');
+    const numeroEl = document.getElementById('carrossel-numero-' + postId);
+    if (!indicadores.length || !numeroEl) return;
+
+    const total = indicadores.length;
+    let itemWidth = 0;
+    let timeoutId = null;
+    let isVisible = true; // será atualizado pelo IntersectionObserver
+
+    // Função que calcula a largura do item (cacheada)
+    function obterItemWidth() {
+        const item = wrapper.querySelector('.carrossel-item');
+        if (item) {
+            itemWidth = item.offsetWidth || 1;
+        } else {
+            itemWidth = 1;
+        }
+        return itemWidth;
+    }
+
+    // Função principal de atualização (agora com cache)
+    function atualizar() {
+        // Se o carrossel não estiver visível, não processa
+        if (!isVisible) return;
+
+        const width = itemWidth || obterItemWidth();
+        if (width === 0) return; // segurança extra
+
+        const scrollLeft = wrapper.scrollLeft;
+        const index = Math.round(scrollLeft / width);
+        const idx = Math.min(Math.max(index, 0), total - 1);
+
+        // Atualiza bolinhas (apenas se mudar)
+        indicadores.forEach((el, i) => {
+            el.classList.toggle('ativo', i === idx);
+        });
+
+        // Atualiza número
+        const novoTexto = (idx + 1) + '/' + total;
+        if (numeroEl.textContent !== novoTexto) {
+            numeroEl.textContent = novoTexto;
+        }
+    }
+
+    // Throttle (limita a execução a cada 100ms)
+    const throttle = (func, delay) => {
+        let lastCall = 0;
+        return function (...args) {
+            const now = Date.now();
+            if (now - lastCall >= delay) {
+                lastCall = now;
+                func.apply(this, args);
+            }
+        };
+    };
+
+    // Versão com throttle da atualização
+    const atualizarThrottled = throttle(atualizar, 100);
+
+    // Evento de scroll (com throttle)
+    wrapper.addEventListener('scroll', atualizarThrottled);
+
+    // Recalcula largura ao redimensionar (com debounce)
+    let resizeTimeout = null;
+    const recalcularLargura = () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            obterItemWidth();
+            atualizar();
+        }, 200);
+    };
+    window.addEventListener('resize', recalcularLargura);
+
+    // IntersectionObserver para pausar quando invisível (otimização)
+    if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isVisible = entry.isIntersecting;
+                if (isVisible) {
+                    // Se ficou visível, atualiza imediatamente
+                    atualizar();
+                }
+            });
+        }, { threshold: 0.1 });
+        observer.observe(wrapper);
+        // Armazena o observer para limpar depois (opcional)
+        wrapper._carrosselObserver = observer;
+    }
+
+    // Atualização inicial (após carregamento)
+    setTimeout(() => {
+        obterItemWidth();
+        atualizar();
+    }, 200);
+};
+
+/**
+ * Inicializa todos os carrosséis da página.
+ */
+window.iniciarTodosCarrosseis = function () {
+    document.querySelectorAll('.carrossel-wrapper').forEach(wrapper => {
+        // Evita duplicar eventos
+        if (wrapper._carrosselIniciado) return;
+        wrapper._carrosselIniciado = true;
+        window.iniciarCarrossel(wrapper);
+    });
+};
+
+// ============================================================
+// 🔥 SETAS DE NAVEGAÇÃO DO CARROSSEL (GLOBAL) – COM LOGS
+// ============================================================
+document.addEventListener('click', function (e) {
+    const btnPrev = e.target.closest('.carrossel-prev');
+    const btnNext = e.target.closest('.carrossel-next');
+    if (!btnPrev && !btnNext) return;
+
+    const postId = btnPrev ? btnPrev.dataset.post : btnNext.dataset.post;
+    const card = document.querySelector(`.spotted-card[data-id="${postId}"]`);
+    if (!card) return;
+    const wrapper = card.querySelector('.carrossel-wrapper');
+    if (!wrapper) return;
+
+    const item = wrapper.querySelector('.carrossel-item');
+    if (!item) return;
+    const itemWidth = item.offsetWidth || 1;
+
+    let targetScroll = wrapper.scrollLeft;
+    if (btnPrev) {
+        targetScroll -= itemWidth;
+    } else if (btnNext) {
+        targetScroll += itemWidth;
+    }
+
+    // 🔥 FORÇA O SCROLL (com ou sem animação)
+    wrapper.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+    });
+
+    // Fallback para navegadores que não suportam behavior smooth
+    setTimeout(() => {
+        if (Math.abs(wrapper.scrollLeft - targetScroll) > 1) {
+            wrapper.scrollLeft = targetScroll;
+        }
+    }, 200);
+});
+
+// ==================== BALÃO DE FEEDBACK GLOBAL ====================
+window.exibirBalaoFenda = function (mensagem, tipo, elementoRef, duracao = 2500) {
+    // Remove balão antigo (evita empilhamento)
+    const balaoAntigo = document.querySelector('.balao-fenda');
+    if (balaoAntigo) balaoAntigo.remove();
+
+    const balao = document.createElement('div');
+    balao.className = 'balao-fenda ' + tipo;
+
+    const icones = { sucesso: '✅', erro: '❌', info: 'ℹ️' };
+    const icone = document.createElement('span');
+    icone.className = 'balao-icone';
+    icone.textContent = icones[tipo] || '💬';
+    balao.appendChild(icone);
+
+    const texto = document.createElement('span');
+    texto.textContent = mensagem;
+    balao.appendChild(texto);
+
+    if (elementoRef) {
+        const rect = elementoRef.getBoundingClientRect();
+        let top = rect.top - 10;
+        let left = rect.left + rect.width / 2 - 50;
+        const balaoWidth = Math.min(300, window.innerWidth * 0.8);
+
+        if (left + balaoWidth > window.innerWidth - 20) {
+            left = window.innerWidth - balaoWidth - 20;
+        }
+        if (left < 20) left = 20;
+        if (rect.top < 60) {
+            top = rect.bottom + 10;
+        } else {
+            top = rect.top - 60;
+        }
+
+        balao.style.top = top + 'px';
+        balao.style.left = left + 'px';
+        balao.style.maxWidth = balaoWidth + 'px';
+    } else {
+        balao.style.top = '50%';
+        balao.style.left = '50%';
+        balao.style.transform = 'translate(-50%, -50%)';
+    }
+
+    document.body.appendChild(balao);
+     // 🔥 Garante que o balão fique acima de drawers/modais (z-index do drawer = 999999)
+    balao.style.zIndex = '1000000';
+
+    setTimeout(() => {
+        if (balao.parentNode) {
+            balao.style.opacity = '0';
+            setTimeout(() => balao.remove(), 300);
+        }
+    }, duracao);
+};
+
+// ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
+// ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
+// 🐚 IARA – 2026-09-25 (auditoria v5.0)
+//    - Unifica duas responsabilidades: validação de uploads de imagem
+//      (já existia) + validação em tempo real dos campos nome e
+//      username (novo).
+//    - Movido pra cá porque o <script> inline do perfil.php não
+//      executa quando o HTML é injetado via innerHTML no drawer.
+//      Como esta função é chamada tanto no DOMContentLoaded (página
+//      avulsa) quanto no abrirPerfilDrawer, cobre os dois contextos.
+window.configurarFormularioPerfil = function () {
+    console.log('[PERFIL] Configurando formulário de perfil...');
+
+    // ============================================================
+    // PARTE 1: VALIDAÇÃO DE UPLOADS DE IMAGEM
+    // ============================================================
+    const inputsFile = document.querySelectorAll(
+        '#perfil-drawer input[type="file"], ' +
+        '.main-perfil-container-config input[type="file"], ' +
+        'form[action="processa-perfil.php"] input[type="file"]'
+    );
+
+    if (inputsFile.length > 0) {
+        console.log('[PERFIL] Encontrados', inputsFile.length, 'inputs de arquivo.');
+        inputsFile.forEach(input => {
+            if (input._fendaListenerAdded) return;
+            input._fendaListenerAdded = true;
+
+            input.addEventListener('change', function () {
+                if (!this.files || !this.files[0]) return;
+
+                const file = this.files[0];
+                const tamanhoMB = file.size / 1024 / 1024;
+                const tipo = this.name; // 'foto' ou 'capa'
+                const anchor = this.closest('label') || this;
+
+                if (tamanhoMB > 2) {
+                    window.exibirBalaoFenda(
+                        `Arquivo muito grande (${tamanhoMB.toFixed(2)}MB). Limite: 2MB.`,
+                        'erro',
+                        anchor
+                    );
+                    this.value = '';
+                    return;
+                }
+
+                const formatosPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+                if (!formatosPermitidos.includes(file.type)) {
+                    window.exibirBalaoFenda(
+                        'Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
+                        'erro',
+                        anchor
+                    );
+                    this.value = '';
+                    return;
+                }
+
+                const tamanhoKB = Math.round(file.size / 1024);
+                const label = tipo === 'capa' ? 'Capa' : 'Foto de perfil';
+                window.exibirBalaoFenda(
+                    `✅ ${label} selecionada (${tamanhoKB} KB)`,
+                    'sucesso',
+                    anchor
+                );
+            });
+        });
+    } else {
+        console.log('[PERFIL] Nenhum input de arquivo encontrado.');
+    }
+
+    // ============================================================
+    // PARTE 2: VALIDAÇÃO EM TEMPO REAL – NOME E USERNAME
+    // ============================================================
+    configurarValidacaoNomeUsername();
+};
+
+/**
+ * Valida em tempo real os campos "nome" e "username" do perfil.
+ * Aplica borda vermelha + helper colorido quando inválido, e limpa
+ * quando válido. Bloqueia o submit com balão de erro se algum
+ * estiver inválido.
+ *
+ * Reentrante: pode ser chamada múltiplas vezes (página avulsa +
+ * drawer) sem duplicar listeners.
+ */
+function configurarValidacaoNomeUsername() {
+    const inputNome = document.getElementById('nome');
+    const helperNome = document.getElementById('nome-helper');
+    const inputUsername = document.getElementById('username');
+    const helperUsername = document.getElementById('username-helper');
+    const formPerfil = document.getElementById('form-perfil');
+
+    if (!inputNome || !inputUsername || !formPerfil) return;
+
+    const REGEX_NOME = /^[a-zA-ZÀ-ÿ\s]{2,25}$/;
+    const REGEX_USERNAME = /^[a-z0-9_\.]{5,18}$/;
+
+    const HELPER_NOME_PADRAO = 'Apenas letras e espaços. De 2 a 25 caracteres. Sem números nem símbolos.';
+    const HELPER_NOME_ERRO = '⚠️ Apenas letras e espaços, entre 2 e 25 caracteres.';
+    const HELPER_USER_PADRAO = 'Apenas letras minúsculas, números, underline (_) ou ponto (.). Sem espaços. (5 a 18 caracteres)';
+    const HELPER_USER_ERRO = '⚠️ Apenas letras minúsculas, números, _ ou . (5 a 18 caracteres).';
+
+    function aplicarEstado(input, helper, valido, helperPadrao, helperErro) {
+        if (valido) {
+            input.style.borderColor = '';
+            input.style.boxShadow = '';
+            if (helper) {
+                helper.style.color = '#777';
+                helper.textContent = helperPadrao;
+            }
+        } else {
+            input.style.borderColor = '#ff4757';
+            input.style.boxShadow = '0 0 0 2px rgba(255, 71, 87, 0.15)';
+            if (helper) {
+                helper.style.color = '#ff4757';
+                helper.textContent = helperErro;
+            }
+        }
+    }
+
+    function validarNome() {
+        const valido = REGEX_NOME.test(inputNome.value.trim());
+        aplicarEstado(inputNome, helperNome, valido, HELPER_NOME_PADRAO, HELPER_NOME_ERRO);
+        return valido;
+    }
+
+    function validarUsername() {
+        const valido = REGEX_USERNAME.test(inputUsername.value.trim());
+        aplicarEstado(inputUsername, helperUsername, valido, HELPER_USER_PADRAO, HELPER_USER_ERRO);
+        return valido;
+    }
+
+    // Listeners (com guard pra não duplicar)
+    if (!inputNome._fendaValidacaoNome) {
+        inputNome._fendaValidacaoNome = true;
+        inputNome.addEventListener('input', validarNome);
+    }
+    if (!inputUsername._fendaValidacaoUsername) {
+        inputUsername._fendaValidacaoUsername = true;
+        inputUsername.addEventListener('input', validarUsername);
+    }
+    if (!formPerfil._fendaValidacaoPerfil) {
+        formPerfil._fendaValidacaoPerfil = true;
+        formPerfil.addEventListener('submit', function (e) {
+            const okNome = validarNome();
+            const okUser = validarUsername();
+
+            if (!okNome || !okUser) {
+                e.preventDefault();
+
+                if (!okNome) {
+                    inputNome.focus();
+                    if (typeof window.exibirBalaoFenda === 'function') {
+                        window.exibirBalaoFenda(
+                            'O nome só pode ter letras e espaços (2 a 25 caracteres).',
+                            'erro',
+                            inputNome
+                        );
+                    }
+                } else if (!okUser) {
+                    inputUsername.focus();
+                    if (typeof window.exibirBalaoFenda === 'function') {
+                        window.exibirBalaoFenda(
+                            'O username aceita só letras minúsculas, números, _ ou . (5 a 18 caracteres).',
+                            'erro',
+                            inputUsername
+                        );
+                    }
+                }
+            }
+        });
+    }
+
+    // Aplica estado inicial (caso o valor do banco já seja inválido)
+    validarNome();
+    validarUsername();
+}
+
+// ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
+window.deslogarUsuario = async function () {
+    try {
+        // 1. Tenta fazer logout no Supabase (se o SDK estiver carregado)
+        if (typeof supabase !== 'undefined' && supabase.auth) {
+            await supabase.auth.signOut();
+            console.log('[LOGOUT] Supabase logout realizado.');
+        }
+    } catch (err) {
+        console.warn('[LOGOUT] Erro ao fazer logout no Supabase:', err.message);
+    }
+
+    // 2. Redireciona para o logout.php (que já existe e é seguro)
+    window.location.href = 'logout.php';
+};
+
+// Inicializa o viewport tracker
+initViewportTracker();

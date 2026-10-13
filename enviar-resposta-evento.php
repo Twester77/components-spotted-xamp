@@ -136,7 +136,7 @@ if ($evento['comunidade_id'] > 0) {
         http_response_code(403);
         echo json_encode([
             'success' => false,
-            'message' => 'Você não tem permissão para responder a este evento porque foi banido da comunidade.',
+            'message' => 'Você não tem permissão para responder a este evento porque foi banido ou excluído da comunidade.',
             'csrf_token' => $csrf_atual
         ]);
         exit;

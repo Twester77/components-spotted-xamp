@@ -164,7 +164,7 @@
     --swipe-rot: 0deg;
 
     /* 🔥 LARGURA DINÂMICA (CONTROLADA PELO JS) */
-    width: var(--bt-card-width, 280px);
+    width: var(--bt-card-width, 300px);
     max-width: var(--bt-card-width, 650px);
     padding: var(--bt-card-padding, clamp(10px, 2cqi, 20px));
     font-size: var(--bt-card-font-size, clamp(0.85rem, 2.5cqi, 1.1rem));
@@ -231,6 +231,7 @@
     animation: none;
     filter: none;
     image-rendering: auto;
+    contain: paint;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transform: translateZ(0);
@@ -664,7 +665,7 @@
 .bt-capa img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     transition: transform 0.3s ease;
 }
@@ -752,10 +753,15 @@
     font-size: var(--bt-titulo-size, clamp(1rem, 5cqi, 1.7rem));
     font-weight: 700;
     margin: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     line-height: 1.2;
     max-width: 100%;
     text-overflow: ellipsis;
     word-break: break-word;
+    overflow: hidden;
     overflow-wrap: anywhere;
 }
 
@@ -829,6 +835,8 @@
     gap: clamp(6px, 1vw, 16px);
     flex-wrap: wrap;
     margin: 6px auto;
+    align-items: center;
+    justify-content: center;
     margin: clamp(4px, 0.5vw, 10px) auto;
 }
 
@@ -844,7 +852,7 @@
     color: #fff;
     color: oklch(1 0 0);
     cursor: pointer;
-    font-size: clamp(0.9rem, 1.8vw, 1.25rem);
+    font-size: clamp(0.82rem, 1.8vw, 1.05rem);
     transition: background 0.2s, transform 0.15s;
     font-family: inherit;
     font-weight: 600;
@@ -961,7 +969,7 @@
 .bt-detalhes-capa img {
     width: 100%;
     height: 100%;
-    max-height: 350px;
+    max-height: 360px;
     background: #1e1a1a1c;
     background: oklab(22.242% 0.00601 0.00188 / 0.11);
     object-fit: cover;
@@ -971,12 +979,12 @@
 .bt-detalhes-info {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    gap: clamp(10px, 1.2vw, 20px);
+    gap: 10px;
+    gap: clamp(8px, 1.2vw, 20px);
 }
 
 .bt-detalhes-titulo {
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(1.3rem, 3vw, 2rem);
     color: #fff;
     color: oklch(1 0 0);
     max-width: 100%;
@@ -1251,7 +1259,7 @@
     justify-self: center;
     /* Centraliza a foto se a coluna do grid ficar maior que 300px */
     aspect-ratio: 1/1;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 8px;
     border: 1px solid var(--bt-borda-sutil);
     transition: transform 0.2s;
@@ -1450,6 +1458,8 @@
     flex-shrink: 0;
     width: 40px;
     height: 40px;
+    width: clamp(36px, 8cqi, 60px);
+    height: clamp(36px, 8cqi, 60px);
     border: none;
     border-radius: 50%;
     /* Fallback */
@@ -1655,7 +1665,7 @@
 
 .bt-criar-page h1 {
     font-size: 1.4rem;
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
     color: #fff;
     color: oklch(1 0 0);
     margin-bottom: 4px;
@@ -1676,7 +1686,6 @@
     gap: 12px;
     justify-content: center;
     width: 100%;
-    flex-wrap: wrap;
     align-content: center;
     justify-content: center;
 
@@ -2186,12 +2195,12 @@
     }
 
     .bt-btn-resposta {
-        font-size: 0.8rem;
-        padding: 6px 12px;
+        font-size: 0.78rem;
+        padding: 6px 10px;
     }
 
     .bt-detalhes-titulo {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 
     .bt-barra-rotulo {
@@ -2219,7 +2228,7 @@
     }
 
     .bt-acoes {
-        gap: 8px;
+        gap: 5px;
     }
 
     .bt-participacao {
@@ -2307,7 +2316,15 @@
 @media (max-width: 480px) {
 
     .bt-btn-resposta {
-        flex: 1 1 100%;
+        /* Altera de 100% para auto para permitir que fiquem lado a lado */
+        flex: 1 1 auto;   
+        /* Zera a trava de 150px que vira do CSS principal */
+        min-width: 0;     
+        /* Define o limite máximo que você deseja no mobile */
+        max-width: 120px; 
+        /* Garante que textos curtos fiquem centralizados se encolherem muito */
+        padding: 6px 10px; 
+        font-size: 0.77rem;
     }
 
     .bt-detalhes-meta {
@@ -2423,8 +2440,8 @@
         max-width: 1000px;
         min-height: 240px;
         margin: 8px auto;
-        padding: clamp(8px, 1.8dvh, 14px);
-        gap: clamp(10px, 2vw, 22px);
+        padding: clamp(6px, 1.8dvh, 12px);
+        gap: clamp(6px, 1.8vw, 20px);
         text-align: left;
     }
 
@@ -2459,7 +2476,7 @@
     .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa img {
         height: 100%;
         max-height: none;
-        object-fit: contain;
+        object-fit: cover;
     }
 
     #bt-container-eventos .bt-card .bt-info {

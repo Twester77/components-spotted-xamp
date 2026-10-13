@@ -1068,14 +1068,18 @@
     left: 5px;
     right: 0;
     max-height: 50vh;
-    max-width: 260px;
+    max-height: 50dvh;
+    max-width: 250px;
+    width: auto;
+    max-width: clamp(120px, 35cqi, 320px);
     background: rgba(0, 0, 0, 0.92);
     background: oklch(0 0 0 / 0.92);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     overflow-y: auto;
     border-radius: 16px;
-    padding: 12px;
+    padding: 8px;
+    padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.5vw, 12px);
     box-sizing: border-box;
     z-index: 1000;
     flex-direction: column;
@@ -1093,8 +1097,8 @@
     align-self: flex-start;
     cursor: pointer;
     padding: 6px 10px;
-    font-size: 0.95rem;
-    font-size: clamp(0.9rem, 2.5cqi, 1.05rem);
+    font-size: 0.92rem;
+    font-size: clamp(0.84rem, 2.5cqi, 1rem);
     border-radius: 8px;
     transition: 0.2s;
 }
@@ -1116,8 +1120,6 @@
     border-radius: 20px;
     padding: 6px 12px;
     color: #fff;
-    font-size: 0.85rem;
-    font-size: clamp(0.8rem, 2.5cqi, 1rem);
     width: 100%;
 }
 
@@ -1125,24 +1127,43 @@
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    border: 1px solid #fff;
+    border-style: none;
+    background: rgba(255, 255, 255, 0.1);
     cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
+
+select#vibe-comentario,
 .btn-attach-opcao {
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
+background: rgba(255, 255, 255, 0.08);
     border-radius: 30px;
-    padding: 10px;
-    text-align: center;
+    font-size: 0.8rem;
+    font-size: clamp(0.77rem, 2.5cqi, 1rem);
     color: #fff;
+    color: oklch(100% 0.00011 271.152) ;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: 0.2s;
+    transition: 0.2s; 
 }
 
+
+select#vibe-comentario {  
+    padding: 6px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+
+.btn-attach-opcao {
+    border: none;
+    padding: 10px;
+    text-align: center;
+}
+
+.select#vibe-comentario:hover,
 .btn-attach-opcao:hover {
     background: rgba(255, 255, 255, 0.116);
 }
@@ -1717,8 +1738,8 @@ body.pagina-post .header-principal {
 .comentario-menu-item:hover,
 .comentario-menu-item:focus-visible {
     background: rgba(255, 255, 255, 0.09);
-    outline: 2px solid currentColor;
-    outline-offset: -2px;
+    outline: 1px solid currentColor;
+    outline-offset: -1px;
 }
 
 .comentario-menu-item[data-accion="excluir"] {
@@ -1772,10 +1793,10 @@ body.pagina-post .header-principal {
     
     /* LIMITADORES INTELIGENTES (Para landscape e telas grandes) */
     /* A foto cresce com o balão, mas para de crescer ao atingir 140px de largura */
-    max-width: 140px; 
+    max-width: 150px; 
     /* Garante que duas linhas de fotos + gap nunca passem da sua meta (~220px/250px) */
     max-height: 25vh; 
-
+    max-height: 25dvh;
     border-radius: 12px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.15);

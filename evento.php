@@ -257,7 +257,7 @@ if (empty($_SESSION['csrf_token'])) {
                         $img_url = obterUrlComFallback($item['caminho'], 'uploads/ui/default_evento.webp', null, true); ?>
                         <img src="<?= htmlspecialchars($img_url) ?>" alt="Foto do evento" loading="lazy" onerror="this.onerror=null; this.style.display='none'">
                     <?php elseif ($item['tipo'] === 'gif' && !empty($item['url'])): ?>
-                        <img src="<?= htmlspecialchars($item['url']) ?>" alt="GIF do evento" loading="lazy" style="object-fit:contain; aspect-ratio:auto;">
+                        <img src="<?= htmlspecialchars($item['url']) ?>" alt="GIF do evento" loading="lazy" style="aspect-ratio:auto;">
                 <?php endif;
                 endforeach; ?>
             </div>

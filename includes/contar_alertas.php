@@ -38,7 +38,13 @@ $response = ['total' => $total];
 // ============================================================
 if ($total > 0) {
     // Copilot (VS Code) — 2026-10-02: expõe o tipo para direcionar o PiP ao módulo correto.
-    $sql_ultima = "SELECT id, mensagem, post_id, tipo FROM notificacoes
+        // 🐚 CORRENTE – 2026-10-10 (Sprint 2, Bloco 3.2): adicionado `evento_id` ao
+    //    SELECT para que o PiP consiga montar o link correto em notificações
+    //    de evento. Antes, o frontend tentava usar `post_id` (que é NULL em
+    //    eventos) e caía no fallback `notificacoes.php` — o usuário clicava
+    //    e ia pra uma página errada. Mesmo padrão que a Calmaria aplicou em
+    //    motor-notificacoes.php e notificacoes.php (item #18 do Sprint 2).
+    $sql_ultima = "SELECT id, mensagem, post_id, evento_id, tipo FROM notificacoes
                    WHERE usuario_id = ? AND lida = 0 
                    ORDER BY id DESC LIMIT 1";
     $stmt_ultima = $conn->prepare($sql_ultima);
@@ -48,10 +54,11 @@ if ($total > 0) {
     
     if ($ultima) {
         $response['ultima'] = [
-            'id'       => (int)$ultima['id'],
-            'mensagem' => $ultima['mensagem'],
-            'post_id'  => $ultima['post_id'] ? (int)$ultima['post_id'] : null,
-            'tipo'     => $ultima['tipo']
+            'id'        => (int)$ultima['id'],
+            'mensagem'  => $ultima['mensagem'],
+            'post_id'   => $ultima['post_id'] ? (int)$ultima['post_id'] : null,
+            'evento_id' => $ultima['evento_id'] ? (int)$ultima['evento_id'] : null,
+            'tipo'      => $ultima['tipo']
         ];
     }
 }

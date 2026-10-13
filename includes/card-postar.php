@@ -92,7 +92,7 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                             <?php endif; ?>
                         </select>
                         <?php if ($comunidade_id > 0): ?>
-                            <small style="color: #ffbc00; font-size: 0.8rem; display: block; margin-top: 4px;">
+                            <small style="color: #ffbc00; font-size: 0.84rem; display: block; margin-top: 4px;">
                                 <i class="fas fa-users"></i> Postando em: <?php echo $comunidade_nome; ?>
                             </small>
                         <?php endif; ?>
