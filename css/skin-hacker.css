@@ -25,7 +25,7 @@ body.hacker-mode {
     color: var(--hacker-green, #00ff41); ;
     font-family: var(--hacker-font, 'Courier New', 'Courier', monospace);
     -webkit-font-smoothing: antialiased;
-    cursor: url('imagensfoto/crosshair.cur'), auto ;
+    cursor: crosshair;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
@@ -235,6 +235,15 @@ body.hacker-mode footer {
     background-size: 100% 2px ;
     font-family: monospace ;
 }
+body.hacker-mode header::before{
+    background: rgba(0, 0, 0, 0.95);
+    background: oklch(0 0 0 / 95%);
+    color: var(--hacker-green,#00ff41) ;
+    font-family: monospace ;
+    font-weight: bold ;
+    white-space: nowrap ;
+    filter: none;
+}
 
 /* Links do menu */
 body.hacker-mode .menu li a,
@@ -271,7 +280,7 @@ body.hacker-mode .submenu li a:hover {
     padding-left: 25px !important;
     box-shadow: 0 0 12px #00ff00 !important;
     text-shadow: none ;
-    cursor: url('imagensfoto/crosshair.cur'), auto ;
+    cursor: crosshair ;
 }
 
 /* Seta ">" no hover */
@@ -399,7 +408,7 @@ body.hacker-mode .link-fofoca {
     text-transform: uppercase ;
     position: relative ;
     transition: none ;
-    cursor: url('imagensfoto/crosshair.cur'), auto ;
+    cursor: crosshair;
     overflow: visible ;
     letter-spacing: 1px ;
     text-decoration: none ;
@@ -423,7 +432,7 @@ body.hacker-mode .btn-attach-gaveta {
     text-transform: uppercase ;
     position: relative ;
     transition: none ;
-    cursor: url('imagensfoto/crosshair.cur'), auto ;
+    cursor: crosshair;
 }
 
 body.hacker-mode .btn-enviar-chat i:hover,
@@ -913,6 +922,31 @@ body.hacker-mode .filtro-btn:hover {
     color: oklch(0 0 0) ;
 }
 
+
+/* ============================================================
+   ADAPTAÇÃO DO BOTÃO DE FILTROS (BALANGA TERAS) PARA O MODO HACKER
+   🐚 CORRENTE – 2026-10-13 (Sprint 2.5 / Bloco 4.3-hacker)
+   Mantém a animação girarLuzesBalada, mas troca a paleta
+   da balada (dourado/magenta/ciano) por uma paleta verde/ciano
+   neon (estilo Tron). O blur aumentou levemente pra reforçar
+   o efeito fosforescente sobre fundo preto.
+   ============================================================ */
+body.hacker-mode .bt-btn-filtro::before {
+    background: conic-gradient(from var(--angulo-balada),
+            #00ff41,       /* verde-fósforo */
+            #00ffcc,       /* ciano-neon */
+            #00ffff,       /* azul-ciano */
+            #00ff41);      /* volta ao verde */
+    filter: blur(5px);
+}
+
+body.hacker-mode .bt-btn-filtro:hover {
+    background: rgba(0, 255, 65, 0.08);
+    border-color: #00ff41;
+    color: #00ff41;
+    text-shadow: 0 0 4px #00ff41;
+}
+
 body.hacker-mode .bt-btn-filtro:active{
     background: #00ff00 ;
     background: conic-gradient( from 45deg, oklch(0.861283 0.293072 142.4953), oklch(0.861283 0.293072 142.4953)) ;
@@ -920,6 +954,7 @@ body.hacker-mode .bt-btn-filtro:active{
     color: #000000 ;
     color: oklch(0 0 0) ;
 }
+
 
 body.hacker-mode .filtros-perdidos {
     margin-top: 30px;

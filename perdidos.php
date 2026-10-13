@@ -180,8 +180,12 @@ include 'includes/bolhas.php';
                                 $anexos_html = '<div class="feed-anexos-grid">';
                                 foreach ($anexos_exibicao as $anexo) {
                                     if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                                        $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
-                                        $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
+                                    // 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.2): fallback circular.
+                                    //    Antes: 'postagens/' . htmlspecialchars($anexo['caminho']) passava o
+                                    //    próprio caminho com prefixo errado como fallback. Agora aponta para
+                                    //    'uploads/ui/fallback-post.webp', espelhando a correção do motor-feed.php.
+                                    $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);   
+                                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                                     } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                                         $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
                                     }

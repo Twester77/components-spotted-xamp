@@ -1,11 +1,25 @@
 <?php
 // 1. CONEXÃO E ESTRUTURA (Lógica)
 include_once __DIR__ . '/conexao.php';
+require_once __DIR__ . '/includes/upload_engine.php';
 include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php'; 
 
-// 2. VALIDAÇÃO E SEGURANÇA (PREPARED STATEMENT)
+// 2. INSTANCIA O B2 (necessário para o fallback centralizado)
+// 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.6): antes, o arquivo não instanciava
+//    o B2Client e montava o caminho da foto na mão ("uploads/" . $foto). Isso
+//    gerava URL quebrada quando o `foto` já vinha com prefixo próprio (ex:
+//    "postagens/xyz.webp" → "uploads/postagens/xyz.webp"). Agora usa o
+//    fallback centralizado como o resto da base.
+try {
+    $b2 = B2Client::getInstance();
+} catch (Exception $e) {
+    $b2 = null;
+    error_log('[ATLETICAS] Falha ao instanciar B2: ' . $e->getMessage());
+}
+
+// 3. VALIDAÇÃO E SEGURANÇA (PREPARED STATEMENT)
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: feed.php");
     exit();
@@ -42,12 +56,16 @@ $total_habitantes = $res->num_rows;
     <div class="grid-habitantes">
         <?php if ($total_habitantes > 0): ?>
             <?php while ($h = $res->fetch_assoc()): 
-                $foto_h = !empty($h['foto']) ? "uploads/".htmlspecialchars($h['foto']) : "uploads/ui/default.webp";
+                // 🐚 CORRENTE – 2026-10-13 (Bloco 4.6): fallback centralizado.
+                //    Antes: "uploads/" . htmlspecialchars($h['foto']) montava o
+                //    caminho na mão e quebrava quando o foto já tinha prefixo
+                //    próprio. Agora obterUrlComFallback() resolve via B2 e cai
+                //    em default.webp se o arquivo não existir.
+                $foto_h = obterUrlComFallback($h['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
             ?>
                 <a href="ver-perfil.php?user=<?php echo urlencode($h['username']); ?>" 
-                   class="card-habitante" 
-                   alt="Card do usuário - link para perfil público">
-                    <img src="<?php echo $foto_h; ?>" class="avatar-lista" alt="Avatar de <?php echo htmlspecialchars($h['nome']); ?>">
+                   class="card-habitante">
+                    <img src="<?php echo htmlspecialchars($foto_h); ?>" class="avatar-lista" alt="Avatar de <?php echo htmlspecialchars($h['nome']); ?>">
                     <div class="info-h">
                         <h3><?php echo htmlspecialchars($h['nome']); ?></h3>
                         <p>@<?php echo htmlspecialchars($h['username']); ?></p>

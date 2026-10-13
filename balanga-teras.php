@@ -621,4 +621,8 @@ $stmt_com->close();
 </script>
 
 <?php include 'includes/footer.php'; ?>
-<script src="js/bt-swipe.js?v=<?= time() ?>"></script>
+<!-- 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.3): substituído time() por filemtime().
+     Antes, o ?v= mudava a cada segundo, anulando completamente o cache HTTP do
+     arquivo. Agora o ?v= acompanha a última modificação real do bt-swipe.js —
+     cache dura até o arquivo ser de fato alterado. -->
+<script src="js/bt-swipe.js?v=<?= filemtime(__DIR__ . '/js/bt-swipe.js') ?>"></script>

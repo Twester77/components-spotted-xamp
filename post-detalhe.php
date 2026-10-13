@@ -28,6 +28,16 @@
  *      ao item #20 (que corrigiu o mesmo problema no mini-header do
  *      comentarios-post.php). Agora respeita a categoria e exibe
  *      'Habitante Anônimo' + avatar anônimo.
+ *
+ * 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.1)
+ *    - Fallback circular em dois pontos do renderizarAnexos():
+ *        (a) anexos JSON: `'postagens/' . $anexo['caminho']` era passado
+ *            como fallback, gerando URL no diretório errado quando o
+ *            arquivo não existia no B2.
+ *        (b) imagem_url: `htmlspecialchars($nome_imagem)` era passado como
+ *            fallback, gerando URL pra si mesmo (404 garantido).
+ *      Ambos agora apontam para 'uploads/ui/fallback-post.webp', espelhando
+ *      a correção da Iara em motor-feed.php.
  */
 
 /**
@@ -222,8 +232,11 @@ function renderizarAnexos($post, $b2)
         $html = '<div class="feed-anexos-grid">';
         foreach ($anexos_exibicao as $anexo) {
             if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                // 🔥 FALLBACK CENTRALIZADO
-                $img_url = obterUrlComFallback($anexo['caminho'], 'postagens/' . htmlspecialchars($anexo['caminho']), $b2, true);
+                // 🐚 CORRENTE – 2026-10-13 (Bloco 4.1): fallback correto.
+                //    Antes: 'postagens/' . htmlspecialchars($anexo['caminho'])
+                //    gerava URL no diretório errado quando o arquivo não existia.
+                //    Agora aponta para 'uploads/ui/fallback-post.webp'.
+                $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);
                 $html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
             } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                 $html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
@@ -236,8 +249,11 @@ function renderizarAnexos($post, $b2)
         if (in_array($nome_imagem, $defaults)) {
             $img_url = 'uploads/ui/' . $nome_imagem;
         } else {
-            // 🔥 FALLBACK CENTRALIZADO
-            $img_url = obterUrlComFallback($nome_imagem, htmlspecialchars($nome_imagem), $b2, true);
+            // 🐚 CORRENTE – 2026-10-13 (Bloco 4.1): fallback correto.
+            //    Antes: htmlspecialchars($nome_imagem) passava o próprio nome
+            //    como fallback → URL pra si mesmo → 404 garantido quando o
+            //    arquivo não existia. Agora aponta para fallback-post.webp.
+            $img_url = obterUrlComFallback($nome_imagem, 'uploads/ui/fallback-post.webp', $b2, true);
         }
         $html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }

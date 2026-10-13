@@ -100,7 +100,7 @@ $sql = "SELECT
         AND (u.username LIKE ? OR u.nome LIKE ?)
         ORDER BY 
             FIELD(cm.status, 'banido') DESC,
-            FIELD(cm.papel, 'criador', 'admin', 'membro'),
+            FIELD(cm.papel, 'criador', 'admin', 'moderador', 'membro'),
             cm.data_entrada ASC
         LIMIT ? OFFSET ?";
 
