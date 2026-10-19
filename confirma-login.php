@@ -6,11 +6,55 @@ fenda_log('🔵 INÍCIO confirma-login.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
     
-    fenda_log('🔵 POST recebido para login: ' . $_POST['email']);
-    
     $email = $_POST['email'];
     $senha = $_POST['senha'];
+    
+    fenda_log('🔵 POST recebido para login: ' . $email);
 
+    // ============================================================
+    // 🔒 RATE LIMITING PERSISTENTE (Proteção contra Brute Force)
+    // 🐚 HORIZONTE – 2026-10-19 (Sprint 2.5 / Rate limits)
+    //    Rate limit em $_SESSION não funciona em serverless. Usamos
+    //    a tabela unificada fenda_rate_limits (mesmo padrão do Snap).
+    // ============================================================
+    $ip = function_exists('obterIPReal') ? obterIPReal() : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+    $endpoint = 'login';
+
+    // Garante que a tabela exista (segurança em localhost)
+    $conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        endpoint VARCHAR(64) NOT NULL,
+        usuario_id INT NULL,
+        ip_address VARCHAR(45) NOT NULL,
+        tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_endpoint (endpoint),
+        INDEX idx_usuario (usuario_id),
+        INDEX idx_ip (ip_address),
+        INDEX idx_tentativa (tentativa)
+    )");
+
+    // Verifica tentativas recentes por IP (15 tentativas em 15 minutos)
+    $stmt_rate = $conn->prepare("SELECT COUNT(*) AS total FROM fenda_rate_limits WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 15 MINUTE");
+    $stmt_rate->bind_param('ss', $endpoint, $ip);
+    $stmt_rate->execute();
+    $rate_data = $stmt_rate->get_result()->fetch_assoc();
+    $stmt_rate->close();
+
+    if ((int)($rate_data['total'] ?? 0) >= 15) {
+        fenda_log('🔴 Rate limit excedido no login para IP: ' . $ip);
+        header("Location: index.php?erro=muitas_tentativas");
+        exit();
+    }
+
+    // Registra a tentativa atual
+    $stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, ip_address) VALUES (?, ?)");
+    $stmt_log_rate->bind_param('ss', $endpoint, $ip);
+    $stmt_log_rate->execute();
+    $stmt_log_rate->close();
+
+    // ============================================================
+    // 🛡️ BUSCA DE USUÁRIO E VALIDAÇÃO
+    // ============================================================
     $sql = "SELECT * FROM usuarios WHERE email = ?";
     $stmt = mysqli_prepare($conn, $sql);
     if (!$stmt) {
@@ -44,11 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             // ============================================================
             // 🔥 NOVO: Gera token único para esta sessão
             // ============================================================
-            $token_sessao = bin2hex(random_bytes(32)); // 64 caracteres hex
+            $token_sessao = bin2hex(random_bytes(32));
             $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-            $ip = function_exists('obterIPReal')
-                ? obterIPReal()
-                : ($_SERVER['REMOTE_ADDR'] ?? '');
 
             // Insere na tabela sessoes_ativas
             $stmt_insert = $conn->prepare("INSERT INTO sessoes_ativas (usuario_id, token, user_agent, ip) VALUES (?, ?, ?, ?)");
@@ -65,12 +106,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email'])) {
             $manter = isset($_POST['manter_conectado']) && $_POST['manter_conectado'] == 1;
             $expires_in = $manter ? time() + (86400 * 30) : 0;
             
-            // 🔥 CORRIGIDO: campo 'token' → 'token_sessao' para alinhar com auth-bridge.php e conexao.php
             $cookie_payload = json_encode([
                 'id' => $usuario['id'],
                 'nome' => $usuario['nome'],
                 'username' => $usuario['username'],
-                'token_sessao' => $token_sessao, // 🔥 agora usa token_sessao
+                'token_sessao' => $token_sessao,
                 'csrf_token' => $_SESSION['csrf_token'],
                 'persistente' => $manter,
                 'exp' => $expires_in

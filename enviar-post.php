@@ -17,12 +17,10 @@
  *
  * 🐚 IARA – 2026-09-24 (auditoria v5.0)
  *    - ADICIONADA VALIDAÇÃO CSRF OBRIGATÓRIA (item #1 do Bloco 1).
- *      O endpoint aceitava qualquer POST sem token — CSRF clássico.
- *      Agora valida via $_POST['csrf_token'] OU header X-CSRF-Token,
- *      usando hash_equals (evita timing attack). Roda ANTES de tocar
- *      no B2 (não sobe arquivo se o token estiver errado).
- *    - Detecção de AJAX movida para o topo (antes do CSRF), para
- *      responder no formato certo (JSON vs redirect).
+ *
+ * 🐚 HORIZONTE – 2026-10-19 (Sprint 2.5 / Rate limits)
+ *    - Adicionado Rate Limiting Persistente (fenda_rate_limits) para evitar spam.
+ *    - Limite: 10 posts/min por usuário e 20 posts/min por IP.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -35,16 +33,13 @@ ob_start();
 
 // ============================================================
 // 0.1 DETECTA SE É REQUISIÇÃO AJAX
-// (movido pra cá para que a validação CSRF saiba o formato de resposta)
 // ============================================================
 $is_ajax = isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
 
 // ============================================================
-// 0.2 VALIDAÇÃO CSRF (obrigatória) – auditoria Iara 2026-09-24
+// 0.2 VALIDAÇÃO CSRF (obrigatória)
 // ============================================================
-// Aceita o token via POST (form multipart) OU via header
-// X-CSRF-Token (fetch puro). hash_equals evita timing attack.
 $token_recebido = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
 $token_sessao   = $_SESSION['csrf_token'] ?? '';
 
@@ -77,6 +72,57 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['status' => 'error', 'message' => 'Método não permitido.']);
     exit();
 }
+
+// ============================================================
+// 🔒 1.5 RATE LIMITING PERSISTENTE
+// 🐚 HORIZONTE – 2026-10-19
+// ============================================================
+$usuario_id_rate = (int)$_SESSION['usuario_id'];
+$ip_rate = function_exists('obterIPReal') ? obterIPReal() : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+$endpoint_rate = 'enviar_post';
+
+// Garante que a tabela exista (fallback local)
+$conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(64) NOT NULL,
+    usuario_id INT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_endpoint (endpoint),
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_ip (ip_address),
+    INDEX idx_tentativa (tentativa)
+)");
+
+// Verifica limite por user (10/min) e IP (20/min)
+$stmt_rate = $conn->prepare("
+    SELECT
+        (SELECT COUNT(*) FROM fenda_rate_limits WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 1 MINUTE) AS user_total,
+        (SELECT COUNT(*) FROM fenda_rate_limits WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 1 MINUTE) AS ip_total
+");
+$stmt_rate->bind_param('siis', $endpoint_rate, $usuario_id_rate, $endpoint_rate, $ip_rate);
+$stmt_rate->execute();
+$result_rate = $stmt_rate->get_result()->fetch_assoc();
+$stmt_rate->close();
+
+if ((int)($result_rate['user_total'] ?? 0) >= 10 || (int)($result_rate['ip_total'] ?? 0) >= 20) {
+    error_log("[enviar-post] 🔴 Rate limit excedido. User: $usuario_id_rate, IP: $ip_rate");
+    http_response_code(429);
+    ob_clean();
+    if ($is_ajax) {
+        echo json_encode(['status' => 'error', 'message' => 'Você está postando rápido demais. Aguarde um minuto.']);
+    } else {
+        $_SESSION['erro_post'] = 'Você está postando rápido demais. Aguarde um minuto.';
+        header("Location: feed.php");
+    }
+    exit();
+}
+
+// Registra a tentativa
+$stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+$stmt_log_rate->bind_param('sis', $endpoint_rate, $usuario_id_rate, $ip_rate);
+$stmt_log_rate->execute();
+$stmt_log_rate->close();
 
 // ============================================================
 // 2. CAPTURA DOS DADOS DO FORMULÁRIO

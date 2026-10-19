@@ -32,17 +32,17 @@
         <?php endif; ?>
 
         <?php if (isset($_GET['erro'])): ?>
-            <!-- Erros críticos usam role="alert" para interromper leituras em andamento e avisar o usuário -->
             <div role="alert" aria-live="assertive" id="mensagem-erro-login" class="toast-login erro">
                 <span aria-hidden="true">⚠️</span>
                 <?php
                 if ($_GET['erro'] == 'senha') echo "Senha incorreta, patrão! Tenta de novo.";
                 if ($_GET['erro'] == 'usuario') echo "Usuário não encontrado.";
                 if ($_GET['erro'] == 'pendente') echo "Eita.. Ativa esse e-mail primeiro!";
+                if ($_GET['erro'] == 'muitas_tentativas') echo "Calma lá! Muitas tentativas de login. Aguarde 15 minutos.";
                 ?>
             </div>
         <?php endif; ?>
-
+        
         <div class="input-group">
             <label for="email"><b>E-mail</b></label>
             <input type="email" id="email" name="email" placeholder="Seu e-mail" required autocomplete="username" <?php echo isset($_GET['erro']) ? 'aria-invalid="true" aria-describedby="mensagem-erro-login"' : ''; ?>>
