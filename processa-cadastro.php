@@ -121,6 +121,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    // ============================================================
+    // 🔒 AUDITORIA CORRENTE – 2026-10-13 (Sprint 2, Bloco 1.2)
+    //    Sanitização de preferências visuais (whitelist + regex).
+    //    Sem isso, um atacante podia injetar CSS via POST manipulado
+    //    (ex: pref_cor_padrao = 'red; } body { background: url(evil) } .x {')
+    //    e obter CSS injection armazenado ao renderizar em ver-perfil.php.
+    //
+    //    Também escapa o $nome (que vai pro HTML do e-mail de ativação),
+    //    prevenindo HTML injection no e-mail.
+    //
+    //    Padrão espelhado do enviar-comentario.php (Pérola – 2026-09-18).
+    // ============================================================
+    $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
+    if (!in_array($pref_vibe_padrao, $vibes_validas, true)) {
+        error_log('[CADASTRO] pref_vibe_padrao inválida (fallback): ' . $pref_vibe_padrao);
+        $pref_vibe_padrao = 'vibe-glass';
+    }
+
+    if (!is_string($pref_cor_padrao) || !preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $pref_cor_padrao)) {
+        error_log('[CADASTRO] pref_cor_padrao inválida (fallback): ' . $pref_cor_padrao);
+        $pref_cor_padrao = '#70cde4';
+    }
+
+    // Escapa o nome para o HTML do e-mail (não afeta o INSERT — bind_param continua seguro)
+    $nome_email_seguro = htmlspecialchars($nome, ENT_QUOTES, 'UTF-8');
+
     $senha = password_hash($senha_raw, PASSWORD_DEFAULT);
     $token = bin2hex(random_bytes(32));
     $ativo = 0; // Conta inativa até ativação via e-mail
@@ -204,7 +230,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // Dispara e-mail (mantido igual)
+        // Dispara e-mail (mantido igual, exceto $nome → $nome_email_seguro)
         $email_payload = [
             'from' => 'Spotted - A Fenda <hello@fendauniversity.com.br>',
             'to' => [$email],
@@ -216,7 +242,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <img src='https://fendauniversity.com.br/imagensfoto/banner-email.png' alt='Banner do A Fenda' style='width: 100%; max-width: 600px; display: block; justify-content: center; margin: auto; '>
     </div>
     <div style='padding: 30px;'>
-        <h2 style='color: #70cde4; text-align: center; margin-top: 0;'>Seja bem-vindo, " . $nome . "!</h2>
+        <h2 style='color: #70cde4; text-align: center; margin-top: 0;'>Seja bem-vindo, " . $nome_email_seguro . "!</h2>
         <p style='font-size: 16px; line-height: 1.6;'>Seu cadastro foi realizado com sucesso. Agora você tem acesso ao ecossistema mais exclusivo da UNIFEV.</p>
         <div style='background: rgba(112, 205, 228, 0.1); border-left: 4px solid #70cde4; padding: 15px; margin: 20px 0;'>
             <p style='margin: 0; font-style: italic;'>\"O que acontece na Fenda, fica na Fenda (ou quase isso) \"</p>

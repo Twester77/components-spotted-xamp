@@ -10,6 +10,13 @@
  * 🔒 AUDITORIA PÉROLA – 2026-09-18
  *    - Botão "Seguir" mudou de <a href="seguir.php"> para <button>
  *      que envia POST com csrf_token via fetch (fix CSRF).
+ *
+ * 🔒 AUDITORIA CORRENTE – 2026-10-13 (Sprint 2, Bloco 1.3)
+ *    - Defesa em profundidade: sanitiza $cor_user (whitelist regex)
+ *      antes de ir pra style inline e para o atributo data-cor.
+ *      Se o banco foi corrompido por uma das falhas dos processa-*.php,
+ *      o CSS injection dispara na renderização. Aqui é a segunda camada.
+ *      Espelhado do comentarios-post.php (Pérola – 2026-09-18).
  */
 
 // 1. Conexão em primeiro lugar (já starta a sessão pelo conexao.php)
@@ -64,6 +71,24 @@ $ja_segue = mysqli_num_rows(mysqli_query($conn, "SELECT id FROM seguidores WHERE
 // PREFERÊNCIAS DE AURA
 $vibe_user = $dados['pref_vibe_padrao'] ?? 'vibe-glass';
 $cor_user  = $dados['pref_cor_padrao'] ?? '#08f7ff';
+
+// ============================================================
+// 🔒 AUDITORIA CORRENTE – 2026-10-13 (Sprint 2, Bloco 1.3)
+//    Sanitização defensiva da cor antes de ir pro CSS inline.
+//    Se o banco foi corrompido por POST manipulado, aqui a segunda
+//    camada segura a barra. Padrão espelhado de comentarios-post.php
+//    (Pérola – 2026-09-18).
+// ============================================================
+if (!is_string($cor_user) || !preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $cor_user)) {
+    error_log('[VER-PERFIL] pref_cor_padrao inválida (fallback): ' . $cor_user);
+    $cor_user = '#08f7ff';
+}
+
+$vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
+if (!in_array($vibe_user, $vibes_validas, true)) {
+    error_log('[VER-PERFIL] pref_vibe_padrao inválida (fallback): ' . $vibe_user);
+    $vibe_user = 'vibe-glass';
+}
 
 $foto_limpa = !empty($dados['foto']) ? htmlspecialchars($dados['foto'], ENT_QUOTES, 'UTF-8') : '';
 $capa_limpa = !empty($dados['capa']) ? htmlspecialchars($dados['capa'], ENT_QUOTES, 'UTF-8') : '';
@@ -188,9 +213,8 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             <span>Ver depoimentos e avaliações</span>
         </button>
 
-        <!-- 🔥 NOVA ESTRUTURA: uma div filha exclusiva do .social-collapse com overflow hidden -->
         <div class="social-collapse" id="social-collapse">
-            <div> <!-- esta div garante que o truque do grid funcione -->
+            <div>
                 <!-- DEPOIMENTOS -->
                 <section class="depoimentos-section">
                     <div class="depoimentos-header">

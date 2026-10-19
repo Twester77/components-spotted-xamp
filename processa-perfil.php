@@ -71,6 +71,26 @@ $nova_notif_comunidade = isset($_POST['pref_notif_comunidade']) ? (int)$_POST['p
 $novo_swipe_balanga = isset($_POST['pref_swipe_balanga']) ? (int)$_POST['pref_swipe_balanga'] : 0;
 fenda_log("📝 preferência swipe balanga recebida: " . $novo_swipe_balanga);
 
+// ============================================================
+// 🔒 AUDITORIA CORRENTE – 2026-10-13 (Sprint 2, Bloco 1.3)
+//    Sanitização de preferências visuais (whitelist + regex).
+//    Mesmo motivo do processa-cadastro.php: sem isso, um atacante
+//    podia injetar CSS via POST manipulado e obter CSS injection
+//    armazenado ao renderizar em ver-perfil.php.
+//
+//    Padrão espelhado do enviar-comentario.php (Pérola – 2026-09-18).
+// ============================================================
+$vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
+if (!in_array($nova_vibe, $vibes_validas, true)) {
+    fenda_log('[PERFIL] pref_vibe_padrao inválida (fallback): ' . $nova_vibe);
+    $nova_vibe = 'vibe-glass';
+}
+
+if (!is_string($nova_cor) || !preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $nova_cor)) {
+    fenda_log('[PERFIL] pref_cor_padrao inválida (fallback): ' . $nova_cor);
+    $nova_cor = '#70cde4';
+}
+
 // 🚀 UPLOAD
 $caminhosEnviados = [];
 $foto_nome = null;
@@ -161,13 +181,6 @@ try {
     // ============================================================
     // 🔧 FIX: Só deletar foto/capa antiga do B2 se uma NOVA foi enviada
     // (auditoria Pérola – 2026-09-18)
-    //
-    // Bug anterior: se o usuário salvava o perfil SEM enviar nova foto,
-    // $foto_nome ficava null, mas a condição `$foto_antiga != $foto_nome`
-    // ainda era true → deletava a foto do B2 sem ter nova. Resultado:
-    // próximo request ao proxy.php retornava 404 e caía no fallback.
-    //
-    // Também removido `unlink()` local (código morto, arquivos estão no B2).
     // ============================================================
     if ($foto_nome !== null && $foto_antiga && $foto_antiga != $foto_nome) {
         deleteFromB2($foto_antiga, $usuario_id);

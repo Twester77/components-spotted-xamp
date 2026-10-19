@@ -21,6 +21,17 @@
  *    - Verificação de existência da função obterUrlComFallback()
  *    - Logs detalhados em cada etapa crítica
  *    - Fallback manual para capa caso a função não exista
+ *
+ * 🔒 AUDITORIA CORRENTE – 2026-10-13 (Sprint 2, Bloco 1.3 + débito SQL)
+ *    - CORRIGIDO XSS REAL: `addslashes($busca)` no `<script>` não escapava
+ *      `</script>`, permitindo injeção de JS via `?q=</script><img src=x onerror=...>`.
+ *      Substituído por `json_encode` com flags `JSON_HEX_TAG | JSON_HEX_AMP |
+ *      JSON_HEX_APOS | JSON_HEX_QUOT` (mesmo padrão do central.php).
+ *    - SQL do LIKE migrado para prepared statements (antes era interpolação
+ *      com real_escape_string — seguro na prática, mas padrão ruim).
+ *      Correção cirúrgica: 2 queries (SELECT principal + COUNT) com bind_param.
+ *
+ *    Nota: o try/catch global foi mantido para resiliência em produção.
  */
 
 // ============================================================
@@ -69,64 +80,94 @@ try {
     error_log("[LISTA-COMUNIDADES] Parâmetros: busca='$busca', offset=$offset, is_ajax=" . ($is_ajax ? 'sim' : 'não'));
 
     // ============================================================
-    // 2. CONSTRUÇÃO DA QUERY PRINCIPAL (SEM SQL_CALC_FOUND_ROWS)
+    // 2. CONSTRUÇÃO DA QUERY PRINCIPAL (PREPARED STATEMENTS)
+    // 🔒 AUDITORIA CORRENTE – 2026-10-13 (Bloco 1.3 + débito SQL)
+    //    Antes: `LIKE '$busca_like'` com real_escape_string (padrão ruim).
+    //    Agora: bind_param em ambas as queries (SELECT + COUNT).
+    //    Mesma semântica, sem SQL inline.
     // ============================================================
+    $where_sql = "WHERE 1=1";
+    $params = [];
+    $types = '';
+
+    if (!empty($busca)) {
+        $busca_like = '%' . $busca . '%';
+        $where_sql .= " AND (c.nome LIKE ? OR c.descricao LIKE ?)";
+        $params[] = $busca_like;
+        $params[] = $busca_like;
+        $types .= 'ss';
+    }
+
+    // Query principal
     $sql = "SELECT c.*, 
             (SELECT COUNT(*) FROM comunidade_membros WHERE comunidade_id = c.id) as total_membros,
             u.username as criador_username
             FROM comunidades c
             LEFT JOIN usuarios u ON c.criador_id = u.id
-            WHERE 1=1";
+            $where_sql
+            ORDER BY c.data_criacao DESC
+            LIMIT ? OFFSET ?";
 
-    // 🔥 Busca com LIKE (funciona em todos os bancos, seguro e eficiente)
-    $busca_like = '';
-    if (!empty($busca)) {
-        $busca_like = '%' . $conn->real_escape_string($busca) . '%';
-        $sql .= " AND (c.nome LIKE '$busca_like' OR c.descricao LIKE '$busca_like')";
+    $params_main = $params;
+    $types_main = $types . 'ii';
+    $params_main[] = $limite;
+    $params_main[] = $offset;
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        error_log("[LISTA-COMUNIDADES] ❌ Erro ao preparar query principal: " . $conn->error);
+        throw new Exception("Erro ao preparar consulta ao banco de dados: " . $conn->error);
     }
 
-    $sql .= " ORDER BY c.data_criacao DESC LIMIT $limite OFFSET $offset";
+    $stmt->bind_param($types_main, ...$params_main);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $result = mysqli_query($conn, $sql);
     if (!$result) {
-        error_log("[LISTA-COMUNIDADES] ❌ Erro na query principal: " . mysqli_error($conn));
-        throw new Exception("Erro na consulta ao banco de dados: " . mysqli_error($conn));
+        error_log("[LISTA-COMUNIDADES] ❌ Erro na query principal: " . $stmt->error);
+        throw new Exception("Erro na consulta ao banco de dados: " . $stmt->error);
     }
 
     // ============================================================
     // 3. QUERY SEPARADA PARA CONTAR O TOTAL DE REGISTROS
     // ============================================================
-    $sql_count = "SELECT COUNT(*) as total FROM comunidades c WHERE 1=1";
-    if (!empty($busca)) {
-        $sql_count .= " AND (c.nome LIKE '$busca_like' OR c.descricao LIKE '$busca_like')";
+    $sql_count = "SELECT COUNT(*) as total FROM comunidades c $where_sql";
+    $stmt_count = $conn->prepare($sql_count);
+    if (!$stmt_count) {
+        error_log("[LISTA-COMUNIDADES] ❌ Erro ao preparar COUNT: " . $conn->error);
+        throw new Exception("Erro ao preparar COUNT: " . $conn->error);
     }
-    $res_count = mysqli_query($conn, $sql_count);
+
+    if (!empty($params)) {
+        $stmt_count->bind_param($types, ...$params);
+    }
+    $stmt_count->execute();
+    $res_count = $stmt_count->get_result();
     $total_registros = 0;
     if ($res_count) {
-        $row = mysqli_fetch_assoc($res_count);
+        $row = $res_count->fetch_assoc();
         $total_registros = (int)($row['total'] ?? 0);
         error_log("[LISTA-COMUNIDADES] Total de registros (COUNT): $total_registros");
     }
+    $stmt_count->close();
 
     // ============================================================
     // 4. SE FOR AJAX, RETORNA APENAS OS CARDS (SEM HEADER/FOOTER)
     // ============================================================
     if ($is_ajax) {
         error_log("[LISTA-COMUNIDADES] 🔄 Modo AJAX ativado");
-        if (mysqli_num_rows($result) === 0) {
+        if ($result->num_rows === 0) {
             error_log("[LISTA-COMUNIDADES] Nenhum resultado para AJAX");
             exit;
         }
-        while ($com = mysqli_fetch_assoc($result)) {
-            // 🔥 CADA CARD AGORA É PROTEGIDO POR try/catch
+        while ($com = $result->fetch_assoc()) {
             try {
                 renderizarCardComunidade($com);
             } catch (Exception $e) {
                 error_log("[LISTA-COMUNIDADES AJAX] Erro ao renderizar card ID {$com['id']}: " . $e->getMessage());
-                // Fallback mínimo para não quebrar o grid
                 echo '<div class="comunidade-card erro" style="border:1px solid #ff6b6b; padding:10px;">';
                 echo '  <h4>' . htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8') . '</h4>';
-                echo '  <p style="color:#ff6b6b; font-size:0.8rem;">Erro ao carregar detalhes.</p>';
+                echo '  <p style="color:#ff6b6b; font-size:0.85rem;">Erro ao carregar detalhes.</p>';
                 echo '</div>';
             }
         }
@@ -156,7 +197,6 @@ try {
         $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
         
         try {
-            // Tenta usar a função centralizada, mas com fallback para o método antigo se necessário
             if (function_exists('obterUrlComFallback')) {
                 $b2 = null;
                 try {
@@ -166,7 +206,6 @@ try {
                 }
                 $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
             } else {
-                // Fallback antigo (caso a nova função não exista)
                 error_log("[RENDER CARD] ⚠️ obterUrlComFallback não existe, usando fallback antigo");
                 try {
                     $b2 = B2Client::getInstance();
@@ -253,15 +292,13 @@ try {
     <!-- 📋 GRID DE COMUNIDADES -->
     <div class="comunidades-grid" id="comunidades-grid">
         <?php
-        $total_cards = mysqli_num_rows($result);
+        $total_cards = $result->num_rows;
         if ($total_cards > 0):
-            while ($com = mysqli_fetch_assoc($result)):
-                // 🔥 CADA CARD AGORA É PROTEGIDO POR try/catch
+            while ($com = $result->fetch_assoc()):
                 try {
                     renderizarCardComunidade($com);
                 } catch (Exception $e) {
                     error_log("[LISTA-COMUNIDADES] Erro ao renderizar card ID {$com['id']}: " . $e->getMessage());
-                    // Fallback seguro
                     echo '<div class="comunidade-card erro" style="border:1px solid #ff6b6b; padding:10px; margin-bottom:10px;">';
                     echo '  <h4>' . htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8') . '</h4>';
                     echo '  <p style="color:#ff6b6b; font-size:0.8rem;">Erro ao carregar detalhes. Tente novamente mais tarde.</p>';
@@ -330,7 +367,7 @@ try {
             });
         }
 
-        // 🔥 FUNÇÃO DE BUSCA COM URL DINÂMICA (RESOLVE O 404 DE UMA VEZ)
+        // 🔥 FUNÇÃO DE BUSCA COM URL DINÂMICA
         function buscar(termo) {
             termo = termo.trim();
             if (termo.length < 2) {
@@ -340,7 +377,6 @@ try {
 
             currentTerm = termo;
 
-            // 🔥 CONSTRÓI A URL COMPLETA DINAMICAMENTE
             const baseUrl = window.location.pathname.replace(/\/[^/]*$/, '/');
             const endpoint = `${baseUrl}buscar-comunidades.php`;
 
@@ -420,7 +456,13 @@ try {
         let offset = <?php echo $offset + $limite; ?>;
         let carregando = false;
         let acabou = <?php echo $tem_mais ? 'false' : 'true'; ?>;
-        const busca = '<?php echo addslashes($busca); ?>';
+
+        // 🔒 AUDITORIA CORRENTE – 2026-10-13 (Bloco 1.3 – XSS REAL)
+        //    Antes: a variável era impressa cruamente com addslashes().
+        //    addslashes NÃO escapa a tag de fechamento de script, permitindo XSS.
+        //    Agora: json_encode com flags HEX — mesmo padrão do central.php.
+        //    O valor vira uma string JS segura, imune a injeção de tag.
+        const busca = <?php echo json_encode($busca, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
         function carregarMais() {
             if (carregando || acabou) return;
@@ -474,7 +516,7 @@ try {
 
 <?php
 // ============================================================
-//  FIM DO try/catch GLOBAL
+// FIM DO try/catch GLOBAL
 // ============================================================
 } catch (Exception $e) {
     error_log("[LISTA-COMUNIDADES] ❌ EXCEÇÃO GLOBAL CAPTURADA: " . $e->getMessage() . " em " . $e->getFile() . ":" . $e->getLine());
