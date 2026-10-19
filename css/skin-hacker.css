@@ -1,97 +1,160 @@
 /* ==================================================================
-   SKIN HACKER - MODO TERMINAL ASCII (A FENDA) - VERSÃO ULTIMATE
+   🦾 SKIN HACKER — MODO TERMINAL ASCII (A FENDA) — V4.0 CONSOLIDADO
    ==================================================================
-   - Molduras completas com símbolos ASCII nos 4 lados
-   - Typing em inputs (cursor verde piscando)
-   - Hover de botões e insígnias com inversão verde/preto
-   - Efeito CRT, scanlines, flicker
-   - Nenhum border-radius em todo o site
-   - 100% !important para sobrepor estilos originais
+   Refactor completo (Fagulha — 2026-10-16)
+
+   HISTÓRICO:
+   - V1.0 (~1100 linhas): override monolítico com body.hacker-mode
+   - V2.0 (~570 linhas): refactor pra [data-theme="hacker"] + variáveis
+   - V3.0 (~1300 linhas): consolidação das Fases 4.1-4.11 (com bagunça)
+   - V4.0 (atual): esmagrecido — 25 blocos duplicados unificados
+
+   FILOSOFIA:
+   - Cores/fundos/textos vêm de [data-theme="hacker"] (root.css)
+   - Este arquivo só carrega EFEITOS que não cabem em variável
+   - Seletor: [data-theme="hacker"] (atributo no <html>, via JS)
+
+   ESTRUTURA:
+     1. Fundação (cursor, seleção, radius)
+     2. Scrollbar + esconder elementos
+     3. CRT (scanline SVG + flicker)
+     4. Molduras ASCII + frames por categoria
+     5. Navegação (navbar, menu, dropdowns)
+     6. Formulários (inputs, buttons, textarea)
+     7. Mídia (avatares, imagens, ícones)
+     8. Meta (badges, reações, contadores)
+     9. Comentários + 5 vibes harmonizadas
+    10. Componentes (toolbar, login, perfil, footer, cards)
+    11. Tipografia + typing + performance swipe
+    12. Boot screen
+
+   OTIMIZAÇÕES:
+   - Scanline via SVG data-URI (GPU-friendly, sem repaint)
+   - translate3d + will-change (composição forçada)
+   - Glass fake via SVG pattern (0 FPS vs backdrop-filter)
+   - Morcegos do vibe-dark: área reduzida (35vh) + 30s
+   - Escala de verdes pra legibilidade prolongada
+
+   Legado da Sereia, da Maré, do Marreteiro, da Corrente, do Farol.
+   "O código que você vê aqui não é só sintaxe."
    ================================================================== */
 
-/* ---------------------------------------------------------------
-   1. RESET GLOBAL E VARIAVEIS
-   --------------------------------------------------------------- */
 
-:root {
-    --hacker-green:oklch(0.86 0.19 142);
-    --hacker-bg: oklch(0 0 0);
-    --hacker-font: 'Courier New', 'Courier', monospace;
-    --boot-duration: 3.5s; /* Ajuste para tornar o boot mais lento */
+/* ==================================================================
+   VARIÁVEIS LOCAIS DO SKIN HACKER
+   ================================================================== */
+
+:root[data-theme="hacker"] {
+    /* Escala de verdes */
+    --hacker-green-soft: #66ff66;      /* "acolchoado" — datas, meta */
+    --hacker-green-data: #4dc44d;      /* números, contadores */
+    --hacker-green-pastel: #c0ffc0;    /* texto longo */
+    --hacker-cyan: #66ffdd;            /* toggles, glass accent */
+
+    /* Cores de estado */
+    --hacker-warn: #ffcc00;            /* avisos/Talvez */
+    --hacker-error: #ff4141;           /* erro/Não vou */
+    --hacker-info: #00ffcc;            /* info técnica */
+
+    /* Boot screen */
+    --boot-duration: 3.5s;
 }
 
-body.hacker-mode {
-    background-color: var(--hacker-bg, #000);
-    color: var(--hacker-green, #00ff41); ;
-    font-family: var(--hacker-font, 'Courier New', 'Courier', monospace);
-    -webkit-font-smoothing: antialiased;
+
+/* ==================================================================
+   1. FUNDAÇÃO
+   ================================================================== */
+
+[data-theme="hacker"] body {
+    font-family: var(--hacker-font);
     cursor: crosshair;
+    -webkit-font-smoothing: antialiased;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    transition: background 0.3s ease, color 0.3s ease !important;
-    pointer-events: auto;
-    
+    transition: background 0.3s ease, color 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hacker-bg) var(--hacker-green);
 }
 
-/* Libera seleção apenas em textos funcionais */
-body.hacker-mode p,
-body.hacker-mode .comentario-texto,
-body.hacker-mode input,
-body.hacker-mode textarea,
-body.hacker-mode [contenteditable="true"],
-body.hacker-mode .bio-texto,
-body.hacker-mode .post-content {
+[data-theme="hacker"] body p,
+[data-theme="hacker"] body .comentario-texto,
+[data-theme="hacker"] body input,
+[data-theme="hacker"] body textarea,
+[data-theme="hacker"] body [contenteditable="true"],
+[data-theme="hacker"] body .bio-texto,
+[data-theme="hacker"] body .post-content {
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
     user-select: none;
 }
 
-/* ---------------------------------------------------------------
-   2. REMOÇÃO TOTAL DE BORDAS ARREDONDADAS
-   --------------------------------------------------------------- */
-
-body.hacker-mode ,
-body.hacker-mode *::before,
-body.hacker-mode *::after {
-    border-radius: 0 ;
+/* Reset só em pseudo-elementos — mantém radius dos elementos reais */
+[data-theme="hacker"] *::before,
+[data-theme="hacker"] *::after {
+    border-radius: 0;
 }
 
-/* ---------------------------------------------------------------
-   3. EFEITOS CRT / SCANLINES / FLICKER / GLOW
-   --------------------------------------------------------------- */
 
-/* Scanlines horizontais */
-body.hacker-mode::before {
-    content: "" ;
-    display: block ;
-    position: fixed  ;
-    top: 0 ;
-    left: 0 ;
-    bottom: 0 ;
-    right: 0 ;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
-                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)) ;
-    z-index: 9999 ;
-    background-size: 100% 2px, 1px 100% ;
-    pointer-events: none !important;
+/* ==================================================================
+   2. SCROLLBAR + ESCONDER ELEMENTOS
+   ================================================================== */
+
+[data-theme="hacker"] body::-webkit-scrollbar { width: thin; }
+[data-theme="hacker"] body::-webkit-scrollbar-track { background: var(--hacker-bg); }
+[data-theme="hacker"] body::-webkit-scrollbar-thumb {
+    background: var(--hacker-green);
+    border-radius: 0;
 }
 
-/* Flicker / brilho de tela CRT */
-body.hacker-mode::after {
-    content: " " !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    bottom: 0 !important;
-    right: 0 !important;
-    background: rgba(0, 255, 0, 0.03) ;
+[data-theme="hacker"] .bubbles-container,
+[data-theme="hacker"] .bolha {
+    display: none;
+}
+
+[data-theme="hacker"] .fixed-input {
+    border: none;
+    background: transparent;
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+
+/* ==================================================================
+   3. CRT — SCANLINE (SVG data-URI, GPU-friendly) + FLICKER
+   ================================================================== */
+
+[data-theme="hacker"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Crect width='4' height='2' fill='%23000000' fill-opacity='0.15'/%3E%3Crect y='2' width='4' height='1' fill='%23ff0000' fill-opacity='0.02'/%3E%3Crect y='3' width='4' height='1' fill='%23000000' fill-opacity='0.02'/%3E%3C/svg%3E");
+    background-size: 4px 4px;
+    background-repeat: repeat;
+
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+[data-theme="hacker"] body::after {
+    content: " ";
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
     background: oklch(0.861283 0.293072 142.4953 / 3%);
-    z-index: 9998 !important;
-    pointer-events: none ;
-    animation: flicker 0.15s infinite ease !important;
+    transform: translate3d(0, 0, 0);
+    will-change: opacity;
+    animation: flicker 0.15s infinite ease;
 }
 
 @keyframes flicker {
@@ -101,1296 +164,1377 @@ body.hacker-mode::after {
     100% { opacity: 1; }
 }
 
-/* ---------------------------------------------------------------
-   4. SCROLLBAR ESTILO TERMINAL
-   --------------------------------------------------------------- */
-body.hacker-mode { scrollbar-width: thin ; scrollbar-color:#000000 #00fd00; border-radius: 0; 
-}
-body.hacker-mode::-webkit-scrollbar {  width: thin ; }
-body.hacker-mode::-webkit-scrollbar-track { background: #000 ; }
-body.hacker-mode::-webkit-scrollbar-thumb { background: #00ff00 ; border-radius: 0 ; }
-
-/* ---------------------------------------------------------------
-   5. BOLHAS DESATIVADAS
-   --------------------------------------------------------------- */
-
-body.hacker-mode .bubbles-container,
-body.hacker-mode .bolha {
-    display: none !important;
-}
-
-/* ---------------------------------------------------------------
-   6. MOLDURAS ASCII TOTAIS - LATERAIS DESENHADAS & TÍTULOS DINÂMICOS
-   --------------------------------------------------------------- */
-
-/* APLICANDO EM TUDO: Cards, Formulários, Modais e Perfis */
-body.hacker-mode .container-principal,
-body.hacker-mode .formulario-caixa,
-body.hacker-mode .sessao-publicar,
-body.hacker-mode .main-perfil-container,
-body.hacker-mode .fenda-modal-content
-{
-    position: relative ;
-    background: #000 !important;
-    background: oklch(0 0 0);
-    /* LATERAIS: O duplo pipe "||" */
-    border-left: 2px double var(--hacker-green,#00ff41) ;
-    border-right: 2px double var(--hacker-green,#00ff41) ;
-    border-bottom: 2px double var(--hacker-green,#00ff41) ;
-    border-top: 2px double var(--hacker-green,#00ff41) ;
-    box-shadow: none ;
-}
-
-body.hacker-mode .spotted-card {
-    background: #000 ;
-    background: oklch(0 0 0);
-    border: none !important;
-    /* LATERAIS: O duplo pipe "||" */
-     border-bottom: 2px double var(--hacker-green,#00ff41)!important;
-    border-top: 2px double var(--hacker-green,#00ff41)!important ;
-    border-right: 2px double var(--glass-bg,#000) !important ;
-    border-left: 2px double var(--glass-bg,#000) !important;
-    box-shadow: none ;
-}
-
-body.hacker-mode .feed-usuario-fenda .spotted-card {
-border-bottom: 2px double var(--aura-user)!important;
-border-top: 2px double var(--aura-user)!important ;
-
-}
-
-body.hacker-mode .spotted-card:hover {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    box-shadow: 0px 0px 6px 0px #00fd00;
-
-}
-
-
-
-
-body.hacker-mode .fixed-input::after, 
-footer {
+/* Desativa scanlines na Central (fundo claro) */
+[data-theme="hacker"] body.central-page::before,
+[data-theme="hacker"]:has(.central-usuario-container) body::before,
+[data-theme="hacker"]:has(.central-conteudo) body::before {
     display: none;
 }
 
-body.hacker-mode .fixed-input {
+/* Desativa CRT durante swipe/tinder (performance) */
+[data-theme="hacker"] body.modo-swipe-ativo::before,
+[data-theme="hacker"] body.modo-swipe-ativo::after,
+[data-theme="hacker"] body.modo-tinder-ativo::before,
+[data-theme="hacker"] body.modo-tinder-ativo::after {
+    display: none;
+}
+
+
+/* ==================================================================
+   4. MOLDURAS ASCII + FRAMES POR CATEGORIA
+   ================================================================== */
+
+[data-theme="hacker"] .container-principal,
+[data-theme="hacker"] .formulario-caixa,
+[data-theme="hacker"] .sessao-publicar,
+[data-theme="hacker"] .main-perfil-container,
+[data-theme="hacker"] .fenda-modal-content {
+    position: relative;
+    border: 2px double var(--hacker-green);
+    box-shadow: none;
+}
+
+[data-theme="hacker"] .spotted-card {
     border: none;
-    background: transparent;
-    background-image: none;
+    border-top: 2px double var(--hacker-green);
+    border-bottom: 2px double var(--hacker-green);
+    border-right: 2px double var(--glass-bg);
+    border-left: 2px double var(--glass-bg);
+    box-shadow: none;
+    border-radius: 10px;
+}
+
+[data-theme="hacker"] .feed-usuario-fenda .spotted-card {
+    border-top: 2px double var(--aura-user);
+    border-bottom: 2px double var(--aura-user);
+}
+
+[data-theme="hacker"] .spotted-card:hover {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    box-shadow: 0 0 6px 0 var(--hacker-green);
 }
 
-/* TOPO: Mantendo os títulos dinâmicos da Deep com cantos "+" */
-body.hacker-mode .spotted-card::before,
-body.hacker-mode .fenda-glass-container::before,
-body.hacker-mode .main-perfil-container::before,
-body.hacker-mode .sessao-publicar::before {
-    /* O 'content' aqui será sobrescrito pelas classes específicas abaixo */
-    content: "+==================================================================+==============================================================+" ;
-    position: absolute !important;
-    top: -22px ;
-    left: -2px ; 
-    right: -2px ;
-    color: var(--hacker-green,#00ff41) ;
-    font-family: monospace ;
-    font-weight: bold ;
-    white-space: nowrap ;
-    overflow: hidden !important ;
-    z-index: 10 ;
+/* Moldura superior padrão */
+[data-theme="hacker"] .spotted-card::before,
+[data-theme="hacker"] .fenda-glass-container::before,
+[data-theme="hacker"] .main-perfil-container::before,
+[data-theme="hacker"] .sessao-publicar::before {
+    content: "+==================================================================+==============================================================+";
+    position: absolute;
+    top: -22px;
+    left: -2px;
+    right: -2px;
+    color: var(--hacker-green);
+    font-family: monospace;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* Frames por categoria */
+[data-theme="hacker"] .spotted-card.anonimo::before {
+    content: "+== [ USER_NOT_FOUND ] ==================================================================================================+";
+    color: #ffffff;
+}
+[data-theme="hacker"] .spotted-card.perdidos::before {
+    content: "+== [ PROTOCOLO: GET_$ITEM ] ================================================================================================+";
+    color: #fcf809;
+}
+[data-theme="hacker"] .spotted-card.tenho-ranco::before {
+    content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+";
+    color: #f33232;
+}
+[data-theme="hacker"] .spotted-card.elogio::before {
+    content: "+== [ LOVE_IS_IN_THE_AIR <3 ] ==================================================================================================+";
+    color: #f85caa;
+}
+[data-theme="hacker"] .spotted-card.games::before {
+    content: "+== [ Xinput_DInput DETECTADO ] ==================================================================================================+";
+    color: #00ffff;
+}
+[data-theme="hacker"] .spotted-card.academico::before {
+    content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+";
+    color: #b00bda;
+}
+[data-theme="hacker"] .spotted-card.caronas::before {
+    content: "+== [ SELECT * FROM unifev WHERE loc='houseofcaralho'] ========================================================================+";
+    color: #969dc4;
+}
+[data-theme="hacker"] .spotted-card.esportes::before {
+    content: "+== [ JOIN_FOR_FUN ] ==========================================================================================================+";
+    color: #128a0ec2;
+}
+[data-theme="hacker"] .spotted-card.comunidade::before {
+    content: "+== [ COMMUNITY_LINK ] ======================================================================================================+";
+    color: #ffffffbe;
+}
+[data-theme="hacker"] .spotted-card.acaba-pelo-amor-de-deus::before {
+    content: "+== [ WARNING: OVERFLOW_EMOTIONAL ] ================================================================================+";
+    color: #f78605;
+}
+[data-theme="hacker"] .spotted-card.desapego::before {
+    content: "+== [ MARKETPLACE_DESAPEGO ] ================================================================================================+";
+    color: #09c0fd;
+}
+
+/* Esconde ASCII frames durante swipe (performance) */
+[data-theme="hacker"] body.modo-tinder-ativo .bt-card::before,
+[data-theme="hacker"] body.modo-swipe-ativo .spotted-card::before {
+    display: none;
 }
 
 
+/* ==================================================================
+   5. NAVEGAÇÃO (NAVBAR, MENU, DROPDOWNS)
+   ================================================================== */
 
-
-/* ---------------------------------------------------------------
-   7. CABEÇALHOS ASCII POR CATEGORIA (MANTIDOS E CORES)
-   --------------------------------------------------------------- */
-
-body.hacker-mode .spotted-card.anonimo::before { content: "+== [ USER_NOT_FOUND ] ==================================================================================================+" !important; color: #ffffff !important;  }
-body.hacker-mode .spotted-card.perdidos::before { content: "+== [ PROTOCOLO: GET_$ITEM ] ================================================================================================+" !important; color: #fcf809 !important; }
-body.hacker-mode .spotted-card.tenho-ranco::before { content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+" !important; color: #f33232 !important; }
-body.hacker-mode .spotted-card.elogio::before { content: "+== [ LOVE_IS_IN_THE_AIR <3 ] ==================================================================================================+" !important; color: #f85caa !important; }
-body.hacker-mode .spotted-card.games::before { content: "+== [ Xinput_DInput DETECTADO] ==================================================================================================+" !important; color: #00ffff !important; }
-body.hacker-mode .spotted-card.academico::before { content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+" !important; color: #b00bda !important; }
-body.hacker-mode .spotted-card.caronas::before { content: "+= [ SELECT * FROM unifev WHERE loc='houseofcaralho'] ========================================================================+" !important; color: #969dc4 !important; }
-body.hacker-mode .spotted-card.esportes::before { content: "+== [ JOIN_FOR_FUN ] ==========================================================================================================+" !important; color: #128a0ec2 !important; }
-body.hacker-mode .spotted-card.comunidade::before { content: "+== [ COMMUNITY_LINK ] ======================================================================================================+" !important; color: #ffffffbe !important; }
-body.hacker-mode .spotted-card.acaba-pelo-amor-de-deus::before { content:"+== [ WARNING: OVERFLOW_EMOTIONAL ] ================================================================================+" !important; color: #f78605 !important; }
-body.hacker-mode .spotted-card.desapego::before { content: "+== [ MARKETPLACE_DESAPEGO ] ================================================================================================+" !important; color: #09c0fd !important; }
-
-/* ---------------------------------------------------------------
-   8. NAVBAR, MENUS E DROPDOWNS (ESTILO LINHA DE COMANDO)
-   --------------------------------------------------------------- */
-
-body.hacker-mode .navbar,
-body.hacker-mode .menu,
-body.hacker-mode .sidebar-fenda,
-body.hacker-mode header,
-body.hacker-mode footer {
-    background-color: rgba(0, 0, 0, 0.95) ;
-    background-color: oklch(0 0 0 / 95%);
-    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
-    background-size: 100% 2px ;
-    font-family: monospace ;
+[data-theme="hacker"] .navbar,
+[data-theme="hacker"] .menu,
+[data-theme="hacker"] .sidebar-fenda,
+[data-theme="hacker"] header {
+    background-color: var(--hacker-bg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%);
+    background-size: 100% 2px;
+    font-family: monospace;
 }
-body.hacker-mode header::before{
-    background: rgba(0, 0, 0, 0.95);
-    background: oklch(0 0 0 / 95%);
-    color: var(--hacker-green,#00ff41) ;
-    font-family: monospace ;
-    font-weight: bold ;
-    white-space: nowrap ;
+
+[data-theme="hacker"] header::before {
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
+    font-family: monospace;
+    font-weight: bold;
+    white-space: nowrap;
     filter: none;
 }
 
-/* Links do menu */
-body.hacker-mode .menu li a,
-body.hacker-mode .navbar-nav .nav-link,
-body.hacker-mode .dropdown-item,
-body.hacker-mode .item-menu,
-body.hacker-mode .btn-header,
-body.hacker-mode .submenu li a {
-    color: #00ff00 ;
-    color: oklch(0.86644 0.294827 142.4953);
-    text-shadow: 0 0 6px #00ff00 ;
-    text-transform: uppercase ;
-    transition: all 0.1s steps(2) ;
-    position: relative ;
-    background: transparent ;
+[data-theme="hacker"] .menu li a,
+[data-theme="hacker"] .navbar-nav .nav-link,
+[data-theme="hacker"] .dropdown-item,
+[data-theme="hacker"] .item-menu,
+[data-theme="hacker"] .btn-header,
+[data-theme="hacker"] .submenu li a {
+    color: var(--hacker-green);
+    text-shadow: 0 0 6px var(--hacker-green);
+    text-transform: uppercase;
+    transition: all 0.1s steps(2);
+    position: relative;
+    background: transparent;
+}
+
+[data-theme="hacker"] .navbar-nav .nav-link:hover,
+[data-theme="hacker"] .menu li a:hover,
+[data-theme="hacker"] .dropdown-item:hover,
+[data-theme="hacker"] .item-menu:hover,
+[data-theme="hacker"] .lista-conselhos li:hover,
+[data-theme="hacker"] .btn-zarpar:hover,
+[data-theme="hacker"] .btn-ficar-terra:hover,
+[data-theme="hacker"] .bloco-diretrizes li:hover,
+[data-theme="hacker"] .submenu li a:hover {
+    background-color: var(--hacker-hover-bg);
+    color: var(--hacker-hover-text);
+    padding-left: 25px;
+    box-shadow: 0 0 10px var(--hacker-green);
     border-radius: 0;
+    text-shadow: none;
+    cursor: crosshair;
 }
 
-/* Hover dos menus: inversão total */
-
-body.hacker-mode .navbar-nav .nav-link:hover,
-body.hacker-mode .menu li a:hover,
-body.hacker-mode .dropdown-item:hover,
-body.hacker-mode .item-menu:hover,
-body.hacker-mode .lista-conselhos li:hover,
-body.hacker-mode .btn-zarpar:hover,
-body.hacker-mode .btn-ficar-terra:hover,
-body.hacker-mode .bloco-diretrizes li:hover,
-body.hacker-mode .submenu li a:hover {
-    background-color: #00ff00 ;
-    background-color: oklch(0.86644 0.294827 142.4953);
-    color: #000000 ;
-    color: oklch(0 0 0);
-    padding-left: 25px !important;
-    box-shadow: 0 0 12px #00ff00 !important;
-    text-shadow: none ;
-    cursor: crosshair ;
-}
-
-/* Seta ">" no hover */
-body.hacker-mode .navbar-nav .nav-link:hover::before,
-body.hacker-mode .menu li a:hover::before,
-body.hacker-mode .lista-conselhos li:hover::before,
-body.hacker-mode .btn-zarpar::before,
-body.hacker-mode .btn-ficar-terra::before,
-body.hacker-mode .dropdown-item:hover::before {
-    content: ">" !important;
-    position: absolute !important;
+[data-theme="hacker"] .navbar-nav .nav-link:hover::before,
+[data-theme="hacker"] .menu li a:hover::before,
+[data-theme="hacker"] .lista-conselhos li:hover::before,
+[data-theme="hacker"] .btn-zarpar::before,
+[data-theme="hacker"] .btn-ficar-terra::before,
+[data-theme="hacker"] .dropdown-item:hover::before {
+    content: ">";
+    position: absolute;
     font-size: 1rem;
-    left: 10px ;
-    color: #000 ;
-    color: oklch(0 0 0);
-    font-weight: bold ;
-    animation: blink-cursor 0.5s infinite !important;
+    font-size: clamp(0.92rem, 1.65vw, 1.2rem);
+    left: 10px;
+    color: var(--hacker-hover-text);
+    font-weight: bold;
+    animation: blink-cursor 0.5s infinite;
 }
 
-/* Dropdowns e submenus */
-body.hacker-mode .dropdown-menu,
-body.hacker-mode .submenu {
-    border: 2px solid #00ff00 !important;
-    background: #000 ;
-    background: oklch(0 0 0);
-    border-radius: 0 ;
-    padding: 0 ;
-}
-
-/* ---------------------------------------------------------------
-   9. INPUTS, TEXTAREAS, SELECTS (PROMPT DE COMANDO + TYPING) - MODO HACKER
-   --------------------------------------------------------------- */
-
-/* Estilos de texto para os inputs nativos */
-body.hacker-mode input,
-body.hacker-mode textarea,
-body.hacker-mode select,
-body.hacker-mode .config-item,
-body.hacker-mode .fenda-input,
-body.hacker-mode .textarea-fenda {
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    caret-color: #00ff00 ;
-    caret-color: oklch(0.86644 0.294827 142.4953);
-    font-family: 'Courier New', 'Courier', monospace ;
+[data-theme="hacker"] .dropdown-menu,
+[data-theme="hacker"] .submenu {
+    border: 2px solid var(--hacker-green);
+    background: var(--hacker-bg);
+    padding: 0;
 }
 
 
-/*  O SEGREDO: Aplicar o fundo preto e borda reta no CONTAINER do chat, não no textarea */
-body.hacker-mode .textarea-container {
-    background: #000000 ; 
-    border: 1px solid #00ff00 ; 
-    border-radius: 0px ; /* Remove o arredondamento no modo hacker */
+/* ==================================================================
+   6. FORMULÁRIOS (INPUTS, BOTÕES, TEXTAREA)
+   ================================================================== */
+
+[data-theme="hacker"] input,
+[data-theme="hacker"] textarea,
+[data-theme="hacker"] select,
+[data-theme="hacker"] .config-item,
+[data-theme="hacker"] .fenda-input,
+[data-theme="hacker"] .textarea-fenda {
+    color: var(--hacker-green);
+    caret-color: var(--hacker-green);
+    font-family: var(--hacker-font);
 }
 
-/* Mantém a pílula visível e estilizada no modo hacker se necessário */
-body.hacker-mode .resposta-indicador {
-    border-radius: 0px ;
-    border-color: #00ff00 ;
-    background: rgba(0, 0, 0, 0.95) ;
+[data-theme="hacker"] .textarea-container {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
 }
 
-body.hacker-mode .comentario-menu-toggle,
-body.hacker-mode .comentario-ellipsis-menu {
-    border: 1px double #00ff41;
-    background: #000;
-    color: #00ff41;
+[data-theme="hacker"] .resposta-indicador {
+    border-color: var(--hacker-green);
+    background: var(--hacker-bg);
+}
+
+[data-theme="hacker"] .comentario-menu-toggle,
+[data-theme="hacker"] .comentario-ellipsis-menu {
+    border: 1px double var(--hacker-green);
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
     box-shadow: 0 0 8px rgba(0, 255, 65, 0.32);
 }
 
-body.hacker-mode .comentario-menu-item {
-    color: #00ff41;
+[data-theme="hacker"] .comentario-menu-item {
+    color: var(--hacker-green);
 }
 
-body.hacker-mode .comentario-menu-item:hover,
-body.hacker-mode .comentario-menu-item:focus-visible {
-    background: #00ff0d50;
+[data-theme="hacker"] .comentario-menu-item:hover,
+[data-theme="hacker"] .comentario-menu-item:focus-visible {
+    background: rgba(0, 255, 13, 0.31);
     transition: background 0.2s ease;
 }
 
-body.hacker-mode .comentario-menu-item[data-accion="excluir"] {
-    color: #00ff41;
-}
-
-/* Efeito de typing / cursor piscando focado no container do prompt */
-body.hacker-mode .textarea-container:focus-within {
-    outline: none ;
-    animation: blink-cursor-input 1s step-end infinite !important;
+[data-theme="hacker"] .textarea-container:focus-within {
+    outline: none;
+    animation: blink-cursor-input 1s step-end infinite;
 }
 
 @keyframes blink-cursor-input {
-    0%, 100% { box-shadow: 0 0 0 2px #00ff00; }
+    0%, 100% { box-shadow: 0 0 0 2px var(--hacker-green); }
     50% { box-shadow: 0 0 0 1px transparent; }
 }
 
 
-/* ---------------------------------------------------------------
-   10. BOTÕES (INVERSÃO DE CORES NO HOVER + SETA)
-   --------------------------------------------------------------- */
+/* --- BOTÕES (inversão de cor + seta) --- */
 
-body.hacker-mode .btn,
-body.hacker-mode .fenda-btn-glow,
-body.hacker-mode .btn-fenda-padrao,
-body.hacker-mode .btn-responder-bolha,
-body.hacker-mode .btn-sair-fenda,
-body.hacker-mode .btn-seguir-fenda,
-body.hacker-mode #btn-load-more,
-body.hacker-mode .btn-lancar,
-body.hacker-mode .btn-editar-atalho,
-body.hacker-mode .btn-finalizar-fenda,
-body.hacker-mode .login-btn,
-body.hacker-mode .btn-salvar-perfil,
-body.hacker-mode .btn-ficar-terra,
-body.hacker-mode #btn-menu-hamburguer,
-body.hacker-mode .btn-zarpar,
-body.hacker-mode .filtro-btn,
-body.hacker-mode .link-fofoca {  
-    background: #000 ;
-    background: oklch(0 0 0);
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    border: 1px double var(--hacker-green,#00ff41) ;
-    border-radius: 0 ;
-    font-family: monospace ;
-    text-transform: uppercase ;
-    position: relative ;
-    transition: none ;
+[data-theme="hacker"] .btn,
+[data-theme="hacker"] .fenda-btn-glow,
+[data-theme="hacker"] .btn-fenda-padrao,
+[data-theme="hacker"] .btn-responder-bolha,
+[data-theme="hacker"] .btn-sair-fenda,
+[data-theme="hacker"] .btn-seguir-fenda,
+[data-theme="hacker"] #btn-load-more,
+[data-theme="hacker"] .btn-lancar,
+[data-theme="hacker"] .btn-editar-atalho,
+[data-theme="hacker"] .btn-finalizar-fenda,
+[data-theme="hacker"] .login-btn,
+[data-theme="hacker"] .btn-salvar-perfil,
+[data-theme="hacker"] .btn-ficar-terra,
+[data-theme="hacker"] #btn-menu-hamburguer,
+[data-theme="hacker"] .btn-zarpar,
+[data-theme="hacker"] .filtro-btn,
+[data-theme="hacker"] .link-fofoca {
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
+    border: 1px double var(--hacker-green);
+    font-family: monospace;
+    text-transform: uppercase;
+    position: relative;
+    transition: none;
     cursor: crosshair;
-    overflow: visible ;
-    letter-spacing: 1px ;
-    text-decoration: none ;
+    overflow: visible;
+    letter-spacing: 1px;
+    text-decoration: none;
 }
 
-body.hacker-mode #btn-menu-hamburguer:hover {
-    background: #00ff0015 ;
-    background:oklch(0.86644 0.294827 142.4953 / 8.2%);
-    color: #ffca00 ;
-    color: oklch(0.8613 0.176 89.44);
+[data-theme="hacker"] #btn-menu-hamburguer:hover {
+    background: rgba(0, 255, 0, 0.082);
+    color: oklch(89.872% 0.15893 184.356);
 }
 
-body.hacker-mode .btn-enviar-chat,
-body.hacker-mode .btn-attach-gaveta {
-    background: #000 ;
-    background: oklch(0 0 0);
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    border: 2px double var(--hacker-green,#00ff41) ;
-    font-family: monospace ;
-    text-transform: uppercase ;
-    position: relative ;
-    transition: none ;
+[data-theme="hacker"] .btn-enviar-chat,
+[data-theme="hacker"] .btn-attach-gaveta {
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
+    border: 2px double var(--hacker-green);
+    font-family: monospace;
+    text-transform: uppercase;
+    position: relative;
+    transition: none;
     cursor: crosshair;
 }
 
-body.hacker-mode .btn-enviar-chat i:hover,
-body.hacker-mode .btn-attach-gaveta i:hover {
-    color: #000 ;
-    color: oklch(0 0 0);
+[data-theme="hacker"] .btn-enviar-chat i:hover,
+[data-theme="hacker"] .btn-attach-gaveta i:hover {
+    color: var(--hacker-hover-text);
 }
 
-body.hacker-mode .btn-attach-gaveta:hover {
-    background: #00ff00 ;
-    background: oklch(0.861283 0.293072 142.4953);
+[data-theme="hacker"] .btn-attach-gaveta:hover {
+    background: var(--hacker-green);
 }
 
-
-body.hacker-mode .perdidos-item .link-fofoca:hover,
-body.hacker-mode .btn-lancar:hover,
-body.hacker-mode .btn-editar-atalho:hover,
-body.hacker-mode .btn-voltar-fenda:hover {
-    color:#000;
-    color: oklch(0 0 0);
-    background: #00ff00;
-    background: oklch(0.861283 0.293072 142.4953);
-
+[data-theme="hacker"] .perdidos-item .link-fofoca:hover,
+[data-theme="hacker"] .btn-lancar:hover,
+[data-theme="hacker"] .btn-editar-atalho:hover,
+[data-theme="hacker"] .btn-voltar-fenda:hover {
+    color: var(--hacker-hover-text);
+    background: var(--hacker-green);
 }
 
-body.hacker-mode .btn-voltar-fenda {
-    background: #00ff0014;
-    background: oklch(0.86644 0.294827 142.4953 / 7.8%);
-    color: #00fdff ;
+[data-theme="hacker"] .btn-voltar-fenda {
+    background: rgba(0, 255, 0, 0.078);
     color: oklch(0.9007 0.1535 195.8);
 }
 
-
-/* Hover: fundo verde, texto preto, seta aparecendo */
-body.hacker-mode .btn:hover,
-body.hacker-mode .fenda-btn-glow:hover,
-body.hacker-mode #btn-load-more:hover,
-body.hacker-mode .btn-sair-fenda:hover,
-body.hacker-mode .btn-zarpar:hover,
-body.hacker-mode .btn-enviar-fenda:hover,
-body.hacker-mode .btn-ficar-terra:hover,
-body.hacker-mode .btn-finalizar-fenda:hover,
-body.hacker-mode .login-btn:hover {
-    background-color: #00ff00 ;
-    background-color: oklch(0.861283 0.293072 142.4953);
-    color: #000000 ;
-    color: oklch(0 0 0);
-    box-shadow: 0 0 8px #00ff00 ;
-    padding-left: 25px ;
+[data-theme="hacker"] .btn:hover,
+[data-theme="hacker"] .fenda-btn-glow:hover,
+[data-theme="hacker"] #btn-load-more:hover,
+[data-theme="hacker"] .btn-sair-fenda:hover,
+[data-theme="hacker"] .btn-zarpar:hover,
+[data-theme="hacker"] .btn-enviar-fenda:hover,
+[data-theme="hacker"] .btn-ficar-terra:hover,
+[data-theme="hacker"] .btn-finalizar-fenda:hover,
+[data-theme="hacker"] .login-btn:hover {
+    background-color: var(--hacker-hover-bg);
+    color: var(--hacker-hover-text);
+    box-shadow: 0 0 8px var(--hacker-green);
+    padding-left: 25px;
 }
 
-body.hacker-mode .nexus-trigger {
-    border-radius: 50%!important;
-    color: #00ff00;
-    color: oklch(0.861283 0.293072 142.4953);
-    background-color: #000000;
-    border: 2px solid #00ff41;
+[data-theme="hacker"] .btn::before,
+[data-theme="hacker"] .fenda-btn-glow::before,
+[data-theme="hacker"] #btn-load-more::before {
+    content: ">";
+    position: absolute;
+    left: -10px;
+    opacity: 0;
+    color: var(--hacker-green);
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
 
+[data-theme="hacker"] .btn:hover::before,
+[data-theme="hacker"] .fenda-btn-glow:hover::before {
+    opacity: 1;
+    left: 8px;
+    color: var(--hacker-hover-text);
+    animation: blink-cursor 0.5s infinite;
+}
+
+[data-theme="hacker"] #btn-load-more::before {
+    content: "[ ";
+    left: auto;
+    opacity: 1;
+    position: relative;
+}
+[data-theme="hacker"] #btn-load-more::after {
+    content: " ]";
+}
+[data-theme="hacker"] #btn-load-more[disabled]::after {
+    content: " [ EOF_REACHED ]";
 }
 
 
-body.hacker-mode .insignia-atletica-bottom:hover,
-body.hacker-mode .insignia-atletica-link:hover,
-body.hacker-mode .img-comunidade-grande:hover {
-    object-fit: contain ;
-    color: #0f0 ;
-    filter: brightness(1.1) drop-shadow(0 0 12px var(--hacker-green, #0f0 ));
-    border-style: none ;
-    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%) ;
-    transform: scale(1.03) ;
+/* ==================================================================
+   7. MÍDIA (AVATARES, IMAGENS, ÍCONES)
+   ================================================================== */
+
+[data-theme="hacker"] .foto-perfil,
+[data-theme="hacker"] .comentario-avatar,
+[data-theme="hacker"] .avatar-p,
+[data-theme="hacker"] .avatar-busca,
+[data-theme="hacker"] .img-comunidade-grande,
+[data-theme="hacker"] .img-avatar-perfil,
+[data-theme="hacker"] .capa-img,
+[data-theme="hacker"] .insignia-atletica-link {
+    filter: sepia(0.3) brightness(0.9) contrast(1) grayscale(0.2);
+    transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-body.hacker-mode .img-comunidade-grande:hover,
-body.hacker-mode .insignia-atletica-link:hover {
-    background: #00fd00;
-    background: oklch(86.129% 0.29305 142.511);
-    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) ;
+[data-theme="hacker"] .foto-perfil:hover,
+[data-theme="hacker"] .avatar-main:hover,
+[data-theme="hacker"] .avatar-busca:hover,
+[data-theme="hacker"] .comentario-avatar:hover,
+[data-theme="hacker"] .capa-img:hover,
+[data-theme="hacker"] .avatar-p:hover,
+[data-theme="hacker"] .insignia-atletica-link:hover img {
+    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px var(--hacker-green));
+}
+
+[data-theme="hacker"] .spotted-card-img:hover {
+    transform: none;
+}
+
+[data-theme="hacker"] .insignia-atletica-bottom:hover,
+[data-theme="hacker"] .insignia-atletica-link:hover,
+[data-theme="hacker"] .img-comunidade-grande:hover {
+    object-fit: contain;
+    color: var(--hacker-green);
+    filter: brightness(1.1) drop-shadow(0 0 12px var(--hacker-green));
+    border-style: none;
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 255, 0, 0.05) 50%);
+    transform: scale(1.03);
+}
+
+[data-theme="hacker"] .img-comunidade-grande:hover,
+[data-theme="hacker"] .insignia-atletica-link:hover {
+    background: var(--hacker-green);
+    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px var(--hacker-green));
     transition: background 0.2s;
 }
 
-
-body.hacker-mode .btn::before,
-body.hacker-mode .fenda-btn-glow::before,
-body.hacker-mode #btn-load-more::before {
-    content: ">" !important;
-    position: absolute !important;
-    left: -10px ;
-    opacity: 0 !important;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    font-weight: bold !important;
-    transition: all 0.2s ease !important;
-}
-
-body.hacker-mode .btn:hover::before,
-body.hacker-mode .fenda-btn-glow:hover::before {
-    opacity: 1 !important;
-    left: 8px !important;
-    color: #000 ;
-    color: oklch(0 0 0);
-    animation: blink-cursor 0.5s infinite !important;
-}
-
-/* Botão "Carregar mais" com colchetes */
-body.hacker-mode #btn-load-more::before { content: "[ " !important; left: auto !important; opacity: 1 !important; position: relative !important; }
-body.hacker-mode #btn-load-more::after { content: " ]" !important; }
-body.hacker-mode #btn-load-more[disabled]::after { content: " [ EOF_REACHED ]" !important; }
-
-/* ---------------------------------------------------------------
-   11. AVATARES E IMAGENS (SEPIA + HOVER COM BRILHO)
-   --------------------------------------------------------------- */
-
-   /* 1. SELETOR DOS CONTAINERS (Adicione os seletores dos pais aqui) */
-body.hacker-mode .avatar-posicionador, 
-body.hacker-mode .comentario-media-wrapper,
-body.hacker-mode .container-img-post,
-body.hacker-mode .feed-anexos-grid,
-body.hacker-mode .anexos-grid,
-body.hacker-mode .anexos-grid-post,
-body.hacker-mode .avatar-p,
-body.hacker-mode .capa-wrapper,
-body.hacker-mode .avatar-central,
-body.hacker-mode .comentario-media-wrapper-grid,
-body.hacker-mode .avatar-wrapper,
-body.hacker-mode .header-miniatura .miniatura-avatar,
-body.hacker-mode .link-do-avatar,
-body.hacker-mode .insignia-atletica-link {
-    border-radius: 0;
-}
-
-body.hacker-mode .foto-perfil,
-body.hacker-mode .comentario-avatar,
-body.hacker-mode .avatar-p,
-body.hacker-mode .avatar-busca,
-body.hacker-mode .img-comunidade-grande,
-body.hacker-mode .img-avatar-perfil,
-body.hacker-mode .capa-img,
-body.hacker-mode .insignia-atletica-link {
-    filter: sepia(0.3) brightness(0.9) contrast(1) grayscale(0.2) ;
-    transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out ;
-    border-radius: 0;
-}
-
-body.hacker-mode .foto-perfil:hover,
-body.hacker-mode .avatar-main:hover,
-body.hacker-mode .avatar-busca:hover,
-body.hacker-mode .comentario-avatar:hover,
-body.hacker-mode .capa-img:hover,
-body.hacker-mode .avatar-p:hover,
-body.hacker-mode .insignia-atletica-link:hover img {
-    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px #00ff00) ;
-}
-
-
-body.hacker-mode .spotted-card-img:hover {
-    transform: none;  
-}
-
-/* ---------------------------------------------------------------
-   12. ÍCONES FONT AWESOME (VERDE NEON + FLICKER - MANTIDOS)
-   --------------------------------------------------------------- */
-
-body.hacker-mode i,
-body.hacker-mode .fa-solid,
-body.hacker-mode .fa-regular,
-body.hacker-mode [class*="fa-"],
-body.hacker-mode .fas,
-body.hacker-mode .spotted-card .user-info-post::after,
-body.hacker-mode .far,
-body.hacker-mode .fab {
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    text-shadow: 0 0 2px #00ff00 ;
-    opacity: 1 ;
-    visibility: visible ;
-    display: inline-block ;
-    animation: flicker 4s infinite ease-in  ;
-}
-
-/* No hover dos botões, ícones também invertem */
-body.hacker-mode .btn:hover i,
-body.hacker-mode #toggle-chat-barra,
-body.hacker-mode .fenda-btn-glow:hover i,
-body.hacker-mode .nav-link:hover i,
-body.hacker-mode .menu li a:hover i {
-    color: #000 ;
-    color: oklch(0 0 0);
-    text-shadow: none ;
-}
-
-/* ---------------------------------------------------------------
-   13. BADGES, TAGS E STATUS
-   --------------------------------------------------------------- */
-
-body.hacker-mode .badge,
-body.hacker-mode .tag-categoria,
-body.hacker-mode .tag-link,
-body.hacker-mode .badge-presenca {
-    background: #000 ;
-    background: oklch(0 0 0);
-    border: 1px solid #00ff00 ;
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    border-radius: 0 ;
-    padding: 5px 10px ;
-    text-transform: uppercase ;
-    font-family: monospace ;
-}
-
-body.hacker-mode .badge-perdido,
-body.hacker-mode .badge-achado {
-    border: 1px solid #00ff00 ;
-    color: #0e1d0e ;
-    color: oklch(0.212 0.0356 144.19);
-    text-transform: uppercase ;
-    font-family: monospace ;
-}
-
-body.hacker-mode .badge-alertas {
-    background: #000000 ;
-    background: oklch(0 0 0);
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    box-shadow: 0 0 8px #00ff00 ;
-}
-
-/* ---------------------------------------------------------------
-   14. COMENTÁRIOS (ESTILO STDOUT COM PREFIXO)
-   --------------------------------------------------------------- */
-
-body.hacker-mode .comentario-item, body.hacker-mode .comentario-item.comentario-filho  {
-    border: 1px solid #0f0 ;
-    border-radius: 10px 10px 10px 2px;
-
-}
-
-body.hacker-mode .comentario-item.meu-comentario {
-    border-radius: 8px 8px 2px 8px;
-}
-
-
-body.hacker-mode .comentario-autor {
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    text-shadow: 0 0 2px #0f0 ;
-}
-
-
-/* ==========================================================
-   ADAPTAÇÃO DAS VIBES PARA O MODO HACKER (TERMINAL) - VERSÃO CORRIGIDA
-   ========================================================== */
-
-/* 1. VIBE DARK (Eigengrau) - Terminal clássico pesado */
-body.hacker-mode .comentario-item.vibe-dark {
-    background: #0b0e2bad ;
-    background: oklch(0.1814 0.0582 274.59 / 67.8%);
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-
-body.hacker-mode .comentario-item.vibe-dark .comentario-autor {
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    text-shadow: 0 0 5px #00ff00;
-}
-
-/* 2. VIBE GLASS - Efeito Matrix translúcido */
-body.hacker-mode .comentario-item.vibe-glass {
-    background: rgba(50, 81, 50, 0.53) ;
-    -webkit-backdrop-filter: blur(6px) ;
-    backdrop-filter: blur(6px) ;
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-
-body.hacker-mode .comentario-item.vibe-glass .comentario-autor {
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    text-shadow: 0 0 4px #00ff00;
-}
-
-/* 3. VIBE NEON - Efeito glitch pulsante */
-body.hacker-mode .comentario-item.vibe-neon {
-    background: #000000 ;
-    background: oklch(0% 0 0);
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
-    margin-bottom: 15px;
-    position: relative;
-    animation: hacker-glitch 5s infinite alternate !important;
-}
-
-body.hacker-mode .comentario-item.vibe-neon .comentario-data,
-body.hacker-mode .comentario-item.vibe-neon .comentario-autor {
-    color: #00ff00 !important;
-    font-weight: bold;
-    text-shadow: 0 0 8px #00ff00 !important;
+/* Ícones Font Awesome */
+[data-theme="hacker"] i,
+[data-theme="hacker"] .fa-solid,
+[data-theme="hacker"] .fa-regular,
+[data-theme="hacker"] [class*="fa-"],
+[data-theme="hacker"] .fas,
+[data-theme="hacker"] .spotted-card .user-info-post::after,
+[data-theme="hacker"] .far,
+[data-theme="hacker"] .fab {
+    color: var(--hacker-green);
+    text-shadow: 0 0 2px var(--hacker-green);
     opacity: 1;
+    visibility: visible;
+    display: inline-block;
+    font-family: "Font Awesome 6 Free";
+    animation: flicker 4s infinite ease-in;
 }
 
-/* Animação de glitch para o modo hacker neon */
-@keyframes hacker-glitch {
-    0%, 100% {
-        box-shadow: 0 0 5px #00ff00, 0 0 10px rgba(0, 255, 0, 0.3);
-        border-left-color: #00ff00;
-    }
-    10%, 30%, 50%, 70%, 90% {
-        box-shadow: 0 0 15px #00ff00, 0 0 25px rgba(0, 255, 0, 0.5);
-        border-left-color: #00ff00;
-    }
-    20%, 40%, 60%, 80% {
-        box-shadow: 0 0 2px #00ff00, 0 0 5px rgba(0, 255, 0, 0.1);
-        border-left-color: rgba(0, 255, 0, 0.5);
-    }
+[data-theme="hacker"] .btn:hover i,
+[data-theme="hacker"] #toggle-chat-barra,
+[data-theme="hacker"] .fenda-btn-glow:hover i,
+[data-theme="hacker"] .nav-link:hover i,
+[data-theme="hacker"] .menu li a:hover i {
+    color: var(--hacker-hover-text);
+    text-shadow: none;
 }
 
-/* 4. VIBE LIGHT - Terminal Monocromático Vintage (verde-fósforo suave) */
-body.hacker-mode .comentario-item.vibe-light {
-    background: #3a873a57;  
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
-    font-weight: normal;
-    /* Aplica a cor verde e a grade por cima de todo o quadrado */
-    
-}
-
-body.hacker-mode .comentario-item.vibe-light .comentario-autor {
-    color: #66ff66 ;  /* Verde médio para o nome do autor */
-    text-shadow: 0 0 4px #33ff33 !important;
-    font-weight: bold;
-}
-
-body.hacker-mode .comentario-item.vibe-light .indicador-resposta,
- body.hacker-mode .resposta-indicador {
-    background: #7fa7776e;
-}
-
-body.hacker-mode .comentario-item.vibe-light .comentario-data {
-    color: #4dc44d ;  /* Verde mais escuro para a data */
-    opacity: 0.92;
-}
-
-body.hacker-mode .comentario-item.vibe-light .comentario-texto {
-    color: #c0ffc0 ;  /* Verde bem suave para o texto principal */
-}
-
-
-/* EXTRA : ADS MODE */
 
 /* ==================================================================
-   INTEGRAÇÃO DA VIBE ADS NO MODO HACKER TERMINAL (ALCATEIA OVERRIDE)
+   8. META (BADGES, REAÇÕES, CONTADORES, DATA)
    ================================================================== */
-body.hacker-mode .comentario-item.vibe-ads {
-    background-color: #000000 ; /* Fundo breu total do terminal */
-    background-color: oklch( 0 0 0);
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important; /* Brilho fantasma verde */
-    animation: pulsar-luz 3s infinite ease-in-out ;
-    /* ⚡ A MÁGICA: O mesmo circuito/grid, adaptado para VERDE HACKER (%2300ff41) */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E") ;
-    background-size: 40px 40px ;
+
+[data-theme="hacker"] .badge,
+[data-theme="hacker"] .tag-categoria,
+[data-theme="hacker"] .tag-link,
+[data-theme="hacker"] .badge-presenca {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
+    padding: 5px 10px;
+    text-transform: uppercase;
+    font-family: monospace;
 }
 
-
-/* Texto do comentário em matriz verde fosforescente */
-body.hacker-mode .comentario-item.vibe-ads .comentario-texto {
-    color: var(--hacker-green,#00ff41) ;
-    text-shadow: 0 0 2px var(--hacker-green,#00ff41) ;
-    font-family: var(--hacker-font) ;
+[data-theme="hacker"] .badge-perdido,
+[data-theme="hacker"] .badge-achado {
+    border: 1px solid var(--hacker-green);
+    color: oklch(0.212 0.0356 144.19);
+    text-transform: uppercase;
+    font-family: monospace;
 }
 
-body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item,
-body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item  {
-    border-color: #00ff41 ;
-}
-body.hacker-mode .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active,
-body.hacker-mode .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
-    background: rgba(0, 255, 64, 0.144) ;
-    border-color: #00ff41 ;
-    box-shadow: 0 0 10px #00ff41 ;
+[data-theme="hacker"] .badge-alertas {
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
+    box-shadow: 0 0 8px var(--hacker-green);
 }
 
-
-/* ==========================================================
-   HIGHLIGHT HACKER – EFEITO GLITCH VERDE
-   ========================================================== */
-
-/* A keyframe exclusiva para o hacker */
-@keyframes hacker-highlight {
-    0% {
-        background-color: rgba(0, 255, 64, 0.897);
-        box-shadow: 0 0 18px rgba(0, 255, 65, 0.3);
-        border-left: 2px solid #00ff41;
-    }
-    40% {
-        background-color: rgba(0, 255, 65, 0.2);
-        box-shadow: 0 0 35px rgba(0, 255, 65, 0.6);
-        border-left: 4px solid #00ff41;
-    }
-    100% {
-        background-color: transparent;
-        box-shadow: none;
-        border-left: 3px solid var(--cor-borda-glow, #00ff41);
-    }
+/* Reações */
+[data-theme="hacker"] .reacao-item {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
+    font-family: monospace;
 }
 
-/* Seletor com alta especificidade para vencer qualquer regra */
-body.hacker-mode .comentario-item.comentario-highlight {
-    animation: hacker-highlight 6s ease-out forwards !important;
-    border-radius: 8px ;
-    border-left: 3px solid #00ff41 ;
+[data-theme="hacker"] .reacao-item.voted {
+    background: rgba(0, 255, 0, 0.2);
+    border-color: var(--hacker-green);
+    box-shadow: 0 0 8px var(--hacker-green);
 }
 
-
-/* ---------------------------------------------------------------
-   16. TIPOGRAFIA GERAL (TÍTULOS COM PREFIXO DE TERMINAL)
-   --------------------------------------------------------------- */
-
-body.hacker-mode h1,
-body.hacker-mode h2,
-body.hacker-mode .titulo-fofoca,
-body.hacker-mode .nome-publico,
-body.hacker-mode .conselho-header {
-    font-family: monospace ;
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    text-transform: uppercase ;
-    border-bottom: 1px dashed #00ff00 ;
-    display: inline-block ;
-    padding-right: 15px;
-}
-
-body.hacker-mode h1::before { content: "root@fenda:~# " ; opacity: 0.6 ; }
-body.hacker-mode h2::before { content: "./" ; opacity: 0.6 ; }
-
-
-body.hacker-mode .comentario-texto,
-body.hacker-mode .post-content,
-body.hacker-mode .bio-texto {
-    font-family: monospace ;
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    line-height: 1.5 ;
-    text-shadow: 0 0 5px rgba(0,255,0,0.3) ;
-}
-
-/* ---------------------------------------------------------------
-   17. FILTROS E BOTÕES DE CATEGORIA
-   --------------------------------------------------------------- */
-
-body.hacker-mode .filtro-btn,
-body.hacker-mode .btn-abrir-filtros,
-body.hacker-mode  #bt-btn-filtros,
-body.hacker-mode .btn-criar-comunidade,
-body.hacker-mode .bt-btn-principal,
-body.hacker-mode .login-btn,
-body.hacker-mode .btn-filtro,
-body.hacker-mode .btn-fenda-padrao,
-body.hacker-mode .btn-enviar-chat,
-body.hacker-mode body:not(.modo-swipe-ativo) #btn-abrir-filtros,
-body.hacker-mode body.modo-swipe-ativo #btn-abrir-filtros,
-body.hacker-mode .preview-botao
- {
-    background: #000 ;
-    background: oklch(0 0 0);
-    border: 1px solid #00ff00 ;
-    color: #00ff00 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-
-body.hacker-mode .btn-filtro.ativo,
-body.hacker-mode  #bt-btn-filtros:hover,
-body.hacker-mode .btn-abrir-filtros:hover,
-body.hacker-mode .btn-fenda-padrao:hover,
-body.hacker-mode .btn-criar-comunidade:hover,
-body.hacker-mode .btn-enviar-chat:hover,
-body.hacker-mode .bt-btn-principal:hover,
-body.hacker-mode .login-btn:hover,
-body.hacker-mode .btn-editar-atalho:hover,
-body.hacker-mode #btnRevelarConteudo.preview-botao:hover,
-body.hacker-mode .filtro-btn.ativo,
-body.hacker-mode .filtro-btn:hover {
-    background: #00ff00 ;
-    background: oklch(0.861283 0.293072 142.4953) ;
-    color: #000000 ;
-    color: oklch(0 0 0) ;
-}
-
-
-/* ============================================================
-   ADAPTAÇÃO DO BOTÃO DE FILTROS (BALANGA TERAS) PARA O MODO HACKER
-   🐚 CORRENTE – 2026-10-13 (Sprint 2.5 / Bloco 4.3-hacker)
-   Mantém a animação girarLuzesBalada, mas troca a paleta
-   da balada (dourado/magenta/ciano) por uma paleta verde/ciano
-   neon (estilo Tron). O blur aumentou levemente pra reforçar
-   o efeito fosforescente sobre fundo preto.
-   ============================================================ */
-body.hacker-mode .bt-btn-filtro::before {
-    background: conic-gradient(from var(--angulo-balada),
-            #00ff41,       /* verde-fósforo */
-            #00ffcc,       /* ciano-neon */
-            #00ffff,       /* azul-ciano */
-            #00ff41);      /* volta ao verde */
-    filter: blur(5px);
-}
-
-body.hacker-mode .bt-btn-filtro:hover {
-    background: rgba(0, 255, 65, 0.08);
-    border-color: #00ff41;
-    color: #00ff41;
-    text-shadow: 0 0 4px #00ff41;
-}
-
-body.hacker-mode .bt-btn-filtro:active{
-    background: #00ff00 ;
-    background: conic-gradient( from 45deg, oklch(0.861283 0.293072 142.4953), oklch(0.861283 0.293072 142.4953)) ;
-    text-shadow: 0 0 4px #00ff00 ;
-    color: #000000 ;
-    color: oklch(0 0 0) ;
-}
-
-
-body.hacker-mode .filtros-perdidos {
-    margin-top: 30px;
-}
-
-/* ---------------------------------------------------------------
-   18. SEÇÃO CONSELHOS E DIRETRIZES (COM MARCADOR ">")
-   --------------------------------------------------------------- */
-
-body.hacker-mode .bloco-conselhos,
-body.hacker-mode .lista-conselhos li {
-    display: block ;
-    visibility: visible ;
-    clip-path: none ;
-    overflow: visible ;
-}
-body.hacker-mode .lista-conselhos li::before {
-    content: "> " ;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    font-weight: bold ;
-}
-body.hacker-mode .lista-conselhos li:hover {
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953) ;
-    color: #000 ;
-    color: oklch(0 0 0) ;
-    transform: translateX(4px) ;
-}
-
-body.hacker-mode .box-diretrizes li:hover {
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953) ;
-    color: #000 ;
-    color: oklch(0 0 0) ;
-    transform: translateX(4px) ;
-}
-
-
-/* ---------------------------------------------------------------
-   19. MENSAGENS DE SISTEMA E RODAPÉ
-   --------------------------------------------------------------- */
-
-body.hacker-mode footer::after {
-    content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
-    display: block ;
-    text-align: center ;
-    font-size: 0.6rem ;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    opacity: 0.6 ;
-}
-
-
-body.hacker-mode .post-content.tem-mais:not(.expandido)::after {
-    content: ' > [ CARREGAR_DADOS... ]' ;
-    background: #000 ;
-    background: oklch(0 0 0);
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    font-weight: bold ;
-}
-
-/* ---------------------------------------------------------------
-   20. REAÇÕES E POPUPS DE EMOJIS
-   --------------------------------------------------------------- */
-
-body.hacker-mode .reacao-item {
-    background: #000 ;
-    background: oklch(0 0 0 0);
-    border: 1px solid #0f0 ;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-    font-family: monospace ;
-}
-
-body.hacker-mode .reacao-item.voted {
-    background: rgba(0,255,0,0.2) ;
-    border-color: #0f0 ;
-    box-shadow: 0 0 8px #0f0 ;
-}
-
-/* Garante que o container dos emojis use flexbox e alinhe os itens em grade/linha */
-body.hacker-mode .reacoes-popup {
-    border: 1px solid #00ff00;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+[data-theme="hacker"] .reacoes-popup {
+    border: 1px solid var(--hacker-green);
+    box-shadow: 0 0 6px rgba(0, 255, 0, 0.5);
     background: repeating-linear-gradient(
         0deg,
         rgba(0, 0, 0, 0.5) 0px,
         rgba(0, 0, 0, 0.5) 1px,
         transparent 1px,
-        transparent 3px
-    ), #031403 ;
-    background-size: 100% 3px ;
-    border-radius: 0;
-    /* Configurações extras para o container */
-    display: flex ;
-    gap: 4px ; /* Espaço entre os quadradinhos dos emojis */
+        transparent 2px
+    ), #031403;
+    background-size: 100% 2px;
+    display: flex;
+    border-radius: 4px;
+    gap: 4px;
 }
 
-/* Modifica os elementos dos emojis para virarem quadradinhos perfeitos */
-body.hacker-mode .reacoes-popup span {
-    display: inline-flex ;
-    align-items: center ;
-    justify-content: center ;
-    border-radius: 3px;
+[data-theme="hacker"] .reacoes-popup span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.2s ease;
 }
 
-/* Hover: Agora preencherá o quadrado inteiro de 32x32 pixels */
-body.hacker-mode .reacoes-popup span:hover {
-    filter: saturate(1.15) drop-shadow(0 0 2px #00ff00);
-    background: #00ff00b2;
+[data-theme="hacker"] .reacoes-popup span:hover {
+    filter: saturate(1.15) drop-shadow(0 0 2px var(--hacker-green));
     background: oklch(0.86644 0.294827 142.4953 / 69.8%);
 }
 
+[data-theme="hacker"] .char-counter {
+    font-size: 0.95rem;
+    color: var(--hacker-green);
+}
 
-/* ---------------------------------------------------------------
-   21. TOOLBAR LATERAL E CONFIGURAÇÕES DE ÁUDIO
-   --------------------------------------------------------------- */
+/* Data / hora — verde-soft pra contraste */
+[data-theme="hacker"] .comentario-data,
+[data-theme="hacker"] .comentario-item.vibe-ads .comentario-data {
+    color: var(--hacker-green-soft);
+    text-shadow: 0 0 4px var(--hacker-green-soft);
+    font-family: var(--hacker-font);
+    font-weight: bold;
+    opacity: 1;
+}
 
-body.hacker-mode #fenda-toolbar {
+
+/* ==================================================================
+   9. COMENTÁRIOS + 5 VIBES HARMONIZADAS
+   ================================================================== */
+
+[data-theme="hacker"] .comentario-item,
+[data-theme="hacker"] .comentario-item.comentario-filho {
+    border: 1px solid var(--hacker-green);
+    border-radius: 10px 10px 10px 2px;
+}
+
+[data-theme="hacker"] .comentario-item.meu-comentario {
+    border-radius: 8px 8px 2px 8px;
+}
+
+[data-theme="hacker"] .comentario-autor {
+    color: var(--hacker-green);
+    text-shadow: 0 0 2px var(--hacker-green);
+}
+
+[data-theme="hacker"] .comentario-texto,
+[data-theme="hacker"] .post-content,
+[data-theme="hacker"] .bio-texto {
+    font-family: monospace;
+    color: var(--hacker-green-pastel);
+    line-height: 1.5;
+    text-shadow: 0 0 3px rgba(192, 255, 192, 0.4);
+}
+
+/* --- VIBE DARK: preto fosco puro --- */
+[data-theme="hacker"] .comentario-item.vibe-dark {
+    background: rgba(5, 10, 5, 0.92);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .comentario-item.vibe-dark .comentario-autor {
+    color: var(--hacker-green);
+    text-shadow: 0 0 5px var(--hacker-green);
+}
+
+/* --- VIBE LIGHT: cinza-esverdeado, borda tracejada --- */
+[data-theme="hacker"] .comentario-item.vibe-light {
+    background: rgba(30, 42, 30, 0.85);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px dashed rgba(120, 255, 150, 0.55);
+    border-left: 3px solid var(--hacker-green-soft);
+    color: var(--hacker-green-pastel);
+    font-weight: normal;
+}
+
+[data-theme="hacker"] .comentario-item.vibe-light .comentario-autor {
+    color: var(--hacker-green-soft);
+    text-shadow: 0 0 4px var(--hacker-green-soft);
+    font-weight: bold;
+}
+
+[data-theme="hacker"] .comentario-item.vibe-light .comentario-data {
+    color: var(--hacker-green-soft);
+    text-shadow: 0 0 3px var(--hacker-green-soft);
+    opacity: 1;
+}
+
+[data-theme="hacker"] .comentario-item.vibe-light .comentario-texto {
+    color: var(--hacker-green-pastel);
+    text-shadow: 0 0 3px rgba(192, 255, 192, 0.4);
+}
+
+[data-theme="hacker"] .comentario-item.vibe-light .indicador-resposta {
+    background: rgba(0, 255, 65, 0.15);
+    border-left-color: var(--hacker-green);
+    color: var(--hacker-green);
+}
+
+/* --- VIBE GLASS: SVG pattern diagonal (fake glass, 0 FPS) --- */
+[data-theme="hacker"] .comentario-item.vibe-glass {
+    background: rgba(0, 35, 40, 0.55);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath d='M-1 1l2-2M0 8l8-8M7 9l2-2' stroke='%2300dcb4' stroke-width='0.5' stroke-opacity='0.15' fill='none'/%3E%3C/svg%3E");
+    background-size: 8px 8px;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid rgba(0, 220, 180, 0.55);
+    border-radius: 12px 12px 12px 3px;
+    color: var(--hacker-green-pastel);
+}
+
+[data-theme="hacker"] .comentario-item.vibe-glass .comentario-autor {
+    color: #66ffdd;
+    text-shadow: 0 0 4px rgba(0, 220, 180, 0.6);
+}
+
+[data-theme="hacker"] .comentario-item.vibe-glass .comentario-rodape::after {
+    content: "◊";
+    color: rgba(0, 220, 180, 0.6);
+    font-size: 0.75rem;
+    margin-left: 6px;
+    opacity: 0.8;
+}
+
+/* --- VIBE NEON: glitch pulsante --- */
+[data-theme="hacker"] .comentario-item.vibe-neon {
+    background: var(--hacker-bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    margin-bottom: 15px;
+    position: relative;
+    animation: hacker-glitch 5s infinite alternate;
+}
+
+[data-theme="hacker"] .comentario-item.vibe-neon .comentario-data,
+[data-theme="hacker"] .comentario-item.vibe-neon .comentario-autor {
+    color: var(--hacker-green);
+    font-weight: bold;
+    text-shadow: 0 0 8px var(--hacker-green);
+    opacity: 1;
+}
+
+@keyframes hacker-glitch {
+    0%, 100% {
+        box-shadow: 0 0 5px var(--hacker-green), 0 0 10px rgba(0, 255, 0, 0.3);
+        border-left-color: var(--hacker-green);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        box-shadow: 0 0 15px var(--hacker-green), 0 0 25px rgba(0, 255, 0, 0.5);
+        border-left-color: var(--hacker-green);
+    }
+    20%, 40%, 60%, 80% {
+        box-shadow: 0 0 2px var(--hacker-green), 0 0 5px rgba(0, 255, 0, 0.1);
+        border-left-color: rgba(0, 255, 0, 0.5);
+    }
+}
+
+/* --- VIBE ADS: hexágonos --- */
+[data-theme="hacker"] .comentario-item.vibe-ads {
+    background-color: var(--hacker-bg);
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    animation: pulsar-luz 3s infinite ease-in-out;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E");
+    background-size: 30px 30px;
+}
+
+[data-theme="hacker"] .comentario-item.vibe-ads .comentario-texto {
+    color: var(--hacker-green);
+    text-shadow: 0 0 2px var(--hacker-green);
+    font-family: var(--hacker-font);
+}
+
+/* --- COMENTÁRIO DELETADO (contraste garantido) --- */
+[data-theme="hacker"] .comentario-item.comentario-deletado,
+[data-theme="hacker"] .comentario-item.comentario-deletado.vibe-light,
+[data-theme="hacker"] .comentario-item.comentario-deletado.vibe-ads,
+[data-theme="hacker"] .comentario-item.comentario-deletado.vibe-dark,
+[data-theme="hacker"] .comentario-item.comentario-deletado.vibe-glass,
+[data-theme="hacker"] .comentario-item.comentario-deletado.vibe-neon {
+    background: rgba(30, 30, 30, 0.7);
+    border: 1px dashed var(--hacker-green);
+    border-left: 3px solid var(--hacker-green);
+    border-right: none;
+    color: var(--hacker-green);
+    opacity: 0.85;
+}
+
+[data-theme="hacker"] .comentario-deletado-msg,
+[data-theme="hacker"] .comentario-deletado-msg i {
+    color: var(--hacker-green);
+    text-shadow: 0 0 4px var(--hacker-green);
+    font-family: var(--hacker-font);
+    font-weight: bold;
+    opacity: 1;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+/* --- HIGHLIGHT (comentário destacado) --- */
+@keyframes hacker-highlight {
+    0% {
+        background-color: rgba(0, 255, 64, 0.897);
+        box-shadow: 0 0 18px rgba(0, 255, 65, 0.3);
+        border-left: 2px solid var(--hacker-green);
+    }
+    40% {
+        background-color: rgba(0, 255, 65, 0.2);
+        box-shadow: 0 0 35px rgba(0, 255, 65, 0.6);
+        border-left: 4px solid var(--hacker-green);
+    }
+    100% {
+        background-color: transparent;
+        box-shadow: none;
+        border-left: 3px solid var(--hacker-green);
+    }
+}
+
+[data-theme="hacker"] .comentario-item.comentario-highlight {
+    animation: hacker-highlight 6s ease-out forwards;
+    border-radius: 8px;
+    border-left: 3px solid var(--hacker-green);
+}
+
+/* Fallback: reduced-motion perde blur */
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="hacker"] .comentario-item.vibe-glass,
+    [data-theme="hacker"] .spotted-card.vibe-glass,
+    [data-theme="hacker"] .main-perfil-container-publico.vibe-glass {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+}
+
+
+/* ==================================================================
+   10. COMPONENTES (TOOLBAR, LOGIN, PERFIL, FOOTER, CARDS)
+   ================================================================== */
+
+/* --- TOOLBAR LATERAL --- */
+[data-theme="hacker"] #fenda-toolbar {
     background: #1b2916ad;
-    border: 1px solid #00ff00 ;
-    color: #00ff00 ;
-    border-radius: 0;
-    font-family: monospace ;
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
+    font-family: monospace;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     clip-path: none;
     background-image: none;
 }
 
-body.hacker-mode .btn-notif-choice {
-    background: #000 ;
-    border: 1px solid #00ff00 ;
-    color: #00ff00 ;
-}
-body.hacker-mode .btn-notif-choice.active {
-    background: #00ff00 ;
-    color: #000 ;
+[data-theme="hacker"] .btn-notif-choice {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
 }
 
-/* ---------------------------------------------------------------
-   22. FORMULÁRIOS DE LOGIN/CADASTRO
-   --------------------------------------------------------------- */
-
-body.hacker-mode .container-cadastro-fenda,
-body.hacker-mode .fenda-glass-container,
-body.hacker-mode form[action="confirma-login.php"] .container {
-    background: rgba(0,0,0,0.8) ;
-    border: 1px solid #00ff00 ;
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
+[data-theme="hacker"] .btn-notif-choice.active {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
 }
 
-body.hacker-mode .fenda-reg-box input {
-    background: #000 ;
-    background: oklch(0% 0 0);
-    border: 1px solid #00ff00 ;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-body.hacker-mode .fenda-reg-box i {
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
+/* --- LOGIN / CADASTRO --- */
+[data-theme="hacker"] .container-cadastro-fenda,
+[data-theme="hacker"] .fenda-glass-container,
+[data-theme="hacker"] form[action="confirma-login.php"] .container {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--hacker-green);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
-/* ---------------------------------------------------------------
-   23. PÁGINA DE PERFIL PÚBLICO
-   --------------------------------------------------------------- */
-
-body.hacker-mode .stats-perfil span {
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-body.hacker-mode .btn-seguir-fenda {
-    background: rgba(0,255,0,0.1) ;
-    border-color: #0f0 ;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
+[data-theme="hacker"] .fenda-reg-box input {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
 }
 
-/* ---------------------------------------------------------------
-   24. ANIMAÇÃO DE CURSOR PISCANTE (para elementos com classe)
-   --------------------------------------------------------------- */
+[data-theme="hacker"] .fenda-reg-box i {
+    color: var(--hacker-green);
+}
+
+/* --- PERFIL PÚBLICO --- */
+[data-theme="hacker"] .stats-perfil span {
+    color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .btn-seguir-fenda {
+    background: rgba(0, 255, 0, 0.1);
+    border-color: var(--hacker-green);
+    color: var(--hacker-green);
+}
+
+/* Container do perfil — cor base */
+[data-theme="hacker"] .main-perfil-container-publico.vibe-dark,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-neon,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-ads {
+    background: var(--hacker-bg);
+    background-image: none;
+    border-top: 4px solid var(--hacker-green);
+    color: var(--hacker-green);
+}
+
+/* Container do perfil — vibe-light */
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light {
+    background: rgba(25, 35, 25, 0.92);
+    background-image: none;
+    border-top: 4px solid var(--hacker-green-soft);
+    border-left: 1px dashed rgba(120, 255, 150, 0.3);
+    border-right: 1px dashed rgba(120, 255, 150, 0.3);
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light h3,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light p,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .nome-publico,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .stats-perfil span,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .bio-texto {
+    color: var(--hacker-green-pastel);
+    text-shadow: 0 0 3px rgba(192, 255, 192, 0.3);
+}
+
+/* Container do perfil — vibe-glass */
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass {
+    background: rgba(0, 35, 40, 0.35);
+    background-image: none;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border-top: 4px solid rgba(0, 220, 180, 0.7);
+    border-left: 1px solid rgba(0, 220, 180, 0.3);
+    border-right: 1px solid rgba(0, 220, 180, 0.3);
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass h3,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass p,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .nome-publico,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .stats-perfil span,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .bio-texto {
+    color: #c0ffef;
+    text-shadow: 0 0 3px rgba(0, 220, 180, 0.4);
+}
+
+/* Container do perfil — vibe-dark com morcegos */
+[data-theme="hacker"] .main-perfil-container-publico.vibe-dark {
+    position: relative;
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-dark .nome-publico {
+    color: var(--hacker-green);
+    text-shadow: 0 0 8px var(--hacker-green);
+    font-family: var(--hacker-font);
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-dark::after {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50vh;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.2;
+    background-color: var(--hacker-green);
+
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
+
+    -webkit-mask-size: 120px 120px;
+    mask-size: 120px 120px;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+
+    contain: strict;
+    will-change: mask-position;
+    animation: revoadaDasSombras 30s linear infinite;
+}
+
+@keyframes revoadaDasSombras {
+    0% { -webkit-mask-position: 0 0; mask-position: 0 0; }
+    100% { -webkit-mask-position: 500px -500px; mask-position: 500px -500px; }
+}
+
+/* Hex do vibe-ads */
+[data-theme="hacker"] .main-perfil-container-publico.vibe-ads .hex-item,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item {
+    border-color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
+    background: rgba(0, 255, 64, 0.144);
+    border-color: var(--hacker-green);
+    box-shadow: 0 0 10px var(--hacker-green);
+}
+
+/* Spotted-card das 5 vibes no feed */
+[data-theme="hacker"] .spotted-card.vibe-light,
+[data-theme="hacker"] .spotted-card.vibe-dark,
+[data-theme="hacker"] .spotted-card.vibe-glass,
+[data-theme="hacker"] .spotted-card.vibe-neon,
+[data-theme="hacker"] .spotted-card.vibe-ads {
+    background: rgba(10, 22, 10, 0.88);
+    color: var(--hacker-green-pastel);
+    border: 1px solid var(--hacker-green);
+}
+
+[data-theme="hacker"] .spotted-card.vibe-light {
+    background: rgba(30, 42, 30, 0.85);
+    border-style: dashed;
+    border-color: rgba(120, 255, 150, 0.55);
+}
+
+[data-theme="hacker"] .spotted-card.vibe-glass {
+    background: rgba(0, 35, 40, 0.55);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath d='M-1 1l2-2M0 8l8-8M7 9l2-2' stroke='%2300dcb4' stroke-width='0.5' stroke-opacity='0.15' fill='none'/%3E%3C/svg%3E");
+    background-size: 8px 8px;
+    border-color: rgba(0, 220, 180, 0.55);
+}
+
+[data-theme="hacker"] .spotted-card.vibe-dark {
+    background: rgba(5, 10, 5, 0.92);
+    border-color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .spotted-card.vibe-neon {
+    border-color: var(--hacker-green);
+    box-shadow: 0 0 12px var(--hacker-green);
+    animation: hacker-glitch 5s infinite alternate;
+}
+
+
+
+[data-theme="hacker"] .spotted-card[class*="vibe-"] .post-content,
+[data-theme="hacker"] .spotted-card[class*="vibe-"] .user-anonimo,
+[data-theme="hacker"] .spotted-card[class*="vibe-"] .user-mention {
+    color: var(--hacker-green-pastel);
+}
+
+[data-theme="hacker"] .spotted-card[class*="vibe-"] .post-time,
+[data-theme="hacker"] .spotted-card[class*="vibe-"] .category-tag {
+    color: var(--hacker-green-soft);
+}
+
+/* Hover do vibe-light — cinza-fumaça sutil */
+@supports (backdrop-filter: blur(2px)) {
+    [data-theme="hacker"] body:not(.modo-swipe-ativo)
+    .main-perfil-container-publico.vibe-light .spotted-card:hover {
+        background: rgba(33, 33, 33, 0.4);
+        -webkit-backdrop-filter: blur(2px);
+        backdrop-filter: blur(2px);
+        border-color: rgba(0, 255, 65, 0.5);
+    }
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .spotted-card:hover p,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .spotted-card:hover h3,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .spotted-card:hover .post-content,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .spotted-card:hover .user-info-post,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .spotted-card:hover .user-anonimo,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .spotted-card:hover .user-mention {
+    color: var(--hacker-green-pastel);
+}
+
+/* Toggles do perfil → ciano */
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-social,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-depoimentos,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-escrever-depoimento,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-social,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-depoimentos,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-escrever-depoimento {
+    color: var(--hacker-cyan);
+    text-shadow: 0 0 3px rgba(0, 220, 180, 0.35);
+    border: 1px solid rgba(0, 220, 180, 0.4);
+    background: rgba(0, 220, 180, 0.08);
+    font-family: var(--hacker-font);
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-social:hover,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-depoimentos:hover,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-escrever-depoimento:hover,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-social:hover,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-depoimentos:hover,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-escrever-depoimento:hover {
+    color: #000;
+    background: var(--hacker-cyan);
+    border-color: var(--hacker-cyan);
+    text-shadow: none;
+    box-shadow: 0 0 10px rgba(0, 220, 180, 0.5);
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-social i,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-depoimentos i,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-social i,
+[data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-depoimentos i {
+    color: inherit;
+}
+
+/* --- FOOTER (só o institucional) --- */
+[data-theme="hacker"] footer.fixed-input::after {
+    content: none;
+    display: none;
+}
+
+[data-theme="hacker"] footer.footer-global::after {
+    content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
+    display: block;
+    text-align: center;
+    font-size: 0.6rem;
+    color: var(--hacker-green);
+    opacity: 0.6;
+}
+
+/* --- CARD DE NOTIFICAÇÃO --- */
+[data-theme="hacker"] .card-notificacao {
+    border: 1px solid var(--hacker-green);
+    border-left: 2px solid var(--hacker-green);
+    border-right: 2px solid var(--hacker-green);
+    color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .card-notificacao:hover {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
+}
+
+[data-theme="hacker"] .notificacao-conteudo p,
+[data-theme="hacker"] .notificacao-conteudo small {
+    color: var(--hacker-green);
+    font-weight: bold;
+}
+
+[data-theme="hacker"] .notificacao-conteudo :hover {
+    color: var(--hacker-hover-text);
+    visibility: visible;
+    filter: contrast(1.05);
+}
+
+[data-theme="hacker"] .link-notificacao:hover,
+[data-theme="hacker"] .card-notificacao:hover {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
+}
+
+/* --- CARD HABITANTE --- */
+[data-theme="hacker"] .card-habitante {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+}
+
+[data-theme="hacker"] .card-habitante:hover {
+    border-color: var(--hacker-green);
+    box-shadow: 0 0 15px var(--hacker-green);
+}
+
+/* --- TABELAS / PAGINAÇÃO --- */
+[data-theme="hacker"] table,
+[data-theme="hacker"] th,
+[data-theme="hacker"] td {
+    border: 1px solid var(--hacker-green);
+    background: rgba(0, 20, 0, 0.5);
+    color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .pagination a,
+[data-theme="hacker"] .pagination span {
+    color: var(--hacker-green);
+    border: 1px solid var(--hacker-green);
+    background: var(--hacker-bg);
+}
+
+/* --- BOTÕES DE RESPOSTA --- */
+[data-theme="hacker"] .btn-responder-bolha::before,
+[data-theme="hacker"] .comentario-item.comentario-filho::before {
+    background: var(--hacker-bg);
+    border: none;
+    color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .btn-responder-bolha:hover {
+    color: var(--hacker-hover-text);
+    background: var(--hacker-green);
+}
+
+/* --- FAB --- */
+[data-theme="hacker"] .fab-postar {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
+}
+[data-theme="hacker"] .fab-postar:hover {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
+}
+
+/* --- FILTROS / MOTOSSERRA --- */
+[data-theme="hacker"] .filtro-btn,
+[data-theme="hacker"] .btn-abrir-filtros,
+[data-theme="hacker"] #bt-btn-filtros,
+[data-theme="hacker"] .btn-criar-comunidade,
+[data-theme="hacker"] .bt-btn-principal,
+[data-theme="hacker"] .btn-filtro,
+[data-theme="hacker"] .btn-fenda-padrao,
+[data-theme="hacker"] .btn-enviar-chat,
+[data-theme="hacker"] body:not(.modo-swipe-ativo) #btn-abrir-filtros,
+[data-theme="hacker"] body.modo-swipe-ativo #btn-abrir-filtros,
+[data-theme="hacker"] .preview-botao {
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+    color: var(--hacker-green);
+}
+
+[data-theme="hacker"] .btn-filtro.ativo,
+[data-theme="hacker"] #bt-btn-filtros:hover,
+[data-theme="hacker"] .btn-abrir-filtros:hover,
+[data-theme="hacker"] .btn-fenda-padrao:hover,
+[data-theme="hacker"] .btn-criar-comunidade:hover,
+[data-theme="hacker"] .btn-enviar-chat:hover,
+[data-theme="hacker"] .bt-btn-principal:hover,
+[data-theme="hacker"] .login-btn:hover,
+[data-theme="hacker"] .btn-editar-atalho:hover,
+[data-theme="hacker"] #btnRevelarConteudo.preview-botao:hover,
+[data-theme="hacker"] .filtro-btn.ativo,
+[data-theme="hacker"] .filtro-btn:hover {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
+}
+
+[data-theme="hacker"] .bt-btn-filtro::before {
+    background: conic-gradient(from var(--angulo-balada),
+            #00ff41, #00ffcc, #00ffff, #00ff41);
+    filter: blur(5px);
+}
+
+[data-theme="hacker"] .bt-btn-filtro:hover {
+    background: rgba(0, 255, 65, 0.08);
+    border-color: var(--hacker-green);
+    color: var(--hacker-green);
+    text-shadow: 0 0 4px var(--hacker-green);
+}
+
+[data-theme="hacker"] .bt-btn-filtro:active {
+    background: conic-gradient(from 45deg, var(--hacker-green), var(--hacker-green));
+    text-shadow: 0 0 4px var(--hacker-green);
+    color: var(--hacker-hover-text);
+}
+
+[data-theme="hacker"] .filtros-perdidos {
+    margin-top: 30px;
+}
+
+/* --- CONSELHOS / DIRETRIZES --- */
+[data-theme="hacker"] .bloco-conselhos,
+[data-theme="hacker"] .lista-conselhos li {
+    display: block;
+    visibility: visible;
+    clip-path: none;
+    overflow: visible;
+}
+
+[data-theme="hacker"] .lista-conselhos li::before {
+    content: "> ";
+    color: var(--hacker-green);
+    font-weight: bold;
+}
+
+[data-theme="hacker"] .lista-conselhos li:hover,
+[data-theme="hacker"] .box-diretrizes li:hover {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
+    transform: translateX(4px);
+}
+
+[data-theme="hacker"] .box-diretrizes li:hover,
+[data-theme="hacker"] .box-diretrizes li:hover *,
+[data-theme="hacker"] .lista-conselhos li:hover,
+[data-theme="hacker"] .lista-conselhos li:hover *,
+[data-theme="hacker"] .bloco-diretrizes li:hover,
+[data-theme="hacker"] .bloco-diretrizes li:hover * {
+    color: var(--hacker-hover-text);
+    background: transparent;
+}
+
+/* --- MENSAGENS DE SISTEMA --- */
+[data-theme="hacker"] .post-content.tem-mais:not(.expandido)::after {
+    content: ' > [ CARREGAR_DADOS... ]';
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
+    font-weight: bold;
+}
+
+/* --- BOTÕES APROVAR / REJEITAR --- */
+[data-theme="hacker"] .btn-aprovar-depoimento,
+[data-theme="hacker"] .btn-aprovar-solicitacao,
+[data-theme="hacker"] .btn-aprovar-solicitacao-central,
+[data-theme="hacker"] .btn-rejeitar-depoimento,
+[data-theme="hacker"] .btn-rejeitar-solicitacao,
+[data-theme="hacker"] .btn-rejeitar-solicitacao-central {
+    background: var(--hacker-bg);
+    color: var(--hacker-green);
+    border: 1px solid var(--hacker-green);
+}
+
+[data-theme="hacker"] .btn-aprovar-depoimento:hover,
+[data-theme="hacker"] .btn-aprovar-solicitacao:hover,
+[data-theme="hacker"] .btn-aprovar-solicitacao-central:hover,
+[data-theme="hacker"] .btn-rejeitar-depoimento:hover,
+[data-theme="hacker"] .btn-rejeitar-solicitacao:hover,
+[data-theme="hacker"] .btn-rejeitar-solicitacao-central:hover {
+    background: var(--hacker-hover-bg);
+    color: var(--hacker-hover-text);
+    border-color: var(--hacker-green);
+    box-shadow: 0 0 8px var(--hacker-green);
+}
+
+[data-theme="hacker"] .btn-aprovar-depoimento:disabled,
+[data-theme="hacker"] .btn-aprovar-solicitacao:disabled,
+[data-theme="hacker"] .btn-aprovar-solicitacao-central:disabled,
+[data-theme="hacker"] .btn-rejeitar-depoimento:disabled,
+[data-theme="hacker"] .btn-rejeitar-solicitacao:disabled,
+[data-theme="hacker"] .btn-rejeitar-solicitacao-central:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- EVENTOS (Balanga Teras) — identidade preservada --- */
+
+/* Talvez — AMARELO */
+[data-theme="hacker"] .bt-barra-talvez .bt-barra-preenchimento,
+[data-theme="hacker"] .bt-btn-resposta.ativo-talvez {
+    background: var(--hacker-warn);
+    color: #000;
+    border: 1px solid var(--hacker-warn);
+}
+[data-theme="hacker"] .bt-btn-resposta.ativo-talvez:hover {
+    background: #ffe066;
+    color: #000;
+}
+
+/* Não vou — VERMELHO */
+[data-theme="hacker"] .bt-barra-nao .bt-barra-preenchimento,
+[data-theme="hacker"] .bt-btn-resposta.ativo-nao {
+    background: var(--hacker-error);
+    color: #fff;
+    border: 1px solid var(--hacker-error);
+}
+[data-theme="hacker"] .bt-btn-resposta.ativo-nao:hover {
+    background: #ff6666;
+}
+
+/* Vou — VERDE hacker */
+[data-theme="hacker"] .bt-barra-vou .bt-barra-preenchimento,
+[data-theme="hacker"] .bt-btn-resposta.ativo-vou {
+    background: var(--hacker-green);
+    color: var(--hacker-hover-text);
+    border: 1px solid var(--hacker-green);
+}
+[data-theme="hacker"] .bt-btn-resposta.ativo-vou:hover {
+    background: var(--hacker-green-soft);
+}
+
+
+/* ==================================================================
+   11. TIPOGRAFIA + TYPING + PERFORMANCE SWIPE
+   ================================================================== */
+
+[data-theme="hacker"] h1,
+[data-theme="hacker"] h2,
+[data-theme="hacker"] .titulo-fofoca,
+[data-theme="hacker"] .nome-publico,
+[data-theme="hacker"] .conselho-header {
+    font-family: monospace;
+    color: var(--hacker-green);
+    text-transform: uppercase;
+    border-bottom: 1px dashed var(--hacker-green);
+    display: inline-block;
+    padding-right: 15px;
+}
+
+[data-theme="hacker"] h1::before { content: "root@fenda:~# "; opacity: 0.6; }
+[data-theme="hacker"] h2::before { content: "./"; opacity: 0.6; }
 
 @keyframes blink-cursor {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
 }
-body.hacker-mode .typing::after,
-body.hacker-mode .hacker-cursor {
-    content: "_" !important ;
-    display: inline-block !important ;
-    width: 15px !important ;
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953);
-    animation: blink-cursor 0.5s infinite !important;
+
+[data-theme="hacker"] .typing::after,
+[data-theme="hacker"] .hacker-cursor {
+    content: "_";
+    display: inline-block;
+    width: 15px;
+    background: var(--hacker-green);
+    animation: blink-cursor 0.5s infinite;
 }
 
-/* ---------------------------------------------------------------
-   25. TYPING APENAS EM TEXTOS (POSTS, COMENTÁRIOS, DESCRIÇÕES)
-   --------------------------------------------------------------- */
-
-/* Aplica a animação de digitação a todos os textos longos */
-body.hacker-mode .bio-texto,
-body.hacker-mode .lista-conselhos,
-body.hacker-mode .article p {
-    overflow: hidden ;
-    white-space: normal ;
-    display: block ;
-    animation: typing-global 4s steps(20, end) forwards ;
-
+[data-theme="hacker"] .bio-texto,
+[data-theme="hacker"] .lista-conselhos,
+[data-theme="hacker"] .article p {
+    overflow: hidden;
+    white-space: normal;
+    display: block;
+    animation: typing-global 4s steps(20, end) forwards;
 }
 
 @keyframes typing-global {
-    from { clip-path: inset(0 100% 0 0) ; }
-    to { clip-path: inset(0 0 0 0) ; }
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
 }
 
-/* Remove typing de menus, botões, badges , modais e cabeçalhos */
-body.hacker-mode .navbar-nav .nav-link,
-body.hacker-mode .menu li a,
-body.hacker-mode .dropdown-menu a,
-body.hacker-mode .submenu li a,
-body.hacker-mode .item-menu,
-body.hacker-mode .fenda-modal-content p,
-body.hacker-mode .fenda-modal-content .desc-modal-sair,
-body.hacker-mode .lightbox-overlay,
-body.hacker-mode .lightbox-comentarios,
-body.hacker-mode .btn,
-body.hacker-mode .filtro-btn,
-body.hacker-mode .link-fofoca,
-body.hacker-mode .badge,
-body.hacker-mode .tag-categoria,
-body.hacker-mode .card-header,
-body.hacker-mode .user-info-post,
-body.hacker-mode .post-time,
-body.hacker-mode .spotted-card,
-body.hacker-mode article.spotted-card,
-body.hacker-mode .post-content,
-body.hacker-mode .post-content-focado,
-body.hacker-mode .comentario-autor,
-body.hacker-mode .comentario-texto,
-body.hacker-mode .comentario-texto p,
-body.hacker-mode .dialog-conteudo .dialog-mensagem p {
-    clip-path: none !important;
-    
-}
-
-
-/* Nova animação baseada em largura (mais estável para celular) */
-@keyframes typing-mobile {
-    from { width: 0; }
-    to { width: 100%; }
+[data-theme="hacker"] .navbar-nav .nav-link,
+[data-theme="hacker"] .menu li a,
+[data-theme="hacker"] .dropdown-menu a,
+[data-theme="hacker"] .submenu li a,
+[data-theme="hacker"] .item-menu,
+[data-theme="hacker"] .fenda-modal-content p,
+[data-theme="hacker"] .fenda-modal-content .desc-modal-sair,
+[data-theme="hacker"] .lightbox-overlay,
+[data-theme="hacker"] .lightbox-comentarios,
+[data-theme="hacker"] .btn,
+[data-theme="hacker"] .filtro-btn,
+[data-theme="hacker"] .link-fofoca,
+[data-theme="hacker"] .badge,
+[data-theme="hacker"] .tag-categoria,
+[data-theme="hacker"] .card-header,
+[data-theme="hacker"] .user-info-post,
+[data-theme="hacker"] .post-time,
+[data-theme="hacker"] .spotted-card,
+[data-theme="hacker"] article.spotted-card,
+[data-theme="hacker"] .post-content,
+[data-theme="hacker"] .post-content-focado,
+[data-theme="hacker"] .comentario-autor,
+[data-theme="hacker"] .comentario-texto,
+[data-theme="hacker"] .comentario-texto p,
+[data-theme="hacker"] .dialog-conteudo .dialog-mensagem p {
+    clip-path: none;
 }
 
 
-/* ---------------------------------------------------------------
-   26. GARANTIA DE VISIBILIDADE DOS ÍCONES (SOBRESCREVE TUDO)
-   --------------------------------------------------------------- */
+/* ==================================================================
+   12. BOOT SCREEN
+   ================================================================== */
 
-body.hacker-mode i, 
-body.hacker-mode .fa-solid, 
-body.hacker-mode .fa-regular,
-body.hacker-mode [class*="fa-"] {
-    display: inline-block ;
-    visibility: visible ;
-    font-family: "Font Awesome 6 Free" ;
-}
-
-body.hacker-mode [class*="fa-"]::before:hover {
-    color: #000 ;
-}
-
-/* ---------------------------------------------------------------
-   27. TUDO QUE É REDONDO MORREU (REMOÇÃO EXTRA)
-   --------------------------------------------------------------- */
-
-body.hacker-mode .avatar,
-body.hacker-mode .avatar-p,
-body.hacker-mode .rounded-circle,
-body.hacker-mode [class*="rounded"],
-body.hacker-mode [style*="border-radius"] {
-    border-radius: 0 ;
-}
-
-/* ---------------------------------------------------------------
-   28. BOTÃO FLUTUANTE (FAB)
-   --------------------------------------------------------------- */
-
-body.hacker-mode .fab-postar {
-    background: #000 ;
-    background: oklch(0 0 0 0);
-    border: 1px solid #0f0 !important;
-    color: #0f0 !important;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-body.hacker-mode .fab-postar:hover {
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953) ;
-    color: #000 ;
-    color: oklch(0% 0 0);
-}
-
-/* ---------------------------------------------------------------
-   29. LINK DE NOTIFICAÇÕES E CARD DE NOTIFICAÇÃO
-   --------------------------------------------------------------- */
-
-body.hacker-mode .card-notificacao {
-    border: 1px solid #0f0 ;
-    border-left: 2px solid #0f0 ;
-    border-right: 2px solid #0f0 ;
-    color:#0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-
-body.hacker-mode .card-notificacao:hover {
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953);
-    color: #000 ;
-}  
-
-body.hacker-mode .notificacao-conteudo p,
-body.hacker-mode .notificacao-conteudo small
- {
-    color:#0f0 ;
-    color: oklch(0.861283 0.293072 142.4953) ;
-    font-weight: bold ;
-
-}
-body.hacker-mode .notificacao-conteudo :hover{
-    color: #000 ;
-    color: oklch(0% 0 0);
-    visibility: visible;
-    filter: contrast(1.05);
-}
-
-
-body.hacker-mode .link-notificacao:hover,
-body.hacker-mode .card-notificacao:hover
- {
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953);
-    color: #000 ;
-    color: oklch(0% 0 0);
-}
-
-
-/* ---------------------------------------------------------------
-   30. PÁGINA DE COMUNIDADES (ATLÉTICAS)
-   --------------------------------------------------------------- */
-
-body.hacker-mode .card-habitante {
-    background: #000 ;
-    background: oklch(0% 0 0) ;
-    border: 1px solid #0f0 ;
-}
-
-body.hacker-mode .card-habitante:hover {
-    border-color: #0f0 ;
-    box-shadow: 0 0 15px #0f0 ;
-}
-
-/* ---------------------------------------------------------------
-   31. TABELAS E LISTAS
-   --------------------------------------------------------------- */
-
-body.hacker-mode table,
-body.hacker-mode th,
-body.hacker-mode td {
-    border: 1px solid #0f0 ;
-    background: rgba(0, 20, 0, 0.5) ;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-
-/* ---------------------------------------------------------------
-   32. PAGINAÇÃO
-   --------------------------------------------------------------- */
-
-body.hacker-mode .pagination a,
-body.hacker-mode .pagination span {
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953) ;
-    border: 1px solid #0f0 ;
-    background: #000 ;
-    background: oklch(0% 0 0) ;
-}
-
-/* ---------------------------------------------------------------
-   33. BOTÕES DE RESPOSTA EM COMENTÁRIOS
-   --------------------------------------------------------------- */
-
-body.hacker-mode .btn-responder-bolha::before,
-body.hacker-mode .comentario-item.comentario-filho::before
-{
-    background: #000 ;
-    background: oklch(0% 0 0) ;
-    border: none !important;
-    color: #0f0 ;
-    color: oklch(0.861283 0.293072 142.4953);
-}
-body.hacker-mode .btn-responder-bolha:hover {
-    color: #000 ;
-    color: oklch(0% 0 0);
-    background: #0f0 ;
-    background: oklch(0.861283 0.293072 142.4953);
-}
-
-body.hacker-mode .char-counter {
-    font-size: 0.95rem;
-    color: #48ff00;
-    color: oklch(0.861283 0.293072 142.4953);
-    
-}
-
-/* ---------------------------------------------------------------
-   34. BOOT MAIS LENTO (ajustável via variável)
-   --------------------------------------------------------------- */
 .hacker-boot-screen {
     position: absolute;
-    top: 50%!important; 
-    left: 50%!important; 
-    transform: translate3d(-50%, -50%, 0px);
-    transform: translate(-50%, -50%); 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     max-width: 100%;
     max-height: 100%;
-    width:100%; height: 100%;
+    width: 100%;
+    height: 100%;
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     background: #000;
-    background: oklch(0% 0 0);
     color: #0f0;
-    color: oklch(0.861283 0.293072 142.4953);
     z-index: 100000;
     overflow: hidden;
     display: flex;
@@ -1409,9 +1553,6 @@ body.hacker-mode .char-counter {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
     overflow-wrap: anywhere;
 }
 
@@ -1420,12 +1561,10 @@ body.hacker-mode .char-counter {
     border: 1px solid #0f0;
 }
 
-
 .loading {
     height: 100%;
     max-width: 600px;
     background: #0f0;
-    background: oklch(0.861283 0.293072 142.4953);
     width: 0;
     animation: load-bar 4s ease-in-out forwards;
 }
@@ -1434,8 +1573,8 @@ body.hacker-mode .char-counter {
     to { width: 100%; }
 }
 
-body.hacker-mode .hacker-booting {
-    animation: bootSystem var(--boot-duration) steps(20) forwards !important;
+[data-theme="hacker"] .hacker-booting {
+    animation: bootSystem var(--boot-duration) steps(20) forwards;
 }
 
 @keyframes bootSystem {
@@ -1444,7 +1583,3 @@ body.hacker-mode .hacker-booting {
     50% { opacity: 0.3; filter: blur(4px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
-
-
-
-

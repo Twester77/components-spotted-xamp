@@ -27,10 +27,9 @@
 .sticky-header {
     position: relative;
     z-index: 100000;
-    background: #1a1a1a86;
-    background: oklab(19.622999999999998% 0.00498 -0.01941 / 0.92);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    background: #1a1a1a86;                                       /* fica local – tom específico do sticky-header */
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     padding: 10px 10px 0 10px;
     transition: max-height 0.3s ease-out;
     max-height: 15vh;
@@ -50,11 +49,13 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(20, 20, 30, 0.92);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    background: rgba(20, 20, 30, 0.92);                            /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 30, 0.92));    /* 🐚 FAROL – Fase 2 */
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     padding: 6px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);            /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🐚 FAROL – Fase 2 */
     display: flex;
     justify-content: flex-start;
     -ms-user-select: none;
@@ -91,7 +92,8 @@
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);                    /* fallback */
+    border: 2px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
 }
 
   .header-miniatura .miniatura-info {
@@ -104,11 +106,11 @@
     overflow: hidden;
 }
 
-
 .header-miniatura .miniatura-nome {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #ffbc00;
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🐚 FAROL – Fase 2 */
 }
 
 .header-miniatura .miniatura-texto {
@@ -131,6 +133,7 @@
     z-index: 1000000 !important; /* Maior que 999999 */
 }
 
+
 .btn-toggle-collapse {
     position: fixed;
     top: 30px;
@@ -138,12 +141,14 @@
     z-index: 1002;
     width: clamp(30px, 6vmin, 48px);
     height: clamp(30px, 6vmin, 48px);
-    background: rgba(20, 20, 30, 0.85);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(20, 20, 30, 0.92);  
+    background: var(--bg-modal-content, rgba(20, 20, 30, 0.92));                          /* 🐚 FAROL – Fase 2 */
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(255, 255, 255, 0.1);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7);                              /* fica local – alpha específico */
     font-size: clamp(1rem, 2vmin, 1.4rem);
     cursor: pointer;
     display: flex;
@@ -156,9 +161,10 @@
 }
 
 .btn-toggle-collapse:hover {
-    background: rgba(255, 188, 0, 0.15);
-    border-color: rgba(255, 188, 0, 0.3);
-    color: #fff;
+    background: rgba(255, 188, 0, 0.15);                           /* fica local – alpha específico do hover */
+    border-color: rgba(255, 188, 0, 0.3);                          /* fica local */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🐚 FAROL – Fase 2 */
     transform: scale(1.05);
 }
 
@@ -170,11 +176,12 @@
    BOTÃO VOLTAR – DENTRO DA BARRA FIXA (INJETADO PELO HEADERMANAGER)
    ================================================== */
 .header-action-btn.btn-voltar-fixo {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                         /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🐚 FAROL – Fase 2 */
     border: none;
     border-radius: 30px;
     padding: 4px 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);                              /* fica local – alpha específico */
     font-size: 0.9rem;
     font-size: clamp(0.8em, 1.5cqw, 1.3em);
     cursor: pointer;
@@ -184,18 +191,17 @@
     align-items: center;
     gap: 4px;
     flex-shrink: 0;
-    /* não encolhe */
     flex-grow: 0;
-    /* não cresce */
     white-space: nowrap;
     font-family: inherit;
     transition: background 0.2s;
-
 }
 
 .header-action-btn.btn-voltar-fixo:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));   /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🐚 FAROL – Fase 2 */
 }
 
 
@@ -266,10 +272,12 @@
 
 /* ---------- MINIATURA DO POST (ESTILO BARRINHA) – LEGADO, MANTIDO PARA COMPATIBILIDADE ---------- */
 .post-miniatura {
-    background: rgba(20, 20, 30, 0.92);
+    background: rgba(20, 20, 30, 0.92);                            /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 30, 0.92));   /* 🐚 FAROL – Fase 2 */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
-    border: 1px solid rgba(255, 188, 0, 0.2);
+    border: 1px solid rgba(255, 188, 0, 0.2);                     /* fallback */
+    border: 1px solid var(--borda-dourada, rgba(255, 188, 0, 0.2)); /* 🐚 FAROL – Fase 2 */
     border-radius: 12px;
     padding: 10px 16px;
     margin: 8px 0 12px 0;
@@ -304,7 +312,8 @@
     transform: none;
     object-fit: cover;
     flex-shrink: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
 }
 
 .miniatura-info {
@@ -325,8 +334,9 @@
 }
 
 .miniatura-texto {
+    font-size: 0.75rem;
     font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);                              /* fica local – alpha específico */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -366,6 +376,7 @@
     gap: 15px;
     align-items: center;
     justify-content: center;
+    justify-content: safe center;
     opacity: 1;
     max-height: 0;
     transform: translateY(0);
@@ -403,12 +414,13 @@
 }
 
 .header-action-btn {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);                         /* fica local – alpha entre --bg-input (0.05) e --borda-media (0.1) */
+    border: 1px solid rgba(255, 255, 255, 0.08);                   /* fica local – alpha específico */
     border-radius: 30px;
     padding: 6px 14px;
-    color: rgba(255, 255, 255, 0.7);
-    font-size:  clamp(0.7rem, 1.2vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.7);  
+    font-size: 0.75rem;                            /* fica local – alpha específico */
+    font-size: clamp(0.7rem, 1.2vw, 1.2rem);
     cursor: pointer;
     transition: 0.2s;
     display: flex;
@@ -418,9 +430,11 @@
 }
 
 .header-action-btn:hover {
-    background: rgba(255, 188, 0, 0.08);
-    border-color: #ffbc00;
-    color: #fff;
+    background: rgba(255, 188, 0, 0.08);                           /* fica local – alpha específico */
+    border-color: #ffbc00;                                         /* fallback */
+    border-color: var(--texto-dourado, #ffbc00);                   /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🐚 FAROL – Fase 2 */
 }
 
 .header-action-btn.danger:hover {
@@ -475,7 +489,8 @@
     display: block;
     visibility: visible;
     opacity: 1;
-    color: #fff;
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
     padding: 6px;
     margin-bottom: 10px;
@@ -494,13 +509,12 @@
     padding-inline-start: 9px;
     border-radius: 16px 16px 16px 4px;
     border-right: 1px solid var(--cor-borda-glow);
-    background: rgba(255, 255, 255, 0.062);
+    background: rgba(255, 255, 255, 0.062);                       /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.062));      /* 🐚 FAROL – Fase 2 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     align-self: flex-start;
     justify-content: center;
-    /* MUDANÇA CHAVE: O balão agora se ajusta ao texto de forma inteligente */
     width: fit-content; 
-    /* Removemos o max-width: min-content; pois o @container já dita o limite real */
     min-width: 140px;
     min-width: clamp(120px , 49cqi, 180px);
     min-height: 50px;
@@ -508,13 +522,10 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    
-    /* MUDANÇA CHAVE: Permitimos que o balão quebre linhas internamente */
     white-space: normal; 
     word-break: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
-    
     margin: 0;
     overflow: visible;
     will-change: transform;
@@ -631,14 +642,15 @@
 }
 
 .comentario-item.vibe-dark {
-    background: rgba(22, 22, 29, 0.911);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    color: #eeeeee;
+    background: rgba(22, 22, 29, 0.911);                          /* fica local – tom específico */
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    color: #eeeeee;                                               /* fallback */
+    color: var(--texto-primario, #eeeeee);                        /* 🐚 FAROL – Fase 2 */
 }
 
 .comentario-item.vibe-neon {
-    background: #000000;
+    background: #000000;                                          /* fica local – vibe-neon precisa de preto puro */
     backdrop-filter: none;
     position: relative;
     animation: neon-ultra 5s infinite alternate ease-in-out;
@@ -753,8 +765,8 @@
 .comentario-data {
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 2cqi, 0.95rem);
-    color: #d6d6d6;
-    color: oklch(88% 0.0001 271.152);
+    color: #d6d6d6;                                               /* fallback */
+    color: var(--texto-secundario, #d6d6d6);                      /* 🐚 FAROL – Fase 2 */
     opacity: 0.85;
     font-weight: bold;
     white-space: nowrap;
@@ -764,8 +776,8 @@
 }
 
 .comentario-texto {
-    color: #ddd;
-    color: oklch(0.92 0 0);
+    color: #ddd;                                                  /* fallback */
+    color: var(--texto-secundario, #ddd);                         /* 🐚 FAROL – Fase 2 */
     font-size: 1rem;
     font-size: clamp(0.95rem, 2.4cqi, 1.05rem);
     line-height: 1.4;
@@ -837,10 +849,10 @@
     min-width: 0;
     box-sizing: border-box;
     padding: 4px;
-    border: 1px solid rgba(255, 188, 0, 0.22);
+    border: 1px solid rgba(255, 188, 0, 0.22);                    /* fica local – alpha específico */
     border-radius: 999px;
-    background: rgba(20, 20, 30, 0.88);
-    background: linear-gradient(135deg, rgba(35, 28, 39, 0.96), rgba(12, 14, 25, 0.96));
+    background: rgba(20, 20, 30, 0.88);                           /* fica local – alpha específico */
+    background: linear-gradient(135deg, rgba(35, 28, 39, 0.96), rgba(12, 14, 25, 0.96)); /* fica local – gradiente específico do chat */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     box-shadow: 0 3px 14px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
@@ -880,15 +892,17 @@
     z-index: 5;
     align-items: center;
     gap: 4px;
-    background: rgba(20, 20, 30, 0.92);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-    border: 1px solid rgba(255, 188, 0, 0.25);
+    background: rgba(20, 20, 30, 0.92);                           /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 30, 0.92));  /* 🐚 FAROL – Fase 2 */
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    border: 1px solid rgba(255, 188, 0, 0.25);                    /* fica local – alpha específico */
     border-radius: 20px;
     padding: 4px 10px 4px 12px;
     font-size: 0.75rem;
     font-size: clamp(0.7rem, 2.5cqi, 1rem);
-    color: #ffbc00;
+    color: #ffbc00;                                               /* fallback */
+    color: var(--texto-dourado, #ffbc00);                         /* 🐚 FAROL – Fase 2 */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     max-height: 50px;
     box-sizing: border-box;
@@ -910,7 +924,8 @@
 
 .resposta-indicador strong {
     font-weight: 600;
-    color: #ffbc00;
+    color: #ffbc00;                                               /* fallback */
+    color: var(--texto-dourado, #ffbc00);                         /* 🐚 FAROL – Fase 2 */
     font-size: 0.65rem;
     font-size: clamp(0.65rem, 1.2vmin, 0.95rem);
     min-width: 0;
@@ -922,11 +937,10 @@
 }
 
 .resposta-indicador .cancelar-resposta {
-    background: rgba(255, 255, 255, 0.08);
-    background: oklch(100% 0.00011 271.152 / 0.08);
+    background: rgba(255, 255, 255, 0.08);                        /* fica local – alpha específico */
     border: none;
     border-radius: 50%;
-    color: #ff8a8a;
+    color: #ff8a8a;                                               /* fica local – vermelho específico */
     cursor: pointer;
     font-size: 0.75rem;
     width: 18px;
@@ -942,8 +956,7 @@
 }
 
 .resposta-indicador .cancelar-resposta:hover {
-    background: rgba(253, 67, 67, 0.486);
-    background: oklch(65.921% 0.22216 25.741 / 0.486);
+    background: rgba(253, 67, 67, 0.486);                         /* fica local – vermelho com alpha */
     transform: scale(1.1);
 }
 
@@ -959,8 +972,8 @@
     padding-right: 35px;
     background: transparent ;
     border: none;
-    color: #fff;
-    color: oklch(0.97 0 0.9);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     font-family: inherit;
     resize: vertical;
     min-height: 45px;
@@ -990,10 +1003,10 @@
     right: 6px;
     font-size: 0.7rem;
     font-size: clamp(0.65rem, 0.8vw, 0.8rem);
-    color: #ffe09a;
+    color: #ffe09a;                                               /* fica local – dourado claro específico */
     pointer-events: none;
-    background: rgba(255, 188, 0, 0.12);
-    border: 1px solid rgba(255, 188, 0, 0.2);
+    background: rgba(255, 188, 0, 0.12);                          /* fica local – alpha específico */
+    border: 1px solid rgba(255, 188, 0, 0.2);                     /* fica local – alpha específico */
     padding: 2px 6px;
     border-radius: 10px;
     z-index: 2;
@@ -1001,24 +1014,24 @@
 }
 
 .char-counter-inline.alerta {
-    color: #ff8a00;
-    background: rgba(255, 138, 0, 0.14);
-    border-color: rgba(255, 138, 0, 0.32);
+    color: #ff8a00;                                               /* fica local – laranja específico */
+    background: rgba(255, 138, 0, 0.14);                          /* fica local – alpha específico */
+    border-color: rgba(255, 138, 0, 0.32);                        /* fica local – alpha específico */
 }
 
 .char-counter-inline.critico {
-    color: #ff4b4b;
-    background: rgba(255, 75, 75, 0.14);
-    border-color: rgba(255, 75, 75, 0.32);
+    color: #ff4b4b;                                               /* fica local – vermelho crítico */
+    background: rgba(255, 75, 75, 0.14);                          /* fica local – alpha específico */
+    border-color: rgba(255, 75, 75, 0.32);                        /* fica local – alpha específico */
 }
 
 .btn-attach-gaveta {
-    background: rgba(255, 255, 255, 0.06);
-    background: oklch(100% 0.00011 271.152 / 0.06);
+    background: rgba(255, 255, 255, 0.06);  
+    background: var(--bg-input, rgba(255, 255, 255, 0.06));                      /* fica local – alpha específico */
     border: none;
     border-radius: 50%;
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
+    color: #fff;    
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     display: flex;
     flex-shrink: 0;
     transition: 0.2s;
@@ -1041,21 +1054,20 @@
 
 
 .btn-attach-gaveta:hover {
-    background: #77c9ddc5;
+    background: #77c9ddc5;                                        /* fica local – ciano específico do hover */
     filter: brightness(1.03);
     transition: 0.3s ease-in-out;
 }
 
 .btn-enviar-chat {
-     /* Fallback */
-    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824)); /* fallback */
     background: var(--laranja-fenda);
     border: none;
     border-radius: 50%;
     display: none;
-    color: #000;
-    color: oklch(0 0 0 / 0.6);
+    color: #000;                                                  /* fica local – texto sobre fundo claro */
 }
+
 
 .btn-enviar-chat.visivel {
     display: flex !important;
@@ -1072,10 +1084,9 @@
     max-width: 250px;
     width: auto;
     max-width: clamp(120px, 35cqi, 320px);
-    background: rgba(0, 0, 0, 0.92);
-    background: oklch(0 0 0 / 0.92);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.92);                              /* fica local – preto com alpha específico do chat */
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     overflow-y: auto;
     border-radius: 16px;
     padding: 8px;
@@ -1093,7 +1104,8 @@
 .btn-toggle-gaveta {
     background: none;
     border: none;
-    color: #fff;
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     align-self: flex-start;
     cursor: pointer;
     padding: 6px 10px;
@@ -1104,7 +1116,8 @@
 }
 
 .btn-toggle-gaveta:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
 }
 
 .customizacao-rapida {
@@ -1115,11 +1128,14 @@
 }
 
 .input-mini {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);                         /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));  /* 🐚 FAROL – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.2);                   /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🐚 FAROL – Fase 2 */
     border-radius: 20px;
     padding: 6px 12px;
-    color: #fff;
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     width: 100%;
 }
 
@@ -1128,7 +1144,8 @@
     height: 35px;
     border-radius: 50%;
     border-style: none;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);                         /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));  /* 🐚 FAROL – Fase 2 */
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
@@ -1137,12 +1154,12 @@
 
 select#vibe-comentario,
 .btn-attach-opcao {
-background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.08);                        /* fica local – alpha específico */
     border-radius: 30px;
     font-size: 0.8rem;
     font-size: clamp(0.77rem, 2.5cqi, 1rem);
-    color: #fff;
-    color: oklch(100% 0.00011 271.152) ;
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1150,12 +1167,11 @@ background: rgba(255, 255, 255, 0.08);
     transition: 0.2s; 
 }
 
-
 select#vibe-comentario {  
     padding: 6px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);                   /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🐚 FAROL – Fase 2 */
 }
-
 
 .btn-attach-opcao {
     border: none;
@@ -1165,7 +1181,7 @@ select#vibe-comentario {
 
 .select#vibe-comentario:hover,
 .btn-attach-opcao:hover {
-    background: rgba(255, 255, 255, 0.116);
+    background: rgba(255, 255, 255, 0.116);                       /* fica local – alpha específico do hover */
 }
 
 .honeypot {
@@ -1182,7 +1198,7 @@ select#vibe-comentario {
     top: 0;
     z-index: 10;
     display: inline-block;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);                              /* fica local – alpha específico */
     text-decoration: none;
     font-size: 1.05rem;
     font-size: clamp(1rem, 0.41vw + 1.018rem, 1.7rem);
@@ -1198,6 +1214,7 @@ select#vibe-comentario {
 
 .btn-voltar-fenda:hover {
     color: var(--dourado);
+    color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🐚 FAROL – Fase 2 */
     text-decoration: underline;
 }
 
@@ -1307,7 +1324,7 @@ select#vibe-comentario {
     border-radius: 10px;
     display: flex;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.05);                              /* fica local – preto com alpha muito baixo */
     overflow: hidden;
 }
 
@@ -1432,11 +1449,13 @@ body.pagina-post .header-principal {
     -ms-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.10);                        /* fallback */
+    background: var(--borda-media, rgba(255, 255, 255, 0.10));    /* 🐚 FAROL – Fase 2 */
     border-left: 2px solid var(--cor-borda-glow);
     border-radius: 8px;
     margin-bottom: 5px;
-    color: #ffffff;
+    color: #ffffff;                                               /* fallback */
+    color: var(--texto-primario, #ffffff);                        /* 🐚 FAROL – Fase 2 */
     transition: background 0.3s;
     min-width: 60px;
     min-height: 28px;
@@ -1451,7 +1470,7 @@ body.pagina-post .header-principal {
 }
 
 .indicador-resposta:hover {
-    background: rgba(255, 255, 255, 0.144);
+    background: rgba(255, 255, 255, 0.144);                       /* fica local – alpha específico do hover */
 }
 
 .spotted-card img {
@@ -1471,8 +1490,9 @@ body.pagina-post .header-principal {
 }
 
 .comentario-deletado {
-    background: rgba(128, 128, 128, 0.1);
-    border-right: 5px solid #888;
+    background: rgba(128, 128, 128, 0.1);                         /* fallback */
+    background: oklch(from var(--cor-borda-glow) 0.5 0.01 h / 0.12); /* 🐚 FAROL – Fase 2 – aura cinza */
+    border-right: 5px solid #888;                                 /* fica local – cinza de "deletado" */
     opacity: 0.7;
 }
 
@@ -1490,10 +1510,10 @@ body.pagina-post .header-principal {
     word-break: break-word;
     hyphens: auto;
     padding: 6px;
-    color: #878787;
-    color: oklch(62.341% 0.00007 271.152);
+    color: #878787;                                               /* fallback */
+    color: var(--texto-muted, #878787);                           /* 🐚 FAROL – Fase 2 */
     font-style: italic;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.05);                        /* fica local – alpha específico */
     font-size: 0.8rem;
     font-size: clamp(0.76rem, 0.382cqw + 0.625rem, 1rem);
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
@@ -1526,7 +1546,7 @@ body.pagina-post .header-principal {
         display: flex;
         aspect-ratio: 16/9;
         justify-content: center;
-        background: #00000066;
+        background: #00000066;                                    /* fica local – preto com alpha específico do landscape */
     }
 
     .fenda-estatica-context .container-img-post img {
@@ -1543,7 +1563,7 @@ body.pagina-post .header-principal {
     left: -38px;
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.7);                              /* fica local – alpha específico */
     cursor: pointer;
     padding: 8px 10px;
     font-size: 1.3rem;
@@ -1558,7 +1578,8 @@ body.pagina-post .header-principal {
 .btn-excluir-comentario:focus-visible {
     opacity: 1;
     pointer-events: auto;
-    color: #cccccc;
+    color: #cccccc;                                               /* fallback */
+    color: var(--texto-secundario, #cccccc);                      /* 🐚 FAROL – Fase 2 */
     transform: scale(1.15);
 }
 
@@ -1567,12 +1588,12 @@ body.pagina-post .header-principal {
         opacity: 0.6;
         pointer-events: auto;
         left: -28px;
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.8);                          /* fica local – alpha específico */
     }
 }
 
 .btn-excluir-comentario:hover {
-    color: #ff4b2b;
+    color: #ff4b2b;                                               /* fica local – vermelho de "excluir" */
     transform: scale(1.2);
 }
 
@@ -1593,11 +1614,11 @@ body.pagina-post .header-principal {
 
 /* POST ENCERRADO – BANNER E BLOQUEIO */
 .post-encerrado-banner {
-    background: rgba(255, 188, 0, 0.08);
+    background: rgba(255, 188, 0, 0.08);                          /* fica local – alpha específico */
     padding: 10px 16px;
     margin-bottom: 12px;
     border-radius: 4px;
-    color: #ffc400;
+    color: #ffc400;                                               /* fica local – dourado específico do banner */
     font-size: 0.85rem;
     display: flex;
     align-items: center;
@@ -1611,8 +1632,8 @@ body.pagina-post .header-principal {
 }
 
 .fixed-input-bloqueado {
-    background: rgba(255, 255, 255, 0.02);
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.02);                        /* fica local – alpha específico */
+    border-top: 1px solid rgba(255, 255, 255, 0.04);              /* fica local – alpha específico */
     padding: 16px 20px;
 }
 
@@ -1621,7 +1642,8 @@ body.pagina-post .header-principal {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    color: #ffffff;
+    color: #ffffff;                                               /* fallback */
+    color: var(--texto-primario, #ffffff);                        /* 🐚 FAROL – Fase 2 */
     opacity: 0.7;
     font-size: 0.95rem;
     font-style: italic;
@@ -1631,7 +1653,8 @@ body.pagina-post .header-principal {
 
 .comentarios-bloqueados-msg i {
     font-size: 1.2rem;
-    color: #ffffff;
+    color: #ffffff;                                               /* fallback */
+    color: var(--texto-primario, #ffffff);                        /* 🐚 FAROL – Fase 2 */
     opacity: 0.7;
 }
 
@@ -1645,8 +1668,8 @@ body.pagina-post .header-principal {
     font-size: clamp(0.75rem, 3.5cqi, 0.95rem);
     gap: 4px;
     opacity: 0.6;
-    color: #d1d1d1;
-    color: oklch(86% 0.0001 271.152);
+    color: #d1d1d1;                                               /* fallback */
+    color: var(--texto-secundario, #d1d1d1);                      /* 🐚 FAROL – Fase 2 */
 }
 
 /* META: agora sem o nowrap, para o nome não esticar a bolha */
@@ -1678,10 +1701,9 @@ body.pagina-post .header-principal {
     height: 28px;
     margin: 0;
     padding: 0;
-    border: 1px solid rgba(255, 188, 0, 0.25);
+    border: 1px solid rgba(255, 188, 0, 0.25);                    /* fica local – alpha específico */
     border-radius: 30px;
-    background: rgba(0, 0, 0, 0.18);
-    background: oklch(0.1 0.0001 271.152 / 0.18);
+    background: rgba(0, 0, 0, 0.18);                              /* fica local – alpha específico */
     color: var(--cor-borda-glow, #ffbc00);
     font: inherit;
     cursor: pointer;
@@ -1709,11 +1731,12 @@ body.pagina-post .header-principal {
     min-width: 156px;
     max-width: min(240px, calc(100vw - 16px));
     padding: 5px;
-    border: 1px solid rgba(255, 188, 0, 0.28);
+    border: 1px solid rgba(255, 188, 0, 0.28);                    /* fica local – alpha específico */
     border-radius: 12px;
-    background: rgba(20, 20, 30, 0.97);
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
+    background: rgba(20, 20, 30, 0.97);                           /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 30, 0.97));  /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
@@ -1743,7 +1766,7 @@ body.pagina-post .header-principal {
 }
 
 .comentario-menu-item[data-accion="excluir"] {
-    color: #ff7777;
+    color: #ff7777;                                               /* fica local – vermelho específico do menu */
 }
 
 .comentario-menu-item i {
@@ -1787,20 +1810,16 @@ body.pagina-post .header-principal {
 }
 
 .comentario-media-item {
-    /* O tamanho agora é totalmente dinâmico */
     width: 100%; 
-    aspect-ratio: 1/1; /* Mantém o quadrado perfeito */
-    
-    /* LIMITADORES INTELIGENTES (Para landscape e telas grandes) */
-    /* A foto cresce com o balão, mas para de crescer ao atingir 140px de largura */
+    aspect-ratio: 1/1;
     max-width: 150px; 
-    /* Garante que duas linhas de fotos + gap nunca passem da sua meta (~220px/250px) */
     max-height: 25vh; 
     max-height: 25dvh;
     border-radius: 12px;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.15);                              /* fica local – preto com alpha específico */
+    border: 1px solid rgba(255, 255, 255, 0.06);                  /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🐚 FAROL – Fase 2 */
     transition: transform 0.15s ease, box-shadow 0.15s ease;
     cursor: pointer;
 }
@@ -1824,18 +1843,16 @@ body.pagina-post .header-principal {
 
 .comentario-media-item img.gif-externo {
     object-fit: contain;
-    background: rgba(0, 0, 0, 0.88);
+    background: rgba(0, 0, 0, 0.88);                              /* fica local – preto com alpha específico do gif */
     display: flex;
     justify-content: center;
 }
-
 
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
 .comentario-item.comentario-selecionado {
     position: relative ;
     border: none;
-    background: rgba(255, 187, 0, 0.075) ;
-    background: oklch(0.832757 0.171572 82.0575 / 7.5%);
+    background: rgba(255, 187, 0, 0.075) ;                         /* fica local – dourado com alpha muito baixo */
     transition: background 0.3s ease;
 }
 
@@ -1846,7 +1863,7 @@ body.pagina-post .header-principal {
     width: 100vw;
     pointer-events: none;
     z-index: 1;
-    background: rgba(255, 187, 0, 0.08);
+    background: rgba(255, 187, 0, 0.08);                          /* fica local – dourado com alpha específico */
     opacity: 0;
     transition: opacity 0.3s ease;
 }

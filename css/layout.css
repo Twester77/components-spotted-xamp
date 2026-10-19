@@ -1,4 +1,3 @@
-/* --- HEADER E ÍCONES (CORREÇÃO AQUI) --- */
 /* --- HEADER E ÍCONES (OTIMIZADO) --- */
 
 header {
@@ -10,6 +9,7 @@ header {
     height: auto;
     justify-content: center;
     align-items: center;
+    padding: 3px 6px ;
     padding: 0.5em 6px; 
     max-width: 100%;
     
@@ -65,17 +65,16 @@ header h1 {
     letter-spacing: 0.5px;
     line-height: 1.3;
     text-transform: uppercase;
-    color: #fff;
-    color: oklab(100% 0 -0.00011);
+    color: #ffffff;                                  /* 🐚 CORRENTE – Fase 2 */
+    color: var(--texto-primario, #ffffff);           /* 🐚 CORRENTE – Fase 2 */
     font-family: 'Urbanist', sans-serif;
     font-weight: bold; 
-    margin: 0; /* Remove margens padrões que possam empurrar o header */
+    margin: 0;
 
 }
 
-
 /* --- ESTILO BASE DOS ÍCONES --- */
-.header-icons {
+.header-icons  {
     display: flex;
     gap: 5px;
     gap: clamp(0.5rem, 1vw, 1.2em);
@@ -86,7 +85,7 @@ header h1 {
     -moz-user-select: none;
     user-select: none;
     pointer-events: auto;
-
+    
 }
 
 .header-icons a {
@@ -98,8 +97,8 @@ header h1 {
 }
 
 .header-icons i {
-    color: var(--dourado);
-    color: oklch(0.834633 0.17177 82.5648);
+    color: #ffbc00;                                  /* 🐚 CORRENTE – Fase 2 */
+    color: var(--texto-dourado, #ffbc00);            /* 🐚 CORRENTE – Fase 2 */
     font-size: 1.05rem;
     font-size: clamp(1.15rem, 3cqi, 1.75rem);
     transition: all 0.3s ease;
@@ -213,21 +212,17 @@ nav {
     transform: translate3d(-100%, 0, 0);
     max-width: 350px;
     height: 100dvh;
-    /* Força a barra a ter EXATAMENTE a altura da tela */
     -webkit-overflow-scrolling: touch;
-    /* Scroll liso no celular */
-    /* Força o navegador a aceitar a rolagem vertical antes do JS do Swipe interceptar: */
     touch-action: pan-y ;
     -webkit-overflow-scrolling: touch;
     background: rgba(10, 25, 47, 0.95);
+    background: var(--bg-sidebar, rgba(10, 25, 47, 0.95));  /* 🐚 CORRENTE – Fase 2 */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
-    /* Camada acima de tudo */
     z-index: 999999;
-    /* Copilot (VS Code) — 2026-10-02: acompanha o padrão transform da Fenda Toolbar. */
     transition: transform 0.35s ease-out;
     overflow-y: auto ;
 
@@ -269,7 +264,8 @@ nav {
 
 .sidebar-fenda.ativa {
     transform: translate3d(0, 0, 0);
-    background: rgba(10, 25, 47, 0.95);
+    background: rgba(10, 25, 47, 0.95);                        /* fallback */
+    background: var(--bg-sidebar, rgba(10, 25, 47, 0.95));     /* 🐚 CORRENTE – Fase 2 */
     border: 1px solid #029687;
     padding: 12px;
 }
@@ -283,6 +279,7 @@ nav {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.514);
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.514));  /* 🐚 CORRENTE – Fase 2 */
     z-index: 9998;
 }
 
@@ -454,13 +451,6 @@ nav {
     transform: translate3d(0, -50%, 0);
 }
 
-@media (prefers-reduced-motion: reduce) {
-    #fenda-toolbar,
-    .sidebar-fenda {
-        transition-duration: 0.01ms;
-    }
-}
-
 /* O Gatilho (Bússola) */
 .toolbar-trigger {
     position: fixed;
@@ -621,6 +611,7 @@ body.modal-aberto .fab-postar {
     height: 100%;
     z-index: 9999;
     background: rgba(0, 0, 0, 0.473);
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.473));  /* 🐚 CORRENTE – Fase 2 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -656,11 +647,13 @@ body.modal-aberto .fab-postar {
 
 .fenda-modal-content h2 {
     color: var(--dourado);
+    color: var(--texto-dourado, var(--dourado, #ffbc00));           /* 🐚 FAROL – Fase 2 */
     margin-bottom: 20px;
 }
 
 .fenda-modal-content p {
-    color: #ccc;
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                           /* 🐚 FAROL – Fase 2 */
     margin-bottom: 25px;
 }
 
@@ -673,7 +666,9 @@ body.modal-aberto .fab-postar {
 .btn-ficar-terra {
     flex: 1;
     background: var(--dourado);
-    color: #000;
+    background: var(--texto-dourado, var(--dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                            /* 🐚 FAROL – Fase 2 */
     border: none;
     padding: 6px 10px;
     border-radius: 12px;
@@ -685,9 +680,12 @@ body.modal-aberto .fab-postar {
 
 .btn-zarpar {
     flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    border: 1px solid #444;
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));         /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                             /* 🐚 FAROL – Fase 2 */
+    border: 1px solid #444;                                         /* fallback */
+    border: 1px solid var(--borda-card, #444);                      /* 🐚 FAROL – Fase 2 */
     padding: 6px 8px;
     border-radius: 12px;
     text-decoration: none;
@@ -696,8 +694,10 @@ body.modal-aberto .fab-postar {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 14px;
     font-size: clamp(13px, 3vmin, 18px);
 }
+
 
 .btn-ficar-terra:hover {
     background: #eab100;
@@ -797,7 +797,7 @@ body.modal-aberto .fab-postar {
     text-align: left;
     color: #d4b8b8;
     padding: 6px 12px;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 .submenu li:hover {
@@ -927,24 +927,21 @@ body.modal-aberto .fab-postar {
 /* FOOTER GLOBAL E MODAL */
 footer {
     clear: both;
-    /* Garante que ele saia debaixo de floats */
     width: 100%;
-    background: #1a1a1ae0;
+    background: #1a1a1ae0;                                       /* fica local – tema hacker sobrescreve direto */
     padding: 20px 20px 30px 20px;
     text-align: center;
-    border-top: 1px solid rgba(255, 188, 0, 0.2);
+    border-top: 1px solid rgba(255, 188, 0, 0.2);                /* fallback */
+    border-top: 1px solid var(--borda-dourada, rgba(255, 188, 0, 0.2)); /* 🐚 FAROL – Fase 2 */
     color: rgba(250, 202, 44, 0.719);
     font-size: 0.9rem;
     z-index: 1;
     flex-shrink: 0;
-    /* Impede o footer de ser "esmagado" */
 }
 
 footer a {
     text-decoration: underline;
 }
-
-
 
 /* Efeito de Hover notificações que não quebra a borda */
 /* --- ESTILIZAÇÃO DAS NOTIFICAÇÕES (VERSÃO FENDA) --- */
@@ -958,16 +955,18 @@ footer a {
 
 
 .card-notificacao {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 4px solid #ffbc00;
+    background: rgba(255, 255, 255, 0.03);                        /* fallback */
+    background: var(--bg-card, rgba(255, 255, 255, 0.03));        /* 🐚 FAROL – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    border-left: 4px solid #ffbc00;                               /* fallback */
+    border-left: 4px solid var(--texto-dourado, #ffbc00);         /* 🐚 FAROL – Fase 2 */
     padding: 20px;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
-
 }
 
 .fa-clock small {
@@ -992,7 +991,9 @@ footer a {
 .notificacao-conteudo p {
     margin: 0;
     font-size: 1rem;
-    color: #eee;
+    font-size: clamp(0.92rem, 1.1vw, 1.05rem);
+    color: #eee;                                                  /* fallback */
+    color: var(--texto-secundario, #eee);                         /* 🐚 FAROL – Fase 2 */
     line-height: 1.4;
 }
 
@@ -1020,8 +1021,10 @@ footer a {
     position: fixed;
     bottom: 25px;
     right: 25px;
-    background: rgba(10, 10, 10, 0.95);
-    color: white;
+    background: rgba(10, 10, 10, 0.95);                          /* fallback */
+    background: var(--bg-modal-content, rgba(10, 10, 10, 0.95));  /* 🐚 FAROL – Fase 2 */
+    color: white;                                                 /* fallback */
+    color: var(--texto-primario, white);                          /* 🐚 FAROL – Fase 2 */
     padding: 16px 25px;
     border-radius: 16px;
     border: 1px solid rgba(255, 188, 0, 0.3);
@@ -1098,10 +1101,12 @@ footer a {
 
 /* Estilo Base dos Botões de Escolha */
 .btn-audio-choice {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #999;
-    color: oklch(68.295% 0.00008 271.152);
+    background: rgba(255, 255, 255, 0.05);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    color: #999;                                                  /* fallback */
+    color: var(--texto-muted, #999);                              /* 🐚 FAROL – Fase 2 */
     padding: 6px 14px;
     border-radius: 20px;
     cursor: pointer;
@@ -1123,8 +1128,10 @@ footer a {
 }
 
 .btn-audio-choice:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1);                        /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                 /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -1272,12 +1279,12 @@ footer a {
     min-height: 100vh;
     height: 100dvh;
     background-color: #11111105;
-    color: #fff;
-    color: oklch(0.97 0 0);
+    background-color: var(--bg-drawer, #11111105);              /* 🐚 CORRENTE – Fase 2 */
+    color: #ffffff;                                              /* 🐚 CORRENTE – Fase 2 */
+    color: var(--texto-primario, #ffffff);                       /* 🐚 CORRENTE – Fase 2 */
     z-index: 999999;
     transform: translateX(100%);
-    /* Começa escondida à direita */
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-y: auto;
     scrollbar-width: thin;
     scroll-behavior: smooth;
@@ -1300,10 +1307,9 @@ footer a {
     left: 0;
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.6));  /* 🐚 CORRENTE – Fase 2 */
     display: none;
-    /* Escondido por padrão */
     z-index: 99998;
-    /* Um pouco abaixo da gaveta */
 }
 
 /* Quando abrir, faz o backdrop aparecer ( trigger) */
@@ -1317,19 +1323,16 @@ footer a {
     top: 10px;
     right: 10px;
     background: rgba(255, 255, 255, 0.15);
-    /* Um pouco mais visível */
     border: none;
-    color: #ffff;
-    color: oklch(0.96 0 0);
+    color: #ffffff;                                              /* 🐚 CORRENTE – Fase 2 */
+    color: var(--texto-primario, #ffffff);                       /* 🐚 CORRENTE – Fase 2 */
     font-size: 1rem;
     font-size: clamp(0.95rem, 1cqw, 1.3rem);
     cursor: pointer;
-    /* Aumentei o z-index para garantir que fique por cima de tudo */
     z-index: 1000000;
     padding: 5px 10px;
     border-radius: 50%;
     pointer-events: auto;
-    /* Garante que o clique funcione */
 }
 
 .btn-fechar-drawer:hover {
@@ -1380,7 +1383,7 @@ footer a {
 .form-busca-fenda {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
     gap: 8px;
     width: 100%;
     max-width: 800px;
@@ -1394,8 +1397,10 @@ footer a {
     flex: 1;
     min-width: 0;
     max-width: 600px;
-    background: rgba(255, 255, 255, 0.08);
-    color: white;
+    background: rgba(255, 255, 255, 0.08);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.08));       /* 🐚 FAROL – Fase 2 */
+    color: white;                                                 /* fallback */
+    color: var(--texto-primario, white);                          /* 🐚 FAROL – Fase 2 */
     border: 2px solid rgba(255, 188, 0, 0.5);
     outline: none;
     box-shadow: none;
@@ -1460,9 +1465,9 @@ footer a {
 /* 3. O Card de Usuário  */
 .user-card {
     display: flex;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
     padding: 12px;
-    border-radius: 12px;
     border-radius: 10px;
     padding: 10px;
     break-inside: avoid;
@@ -1478,7 +1483,8 @@ footer a {
     scrollbar-width: none;
     container-type: inline-size;
     container-name: card-busca;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
     transition: transform 0.2s ease, background 0.2s ease !important;
 }
 
@@ -1505,7 +1511,8 @@ footer a {
 /* 5. Textos dentro do Card */
 .nome-user {
     display: block;
-    color: #ffffff;
+    color: #ffffff;                                               /* fallback */
+    color: var(--texto-primario, #ffffff);                        /* 🐚 FAROL – Fase 2 */
     font-size: 1.1rem;
     font-weight: bold;
 }
@@ -1664,13 +1671,15 @@ article.conteudo-principal {
 
 /* Cada "Slide" da nossa apresentação */
 .fenda-slide {
-    background: rgba(0, 0, 0, 0.473);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.473);                             /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.473));    /* 🐚 FAROL – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08);                  /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🐚 FAROL – Fase 2 */
     border-radius: 20px;
     padding: clamp(8px, 2.5dvh, 20px) clamp(8px, 2.5dvh, 20px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     transition: transform 0.3s ease, border-color 0.3s ease;
     margin: 20px auto;
 }
@@ -1685,7 +1694,8 @@ article.conteudo-principal {
 .slide-title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 2rem;
-    color: #fc900c;
+    color: #fc900c;                                                /* fallback */
+    color: var(--cor-principal-laranja, #fc900c);                  /* 🐚 FAROL – Fase 2 (variável NOVA) */
     letter-spacing: 2px;
     margin-bottom: 20px;
     position: relative;
@@ -1699,7 +1709,8 @@ article.conteudo-principal {
     left: 0;
     width: 40px;
     height: 3px;
-    background: #fc900c;
+    background: #fc900c;                                           /* fallback */
+    background: var(--cor-principal-laranja, #fc900c);             /* 🐚 FAROL – Fase 2 */
     border-radius: 2px;
 }
 
@@ -1708,7 +1719,8 @@ article.conteudo-principal {
     font-size: 1.125rem;
     /* 18px */
     line-height: 1.5;
-    color: #e0e0e0;
+    color: #e0e0e0;                                                /* fallback */
+    color: var(--texto-secundario, #e0e0e0);                       /* 🐚 FAROL – Fase 2 */
 }
 
 .slide-body p {
@@ -1808,8 +1820,10 @@ article.conteudo-principal {
 }
 
 .card-habitante {
-    background: #0a0a0a;
-    border: 1px solid #333;
+    background: #0a0a0a;                                            /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                       /* 🐚 FAROL – Fase 2 */
+    border: 1px solid #333;                                         /* fallback */
+    border: 1px solid var(--borda-media, #333);                     /* 🐚 FAROL – Fase 2 */
     border-radius: 20px;
     padding: 8px;
     display: flex;
@@ -1829,6 +1843,7 @@ article.conteudo-principal {
 
 .card-habitante:hover {
     border-color: var(--dourado);
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));     /* 🐚 FAROL – Fase 2 */
     transform: translateY(-6px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
@@ -1839,42 +1854,45 @@ article.conteudo-principal {
     flex-shrink: 0;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #444;
+    border: 2px solid #444;                                         /* fallback */
+    border: 2px solid var(--borda-card, #444);                      /* 🐚 FAROL – Fase 2 */
 }
 
 .info-h h3 {
     margin: 0;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                             /* 🐚 FAROL – Fase 2 */
     font-size: 1rem;
     font-size: clamp(0.95rem, 1.5vw, 1.1rem);
 }
 
 .info-h p {
     margin: 10px 0 0;
-    color: #888;
-    color: oklch(62.675% 0.00007 271.152);
-    font-size: 0.85rem;
-    font-size: clamp(0.8rem, 2cqi, 0.95rem);
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                                /* 🐚 FAROL – Fase 2 */
+    font-size: 0.84rem;
+    font-size: clamp(0.78rem, 2cqi, 0.95rem);
 }
 
 /* CONTAINER DAS REGRAS - VISUAL FENDA */
 
 /* ESTILO DA SEÇÃO PAI (DIRETRIZES) */
 .secao-seguranca {
-    background-color: rgba(105, 61, 10, 0.22);
+    background-color: rgba(105, 61, 10, 0.22);                    /* fica local – tom específico */
     /* Cor original que você estava usando */
     border-radius: 20px;
     padding: 10px;
     /* Valor de segurança que não entendem os clamps */
     padding: clamp(8px, 4vw, 20px);
     line-height: 1.4;
-    border: 1px solid rgba(252, 144, 12, 0.2);
+    border: 1px solid rgba(252, 144, 12, 0.2);                    /* fica local – border sutil */
     /* Uma bordinha bem sutil laranja */
     transition: all 0.3s ease;
 }
 
 .secao-seguranca h2 {
-    color: #fc900c;
+    color: #fc900c;                                                /* fallback */
+    color: var(--cor-principal-laranja, #fc900c);                  /* 🐚 FAROL – Fase 2 */
     /* Laranja padrão da Fenda */
     text-align: center;
     margin-bottom: 20px;
@@ -1884,8 +1902,8 @@ article.conteudo-principal {
 }
 
 .secao-seguranca p {
-    color: #ffffff;
-    color: oklch(100% 0.00011 271.152);
+    color: #ffffff;                                                /* fallback */
+    color: var(--texto-primario, #ffffff);                         /* 🐚 FAROL – Fase 2 */
     font-size: 14px ;
     font-size: clamp(14px, 2.5vw, 18px);
     margin-bottom: 15px;
@@ -1938,14 +1956,15 @@ article.conteudo-principal {
     content: ">";
     position: absolute;
     left: 0;
-    color: #fc900c;
+    color: #fc900c;                                                /* fallback */
+    color: var(--cor-principal-laranja, #fc900c);                  /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
     font-family: 'Courier New', monospace;
 }
 
 .box-diretrizes li strong {
-    color: #ffffff;
-    color: oklch(100% 0.00011 271.152);
+    color: #ffffff;                                                /* fallback */
+    color: var(--texto-primario, #ffffff);                         /* 🐚 FAROL – Fase 2 */
     /* Deixa o título do item bem visível */
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -2090,7 +2109,8 @@ textarea[name="bio"] {
 
 .notif-nova {
     border-left: 3px solid var(--dourado);
-    background: rgba(221, 200, 14, 0.05);
+    border-left: 3px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    background: rgba(221, 200, 14, 0.05);                          /* fica local – cor específica */
 }
 
 .notif-avatar {
@@ -2116,6 +2136,7 @@ textarea[name="bio"] {
 .notif-txt strong {
     font-size: 0.85rem;
     color: var(--dourado);
+    color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🐚 FAROL – Fase 2 */
 }
 
 .notif-txt span {
@@ -2135,10 +2156,10 @@ textarea[name="bio"] {
     padding: 10px;
     font-size: 0.8rem;
     color: var(--dourado);
+    color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🐚 FAROL – Fase 2 */
     text-decoration: none;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);                               /* fica local */
 }
-
 
 /* Efeito especial para o post do Leonardo */
 .post-admin-gold {
@@ -2155,7 +2176,7 @@ textarea[name="bio"] {
     font-size: 0.65rem;
     font-size: clamp(0.65rem, 1.8cqi, 0.95rem);
     font-weight: bold;
-    color: #FFD700;
+    color: #FFD700;                                                /* fica local – cor específica do selo */
     letter-spacing: 2px;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
@@ -2643,7 +2664,7 @@ textarea[name="bio"] {
     bottom: 20%;
     right: 15px;
     padding-bottom: 10px;
-    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
     z-index: 9999;
     display: flex;
     flex-direction: column-reverse;
@@ -2669,6 +2690,7 @@ body.modal-aberto #fenda-nexus {
     width: 60px;
     width: clamp(40px, 8vmin, 95px);
     background: var(--dourado, #ffbc00);
+    background: var(--texto-dourado, var(--dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     border-radius: 50% !important;
     aspect-ratio: 1/1;
     border: none;
@@ -2689,7 +2711,7 @@ body.modal-aberto #fenda-nexus {
 .nexus-menu {
     display: none;
     /* Escondido por padrão */
-    flex-direction: column;
+    flex-direction: row-reverse;
     gap: 10px;
     margin-bottom: 10px;
     width: fit-content;
@@ -2701,15 +2723,17 @@ body.modal-aberto #fenda-nexus {
 }
 
 .nexus-item {
-    background: rgba(20, 11, 0, 0.397);
+    background: rgba(20, 11, 0, 0.397);                             /* fica local – marrom específico */
     border: 1px solid var(--cor-borda-glow, #00ff00);
     padding: 10px;
     border-radius: 12px;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                             /* 🐚 FAROL – Fase 2 */
     cursor: pointer;
     white-space: nowrap;
     text-align: center;
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     font-size: clamp(0.9rem, 0.382vw + 0.625rem, 1.3rem);
 }
 
@@ -2727,8 +2751,9 @@ body.modal-aberto #fenda-nexus {
 
 /* O botão ativo fica com destaque */
 .nexus-item.active {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid #fff;
+    background: rgba(255, 255, 255, 0.2);                           /* fica local – alpha específico */
+    border: 1px solid #fff;                                         /* fallback */
+    border: 1px solid var(--texto-primario, #fff);                  /* 🐚 FAROL – Fase 2 */
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     /* Um glow extra */
 }
@@ -2783,14 +2808,15 @@ body.modal-aberto #fenda-nexus {
     margin-top: 8px;
     text-align: center;
     opacity: 0.75;
-    color: #ffffff;
-    color: oklch(100% 0.00011 271.152 / 0.904);
+    color: #ffffff;                                              /* fallback */
+    color: var(--texto-primario, #ffffff);                       /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
     font-size: clamp(0.7rem, 2vw, 0.95rem);
 }
 
 .link-pagina-especializada a {
     color: var(--dourado);
+    color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🐚 FAROL – Fase 2 */
     text-decoration: none;
 }
 
@@ -3081,13 +3107,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     min-width: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    #central-body .item-notif-rapida,
-    #central-body .item-notif-rapida-wrap,
-    #central-body .btn-excluir-notificacao {
-        transition: none;
-    }
-}
+
 
 /* Card individual */
 .notificacao-card {
@@ -3257,14 +3277,15 @@ section.sessao-publicar .form-publicar .anexos-grid {
 /* ---------------------------------------------------------------
     MODO DE SEGURANÇA PARA REDUÇÃO DE MOVIMENTO (OTIMIZADO)
    --------------------------------------------------------------- */
+/* 🌅 FAGULHA — Fase 3: body.hacker-mode → [data-theme="hacker"] */
 @media (prefers-reduced-motion: reduce) {
 
-    body.hacker-mode::before,
-    body.hacker-mode::after,
-    body.hacker-mode .post-content,
+    [data-theme="hacker"] body::before,
+    [data-theme="hacker"] body::after,
+    [data-theme="hacker"] body .post-content,
     .main-perfil-container-publico.vibe-neon,
-    body.hacker-mode .comentario-texto,
-    body.hacker-mode .hacker-booting,
+    [data-theme="hacker"] body .comentario-texto,
+    [data-theme="hacker"] body .hacker-booting,
     .modo-swipe-ativo .spotted-card,
     .main-perfil-container-publico.vibe-ads {
         animation: none !important;
@@ -3293,5 +3314,27 @@ section.sessao-publicar .form-publicar .anexos-grid {
     .main-perfil-container-publico.vibe-ads .perfil-header-container::before {
         display: none;
     }
+
+     #fenda-toolbar,
+    .sidebar-fenda {
+        transition-duration: 0.01ms;
+    }
+
+
+    #central-body .item-notif-rapida,
+    #central-body .item-notif-rapida-wrap,
+    #central-body .btn-excluir-notificacao {
+        transition: none;
+    }
+
+    .feedback-swipe {
+        transition: none;
+    }
+
+     .social-collapse {
+        transition-duration: 0.01ms;
+    }
+
+    
 }
 

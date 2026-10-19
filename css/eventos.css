@@ -339,9 +339,12 @@
     margin: 5px auto;
     padding: 8px 16px;
     border-radius: 30px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.05);                       /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));      /* 🐚 FAROL – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.9rem, 2.5cqw, 1.2rem);
     min-width: 200px;
@@ -359,26 +362,29 @@
 }
 
 .bt-select-comunidade:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.08);                 /* fica local – alpha específico do hover */
+    border-color: rgba(255, 255, 255, 0.2);                      /* fica local – alpha específico */
 }
 
 .bt-select-comunidade:focus-visible {
     outline: none;
     border-color: var(--bt-dourado, #ffbc00);
-    background-color: rgba(255, 255, 255, 0.06);
+    border-color: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    background-color: rgba(255, 255, 255, 0.06);                 /* fica local – alpha específico do focus */
     box-shadow: 0 0 0 4px rgba(255, 188, 0, 0.1);
 }
 
 .bt-select-comunidade option {
-    background: #1a1a2e;
-    color: #fff;
+    background: #1a1a2e;                                          /* fica local – cor específica de <option> */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     padding: 4px 8px;
 }
 
 .bt-select-comunidade option:hover {
     background: var(--bt-dourado, #ffbc00);
-    color: #000;
+    background: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                  /* fica local – texto em fundo claro */
 }
 
 
@@ -612,9 +618,10 @@
    4. CARDS (bt-card) – Estilos base (grid e swipe compartilham)
    ================================================================ */
 .bt-card {
-    background: var(--bt-fundo-card, #1a1a2e94);
-    background: oklch(0.23 0.03 250 / 0.6);
-    border: 1px solid var(--bt-borda-sutil);
+    background: var(--bt-fundo-card, #1a1a2e94);                 /* fallback */
+    background: var(--bg-card, var(--bt-fundo-card, #1a1a2e94));  /* 🐚 FAROL – Fase 2 */
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     border-radius: clamp(10px, 1.5vw, 16px);
     padding: 10px;
     padding: clamp(8px, 1.5vw, 20px);
@@ -633,20 +640,19 @@
     transition: box-shadow 0.2s ease, width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
 }
 
-/* Estados por status – mantido */
 .bt-card.expirado {
     opacity: 0.75;
     filter: grayscale(0.3);
-    border-color: rgba(100, 100, 100, 0.2);
+    border-color: rgba(100, 100, 100, 0.2);                       /* fica local – cinza específico do expirado */
 }
 
 .bt-card.em-andamento {
-    border-color: rgba(255, 68, 68, 0.5);
+    border-color: rgba(255, 68, 68, 0.5);                         /* fica local – vermelho específico */
     box-shadow: 0 0 30px rgba(255, 0, 0, 0.08);
 }
 
 .bt-card.agendado {
-    border-color: rgba(255, 188, 0, 0.2);
+    border-color: rgba(255, 188, 0, 0.2);                         /* fica local – dourado específico */
 }
 
 /* Capa do evento – base (sem altura fixa, será controlada pelo modo swipe ou grid) */
@@ -657,8 +663,8 @@
     align-content: center;
     overflow: hidden;
     border-radius: clamp(6px, 1vw, 10px);
-    background: var(--bt-fundo-escuro);
-    background: oklch(5% 0 0);
+    background: var(--bt-fundo-escuro);                           /* fallback */
+    background: var(--bg-page-dark, var(--bt-fundo-escuro));      /* 🐚 FAROL – Fase 2 */
     flex-shrink: 0;
 }
 
@@ -686,40 +692,37 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    background: rgba(0, 0, 0, 0.7);
-    background: oklch(0% 0 0 / 0.7);
+    background: rgba(0, 0, 0, 0.7);                              /* fica local – preto com alpha específico */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     z-index: 2;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .bt-status-selo.expirado {
-    background: rgba(80, 80, 80, 0.85);
-    background: oklch(0.4 0 0 / 0.85);
-    color: #bbb;
-    color: oklch(0.8 0 0);
-    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(80, 80, 80, 0.85);                           /* fica local – cinza específico do expirado */
+    color: #bbb;                                                  /* fallback */
+    color: var(--texto-terciario, #bbb);                         /* 🐚 FAROL – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.05);                      /* fallback */
+    border-color: var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-status-selo.em-andamento {
-    background: rgba(255, 0, 0, 0.85);
-    background: oklch(0.55 0.2 25 / 0.85);
-    color: #fff;
-    color: oklch(1 0 0);
+    background: rgba(255, 0, 0, 0.85);                           /* fica local – vermelho específico de "ao vivo" */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     animation: bt-pulsar-selo 1.5s infinite ease-in-out;
-    border-color: rgba(255, 100, 100, 0.3);
+    border-color: rgba(255, 100, 100, 0.3);                       /* fica local – borda específica */
 }
 
 .bt-status-selo.agendado {
-    background: rgba(255, 188, 0, 0.85);
-    background: oklch(83.276% 0.17139 82.036 / 0.85);
-    color: #000;
-    color: oklch(0% 0 0);
-    border-color: rgba(255, 188, 0, 0.3);
+    background: rgba(255, 188, 0, 0.85);                         /* fica local – dourado com alpha específico */
+    color: #000;                                                  /* fica local – texto em fundo claro */
+    border-color: rgba(255, 188, 0, 0.3);                         /* fica local */
 }
 
 @keyframes bt-pulsar-selo {
@@ -748,8 +751,8 @@
 }
 
 .bt-titulo {
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     font-size: var(--bt-titulo-size, clamp(1rem, 5cqi, 1.7rem));
     font-weight: 700;
     margin: 0;
@@ -769,8 +772,8 @@
 .bt-data {
     font-size: 0.88rem;
     font-size: clamp(0.84rem, 1.8cqh, 1.15rem);
-    color: var(--bt-texto-cinza, #aaa);
-    color: oklch(0.75 0 0);
+    color: var(--bt-texto-cinza, #aaa);                           /* fallback */
+    color: var(--texto-terciario, var(--bt-texto-cinza, #aaa));   /* 🐚 FAROL – Fase 2 */
     margin: 0;
     display: flex;
     align-items: center;
@@ -781,15 +784,15 @@
 .bt-data i {
     width: 16px;
     text-align: center;
-    color: var(--bt-dourado);
-    color: oklch(83.276% 0.17139 82.036);
+    color: var(--bt-dourado);                                     /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-descricao {
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 2cqi, 1rem);
-    color: #ccc;
-    color: oklch(0.85 0 0);
+    color: #ccc;                                                  /* fallback */
+    color: var(--texto-secundario, #ccc);                         /* 🚚 FAROL – Fase 2 */
     margin: 4px 0;
     max-height: var(--bt-text-max-height, 80px);
     overflow: hidden;
@@ -812,8 +815,8 @@
     gap: 10px;
     gap: clamp(10px, 1.5vw, 20px);
     font-size: clamp(0.75rem, 1cqi, 0.95rem);
-    color: var(--bt-texto-cinza);
-    color: oklch(0.75 0 0);
+    color: var(--bt-texto-cinza);                                 /* fallback */
+    color: var(--texto-terciario, var(--bt-texto-cinza, #aaa));   /* 🐚 FAROL – Fase 2 */
     margin: 6px 0;
     margin: clamp(4px, 0.5vw, 12px) 0;
     flex-wrap: wrap;
@@ -846,11 +849,11 @@
     padding: 4px 10px;
     padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1vw, 16px);
     border: none;
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.06);
-    background: oklch(1 0 0 / 0.06);
-    color: #fff;
-    color: oklch(1 0 0);
+    border-radius: 30px; 
+    background: rgba(255, 255, 255, 0.06);                                        /* fallback */                              
+    background: var(--bg-input, rgba(255, 255, 255, 0.06));                      /* 🐚 FAROL – Fase 2 - troca de 0.06 pra 0.05 var bg input, diferença sutil  */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     cursor: pointer;
     font-size: clamp(0.82rem, 1.8vw, 1.05rem);
     transition: background 0.2s, transform 0.15s;
@@ -861,8 +864,8 @@
 }
 
 .bt-btn-resposta:hover {
-    background: rgba(255, 255, 255, 0.12);
-    background: oklch(1 0 0 / 0.12);
+    background: rgba(255, 255, 255, 0.12);                                          /* fallback */
+     background: var(--borda-media, rgba(255, 255, 255, 0.10));                    /* 🐚 FAROL – Fase 2 - troca de 0.12 pra 0.10 --var-borda media */
     transform: scale(1.02);
 }
 
@@ -871,36 +874,33 @@
 }
 
 .bt-btn-resposta.ativo-vou {
-    background: #4caf50;
-    background: oklch(60% 0.18 142);
-    color: #fff;
-    color: oklch(1 0 0);
+    background: #4caf50;                                          /* fallback */
+    background: var(--cor-sucesso, #4caf50);                     /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-btn-resposta.ativo-talvez {
-    background: var(--bt-dourado);
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: var(--bt-dourado);                                /* fallback */
+    background: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                  /* fica local – texto em fundo claro */
 }
 
 .bt-btn-resposta.ativo-nao {
-    background: #f44336;
-    background: oklch(55% 0.18 30);
-    color: #fff;
-    color: oklch(1 0 0);
+    background: #f44336;                                          /* fallback */
+    background: var(--cor-erro-escuro, #f44336);                 /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
 }
 
-/* Mensagem de evento expirado */
 .bt-expirado-msg {
     padding: 8px;
     padding: clamp(6px, 0.8vw, 10px);
     text-align: center;
-    background: rgba(255, 0, 0, 0.06);
-    background: oklch(55% 0.18 30 / 0.06);
+    background: rgba(255, 0, 0, 0.06);                            /* fica local – vermelho com alpha muito baixo */
     border-radius: 8px;
-    color: #ff6b6b;
-    color: oklch(65% 0.15 30);
+    color: #ff6b6b;                                               /* fallback */
+    color: var(--cor-erro, #ff6b6b);                             /* 🐚 FAROL – Fase 2 */
     font-weight: 700;
     margin: clamp(4px, 0.5vw, 8px) 0;
     font-size: clamp(0.8rem, 1vw, 0.95rem);
@@ -912,17 +912,18 @@
     align-items: center;
     gap: 6px;
     margin-top: clamp(4px, 0.5vw, 8px);
-    color: var(--bt-dourado);
-    color: oklch(83.276% 0.17139 82.036);
+    color: var(--bt-dourado);                                     /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     text-decoration: none;
     font-weight: 700;
-    font-size: clamp(0.8rem, 1vw, 0.95rem);
+    font-size: 0.84rem ;
+    font-size: clamp(0.77rem, 1vw, 0.95rem);
     transition: color 0.2s, transform 0.15s;
 }
 
 .bt-btn-detalhes:hover {
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     transform: translateX(4px);
 }
 
@@ -944,8 +945,8 @@
     margin: 0 auto;
     padding: 12px 8px;
     padding: clamp(15px, 3vw, 35px) clamp(10px, 2vw, 20px);
-    background: var(--bt-fundo-escuro, #0a0a0a);
-    background: oklch(5% 0 0);
+    background: var(--bt-fundo-escuro, #0a0a0a);                 /* fallback */
+    background: var(--bg-page-dark, var(--bt-fundo-escuro, #0a0a0a)); /* 🐚 FAROL – Fase 2 */
     min-height: 100dvh;
     overflow-y: auto;
 }
@@ -960,8 +961,8 @@
     align-items: center;
     border-radius: 8px;
     border-radius: clamp(10px, 1.5vw, 16px);
-    background: var(--bt-fundo-escuro);
-    background: oklch(5% 0 0);
+    background: var(--bt-fundo-escuro);                          /* fallback */
+    background: var(--bg-page-dark, var(--bt-fundo-escuro));     /* 🐚 FAROL – Fase 2 */
     margin-bottom: 12px;
     margin-bottom: clamp(16px, 2vw, 28px);
 }
@@ -970,8 +971,7 @@
     width: 100%;
     height: 100%;
     max-height: 360px;
-    background: #1e1a1a1c;
-    background: oklab(22.242% 0.00601 0.00188 / 0.11);
+    background: #1e1a1a1c;                                        /* fica local – cinza específico de overlay */
     object-fit: cover;
     display: block;
 }
@@ -985,8 +985,8 @@
 
 .bt-detalhes-titulo {
     font-size: clamp(1.3rem, 3vw, 2rem);
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     max-width: 100%;
     word-break: break-word;
     white-space: normal;
@@ -1000,13 +1000,13 @@
     gap: clamp(12px, 2vw, 24px);
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.4vw, 1.1rem);
-    color: var(--bt-texto-cinza);
-    color: oklch(0.75 0 0);
+    color: var(--bt-texto-cinza);                                 /* fallback */
+    color: var(--texto-terciario, var(--bt-texto-cinza, #aaa));   /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-detalhes-meta i {
-    color: var(--bt-dourado);
-    color: oklch(83.276% 0.17139 82.036);
+    color: var(--bt-dourado);                                     /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     width: 20px;
     text-align: center;
 }
@@ -1015,8 +1015,8 @@
     font-size: 1rem;
     font-size: clamp(0.95rem, 1.3vw, 1.3rem);
     line-height: 1.6;
-    color: #ccc;
-    color: oklch(0.85 0 0);
+    color: #ccc;                                                  /* fallback */
+    color: var(--texto-secundario, #ccc);                        /* 🐚 FAROL – Fase 2 */
     margin: 8px 0;
     overflow-wrap: break-word;
     -ms-word-break: break-word;
@@ -1039,30 +1039,33 @@
 }
 
 .bt-btn-editar {
-    background: rgba(255, 188, 0, 0.15);
-    border: 1px solid rgba(255, 188, 0, 0.3);
-    color: var(--bt-dourado);
+    background: rgba(255, 188, 0, 0.15);                         /* fica local – dourado com alpha específico */
+    border: 1px solid rgba(255, 188, 0, 0.3);                     /* fica local */
+    color: var(--bt-dourado);                                     /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     text-decoration: none;
-
 }
 
 .bt-btn-editar:hover {
-    background: rgba(255, 188, 0, 0.25);
-    border-color: var(--bt-dourado);
-    color: #fff;
+    background: rgba(255, 188, 0, 0.25);                         /* fica local */
+    border-color: var(--bt-dourado);                              /* fallback */
+    border-color: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-btn-cancelar {
-    background: rgba(255, 50, 50, 0.15);
-    border: 1px solid rgba(255, 50, 50, 0.3);
-    color: #ff6b6b;
+    background: rgba(255, 50, 50, 0.15);                         /* fica local – vermelho com alpha específico */
+    border: 1px solid rgba(255, 50, 50, 0.3);                     /* fica local */
+    color: #ff6b6b;                                               /* fallback */
+    color: var(--cor-erro, #ff6b6b);                             /* 🐚 FAROL – Fase 2 */
     font-family: inherit;
 }
 
 .bt-btn-cancelar:hover {
-    background: rgba(255, 50, 50, 0.25);
-    border-color: #ff4b4b;
-    color: #ff8a8a;
+    background: rgba(255, 50, 50, 0.25);                         /* fica local */
+    border-color: #ff4b4b;                                        /* fica local – vermelho vivo */
+    color: #ff8a8a;                                               /* fica local – vermelho claro */
 }
 
 .bt-btn-editar,
@@ -1078,8 +1081,8 @@
 
 /* Barra de participação */
 .bt-barramento {
-    background: rgba(255, 255, 255, 0.03);
-    background: oklch(1 0 0 / 0.03);
+    background: rgba(255, 255, 255, 0.03); /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));                       /* 🐚 FAROL – Fase 2 */
     border-radius: 10px;
     border-radius: clamp(10px, 1.2vw, 14px);
     padding: clamp(12px, 1.5vw, 20px);
@@ -1089,7 +1092,8 @@
     width: 100%;
     place-self: center;
     align-items: center;
-    border: 1px solid var(--bt-borda-sutil);
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-barra-item {
@@ -1110,16 +1114,16 @@
     font-weight: 600;
     font-size: 0.85rem;
     font-size: clamp(0.9rem, 1.4vw, 1rem);
-    color: #ddd;
-    color: oklch(0.85 0 0);
+    color: #ddd;                                                  /* fallback */
+    color: var(--texto-secundario, #ddd);                        /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-barra-fundo {
     flex: 1;
     height: 20px;
     height: clamp(18px, 3cqh, 28px);
-    background: rgba(255, 255, 255, 0.06);
-    background: oklch(1 0 0 / 0.06);
+    background: rgba(255, 255, 255, 0.06);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.06));       /* 🐚 FAROL – Fase 2 */
     border-radius: 30px;
     overflow: hidden;
     position: relative;
@@ -1137,33 +1141,32 @@
     padding-right: 6px;
     font-size: 0.7rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.9);
-    color: oklch(1 0 0 / 0.9);
+    color: rgba(255, 255, 255, 0.9);                              /* fallback */
+    color: var(--texto-primario, rgba(255, 255, 255, 0.9));       /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-barra-vou .bt-barra-preenchimento {
-    background: #4caf50;
-    background: oklch(60% 0.18 142);
+    background: #4caf50;                                          /* fallback */
+    background: var(--cor-sucesso, #4caf50);                     /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-barra-talvez .bt-barra-preenchimento {
-    background: var(--bt-dourado);
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: var(--bt-dourado);                                /* fallback */
+    background: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                  /* fica local – texto em fundo claro */
 }
 
 .bt-barra-nao .bt-barra-preenchimento {
-    background: #f44336;
-    background: oklch(55% 0.18 30);
+    background: #f44336;                                          /* fallback */
+    background: var(--cor-erro-escuro, #f44336);                 /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-barra-total {
     text-align: right;
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 0.9vw, 0.9rem);
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     margin-top: 4px;
 }
 
@@ -1176,8 +1179,8 @@
 .bt-participantes h3 {
     font-size: 1rem;
     font-size: clamp(0.95rem, 1.5vw, 1.3rem);
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     margin-bottom: 12px;
     margin-bottom: clamp(10px, 1.2vw, 18px);
 }
@@ -1211,8 +1214,8 @@
 .bt-avatar-item span {
     font-size: 0.75rem;
     font-size: clamp(0.75rem, 0.85vw, 0.95rem);
-    color: var(--bt-texto-cinza, #aeaeae);
-    color: oklch(0.75 0 0);
+    color: var(--bt-texto-cinza, #aeaeae);                        /* fallback */
+    color: var(--texto-terciario, var(--bt-texto-cinza, #aeaeae)); /* 🐚 FAROL – Fase 2 */
     position: relative;
     display: flex;
     text-align: center;
@@ -1223,8 +1226,8 @@
 }
 
 .bt-sem-participantes {
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     font-style: italic;
     padding: 10px 0;
 }
@@ -1239,8 +1242,8 @@
 .bt-galeria h4 {
     font-size: 1rem;
     font-size: clamp(0.95rem, 2vw, 1.3rem);
-    color: #ddd;
-    color: oklch(0.85 0 0);
+    color: #ddd;                                                  /* fallback */
+    color: var(--texto-secundario, #ddd);                        /* 🐚 FAROL – Fase 2 */
     margin-bottom: 10px;
 }
 
@@ -1324,26 +1327,25 @@
 .bt-comentarios h3 {
     font-size: 1rem;
     font-size: clamp(0.95rem, 3.05cqw, 1.5rem);
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     margin-bottom: 15px;
     margin-bottom: clamp(12px, 1.5vw, 20px);
 }
 
 .bt-comentario-item {
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(1 0 0 / 0.04);
+    background: rgba(255, 255, 255, 0.04);                        /* fica local – alpha muito específico */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));
     border-radius: 12px;
     padding: 10px 14px;
     margin-bottom: 15px;
-    border-left: 3px solid var(--bt-dourado, #ffbc00);
-    border-left: 3px solid oklch(83.276% 0.17139 82.036);
+    border-left: 3px solid var(--bt-dourado, #ffbc00);            /* fallback */
+    border-left: 3px solid var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
     transition: background 0.2s;
 }
 
 .bt-comentario-item:hover {
-    background: rgba(255, 255, 255, 0.12);
-    background: oklch(1 0 0 / 0.12);
+    background: rgba(255, 255, 255, 0.12);                       /* fica local – alpha específico do hover */
 }
 
 .bt-comentario-meta {
@@ -1367,7 +1369,6 @@
     background-clip: padding-box;
     /* Modern browsers (Firefox 4+, Chrome, Safari 5+, IE9+) */
     object-fit: cover;
-    flex-shrink: 0;
     display: flex;
     align-items: center;
     flex-shrink: 0;
@@ -1376,8 +1377,8 @@
 
 .bt-comentario-autor {
     font-weight: 600;
-    color: var(--bt-dourado);
-    color: oklch(83.276% 0.17139 82.036);
+    color: var(--bt-dourado);                                     /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 1.5vw, 1.05rem);
 }
@@ -1385,15 +1386,15 @@
 .bt-comentario-data {
     font-size: 0.75rem;
     font-size: clamp(0.75rem, 0.8vw, 0.9rem);
-    color: #888;
-    color: oklch(0.62 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     margin-left: auto;
     flex-shrink: 0;
 }
 
 .bt-comentario-texto {
-    color: #ddd;
-    color: oklch(0.88 0 0);
+    color: #ddd;                                                  /* fallback */
+    color: var(--texto-secundario, #ddd);                        /* 🐚 FAROL – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1vw, 1.05rem);
     line-height: 1.5;
@@ -1404,8 +1405,8 @@
 }
 
 .bt-sem-comentarios {
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     font-style: italic;
     padding: 10px 0;
 }
@@ -1419,11 +1420,12 @@
     max-height: 220px;
     min-height: 60px;
     margin: 20px auto 40px auto;
-    background: rgba(255, 255, 255, 0.03);
-    background: oklch(1 0 0 / 0.03);
+    background: rgba(255, 255, 255, 0.03);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));
     border-radius: 16px;
     padding: 10px 14px;
-    border: 1px solid var(--bt-borda-sutil);
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
 }
 
 #bt-form-comentario {
@@ -1439,8 +1441,8 @@
     padding: 8px 0;
     background: transparent;
     border: none;
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     resize: vertical;
     font-family: inherit;
     font-size: clamp(0.85rem, 1vw, 1rem);
@@ -1450,9 +1452,10 @@
 }
 
 .bt-textarea-chat::placeholder {
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
 }
+
 
 .bt-btn-enviar {
     flex-shrink: 0;
@@ -1462,11 +1465,9 @@
     height: clamp(36px, 8cqi, 60px);
     border: none;
     border-radius: 50%;
-    /* Fallback */
-    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824)); /* fallback */
     background: var(--laranja-fenda);
-    color: #000;
-    color: oklch(0% 0 0);
+    color: #000;                                                  /* fica local – texto em fundo claro */
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
@@ -1476,8 +1477,8 @@
 }
 
 .bt-btn-enviar:hover {
-    background: #ffd44d;
-    background: oklch(90% 0.15 80);
+    background: #ffd44d;                                          /* fallback */
+    background: var(--texto-dourado-hover, #ffd44d);             /* 🐚 FAROL – Fase 2 */
     transform: scale(1.05);
 }
 
@@ -1522,22 +1523,19 @@
     top: 20%;
     left: 50%;
     gap: 8px;
-    background: rgba(0, 0, 0, 0.25);
-    background: oklch(0 0 0 / 0.25);
-    border: 1px solid var(--bt-borda-sutil);
+    background: rgba(0, 0, 0, 0.25);                             /* fica local – preto com alpha específico */
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     border-radius: 30px;
     padding: 8px 16px;
-    color: #fff;
-    color: oklch(0.98 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     font-weight: 600;
     font-size: clamp(0.8rem, 1.2vw, 1rem);
     cursor: pointer;
     transition: 0.2s;
     font-family: inherit;
-    /* volta ao fluxo normal */
     z-index: 9994;
-
-    /* Apenas isola o contexto para o brilho ficar estritamente atrás do botão */
     isolation: isolate;
 }
 
@@ -1560,9 +1558,10 @@
 }
 
 .bt-btn-filtro:hover {
-    background: rgba(255, 255, 255, 0.1);
-    background: oklch(1 0 0 / 0.1);
-    border-color: var(--bt-dourado);
+    background: rgba(255, 255, 255, 0.1);                        /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    border-color: var(--bt-dourado);                              /* fallback */
+    border-color: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
 }
 
 
@@ -1576,17 +1575,16 @@
     transform: translate3d(-50%, -50%, 0px);
     transform: translate(-50%, -50%);
     z-index: 9992;
-    background: rgba(0, 0, 0, 0.6);
-    background: oklch(0% 0 0 / 0.6);
+    background: rgba(0, 0, 0, 0.6);                              /* fica local – preto com alpha específico */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: 12px 16px;
-    border: 1px solid var(--bt-borda-sutil);
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     width: 100%;
     max-width: 800px;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
 }
 
 .bt-gaveta-filtros.aberto {
@@ -1607,23 +1605,23 @@
     font-weight: 700;
     padding: clamp(4px, 0.6vw, 8px) clamp(10px, 1.5vw, 18px);
     border-radius: 30px;
-    color: #fff;
-    color: oklch(1 0 0);
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(1 0 0 / 0.05);
-    border: 1px solid var(--bt-borda-sutil);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
+    background: rgba(255, 255, 255, 0.05);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     transition: background 0.2s, transform 0.15s;
     text-transform: uppercase;
 }
 
 .bt-filtro.ativo,
 .bt-filtro:hover {
-    background: var(--bt-dourado);
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
-    border-color: var(--bt-dourado);
-    border-color: oklch(83.276% 0.17139 82.036);
+    background: var(--bt-dourado);                                /* fallback */
+    background: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                  /* fica local – texto em fundo claro */
+    border-color: var(--bt-dourado);                              /* fallback */
+    border-color: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 188, 0, 0.2);
 }
@@ -1655,8 +1653,8 @@
     max-width: 1000px;
     margin: 0 auto;
     padding: 25px 12px;
-    background: var(--bt-fundo-escuro);
-    background: oklch(5% 0 0);
+    background: var(--bt-fundo-escuro);                           /* fallback */
+    background: var(--bg-page-dark, var(--bt-fundo-escuro));      /* 🐚 FAROL – Fase 2 */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -1666,14 +1664,14 @@
 .bt-criar-page h1 {
     font-size: 1.4rem;
     font-size: clamp(1.5rem, 3vw, 2.2rem);
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     margin-bottom: 4px;
 }
 
 .bt-subtitulo {
-    color: var(--bt-texto-cinza);
-    color: oklch(0.75 0 0);
+    color: var(--bt-texto-cinza);                                 /* fallback */
+    color: var(--texto-terciario, var(--bt-texto-cinza, #aaa));   /* 🐚 FAROL – Fase 2 */
     font-size: 0.95rem;
     font-size: clamp(1rem, 1.2vw, 1.1rem);
     margin-bottom: 24px;
@@ -1702,10 +1700,10 @@
 
 .bt-campo-grupo label {
     display: block;
-    color: #ddd;
-    color: oklch(0.85 0 0);
+    color: #ddd;                                                  /* fallback */
+    color: var(--texto-secundario, #ddd);                        /* 🐚 FAROL – Fase 2 */
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+    font-size: clamp(0.86rem, 1.1vw, 1.05rem);
     margin-bottom: 8px;
     font-weight: 500;
 }
@@ -1715,13 +1713,13 @@
 .bt-campo-grupo textarea,
 .bt-campo-grupo select {
     width: 100%;
-    background: rgba(255, 255, 255, 0.14);
-    background: oklch(1 0 0 / 0.14);
-    border: 1px solid var(--bt-borda-sutil);
+    background: rgba(255, 255, 255, 0.14);                        /* fica local – alpha específico dos inputs de evento */
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     border-radius: 8px;
     padding: 10px 12px;
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.95rem, 1vw, 1.05rem);
     transition: border-color 0.3s ease;
@@ -1733,8 +1731,8 @@
 .bt-campo-grupo textarea:focus-visible,
 .bt-campo-grupo select:focus-visible {
     outline: none;
-    border-color: var(--bt-dourado);
-    border-color: oklch(83.276% 0.17139 82.036);
+    border-color: var(--bt-dourado);                              /* fallback */
+    border-color: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-campo-grupo textarea {
@@ -1753,16 +1751,16 @@
 .bt-campo-grupo input[type="file"] {
     display: inline-block;
     margin-top: 5px;
-    color: #aaa;
-    color: oklch(0.75 0 0);
+    color: #aaa;                                                  /* fallback */
+    color: var(--texto-terciario, #aaa);                         /* 🐚 FAROL – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 1.5vw, 0.95rem);
 }
 
 .bt-campo-ajuda {
     display: block;
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     font-size: 0.7rem;
     font-size: clamp(0.7rem, 0.9vw, 0.95rem);
     margin-top: 5px;
@@ -1782,9 +1780,9 @@
     height: clamp(100px, 15cqw, 220px);
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--bt-borda-sutil);
-    background: rgba(0, 0, 0, 0.3);
-    background: oklch(0% 0 0 / 0.3);
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
+    background: rgba(0, 0, 0, 0.3);                              /* fica local – preto com alpha específico */
     flex-shrink: 0;
 }
 
@@ -1805,10 +1803,9 @@
 }
 
 .bt-btn-principal {
-    background: var(--bt-dourado);
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: var(--bt-dourado);                                /* fallback */
+    background: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                  /* fica local – texto em fundo claro */
     padding: 12px 24px;
     border-radius: 30px;
     font-weight: bold;
@@ -1822,18 +1819,19 @@
 }
 
 .bt-btn-principal:hover {
-    background: #ffd44d;
-    background: oklch(90% 0.15 80);
+    background: #ffd44d;                                          /* fallback */
+    background: var(--texto-dourado-hover, #ffd44d);             /* 🐚 FAROL – Fase 2 */
     transform: scale(1.01);
 }
 
 .bt-btn-secundario {
     background: transparent;
-    color: var(--bt-texto-cinza);
-    color: oklch(0.75 0 0);
+    color: var(--bt-texto-cinza);                                 /* fallback */
+    color: var(--texto-terciario, var(--bt-texto-cinza, #aaa));   /* 🐚 FAROL – Fase 2 */
     padding: 12px 30px;
     border-radius: 30px;
-    border: 1px solid var(--bt-borda-sutil);
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     text-decoration: none;
     text-align: center;
     align-content: center;
@@ -1843,10 +1841,10 @@
 }
 
 .bt-btn-secundario:hover {
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(1 0 0 / 0.05);
-    color: #fff;
-    color: oklch(1 0 0);
+    background: rgba(255, 255, 255, 0.05);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
 }
 
 /* ================================================================
@@ -1854,10 +1852,11 @@
    ================================================================ */
 .bt-feedback {
     position: fixed;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7);                              /* fica local – preto com alpha específico */
     padding: 20px;
     border-radius: 40px;
-    color: #fff;
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
     transition: opacity 0.2s ease-in-out;
     opacity: 0;
@@ -1872,21 +1871,21 @@
     right: 5%;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(9, 255, 0, 0.8);
+    background-color: rgba(9, 255, 0, 0.8);                      /* fica local – verde específico do "vou" */
 }
 
 .bt-feedback-esquerda {
     left: 5%;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(247, 44, 44, 0.95);
+    background-color: rgba(247, 44, 44, 0.95);                   /* fica local – vermelho específico do "não vou" */
 }
 
 .bt-feedback-cima {
     top: 30%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #00a896;
+    background-color: #00a896;                                    /* fica local – ciano específico do "talvez" */
 }
 
 @media (max-width: 600px) {
@@ -1907,15 +1906,15 @@
     top: calc(25% - 50px);
     margin: 20px auto;
     padding: 40px 20px;
-    color: #ccc;
-    color: oklch(0.85 0 0);
+    color: #ccc;                                                  /* fallback */
+    color: var(--texto-secundario, #ccc);                        /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-empty i {
     font-size: 2.5rem;
     font-size: clamp(2.8rem, 6vw, 5rem);
-    color: var(--bt-dourado, #ffbc00);
-    color: var(--bt-dourado-oklch);
+    color: var(--bt-dourado, #ffbc00);                            /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     display: block;
     margin-bottom: 15px;
 }
@@ -1923,23 +1922,22 @@
 .bt-empty strong {
     display: block;
     font-size: clamp(1.1rem, 2cqw, 1.6rem);
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     margin-bottom: 8px;
 }
 
 .bt-empty p {
     font-size: clamp(0.9rem, 1.2cqw, 1.1rem);
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     margin-bottom: 20px;
 }
 
 .bt-btn-empty {
-    background: var(--bt-dourado);
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: var(--bt-dourado);                                /* fallback */
+    background: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
+    color: #000;                                                  /* fica local – texto em fundo claro */
     border: none;
     border-radius: 30px;
     padding: 14px 28px;
@@ -1951,8 +1949,8 @@
 }
 
 .bt-btn-empty:hover {
-    background: #ffd44d;
-    background: oklch(90% 0.15 80);
+    background: #ffd44d;                                          /* fallback */
+    background: var(--texto-dourado-hover, #ffd44d);             /* 🐚 FAROL – Fase 2 */
     transform: scale(1.02);
 }
 
@@ -1965,13 +1963,12 @@
 
 .bt-btn-load-more,
 .btn-load-more-comunidades.btn-fenda-padrao {
-    background: #faba0d;
-    background: oklch(0.8 0.19 76.05);
-    border: 1px solid var(--bt-borda-sutil);
+    background: #faba0d;                                          /* fica local – amarelo-ouro específico do "load more" */
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
     border-radius: 30px;
     padding: 10px 30px;
-    color: #1e1a1a;
-    color: oklch(0.09 0 1);
+    color: #1e1a1a;                                               /* fica local – texto em fundo claro */
     font-weight: 600;
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     display: inline-flex;
@@ -1981,9 +1978,10 @@
 }
 
 .bt-btn-load-more:hover {
-    background: rgba(255, 255, 255, 0.1);
-    background: oklch(1 0 0 / 0.1);
-    border-color: var(--bt-dourado);
+    background: rgba(255, 255, 255, 0.1);                        /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    border-color: var(--bt-dourado);                              /* fallback */
+    border-color: var(--texto-dourado, var(--bt-dourado, #ffbc00)); /* 🐚 FAROL – Fase 2 */
     transform: translateY(-2px);
 }
 
@@ -2009,7 +2007,8 @@
 
 .bt-radar .fa-search:before {
     font-size: clamp(3rem, 8vw, 7rem);
-    color: var(--bt-dourado, #ffbc00);
+    color: var(--bt-dourado, #ffbc00);                            /* fallback */
+    color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     display: block;
     margin-bottom: 16px;
 }
@@ -2018,15 +2017,15 @@
     font-size: clamp(1.1rem, 2.5vw, 1.6rem);
     display: block;
     margin-bottom: 8px;
-    color: #fff;
-    color: oklch(0.95 0 1);
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
 }
 
 .bt-radar p {
     font-size: 0.9rem;
     font-size: clamp(0.9rem, 1.7vw, 1.2rem);
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                  /* fallback */
+    color: var(--texto-muted, #888);                             /* 🐚 FAROL – Fase 2 */
     margin-bottom: 20px;
 }
 
@@ -2049,8 +2048,7 @@
     height: 100%;
     object-fit: contain;
     justify-content: center;
-    background: #a5a5a5a5;
-    background: oklch(0.7219 0 0 / 65%);
+    background: #a5a5a5a5;                                        /* fica local – cinza específico da prévia de capa */
     display: block;
     max-height: 400px;
 }
@@ -2085,9 +2083,9 @@
     height: clamp(70px, 12cqw, 120px);
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--bt-borda-sutil);
-    background: rgba(0, 0, 0, 0.3);
-    background: oklch(0% 0 0 / 0.3);
+    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
+    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
+    background: rgba(0, 0, 0, 0.3);                              /* fica local – preto com alpha específico */
     flex-shrink: 0;
     transition: opacity 0.3s, transform 0.3s;
 }
@@ -2103,9 +2101,10 @@
     position: absolute;
     top: 2px;
     right: 2px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7);                              /* fica local – preto com alpha específico */
     border: none;
-    color: #fff;
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -2118,7 +2117,7 @@
 }
 
 #galeria-container .btn-remover-anexo:hover {
-    background: rgba(255, 50, 50, 0.7);
+    background: rgba(255, 50, 50, 0.7);                          /* fica local – vermelho com alpha específico */
     transform: scale(1.05);
 }
 
@@ -2155,26 +2154,31 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background: rgba(20, 20, 32, 0.95);
+    background: rgba(20, 20, 32, 0.95);                          /* fica local – roxo-escuro específico do balão */
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
+    color: #fff;                                                  /* fallback */
+    color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     transition: opacity 0.3s ease;
     max-width: 95%;
     pointer-events: none;
 }
 
 .balao-fenda.sucesso {
-    border-left: 4px solid #4caf50;
+    border-left: 4px solid #4caf50;                               /* fallback */
+    border-left: 4px solid var(--cor-sucesso, #4caf50);          /* 🐚 FAROL – Fase 2 */
 }
 
 .balao-fenda.erro {
-    border-left: 4px solid #f44336;
+    border-left: 4px solid #f44336;                               /* fallback */
+    border-left: 4px solid var(--cor-erro-escuro, #f44336);      /* 🐚 FAROL – Fase 2 */
 }
 
 .balao-fenda.info {
-    border-left: 4px solid #ffbc00;
+    border-left: 4px solid #ffbc00;                               /* fallback */
+    border-left: 4px solid var(--texto-dourado, #ffbc00);        /* 🐚 FAROL – Fase 2 */
 }
 
 .balao-icone {

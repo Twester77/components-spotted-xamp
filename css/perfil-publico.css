@@ -1,10 +1,20 @@
 /* ================================================================
+   🌅 FAGULHA — 2026-10-16 — Fase 2 (arquivo 5 de 7)
+   Perfil Público. As 5 vibes (ads/dark/glass/neon/light) foram
+   MANTIDAS HARDCODED — são identidade visual, e o tema hacker
+   vai sobrescrever via [data-theme="hacker"] sem tocar nas vars.
+   --aura-user e --cor-aura são DINÂMICAS via PHP — preservadas.
+   ================================================================ */
+
+/* ================================================================
    PERFIL PÚBLICO (ver-perfil.php)
    ================================================================
    Estrutura: Capa | Avatar | Bio | Depoimentos | Avaliações | Feed
    Tudo com clamp(), fallback para legados e glassmorphism.
    ================================================================ */
    /* Importando fontes com serifas pesadas, estilo gótico medieval / vitoriano */
+   /* 🌅 FAGULHA — recomendação: mover este @import para <link> no header.php
+      (bloqueia renderização). Mantido aqui por segurança. */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Pirata+One&display=swap');
 
 /* ================================================================
@@ -49,11 +59,12 @@
     image-rendering: auto;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    background: #0a0a0a;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    background: #0a0a0a;                                            /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                     /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica da capa */
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    border: 2px solid var(--aura-user, #bd2fff1f);
+    border: 2px solid var(--aura-user, #bd2fff1f);                 /* 🎨 dinâmica via PHP — preservada */
     border-radius: 6px;
     border-radius: clamp(8px, 1.2vw, 16px);
 }
@@ -99,9 +110,10 @@
     object-fit: cover;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    border: 3px solid var(--aura-user, #ffbc00);
-    box-shadow: 0 0 8px var(--aura-user, #ffbc00)55;
-    background: #0a0a0a;
+    border: 3px solid var(--aura-user, #ffbc00);                   /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 8px var(--aura-user, #ffbc00)55;               /* 🎨 dinâmica via PHP — preservada */
+    background: #0a0a0a;                                            /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                     /* 🌅 FAGULHA – Fase 2 */
 }
 
 .perfil-imagem-trigger {
@@ -114,7 +126,7 @@
 }
 
 .perfil-imagem-trigger:focus-visible {
-    outline: 3px solid var(--aura-user, #ffbc00);
+    outline: 3px solid var(--aura-user, #ffbc00);                  /* 🎨 dinâmica via PHP — preservada */
     outline-offset: 3px;
 }
 
@@ -159,7 +171,7 @@
 }
 
 .perfil-imagem-lightbox::backdrop {
-    background: #000000e0;
+    background: #000000e0;                                          /* 🎨 preto com alpha específico do backdrop */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
 }
@@ -172,7 +184,7 @@
     max-height: 90dvh;
     object-fit: contain;
     border-radius: 10px;
-    box-shadow: 0 12px 30px rgb(0 0 0 / 65%);
+    box-shadow: 0 12px 30px rgb(0 0 0 / 65%);                     /* 🎨 sombra específica do lightbox */
 }
 
 .perfil-imagem-lightbox-fechar {
@@ -186,11 +198,13 @@
     width: clamp(32px, 8vmin, 44px);
     height: clamp(32px, 8vmin, 44px);
     place-items: center;
-    border: 1px solid rgb(255 255 255 / 35%);
+    border: 1px solid rgb(255 255 255 / 35%);                      /* 🎨 alpha específico */
     border-radius: 50%;
-    background: rgb(0 0 0 / 68%);
-    background: oklch(0% 0 0 / 0.68) ;
-    color: #fff;
+    background: rgb(0 0 0 / 68%);                                  /* fallback */
+    background: oklch(0% 0 0 / 0.68);                              /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.68));     /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 28px;
     font-size: clamp(24px, 5vmin, 32px);
     line-height: 1;
@@ -200,10 +214,12 @@
 
 .perfil-imagem-lightbox-fechar:hover,
 .perfil-imagem-lightbox-fechar:focus-visible {
-    background: #ffbc00;
-    background: oklch(83.462% 0.1717 82.566);
-    color: #111;
-    color: oklch(17.764% 0.00002 271.152);
+    background: #ffbc00;                                            /* fallback */
+    background: oklch(83.462% 0.1717 82.566);                      /* fallback moderno */
+    background: var(--texto-dourado, oklch(83.462% 0.1717 82.566)); /* 🌅 FAGULHA – Fase 2 */
+    color: #111;                                                    /* fallback */
+    color: oklch(17.764% 0.00002 271.152);                         /* fallback moderno */
+    color: var(--bg-page-dark, oklch(17.764% 0.00002 271.152));    /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* Badge de presença (coroa) */
@@ -211,9 +227,11 @@
     position: absolute;
     top: 2px;
     right: 2px;
-    background: var(--dourado, #ffbc00);
-    color: #000;
-    color:oklch(0% 0 0);
+    background: var(--dourado, #ffbc00);                            /* fallback */
+    background: var(--texto-dourado, var(--dourado, #ffbc00));     /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: oklch(0% 0 0);                                           /* fallback moderno */
+    color: var(--bg-page-dark, oklch(0% 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     width: clamp(20px, 2.5cqi, 35px);
     height: clamp(20px, 2.5cqi, 35px);
     border-radius: 50%;
@@ -222,8 +240,8 @@
     justify-content: center;
     font-size: 12px;
     font-size: clamp(10px, 1.2cqi, 16px);
-    border: 2px solid #000;
-    box-shadow: 0 0 10px rgba(255, 188, 0, 0.6);
+    border: 2px solid #000;                                         /* 🎨 preto sólido específico */
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.6);                    /* 🎨 glow dourado específico */
     z-index: 16;
 }
 
@@ -256,8 +274,8 @@
 .nome-publico {
     color: #ffffffe5;
     /* Fallback para navegadores antigos */
-    color: var(--aura-user, #fff);
-    color: oklch(from var(--aura-user, #ffffff) l c h / 0.6);
+    color: var(--aura-user, #fff);                                  /* 🎨 dinâmica via PHP — preservada */
+    color: oklch(from var(--aura-user, #ffffff) l c h / 0.6);      /* 🎨 dinâmica via PHP — preservada */
     /* Navegadores modernos */
     letter-spacing: 1px;
     font-size: clamp(1.1rem, 3vw, 2rem);
@@ -279,7 +297,7 @@
     height: clamp(32px, 8vmin, 60px);
     object-fit: contain;
     transition: all 0.3s ease-in-out;
-    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));                /* 🎨 sombra específica */
     cursor: pointer;
     flex-shrink: 0;
     padding: 4px;
@@ -287,7 +305,8 @@
 
 .insignia-atletica-bottom:hover {
     transform: scale(1.1);
-    filter: drop-shadow(0 0 8px var(--dourado, #ff8800));
+    filter: drop-shadow(0 0 8px var(--dourado, #ff8800));           /* fallback */
+    filter: drop-shadow(0 0 8px var(--texto-dourado, var(--dourado, #ff8800))); /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* Stats (seguidores) */
@@ -298,14 +317,15 @@
     padding: clamp(5px, 1.5cqi, 20px) 0;
     margin: 8px;
     margin: clamp(6px, 1cqi, 16px) 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);                /* fallback */
+    border-top: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     width: 100%;
 }
 
 .stats-perfil span {
     color: #ffffffce;
     /* Fallback para navegadores antigos */
-    color: oklch(from var(--aura-user, #ffffff) l c h / 0.8);
+    color: oklch(from var(--aura-user, #ffffff) l c h / 0.8);      /* 🎨 dinâmica via PHP — preservada */
     /* Navegadores modernos */
     text-transform: uppercase;
     font-size: clamp(0.9rem, 1.4vw, 1.4rem);
@@ -337,8 +357,9 @@
     /*IE/Edge */
     hyphens: auto;
     line-height: 1.5;
-    color: rgba(255, 255, 255, 0.9);
-    color: oklch(96.115% 0.00011 271.152 / 0.9)
+    color: rgba(255, 255, 255, 0.9);                                /* fallback */
+    color: oklch(96.115% 0.00011 271.152 / 0.9);                   /* fallback moderno */
+    color: var(--texto-primario, oklch(96.115% 0.00011 271.152 / 0.9)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 
@@ -358,8 +379,9 @@
 }
 
 .btn-seguir-fenda {
-    background-color: #28a745;
-    color: #fff;
+    background-color: #28a745;                                      /* 🎨 verde de "seguir" — cor de marca */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     border: none;
     padding: 5px 14px;
     padding: clamp(6px, 0.8vw, 10px) clamp(16px, 2vw, 28px);
@@ -375,20 +397,20 @@
 }
 
 .btn-seguir-fenda.seguindo {
-    background: rgba(38, 211, 110, 0.12) !important;
-    border: 2px solid #26d36e !important;
-    color: #26d36e !important;
+    background: rgba(38, 211, 110, 0.12) !important;               /* 🎨 verde-translúcido específico do estado "seguindo" */
+    border: 2px solid #26d36e !important;                           /* 🎨 verde-marca específico */
+    color: #26d36e !important;                                      /* 🎨 verde-marca específico */
 }
 
 .btn-seguir-fenda:hover:not(.seguindo) {
     opacity: 0.9;
     transform: scale(1.03);
-    background: #218838 !important;
+    background: #218838 !important;                                 /* 🎨 verde-escuro específico do hover */
 }
 
 .btn-seguir-fenda.seguindo:hover {
-    background: rgba(255, 71, 87, 0.15) !important;
-    border-color: #ff4757 !important;
+    background: rgba(255, 71, 87, 0.15) !important;                /* 🎨 vermelho-translúcido específico do hover de "seguindo" */
+    border-color: #ff4757 !important;                               /* 🎨 vermelho-marca específico */
     color: #ff4757 !important;
     transform: scale(1.02);
 }
@@ -399,7 +421,7 @@
 .depoimentos-section,
 .avaliacoes-section {
     width: 100%;
-    max-width: 700px;
+    max-width: 100%;
     margin: 25px auto;
     margin: clamp(20px, 2vw, 60px) auto;
     padding: 0 15px;
@@ -413,7 +435,8 @@
     align-items: center;
     margin-bottom: 12px;
     margin-bottom: clamp(10px, 1.5vw, 18px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);            /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     padding-bottom: 8px;
     padding-bottom: clamp(6px, 1vw, 12px);
     flex-wrap: wrap;
@@ -422,8 +445,9 @@
 
 .depoimentos-header h3,
 .avaliacoes-header h3 {
-    color: #ffbb00c0;
-    color: oklch(79.64% 0.16302 84.414 / 0.879);
+    color: #ffbb00c0;                                               /* fallback */
+    color: oklch(79.64% 0.16302 84.414 / 0.879);                   /* fallback moderno */
+    color: var(--texto-dourado, oklch(79.64% 0.16302 84.414 / 0.879)); /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1.1rem, 1.6vw, 1.6rem);
     margin: 0;
     display: flex;
@@ -445,10 +469,12 @@
    ================================================================ */
 .btn-toggle-social {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 30px;
     padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
-    color: oklch(0.9 0 0 / 0.85);
+    color: oklch(0.9 0 0 / 0.85);                                   /* fallback moderno */
+    color: var(--texto-secundario, oklch(0.9 0 0 / 0.85));         /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.8rem, 0.9vw, 1.05rem);
     cursor: pointer;
     transition: 0.25s ease;
@@ -459,9 +485,11 @@
 }
 
 .btn-toggle-social:hover {
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(100% 0.00011 271.152 / 0.05);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: oklch(100% 0.00011 271.152 / 0.05);                /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0.00011 271.152 / 0.05)); /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-toggle-social i {
@@ -476,13 +504,21 @@
    COLLAPSE SOCIAL (Compatibilidade Universal: do Lumia ao iPhone 4+)
    ================================================================ */
 
+.social-collapse-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
 /* Fallback base (Navegadores antigos / Dinossauros da web) */
 .social-collapse {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out;
-    background: #3a3a3a73;
-    background: oklch(0.35 0 0 / 0.45);
+    background: #3a3a3a73;                                          /* fallback */
+    background: oklch(0.35 0 0 / 0.45);                            /* 🎨 cinza-escuro específico do collapse */
     border-radius: 20px;
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
@@ -516,24 +552,20 @@
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .social-collapse {
-        transition-duration: 0.01ms;
-    }
-}
 
 
 /* ================================================================
    DEPOIMENTOS (ESTILO ORKUT)
    ================================================================ */
 .depoimento-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(10px, 1.2vw, 14px);
     padding: 10px;
     padding: clamp(12px, 1.5vw, 18px);
     margin-bottom: 8px;
     margin-bottom: clamp(10px, 1.2vw, 16px);
-    border-left: 3px solid var(--aura-user, #ffbc00);
+    border-left: 3px solid var(--aura-user, #ffbc00);              /* 🎨 dinâmica via PHP — preservada */
     transition: 0.2s;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
@@ -542,7 +574,8 @@
 
 .avaliacao-item:hover,
 .depoimento-item:hover {
-    background: rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.10);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.10));  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-autor {
@@ -563,11 +596,12 @@
     height: clamp(32px, 5vw, 60px);
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--aura-user, #ffbc00);
+    border: 1px solid var(--aura-user, #ffbc00);                   /* 🎨 dinâmica via PHP — preservada */
 }
 
 .depoimento-autor strong {
-    color: oklch(0.96 0 0 / 1);
+    color: oklch(0.96 0 0 / 1);                                    /* fallback moderno */
+    color: var(--texto-primario, oklch(0.96 0 0 / 1));             /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.85rem;
     font-size: clamp(0.9rem, 1vw, 1.05rem);
 }
@@ -576,8 +610,9 @@
     word-break: break-word;
     overflow-wrap: break-word;
     white-space: nowrap;
-    color: #f3f3f3;
-    color: oklch(0.96 0 0 / 1);
+    color: #f3f3f3;                                                 /* fallback */
+    color: oklch(0.96 0 0 / 1);                                    /* fallback moderno */
+    color: var(--texto-primario, oklch(0.96 0 0 / 1));             /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     opacity: 0.7;
@@ -585,7 +620,8 @@
 }
 
 .depoimento-texto {
-    color: oklch(0.96 0 0 / 1);
+    color: oklch(0.96 0 0 / 1);                                    /* fallback moderno */
+    color: var(--texto-primario, oklch(0.96 0 0 / 1));             /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.8vw, 1.1rem);
     line-height: 1.5;
@@ -598,19 +634,23 @@
 }
 
 .sem-depoimentos {
-    color: oklch(96.115% 0.00011 271.152 / 0.712);
+    color: oklch(96.115% 0.00011 271.152 / 0.712);                 /* fallback moderno */
+    color: var(--texto-muted, oklch(96.115% 0.00011 271.152 / 0.712)); /* 🌅 FAGULHA – Fase 2 */
     text-align: center;
     font-style: italic;
     padding: 12px;
     padding: clamp(16px, 3vw, 30px);
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.02);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.02));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
-    border: 1px dashed rgba(255, 255, 255, 0.06);
+    border: 1px dashed rgba(255, 255, 255, 0.06);                   /* fallback */
+    border: 1px dashed var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .loading-depoimentos {
     text-align: center;
-    color: #888;
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
     padding: 12px;
     padding: clamp(16px, 3vw, 30px);
     font-style: italic;
@@ -632,12 +672,14 @@
 }
 
 .avaliacao-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 10px;
     border-radius: clamp(10px, 1.2vw, 16px);
     padding: 8px 12px;
     padding: clamp(8px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
 }
@@ -660,7 +702,8 @@
 
 .avaliacao-nome {
     font-weight: bold;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.2vw, 1.1rem);
     text-transform: uppercase;
@@ -670,10 +713,11 @@
 
 .avaliacao-media {
     margin-left: auto;
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     font-weight: 700;
     font-size: clamp(0.8rem, 1vw, 1rem);
-    background: rgba(255, 188, 0, 0.08);
+    background: rgba(255, 188, 0, 0.08);                            /* 🎨 dourado com alpha específico */
     padding: 2px 8px;
     padding: clamp(2px, 0.3vw, 6px) clamp(8px, 1vw, 14px);
     border-radius: 30px;
@@ -692,7 +736,7 @@
 
 .estrela {
     line-height: 1;
-    color: #555;
+    color: #555;                                                    /* 🎨 cinza específico da estrela vazia */
     cursor: pointer;
     transition: transform 0.15s ease, color 0.2s ease;
     -webkit-user-select: none;
@@ -705,7 +749,8 @@
 
 /* Estrelas selecionáveis (cursor pointer já existe) */
 .estrela.selecionada {
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.1);
 }
 
@@ -717,12 +762,14 @@
 }
 
 .estrela.cheia {
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
 }
 
 .estrela.meia {
-    color: var(--dourado, #ffbc00);
-    background: linear-gradient(90deg, var(--dourado, #ffbc00) 50%, #555 50%);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
+    background: linear-gradient(90deg, var(--dourado, #ffbc00) 50%, #555 50%); /* 🎨 par de cores específico */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -731,23 +778,24 @@
 /* Fallback para navegadores sem background-clip: text */
 @supports not (background-clip: text) {
     .estrela.meia {
-        color: var(--dourado, #ffbc00);
+        color: var(--dourado, #ffbc00);                             /* fallback */
+        color: var(--texto-dourado, var(--dourado, #ffbc00));      /* 🌅 FAGULHA – Fase 2 */
         background: none;
         -webkit-text-fill-color: initial;
     }
 }
 
 .estrela.vazia {
-    color: #555;
+    color: #555;                                                    /* 🎨 cinza específico da estrela vazia */
 }
 
 .estrela:hover {
     transform: scale(1.15);
-    color: #ffd700;
+    color: #ffd700;                                                 /* 🎨 dourado-brilhante específico do hover */
 }
 
 .estrela.vazia:hover {
-    color: #ffd700;
+    color: #ffd700;                                                 /* 🎨 dourado-brilhante específico do hover */
 }
 
 .avaliacao-footer {
@@ -758,23 +806,26 @@
     font-weight: bold;
     font-size: 0.8rem;
     font-size: clamp(0.7rem, 0.9vw, 0.85rem);
-    color: #999999;
-    color: oklch(96.115% 0.00011 271.152 / 0.534);
+    color: #999999;                                                 /* fallback */
+    color: oklch(96.115% 0.00011 271.152 / 0.534);                 /* fallback moderno */
+    color: var(--texto-muted, oklch(96.115% 0.00011 271.152 / 0.534)); /* 🌅 FAGULHA – Fase 2 */
     flex-wrap: wrap;
     gap: 6px;
 }
 
 .avaliacao-total {
-    color: #c4c4c4;
-    color: oklch(0.96 0 0 / 0.56);
+    color: #c4c4c4;                                                 /* fallback */
+    color: oklch(0.96 0 0 / 0.56);                                 /* fallback moderno */
+    color: var(--texto-terciario, oklch(0.96 0 0 / 0.56));         /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-votar-estrela {
-    background: rgba(255, 188, 0, 0.10);
-    border: 1px solid rgba(255, 188, 0, 0.2);
+    background: rgba(255, 188, 0, 0.10);                            /* 🎨 dourado com alpha específico */
+    border: 1px solid rgba(255, 188, 0, 0.2);                       /* 🎨 dourado com alpha específico */
     border-radius: 30px;
     padding: clamp(4px, 0.5vw, 8px) clamp(12px, 1.5vw, 20px);
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 1vw, 1.05rem);
     cursor: pointer;
@@ -784,38 +835,44 @@
 }
 
 .btn-votar-estrela:hover {
-    background: rgba(255, 188, 0, 0.20);
-    border-color: var(--dourado, #ffbc00);
+    background: rgba(255, 188, 0, 0.20);                            /* 🎨 dourado com alpha específico do hover */
+    border-color: var(--dourado, #ffbc00);                          /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
 .ja-votou {
-    color: #4caf50;
+    color: #4caf50;                                                 /* fallback */
+    color: var(--cor-sucesso, #4caf50);                            /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
     font-size: 0.8rem;
     font-size: clamp(0.7rem, 0.9vw, 0.9rem);
-    background: rgba(76, 175, 80, 0.08);
+    background: rgba(76, 175, 80, 0.08);                            /* 🎨 verde com alpha específico */
     padding: 2px 8px;
     padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 14px);
     border-radius: 30px;
-    border: 1px solid rgba(76, 175, 80, 0.15);
+    border: 1px solid rgba(76, 175, 80, 0.15);                      /* 🎨 verde com alpha específico */
     white-space: nowrap;
 }
 
 .sem-avaliacoes {
-    color: oklch(96.115% 0.00011 271.152 / 0.651);
+    color: oklch(96.115% 0.00011 271.152 / 0.651);                 /* fallback moderno */
+    color: var(--texto-muted, oklch(96.115% 0.00011 271.152 / 0.651)); /* 🌅 FAGULHA – Fase 2 */
     text-align: center;
     font-style: italic;
     padding: 10px;
     padding: clamp(12px, 2vw, 24px);
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.02);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.02));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
-    border: 1px dashed rgba(255, 255, 255, 0.06);
+    border: 1px dashed rgba(255, 255, 255, 0.06);                   /* fallback */
+    border: 1px dashed var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .loading-avaliacoes {
     text-align: center;
-    color: #d1d1d1;
+    color: #d1d1d1;                                                 /* fallback */
+    color: var(--texto-secundario, #d1d1d1);                       /* 🌅 FAGULHA – Fase 2 */
     font-style: italic;
     padding: 12px;
     padding: clamp(16px, 3vw, 30px);
@@ -825,11 +882,12 @@
    BOTÃO ESCREVER DEPOIMENTO (LINK)
    ================================================================ */
 .btn-escrever-depoimento {
-    background: rgba(255, 188, 0, 0.10);
-    border: 1px solid rgba(255, 188, 0, 0.15);
+    background: rgba(255, 188, 0, 0.10);                            /* 🎨 dourado com alpha específico */
+    border: 1px solid rgba(255, 188, 0, 0.15);                      /* 🎨 dourado com alpha específico */
     border-radius: 30px;
     padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.8rem, 0.9vw, 0.95rem);
     text-decoration: none;
     transition: 0.25s ease;
@@ -839,7 +897,7 @@
 }
 
 .btn-escrever-depoimento:hover {
-    background: rgba(255, 188, 0, 0.20);
+    background: rgba(255, 188, 0, 0.20);                            /* 🎨 dourado com alpha específico do hover */
     transform: scale(1.02);
 }
 
@@ -857,7 +915,7 @@
 }
 
 .feed-usuario-fenda h3 {
-    border-bottom: 2px solid var(--aura-user, #70cde4);
+    border-bottom: 2px solid var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
     display: inline-block;
     break-inside: avoid;
     word-break: break-word;
@@ -868,8 +926,9 @@
     font-size: clamp(1.2rem, 1.8vw, 2rem);
     margin: 0 0 12px 0;
     margin: 0 0 clamp(16px, 2vw, 28px) 0;
-    color: #ffffffbf;
-    color: oklch(1 0 0 / 0.75);
+    color: #ffffffbf;                                               /* fallback */
+    color: oklch(1 0 0 / 0.75);                                    /* fallback moderno */
+    color: var(--texto-primario, oklch(1 0 0 / 0.75));             /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ================================================================
@@ -877,10 +936,12 @@
    ================================================================ */
 .btn-toggle-depoimentos {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 30px;
     padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.8rem, 0.9vw, 0.95rem);
     cursor: pointer;
     transition: 0.25s ease;
@@ -891,8 +952,10 @@
 }
 
 .btn-toggle-depoimentos:hover {
-    background: rgba(255, 255, 255, 0.04);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-toggle-depoimentos:disabled {
@@ -911,20 +974,24 @@
 }
 
 .depoimento-form-container {
-    background: rgba(20, 20, 30, 0.75);
+    background: rgba(20, 20, 30, 0.75);                             /* fallback */
+    background: oklch(19.623% 0.02004 284.397 / 0.75);             /* fallback moderno */
+    background: var(--bg-modal-content, oklch(19.623% 0.02004 284.397 / 0.75)); /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     border-radius: 10px;
     border-radius: clamp(14px, 2vw, 24px);
     padding: 20px 16px;
     padding: clamp(24px, 4vw, 42px) clamp(18px, 3vw, 34px);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica do form */
 }
 
 .depoimento-form-container h1 {
     font-size: clamp(1.3rem, 2.8vw, 2.2rem);
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-weight: 600;
     margin-bottom: 4px;
     display: flex;
@@ -933,19 +1000,23 @@
 }
 
 .depoimento-form-container h1 i {
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-destinatario {
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.2vw, 1.15rem);
     margin-bottom: clamp(16px, 2.5vw, 28px);
     padding-bottom: clamp(10px, 1.5vw, 18px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);             /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-destinatario strong {
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
 }
 
@@ -956,7 +1027,8 @@
 
 .depoimento-form-container label {
     display: block;
-    color: #ddd;
+    color: #ddd;                                                    /* fallback */
+    color: var(--texto-secundario, #ddd);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1vw, 1.05rem);
     font-weight: 500;
     margin-bottom: 6px;
@@ -964,14 +1036,17 @@
 
 .depoimento-form-container textarea {
     width: 100%;
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0.00011 271.152 / 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: oklch(100% 0.00011 271.152 / 0.04);                /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0.00011 271.152 / 0.04)); /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 8px;
     border-radius: clamp(10px, 1.2vw, 14px);
     padding: clamp(12px, 1.5vw, 18px) clamp(14px, 1.8vw, 20px);
-    color: #f0f0f0;
-    color: oklch(95.514% 0.00011 271.152);
+    color: #f0f0f0;                                                 /* fallback */
+    color: oklch(95.514% 0.00011 271.152);                         /* fallback moderno */
+    color: var(--texto-primario, oklch(95.514% 0.00011 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.1vw, 1.1rem);
     transition: border 0.25s ease, box-shadow 0.25s ease;
     resize: vertical;
@@ -984,14 +1059,17 @@
 
 .depoimento-form-container textarea:focus-visible {
     outline: none;
-    border-color: var(--dourado, #ffbc00);
-    box-shadow: 0 0 0 3px rgba(255, 188, 0, 0.08);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--dourado, #ffbc00);                          /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 0 0 3px rgba(255, 188, 0, 0.08);                 /* 🎨 dourado com alpha específico */
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.05));  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-form-container .campo-ajuda {
     display: block;
-    color: #777;
+    color: #777;                                                    /* fallback */
+    color: var(--texto-disabled, #777);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.7rem, 0.9vw, 0.85rem);
     margin-top: 6px;
     padding-left: 4px;
@@ -1007,9 +1085,10 @@
 
 .depoimento-form-container .btn-principal {
      /* Fallback */
-    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
-    background: var(--laranja-fenda);
-    color: #000;
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824)); /* fallback */
+    background: var(--laranja-fenda);                              /* 🎨 gradiente da marca — já é variável */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     padding: 10px 20px;
     padding: clamp(10px, 1.2vw, 14px) clamp(24px, 3vw, 40px);
     border-radius: 40px;
@@ -1027,17 +1106,19 @@
 }
 
 .depoimento-form-container .btn-principal:hover {
-    background: #ffc13a;
+    background: #ffc13a;                                            /* 🎨 dourado-claro específico do hover */
     transform: scale(1.02);
-    box-shadow: 0 4px 16px rgba(255, 188, 0, 0.25);
+    box-shadow: 0 4px 16px rgba(255, 188, 0, 0.25);                /* 🎨 glow dourado específico */
 }
 
 .depoimento-form-container .btn-secundario {
     background: transparent;
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     padding: clamp(10px, 1.2vw, 14px) clamp(18px, 2vw, 28px);
     border-radius: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
     text-align: center;
     transition: 0.25s ease;
@@ -1046,9 +1127,12 @@
 }
 
 .depoimento-form-container .btn-secundario:hover {
-    background: rgba(255, 255, 255, 0.04);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.12);                        /* fallback */
+    border-color: var(--borda-media, rgba(255, 255, 255, 0.12));   /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ================================================================
@@ -1061,8 +1145,10 @@
 }
 
 .gerenciar-depoimentos-container {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.02));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(14px, 2vw, 22px);
     padding: clamp(20px, 3vw, 42px);
     -webkit-backdrop-filter: blur(4px);
@@ -1070,7 +1156,8 @@
 }
 
 .gerenciar-depoimentos-container h1 {
-    color: var(--dourado, #ffbc00);
+    color: var(--dourado, #ffbc00);                                 /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1.4rem, 2.8vw, 2.4rem);
     margin-bottom: 4px;
     display: flex;
@@ -1079,17 +1166,20 @@
 }
 
 .subtitulo {
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     margin-bottom: clamp(20px, 3vw, 35px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);             /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     padding-bottom: 12px;
 }
 
 .sem-depoimentos-msg {
     text-align: center;
     padding: clamp(30px, 5vw, 60px) 10px;
-    color: #888;
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
 }
 
 .sem-depoimentos-msg p {
@@ -1104,15 +1194,18 @@
 }
 
 .depoimento-pendente-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(10px, 1.2vw, 16px);
     padding: clamp(12px, 1.5vw, 20px);
-    border-left: 4px solid var(--dourado, #ffbc00);
+    border-left: 4px solid var(--dourado, #ffbc00);                 /* fallback */
+    border-left: 4px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🌅 FAGULHA – Fase 2 */
     transition: 0.2s;
 }
 
 .depoimento-pendente-item:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.06);                          /* fallback */
+    background: var(--borda-sutil, rgba(255, 255, 255, 0.06));     /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-autor {
@@ -1127,22 +1220,26 @@
     height: clamp(36px, 4vw, 50px);
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--dourado, #ffbc00);
+    border: 2px solid var(--dourado, #ffbc00);                      /* fallback */
+    border: 2px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-autor strong {
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.1vw, 1.1rem);
 }
 
 .depoimento-pendente-autor .depoimento-data {
-    color: #888;
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     display: block;
 }
 
 .depoimento-pendente-texto {
-    color: #ccc;
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1vw, 1.05rem);
     line-height: 1.5;
     margin: 0 0 14px 0;
@@ -1173,25 +1270,33 @@
 }
 
 .btn-aprovar-depoimento {
-    background: #4caf50;
-    color: #fff;
+    background: #4caf50;                                            /* fallback */
+    background: var(--cor-sucesso, #4caf50);                       /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-aprovar-depoimento:hover {
-    background: #66bb6a;
+    background: #66bb6a;                                            /* fallback */
+    background: var(--cor-sucesso-hover, #66bb6a);                 /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
 .btn-rejeitar-depoimento {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ccc;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.08);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08));  /* 🌅 FAGULHA – Fase 2 */
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;         /* fallback */
+    border: 1px solid var(--bg-input-hover, rgba(255, 255, 255, 0.08)) !important; /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-rejeitar-depoimento:hover {
-    background: rgba(255, 60, 60, 0.15);
-    color: #ff6b6b;
-    border-color: #ff6b6b !important;
+    background: rgba(255, 60, 60, 0.15);                            /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                               /* 🌅 FAGULHA – Fase 2 */
+    border-color: #ff6b6b !important;                               /* fallback */
+    border-color: var(--cor-erro, #ff6b6b) !important;             /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-acoes button:disabled {
@@ -1202,6 +1307,8 @@
 
 /* ================================================================
    VIBES (ADS, DARK, GLASS, NEON, LIGHT)
+   ⚠️ MANTIDAS HARDCODED — identidade visual. O tema hacker vai
+   sobrescrever via [data-theme="hacker"] sem tocar nas variáveis.
    ================================================================ */
 
 /* ==========================================================
@@ -1211,16 +1318,16 @@
     position: relative;
     overflow: hidden;
     min-height: 100vh;
-    background-color: #16161db0 ;
+    background-color: #16161db0 ;                                   /* 🎨 identidade visual da vibe ADS */
 
     /* Gradiente original de fundo isolado */
-    background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.9) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.9) 100%) !important;
+    background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.9) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.9) 100%) !important; /* 🎨 identidade visual da vibe ADS */
     background-size: 200% 200%;
     background-repeat: no-repeat;
     background-position: 0% 0%;
 
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-top: 4px solid var(--aura-user) ;
+    border: 1px solid rgba(255, 255, 255, 0.04);                    /* 🎨 identidade visual da vibe ADS */
+    border-top: 4px solid var(--aura-user) ;                        /* 🎨 dinâmica via PHP — preservada */
     will-change: box-shadow, background-position, opacity, animation;
     animation: ads-neon-glow-pulse var(--vibe-ads-pulse-duration) infinite ease-in-out alternate;
 }
@@ -1239,7 +1346,7 @@
     pointer-events: none;
 
     /* A cor salva no TiDB pinta a máscara dos hexágonos de forma 100% garantida */
-    background-color: var(--aura-user,#70cde4);
+    background-color: var(--aura-user,#70cde4);                     /* 🎨 dinâmica via PHP — preservada */
 
     /* Padrão de hexágono via máscara estêncil */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
@@ -1291,8 +1398,8 @@
     width: 100%;
     aspect-ratio: 1/1.15;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    background: rgba(0, 240, 255, 0.02);
-    border: 1px solid var(--aura-user, #70cde4);
+    background: rgba(0, 240, 255, 0.02);                            /* 🎨 identidade visual da vibe ADS */
+    border: 1px solid var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
     opacity: 0.3;
     transform: scale(0.85);
     transition: all 0.4s ease;
@@ -1300,31 +1407,31 @@
 }
 
 .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
-    background: var(--aura-user, #70cde4) ;
-    border-color: var(--aura-user, #70cde4) ;
-    box-shadow: 0 0 8px var(--aura-user, #70cde4) ;
+    background: var(--aura-user, #70cde4) ;                         /* 🎨 dinâmica via PHP — preservada */
+    border-color: var(--aura-user, #70cde4) ;                       /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 8px var(--aura-user, #70cde4) ;                 /* 🎨 dinâmica via PHP — preservada */
     transform: scale(1.0);
     opacity: 0.8;
 }
 
 @keyframes ads-neon-glow-pulse {
     0% {
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4);
-        border-top-color: var(--aura-user, #70cde4);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4); /* 🎨 dinâmica via PHP — preservada */
+        border-top-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
     }
     50% {
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6), 0 0 12px var(--aura-user, #70cde4);
-        border-color: var(--aura-user, #70cde4);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6), 0 0 12px var(--aura-user, #70cde4); /* 🎨 dinâmica via PHP — preservada */
+        border-color: var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
     }
     100% {
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4);
-        border-top-color: var(--aura-user, #70cde4);
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4); /* 🎨 dinâmica via PHP — preservada */
+        border-top-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
     }
 }
 
 .main-perfil-container-publico.vibe-ads p {
-    color: var(--aura-user, #70cde4);
-    color: oklch(from var(--aura-user, #70cde4)) 0.92 0.04 h;
+    color: var(--aura-user, #70cde4);                               /* 🎨 dinâmica via PHP — preservada */
+    color: oklch(from var(--aura-user, #70cde4)) 0.92 0.04 h;      /* 🎨 dinâmica via PHP — preservada */
 }
 
 
@@ -1337,9 +1444,9 @@
     position: relative;
     overflow: hidden;
     /* Trocamos o fundo sólido por uma névoa escura fixa usando OKLCH */
-    background: #010203;
-    background: radial-gradient(circle at 50% 30%, oklch(0.15 0.02 280) 0%, oklch(0.08 0.01 260) 100%);
-    border-top: 4px solid rgba(255, 0, 50, 0.4);
+    background: #010203;                                            /* 🎨 identidade visual da vibe DARK */
+    background: radial-gradient(circle at 50% 30%, oklch(0.15 0.02 280) 0%, oklch(0.08 0.01 260) 100%); /* 🎨 identidade visual da vibe DARK */
+    border-top: 4px solid rgba(255, 0, 50, 0.4);                    /* 🎨 identidade visual da vibe DARK */
     border-radius: 14px;
     transition: transform 0.3s ease;
     
@@ -1369,7 +1476,7 @@
     z-index: 0;
     pointer-events: none;
     opacity: 0.2; /* Um pouco mais sutil para combinar com o breu do castelo */
-    background-color: var(--cor-aura, var(--aura-user, #70cde4));
+    background-color: var(--cor-aura, var(--aura-user, #70cde4));  /* 🎨 dinâmica via PHP — preservada */
     
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
@@ -1404,12 +1511,12 @@
     font-family: 'Cinzel Decorative', 'Pirata One', serif;
     font-weight: 900;
     letter-spacing: 1px;
-    color: #ff1e38 !important;
+    color: #ff1e38 !important;                                      /* 🎨 identidade visual da vibe DARK */
     
     /* REDUÇÃO DE SOMBRAS COMPLEXAS: Removemos o terceiro nível de blur borrado */
     text-shadow: 
-        2px 2px 0px #3a0005,
-        0 0 6px rgba(255, 0, 40, 0.8);
+        2px 2px 0px #3a0005,                                        /* 🎨 identidade visual da vibe DARK */
+        0 0 6px rgba(255, 0, 40, 0.8);                              /* 🎨 identidade visual da vibe DARK */
         
     display: inline-block;
     position: relative;
@@ -1437,9 +1544,9 @@
     left: 50%;
     width: 4px;
     height: 10px;
-    background: #ff002b;
+    background: #ff002b;                                            /* 🎨 identidade visual da vibe DARK */
     border-radius: 50%;
-    box-shadow: 0 0 4px #ff002b;
+    box-shadow: 0 0 4px #ff002b;                                    /* 🎨 identidade visual da vibe DARK */
     will-change: transform, opacity;
     animation: pingo-sangue 2.2s infinite cubic-bezier(0.5, 0, 0.7, 1);
     opacity: 0;
@@ -1455,21 +1562,21 @@
 
 /* --- VIBE NEON (Flicker) --- */
 .main-perfil-container-publico.vibe-neon {
-    background: linear-gradient(to bottom, transparent 0%, var(--aura-user, #ff9100) 25%, #000 50%);
+    background: linear-gradient(to bottom, transparent 0%, var(--aura-user, #ff9100) 25%, #000 50%); /* 🎨 dinâmica via PHP — preservada */
     /* CORRIGIDO: filter força o uso da GPU perfeitamente sem o overhead do box-shadow na memória */
     will-change: filter;
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
-    border: 2px solid var(--aura-user, #ff9100);
+    border: 2px solid var(--aura-user, #ff9100);                    /* 🎨 dinâmica via PHP — preservada */
 }
 
 @keyframes neon-flicker-subtle {
     0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
         filter: brightness(0.85) saturate(0.85);
-        box-shadow: 0 0 8px var(--aura-user, #ff9100), 0 0 12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 8px var(--aura-user, #ff9100), 0 0 12px rgba(0, 0, 0, 0.5); /* 🎨 dinâmica via PHP — preservada */
     }
     20%, 24%, 55% {
         filter: brightness(0.75) saturate(0.75);
-        box-shadow: 0 0 4px var(--aura-user, #ff9100), 0 0 8px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 4px var(--aura-user, #ff9100), 0 0 8px rgba(0, 0, 0, 0.5); /* 🎨 dinâmica via PHP — preservada */
     }
 }
 
@@ -1477,23 +1584,23 @@
 .main-perfil-container-publico.vibe-neon .stats-perfil span,
 .main-perfil-container-publico.vibe-neon .feed-usuario-fenda h3 {
     /* CORRIGIDO: Um fallback simples para navegadores velhos e a sua mágica em OKLCH embaixo */
-    color: #ffffffce; 
-    color: oklch(from var(--aura-user, #ff9100) 0.90 0.03 h);
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6)); 
+    color: #ffffffce;                                               /* 🎨 identidade visual da vibe NEON */
+    color: oklch(from var(--aura-user, #ff9100) 0.90 0.03 h);      /* 🎨 dinâmica via PHP — preservada */
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));               /* 🎨 identidade visual da vibe NEON */
 }
 
 
 /* --- VIBE GLASS (Vidro V5 - Oklab Match) --- */
 .main-perfil-container-publico.vibe-glass {
     /* Fallback impecável para navegadores legados */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.45) 100%), #00bbff06;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.45) 100%), #00bbff06; /* 🎨 identidade visual da vibe GLASS */
     
     /* ALTERADO: Agora rodando com interpolação matemática em Oklab para o reflexo físico perfeito */
-    background: linear-gradient(in oklab 135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #70cde4) l c h / 0.3);
+    background: linear-gradient(in oklab 135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #70cde4) l c h / 0.3); /* 🎨 identidade visual da vibe GLASS */
     
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border: 1px solid oklch(1 0 0 / 0.35) ;
+    border: 1px solid oklch(1 0 0 / 0.35) ;                         /* 🎨 identidade visual da vibe GLASS */
     border-radius: 12px 12px 0 0;
     overflow: hidden;
     position: relative;
@@ -1519,7 +1626,7 @@
 /* --- VIBE LIGHT (Manhã Ensolarada & Sóbria V5) --- */
 .main-perfil-container-publico.vibe-light {
     /* 1. FALLBACK: Gradiente clássico e confortável */
-    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%);
+    background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%); /* 🎨 identidade visual da vibe LIGHT */
 
     /* 2. PRODUÇÃO (Oklab + OKLCH): Camada Dupla Otimizada */
     background:
@@ -1530,7 +1637,7 @@
             oklch(0.35 0.01 250 / 0.5) 100%   /* O cinza chumbo sutil no final */
         ),
         /* CAMADA INFERIOR: A aura do usuário suavizada fazendo a fusão por trás */
-        oklch(from var(--aura-user, #ffa600) 0.85 0.04 h / 0.75);
+        oklch(from var(--aura-user, #ffa600) 0.85 0.04 h / 0.75);  /* 🎨 dinâmica via PHP — preservada */
 
     /* CORRIGIDO: Explicitamos normal para a primeira camada e soft-light para a fusão com o fundo */
     background-blend-mode: normal, soft-light;
@@ -1538,14 +1645,14 @@
     /* Mantém o vidro e bordas premium sem travar a GPU (sem will-change desnecessário) */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
-    border: 1px solid oklch(1 0 0 / 0.25);
-    border-top: 6px solid var(--aura-user, #ffa600);
+    border: 1px solid oklch(1 0 0 / 0.25);                         /* 🎨 identidade visual da vibe LIGHT */
+    border-top: 6px solid var(--aura-user, #ffa600);               /* 🎨 dinâmica via PHP — preservada */
     border-radius: 16px 16px 0 0;
 
     /* Sombra suave e elegante para tema claro */
     box-shadow:
-        0 8px 20px oklch(0 0 0 / 0.08),
-        inset 0 1px 1px oklch(1 0 0 / 0.5);
+        0 8px 20px oklch(0 0 0 / 0.08),                             /* 🎨 identidade visual da vibe LIGHT */
+        inset 0 1px 1px oklch(1 0 0 / 0.5);                         /* 🎨 identidade visual da vibe LIGHT */
         
     /* Garante estabilidade de hardware durante transições ou swipes */
     transform: translateZ(0); 
@@ -1556,11 +1663,14 @@
 .main-perfil-container-publico.vibe-light .btn-toggle-social,
 .main-perfil-container-publico.vibe-light .btn-toggle-depoimentos,
 .main-perfil-container-publico.vibe-light p {
-    color: #3e382d;
+    color: #3e382d;                                                 /* 🎨 identidade visual da vibe LIGHT */
     text-shadow: none;
 }
 
+.main-perfil-container-publico.vibe-light .spotted-card:hover {
+    background: rgba(33, 33, 33, 0.4);   /* ← sugestão do Léo */
 
+}
 
 /* ================================================================
    FALLBACKS GERAIS (CLAMP, BACKDROP-FILTER, LEGADOS)
@@ -1574,7 +1684,7 @@
     .depoimento-form-container,
     .gerenciar-depoimentos-container,
     .main-perfil-container-publico.vibe-glass {
-        background: rgba(10, 10, 10, 0.85);
+        background: rgba(10, 10, 10, 0.85);                         /* 🎨 preto com alpha específico do fallback */
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -1627,7 +1737,7 @@
     }
 
     .main-perfil-container-publico.vibe-ads::after {
-        background-color: var(--aura-user, #70cde4);
+        background-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
         -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E");
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='65' height='65' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.2'/%3E%3C/svg%3E");
         -webkit-mask-size: 70px 70px;
@@ -1638,7 +1748,7 @@
     }
 
     .main-perfil-container-publico.vibe-ads .hex-item {
-        border-color: var(--aura-user, #70cde4);
+        border-color: var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
     }
 
     .depoimentos-header,
@@ -1685,7 +1795,7 @@
 
     @media (min-width: 769px) {
     .main-perfil-container-publico.vibe-ads::after {
-        background-color: var(--aura-user, #70cde4);
+        background-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
         -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
 
@@ -1707,30 +1817,30 @@
     .main-perfil-container-publico.vibe-ads .hex-item {
         border-width: 1.5px;
         border-style: solid;
-        border-color: var(--aura-user, #70cde4);
+        border-color: var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
     }
 
     .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
-        background: var(--aura-user, #70cde4) ;
-        border-color: var(--aura-user, #70cde4) ;
-        box-shadow: 0 0 15px var(--aura-user, #70cde4) ;
+        background: var(--aura-user, #70cde4) ;                     /* 🎨 dinâmica via PHP — preservada */
+        border-color: var(--aura-user, #70cde4) ;                   /* 🎨 dinâmica via PHP — preservada */
+        box-shadow: 0 0 15px var(--aura-user, #70cde4) ;            /* 🎨 dinâmica via PHP — preservada */
         opacity: 0.65;
     }
 
     @keyframes ads-neon-glow-pulse {
         0% {
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
-            border-top-color: var(--aura-user, #70cde4);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
+            border-top-color: var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
         }
 
         50% {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15);
-            border-color: var(--aura-user, #70cde4);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15); /* 🎨 identidade visual da vibe ADS */
+            border-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
         }
 
         100% {
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06);
-            border-top-color: var(--aura-user, #70cde4);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
+            border-top-color: var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
         }
     }
 
@@ -1742,7 +1852,7 @@
     .avaliacao-item,
     .depoimento-form-container,
     .main-perfil-container-publico.vibe-glass {
-        background: rgba(10, 10, 10, 0.85);
+        background: rgba(10, 10, 10, 0.85);                         /* 🎨 preto com alpha específico do fallback */
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -1795,6 +1905,10 @@
     .modal-depoimento-overlay {
         padding-top: 12%;
     }
+    .social-collapse-container {
+        padding: 0 8px;
+        margin: 15px auto;
+    }
 }
 
 @media (orientation: portrait) and (max-height: 500px) {
@@ -1821,7 +1935,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.65);                                /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.65));      /* 🌅 FAGULHA – Fase 2 */
     z-index: 99999;
     display: none;
     /*  CORREÇÃO: Alinha no topo com padding para não ficar colado no topo */
@@ -1836,9 +1951,11 @@
 }
 
 .modal-depoimento-content {
-    background: rgba(20, 20, 30, 0.92);
-    background: oklch(19.623% 0.02004 284.397 / 0.92);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(20, 20, 30, 0.92);                             /* fallback */
+    background: oklch(19.623% 0.02004 284.397 / 0.92);             /* fallback moderno */
+    background: var(--bg-modal-content, oklch(19.623% 0.02004 284.397 / 0.92)); /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 20px;
     max-width: 550px;
     width: 100%;
@@ -1846,7 +1963,7 @@
     overflow-y: auto;
     padding: 30px 24px 24px 24px;
     position: relative;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);                     /* 🎨 sombra específica do modal */
     animation: modalDepoimentoIn 0.25s ease-out;
     /*  CORREÇÃO: Não deixa o modal esticar verticalmente */
     align-self: flex-start;
@@ -1858,12 +1975,14 @@
 }
 
 .modal-depoimento-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 4px;
 }
 
 .modal-depoimento-content::-webkit-scrollbar-thumb {
-    background: #ffbc00;
+    background: #ffbc00;                                            /* fallback */
+    background: var(--texto-dourado, #ffbc00);                     /* 🌅 FAGULHA – Fase 2 */
     border-radius: 4px;
 }
 
@@ -1885,7 +2004,8 @@
     right: 16px;
     background: transparent;
     border: none;
-    color: #888;
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
     font-size: 1.8rem;
     cursor: pointer;
     transition: 0.2s;
@@ -1893,7 +2013,8 @@
 }
 
 .modal-depoimento-fechar:hover {
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     transform: rotate(90deg);
 }
 

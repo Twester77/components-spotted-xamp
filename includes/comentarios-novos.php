@@ -212,7 +212,7 @@ while ($c = $res->fetch_assoc()) {
     <div class="comentario-linha ' . ($sou_eu === 'meu-comentario' ? 'comentario-linha-proprio' : '') . ' ' . ($classe_filho ? 'comentario-linha-filha' : '') . '">
     <div class="comentario-item ' . $vibe . ' ' . $classe_filho . ' ' . $sou_eu . '" id="comentario-' . (int)$c['id'] . '" style="--cor-borda-glow: ' . $cor_borda . '; ' . $estilo_filho . '">
         <div class="comentario-meta">
-            <strong class="comentario-autor" style="color: var(--cor-borda-glow);">' . $nome_autor . '</strong>
+            <strong class="comentario-autor">' . $nome_autor . '</strong>
         </div>';
 
     if (!empty($c['parent_id'])) {

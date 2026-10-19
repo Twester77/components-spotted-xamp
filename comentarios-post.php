@@ -367,7 +367,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                         <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
 
                             <div class="comentario-meta">
-                                <strong class="comentario-autor" style="color: var(--cor-borda-glow);">
+                                <strong class="comentario-autor">
                                     <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
                                 </strong>
                             </div>

@@ -470,11 +470,11 @@ if ($stmt->execute()) {
                             </div>';
     }
 
-    $comentarioHtml = '
+        $comentarioHtml = '
     <div class="comentario-linha comentario-linha-proprio ' . $classe_linha_filha . '">
     <div class="comentario-item comentario-entrou meu-comentario ' . $vibe . ' ' . $classe_filho . '" id="comentario-' . $novo_id . '" style="--cor-borda-glow: ' . $cor_borda . ';">
         <div class="comentario-meta">
-            <strong class="comentario-autor" style="color: ' . $cor_borda . ';">' . $nomeExibicao . '</strong>
+            <strong class="comentario-autor">' . $nomeExibicao . '</strong>
         </div>
         ' . $reply_indicator . '
         ' . $textoHtml . '

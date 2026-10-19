@@ -1,26 +1,38 @@
+/* ============================================================
+   🌅 FAGULHA — 2026-10-16 — Fase 2 + Dedupe (arquivo 6 de 7)
+   Formulários: login, cadastro, sessões, perfil, perdidos, balão,
+   dialog. DEDUPE aplicado: ~20 blocos removidos (PARTE 1 vs PARTE 2).
+   Valores mantidos = versão que ganhava por cascade.
+   Cores de marca (laranja-fenda, verde-limão, toast, gradiente login)
+   mantidas hardcoded — tema hacker vai sobrescrever via [data-theme].
+   ============================================================ */
+
 *,
 *:before,
 *:after {
     box-sizing: border-box;
 }
 
-/* Isso garante que o fundo seja escuro e o texto visível em qualquer estado */
+/* ============================================================
+   1. RESET GLOBAL DE SELECT/OPTION
+   ============================================================ */
+
 select,
 option {
-    background-color: #1a1a1afd;
-    color: #ffffff;
+    background-color: #1a1a1afd;                                   /* 🎨 cor específica de `<option>` */
+    color: #ffffff;                                                 /* fallback */
+    color: var(--texto-primario, #ffffff);                          /* 🌅 FAGULHA – Fase 2 */
     -webkit-appearance: none;
     appearance: none;
-
 }
 
 select:focus-visible {
-    background-color: #00000071;
-    color: #ffbf0fec;
+    background-color: #00000071;                                    /* 🎨 preto com alpha específico */
+    color: #ffbf0fec;                                               /* 🎨 dourado-claro com alpha específico */
 }
 
 /* ============================================================
-   TOASTS DE LOGIN (substitui os estilos inline)
+   2. TOASTS DE LOGIN (marca — cores mantidas hardcoded)
    ============================================================ */
 .toast-login {
     text-align: center;
@@ -29,38 +41,40 @@ select:focus-visible {
     border-radius: 10px;
     font-weight: bold;
     font-size: clamp(14px, 2vw, 16px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);                     /* 🎨 sombra específica do toast */
 }
 
 .toast-login.ativado {
-    background: #27ce27bd ;
-    background: linear-gradient(170deg, #27ce27bd 15%, #2e6ba5a2 100%);
-    color: #fff;
-    color: oklch(0.96 0 0 / 1);
-    border: 1px solid #00c3ff;
-    box-shadow: 0 4px 12px rgba(0, 195, 255, 0.2);
+    background: #27ce27bd ;                                         /* fallback */
+    background: linear-gradient(170deg, #27ce27bd 15%, #2e6ba5a2 100%); /* 🎨 gradiente de marca */
+    color: #fff;                                                    /* fallback */
+    color: oklch(0.96 0 0 / 1);                                     /* fallback moderno */
+    color: var(--texto-primario, oklch(0.96 0 0 / 1));              /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid #00c3ff;                                      /* 🎨 ciano de marca */
+    box-shadow: 0 4px 12px rgba(0, 195, 255, 0.2);                  /* 🎨 sombra ciano específica */
 }
 
 .toast-login.pendente {
-    background: rgba(255, 165, 0, 0.2);
-    background: oklch(0.7927 0.171 70.67 / 20%);
-    color: #ffa500;
-    border: 1px solid #ffa500;
+    background: rgba(255, 165, 0, 0.2);                             /* fallback */
+    background: oklch(0.7927 0.171 70.67 / 20%);                    /* 🎨 laranja com alpha específico */
+    color: #ffa500;                                                 /* 🎨 laranja-aviso específico */
+    border: 1px solid #ffa500;                                      /* 🎨 laranja-aviso específico */
 }
 
 .toast-login.validar {
-    background: rgba(255, 152, 0, 0.9);
-    background: oklch(0.7703 0.1741 64.05 / 90%);
-    color: #fff;
-    color: oklch(0.97 0 0 / 1);
-    border: 1px solid #ffcc80;
+    background: rgba(255, 152, 0, 0.9);                             /* fallback */
+    background: oklch(0.7703 0.1741 64.05 / 90%);                   /* 🎨 laranja com alpha específico */
+    color: #fff;                                                    /* fallback */
+    color: oklch(0.97 0 0 / 1);                                     /* fallback moderno */
+    color: var(--texto-primario, oklch(0.97 0 0 / 1));              /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid #ffcc80;                                      /* 🎨 laranja-claro específico */
 }
 
 .toast-login.erro {
-    background: rgba(255, 77, 77, 0.15);
-    background: oklch(0.673 0.2146 25.04 / 15%);
-    color: #ff4d4d;
-    border: 1px solid #ff4d4d;
+    background: rgba(255, 77, 77, 0.15);                            /* fallback */
+    background: oklch(0.673 0.2146 25.04 / 15%);                    /* 🎨 vermelho com alpha específico */
+    color: #ff4d4d;                                                 /* 🎨 vermelho-erro específico */
+    border: 1px solid #ff4d4d;                                      /* 🎨 vermelho-erro específico */
 }
 
 .toast-login span {
@@ -71,7 +85,7 @@ select:focus-visible {
 }
 
 /* ============================================================
-   CHECKBOXES UNIFICADOS (substitui os estilos inline)
+   3. CHECKBOXES UNIFICADOS
    ============================================================ */
 .checkbox-wrapper {
     margin: 15px 0;
@@ -85,39 +99,43 @@ select:focus-visible {
     width: auto;
     margin: 0;
     cursor: pointer;
-    accent-color: #157b00cf;
+    accent-color: #157b00cf;                                        /* 🎨 verde-acento específico */
 }
 
 .checkbox-wrapper label {
     font-size: 14px;
     font-size: clamp(14px, 1.5vw, 16px);
-    color: #ffffffa2;
-    color: oklch(1 0 0 / 63.5%);
+    color: #ffffffa2;                                               /* fallback */
+    color: oklch(1 0 0 / 63.5%);                                    /* fallback moderno */
+    color: var(--texto-secundario, oklch(1 0 0 / 63.5%));           /* 🌅 FAGULHA – Fase 2 */
     font-weight: bold;
     cursor: pointer;
     line-height: 1;
 }
 
 .checkbox-wrapper label a {
-    color: #ffbc00;
-    color: oklch(0.834633 0.17177 82.5648);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(0.834633 0.17177 82.5648);                         /* fallback moderno */
+    color: var(--texto-dourado, oklch(0.834633 0.17177 82.5648));   /* 🌅 FAGULHA – Fase 2 */
     text-decoration: underline;
     display: inline;
 }
 
 .checkbox-wrapper label a:hover {
-    color: #ffd44d;
-    color: oklch(0.8838 0.1546 90.87);
+    color: #ffd44d;                                                 /* fallback */
+    color: oklch(0.8838 0.1546 90.87);                              /* fallback moderno */
+    color: var(--texto-dourado-hover, oklch(0.8838 0.1546 90.87));  /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ============================================================
-   BOTÃO DE LOGIN
+   4. BOTÃO DE LOGIN (marca — mantido hardcoded)
    ============================================================ */
 .login-btn {
-    background: #ff7011;
-    background: linear-gradient(135deg, #ff7011, #ffbc00);
-    color: #fff;
-    color: oklch(0.96 0 0 / 1);
+    background: #ff7011;                                            /* fallback */
+    background: linear-gradient(135deg, #ff7011, #ffbc00);          /* 🎨 gradiente de marca do login */
+    color: #fff;                                                    /* fallback */
+    color: oklch(0.96 0 0 / 1);                                     /* fallback moderno */
+    color: var(--texto-primario, oklch(0.96 0 0 / 1));              /* 🌅 FAGULHA – Fase 2 */
     border: none;
     width: 100%;
     padding: 10px 16px;
@@ -125,7 +143,7 @@ select:focus-visible {
     border-radius: 10px;
     font-weight: bold;
     text-transform: uppercase;
-    box-shadow: 0 4px 12px rgba(255, 112, 17, 0.4);
+    box-shadow: 0 4px 12px rgba(255, 112, 17, 0.4);                 /* 🎨 sombra laranja específica */
     cursor: pointer;
     margin-top: 10px;
     transition: 0.3s;
@@ -135,14 +153,12 @@ select:focus-visible {
 
 .login-btn:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);
+    box-shadow: 0 6px 20px rgba(255, 112, 17, 0.5);                 /* 🎨 sombra laranja específica */
     filter: brightness(1.1);
 }
 
-
-
 /* ============================================================
-   LINK DE CADASTRO
+   5. LINK DE CADASTRO (verde-marca)
    ============================================================ */
 .cadastro-link {
     text-align: center;
@@ -152,16 +168,16 @@ select:focus-visible {
 }
 
 .cadastro-link a {
-    color: #08d888ab;
+    color: #08d888ab;                                               /* 🎨 verde-marca específico */
     font-weight: bold;
 }
 
 .cadastro-link a:hover {
-    color: #08d888;
+    color: #08d888;                                                 /* 🎨 verde-marca específico */
 }
 
 /* ============================================================
-   CONTAINER DA SENHA (relative para o botão absolute)
+   6. TOGGLE DE SENHA
    ============================================================ */
 .input-senha-wrapper {
     position: relative;
@@ -180,13 +196,9 @@ select:focus-visible {
     border-radius: 10px;
     padding-right: 40px;
     padding-right: clamp(42px, 6vw, 56px);
-    /* espaço para o botão */
     box-sizing: border-box;
 }
 
-/* ============================================================
-   BOTÃO DE TOGGLE (olhinho) – DENTRO DO CAMPO
-   ============================================================ */
 .btn-toggle-senha {
     position: absolute;
     right: clamp(8px, 1.5vw, 14px);
@@ -194,7 +206,8 @@ select:focus-visible {
     transform: translateY(-50%);
     background: transparent;
     border: none;
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     cursor: pointer;
     padding: 0;
     font-size: clamp(1rem, 3vw, 1.4rem);
@@ -210,11 +223,13 @@ select:focus-visible {
 }
 
 .btn-toggle-senha:hover {
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-toggle-senha:focus-visible {
-    outline: 2px solid #ffbc00;
+    outline: 2px solid #ffbc00;                                     /* fallback */
+    outline: 2px solid var(--texto-dourado, #ffbc00);               /* 🌅 FAGULHA – Fase 2 */
     outline-offset: 2px;
     border-radius: 4px;
 }
@@ -228,25 +243,20 @@ select:focus-visible {
     .toast-login {
         font-size: 15px;
     }
-
     .checkbox-wrapper label {
         font-size: 15px;
     }
-
     .login-btn {
         font-size: 16px;
         padding: 12px 20px;
     }
-
     .cadastro-link {
         font-size: 14px;
     }
-
     .btn-toggle-senha {
         font-size: 1.2rem;
         right: 10px;
     }
-
     .senha-container input {
         padding-right: 46px;
     }
@@ -254,24 +264,20 @@ select:focus-visible {
 
 @supports not (background: linear-gradient(135deg, #ff7011, #ffbc00)) {
     .login-btn {
-        background: #ff8c00;
+        background: #ff8c00;                                        /* fallback estrutural do gradiente */
     }
 }
 
-
 /* ============================================================
-   SESSÕES ATIVAS – CENTRAL DO HABITANTE
-   (Compatível com fundo oklch(0.7 0 0 / 0.24) e modo escuro)
+   7. SESSÕES ATIVAS – CENTRAL DO HABITANTE
    ============================================================ */
 
-/* Container principal */
 .sessoes-container {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
 }
 
-/* Cabeçalho */
 .sessoes-header {
     display: flex;
     justify-content: space-between;
@@ -284,8 +290,9 @@ select:focus-visible {
 }
 
 .sessoes-titulo {
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     margin: 0;
     font-size: 1rem;
     font-size: clamp(1rem, 1.4vw, 1.2rem);
@@ -298,18 +305,19 @@ select:focus-visible {
 .sessoes-contador {
     font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 1rem);
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                    /* fallback */
+    color: oklch(0.65 0 0);                                         /* fallback moderno */
+    color: var(--texto-muted, oklch(0.65 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     font-weight: 400;
 }
 
-/* Botão "Encerrar todas" */
 .btn-encerrar-todas {
-    background: rgba(255, 50, 50, 0.12);
-    background: oklch(0.6481 0.2377 27.04 / 12%);
-    color: #ff6b6b;
-    color: oklch(0.7116 0.1812 22.84);
-    border: 1px solid rgba(255, 50, 50, 0.2);
+    background: rgba(255, 50, 50, 0.12);                            /* fallback */
+    background: oklch(0.6481 0.2377 27.04 / 12%);                   /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                 /* fallback */
+    color: oklch(0.7116 0.1812 22.84);                              /* fallback moderno */
+    color: var(--cor-erro, oklch(0.7116 0.1812 22.84));             /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 50, 50, 0.2);                       /* 🎨 vermelho com alpha específico */
     border-radius: 30px;
     padding: 4px 10px;
     padding: clamp(4px, 0.5vw, 8px) clamp(10px, 1.2vw, 16px);
@@ -325,8 +333,8 @@ select:focus-visible {
 }
 
 .btn-encerrar-todas:hover {
-    background: rgba(255, 50, 50, 0.2);
-    border-color: rgba(255, 50, 50, 0.4);
+    background: rgba(255, 50, 50, 0.2);                             /* 🎨 vermelho com alpha específico */
+    border-color: rgba(255, 50, 50, 0.4);                           /* 🎨 vermelho com alpha específico */
     transform: scale(1.02);
 }
 
@@ -336,75 +344,68 @@ select:focus-visible {
     transform: none;
 }
 
-/* Lista de sessões */
 .sessoes-lista {
     display: flex;
     flex-direction: column;
     gap: clamp(6px, 1.5cqi, 15px);
 }
 
-/* Item da sessão – fundo escuro com contraste */
 .sessao-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 6px 10px;
     padding: clamp(8px, 1vw, 14px) clamp(10px, 1.5vw, 18px);
-    
-    /* Fundo escuro padrão */
-    background: rgba(0, 0, 0, 0.4);
-    background: oklch(0 0 0 / 0.4);
-    
-    /* Texto claro padrão 0.96 oklch para contraste no fundo escuro */
-    color: #fff;
-    color: oklch(0.96 0 0);
-    
+
+    background: rgba(0, 0, 0, 0.4);                                 /* fallback */
+    background: oklch(0 0 0 / 0.4);                                 /* fallback moderno */
+    background: var(--bg-modal-content, oklch(0 0 0 / 0.4));        /* 🌅 FAGULHA – Fase 2 */
+
+    color: #fff;                                                    /* fallback */
+    color: oklch(0.96 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(0.96 0 0));                  /* 🌅 FAGULHA – Fase 2 */
+
     border-radius: 10px;
     border-radius: clamp(8px, 1vw, 12px);
     margin-bottom: clamp(6px, 0.8vw, 10px);
-    border-left: 3px solid #4caf50;
+    border-left: 3px solid #4caf50;                                 /* fallback */
+    border-left: 3px solid var(--cor-sucesso, #4caf50);             /* 🌅 FAGULHA – Fase 2 */
     transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease, color 0.2s ease;
     flex-wrap: wrap;
     gap: 6px;
     gap: clamp(6px, 1vw, 12px);
 }
 
-/* Força os ícones e spans da sessão comum a seguirem o texto claro */
 .sessao-item .sessao-dispositivo,
 .sessao-item .sessao-detalhes span,
 .sessao-item .sessao-detalhes i {
     color: inherit;
 }
 
-/* Hover da sessão comum: Fundo um pouco mais cinza e escuro */
 .sessao-item:hover {
-    background: rgba(0, 0, 0, 0.6);
-    background: oklch(0 0 0 / 0.6);
+    background: rgba(0, 0, 0, 0.6);                                 /* fallback */
+    background: oklch(0 0 0 / 0.6);                                 /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0 0 0 / 0.6));        /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Sessão atual (destaque) */
 .sessao-item.sessao-atual {
-    border-left-color: #ffbb01cc;
-    border-left-color: oklch(0.83277 0.171456 82.0349 / 80%);
-    
-    /* Seu fundo verde encardido translúcido */
-    background: rgba(38, 248, 0, 0.07);
-    background: oklch(from rgba(38, 248, 0, 0.06) l c h / 0.07);
-    
-    /* Texto cinza escuro/preto para dar contraste no fundo verde */
-    color: #0a0a0aa1;
-    color: oklch(0.1448 0 0 / 63.1%);
+    border-left-color: #ffbb01cc;                                   /* fallback */
+    border-left-color: oklch(0.83277 0.171456 82.0349 / 80%);       /* 🎨 dourado com alpha específico */
+
+    background: rgba(38, 248, 0, 0.07);                             /* fallback */
+    background: oklch(from rgba(38, 248, 0, 0.06) l c h / 0.07);    /* 🎨 verde-encardido específico */
+
+    color: #0a0a0aa1;                                               /* fallback */
+    color: oklch(0.1448 0 0 / 63.1%);                               /* 🎨 preto-translúcido específico */
 }
 
-/* Aplica o cinza escuro cirurgicamente em todos os textos internos da atual */
 .sessao-item.sessao-atual .sessao-dispositivo,
 .sessao-item.sessao-atual .sessao-detalhes span,
 .sessao-item.sessao-atual .sessao-detalhes i {
-    color: #0a0a0aa1;
-    color: oklch(0.1448 0 0 / 63.1%);
+    color: #0a0a0aa1;                                               /* fallback */
+    color: oklch(0.1448 0 0 / 63.1%);                               /* 🎨 preto-translúcido específico */
 }
 
-/* Ajustes de tamanho e flex da sessão atual */
 .sessao-item.sessao-atual .sessao-dispositivo {
     font-size: 0.8rem;
     font-size: clamp(0.85rem, 1vw, 1.05rem);
@@ -413,24 +414,20 @@ select:focus-visible {
     gap: 6px;
 }
 
-/* Hover da Sessão Atual: O verde brilha um pouco mais (14%) */
 .sessao-item.sessao-atual:hover {
-    background: rgba(38, 248, 0, 0.12);
-    background: oklch(0.85 0.29 141.38 / 12%);
+    background: rgba(38, 248, 0, 0.12);                             /* fallback */
+    background: oklch(0.85 0.29 141.38 / 12%);                      /* 🎨 verde com alpha específico */
 }
 
-/* Sufixo da sessão atual */
 .sessao-item.sessao-atual .sessao-dispositivo::after {
     content: " (sessão atual)";
     font-size: 0.7rem;
-    color: #ffa600;
-    color: oklch(0.7945 0.1709 71.19);
+    color: #ffa600;                                                 /* fallback */
+    color: oklch(0.7945 0.1709 71.19);                              /* 🎨 laranja-dourado específico */
     font-weight: 400;
     margin-left: 4px;
 }
 
-
-/* Informações da sessão */
 .sessao-info {
     flex: 1;
     min-width: 120px;
@@ -441,8 +438,9 @@ select:focus-visible {
 
 .sessao-dispositivo {
     font-weight: 600;
-    color: #fff;
-    color: oklch(0.94 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(0.94 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(0.94 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.85rem, 1vw, 1.05rem);
     display: flex;
@@ -453,8 +451,9 @@ select:focus-visible {
 .sessao-detalhes {
     font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
-    color: #aaa;
-    color: oklch(0.75 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(0.75 0 0);                                         /* fallback moderno */
+    color: var(--texto-terciario, oklch(0.75 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
@@ -468,11 +467,10 @@ select:focus-visible {
 }
 
 .sessao-detalhes i {
-    color: #141416;
-    color: oklch(0.1921 0.004 286.02);
+    color: #141416;                                                 /* fallback */
+    color: oklch(0.1921 0.004 286.02);                              /* 🎨 roxo-quase-preto específico */
 }
 
-/* Ações da sessão */
 .sessao-actions {
     display: flex;
     gap: 4px;
@@ -481,13 +479,13 @@ select:focus-visible {
     align-items: center;
 }
 
-/* Botão encerrar individual */
 .btn-encerrar-sessao {
-    background: rgba(255, 50, 50, 0.08);
-    background: oklch(0.6481 0.2377 27.04 / 8%);
-    color: #ff6b6b;
-    color: oklch(0.7116 0.1812 22.84);
-    border: 1px solid rgba(255, 50, 50, 0.15);
+    background: rgba(255, 50, 50, 0.08);                            /* fallback */
+    background: oklch(0.6481 0.2377 27.04 / 8%);                    /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                 /* fallback */
+    color: oklch(0.7116 0.1812 22.84);                              /* fallback moderno */
+    color: var(--cor-erro, oklch(0.7116 0.1812 22.84));             /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 50, 50, 0.15);                      /* 🎨 vermelho com alpha específico */
     border-radius: 20px;
     padding: 4px 8px;
     padding: clamp(4px, 0.5vw, 8px) clamp(10px, 1.2vw, 16px);
@@ -502,8 +500,8 @@ select:focus-visible {
 }
 
 .btn-encerrar-sessao:hover {
-    background: rgba(255, 50, 50, 0.16);
-    border-color: rgba(255, 50, 50, 0.3);
+    background: rgba(255, 50, 50, 0.16);                            /* 🎨 vermelho com alpha específico */
+    border-color: rgba(255, 50, 50, 0.3);                           /* 🎨 vermelho com alpha específico */
     transform: scale(1.03);
 }
 
@@ -513,41 +511,42 @@ select:focus-visible {
     transform: none;
 }
 
-
 .btn-encerrar-sessoes .spinner {
     display: inline-block;
     width: 16px;
     height: 16px;
     width: clamp(16px, 3vw, 40px);
     height: clamp(16px, 3vw, 40px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid #ff6b6b;
+    border: 2px solid rgba(255, 255, 255, 0.3);                     /* 🎨 branco com alpha específico */
+    border-top: 2px solid #ff6b6b;                                  /* fallback */
+    border-top: 2px solid var(--cor-erro, #ff6b6b);                 /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
 
-
-/* Mensagem de feedback após encerrar */
 .toast-sessoes-encerradas {
-    background: rgba(76, 175, 80, 0.15);
-    border-left: 4px solid #4caf50;
+    background: rgba(76, 175, 80, 0.15);                            /* fallback */
+    background: color-mix(in srgb, var(--cor-sucesso, #4caf50) 15%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-left: 4px solid #4caf50;                                 /* fallback */
+    border-left: 4px solid var(--cor-sucesso, #4caf50);             /* 🌅 FAGULHA – Fase 2 */
     padding: 12px 16px;
     border-radius: 8px;
-    color: #4caf50;
+    color: #4caf50;                                                 /* fallback */
+    color: var(--cor-sucesso, #4caf50);                             /* 🌅 FAGULHA – Fase 2 */
     margin: 10px 0;
     font-weight: 500;
 }
 
-
-/* Badge "Atual" */
 .sessao-badge-atual {
     font-size: 0.7rem;
     font-size: clamp(0.65rem, 0.8vw, 0.85rem);
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     font-weight: 600;
-    background: rgba(255, 188, 0, 0.08);
-    background: oklch(83.276% 0.17139 82.036 / 0.08);
+    background: rgba(255, 188, 0, 0.08);                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036 / 0.08);               /* fallback moderno */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 8%, transparent); /* 🌅 FAGULHA – Fase 2 */
     padding: 2px 8px;
     padding: clamp(2px, 0.3vw, 4px) clamp(8px, 1vw, 12px);
     border-radius: 12px;
@@ -556,31 +555,32 @@ select:focus-visible {
     gap: 4px;
 }
 
-/* Estado vazio */
 .sem-sessoes {
     text-align: center;
     padding: 15px;
     padding: clamp(20px, 3vw, 40px);
-    color: #888;
-    color: oklch(0.65 0 0);
+    color: #888;                                                    /* fallback */
+    color: oklch(0.65 0 0);                                         /* fallback moderno */
+    color: var(--texto-muted, oklch(0.65 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1.1vw, 1.05rem);
 }
 
 .sem-sessoes i {
     font-size: 2rem;
     font-size: clamp(2.5rem, 5vw, 4rem);
-    color: #4caf50;
+    color: #4caf50;                                                 /* fallback */
+    color: var(--cor-sucesso, #4caf50);                             /* 🌅 FAGULHA – Fase 2 */
     display: block;
     margin-bottom: 10px;
 }
 
-/* Spinners */
 .spinner {
     display: inline-block;
     width: 40px;
     height: 40px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid #ff6b6b;
+    border: 2px solid rgba(255, 255, 255, 0.3);                     /* 🎨 branco com alpha específico */
+    border-top: 2px solid #ff6b6b;                                  /* fallback */
+    border-top: 2px solid var(--cor-erro, #ff6b6b);                 /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     vertical-align: middle;
@@ -590,101 +590,46 @@ select:focus-visible {
     display: inline-block;
     width: 16px;
     height: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-top: 2px solid #ff6b6b;
+    border: 2px solid rgba(255, 255, 255, 0.2);                     /* 🎨 branco com alpha específico */
+    border-top: 2px solid #ff6b6b;                                  /* fallback */
+    border-top: 2px solid var(--cor-erro, #ff6b6b);                 /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
     vertical-align: middle;
 }
 
-
-/* Fallbacks para navegadores sem oklch */
 @supports not (color: oklch(1 0 0)) {
-    .sessoes-titulo {
-        color: #ffbc00;
-    }
-
-    .sessoes-contador {
-        color: #888;
-    }
-
-    .sessao-item {
-        background: rgba(0, 0, 0, 0.35);
-    }
-
-    .sessao-item.sessao-atual {
-        background: rgba(255, 188, 0, 0.06);
-    }
-
-    .sessao-dispositivo {
-        color: #fff;
-    }
-
-    .sessao-detalhes {
-        color: #aaa;
-    }
-
-    .sessao-detalhes i {
-        color: #ffbc00;
-    }
-
-    .sessao-badge-atual {
-        color: #ffbc00;
-        background: rgba(255, 188, 0, 0.08);
-    }
-
-    .sem-sessoes {
-        color: #888;
-    }
-
-    .btn-encerrar-todas {
-        background: rgba(255, 50, 50, 0.12);
-        color: #ff6b6b;
-    }
-
-    .btn-encerrar-sessao {
-        background: rgba(255, 50, 50, 0.08);
-        color: #ff6b6b;
-    }
+    .sessoes-titulo { color: #ffbc00; }
+    .sessoes-contador { color: #888; }
+    .sessao-item { background: rgba(0, 0, 0, 0.35); }
+    .sessao-item.sessao-atual { background: rgba(255, 188, 0, 0.06); }
+    .sessao-dispositivo { color: #fff; }
+    .sessao-detalhes { color: #aaa; }
+    .sessao-detalhes i { color: #ffbc00; }
+    .sessao-badge-atual { color: #ffbc00; background: rgba(255, 188, 0, 0.08); }
+    .sem-sessoes { color: #888; }
+    .btn-encerrar-todas { background: rgba(255, 50, 50, 0.12); color: #ff6b6b; }
+    .btn-encerrar-sessao { background: rgba(255, 50, 50, 0.08); color: #ff6b6b; }
 }
 
 @supports not (font-size: clamp(1rem, 1vw, 2rem)) {
-    .sessoes-titulo {
-        font-size: 1.2rem;
-    }
-
-    .sessao-dispositivo {
-        font-size: 0.8rem;
-    }
-
-    .sessao-detalhes {
-        font-size: 0.8rem;
-    }
-
-    .btn-encerrar-sessao {
-        font-size: 0.8rem;
-        padding: 4px 12px;
-    }
-
-    .sessao-badge-atual {
-        font-size: 0.8rem;
-    }
-
-    .sem-sessoes {
-        font-size: 1rem;
-    }
+    .sessoes-titulo { font-size: 1.2rem; }
+    .sessao-dispositivo { font-size: 0.8rem; }
+    .sessao-detalhes { font-size: 0.8rem; }
+    .btn-encerrar-sessao { font-size: 0.8rem; padding: 4px 12px; }
+    .sessao-badge-atual { font-size: 0.8rem; }
+    .sem-sessoes { font-size: 1rem; }
 }
 
-
 /* ============================================================
-       ESTILOS GERAIS DO CADASTRO (JÁ EXISTENTES)
-       ============================================================ */
+   8. CADASTRO – BASE E ETAPAS
+   ============================================================ */
 .main-form-cadastro {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at 30% 50%, #1a1a2e 0%, #0a0a0a 100%);
+    background: radial-gradient(circle at 30% 50%, #1a1a2e 0%, #0a0a0a 100%); /* 🎨 gradiente de marca do cadastro */
     position: relative;
     overflow: hidden;
     padding: 15px;
@@ -699,8 +644,8 @@ select:focus-visible {
     width: 100%;
     height: 100%;
     background-image:
-        linear-gradient(rgba(255, 188, 0, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 188, 0, 0.03) 1px, transparent 1px);
+        linear-gradient(rgba(255, 188, 0, 0.03) 1px, transparent 1px),   /* 🎨 dourado com alpha específico (grade) */
+        linear-gradient(90deg, rgba(255, 188, 0, 0.03) 1px, transparent 1px); /* 🎨 dourado com alpha específico (grade) */
     background-size: 30px 30px;
     pointer-events: none;
     z-index: 0;
@@ -709,16 +654,18 @@ select:focus-visible {
 .container-cadastro-fenda {
     position: relative;
     z-index: 1;
-    background: rgba(20, 20, 30, 0.85);
+    background: rgba(20, 20, 30, 0.85);                             /* fallback */
+    background: color-mix(in srgb, var(--bg-modal-content, rgba(20, 20, 30, 0.92)) 92%, transparent); /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 24px;
     padding: 28px;
     max-width: 500px;
     width: 100%;
     margin: 20px auto;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);                     /* 🎨 sombra específica do cadastro */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -727,16 +674,393 @@ select:focus-visible {
 }
 
 .container-cadastro-fenda.aura-glow {
-    border-color: var(--cor-aura, #70cde4);
-    box-shadow: 0 0 30px var(--cor-aura-alpha, rgba(112, 205, 228, 0.2));
+    border-color: var(--cor-aura, #70cde4);                         /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 30px var(--cor-aura-alpha, rgba(112, 205, 228, 0.2)); /* 🎨 dinâmica via PHP — preservada */
 }
 
-/* ---------- PRÉVIA DO PERFIL (CARTÃO DE VISITA) ---------- */
+.step-container {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.step-container.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.step-container.saindo {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.step-content {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+.cadastro-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cadastro-header h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    text-shadow: 0 0 10px rgba(255, 188, 0, 0.3);                   /* 🎨 glow dourado específico */
+    margin-bottom: 4px;
+}
+
+.cadastro-header p {
+    color: rgba(255, 255, 255, 0.5);                                /* fallback */
+    color: var(--texto-terciario, rgba(255, 255, 255, 0.5));       /* 🌅 FAGULHA – Fase 2 */
+    font-size: 0.9rem;
+}
+
+.campo-grupo-fenda {
+    margin-bottom: 18px;
+}
+
+.campo-grupo-fenda label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);                                /* fallback */
+    color: var(--texto-secundario, rgba(255, 255, 255, 0.7));      /* 🌅 FAGULHA – Fase 2 */
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+}
+
+.fenda-reg-box {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    border-radius: 12px;
+    padding: 4px 12px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    overflow: hidden;
+}
+
+.fenda-reg-box i {
+    color: rgba(255, 255, 255, 0.3);                                /* fallback */
+    color: var(--texto-disabled, rgba(255, 255, 255, 0.3));        /* 🌅 FAGULHA – Fase 2 */
+    font-size: 1rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+    transition: color 0.25s ease;
+}
+
+.fenda-reg-box input,
+.fenda-reg-box select {
+    width: 100%;
+    padding: 10px 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+.fenda-reg-box select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.fenda-reg-box select option {
+    background: #1a1a2e;                                            /* 🎨 cor específica de `<option>` */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+}
+
+.fenda-reg-box input[type="color"] {
+    width: 50px;
+    padding: 0;
+    margin: 5px 0 5px 5px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+}
+
+.fenda-reg-box:focus-within {
+    border-color: var(--cor-aura, #70cde4) !important;              /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 15px var(--cor-aura-alpha, rgba(112, 205, 228, 0.15)) !important; /* 🎨 dinâmica via PHP — preservada */
+    background: rgba(255, 255, 255, 0.06);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.06));  /* 🌅 FAGULHA – Fase 2 */
+}
+
+.fenda-reg-box:focus-within i {
+    color: var(--cor-aura, #70cde4) !important;                     /* 🎨 dinâmica via PHP — preservada */
+}
+
+.checkbox-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.6);                                /* fallback */
+    color: var(--texto-secundario, rgba(255, 255, 255, 0.6));      /* 🌅 FAGULHA – Fase 2 */
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    cursor: pointer;
+}
+
+.checkbox-custom input[type="checkbox"] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);                     /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🌅 FAGULHA – Fase 2 */
+    border-radius: 4px;
+    background: transparent;
+    flex-shrink: 0;
+    transition: 0.2s;
+    position: relative;
+    cursor: pointer;
+}
+
+.checkbox-custom input[type="checkbox"]:checked {
+    background: var(--cor-aura, #70cde4);                           /* 🎨 dinâmica via PHP — preservada */
+    border-color: var(--cor-aura, #70cde4);                         /* 🎨 dinâmica via PHP — preservada */
+}
+
+.checkbox-custom input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0px);
+    transform: translate(-50%, -50%);
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.checkbox-custom a {
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
+    text-decoration: none;
+}
+
+.checkbox-custom a:hover {
+    text-decoration: underline;
+}
+
+.btn-finalizar-fenda {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ffbc00, #ff8c00);          /* 🎨 gradiente de marca */
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-finalizar-fenda:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--cor-aura-alpha, rgba(255, 188, 0, 0.3)); /* 🎨 dinâmica via PHP — preservada */
+}
+
+.btn-finalizar-fenda:active {
+    transform: translateY(0);
+}
+
+.btn-step-next,
+.btn-step-prev {
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    font-size: 0.95rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.06);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.06));        /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+}
+
+.btn-step-next:hover,
+.btn-step-prev:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);                           /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));   /* 🌅 FAGULHA – Fase 2 */
+}
+
+.btn-step-next:active,
+.btn-step-prev:active {
+    transform: translateY(0px);
+}
+
+.btn-step-prev {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);                    /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.15)); /* 🌅 FAGULHA – Fase 2 */
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
+}
+
+.btn-step-prev:hover {
+    border-color: rgba(255, 255, 255, 0.3);                         /* fallback */
+    border-color: var(--borda-card, rgba(255, 255, 255, 0.3));     /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+}
+
+.btn-cor-sugestao {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #444;                                         /* 🎨 cinza-borda específico */
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-cor-sugestao:hover {
+    transform: scale(1.1);
+    border-color: #fff !important;                                  /* fallback */
+    border-color: var(--texto-primario, #fff) !important;           /* 🌅 FAGULHA – Fase 2 */
+}
+
+.btn-cor-sugestao:active {
+    transform: scale(0.95);
+}
+
+.grid-vibes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.vibe-option {
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
+    border: 2px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 2px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vibe-option:hover {
+    transform: scale(1.03);
+    border-color: #888;                                             /* fallback */
+    border-color: var(--texto-muted, #888);                        /* 🌅 FAGULHA – Fase 2 */
+}
+
+.vibe-option.selecionado {
+    border-color: var(--dourado);                                   /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(255, 188, 0, 0.08) !important;                 /* 🎨 dourado com alpha específico */
+    box-shadow: 0 0 20px rgba(255, 188, 0, 0.15);                   /* 🎨 glow dourado específico */
+}
+
+.vibe-option i {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.vibe-option p {
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.aura-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto;
+    border: 3px solid #333;                                         /* 🎨 cinza-borda específico */
+    transition: background 0.3s ease;
+}
+
+.termos-wrapper {
+    margin: 15px 0;
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
+    font-size: 0.9rem;
+}
+
+.termos-wrapper a {
+    color: #ffbb00d5;                                               /* 🎨 dourado com alpha específico */
+    text-decoration: none;
+}
+
+.termos-wrapper a:hover {
+    text-decoration: underline;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.4);                                /* fallback */
+    color: var(--texto-muted, rgba(255, 255, 255, 0.4));           /* 🌅 FAGULHA – Fase 2 */
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+.botoes-rodape {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+.botoes-rodape .btn-step-prev {
+    flex: 0 0 auto;
+    padding: 10px 20px;
+    white-space: nowrap;
+}
+
+.botoes-rodape .btn-finalizar-fenda {
+    flex: 1;
+    margin-top: 0;
+}
+
+/* ============================================================
+   9. PREVIEW DE PERFIL (5 VIBES — identidade visual hardcoded)
+   ============================================================ */
 .preview-perfil-wrapper {
     margin: 15px 0 25px 0;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica do preview */
     transition: all 0.4s ease;
 }
 
@@ -753,7 +1077,6 @@ select:focus-visible {
     border-radius: 16px;
 }
 
-/* Conteúdo da prévia – um mini-card com avatar e nome fictícios */
 .preview-conteudo {
     display: flex;
     align-items: center;
@@ -767,20 +1090,24 @@ select:focus-visible {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);                           /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));   /* 🌅 FAGULHA – Fase 2 */
+    border: 2px solid rgba(255, 255, 255, 0.2);                     /* fallback */
+    border: 2px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🌅 FAGULHA – Fase 2 */
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.6rem;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     transition: border-color 0.3s ease;
 }
 
 .preview-info {
     flex: 1;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .preview-info .nome {
@@ -803,22 +1130,18 @@ select:focus-visible {
     font-style: italic;
 }
 
-/* ============================================================
-   ESTILOS DE CADA VIBE (FIEL AO VER-PERFIL) - PREVIEW DE CADASTRO
-   ============================================================ */
-
+/* --- VIBE DARK (preview) --- */
 .preview-perfil.vibe-dark {
     position: relative;
     overflow: hidden;
-    background: #0d0d11 ;
+    background: #0d0d11 ;                                           /* 🎨 identidade visual vibe-dark */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border-top: 2px solid rgba(255, 0, 50, 0.5);
+    border-top: 2px solid rgba(255, 0, 50, 0.5);                    /* 🎨 identidade visual vibe-dark */
     border-radius: 14px;
     transition: all 0.5s ease;
 }
 
-/* 1. NÉVOA VOLUMÉTRICA DENSA (Comportamento garantido em mobile e desktop) */
 .preview-perfil.vibe-dark::before {
     content: '';
     position: absolute;
@@ -828,7 +1151,6 @@ select:focus-visible {
     height: 140%;
     z-index: 1;
     pointer-events: none;
-    /* Camadas múltiplas de fumaça densa combinadas */
     background: 
         radial-gradient(circle at 20% 30%, rgba(120, 210, 255, 0.007) 0%, transparent 50%),
         radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.15) 0%, transparent 55%),
@@ -855,7 +1177,6 @@ select:focus-visible {
     }
 }
 
-/* 2. CAMADA DOS MORCEGOS (SVG de fundo) */
 .preview-perfil.vibe-dark::after {
     content: '';
     position: absolute;
@@ -867,11 +1188,11 @@ select:focus-visible {
     pointer-events: none;
     opacity: 0.3;
     mix-blend-mode: screen;
-    background-color: var(--cor-aura, var(--aura-user, #70cde4)) ;
-    
+    background-color: var(--cor-aura, var(--aura-user, #70cde4)) ;  /* 🎨 dinâmica via PHP — preservada */
+
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
-    
+
     -webkit-mask-size: 150px 150px;
     mask-size: 150px 150px;
     -webkit-mask-repeat: repeat;
@@ -884,23 +1205,21 @@ select:focus-visible {
     100% { -webkit-mask-position: 500px -500px; mask-position: 500px -500px; }
 }
 
-/* Conteúdo interno acima de tudo */
 .preview-perfil.vibe-dark .preview-conteudo {
     position: relative;
     z-index: 2;
 }
 
-/* 3. NOME VITORIANO COM SERIFAS + CORAÇÃO PULSANDO + SANGUE ESCORRENDO */
 .preview-perfil.vibe-dark .nome-publico,
 .preview-perfil.vibe-dark .preview-info .nome {
     font-family: 'Cinzel Decorative', 'Pirata One', serif ;
     font-weight: 900 ;
     letter-spacing: 1px;
-    color: #ff1e38 !important;
+    color: #ff1e38 !important;                                      /* 🎨 identidade visual vibe-dark */
     text-shadow: 
-        2px 2px 0px #3a0005,
-        0 0 8px rgba(255, 0, 40, 0.9),
-        0 0 20px rgba(139, 0, 0, 0.7);
+        2px 2px 0px #3a0005,                                        /* 🎨 identidade visual vibe-dark */
+        0 0 8px rgba(255, 0, 40, 0.9),                              /* 🎨 identidade visual vibe-dark */
+        0 0 20px rgba(139, 0, 0, 0.7);                              /* 🎨 identidade visual vibe-dark */
     transform-origin: center;
     animation: coracao-arrancado 1.3s infinite ease-in-out;
     display: inline-block;
@@ -908,7 +1227,6 @@ select:focus-visible {
     z-index: 2;
 }
 
-/* Gotas de sangue pingando */
 .preview-perfil.vibe-dark .nome-publico::after {
     content: '';
     position: absolute;
@@ -916,9 +1234,9 @@ select:focus-visible {
     left: 50%;
     width: 6px;
     height: 12px;
-    background: #ff002b;
+    background: #ff002b;                                            /* 🎨 identidade visual vibe-dark */
     border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: 0 0 6px #ff002b, 0 0 12px rgba(255,0,0,0.8);
+    box-shadow: 0 0 6px #ff002b, 0 0 12px rgba(255,0,0,0.8);       /* 🎨 identidade visual vibe-dark */
     animation: pingo-sangue 1.8s infinite cubic-bezier(0.5, 0, 0.5, 1);
     opacity: 0;
 }
@@ -965,11 +1283,11 @@ select:focus-visible {
     }
 }
 
-/* ---------- VIBE NEON ---------- */
+/* --- VIBE NEON (preview) --- */
 .preview-perfil.vibe-neon {
-    background: linear-gradient(to bottom, transparent 0%, var(--cor-aura, var(--aura-user, #ff9100)) 25%, #000 50%) !important;
+    background: linear-gradient(to bottom, transparent 0%, var(--cor-aura, var(--aura-user, #ff9100)) 25%, #000 50%) !important; /* 🎨 dinâmica via PHP — preservada */
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
-    border: 1px solid var(--cor-aura, var(--aura-user, #ff9100));
+    border: 1px solid var(--cor-aura, var(--aura-user, #ff9100));   /* 🎨 dinâmica via PHP — preservada */
     border-radius: 16px;
     transition: all 0.3s ease-in-out;
     position: relative;
@@ -982,37 +1300,38 @@ select:focus-visible {
 }
 
 .preview-perfil.vibe-neon .preview-avatar {
-    border-color: var(--cor-aura, var(--aura-user, #ff9100));
-    box-shadow: 0 0 10px var(--cor-aura, var(--aura-user, #ff9100));
+    border-color: var(--cor-aura, var(--aura-user, #ff9100));       /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 10px var(--cor-aura, var(--aura-user, #ff9100)); /* 🎨 dinâmica via PHP — preservada */
 }
 
 .preview-perfil.vibe-neon .preview-info .nome,
 .preview-perfil.vibe-neon .nome-publico {
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 @keyframes neon-flicker-subtle {
     0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
         filter: brightness(0.85) saturate(0.85);
-        box-shadow: 0 0 8px var(--cor-aura, var(--aura-user, #ff9100)), 0 0 12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 8px var(--cor-aura, var(--aura-user, #ff9100)), 0 0 12px rgba(0, 0, 0, 0.5); /* 🎨 dinâmica via PHP — preservada */
     }
     20%, 24%, 55% {
         filter: brightness(0.8) saturate(0.8);
-        box-shadow: 0 0 4px var(--cor-aura, var(--aura-user, #ff9100)), 0 0 8px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 4px var(--cor-aura, var(--aura-user, #ff9100)), 0 0 8px rgba(0, 0, 0, 0.5); /* 🎨 dinâmica via PHP — preservada */
     }
 }
 
-/* ---------- VIBE GLASS ---------- */
+/* --- VIBE GLASS (preview) --- */
 .preview-perfil.vibe-glass {
     background: linear-gradient(135deg,
         oklch(1 0 0 / 0.45) 0%,
         oklch(1 0 0 / 0.05) 45%,
-        oklch(0 0 0 / 0.45) 100%), oklch(from var(--cor-aura, var(--aura-user, #70cde4)) l c h / 0.3) !important;
+        oklch(0 0 0 / 0.45) 100%), oklch(from var(--cor-aura, var(--aura-user, #70cde4)) l c h / 0.3) !important; /* 🎨 dinâmica via PHP — preservada */
     background-blend-mode: soft-light;
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border: 1px solid oklch(1 0 0 / 0.35) !important;
-    box-shadow: 0 16px 32px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important;
+    border: 1px solid oklch(1 0 0 / 0.35) !important;               /* 🎨 identidade visual vibe-glass */
+    box-shadow: 0 16px 32px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important; /* 🎨 identidade visual vibe-glass */
     border-radius: 16px;
     position: relative;
     overflow: hidden;
@@ -1027,16 +1346,17 @@ select:focus-visible {
 }
 
 .preview-perfil.vibe-glass .preview-avatar {
-    border-color: rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.4);                         /* 🎨 identidade visual vibe-glass */
+    background: rgba(255, 255, 255, 0.05);                          /* 🎨 identidade visual vibe-glass */
 }
 
 .preview-perfil.vibe-glass .preview-info .nome {
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);                 /* 🎨 identidade visual vibe-glass */
 }
 
-/* ---------- VIBE LIGHT ---------- */
+/* --- VIBE LIGHT (preview) --- */
 .preview-perfil.vibe-light {
     background:
         linear-gradient(165deg,
@@ -1044,11 +1364,11 @@ select:focus-visible {
             oklch(1 0 0 / 0.05) 20%,
             oklch(0.35 0.01 250 / 0.5) 100%
         ),
-        oklch(from var(--cor-aura, var(--aura-user, #ffbc00)) 0.94 0.04 h / 0.75);
+        oklch(from var(--cor-aura, var(--aura-user, #ffbc00)) 0.94 0.04 h / 0.75); /* 🎨 dinâmica via PHP — preservada */
     background-blend-mode: soft-light;
-    border: 1px solid oklch(1 0 0 / 0.25) !important;
-    border-top: 4px solid var(--cor-aura, var(--aura-user, #ffbc00)) !important;
-    box-shadow: 0 8px 32px oklch(0 0 0 / 0.08), inset 0 1px 1px oklch(1 0 0 / 0.5) !important;
+    border: 1px solid oklch(1 0 0 / 0.25) !important;               /* 🎨 identidade visual vibe-light */
+    border-top: 4px solid var(--cor-aura, var(--aura-user, #ffbc00)) !important; /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.08), inset 0 1px 1px oklch(1 0 0 / 0.5) !important; /* 🎨 identidade visual vibe-light */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border-radius: 16px;
@@ -1066,30 +1386,29 @@ select:focus-visible {
 .preview-perfil.vibe-light .preview-info .bio-preview,
 .preview-perfil.vibe-light p,
 .preview-perfil.vibe-light h3 {
-    color: #3e382d ;
+    color: #3e382d ;                                                /* 🎨 identidade visual vibe-light */
     text-shadow: none !important;
 }
 
 .preview-perfil.vibe-light .preview-avatar {
-    border-color: #be9a45;
-    background: rgba(255, 255, 255, 0.3);
+    border-color: #be9a45;                                          /* 🎨 identidade visual vibe-light */
+    background: rgba(255, 255, 255, 0.3);                           /* 🎨 identidade visual vibe-light */
 }
 
-/* ---------- VIBE ADS ---------- */
+/* --- VIBE ADS (preview) --- */
 .preview-perfil.vibe-ads {
     position: relative;
     overflow: hidden;
-    background-color: #16161d91 ;
-    background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.9) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.9) 100%) ;
+    background-color: #16161d91 ;                                   /* 🎨 identidade visual vibe-ads */
+    background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.9) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.9) 100%) ; /* 🎨 identidade visual vibe-ads */
     background-size: 200% 200%;
     backdrop-filter: none;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-top: 4px solid var(--cor-aura, #70cde4) ;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.04);                    /* 🎨 identidade visual vibe-ads */
+    border-top: 4px solid var(--cor-aura, #70cde4) ;                /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);                         /* 🎨 identidade visual vibe-ads */
     animation: ads-neon-glow-pulse-preview 3.5s infinite ease-in-out alternate;
     border-radius: 16px;
 }
-
 
 .preview-perfil.vibe-ads .preview-conteudo {
     position: relative;
@@ -1097,13 +1416,13 @@ select:focus-visible {
 }
 
 .preview-perfil.vibe-ads .preview-info .nome {
-    color: var(--cor-aura);
-    color: oklch(from var(--cor-aura) 0.92 0.04 h);
+    color: var(--cor-aura);                                         /* 🎨 dinâmica via PHP — preservada */
+    color: oklch(from var(--cor-aura) 0.92 0.04 h);                 /* 🎨 dinâmica via PHP — preservada */
 }
 
 .preview-perfil.vibe-ads .preview-avatar {
-    border-color: var(--cor-aura, #70cde4);
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    border-color: var(--cor-aura, #70cde4);                         /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);                    /* 🎨 identidade visual vibe-ads */
 }
 
 .preview-perfil.vibe-ads::after {
@@ -1116,20 +1435,17 @@ select:focus-visible {
     z-index: -1;
     pointer-events: none;
 
-    /* A cor salva no TiDB pinta a máscara dos hexágonos de forma 100% garantida */
-    background-color: var(--cor-aura,#70cde4) ;
+    background-color: var(--cor-aura,#70cde4) ;                     /* 🎨 dinâmica via PHP — preservada */
 
-    /* Padrão de hexágono via máscara estêncil */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
 
-    
     -webkit-mask-size: 50px 50px;
     mask-size: 50px 50px;
-    
+
     -webkit-mask-repeat: repeat;
     mask-repeat: repeat;
-    
+
     -webkit-mask-position: 0 0;
     mask-position: 0 0;
 
@@ -1149,9 +1465,6 @@ select:focus-visible {
     }
 }
 
-/* ==========================================================
-   HEXÁGONOS DINÂMICOS (GRADE DO DOM)
-   ========================================================== */
 .preview-perfil.vibe-ads .hex-bg {
     position: fixed;
     top: 80px;
@@ -1173,8 +1486,8 @@ select:focus-visible {
     width: 100%;
     aspect-ratio: 1/1.15;
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    background: rgba(0, 240, 255, 0.02);
-    border: 1px solid var(--cor-aura, #70cde4);
+    background: rgba(0, 240, 255, 0.02);                            /* 🎨 identidade visual vibe-ads */
+    border: 1px solid var(--cor-aura, #70cde4);                     /* 🎨 dinâmica via PHP — preservada */
     opacity: 0.3;
     transform: scale(0.85);
     transition: all 0.4s ease;
@@ -1182,401 +1495,44 @@ select:focus-visible {
 }
 
 .preview-perfil.vibe-ads .hex-item.dynamic.active {
-    background: var(--cor-aura, #70cde4) ;
-    border-color: var(--cor-aura, #70cde4) ;
-    box-shadow: 0 0 8px var(--cor-aura, #70cde4) ;
+    background: var(--cor-aura, #70cde4) ;                          /* 🎨 dinâmica via PHP — preservada */
+    border-color: var(--cor-aura, #70cde4) ;                        /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 8px var(--cor-aura, #70cde4) ;                  /* 🎨 dinâmica via PHP — preservada */
     transform: scale(1.0);
     opacity: 1;
 }
 
-@keyframes ads-neon-glow-pulse {
+@keyframes ads-neon-glow-pulse-preview {
     0% {
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px var(--cor-aura, #70cde4);
-        border-top-color: var(--cor-aura, #70cde4);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px var(--cor-aura, #70cde4); /* 🎨 dinâmica via PHP — preservada */
+        border-top-color: var(--cor-aura, #70cde4);                 /* 🎨 dinâmica via PHP — preservada */
     }
     50% {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.6), 0 0 12px var(--cor-aura, #70cde4);
-        border-color: var(--cor-aura, #70cde4);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.6), 0 0 12px var(--cor-aura, #70cde4); /* 🎨 dinâmica via PHP — preservada */
+        border-color: var(--cor-aura, #70cde4);                     /* 🎨 dinâmica via PHP — preservada */
     }
     100% {
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px var(--cor-aura, #70cde4);
-        border-top-color: var(--cor-aura, #70cde4);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px var(--cor-aura, #70cde4); /* 🎨 dinâmica via PHP — preservada */
+        border-top-color: var(--cor-aura, #70cde4);                 /* 🎨 dinâmica via PHP — preservada */
     }
 }
 
-.main-perfil-container-publico.vibe-ads p {
-    color: var(--cor-aura);
-    color: oklch(from var(--aura-user, #70cde4) 0.92 0.04 h);
-}
-
-
 /* ============================================================
-       ESTILOS DAS ETAPAS E CAMPOS (MANTIDOS)
-       ============================================================ */
-.step-container {
-    display: none;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.step-container.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.step-container.saindo {
-    opacity: 0;
-    transform: translateY(-20px);
-}
-
-.step-content {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 10px 0;
-}
-
-.cadastro-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.cadastro-header h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 188, 0, 0.3);
-    margin-bottom: 4px;
-}
-
-.cadastro-header p {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-}
-
-.campo-grupo-fenda {
-    margin-bottom: 18px;
-}
-
-.campo-grupo-fenda label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 4px;
-    letter-spacing: 0.5px;
-}
-
-.fenda-reg-box {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 4px 12px;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    overflow: hidden;
-}
-
-.fenda-reg-box i {
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 1rem;
-    margin-right: 10px;
-    flex-shrink: 0;
-    transition: color 0.25s ease;
-}
-
-.fenda-reg-box input,
-.fenda-reg-box select {
-    width: 100%;
-    padding: 10px 0;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #fff;
-    font-size: 0.95rem;
-    font-family: inherit;
-}
-
-.fenda-reg-box select {
-    appearance: none;
-    cursor: pointer;
-}
-
-.fenda-reg-box select option {
-    background: #1a1a2e;
-    color: #fff;
-}
-
-.fenda-reg-box input[type="color"] {
-    width: 50px;
-    padding: 0;
-    margin: 5px 0 5px 5px;
-    height: 35px;
-    cursor: pointer;
-    border-radius: 10px;
-    border: none;
-    background: transparent;
-}
-
-.fenda-reg-box:focus-within {
-    border-color: var(--cor-aura, #70cde4) !important;
-    box-shadow: 0 0 15px var(--cor-aura-alpha, rgba(112, 205, 228, 0.15)) !important;
-    background: rgba(255, 255, 255, 0.06);
-}
-
-.fenda-reg-box:focus-within i {
-    color: var(--cor-aura, #70cde4) !important;
-}
-
-.checkbox-custom {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: clamp(0.75rem, 1.5vw, 1rem);
-    cursor: pointer;
-}
-
-.checkbox-custom input[type="checkbox"] {
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    background: transparent;
-    flex-shrink: 0;
-    transition: 0.2s;
-    position: relative;
-    cursor: pointer;
-}
-
-.checkbox-custom input[type="checkbox"]:checked {
-    background: var(--cor-aura, #70cde4);
-    border-color: var(--cor-aura, #70cde4);
-}
-
-.checkbox-custom input[type="checkbox"]:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate3d(-50%, -50%, 0px);
-    transform: translate(-50%, -50%);
-    color: #000;
-    font-size: 12px;
-    font-weight: 700;
-}
-
-.checkbox-custom a {
-    color: #ffbc00;
-    text-decoration: none;
-}
-
-.checkbox-custom a:hover {
-    text-decoration: underline;
-}
-
-.btn-finalizar-fenda {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, #ffbc00, #ff8c00);
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 1rem;
-    color: #000;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.btn-finalizar-fenda:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px var(--cor-aura-alpha, rgba(255, 188, 0, 0.3));
-}
-
-.btn-finalizar-fenda:active {
-    transform: translateY(0);
-}
-
-.btn-step-next,
-.btn-step-prev {
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    font-family: inherit;
-    font-size: 0.95rem;
-    border: none;
-    background: rgba(255, 255, 255, 0.06);
-    color: #fff;
-}
-
-.btn-step-next:hover,
-.btn-step-prev:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.btn-step-next:active,
-.btn-step-prev:active {
-    transform: translateY(0px);
-}
-
-.btn-step-prev {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #aaa;
-}
-
-.btn-step-prev:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
-}
-
-.btn-cor-sugestao {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #444;
-    cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-    flex-shrink: 0;
-}
-
-.btn-cor-sugestao:hover {
-    transform: scale(1.1);
-    border-color: #fff !important;
-}
-
-.btn-cor-sugestao:active {
-    transform: scale(0.95);
-}
-
-.grid-vibes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 12px;
-    margin: 20px 0;
-}
-
-.vibe-option {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.vibe-option:hover {
-    transform: scale(1.03);
-    border-color: #888;
-}
-
-.vibe-option.selecionado {
-    border-color: var(--dourado);
-    background: rgba(255, 188, 0, 0.08) !important;
-    box-shadow: 0 0 20px rgba(255, 188, 0, 0.15);
-}
-
-.vibe-option i {
-    font-size: 2rem;
-    display: block;
-    margin-bottom: 6px;
-}
-
-.vibe-option p {
-    color: #ccc;
-    margin: 0;
-    font-size: 0.9rem;
-}
-
-.aura-preview {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin: 0 auto;
-    border: 3px solid #333;
-    transition: background 0.3s ease;
-}
-
-.termos-wrapper {
-    margin: 15px 0;
-    color: #ccc;
-    font-size: 0.9rem;
-}
-
-.termos-wrapper a {
-    color: #ffbb00d5;
-    text-decoration: none;
-}
-
-.termos-wrapper a:hover {
-    text-decoration: underline;
-}
-
-.form-footer {
-    text-align: center;
-    margin-top: 20px;
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.9rem;
-}
-
-.form-footer a {
-    color: #ffbc00;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.form-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ---------- BOTÕES DA ETAPA 4 (AJUSTE) ---------- */
-.botoes-rodape {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    align-items: center;
-}
-
-.botoes-rodape .btn-step-prev {
-    flex: 0 0 auto;
-    padding: 10px 20px;
-    white-space: nowrap;
-}
-
-.botoes-rodape .btn-finalizar-fenda {
-    flex: 1;
-    margin-top: 0;
-}
-
-
-/* --- AJUSTE PARA O MODAL VIRAR UM POP-UP COMPACTO (ESTILO AÇO) --- */
-
-/* 1. Ajuste do Container do Modal (o pai) */
+   10. MODAL DE POSTAR
+   ============================================================ */
 #modal-postar-fenda .fenda-modal-content {
     text-align: left;
-    /* Padding dinâmico: menor em telas pequenas */
     padding: 6px;
     padding: clamp(8px, 2.5vw, 20px);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8);                     /* 🎨 sombra específica do modal */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    background: #00000094;
+    background: #00000094;                                          /* fallback */
+    background: color-mix(in srgb, var(--bg-page-dark, #000) 58%, transparent); /* 🌅 FAGULHA – Fase 2 */
     position: relative;
-    /* Garante que o 'X' de fechar se posicione certo */
-    /* Garante que se o texto for gigante, apareça um scroll interno só no modal */
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -1597,7 +1553,8 @@ select:focus-visible {
     right: 8px;
     background: none;
     border: none;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 30px;
     cursor: pointer;
     -webkit-user-select: none;
@@ -1609,11 +1566,10 @@ select:focus-visible {
 }
 
 .btn-fechar-modal:hover {
-    color: var(--dourado);
+    color: var(--dourado);                                          /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
 }
 
-
-/* 2. Limpando o card de postagem para ele "fundir" com o modal */
 .modal-body-ajuste .main-novo-post {
     display: flex;
     flex-direction: column;
@@ -1628,17 +1584,14 @@ select:focus-visible {
     height: auto;
 }
 
-/* 3. Ajuste do formulário interno */
 .modal-body-ajuste .main-novo-post .form-container {
     width: 100%;
     padding: 15px 0;
-
-
 }
 
-/* 4. Título mais sóbrio (Troquei var(--dourado) por Branco Fumaça) */
 .modal-body-ajuste .main-novo-post h2 {
-    color: #f5f5f5;
+    color: #f5f5f5;                                                 /* fallback */
+    color: var(--texto-primario, #f5f5f5);                         /* 🌅 FAGULHA – Fase 2 */
     font-size: 1.05rem;
     font-size: clamp(1.1rem, 4vw, 1.5rem);
     margin-bottom: 15px;
@@ -1646,16 +1599,15 @@ select:focus-visible {
     letter-spacing: 1px;
 }
 
-/* 5. Estilização dos Inputs (Bordas cinzas em vez de douradas) */
 .modal-body-ajuste .main-novo-post textarea,
 .modal-body-ajuste .main-novo-post select,
 .modal-body-ajuste .main-novo-post input {
     width: 100%;
-    border: 1px solid #444;
-    /* Cinza escuro */
+    border: 1px solid #444;                                         /* 🎨 cinza-borda específico do modal */
     border-radius: 12px;
     padding: 8px 12px;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 15px;
     transition: 0.3s;
     font-size: 0.95rem;
@@ -1665,11 +1617,12 @@ select:focus-visible {
     padding: 8px 14px;
 }
 
-/* Foco do input acende em Branco/Prata */
 .modal-body-ajuste .main-novo-post textarea:focus {
-    border-color: #888;
+    border-color: #888;                                             /* fallback */
+    border-color: var(--texto-muted, #888);                        /* 🌅 FAGULHA – Fase 2 */
     outline: none;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.6);                                 /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.6));       /* 🌅 FAGULHA – Fase 2 */
 }
 
 .modal-body-ajuste .main-novo-post textarea {
@@ -1677,19 +1630,16 @@ select:focus-visible {
 }
 
 /* ============================================================
-   FORMULÁRIO VIVO – EXTENSÃO DOS ESTILOS EXISTENTES
+   11. FORMULÁRIO VIVO (DEDUPLICADO — uma só regra por seletor)
    ============================================================ */
-
-/* Container do formulário */
 .form-container-vivo {
     padding: 0;
     background: transparent;
 }
 
-/* Área de texto – fundo cinza escuro */
 .area-texto-vivo {
-    background: #16161d73;
-    border: 1px solid #333;
+    background: #16161d73;                                          /* 🎨 roxo-escuro com alpha específico */
+    border: 1px solid #333;                                         /* 🎨 cinza-borda específico */
     margin-bottom: 12px;
     transition: border-color 0.3s ease;
 }
@@ -1703,7 +1653,8 @@ select:focus-visible {
 }
 
 .area-texto-vivo:focus-within {
-    border-color: var(--dourado);
+    border-color: var(--dourado, #ffbc00);                          /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
 }
 
 #mensagem-vivo {
@@ -1716,7 +1667,8 @@ select:focus-visible {
     field-sizing: content;
     background: transparent;
     border: none;
-    color: #eee;
+    color: #eee;                                                    /* fallback */
+    color: var(--texto-secundario, #eee);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: 1rem;
     line-height: 1.4;
     padding: 4px;
@@ -1725,11 +1677,10 @@ select:focus-visible {
 }
 
 #mensagem-vivo::placeholder {
-    color: #a1a1a1;
+    color: #a1a1a1;                                                 /* 🎨 cinza-placeholder específico */
     font-style: italic;
 }
 
-/* Prévia da mídia – com botão remover */
 .previa-midia-vivo {
     margin-top: 12px;
     max-width: 100%;
@@ -1744,10 +1695,10 @@ select:focus-visible {
 
 .midia-wrapper img {
     width: 100%;
-    max-height: 220px;
+    max-height: 200px;                                              /* 🎨 venceu o max-height 220px (dedupe) */
     border-radius: 10px;
     object-fit: contain;
-    background: #000000c5;
+    background: #000000c5;                                          /* 🎨 preto com alpha específico */
     display: block;
     object-position: center;
 }
@@ -1756,12 +1707,13 @@ select:focus-visible {
     position: absolute;
     top: 6px;
     right: 6px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.7);                                 /* 🎨 preto com alpha específico */
     border: none;
     border-radius: 50%;
     width: 28px;
     height: 28px;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 14px;
     cursor: pointer;
     display: flex;
@@ -1771,35 +1723,35 @@ select:focus-visible {
 }
 
 .btn-remover-midia:hover {
-    background: rgba(255, 0, 0, 0.8);
+    background: rgba(255, 0, 0, 0.8);                               /* 🎨 vermelho com alpha específico */
     transform: scale(1.1);
 }
 
 #form-postar-vivo {
-
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 8px;
     align-items: center;
     justify-content: center;
-
 }
 
-/* Categoria – badge clean */
 #form-postar-vivo .campo-categoria-vivo {
     margin-bottom: 10px;
     align-self: flex-start;
 }
 
 .campo-categoria-vivo select {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 30px;
     padding: 6px 16px;
     padding-right: 36px;
-    color: #ccc;
-    color: oklch(84.522% 0.0001 271.152);
+    color: #ccc;                                                    /* fallback */
+    color: oklch(84.522% 0.0001 271.152);                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(84.522% 0.0001 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.041vw, 1.1rem);
     font-weight: 500;
@@ -1814,18 +1766,20 @@ select:focus-visible {
 }
 
 .campo-categoria-vivo select:hover {
-    border-color: var(--dourado);
-    background-color: rgba(255, 188, 0, 0.04);
+    border-color: var(--dourado, #ffbc00);                          /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    background-color: rgba(255, 188, 0, 0.04);                      /* 🎨 dourado com alpha específico */
 }
 
 .campo-categoria-vivo select option {
-    background: #1a1a1a;
-    background: oklch(21.779% 0.00002 271.152);
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
+    background: #1a1a1a;                                            /* fallback */
+    background: oklch(21.779% 0.00002 271.152);                     /* fallback moderno */
+    background: var(--bg-page-dark, oklch(21.779% 0.00002 271.152)); /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0.00011 271.152);                            /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0.00011 271.152));     /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Barra de ações global */
 .barra-acoes-vivo {
     display: flex;
     align-items: center;
@@ -1835,13 +1789,15 @@ select:focus-visible {
     flex-wrap: wrap;
     flex: 1 0 auto;
     padding: 8px 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);                /* fallback */
+    border-top: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)); /* 🌅 FAGULHA – Fase 2 */
 }
 
+/* 🎨 DEDUPE — venceu o segundo bloco (gap: 12px) */
 .acoes-esquerda,
 .acoes-direita {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
 }
 
@@ -1849,10 +1805,10 @@ select:focus-visible {
     flex-wrap: wrap;
 }
 
-/* contador com FIM DO TREMOR: Fonte com espaçamento fixo para números */
 .contador-caracteres {
-    color: #666;
-    color: oklch(51.028% 0.00006 271.152);
+    color: #666;                                                    /* fallback */
+    color: oklch(51.028% 0.00006 271.152);                         /* fallback moderno */
+    color: var(--texto-disabled, oklch(51.028% 0.00006 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 1.2vw, 0.95rem);
     font-weight: 600;
@@ -1860,13 +1816,14 @@ select:focus-visible {
     white-space: nowrap;
 }
 
-/* Botão cancelar – versão limpa */
 .btn-cancelar-vivo {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     padding: 6px 10px;
     border-radius: 30px;
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.85rem;
     font-size: clamp(0.75rem, 1.2vw, 0.95rem);
     cursor: pointer;
@@ -1874,12 +1831,14 @@ select:focus-visible {
 }
 
 .btn-cancelar-vivo:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.15);                        /* fallback */
+    border-color: var(--borda-card, rgba(255, 255, 255, 0.15));    /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Botão de GIF/Sticker no modal de post */
 .btn-acao-vivo {
     display: flex;
     align-items: center;
@@ -1890,11 +1849,14 @@ select:focus-visible {
     max-width: 100%;
     justify-content: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.2);                     /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 30px;
     padding: 10px 14px;
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 2vw, 1.1rem);
     font-weight: 500;
@@ -1902,21 +1864,26 @@ select:focus-visible {
     transition: color 0.2s ease;
 }
 
- .btn-acao-vivo:hover {
-    background: rgba(255, 188, 0, 0.08);
-    border-color: #fff;
-    color: #fc900c;
-    color: oklch(75.332% 0.17358 60.488);
+.btn-acao-vivo:hover {
+    background: rgba(255, 188, 0, 0.08);                            /* 🎨 dourado com alpha específico */
+    border-color: #fff;                                             /* fallback */
+    border-color: var(--texto-primario, #fff);                     /* 🌅 FAGULHA – Fase 2 */
+    color: #fc900c;                                                 /* fallback */
+    color: oklch(75.332% 0.17358 60.488);                          /* fallback moderno */
+    color: var(--cor-principal-laranja, oklch(75.332% 0.17358 60.488)); /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.03);
 }
 
- .btn-acao-vivo i {
+.btn-acao-vivo i {
     font-size: 1.1rem;
-    color: #ffbc00;
-    color: oklch(83.462% 0.1717 82.566);;
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.462% 0.1717 82.566);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.462% 0.1717 82.566));     /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Bio: Centralizada e com limite de largura */
+/* ============================================================
+   12. BIO E CONFIGURAÇÕES DO HABITANTE
+   ============================================================ */
 .campo-grupo textarea#bio,
 textarea[name="bio"] {
     width: 100% ;
@@ -1925,14 +1892,16 @@ textarea[name="bio"] {
     display: block;
     box-sizing: border-box;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.2);                     /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     line-height: 1.5;
     resize: none;
 }
-
 
 .card-body p,
 .perfil-info-publica p {
@@ -1941,20 +1910,15 @@ textarea[name="bio"] {
     white-space: pre-wrap;
     width: 100%;
     -webkit-hyphens: auto;
-    /*Safari/Chrome*/
     -ms-hyphens: auto;
-    /*IE/Edge */
     hyphens: auto;
     flex-grow: 1;
-
 }
 
-
-/* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
-
 .titulo-pagina {
-    color: var(--dourado);
-    color: oklch(0.834633 0.17177 82.5648);
+    color: var(--dourado);                                          /* fallback */
+    color: oklch(0.834633 0.17177 82.5648);                         /* fallback moderno */
+    color: var(--texto-dourado, oklch(0.834633 0.17177 82.5648));   /* 🌅 FAGULHA – Fase 2 */
     font-size: 1.05rem;
     margin-bottom: 15px;
     text-align: center;
@@ -1966,214 +1930,54 @@ textarea[name="bio"] {
     text-align: left;
     display: block;
     width: 100%;
-    color: #bbb;
-    color: oklch(79.208% 0.00009 271.152);
+    color: #bbb;                                                    /* fallback */
+    color: oklch(79.208% 0.00009 271.152);                         /* fallback moderno */
+    color: var(--texto-terciario, oklch(79.208% 0.00009 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: 15px;
     font-size: clamp(15px, 1.5vw, 18px);
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-/* Textarea (Bio) */
 .campo-grupo textarea {
     resize: vertical;
     min-height: 160px;
     max-height: 100%;
 }
 
-
 .pref_vibe_padrao select {
-    color: #bbb;
+    color: #bbb;                                                    /* fallback */
+    color: var(--texto-terciario, #bbb);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: 14px;
     margin-bottom: 15px;
     margin-top: 15px;
-
 }
 
-/* Estilo geral para Inputs e Textarea */
+.campo-grupo input[type="text"],
+.campo-grupo textarea {
+    width: 100%;
+    padding: 10px 14px;
+    background: #1a1a1a;                                            /* fallback */
+    background: oklch(21.779% 0.00002 271.152);                     /* fallback moderno */
+    background: var(--bg-page-dark, oklch(21.779% 0.00002 271.152)); /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid #333;                                         /* 🎨 cinza-borda específico */
+    border-radius: 8px;
+    color: #fff;                                                    /* fallback */
+    color: oklch(1 0 0 / 0.9);                                      /* fallback moderno */
+    color: var(--texto-primario, oklch(1 0 0 / 0.9));              /* 🌅 FAGULHA – Fase 2 */
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
 
-
-/* Efeito de foco (quando clica para digitar) */
 .campo-grupo input:focus-visible,
 .campo-grupo textarea:focus-visible {
     outline: none;
-    border-color: var(--dourado , #ffbc00);
-    background: #222;
-    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+    border-color: var(--dourado, #ffbc00);                          /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    background: #222;                                               /* 🎨 cinza-escuro específico do focus */
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);                     /* 🎨 glow dourado específico */
 }
 
-
-/* Wrapper do Username (Onde tem o @) */
-.input-username-wrapper {
-    display: flex;
-    flex: 1 ;
-    align-items: center;
-    border: 1px solid #333;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: 0.3s;
-    /* Correção do campo @Username */
-    height: 100%;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-    white-space: nowrap;
-    /* Impede que o @ pule pra baixo */
-    flex-shrink: 0;
-    /* Não deixa o @ espremer */
-
-}
-
-
-.input-username-wrapper input {
-    border: none ;
-    background: transparent ;
-    appearance: none;
-}
-
-/* Quando foca no campo de username, destaca o wrapper inteiro */
-.input-username-wrapper:focus-within {
-    border-color: #ffb11fe7;
-    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
-}
-
-.input-username-wrapper span {
-    color: var(--dourado);
-    padding: 0 10px;
-    font-weight: bold;
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-
-
-/* ============================================================
-   PARTE 1: FORMULÁRIO VIVO – ESTILOS EXISTENTES E GLOBAIS
-   ============================================================ */
-
-/* Container do formulário */
-.form-container-vivo {
-    padding: 0;
-    background: transparent;
-}
-
-/* Área de texto – fundo cinza escuro */
-.area-texto-vivo {
-    background: #16161d73;
-    border: 1px solid #333;
-    margin-bottom: 12px;
-    transition: border-color 0.3s ease;
-}
-
-.area-post-vivo {
-    border-radius: 12px;
-    padding: 10px 14px;
-    width: 100%;
-    flex: 1 1 auto;
-    justify-content: space-between;
-}
-
-.area-texto-vivo:focus-within {
-    border-color: var(--dourado, #ffbc00);
-}
-
-#mensagem-vivo {
-    display: flex;
-    width: 100%;
-    flex: 1 1 auto;
-    min-height: 50px;
-    max-height: 180px;
-    resize: vertical;
-    field-sizing: content;
-    background: transparent;
-    border: none;
-    color: #eee;
-    font-size: 1rem;
-    line-height: 1.4;
-    padding: 4px;
-    font-family: inherit;
-    outline: none;
-}
-
-#mensagem-vivo::placeholder {
-    color: #a1a1a1;
-    font-style: italic;
-}
-
-/* Prévia da mídia – com botão remover */
-.previa-midia-vivo {
-    margin-top: 12px;
-    max-width: 100%;
-}
-
-.midia-wrapper {
-    position: relative;
-    max-width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.midia-wrapper img {
-    width: 100%;
-    max-height: 200px;
-    border-radius: 10px;
-    object-fit: contain;
-    background: #000000c5;
-    display: block;
-    object-position: center;
-}
-
-.btn-remover-midia {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    background: rgba(0, 0, 0, 0.7);
-    border: none;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-}
-
-.btn-remover-midia:hover {
-    background: rgba(255, 0, 0, 0.8);
-    transform: scale(1.1);
-}
-
-#form-postar-vivo {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 8px;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Categoria – badge clean */
-#form-postar-vivo .campo-categoria-vivo {
-    margin-bottom: 10px;
-    align-self: flex-start;
-}
-
-
-.acoes-esquerda,
-.acoes-direita {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-
-
-
-
-/* Centraliza o rótulo "Bio" também */
 .campo-grupo label[for="bio"] {
     display: block ;
     text-align: left ;
@@ -2188,32 +1992,9 @@ form[action="confirma-login.php"] {
     width: 100%;
 }
 
-/* FORMULÁRIO DE CONFIGURAÇÕES (HABITANTE) */
-.titulo-pagina {
-    color: var(--dourado);
-    color: oklch(0.834633 0.17177 82.5648);
-    font-size: 1.05rem;
-    margin-bottom: 15px;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Textarea (Bio) */
-.campo-grupo textarea {
-    resize: vertical;
-    min-height: 160px;
-    max-height: 100%;
-}
-
-.pref_vibe_padrao select {
-    color: #bbb;
-    font-size: 14px;
-    margin-bottom: 15px;
-    margin-top: 15px;
-}
-
-/* Estilo geral para Inputs e Textarea */
+/* ============================================================
+   13. INPUTS GENÉRICOS DE FORMULÁRIO
+   ============================================================ */
 .container input,
 .container button,
 select,
@@ -2221,35 +2002,51 @@ textarea {
     padding: 10px;
     width: 100%;
     border-radius: 15px;
-    border: 1px solid #333;
+    border: 1px solid #333;                                         /* 🎨 cinza-borda específico */
     display: block;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-.campo-grupo input[type="text"],
-.campo-grupo textarea {
-    width: 100%;
-    padding: 10px 14px;
-    background: #1a1a1a;
-    border: 1px solid #333;
+.input-username-wrapper {
+    display: flex;
+    flex: 1 ;
+    align-items: center;
+    border: 1px solid #333;                                         /* 🎨 cinza-borda específico */
     border-radius: 8px;
-    color: #fff;
-    color: oklch(1 0 0 / 0.9);
-    font-family: 'Inter', sans-serif;
-    transition: all 0.3s ease;
+    overflow: hidden;
+    transition: 0.3s;
+    height: 100%;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* Efeito de foco (quando clica para digitar) */
-.campo-grupo input:focus-visible,
-.campo-grupo textarea:focus-visible {
-    outline: none;
-    border-color: var(--dourado, #ffbc00);
-    background: #222;
-    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+.input-username-wrapper input {
+    border: none ;
+    background: transparent ;
+    appearance: none;
 }
 
+.input-username-wrapper:focus-within {
+    border-color: #ffb11fe7;                                        /* 🎨 dourado com alpha específico */
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);                     /* 🎨 glow dourado específico */
+}
 
-/* Página perdidos */
+.input-username-wrapper span {
+    color: var(--dourado);                                          /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
+    padding: 0 10px;
+    font-weight: bold;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* ============================================================
+   14. PÁGINA PERDIDOS – BASE
+   ============================================================ */
 .painel-sessao {
     max-width: 100%;
     min-height: 100px;
@@ -2266,7 +2063,8 @@ textarea {
 }
 
 .painel-sessao p {
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 15px;
     font-size: 1.1rem;
     font-size: clamp(1.1rem, 4cqw, 1.8rem);
@@ -2275,8 +2073,10 @@ textarea {
 }
 
 .btn-sair-fenda {
-    background: #cc420c;
-    color: #fff;
+    background: #cc420c;                                            /* fallback */
+    background: var(--cor-perigo, #cc420c);                         /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     border: none;
     padding: 10px 24px;
     border-radius: 10px;
@@ -2288,18 +2088,11 @@ textarea {
 }
 
 .btn-sair-fenda:hover {
-    background: #ff4d00;
+    background: #ff4d00;                                            /* 🎨 laranja-vermelho específico do hover */
     transform: scale(1.05);
     filter: brightness(1.1);
 }
 
-
-
-/* ============================================================
-   PARTE 2: ESTILIZAÇÃO DA SESSÃO DE PUBLICAR E PRODUTO FINAL
-   ============================================================ */
-
-/* Blindagem absoluta contra estouros de padding */
 .main-perdidos,
 .main-perdidos *,
 section.sessao-publicar,
@@ -2308,7 +2101,6 @@ section.sessao-publicar,
     box-sizing: border-box;
 }
 
-/* Container Principal */
 .main-perdidos {
     width: 300px;
     padding: 4px;
@@ -2318,16 +2110,16 @@ section.sessao-publicar,
     max-width: 95%;
 }
 
-/* O Form de busca/filtro */
 .form-perdidos {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 15px;
     padding: clamp(10px, 4vw, 24px);
     margin-bottom: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Os Cards de Itens Perdidos */
 .perdidos-item.card-perdido,
 .perdidos-item.card-achado {
     margin-bottom: 20px;
@@ -2339,27 +2131,27 @@ section.sessao-publicar,
     background: var(--glass-bg);
 }
 
-/* O container que envolve o formulário de postagem */
 section.sessao-publicar {
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
-    border: 1px solid rgba(255, 255, 255, 0.007);
+    border: 1px solid rgba(255, 255, 255, 0.007);                   /* 🎨 quase transparente — específico */
     padding: 12px;
     margin: 20px auto;
-    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.37);
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.37);                   /* 🎨 sombra específica */
     max-width: 300px;
     max-width: clamp(280px, 90cqw, 600px);
-    background-color: #49414121;
-    background: rgba(0, 0, 0, 0.45);
+    background-color: #49414121;                                    /* fallback */
+    background: rgba(0, 0, 0, 0.45);                                /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.45));      /* 🌅 FAGULHA – Fase 2 */
     border-radius: 20px;
     height: auto;
 }
 
-
 .sessao-publicar h3,
 .titulo-publicar {
     font-family: 'Bebas Neue', sans-serif;
-    color: var(--dourado);
+    color: var(--dourado);                                          /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 20px;
     text-align: center;
     font-size: 1rem;
@@ -2367,17 +2159,19 @@ section.sessao-publicar {
 }
 
 .nota-seguranca {
-    background: rgba(252, 144, 12, 0.1);
-    border-left: 4px solid #fc900c;
+    background: rgba(252, 144, 12, 0.1);                            /* fallback */
+    background: color-mix(in srgb, var(--cor-principal-laranja, #fc900c) 10%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-left: 4px solid #fc900c;                                 /* fallback */
+    border-left: 4px solid var(--cor-principal-laranja, #fc900c);   /* 🌅 FAGULHA – Fase 2 */
     padding: 10px;
     font-size: 0.8rem;
     font-size: clamp(0.85rem, 2.5vw, 1.05rem);
-    color: #eee;
+    color: #eee;                                                    /* fallback */
+    color: var(--texto-secundario, #eee);                          /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 20px;
     border-radius: 4px;
 }
 
-/* --- O FORMULÁRIO EM ROW INTELIGENTE (FLEX WRAP) --- */
 .form-publicar {
     width: 100%;
     margin-top: 15px;
@@ -2388,7 +2182,6 @@ section.sessao-publicar {
     gap: 15px;
 }
 
-/* Os blocos de embrulho se adaptando */
 .form-publicar .input-group {
     margin-bottom: 0;
     flex: 1 1 calc(50% - 12px);
@@ -2399,7 +2192,6 @@ section.sessao-publicar {
     flex: 3 1 280px;
 }
 
-/* Estilo base dos seus inputs */
 .form-publicar select,
 .form-publicar textarea,
 .form-publicar .fenda-input {
@@ -2408,8 +2200,9 @@ section.sessao-publicar {
     max-width: 100%;
     padding: 8px;
     padding: clamp(10px, 1.5vw, 15px);
-    border: 1px solid rgba(7, 4, 4, 0.2);
-    color: #fff;
+    border: 1px solid rgba(7, 4, 4, 0.2);                           /* 🎨 quase preto com alpha específico */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     border-radius: 14px;
     margin-bottom: 0;
 }
@@ -2420,10 +2213,10 @@ section.sessao-publicar {
 }
 
 #imagem.fenda-input {
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.219);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.219);                       /* 🎨 sombra específica do input de imagem */
     border-radius: 10px;
-    background-color: #0a0a0a9c;
-    color: #f0cd05e8;
+    background-color: #0a0a0a9c;                                    /* 🎨 preto com alpha específico */
+    color: #f0cd05e8;                                               /* 🎨 dourado-claro específico */
     font-style: none;
     padding: 4px 8px;
     align-content: center;
@@ -2446,16 +2239,20 @@ section.sessao-publicar {
 
 .form-publicar select:focus-visible,
 .form-publicar textarea:focus-visible {
-    border-color: #ffbc00;
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: var(--texto-dourado, #ffbc00);                   /* 🌅 FAGULHA – Fase 2 */
     outline: none;
 }
 
 .fenda-input {
     width: 100%;
     height: auto;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(0, 0, 0, 0.3);                                 /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.3));       /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    color: white;                                                   /* fallback */
+    color: var(--texto-primario, white);                           /* 🌅 FAGULHA – Fase 2 */
     padding: 15px;
     border-radius: 8px;
     font-size: 1rem;
@@ -2464,14 +2261,15 @@ section.sessao-publicar {
 }
 
 .fenda-input:focus-visible {
-    border-color: var(--dourado);
-    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);
+    border-color: var(--dourado);                                   /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);                     /* 🎨 glow dourado específico */
 }
 
-/* O Botão de Lançar se comportando na grade flex */
 .btn-lancar {
-    background: #7cd632e8;
-    color: black;
+    background: #7cd632e8;                                          /* 🎨 verde-limão de marca */
+    color: black;                                                   /* fallback */
+    color: var(--bg-page-dark, black);                             /* 🌅 FAGULHA – Fase 2 */
     border: none;
     height: 40px;
     padding: 0 12px;
@@ -2488,54 +2286,47 @@ section.sessao-publicar {
 }
 
 .btn-lancar:hover {
-    background: #c8ff00d3;
+    background: #c8ff00d3;                                          /* 🎨 verde-limão-claro de marca */
     transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(255, 188, 0, 0.3);
+    box-shadow: 0 5px 10px rgba(255, 188, 0, 0.3);                  /* 🎨 glow específico */
 }
 
 /* ============================================================
-   AJUSTE DE ESPECIFICIDADE PARA PÁGINA PERDIDOS (DEITADO E SEM TREMOR)
+   15. FORM PERDIDOS (VIVO — DEITADO)
    ============================================================ */
-
-   /* ============================================================
-   CONTAINER DO FORMULÁRIO (VIRA DEITADO EM TELAS GRANDES)
-   ============================================================ */
-
-/* Anula os flex-wraps e alinhamentos inferiores herdados lá de cima */
 .form-publicar.form-perdidos-vivo {
     display: flex ;
     flex-direction: column ;
     align-items: center ;
     gap: 12px ;
-    background: #00000066; 
-    background: oklch(0 0 0 / 0.4) ;
+    background: #00000066;                                          /* fallback */
+    background: oklch(0 0 0 / 0.4) ;                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0 0 0 / 0.4)) ;      /* 🌅 FAGULHA – Fase 2 */
     padding: 12px ;
     border-radius: 16px ;
-    border: 1px solid rgba(255, 255, 255, 0.06) ;
+    border: 1px solid rgba(255, 255, 255, 0.06) ;                   /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)) ; /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 0 ;
     box-sizing: border-box;
     max-width: 100% ;
     width: 100% ;
 }
 
-
-
-
-/* Caixa de Texto */
 .form-perdidos-vivo .area-perdidos-vivo {
     border-radius: 12px ;
     padding: 10px 14px ;
     width: 100% ;
     transition: border-color 0.3s ease ;
     flex: 1 1 auto ;
-    background: rgba(0, 0, 0, 0.25) ;
+    background: rgba(0, 0, 0, 0.25) ;                               /* 🎨 preto com alpha específico */
     justify-content: space-between ;
     display: flex ;
     flex-direction: column ;
 }
 
 .form-perdidos-vivo .area-perdidos-vivo:focus-within {
-    border-color: var(--dourado) ;
+    border-color: var(--dourado) ;                                  /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00)) ;  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .form-perdidos-vivo #mensagem-perdidos {
@@ -2543,10 +2334,11 @@ section.sessao-publicar {
     min-height: 80px ;
     max-height: 200px ;
     background: transparent ;
-    color: #eee ;
+    color: #eee ;                                                   /* fallback */
+    color: var(--texto-secundario, #eee) ;                         /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.95rem ;
     line-height: 1.6 ;
-    resize: none ; /* Desliga o resize para não quebrar o alinhamento em linha */
+    resize: none ;
     padding: 0 ;
     font-family: inherit ;
     outline: none ;
@@ -2554,13 +2346,14 @@ section.sessao-publicar {
 }
 
 #mensagem-perdidos::placeholder {
-    color: #666;
+    color: #666;                                                    /* fallback */
+    color: var(--texto-disabled, #666);                            /* 🌅 FAGULHA – Fase 2 */
     font-style: italic;
 }
 
-/* Barra de ações interna (Efeito Space-Between Corrigido) */
 .form-perdidos-vivo .barra-perdidos-vivo {
-    border-top: 1px solid rgba(255, 255, 255, 0.04) ;
+    border-top: 1px solid rgba(255, 255, 255, 0.04) ;               /* fallback */
+    border-top: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)) ; /* 🌅 FAGULHA – Fase 2 */
     padding-top: 8px ;
     margin-top: 4px ;
     display: flex ;
@@ -2587,7 +2380,6 @@ section.sessao-publicar {
     max-width: 100%;
 }
 
-/* TRAVA DO TREMOR: Congela as larguras numéricas */
 .form-perdidos-vivo .contador-caracteres {
     color: #aaaaaa ;
     color: oklch(73.802% 0.00008 271.152);
@@ -2598,10 +2390,10 @@ section.sessao-publicar {
     white-space: nowrap ;
 }
 
-/* Botão Lançar da página de perdidos */
 .form-perdidos-vivo .btn-lancar-perdidos {
-    background: #7cd632e8 ;
-    color: #000 ;
+    background: #7cd632e8 ;                                         /* 🎨 verde-limão de marca */
+    color: #000 ;                                                   /* fallback */
+    color: var(--bg-page-dark, #000) ;                             /* 🌅 FAGULHA – Fase 2 */
     border: none ;
     display: flex;
     justify-content: center;
@@ -2619,23 +2411,18 @@ section.sessao-publicar {
     transition: color 0.3s ease ;
     height: auto ;
     max-width: 250px;
-    
 }
-    
 
 .form-perdidos-vivo .btn-lancar-perdidos:hover {
-    background: #c8ff00d3 ;
-    background: oklch(92.812% 0.23031 123.995 / 0.827) ;
+    background: #c8ff00d3 ;                                         /* fallback */
+    background: oklch(92.812% 0.23031 123.995 / 0.827) ;            /* 🎨 verde-limão com alpha específico */
     transform: scale(1.02) ;
-    box-shadow: 0 6px 12px rgba(179, 255, 0, 0.3) ;
+    box-shadow: 0 6px 12px rgba(179, 255, 0, 0.3) ;                 /* 🎨 glow verde-limão específico */
 }
 
-
-
 /* ============================================================
-   BOTÕES DE TOGGLE (PERDI / ACHEI)
+   16. TOGGLE PERDI/ACHEI
    ============================================================ */
-/* Toggle de Perdi/Achei */
 .toggle-perdidos-vivo {
     display: flex;
     gap: 15px;
@@ -2645,15 +2432,17 @@ section.sessao-publicar {
     align-self: flex-start;
 }
 
-
 .btn-toggle-perdido {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 28px;
     padding: 6px 12px;
     padding: clamp(6px, 1.2vw, 10px) clamp(10px, 1.5vw, 12px);
-    color: #aaa;
-    color: oklch(73.802% 0.00008 271.152);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(73.802% 0.00008 271.152);                         /* fallback moderno */
+    color: var(--texto-terciario, oklch(73.802% 0.00008 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.85rem;
     font-size: clamp(0.77em, 1.8cqi, 0.95em);
     font-weight: 600;
@@ -2668,36 +2457,42 @@ section.sessao-publicar {
 }
 
 .btn-toggle-perdido:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
+    background: rgba(255, 255, 255, 0.08);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08));  /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.15);                        /* fallback */
+    border-color: var(--borda-card, rgba(255, 255, 255, 0.15));    /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0.00011 271.152);                            /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0.00011 271.152));     /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-toggle-perdido.ativo[data-valor="perdi"] {
-    background: rgba(204, 66, 12, 0.3);
-    border-color: #cc420c;
-    color: #ff8a5e;
-    box-shadow: 0 0 15px rgba(204, 66, 12, 0.15);
+    background: rgba(204, 66, 12, 0.3);                             /* fallback */
+    background: color-mix(in srgb, var(--cor-perigo, #cc420c) 30%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-color: #cc420c;                                          /* fallback */
+    border-color: var(--cor-perigo, #cc420c);                      /* 🌅 FAGULHA – Fase 2 */
+    color: #ff8a5e;                                                 /* 🎨 laranja-queimado específico */
+    box-shadow: 0 0 15px rgba(204, 66, 12, 0.15);                   /* 🎨 glow específico */
 }
 
 .btn-toggle-perdido.ativo[data-valor="achei"] {
-    background: rgba(46, 204, 112, 0.2);
-    border-color: #2ecc71;
-    color: #5dffa0;
-    box-shadow: 0 0 15px rgba(46, 204, 113, 0.15);
+    background: rgba(46, 204, 112, 0.2);                            /* fallback */
+    background: color-mix(in srgb, #2ecc71 20%, transparent);      /* 🎨 verde-específico do "achei" */
+    border-color: #2ecc71;                                          /* 🎨 verde-específico do "achei" */
+    color: #5dffa0;                                                 /* 🎨 verde-claro específico */
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.15);                  /* 🎨 glow específico */
 }
 
-
 /* ============================================================
-   ÁREA DE TEXTO (GANHA VISUAL DE CAIXA UNIFICADA)
+   17. ÁREA PERDIDOS + BARRA + BOTÃO PUBLICAR
    ============================================================ */
 .area-perdidos-vivo {
     display: flex;
     flex-direction: column;
-    flex: 1; /* Ocupa o meio do formulário deitado */
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    flex: 1;
+    background: rgba(0, 0, 0, 0.25);                                /* 🎨 preto com alpha específico */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     padding: 12px 14px;
     min-height: 120px;
@@ -2706,18 +2501,20 @@ section.sessao-publicar {
 }
 
 .area-perdidos-vivo:focus-within {
-    border-color: #fc900c; /* Dourado/Laranja do seu tema */
-    box-shadow: 0 0 10px rgba(252, 144, 12, 0.15);
+    border-color: #fc900c;                                          /* fallback */
+    border-color: var(--cor-principal-laranja, #fc900c);           /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 0 10px rgba(252, 144, 12, 0.15);                  /* 🎨 glow laranja específico */
 }
 
 #mensagem-perdidos {
     width: 100%;
     flex: 1;
     background: transparent;
-    color: #eee;
+    color: #eee;                                                    /* fallback */
+    color: var(--texto-secundario, #eee);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.95rem;
     line-height: 1.5;
-    resize: none; /* Desativado para o layout deitado não quebrar */
+    resize: none;
     outline: none;
     border: none;
     padding: 0;
@@ -2725,25 +2522,23 @@ section.sessao-publicar {
 }
 
 #mensagem-perdidos::placeholder {
-    color: #666;
+    color: #666;                                                    /* fallback */
+    color: var(--texto-disabled, #666);                            /* 🌅 FAGULHA – Fase 2 */
     font-style: italic;
 }
 
-/* ============================================================
-   BARRA DE AÇÕES (REPOUSANDO ABAIXO DO TEXTO)
-   ============================================================ */
 .barra-perdidos-vivo {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);                /* fallback */
+    border-top: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     padding-top: 8px;
-    margin-top: auto; /* Força ir para o final da caixa */
+    margin-top: auto;
     gap: 15px;
     align-self: stretch;
 }
 
-/* Alinhando os grupos internos originais */
 .barra-perdidos-vivo .acoes-esquerda {
     display: flex;
     gap: 12px;
@@ -2755,17 +2550,13 @@ section.sessao-publicar {
     gap: 15px;
     align-items: center;
     flex: 1;
-    justify-content: flex-end; /* Joga o contador e botão para a direita */
+    justify-content: flex-end;
 }
 
-
-
-/* ============================================================
-   BOTÃO PUBLICAR
-   ============================================================ */
 .btn-lancar-perdidos {
-    background: #7cd632e8;
-    color: #000;
+    background: #7cd632e8;                                          /* 🎨 verde-limão de marca */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     border: none;
     padding: 10px 20px;
     border-radius: 30px;
@@ -2780,26 +2571,18 @@ section.sessao-publicar {
 }
 
 .btn-lancar-perdidos:hover {
-    background: #c8ff00d3;
+    background: #c8ff00d3;                                          /* 🎨 verde-limão-claro de marca */
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(124, 214, 50, 0.25);
+    box-shadow: 0 5px 15px rgba(124, 214, 50, 0.25);                /* 🎨 glow verde-limão específico */
 }
 
-
-
-
-
-
-
-
-
-/* ESTILO DOS BOTÕES DE EDIÇÃO */
-
+/* ============================================================
+   18. EDITOR DE PERFIL (capa, avatar, botões)
+   ============================================================ */
 .avatar-pequeno {
     gap: 20px;
     justify-content: center;
     display: flex;
-
 }
 
 .avatar.de.inicio {
@@ -2813,9 +2596,8 @@ section.sessao-publicar {
     align-content: center;
     border-radius: 50%;
     border: none !important;
-    /* Efeito de esmaecer nas bordas (ficar fantasmagórico) */
-    -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
-    mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);
+    -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%); /* 🎨 gradiente específico do mask */
+    mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);          /* 🎨 gradiente específico do mask */
     transition: transform 0.3s ease;
 }
 
@@ -2823,12 +2605,9 @@ section.sessao-publicar {
     transform: scale(1.1);
 }
 
-
-/* Container da Capa (O molde) */
 .capa-wrapper.viewer {
     width: 100%;
     max-width: 100%;
-    /* O aspect-ratio no container garante que o espaço reserve o tamanho antes da foto carregar */
     aspect-ratio: 16 / 8;
     overflow: hidden;
     border-radius: 15px 15px 0 0;
@@ -2837,19 +2616,16 @@ section.sessao-publicar {
     justify-content: center;
 }
 
-/* A Imagem da Capa (O conteúdo) */
 .img-capa-preview {
     max-width: 100%;
     max-height: 100%;
-    background: #1a1a1a;
+    background: #1a1a1a;                                            /* 🎨 cinza-escuro específico */
     object-fit: contain;
     object-position: center 25% ;
-    /* Foca um pouco acima do meio */
     display: block;
     aspect-ratio: 16 / 8;
 }
 
-/* O container do Avatar - Foto de perfil */
 .avatar-wrapper {
     position: relative;
     width: 65px;
@@ -2864,19 +2640,17 @@ section.sessao-publicar {
     align-items: center;
 }
 
-/* 1. Botão da Câmera (Capa) */
-
 .btn-mudar-capa {
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.6);                                 /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.6));       /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     width: clamp(30px, 4vw + 6px, 48px);
     height: clamp(30px, 4vw + 6px, 48px);
     right: 20px;
     right: clamp(15px, 2vw, 40px);
-    /* Margem lateral fluida */
     bottom: 20px;
     bottom: clamp(15px, 2vw, 40px);
-    /* Margem inferior fluida */
     font-size: 14px;
     font-size: clamp(14px, 2vw, 20px);
     border-radius: 50%;
@@ -2886,24 +2660,25 @@ section.sessao-publicar {
     cursor: pointer;
     position: absolute;
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);                     /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.3)); /* 🌅 FAGULHA – Fase 2 */
     z-index: 10;
 }
 
 .btn-mudar-capa:hover {
-     /* Fallback */
-    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
-    background: var(--laranja-fenda);
+    background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824)); /* fallback */
+    background: var(--laranja-fenda);                              /* 🎨 gradiente de marca — já é variável */
     transform: scale(1.2);
 }
 
-/* 2. Botão do Lápis (Trocar Avatar) */
 .btn-mudar-avatar {
     position: absolute;
     right: 0;
     bottom: 5px;
-    background: var(--dourado);
-    color: #000;
+    background: var(--dourado);                                     /* fallback */
+    background: var(--texto-dourado, var(--dourado, #ffbc00));     /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     width: clamp(25px, 3.5vw, 45px);
     height: clamp(25px, 3.5vw, 45px);
     border-radius: 50%;
@@ -2911,9 +2686,10 @@ section.sessao-publicar {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica do lápis */
     transition: 0.3s;
-    border: 2px solid #0a0a0a;
+    border: 2px solid #0a0a0a;                                      /* fallback */
+    border: 2px solid var(--bg-page-dark, #0a0a0a);                /* 🌅 FAGULHA – Fase 2 */
     z-index: 15;
 }
 
@@ -2922,12 +2698,10 @@ section.sessao-publicar {
 }
 
 .btn-mudar-avatar:hover {
-    background: #fff;
+    background: #fff;                                               /* fallback */
+    background: var(--texto-primario, #fff);                       /* 🌅 FAGULHA – Fase 2 */
     transform: rotate(-15deg) scale(1.2);
-    /* Efeito de inclinação no lápis */
 }
-
-/*  AVATAR (CAPIVARA) */
 
 .perfil-header-container {
     width: 100%;
@@ -2939,17 +2713,15 @@ section.sessao-publicar {
     position: relative;
 }
 
-
-
-/* Tira o azul chato do Checkbox no Mobile */
 input[type="checkbox"]:focus-visible {
     outline: none;
     box-shadow: none;
 }
 
 .btn-salvar-perfil {
-    background: linear-gradient(135deg, #08d888, #05a870);
-    color: white;
+    background: linear-gradient(135deg, #08d888, #05a870);          /* 🎨 gradiente verde de marca */
+    color: white;                                                   /* fallback */
+    color: var(--texto-primario, white);                           /* 🌅 FAGULHA – Fase 2 */
     border: none;
     padding: 10px;
     border-radius: 8px;
@@ -2961,12 +2733,11 @@ input[type="checkbox"]:focus-visible {
 }
 
 .btn-salvar-perfil:hover {
-    background-color: #fff;
+    background-color: #fff;                                         /* fallback */
+    background-color: var(--texto-primario, #fff);                 /* 🌅 FAGULHA – Fase 2 */
     transform: translateY(-4px);
-    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(255, 188, 0, 0.3);                  /* 🎨 glow dourado específico */
 }
-
-
 
 .btn-classificados {
     display: inline-flex;
@@ -2985,16 +2756,16 @@ input[type="checkbox"]:focus-visible {
     user-select: none;
     text-transform: uppercase;
     text-decoration: none;
-    background: var(--dourado);
-    color: #000;
+    background: var(--dourado);                                     /* fallback */
+    background: var(--texto-dourado, var(--dourado, #ffbc00));     /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50px;
     border: none;
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-
-/* 1. REGRAS GERAIS (Ajustadas para Flex) */
 .perfil-controles .btn-editar-atalho {
     display: inline-flex;
     justify-content: center;
@@ -3010,23 +2781,19 @@ input[type="checkbox"]:focus-visible {
     user-select: none;
     text-transform: uppercase;
     text-decoration: none;
-    background: var(--dourado);
-    color: #000;
+    background: var(--dourado);                                     /* fallback */
+    background: var(--texto-dourado, var(--dourado, #ffbc00));     /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50px;
     border: none;
     cursor: pointer;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Ajuste nos botões para responderem ao container flex */
-.perfil-controles .btn-editar-atalho {
     flex: 1 1 150px;
     max-width: 100%;
     text-align: center;
     align-items: center;
-
 }
-
 
 .btn-editar-perfil:hover,
 .btn-seguir:hover,
@@ -3034,33 +2801,29 @@ input[type="checkbox"]:focus-visible {
 .btn-seguir-fenda:hover {
     transform: scale(1.03);
     filter: brightness(1.05);
-    box-shadow: 0 8px 15px rgba(255, 188, 0, 0.4);
+    box-shadow: 0 8px 15px rgba(255, 188, 0, 0.4);                  /* 🎨 glow dourado específico */
 }
 
-
-/*  AVATAR E A PRESENÇA */
-
-/* A Imagem prévia em si: redonda e centrada */
 .img-avatar-perfil {
     width: 100%;
     height: 100%;
     aspect-ratio: 1/1;
     object-fit: cover;
-    border: rgba(250, 113, 22, 0.698);
-    border: 3px solid var(--aura-user, #fa7116b2 );
-    background: #000;
-    background: oklch(0% 0 0);
+    border: rgba(250, 113, 22, 0.698);                              /* fallback */
+    border: 3px solid var(--aura-user, #fa7116b2 );                /* 🎨 dinâmica via PHP — preservada */
+    background: #000;                                               /* fallback */
+    background: oklch(0% 0 0);                                      /* fallback moderno */
+    background: var(--bg-page-dark, oklch(0% 0 0));                /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
     display: block ;
     margin: 0 auto ;
     box-sizing: border-box;
 }
 
-/* --- EASTER EGG: A PRESENÇA (ID 1) --- */
-
 .perfil-gold .img-avatar-perfil {
-    border-color: var(--dourado);
-    box-shadow: 0 0 10px rgba(255, 187, 0, 0.822);
+    border-color: var(--dourado);                                   /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 0 10px rgba(255, 187, 0, 0.822);                  /* 🎨 glow dourado específico */
 }
 
 .perfil-gold .capa-container {
@@ -3068,14 +2831,16 @@ input[type="checkbox"]:focus-visible {
 }
 
 .perfil-gold .img-capa-preview {
-    border: 2px solid var(--dourado, #ffbc00fc);
+    border: 2px solid var(--dourado, #ffbc00fc);                    /* fallback */
+    border: 2px solid var(--texto-dourado, var(--dourado, #ffbc00fc)); /* 🌅 FAGULHA – Fase 2 */
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
     border-radius: 20px;
 }
 
 .perfil-gold .img-capa-viewer {
-    border: 2px solid var(--dourado);
+    border: 2px solid var(--dourado);                               /* fallback */
+    border: 2px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 20px;
 }
 
@@ -3083,46 +2848,44 @@ input[type="checkbox"]:focus-visible {
     display: block;
     width: fit-content;
     margin: 25px 40px 0 auto;
-    background: linear-gradient(45deg, var(--dourado), #ffee00e0);
-    color: #000;
+    background: linear-gradient(45deg, var(--dourado), #ffee00e0);  /* 🎨 gradiente dourado específico */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     padding: 4px 12px;
     border-radius: 4px;
     font-weight: 900;
     font-size: 1.1rem;
     text-transform: uppercase;
-    border: 2px solid #fff;
-    box-shadow: 0 0 8px rgba(255, 188, 0, 0.4);
+    border: 2px solid #fff;                                         /* fallback */
+    border: 2px solid var(--texto-primario, #fff);                 /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.4);                     /* 🎨 glow dourado específico */
     position: relative;
     z-index: 10;
 }
 
-
-
 /* ============================================================
-   PADRONIZAÇÃO DEFINITIVA DO LOGIN (FENDA UNIFEV)
+   19. LOGIN PADRONIZADO
    ============================================================ */
-
-/* 1. O Container Principal (Onde ficam as fotos e os campos) */
 form[action="confirma-login.php"] .container {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.4);                                 /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.4));       /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border-radius: 15px;
     padding: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);                      /* 🎨 sombra específica do login */
     margin-top: 20px;
 }
 
-/* 2. Os Labels (E-mail e Senha - Texto em cima) */
 form[action="confirma-login.php"] label b {
-    color: #dd7c0e;
+    color: #dd7c0e;                                                 /* 🎨 laranja-dourado específico */
     font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* 3. Estilizando os Inputs (E-mail e Senha) */
 form[action="confirma-login.php"] .input-group {
     border: none;
     margin-bottom: 15px;
@@ -3134,11 +2897,13 @@ form[action="confirma-login.php"] input[type="email"],
 form[action="confirma-login.php"] input[type="password"],
 input:-internal-autofill-selected {
     width: 100%;
-    background: rgba(255, 255, 255, 0.08);
-    background: oklch(0.96 0 0 / 0.08);
-    color: #ffffff;
-    color: oklch(0.97 0 0 / 1);
-    border: 2px solid rgba(255, 188, 0, 0.5);
+    background: rgba(255, 255, 255, 0.08);                          /* fallback */
+    background: oklch(0.96 0 0 / 0.08);                             /* fallback moderno */
+    background: var(--bg-input-hover, oklch(0.96 0 0 / 0.08));     /* 🌅 FAGULHA – Fase 2 */
+    color: #ffffff;                                                 /* fallback */
+    color: oklch(0.97 0 0 / 1);                                     /* fallback moderno */
+    color: var(--texto-primario, oklch(0.97 0 0 / 1));             /* 🌅 FAGULHA – Fase 2 */
+    border: 2px solid rgba(255, 188, 0, 0.5);                       /* 🎨 dourado com alpha específico */
     border-radius: 10px;
     padding: 10px 12px;
     font-size: 0.85rem;
@@ -3149,31 +2914,25 @@ input:-internal-autofill-selected {
     transition: 0.3s ease;
 }
 
-/* 4. Efeito de Foco */
-form[action="confirma-login.php"] input:focus-visible
- {
-    border-color: #ddbe0e;
-    background: rgba(255, 255, 255, 0.027);
-    box-shadow: 0 0 8px rgba(221, 200, 14, 0.3);
+form[action="confirma-login.php"] input:focus-visible {
+    border-color: #ddbe0e;                                          /* 🎨 dourado-claro específico */
+    background: rgba(255, 255, 255, 0.027);                         /* 🎨 branco com alpha quase nulo */
+    box-shadow: 0 0 8px rgba(221, 200, 14, 0.3);                    /* 🎨 glow dourado específico */
 }
 
-
-/* 5. Checkbox e Links Inferiores */
 #terms {
-    accent-color: #157b00cf;
+    accent-color: #157b00cf;                                        /* 🎨 verde-acento específico */
 }
 
-/* Garante que o texto de "Cadastre-se" não suma no fundo escuro */
 form[action="confirma-login.php"] a {
-    color: #13eddbf0;
+    color: #13eddbf0;                                               /* 🎨 ciano-específico */
     text-decoration: none;
     font-weight: bold;
 }
 
-
-/* A VINGANÇA CONTRA O IPHONE 4 E O CAPIROTO DA MARGEM ESQUERDA */
-
-/* 1. Reset de Centralização do Container Principal */
+/* ============================================================
+   20. CONFIGURAÇÃO DE PERFIL – CONTAINER + CONTROLES
+   ============================================================ */
 .main-perfil-container-config {
     flex-direction: column;
     align-items: center;
@@ -3185,28 +2944,23 @@ form[action="confirma-login.php"] a {
     border-radius: 16px;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    border: 1px solid #cccccc;
+    border: 1px solid #cccccc;                                      /* 🎨 cinza-claro específico */
     max-width: 800px;
-    background: #0d0d0db4;
+    background: #0d0d0db4;                                          /* 🎨 preto com alpha específico */
 }
-/*  O CONTAINER PAI (Atualizado para Row Responsivo) */
+
 .perfil-controles {
     display: flex;
-    /* Mudado de inline-flex para flex puro */
     flex-direction: row;
     flex-wrap: wrap;
-    /* Permite quebrar a linha (um embaixo do outro) no celular */
     justify-content: space-between;
     align-items: center;
-    /* Alinha os botões verticalmente no meio */
     gap: 15px;
     margin: 15px auto;
     width: 100%;
     clear: both;
 }
 
-
-/* 2. Forçar o Formulário a ser uma coluna só (Mata o Grid bugado) */
 .form-perfil-corpo {
     display: flex;
     flex-direction: column;
@@ -3215,10 +2969,8 @@ form[action="confirma-login.php"] a {
     box-sizing: border-box;
     margin: 10px auto;
     gap: 15px;
-
 }
 
-/* 3. Garantir que cada campo ocupe 100% da largura disponível */
 .campo-grupo {
     width: 100%;
     margin-bottom: 20px;
@@ -3226,18 +2978,18 @@ form[action="confirma-login.php"] a {
     display: flex;
     flex-direction: column;
     grid-column: span 1;
-   
-}
-#username-helper,
-#nome-helper {
-  color:#777; 
-  color: oklch(56.926% 0.00006 271.152);
-  font-size: 0.8rem;
-  font-size: clamp(0.75rem, 0.7vw , 1rem);
-  transition: color 0.2s;
 }
 
-/* 4. Estilo dos Inputs para não vazarem */
+#username-helper,
+#nome-helper {
+    color: #777;                                                    /* fallback */
+    color: oklch(56.926% 0.00006 271.152);                         /* fallback moderno */
+    color: var(--texto-disabled, oklch(56.926% 0.00006 271.152));   /* 🌅 FAGULHA – Fase 2 */
+    font-size: 0.8rem;
+    font-size: clamp(0.75rem, 0.7vw , 1rem);
+    transition: color 0.2s;
+}
+
 input[type="email"],
 input[type="password"],
 select,
@@ -3248,55 +3000,50 @@ textarea {
     padding: 8px;
 }
 
-/* SISTEMA DE MENÇÕES E FUNÇÃO DE AUTOCOMPLETE */
-
-/* 1. Base da Lista */
+/* ============================================================
+   21. SISTEMA DE MENÇÕES / AUTOCOMPLETE
+   ============================================================ */
 .lista-mencoes-flutuante {
-    background: white;
-    border: 1px solid #ccc;
+    background: white;                                              /* 🎨 branco específico do autocomplete */
+    border: 1px solid #ccc;                                         /* 🎨 cinza-borda específico */
     z-index: 9999999 !important;
     position: fixed;
     display: none;
     padding: 6px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);                      /* 🎨 sombra específica */
     max-height: 150px;
-    /* Limita a altura */
     overflow-y: auto;
-    /* Habilita o scroll se passar disso */
 }
 
-/* 2. Estilo dos Itens (Padrão) */
 .lista-mencoes-flutuante div {
     padding: 8px;
-    color: #333;
-    /* Texto escuro no fundo branco */
+    color: #333;                                                    /* 🎨 texto escuro específico */
     cursor: pointer;
 }
 
 .lista-mencoes-flutuante div:hover {
-    /* Cinza claro no hover padrão */
-    color: #000000f6;
+    color: #000000f6;                                               /* 🎨 quase-preto com alpha específico */
 }
 
-/* 3. Modo Dark (Modal) */
 .lista-mencoes-flutuante.modal-theme {
-    background: #2a2a2a;
-    border: 1px solid var(--dourado);
+    background: #2a2a2a;                                            /* 🎨 cinza-escuro específico */
+    border: 1px solid var(--dourado);                               /* fallback */
+    border: 1px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .lista-mencoes-flutuante.modal-theme div {
-    color: #fff;
-    /* Texto branco no fundo escuro */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .lista-mencoes-flutuante.modal-theme div:hover {
-    background: #ffdb0054;
-    background: oklch(0.9 0.21 95.91 / 0.33);
-    color: #e3e3e3;
+    background: #ffdb0054;                                          /* fallback */
+    background: oklch(0.9 0.21 95.91 / 0.33);                       /* 🎨 dourado com alpha específico */
+    color: #e3e3e3;                                                 /* fallback */
+    color: var(--texto-secundario, #e3e3e3);                       /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Container que vai segurar as sugestões abaixo do input buscar usuarios */
 .container-autocomplete {
     position: relative;
     width: 100%;
@@ -3305,15 +3052,13 @@ textarea {
 .dropdown-busca {
     position: absolute;
     top: 100%;
-    /* Fica logo abaixo do input */
     left: 0;
     width: 100%;
-    background: #1a1a1a77;
-    border: 1px solid #444;
+    background: #1a1a1a77;                                          /* 🎨 preto com alpha específico */
+    border: 1px solid #444;                                         /* 🎨 cinza-borda específico */
     border-radius: 0 0 10px 10px;
     z-index: 9999;
     display: none;
-    /* Escondido por padrão */
     max-height: 300px;
     overflow-y: auto;
 }
@@ -3321,28 +3066,30 @@ textarea {
 .item-sugestao {
     padding: 10px;
     cursor: pointer;
-    color: #fff;
-    border-bottom: 1px solid #333;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    border-bottom: 1px solid #333;                                  /* 🎨 cinza-borda específico */
     display: flex;
     align-items: center;
 }
 
 .item-sugestao:hover {
-    background: #333;
+    background: #333;                                               /* 🎨 cinza-escuro específico */
 }
 
 /* ============================================================
-   BALÃO DE FALA – FENDA VERSION
+   22. BALÃO DE FALA (FENDA VERSION)
    ============================================================ */
 .balao-fenda {
     position: fixed;
-    background: rgba(10, 10, 10, 0.92);
+    background: rgba(10, 10, 10, 0.92);                             /* 🎨 preto com alpha específico */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    color: #f0f0f0;
+    color: #f0f0f0;                                                 /* fallback */
+    color: var(--texto-primario, #f0f0f0);                         /* 🌅 FAGULHA – Fase 2 */
     padding: 12px 20px 12px 16px;
     border-radius: 16px 16px 16px 4px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05); /* 🎨 sombra + borda específicas */
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 1.5vw, 1rem);
     font-weight: 500;
@@ -3357,7 +3104,6 @@ textarea {
     transition: opacity 0.2s ease;
 }
 
-/* Rabinho (triângulo) */
 .balao-fenda::after {
     content: '';
     position: absolute;
@@ -3365,50 +3111,48 @@ textarea {
     left: 24px;
     border-width: 10px 10px 0 10px;
     border-style: solid;
-    border-color: rgba(10, 10, 10, 0.92) transparent transparent transparent;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    border-color: rgba(10, 10, 10, 0.92) transparent transparent transparent; /* 🎨 cor específica do rabinho */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));             /* 🎨 sombra específica */
 }
 
-/* Ícone animado */
 .balao-fenda .balao-icone {
     font-size: 1.4rem;
     flex-shrink: 0;
     animation: balaoPulse 0.5s ease 2;
 }
 
-/* Cores por tipo */
 .balao-fenda.sucesso .balao-icone {
-    color: #4caf50;
+    color: #4caf50;                                                 /* fallback */
+    color: var(--cor-sucesso, #4caf50);                             /* 🌅 FAGULHA – Fase 2 */
 }
 
 .balao-fenda.erro .balao-icone {
-    color: #ff6b6b;
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                                /* 🌅 FAGULHA – Fase 2 */
 }
 
 .balao-fenda.info .balao-icone {
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* Rabinho com cor de borda sutil */
 .balao-fenda.sucesso::after {
-    border-color: rgba(76, 175, 80, 0.3) transparent transparent transparent;
+    border-color: rgba(76, 175, 80, 0.3) transparent transparent transparent; /* 🎨 verde com alpha específico */
 }
 
 .balao-fenda.erro::after {
-    border-color: rgba(255, 107, 107, 0.3) transparent transparent transparent;
+    border-color: rgba(255, 107, 107, 0.3) transparent transparent transparent; /* 🎨 vermelho com alpha específico */
 }
 
 .balao-fenda.info::after {
-    border-color: rgba(255, 188, 0, 0.3) transparent transparent transparent;
+    border-color: rgba(255, 188, 0, 0.3) transparent transparent transparent; /* 🎨 dourado com alpha específico */
 }
 
-/* Animações */
 @keyframes balaoEntrada {
     from {
         opacity: 0;
         transform: scale(0.85) translateY(12px);
     }
-
     to {
         opacity: 1;
         transform: scale(1) translateY(0);
@@ -3416,37 +3160,18 @@ textarea {
 }
 
 @keyframes balaoPulse {
-
     0%,
     100% {
         transform: scale(1);
     }
-
     50% {
         transform: scale(1.25) rotate(-5deg);
     }
 }
 
-/* Responsivo – em telas pequenas, fica mais compacto */
-@media (max-width: 480px) {
-    .balao-fenda {
-        font-size: 0.82rem;
-        padding: 10px 14px 10px 12px;
-        max-width: 240px;
-        border-radius: 12px 12px 12px 2px;
-    }
-
-    .balao-fenda .balao-icone {
-        font-size: 1.1rem;
-    }
-
-    .balao-fenda::after {
-        left: 16px;
-        border-width: 8px 8px 0 8px;
-    }
-}
-
-/* DIALOG POP-UP ESTILO WHATSAPP */
+/* ============================================================
+   23. DIALOG DE CONFIRMAÇÃO (estilo WhatsApp)
+   ============================================================ */
 .dialog-confirmacao {
     border: none;
     border-radius: 16px;
@@ -3456,7 +3181,7 @@ textarea {
     max-width: 350px;
     z-index: 5;
     margin: auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);                      /* 🎨 sombra específica */
     position: fixed;
     top: 50%;
     left: 50%;
@@ -3469,14 +3194,15 @@ textarea {
 }
 
 .dialog-conteudo {
-    background: rgba(20, 20, 32, 0.96);
+    background: rgba(20, 20, 32, 0.96);                             /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 32, 0.96));   /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     z-index: 99;
     border-radius: 16px;
     padding: 16px 20px 20px;
     text-align: center;
-    border: 1px solid rgba(255, 140, 0, 0.3);
+    border: 1px solid rgba(255, 140, 0, 0.3);                       /* 🎨 laranja com alpha específico */
     pointer-events: auto;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -3486,7 +3212,8 @@ textarea {
 
 .dialog-conteudo h3 {
     margin: 0 0 8px 0;
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: 1rem;
     font-size: clamp(0.95rem, 2.5cqi, 1.3rem);
     font-weight: 600;
@@ -3494,8 +3221,9 @@ textarea {
 
 .dialog-conteudo p {
     margin: 0 0 16px 0;
-    color: #fff;
-    color: oklch(1 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(1 0 0);                                            /* fallback moderno */
+    color: var(--texto-primario, oklch(1 0 0));                    /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.85rem;
     font-size: clamp(0.9rem, 2cqi, 1.2rem);
     line-height: 1.4;
@@ -3520,28 +3248,32 @@ textarea {
 }
 
 .dialog-btn-sim {
-    background: rgba(220, 53, 69, 0.2);
-    border: 1px solid #ff4b2b;
-    color: #ff8a8a;
+    background: rgba(220, 53, 69, 0.2);                             /* 🎨 vermelho com alpha específico */
+    border: 1px solid #ff4b2b;                                      /* 🎨 vermelho-marca específico */
+    color: #ff8a8a;                                                 /* 🎨 vermelho-claro específico */
 }
 
 .dialog-btn-sim:hover {
-    background: rgba(220, 53, 69, 0.4);
+    background: rgba(220, 53, 69, 0.4);                             /* 🎨 vermelho com alpha específico */
 }
 
 .dialog-btn-nao {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid #666;
-    color: #ccc;
+    background: rgba(255, 255, 255, 0.08);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08));  /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid #666;                                         /* fallback */
+    border: 1px solid var(--texto-disabled, #666);                 /* 🌅 FAGULHA – Fase 2 */
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
 }
 
 .dialog-btn-nao:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.15);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.15));  /* 🌅 FAGULHA – Fase 2 */
 }
 
-/* ==================================================
-   RESPONSIVIDADE – telas pequenas e landscape
-   ================================================== */
+/* ============================================================
+   24. RESPONSIVIDADE
+   ============================================================ */
 @media (max-width: 480px) {
     .btn-excluir-comentario {
         left: -24px;
@@ -3568,6 +3300,22 @@ textarea {
         font-size: 0.75rem;
         padding: 4px 10px;
         min-width: 60px;
+    }
+
+    .balao-fenda {
+        font-size: 0.82rem;
+        padding: 10px 14px 10px 12px;
+        max-width: 240px;
+        border-radius: 12px 12px 12px 2px;
+    }
+
+    .balao-fenda .balao-icone {
+        font-size: 1.1rem;
+    }
+
+    .balao-fenda::after {
+        left: 16px;
+        border-width: 8px 8px 0 8px;
     }
 }
 

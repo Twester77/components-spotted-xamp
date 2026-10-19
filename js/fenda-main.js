@@ -48,15 +48,8 @@
 window.audioLiberado = false;
 
 // ==================== CARREGAMENTO DINÂMICO DO CSS HACKER ====================
-function carregarCssHacker() {
-    if (document.getElementById('hacker-css')) return;
-    const link = document.createElement('link');
-    link.id = 'hacker-css';
-    link.rel = 'stylesheet';
-    link.href = 'css/skin-hacker.css';
-    document.head.appendChild(link);
-    console.log("[HACKER] CSS carregado dinamicamente.");
-}
+// 🌅 FAGULHA — Fase 3: skin-hacker.css agora carrega via <link> no header.
+// Não precisa mais de carregamento dinâmico. Função removida.
 
 // ==================== BOLHAS (Imediato) ====================
 window.setBolhasLocal = function (valor) {
@@ -117,18 +110,20 @@ window.toggleToolbar = function () {
 };
 
 // ==================== HACKER MODE ====================
+// 🌅 FAGULHA — Fase 3: data-theme no <html> em vez de classe no <body>
 window.toggleHackerMode = function () {
-    const body = document.body;
     const btnNav = document.getElementById('hacker-toggle');
     const btnToolbar = document.getElementById('hacker-toggle-lateral');
 
-    // Se for ativar o modo hacker e o CSS ainda não foi carregado, carrega
-    if (!body.classList.contains('hacker-mode')) {
-        carregarCssHacker();
+    const isHackerAtivo = document.documentElement.dataset.theme === 'hacker';
+    const isHacker = !isHackerAtivo;
+
+    if (isHacker) {
+        document.documentElement.dataset.theme = 'hacker';
+    } else {
+        delete document.documentElement.dataset.theme;
     }
 
-    body.classList.toggle('hacker-mode');
-    const isHacker = body.classList.contains('hacker-mode');
     localStorage.setItem('fenda_hacker', isHacker ? 'active' : 'inactive');
     const texto = isHacker ? '[ DESLIGAR_TERMINAL ]' : '[ ACESSAR_TERMINAL ]';
     if (btnNav) btnNav.innerHTML = texto;
@@ -137,7 +132,7 @@ window.toggleHackerMode = function () {
 };
 
 window.removerBordasInlineHacker = function () {
-    if (!document.body.classList.contains('hacker-mode')) return;
+    if (document.documentElement.dataset.theme !== 'hacker') return;
     document.querySelectorAll('.spotted-card').forEach(card => {
         card.style.borderLeft = '';
         card.style.borderRight = '';
@@ -1405,10 +1400,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // ==================== LOAD FINAL (BOOT E HACKER MODE) ====================
 window.addEventListener('load', () => {
-    // Restaura modo hacker se estava ativo
+    // 🌅 FAGULHA — Fase 3: restaura data-theme em vez de classe
     if (localStorage.getItem('fenda_hacker') === 'active') {
-        carregarCssHacker(); // carrega o CSS antes de ativar
-        document.body.classList.add('hacker-mode');
+        document.documentElement.dataset.theme = 'hacker';
         window.removerBordasInlineHacker();
     }
 
@@ -1423,25 +1417,6 @@ window.addEventListener('load', () => {
         }, 2500);
     } else if (bootScreen) bootScreen.style.display = 'none';
 
-    // Swipe ativo: suspende modo hacker
-    if (document.body.classList.contains('modo-swipe-ativo')) {
-        if (document.body.classList.contains('hacker-mode')) {
-            sessionStorage.setItem('fenda_hacker_suspended_by_swipe', 'true');
-            document.body.classList.remove('hacker-mode');
-            console.log("[HACKER] Modo Hacker suspenso porque o modo swipe está ativo.");
-        }
-    } else {
-        // Saiu do modo swipe: restaura hacker se estava suspenso e ativo no localStorage
-        if (sessionStorage.getItem('fenda_hacker_suspended_by_swipe') === 'true') {
-            if (localStorage.getItem('fenda_hacker') === 'active') {
-                carregarCssHacker(); // carrega o CSS novamente (se não estiver carregado)
-                document.body.classList.add('hacker-mode');
-                window.removerBordasInlineHacker();
-                console.log("[HACKER] Modo Hacker restaurado ao sair do modo swipe.");
-            }
-            sessionStorage.removeItem('fenda_hacker_suspended_by_swipe');
-        }
-    }
 });
 
 // ========================================================

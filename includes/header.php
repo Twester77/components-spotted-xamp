@@ -141,6 +141,9 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 🌅 FAGULHA — Skin hacker (Fase 4/5). Carrega sempre; só aplica
+     quando [data-theme="hacker"] está no <html>. -->
+    <link rel="stylesheet" href="<?= asset_versao('css/skin-hacker.css') ?>">
 </head>
 
 <body class="<?php echo $classes_finais; ?> <?php echo (isset($is_post_page) && $is_post_page) ? 'pagina-post' : ''; ?>">

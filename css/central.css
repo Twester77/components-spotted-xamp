@@ -1,4 +1,12 @@
 /* ================================================================
+   🌅 FAGULHA — 2026-10-16 — Fase 2 (arquivo 3 de 7)
+   Central do Habitante. Aplicadas variáveis semânticas.
+   EXCEÇÃO DELIBERADA (plano): o fundo branco-gelo
+   oklch(0.96 0 0 / 1) do .central-usuario-container é LOCAL
+   e NÃO migra para --bg-page. É o "app clássico" da Central.
+   ================================================================ */
+
+/* ================================================================
    CENTRAL DO HABITANTE (antigo feed-pessoal.php)
    ================================================================ */
 
@@ -21,6 +29,7 @@
     flex: 1 0 auto;
 
     /* O BRANCO GELO DA PÁGINA (SÓLIDO E LIMPO) */
+    /* 🎨 EXCEÇÃO DELIBERADA (plano): fundo LOCAL da Central — não usa --bg-page */
     background-color: oklch(0.96 0 0 / 1);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -38,8 +47,8 @@
        Usamos uma luminosidade baixa (0.16) com matiz azul/roxa (250) 
        misturada com opacidade suave.
     */
-    background: #0c1b2de0;
-    background: oklch(0.22 0.04 252.76 / 88%);
+    background: #0c1b2de0;                                         /* 🎨 cor específica do "app clássico" da Central */
+    background: oklch(0.22 0.04 252.76 / 88%);                     /* 🎨 fallback moderno */
 
     /* 
      MIX-BLEND-MODE APLICADO
@@ -59,7 +68,8 @@
     container-name: menu-central;
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 16px;
     padding: 20px 0;
     margin: 20px auto;
@@ -113,7 +123,8 @@
     border-radius: 10px;
     background: transparent;
     border: none;
-    color: #aaa;
+    color: #aaa;                                                   /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -132,22 +143,26 @@
 
 .aba-central:hover,
 .aba-central-link:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.05);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .aba-central.ativa {
-    background: rgba(255, 188, 0, 0.12);
-    color: #ffbc00;
-    box-shadow: inset 3px 0 0 #ffbc00;
+    background: rgba(255, 188, 0, 0.12);                           /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: inset 3px 0 0 #ffbc00;                             /* 🎨 dourado exato como indicador */
 }
 
 .aba-central-link {
-    color: #777;
+    color: #777;                                                   /* 🎨 cinza-específico do link não-ativo */
 }
 
 .aba-central-link:hover {
-    color: #fff;
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .aba-central-link i {
@@ -157,7 +172,8 @@
 /* Separador no menu */
 .menu-central-abas hr {
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);               /* fallback */
+    border-top: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     margin: 12px 0;
 }
 
@@ -167,9 +183,9 @@
 .central-conteudo {
     display: flex;
     flex-direction: column;
-    background: #9e9e9e3d;
-    background: oklch(0.7 0 0 / 0.24);
-    border: 2px solid oklch(0.91 0 0 / 0.15);
+    background: #9e9e9e3d;                                         /* fallback */
+    background: oklch(0.7 0 0 / 0.24);                             /* 🎨 cinza translúcido específico da Central */
+    border: 2px solid oklch(0.91 0 0 / 0.15);                      /* 🎨 borda clara específica da Central */
     /* ✨ Impede que a cor de fundo invada a área da borda transparente */
     background-clip: padding-box;
     container-type: inline-size;
@@ -201,7 +217,8 @@
 #central-loading i {
     font-size: 2rem;
     font-size: clamp(2rem, 15cqi, 4rem);
-    color: #ffbc00;
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
     animation: spin 1s linear infinite;
 }
 
@@ -232,7 +249,7 @@
     max-height: 70dvh;
     padding-right: 4px;
     scrollbar-width: thin;
-    scrollbar-color:  #ffffffe6 #ffbc00e6;
+    scrollbar-color:  #ffffffe6 #ffbc00e6;                          /* 🎨 par de cores do scrollbar — específico da Central */
     scroll-behavior: smooth;
 }
 
@@ -241,7 +258,7 @@
 }
 
 .central-conteudo .container-feed::-webkit-scrollbar-track {
-    background: #1a1a2e;
+    background: #1a1a2e;                                           /* 🎨 roxo-escuro específico do scrollbar */
     border-radius: 4px;
 }
 
@@ -263,8 +280,8 @@
     border-radius: 10px;
     padding: 10px;
     position: relative;
-    background: oklch(0.24 0 0 / 1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    background: oklch(0.24 0 0 / 1);                               /* 🎨 grafite específico do card da Central */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);                    /* 🎨 sombra leve específica */
     break-inside: avoid;
     margin-bottom: 40px;
     margin-left: auto;
@@ -281,18 +298,18 @@
 
 /* Efeito de Hover Sutil no Card (Estilo App de 2026) */
 body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
-    background: oklch(0.31 0 0 / 1);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+    background: oklch(0.31 0 0 / 1);                               /* 🎨 grafite mais claro específico do hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);                    /* 🎨 sombra específica */
     transform: none;
 }
 
 /* Garante legibilidade máxima dos textos sobre o card grafite */
 .central-conteudo .user-anonimo {
-    color: oklch(0.92 0 0);
+    color: oklch(0.92 0 0);                                        /* 🎨 branco levemente esmaecido — específico da Central */
 }
 
 .central-conteudo .post-time {
-    color: oklch(0.82 0 0);
+    color: oklch(0.82 0 0);                                        /* 🎨 cinza claro específico da Central */
 }
 
 /* ============================================================
@@ -316,8 +333,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border-radius: clamp(8px, 1.5vw, 14px);
     margin: 6px 0 ;
     margin: clamp(6px, 1vw, 12px) 0;
-    background: #0a0a0a;
-    background: oklch(5% 0 0);
+    background: #0a0a0a;                                           /* fallback */
+    background: oklch(5% 0 0);                                     /* fallback moderno */
+    background: var(--bg-page-dark, oklch(5% 0 0));                /* 🌅 FAGULHA – Fase 2 */
     width: 100%;
     height: auto;
 }
@@ -334,7 +352,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     max-height: 350px;
     max-height: clamp(200px, 35cqh, 350px);
     height: auto;
-    background: #0a0a0a;
+    background: #0a0a0a;                                           /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -347,7 +366,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     height: 100%;
     object-fit: contain;
     display: block;
-    background: #0a0a0a;
+    background: #0a0a0a;                                           /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ============================================================
@@ -366,8 +386,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .carrossel-numero {
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 3.2cqi, 1rem);
-    color: rgba(255, 255, 255, 0.5);
-    color: oklch(1 0 0 / 0.5);
+    color: rgba(255, 255, 255, 0.5);                               /* fallback */
+    color: oklch(1 0 0 / 0.5);                                     /* fallback moderno */
+    color: var(--texto-terciario, oklch(1 0 0 / 0.5));             /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
     margin-right: 6px ;
     margin-right: clamp(4px, 0.8cqi, 10px);
@@ -379,14 +400,15 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     width: clamp(6px, 1cqi, 10px);
     height: clamp(6px, 1cqi, 10px);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    background: oklch(1 0 0 / 0.3);
+    background: rgba(255, 255, 255, 0.3);                          /* fallback */
+    background: oklch(1 0 0 / 0.3);                                /* fallback moderno */
+    background: var(--borda-media, oklch(1 0 0 / 0.3));            /* 🌅 FAGULHA – Fase 2 */
     transition: all 0.3s ease;
     flex-shrink: 0;
 }
 
 .indicador.ativo {
-    background: #ff7300;
+    background: #ff7300;                                           /* 🎨 laranja-vivo específico do indicador ativo */
     transform: scale(1.3);
 }
 
@@ -412,13 +434,15 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .central-conteudo .spotted-card .carrossel-nav button {
     pointer-events: auto !important;
-    background: rgba(0, 0, 0, 0.308);
-    background: oklch(0% 0 0 / 0.30);
+    background: rgba(0, 0, 0, 0.308);                              /* fallback */
+    background: oklch(0% 0 0 / 0.30);                              /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.30));     /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     border: none;
     border-radius: 50%;
-    color: #fff;
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 1rem;
     font-size: clamp(1.2rem, 2.5cqi, 2rem);
     width: 36px;
@@ -432,7 +456,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     align-items: center;
     justify-content: center;
     transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);                     /* 🎨 sombra específica */
     z-index: 6;
     position: relative;
     /* Para o pseudo-elemento posicionar corretamente */
@@ -452,8 +476,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .central-conteudo .spotted-card .carrossel-nav button:hover {
-    background: rgba(255, 188, 0, 0.8);
-    background: oklch(83.276% 0.17139 82.036 / 0.8);
+    background: rgba(255, 188, 0, 0.8);                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036 / 0.8);               /* fallback moderno */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 80%, transparent); /* 🌅 FAGULHA – Fase 2 */
     transform: none;
 }
 
@@ -479,17 +504,20 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.08);                        /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 20px;
     padding: 2px 10px;
     font-size: clamp(0.75rem, 0.9vw, 0.95rem);
-    color: #ddd;
+    color: #ddd;                                                   /* fallback */
+    color: var(--texto-secundario, #ddd);                          /* 🌅 FAGULHA – Fase 2 */
     border: 1px solid transparent;
 }
 
 .central-conteudo .spotted-card .reacao-item.voted {
-    background: rgba(255, 188, 0, 0.15);
-    border-color: #ffbc00;
+    background: rgba(255, 188, 0, 0.15);                           /* 🎨 dourado com alpha específico do "voted" */
+    border-color: #ffbc00;                                         /* fallback */
+    border-color: var(--texto-dourado, #ffbc00);                   /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ============================================================
@@ -547,11 +575,12 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .central-comunidade-card {
-    background: oklch(34.014% 0.12158 29.883 / 0.6);
+    background: oklch(34.014% 0.12158 29.883 / 0.6);               /* 🎨 marrom-avermelhado específico do card de comunidade */
     border-radius: 12px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -559,7 +588,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .central-comunidade-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);                     /* 🎨 sombra de hover específica */
     text-decoration: underline;
 }
 
@@ -569,23 +598,24 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     aspect-ratio: 16 / 9;
     object-fit: cover;
     object-position: center 25%;
-    background: #111;
+    background: #111;                                              /* 🎨 preto para placeholder de imagem */
 }
 
 
 .central-comunidade-card h4 {
     padding: 0 12px;
     margin: 10px 0 4px 0;
-    font-size: 0.9rem;
-    font-size: clamp(0.95rem, 1.2vw, 1.2rem);
-    color: #fff;
+    font-size: 0.88rem;
+    font-size: clamp(0.92rem, 1.2vw, 1.15rem);
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .central-comunidade-card p {
     padding: 0 12px;
     margin: 0 0 8px 0;
     font-size: clamp(0.8rem, 1vw, 0.95rem);
-    color: oklch(0.95 0 0 / 0.8);
+    color: oklch(0.95 0 0 / 0.8);                                  /* 🎨 branco esmaecido específico */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -597,7 +627,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-comunidade-card small {
     display: block;
     padding: 0 12px 12px 12px;
-    color: oklch(0.89 0 0 / 0.75);
+    color: oklch(0.89 0 0 / 0.75);                                 /* 🎨 cinza-claro específico */
     font-size: 0.75rem;
 }
 
@@ -647,8 +677,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .central-conteudo .avatar-p {
     width: 38px;
     height: 38px;
-    width: clamp(36px, 18cqw, 60px);
-    height: clamp(36px, 18cqw, 60px);
+    width: clamp(34px, 15cqw, 50px);
+    height: clamp(34px, 15cqw, 50px);
     border-radius: 50%;
     object-fit: cover;
 }
@@ -664,8 +694,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .gerenciar-depoimentos-container {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.02));       /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.06);                   /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(14px, 2vw, 22px);
     padding: clamp(20px, 3vw, 42px);
     -webkit-backdrop-filter: blur(4px);
@@ -674,6 +706,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .gerenciar-depoimentos-container h1 {
     color: var(--dourado, #ffbc00);
+    color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1.4rem, 2.8vw, 2.4rem);
     margin-bottom: 4px;
     display: flex;
@@ -682,17 +715,20 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .subtitulo {
-    color: #aaa;
+    color: #aaa;                                                   /* fallback */
+    color: var(--texto-terciario, #aaa);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     margin-bottom: clamp(20px, 3vw, 35px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);            /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     padding-bottom: 12px;
 }
 
 .sem-depoimentos-msg {
     text-align: center;
     padding: clamp(30px, 5vw, 60px) 10px;
-    color: #888;
+    color: #888;                                                   /* fallback */
+    color: var(--texto-muted, #888);                              /* 🌅 FAGULHA – Fase 2 */
 }
 
 .sem-depoimentos-msg p {
@@ -707,15 +743,18 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .depoimento-pendente-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                        /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));       /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(10px, 1.2vw, 16px);
     padding: clamp(12px, 1.5vw, 20px);
     border-left: 4px solid var(--dourado, #ffbc00);
+    border-left: 4px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🌅 FAGULHA – Fase 2 */
     transition: 0.2s;
 }
 
 .depoimento-pendente-item:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.06);                        /* fallback */
+    background: var(--borda-sutil, rgba(255, 255, 255, 0.06));    /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-autor {
@@ -731,21 +770,25 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--dourado, #ffbc00);
+    border: 2px solid var(--texto-dourado, var(--dourado, #ffbc00)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-autor strong {
-    color: #fff;
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.1vw, 1.1rem);
 }
 
 .depoimento-pendente-autor .depoimento-data {
-    color: #888;
+    color: #888;                                                   /* fallback */
+    color: var(--texto-muted, #888);                              /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     display: block;
 }
 
 .depoimento-pendente-texto {
-    color: #ccc;
+    color: #ccc;                                                   /* fallback */
+    color: var(--texto-secundario, #ccc);                         /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1vw, 1.05rem);
     line-height: 1.5;
     margin: 0 0 14px 0;
@@ -777,25 +820,33 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .btn-aprovar-depoimento {
-    background: #4caf50;
-    color: #fff;
+    background: #4caf50;                                           /* fallback */
+    background: var(--cor-sucesso, #4caf50);                      /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-aprovar-depoimento:hover {
-    background: #66bb6a;
+    background: #66bb6a;                                           /* fallback */
+    background: var(--cor-sucesso-hover, #66bb6a);                /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
 .btn-rejeitar-depoimento {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ccc;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: rgba(255, 255, 255, 0.08);                        /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
+    color: #ccc;                                                   /* fallback */
+    color: var(--texto-secundario, #ccc);                         /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;        /* fallback */
+    border: 1px solid var(--bg-input-hover, rgba(255, 255, 255, 0.08)) !important; /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-rejeitar-depoimento:hover {
-    background: rgba(255, 60, 60, 0.15);
-    color: #ff6b6b;
-    border-color: #ff6b6b !important;
+    background: rgba(255, 60, 60, 0.15);                          /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                /* fallback */
+    color: var(--cor-erro, #ff6b6b);                              /* 🌅 FAGULHA – Fase 2 */
+    border-color: #ff6b6b !important;                              /* fallback */
+    border-color: var(--cor-erro, #ff6b6b) !important;            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-acoes button:disabled {
@@ -816,16 +867,18 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     gap: clamp(10px, 1.5vw, 16px);
     padding: 6px 10px;
     padding: clamp(8px, 1.2vw, 16px) clamp(12px, 1.5vw, 20px);
-    background: #121212b3;
-    background: oklch(0.18 0 0 / 0.7);
+    background: #121212b3;                                         /* fallback */
+    background: oklch(0.18 0 0 / 0.7);                             /* fallback moderno */
+    background: var(--bg-modal-content, oklch(0.18 0 0 / 0.7));    /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     margin-bottom: 0;
     text-decoration: none;
-    color: rgb(238, 238, 238);
-    color: oklch(0.95 0 0);
+    color: rgb(238, 238, 238);                                     /* fallback */
+    color: oklch(0.95 0 0);                                        /* fallback moderno */
+    color: var(--texto-primario, oklch(0.95 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     transition: background 0.2s ease, transform 0.15s ease;
     border-left: 2px solid transparent;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);                     /* 🎨 sombra leve específica */
 }
 
 #central-body .item-notif-rapida-wrap {
@@ -857,8 +910,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     width: 64px;
     align-items: stretch;
     justify-content: stretch;
-    background:  #121212b3;
-    background: oklch(0.18 0 0 / 0.7);
+    background:  #121212b3;                                        /* fallback */
+    background: oklch(0.18 0 0 / 0.7);                             /* fallback moderno */
+    background: var(--bg-modal-content, oklch(0.18 0 0 / 0.7));    /* 🌅 FAGULHA – Fase 2 */
     visibility: hidden;
 }
 
@@ -874,9 +928,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border-radius: 0;
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(217, 75, 87, 0.58);
-    color: #ff929b;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);               /* fallback */
+    border-left: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(217, 75, 87, 0.58);                           /* 🎨 vermelho específico do botão excluir */
+    color: #ff929b;                                                /* 🎨 vermelho-claro específico */
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.15s ease, color 0.15s ease;
@@ -900,7 +955,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border: 0;
     border-radius: 0 12px 12px 0;
     background: transparent;
-    color: #c8ced5;
+    color: #c8ced5;                                                /* 🎨 cinza-azulado específico */
     cursor: pointer;
     opacity: 0;
     pointer-events: none;
@@ -917,7 +972,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 #central-body .item-notif-rapida-wrap .btn-notificacao-acoes-toggle:focus-visible {
     opacity: 1;
     pointer-events: auto;
-    outline: 2px solid #ffbc00;
+    outline: 2px solid #ffbc00;                                    /* fallback */
+    outline: 2px solid var(--texto-dourado, #ffbc00);              /* 🌅 FAGULHA – Fase 2 */
     outline-offset: -4px;
 }
 
@@ -928,13 +984,15 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 #central-body .item-notif-rapida-wrap .btn-excluir-notificacao:hover {
-    background: rgba(217, 75, 87, 0.34);
-    color: #fff;
+    background: rgba(217, 75, 87, 0.34);                           /* 🎨 vermelho com alpha específico do hover */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 #central-body .item-notif-rapida:hover,
 #central-body .item-notif-rapida:focus-visible {
-    background: oklch(0.18 0 0 / 0.7);
+    background: oklch(0.18 0 0 / 0.7);                             /* fallback moderno */
+    background: var(--bg-modal-content, oklch(0.18 0 0 / 0.7));    /* 🌅 FAGULHA – Fase 2 */
     transform: none;
     border-left-color: transparent;
 }
@@ -947,33 +1005,29 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 #central-body .item-notif-rapida:focus-visible {
-    outline: 2px solid #ffbc00;
+    outline: 2px solid #ffbc00;                                    /* fallback */
+    outline: 2px solid var(--texto-dourado, #ffbc00);              /* 🌅 FAGULHA – Fase 2 */
     outline-offset: 2px;
 }
 
 #central-body .btn-excluir-notificacao:focus-visible {
-    outline: 2px solid #ffbc00;
+    outline: 2px solid #ffbc00;                                    /* fallback */
+    outline: 2px solid var(--texto-dourado, #ffbc00);              /* 🌅 FAGULHA – Fase 2 */
     outline-offset: -4px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    #central-body .item-notif-rapida-wrap .item-notif-rapida,
-    #central-body .item-notif-rapida-wrap .btn-excluir-notificacao,
-    #central-body .item-notif-rapida-wrap .btn-notificacao-acoes-toggle {
-        transition: none;
-    }
-}
 
 #central-body .item-notif-rapida .notif-avatar {
     flex-shrink: 0;
     width: clamp(32px, 4vw, 44px);
     height: clamp(32px, 4vw, 44px);
     border-radius: 50%;
-    background: oklch(0.32 0.02 250 / 0.6);
+    background: oklch(0.32 0.02 250 / 0.6);                        /* 🎨 azul-cinza específico do avatar de notificação */
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffbc00;
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1rem, 1.4vw, 1.4rem);
 }
 
@@ -986,7 +1040,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     display: block;
     font-size: clamp(0.85rem, 1vw, 1.05rem);
     font-weight: 500;
-    color: oklch(0.95 0 0);
+    color: oklch(0.95 0 0);                                        /* fallback moderno */
+    color: var(--texto-primario, oklch(0.95 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     line-height: 1.4;
     word-break: break-word;
     overflow-wrap: anywhere;
@@ -995,17 +1050,20 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 #central-body .item-notif-rapida .notif-txt small {
     display: block;
     font-size: clamp(0.65rem, 0.8vw, 0.8rem);
-    color: oklch(0.7 0 0);
+    color: oklch(0.7 0 0);                                         /* fallback moderno */
+    color: var(--texto-terciario, oklch(0.7 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     margin-top: 2px;
 }
 
 #central-body .item-notif-rapida.notif-nova {
-    border-left-color: #ffbc00;
-    background: oklch(0.22 0.08 85 / 0.5);
+    border-left-color: #ffbc00;                                    /* fallback */
+    border-left-color: var(--texto-dourado, #ffbc00);              /* 🌅 FAGULHA – Fase 2 */
+    background: oklch(0.22 0.08 85 / 0.5);                         /* 🎨 dourado escuro específico da notif nova */
 }
 
 #central-body .item-notif-rapida.notif-nova .notif-txt span {
-    color: #ffbc00;
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
 }
 
 #central-body .ver-todas-notif {
@@ -1013,16 +1071,17 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     text-align: center;
     padding: 5px;
     padding: clamp(8px, 1vw, 14px);
-    background: oklch(0.18 0 0 / 0.5);
+    background: oklch(0.18 0 0 / 0.5);                             /* 🎨 cinza-escuro específico */
     border-radius: 30px;
-    color: #ffbc00;
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
     font-weight: 600;
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 0.9vw, 0.95rem);
     text-decoration: none;
     transition: 0.2s;
     margin-top: 10px;
-    border: 1px solid rgba(255, 188, 0, 0.15);
+    border: 1px solid rgba(255, 188, 0, 0.15);                     /* 🎨 dourado com alpha específico */
 }
 
 #btn-marcar-todas-lidas.btn-fenda-padrao {
@@ -1030,15 +1089,15 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     font-size: clamp(0.75rem, 1.2cqw, 1.1rem);
     padding: 6px 12px;
     padding: clamp(6px, 1.5cqw, 10px) clamp(8px, 1.2cqw, 16px);
-    background: rgba(255, 188, 0, 0.12);
-    color: #ff9b00;
-    border: 1px solid rgba(255, 188, 0, 0.15);
+    background: rgba(255, 188, 0, 0.12);                           /* 🎨 dourado com alpha específico */
+    color: #ff9b00;                                                /* 🎨 laranja-dourado específico */
+    border: 1px solid rgba(255, 188, 0, 0.15);                     /* 🎨 dourado com alpha específico */
     border-radius: 30px;
     cursor: pointer;
 }
 
 #central-body .ver-todas-notif:hover {
-    background: oklch(0.25 0 0 / 0.7);
+    background: oklch(0.25 0 0 / 0.7);                             /* 🎨 cinza-escuro específico do hover */
     transform: scale(1.01);
 }
 
@@ -1048,17 +1107,18 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
    ================================================================ */
 
 .central-depoimento-pendente-item {
-    background: oklch(0.18 0 0 / 0.6);
+    background: oklch(0.18 0 0 / 0.6);                             /* 🎨 cinza-escuro específico */
     border-radius: clamp(10px, 1.2vw, 16px);
     padding: clamp(12px, 1.5vw, 20px);
     margin-bottom: clamp(12px, 1.5vw, 20px);
-    border-left: 4px solid #ffbc00;
+    border-left: 4px solid #ffbc00;                                /* fallback */
+    border-left: 4px solid var(--texto-dourado, #ffbc00);          /* 🌅 FAGULHA – Fase 2 */
     transition: 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);                     /* 🎨 sombra leve específica */
 }
 
 .central-depoimento-pendente-item:hover {
-    background: oklch(0.25 0 0 / 0.75);
+    background: oklch(0.25 0 0 / 0.75);                            /* 🎨 cinza-escuro específico do hover */
     transform: translateX(4px);
 }
 
@@ -1074,26 +1134,29 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     height: clamp(36px, 4vw, 48px);
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid #ff9900;
+    border: 1px solid #ff9900;                                     /* 🎨 laranja-dourado específico */
 }
 
 .central-depoimento-pendente-autor strong {
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
+    color: #fff;                                                   /* fallback */
+    color: oklch(100% 0.00011 271.152);                           /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0.00011 271.152));     /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.95rem, 1.1vw, 1.1rem);
 }
 
 .central-depoimento-pendente-autor .depoimento-pendente-data {
-    color: #9e9e9e;
-    color: oklch(0.7 0 0);
+    color: #9e9e9e;                                                /* fallback */
+    color: oklch(0.7 0 0);                                         /* fallback moderno */
+    color: var(--texto-terciario, oklch(0.7 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.75rem;
     font-size: clamp(0.7rem, 0.8vw, 0.85rem);
     display: block;
 }
 
 .central-depoimento-pendente-texto {
-    color: oklch(0.92 0 0);
+    color: oklch(0.92 0 0);                                        /* fallback moderno */
+    color: var(--texto-secundario, oklch(0.92 0 0));               /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1vw, 1.05rem);
     line-height: 1.5;
     margin: 0 0 14px 0;
@@ -1124,25 +1187,33 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .central-depoimento-pendente-item .btn-aprovar-depoimento {
-    background: #4caf50;
-    color: #fff;
+    background: #4caf50;                                           /* fallback */
+    background: var(--cor-sucesso, #4caf50);                      /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .central-depoimento-pendente-item .btn-aprovar-depoimento:hover {
-    background: #66bb6a;
+    background: #66bb6a;                                           /* fallback */
+    background: var(--cor-sucesso-hover, #66bb6a);                /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
 .central-depoimento-pendente-item .btn-rejeitar-depoimento {
-    background: rgba(255, 255, 255, 0.08);
-    color: #ccc;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);                        /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
+    color: #ccc;                                                   /* fallback */
+    color: var(--texto-secundario, #ccc);                         /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .central-depoimento-pendente-item .btn-rejeitar-depoimento:hover {
-    background: rgba(255, 60, 60, 0.15);
-    color: #ff6b6b;
-    border-color: #ff6b6b;
+    background: rgba(255, 60, 60, 0.15);                          /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                /* fallback */
+    color: var(--cor-erro, #ff6b6b);                              /* 🌅 FAGULHA – Fase 2 */
+    border-color: #ff6b6b;                                         /* fallback */
+    border-color: var(--cor-erro, #ff6b6b);                       /* 🌅 FAGULHA – Fase 2 */
 }
 
 .central-depoimento-pendente-item .depoimento-pendente-acoes button:disabled {
@@ -1163,14 +1234,16 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 .central-empty-state i {
     font-size: clamp(2.8rem, 8vw, 4rem);
-    color: #4caf50;
+    color: #4caf50;                                                /* fallback */
+    color: var(--cor-sucesso, #4caf50);                           /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 15px;
 }
 
 .central-empty-state p {
     font-size: clamp(0.9rem, 1.2vw, 1.2rem);
-    color: #a5a5a5;
-    color: oklch(0.68 0 0);
+    color: #a5a5a5;                                                /* fallback */
+    color: oklch(0.68 0 0);                                        /* fallback moderno */
+    color: var(--texto-muted, oklch(0.68 0 0));                    /* 🌅 FAGULHA – Fase 2 */
 }
 
 
@@ -1196,16 +1269,17 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     justify-content: space-between;
     padding: 6px 10px;
     padding: clamp(8px, 1.5vw, 16px) clamp(12px, 2vw, 20px);
-    background: rgba(20, 20, 30, 0.44);
+    background: rgba(20, 20, 30, 0.44);                            /* 🎨 roxo-escuro com alpha específico */
     border-radius: clamp(8px, 1.2vw, 14px);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.04);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)); /* 🌅 FAGULHA – Fase 2 */
     flex-wrap: wrap;
     gap: clamp(6px, 1vw, 12px);
     transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .solicitacao-central-item:hover {
-    background: rgba(20, 20, 28, 0.7);
+    background: rgba(20, 20, 28, 0.7);                             /* 🎨 roxo-escuro com alpha específico do hover */
 }
 
 /* Avatar e informações do solicitante */
@@ -1226,13 +1300,14 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     height: clamp(36px, 4vw, 55px);
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 188, 0, 0.15);
+    border: 2px solid rgba(255, 188, 0, 0.15);                     /* 🎨 dourado com alpha específico */
 }
 
 .solicitacao-central-item .solicitante-nome {
     font-weight: 600;
-    color: #fff;
-    color: oklch(96.115% 0.00011 271.152);
+    color: #fff;                                                   /* fallback */
+    color: oklch(96.115% 0.00011 271.152);                         /* fallback moderno */
+    color: var(--texto-primario, oklch(96.115% 0.00011 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.85rem, 1.2vw, 1.05rem);
 }
@@ -1240,15 +1315,17 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 .solicitacao-central-item .solicitante-data {
     font-size: 0.65rem;
     font-size: clamp(0.65rem, 0.9vw, 0.8rem);
-    color: #aaa;
-    color: oklch(96.115% 0.00011 271.152 / 0.747);
+    color: #aaa;                                                   /* fallback */
+    color: oklch(96.115% 0.00011 271.152 / 0.747);                 /* fallback moderno */
+    color: var(--texto-terciario, oklch(96.115% 0.00011 271.152 / 0.747)); /* 🌅 FAGULHA – Fase 2 */
 
 }
 
 .solicitacao-central-item .solicitante-comunidade {
     font-size: 0.7rem;
     font-size: clamp(0.7rem, 0.9vw, 0.9rem);
-    color: #ffbc00;
+    color: #ffbc00;                                                /* fallback */
+    color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
 }
 
@@ -1274,14 +1351,17 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .btn-aprovar-solicitacao-central {
-    background: #4caf50;
-    color: #fff;
+    background: #4caf50;                                           /* fallback */
+    background: var(--cor-sucesso, #4caf50);                      /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                   /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-aprovar-solicitacao-central:hover {
-    background: #66bb6a;
+    background: #66bb6a;                                           /* fallback */
+    background: var(--cor-sucesso-hover, #66bb6a);                /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.03);
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.2);                   /* 🎨 verde com alpha específico */
 }
 
 .btn-aprovar-solicitacao-central:active {
@@ -1296,16 +1376,17 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .btn-rejeitar-solicitacao-central {
-    background: rgba(255, 50, 50, 0.12);
-    color: #ff6b6b;
-    border: 1px solid rgba(255, 50, 50, 0.15);
+    background: rgba(255, 50, 50, 0.12);                           /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                /* fallback */
+    color: var(--cor-erro, #ff6b6b);                              /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 50, 50, 0.15);                     /* 🎨 vermelho com alpha específico */
 }
 
 .btn-rejeitar-solicitacao-central:hover {
-    background: rgba(255, 50, 50, 0.2);
-    border-color: rgba(255, 50, 50, 0.3);
+    background: rgba(255, 50, 50, 0.2);                            /* 🎨 vermelho com alpha específico do hover */
+    border-color: rgba(255, 50, 50, 0.3);                          /* 🎨 vermelho com alpha específico do hover */
     transform: scale(1.03);
-    box-shadow: 0 0 12px rgba(255, 50, 50, 0.1);
+    box-shadow: 0 0 12px rgba(255, 50, 50, 0.1);                   /* 🎨 vermelho com alpha específico */
 }
 
 .btn-rejeitar-solicitacao-central:active {
@@ -1321,8 +1402,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 /* Badge do contador na aba */
 .badge-solicitacoes {
-    background: #ffbc00;
-    color: #000;
+    background: #ffbc00;                                           /* fallback */
+    background: var(--texto-dourado, #ffbc00);                     /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                   /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.55rem;
     font-size: clamp(0.5rem, 0.7vw, 0.65rem);
     padding: 1px clamp(4px, 0.6vw, 8px);
@@ -1384,7 +1467,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 @supports not (backdrop-filter: blur(4px)) {
     .solicitacao-central-item {
-        background: rgba(20, 20, 30, 0.9);
+        background: rgba(20, 20, 30, 0.9);                         /* 🎨 roxo-escuro com alpha específico do fallback */
     }
 }
 

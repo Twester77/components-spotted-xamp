@@ -1,4 +1,12 @@
 /* ============================================================
+   🌅 FAGULHA — 2026-10-16 — Fase 2 (arquivo 7 de 7) — ÚLTIMO!
+   Comunidades. SEM dedupe (o combinado era só no formularios.css).
+   Cores de identidade do comunidades (roxo eigengrau, verde-limão,
+   amarelo load-more) MANTIDAS hardcoded. Tema hacker vai sobrescrever
+   via [data-theme="hacker"].
+   ============================================================ */
+
+/* ============================================================
    COMUNIDADES – ESTILOS DEDICADOS (FASE 4 – REFORMULADO)
    ============================================================ 
    Tema escuro (eigengrau) com inspiração em Facebook/Instagram/Orkut
@@ -57,25 +65,25 @@
 
 @supports not (oklch(0% 0 0)) {
     .comunidade-page .card-postar-inline-wrapper {
-        background: #16161d;
+        background: #16161d;                                        /* 🎨 roxo-eigengrau fallback */
     }
     .comunidade-page .btn-toggle-postar {
-        color: #ccc;
+        color: #ccc;                                                /* fallback */
     }
     .comunidade-page .postar-inline-conteudo .btn-lancar-vivo {
-        background: #7cd632e8;
+        background: #7cd632e8;                                      /* 🎨 verde-limão fallback */
     }
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
-        background: #16161d;
+        background: #16161d;                                        /* 🎨 roxo-eigengrau fallback */
     }
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-mention {
-        color: #ffbc00;
+        color: #ffbc00;                                             /* fallback */
     }
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
-        color: #eee;
+        color: #eee;                                                /* fallback */
     }
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item.voted {
-        background: rgba(255, 188, 0, 0.15);
+        background: rgba(255, 188, 0, 0.15);                        /* fallback */
     }
 }
 
@@ -88,14 +96,16 @@
 .comunidades-header h1 {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(1.6rem, 3vw, 2.4rem);
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     margin: 30px 0 10px 0;
 }
 
 .comunidades-header p {
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1rem, 1.5vw, 1.2rem);
     margin-bottom: 30px;
 }
@@ -110,29 +120,32 @@
 }
 
 .comunidade-card {
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0 0 / 0.04);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: oklch(100% 0 0 / 0.04);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.04));            /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border: 1px solid oklch(100% 0 0 / 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.06);                       /* fallback moderno */
+    border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);                      /* 🎨 sombra específica do card */
 }
 
 .comunidade-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica do hover */
 }
 
 .comunidade-card .capa-wrapper {
     position: relative;
     aspect-ratio: 16 / 9;
     overflow: hidden;
-    background: #111;
-    background: oklch(10% 0 0);
+    background: #111;                                               /* fallback */
+    background: oklch(10% 0 0);                                     /* fallback moderno */
+    background: var(--bg-page-dark, oklch(10% 0 0));                /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-card .capa-wrapper img {
@@ -150,16 +163,18 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    background: oklch(0% 0 0 / 0.6);
+    background: rgba(0, 0, 0, 0.6);                                 /* fallback */
+    background: oklch(0% 0 0 / 0.6);                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.6));       /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     border-radius: 20px;
     padding: 4px 12px;
     font-size: 0.75rem;
     font-size: clamp(0.7rem, 1vw, 0.9rem);
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     align-items: center;
     gap: 4px;
@@ -171,8 +186,9 @@
 
 .comunidade-card .info-comunidade h3 {
     font-size: clamp(1.05rem, 1.5vw, 1.4rem);
-    color: #fff;
-    color: oklch(100% 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 6px;
     font-weight: 600;
 }
@@ -180,8 +196,9 @@
 .comunidade-card .info-comunidade .descricao {
     font-size: 0.9rem;
     font-size: clamp(0.85rem, 1.2vw, 1rem);
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     display: -webkit-box;
     max-height: 3.5rem;
     -webkit-line-clamp: 3;
@@ -199,8 +216,9 @@
     align-items: center;
     font-size: 0.8rem;
     font-size: clamp(0.75rem, 1vw, 0.9rem);
-    color: #777;
-    color: oklch(58% 0 0);
+    color: #777;                                                    /* fallback */
+    color: oklch(58% 0 0);                                          /* fallback moderno */
+    color: var(--texto-disabled, oklch(58% 0 0));                   /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-entrar-comunidade {
@@ -209,10 +227,12 @@
     border: none;
     text-decoration: none;
     border-radius: 30px;
-    background: #ffbc00;
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: #ffbc00;                                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036);                      /* fallback moderno */
+    background: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: oklch(0% 0 0);                                           /* fallback moderno */
+    color: var(--bg-page-dark, oklch(0% 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
@@ -221,10 +241,12 @@
 }
 
 .btn-entrar-comunidade.membro {
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(100% 0 0 / 0.05);
-    color: #aaa;
-    color: oklch(68% 0 0);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: oklch(100% 0 0 / 0.05);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.05));            /* 🌅 FAGULHA – Fase 2 */
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-entrar-comunidade:hover {
@@ -256,9 +278,12 @@
     padding: 8px 16px;
     min-height: 40px;
     border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(255, 255, 255, 0.15);                          /* fallback */
+    background: var(--borda-card, rgba(255, 255, 255, 0.15));      /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.95rem;
     transition: border-color 0.2s, background 0.2s;
     min-width: 0;
@@ -266,24 +291,29 @@
 
 .search-input:focus-visible {
     outline: none;
-    border-color: var(--dourado, #ffbc00);
-    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--dourado, #ffbc00);                          /* fallback */
+    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(255, 255, 255, 0.08);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.08));  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .search-input::placeholder {
-    color: #888;
-    color: oklch(62.675% 0.00007 271.152);
+    color: #888;                                                    /* fallback */
+    color: oklch(62.675% 0.00007 271.152);                         /* fallback moderno */
+    color: var(--texto-muted, oklch(62.675% 0.00007 271.152));      /* 🌅 FAGULHA – Fase 2 */
 }
 
 .search-btn {
     min-height: 40px;
     flex-shrink: 0;
     padding: 8px 16px;
-    background: #4caf50;
-    background: oklch(67.311% 0.16242 144.231);
+    background: #4caf50;                                            /* fallback */
+    background: oklch(67.311% 0.16242 144.231);                     /* fallback moderno */
+    background: var(--cor-sucesso, oklch(67.311% 0.16242 144.231)); /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.9rem;
     font-size: clamp(0.86rem, 1.1cqi, 1.05rem);
-    color: #000;
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     border: none;
     border-radius: 25px;
     font-weight: 600;
@@ -304,16 +334,17 @@
     width: 100%;
     max-height: 350px;
     overflow-y: auto;
-    background: rgba(16, 16, 28, 0.70);
+    background: rgba(16, 16, 28, 0.70);                             /* 🎨 roxo com alpha específico do dropdown */
     -webkit-backdrop-filter: blur(1.5px);
     backdrop-filter: blur(1.5px);
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);                     /* 🎨 sombra específica */
     z-index: 9999;
     padding: 6px 0;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 188, 0, 0.3) transparent;
+    scrollbar-color: rgba(255, 188, 0, 0.3) transparent;            /* 🎨 dourado com alpha específico (scrollbar) */
 }
 
 .search-dropdown::-webkit-scrollbar {
@@ -323,7 +354,7 @@
     background: transparent;
 }
 .search-dropdown::-webkit-scrollbar-thumb {
-    background: rgba(255, 188, 0, 0.3);
+    background: rgba(255, 188, 0, 0.3);                             /* 🎨 dourado com alpha específico (scrollbar) */
     border-radius: 4px;
 }
 
@@ -334,9 +365,11 @@
     gap: 12px;
     padding: 10px 14px;
     text-decoration: none;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     transition: background 0.15s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);             /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.03)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .search-result-item:last-child {
@@ -344,7 +377,8 @@
 }
 
 .search-result-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
 }
 
 .search-result-avatar {
@@ -353,8 +387,10 @@
     border-radius: 8px;
     object-fit: cover;
     flex-shrink: 0;
-    background: #111;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #111;                                               /* fallback */
+    background: var(--bg-page-dark, #111);                         /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .search-result-info {
@@ -368,7 +404,8 @@
 .search-result-nome {
     font-weight: 600;
     font-size: 0.95rem;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -376,7 +413,8 @@
 
 .search-result-descricao {
     font-size: 0.8rem;
-    color: #aaa;
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -397,8 +435,9 @@
     max-width: 1080px;
     overflow: hidden;
     border-radius: 8px;
-    background: #111;
-    background: oklch(10% 0 0);
+    background: #111;                                               /* fallback */
+    background: oklch(10% 0 0);                                     /* fallback moderno */
+    background: var(--bg-page-dark, oklch(10% 0 0));                /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 20px;
     align-self: center;
     justify-self: center;
@@ -420,21 +459,23 @@
     left: 0;
     right: 0;
     padding: 30px 20px 20px 20px;
-    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-    background: linear-gradient(to top, oklch(0% 0 0 / 0.8) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%); /* fallback */
+    background: linear-gradient(to top, oklch(0% 0 0 / 0.8) 0%, transparent 100%); /* 🎨 gradiente específico do overlay */
 }
 
 .comunidade-capa .overlay h1 {
     font-size: clamp(1.8rem, 4vw, 2.8rem);
-    color: #fff;
-    color: oklch(100% 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-weight: 700;
     margin-bottom: 4px;
 }
 
 .comunidade-capa .overlay .descricao {
-    color: #ccc;
-    color: oklch(80% 0 0);
+    color: #ccc;                                                    /* fallback */
+    color: oklch(80% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(80% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.2vw, 1.2rem);
 }
 
@@ -445,8 +486,9 @@
     gap: 15px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-    background: rgba(20, 20, 30, 0.5);
-    background: oklch(15% 0 0 / 0.5);
+    background: rgba(20, 20, 30, 0.5);                              /* fallback */
+    background: oklch(15% 0 0 / 0.5);                               /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(15% 0 0 / 0.5));      /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     border-radius: 12px;
@@ -484,8 +526,9 @@
 }
 
 .comunidade-actions .contador-membros {
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-info-actions {
@@ -496,30 +539,36 @@
 }
 
 .comunidade-info-actions .criador-info {
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-editar-comunidade {
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(100% 0 0 / 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border: 1px solid oklch(100% 0 0 / 0.1);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: oklch(100% 0 0 / 0.05);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.05));            /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.1);                        /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.1));    /* 🌅 FAGULHA – Fase 2 */
     padding: 8px 20px;
     justify-content: center;
     align-content: center;
     text-align: center;
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
     transition: 0.3s;
 }
 
 .btn-editar-comunidade:hover {
-    background: rgba(255, 255, 255, 0.1);
-    background: oklch(100% 0 0 / 0.1);
-    color: #fff;
-    color: oklch(100% 0 0);
+    background: rgba(255, 255, 255, 0.1);                           /* fallback */
+    background: oklch(100% 0 0 / 0.1);                              /* fallback moderno */
+    background: var(--bg-input-hover, oklch(100% 0 0 / 0.1));       /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .feed-comunidade {
@@ -534,10 +583,11 @@
 
 /* Formulários (criar/editar posts) – fundo escuro com leve vidro */
 .form-container.form-comunidade {
-    background: #1c1c25;
-    background: oklch(23.057% 0.01731 284.95);
+    background: #1c1c25;                                            /* fallback */
+    background: oklch(23.057% 0.01731 284.95);                      /* 🎨 roxo-eigengrau específico do form */
     background-clip: padding-box;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     width: 100%;
     max-width: 1200px;
@@ -554,9 +604,11 @@ textarea#descricao{
     padding: 10px 12px;
     font-family: inherit;
     outline: none;
-    color: #ffffffeb;
-    color: oklch(100% 0.00011 271.152 / 0.922);
-    background: #1a1a1a;
+    color: #ffffffeb;                                               /* fallback */
+    color: oklch(100% 0.00011 271.152 / 0.922);                     /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0.00011 271.152 / 0.922)); /* 🌅 FAGULHA – Fase 2 */
+    background: #1a1a1a;                                            /* fallback */
+    background: var(--bg-page-dark, #1a1a1a);                      /* 🌅 FAGULHA – Fase 2 */
 }
 
 
@@ -572,9 +624,10 @@ textarea#descricao{
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 188, 0, 0.12);
-    color: #ffbc00;
-    border: 1px solid rgba(255, 188, 0, 0.25);
+    background: rgba(255, 188, 0, 0.12);                            /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 188, 0, 0.25);                      /* 🎨 dourado com alpha específico */
     border-radius: 30px;
     padding: 8px 20px;
     font-weight: 600;
@@ -586,10 +639,10 @@ textarea#descricao{
 }
 
 .btn-solicitar-entrada:hover {
-    background: rgba(255, 188, 0, 0.2);
-    border-color: rgba(255, 188, 0, 0.4);
+    background: rgba(255, 188, 0, 0.2);                             /* 🎨 dourado com alpha específico */
+    border-color: rgba(255, 188, 0, 0.4);                           /* 🎨 dourado com alpha específico */
     transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
+    box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);                    /* 🎨 glow dourado específico */
 }
 
 .btn-solicitar-entrada:active {
@@ -601,9 +654,10 @@ textarea#descricao{
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 188, 0, 0.08);
-    color: #ffbc00;
-    border: 1px solid rgba(255, 188, 0, 0.1);
+    background: rgba(255, 188, 0, 0.08);                            /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 188, 0, 0.1);                       /* 🎨 dourado com alpha específico */
     border-radius: 30px;
     padding: 8px 16px;
     font-weight: 600;
@@ -619,8 +673,9 @@ textarea#descricao{
     border-radius: 30px;
     font-size: 0.75rem;
     font-size: clamp(0.8rem, 1vw, 1.05rem);
-    background: rgba(255, 50, 50, 0.12);
-    color: #ff6b6b;
+    background: rgba(255, 50, 50, 0.12);                            /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                                /* 🌅 FAGULHA – Fase 2 */
     padding: 8px 15px;
     font-weight: 600;
     opacity: 0.6;
@@ -629,14 +684,14 @@ textarea#descricao{
     align-items: center;
     gap: 8px;
     transition: opacity 0.2s ease, background 0.2s ease;
-    border: 1px solid rgba(255, 50, 50, 0.2);
+    border: 1px solid rgba(255, 50, 50, 0.2);                       /* 🎨 vermelho com alpha específico */
 }
 
 
 .btn-banido-estilo:hover {
     opacity: 1;
-    background: rgba(255, 50, 50, 0.15);
-    border-color: rgba(255, 50, 50, 0.25);
+    background: rgba(255, 50, 50, 0.15);                            /* 🎨 vermelho com alpha específico */
+    border-color: rgba(255, 50, 50, 0.25);                          /* 🎨 vermelho com alpha específico */
 }
 
 .btn-banido-estilo small {
@@ -648,8 +703,10 @@ textarea#descricao{
 
 /* ---------- BOTÕES APROVAR / REJEITAR (na lista de solicitações) ---------- */
 .btn-aprovar-solicitacao {
-    background: #4caf50;
-    color: #fff;
+    background: #4caf50;                                            /* fallback */
+    background: var(--cor-sucesso, #4caf50);                       /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     border: none;
     border-radius: 20px;
     padding: 4px 14px;
@@ -664,9 +721,10 @@ textarea#descricao{
 }
 
 .btn-aprovar-solicitacao:hover {
-    background: #66bb6a;
+    background: #66bb6a;                                            /* fallback */
+    background: var(--cor-sucesso-hover, #66bb6a);                 /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);                    /* 🎨 verde com alpha específico */
 }
 
 .btn-aprovar-solicitacao:active {
@@ -681,9 +739,10 @@ textarea#descricao{
 }
 
 .btn-rejeitar-solicitacao {
-    background: rgba(255, 50, 50, 0.12);
-    color: #ff6b6b;
-    border: 1px solid rgba(255, 50, 50, 0.2);
+    background: rgba(255, 50, 50, 0.12);                            /* 🎨 vermelho com alpha específico */
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                                /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 50, 50, 0.2);                       /* 🎨 vermelho com alpha específico */
     border-radius: 20px;
     padding: 4px 14px;
     font-size: clamp(0.7rem, 0.9vw, 0.8rem);
@@ -697,10 +756,10 @@ textarea#descricao{
 }
 
 .btn-rejeitar-solicitacao:hover {
-    background: rgba(255, 50, 50, 0.2);
-    border-color: rgba(255, 50, 50, 0.4);
+    background: rgba(255, 50, 50, 0.2);                             /* 🎨 vermelho com alpha específico */
+    border-color: rgba(255, 50, 50, 0.4);                           /* 🎨 vermelho com alpha específico */
     transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(255, 50, 50, 0.15);
+    box-shadow: 0 0 12px rgba(255, 50, 50, 0.15);                   /* 🎨 vermelho com alpha específico */
 }
 
 .btn-rejeitar-solicitacao:active {
@@ -717,16 +776,18 @@ textarea#descricao{
 /* ---------- SEÇÃO DE SOLICITAÇÕES PENDENTES ---------- */
 .solicitacoes-section {
     margin: 20px 0;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     padding: 16px;
-    border: 1px solid rgba(255, 188, 0, 0.1);
+    border: 1px solid rgba(255, 188, 0, 0.1);                       /* 🎨 dourado com alpha específico */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
 }
 
 .solicitacoes-section h4 {
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     margin: 0 0 12px 0;
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     display: flex;
@@ -745,7 +806,8 @@ textarea#descricao{
     align-items: center;
     justify-content: space-between;
     padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.04));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: 8px;
     flex-wrap: wrap;
     gap: 8px;
@@ -753,7 +815,7 @@ textarea#descricao{
 }
 
 .solicitacao-item:hover {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.07);                          /* 🎨 branco com alpha específico do hover */
 }
 
 .solicitacao-item img {
@@ -761,36 +823,40 @@ textarea#descricao{
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255, 188, 0, 0.15);
+    border: 2px solid rgba(255, 188, 0, 0.15);                      /* 🎨 dourado com alpha específico */
 }
 
 .solicitacao-item .solicitante-nome {
     font-weight: 500;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .solicitacao-item .solicitante-data {
-    color: #888;
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.7rem;
 }
 
 /* ---------- BADGE DE PRIVADA (na capa da comunidade) ---------- */
 .badge-privada {
     display: inline-block;
-    background: rgba(255, 188, 0, 0.2);
-    color: #ffbc00;
+    background: rgba(255, 188, 0, 0.2);                             /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     padding: 2px 12px;
     border-radius: 20px;
     font-size: clamp(0.65rem, 0.8vw, 0.75rem);
     font-weight: 600;
     margin-top: 6px;
-    border: 1px solid rgba(255, 188, 0, 0.15);
+    border: 1px solid rgba(255, 188, 0, 0.15);                      /* 🎨 dourado com alpha específico */
 }
 
 /* ---------- BADGE DE SOLICITAÇÕES (contador) ---------- */
 .solicitacoes-badge {
-    background: rgba(255, 188, 0, 0.15);
-    color: #ffbc00;
+    background: rgba(255, 188, 0, 0.15);                            /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     padding: 2px 10px;
     border-radius: 20px;
     font-size: 0.75rem;
@@ -799,7 +865,7 @@ textarea#descricao{
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    border: 1px solid rgba(255, 188, 0, 0.1);
+    border: 1px solid rgba(255, 188, 0, 0.1);                       /* 🎨 dourado com alpha específico */
 }
 
 /* ---------- SELO DE TIPO NA LISTA DE COMUNIDADES ---------- */
@@ -807,7 +873,7 @@ textarea#descricao{
     position: absolute;
     bottom: 8px;
     left: 8px;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.65);                                /* 🎨 preto com alpha específico */
     -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     padding: 3px 10px;
@@ -815,21 +881,24 @@ textarea#descricao{
     font-size: 0.65rem;
     font-size: clamp(0.65rem, 0.7vw, 0.8rem);
     font-weight: 600;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 
 .badge-tipo.publica {
-    border-color: rgba(76, 175, 80, 0.3);
-    color: #81c784;
+    border-color: rgba(76, 175, 80, 0.3);                           /* 🎨 verde com alpha específico */
+    color: #81c784;                                                 /* 🎨 verde-claro específico */
 }
 
 .badge-tipo.privada {
-    border-color: rgba(255, 188, 0, 0.3);
-    color: #ffbc00;
+    border-color: rgba(255, 188, 0, 0.3);                           /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ================================================================
@@ -837,10 +906,10 @@ textarea#descricao{
    ================================================================ */
 @supports not (backdrop-filter: blur(4px)) {
     .solicitacoes-section {
-        background: rgba(20, 20, 30, 0.9);
+        background: rgba(20, 20, 30, 0.9);                          /* fallback estrutural */
     }
     .badge-tipo {
-        background: rgba(0, 0, 0, 0.85);
+        background: rgba(0, 0, 0, 0.85);                            /* fallback estrutural */
     }
 }
 
@@ -1056,9 +1125,10 @@ textarea#descricao{
     display: inline-flex;
     align-items: center;
     gap: clamp(4px, 0.6vw, 8px);
-    background: rgba(255, 188, 0, 0.12);
-    color: #ffbc00;
-    border: 1px solid rgba(255, 188, 0, 0.2);
+    background: rgba(255, 188, 0, 0.12);                            /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 188, 0, 0.2);                       /* 🎨 dourado com alpha específico */
     border-radius: clamp(20px, 3vw, 30px);
     padding: 8px 20px;
     padding: clamp(8px, 0.8vw, 10px) clamp(12px, 1.5vw, 20px);
@@ -1070,10 +1140,10 @@ textarea#descricao{
 }
 
 .btn-gerenciar-membros:hover {
-    background: rgba(255, 188, 0, 0.2);
-    border-color: rgba(255, 188, 0, 0.4);
+    background: rgba(255, 188, 0, 0.2);                             /* 🎨 dourado com alpha específico */
+    border-color: rgba(255, 188, 0, 0.4);                           /* 🎨 dourado com alpha específico */
     transform: scale(1.02);
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.05);
+    box-shadow: 0 0 15px rgba(255, 188, 0, 0.05);                   /* 🎨 glow dourado específico */
 }
 
 .btn-gerenciar-membros:active {
@@ -1087,8 +1157,9 @@ textarea#descricao{
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    background: oklch(0% 0 0 / 0.5); /* fallback: rgba */
+    background: rgba(0, 0, 0, 0.5);                                 /* fallback */
+    background: oklch(0% 0 0 / 0.5);                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.5));       /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     z-index: 99999;
@@ -1101,9 +1172,10 @@ textarea#descricao{
 
 /* ---------- CONTAINER DO MODAL ---------- */
 .modal-container {
-    background: #1a1a2ed9;
-    background: oklch(23.271% 0.04427 278.592 / 0.86);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: #1a1a2ed9;                                          /* fallback */
+    background: oklch(23.271% 0.04427 278.592 / 0.86);              /* 🎨 roxo específico do modal */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(14px, 2vw, 24px);
     max-width: clamp(300px, 90vw, 600px);
     width: 100%;
@@ -1111,7 +1183,7 @@ textarea#descricao{
     max-height: 80dvh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);                     /* 🎨 sombra específica do modal */
     animation: modalEntrada 0.25s ease-out;
     overflow: hidden;
 }
@@ -1133,7 +1205,8 @@ textarea#descricao{
     justify-content: space-between;
     align-items: center;
     padding: clamp(10px, 1.5vw, 20px) clamp(14px, 2vw, 24px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);             /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)); /* 🌅 FAGULHA – Fase 2 */
     flex-shrink: 0;
 }
 
@@ -1141,20 +1214,23 @@ textarea#descricao{
     margin: 0;
     font-size: clamp(1.1rem, 1.4vw, 1.4rem);
     font-weight: 600;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     align-items: center;
     gap: clamp(6px, 0.8vw, 12px);
 }
 
 .modal-header h3 i {
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
 }
 
 .modal-fechar {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5);                                /* fallback */
+    color: var(--texto-terciario, rgba(255, 255, 255, 0.5));       /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1.2rem, 2vw, 2rem);
     cursor: pointer;
     padding: 0;
@@ -1164,7 +1240,8 @@ textarea#descricao{
 }
 
 .modal-fechar:hover {
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.05);
 }
 
@@ -1174,7 +1251,7 @@ textarea#descricao{
     overflow-y: auto;
     padding: clamp(6px, 1.2vw, 14px) clamp(8px, 1.5vw, 20px);
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 188, 0, 0.3) transparent;
+    scrollbar-color: rgba(255, 188, 0, 0.3) transparent;            /* 🎨 dourado com alpha específico */
 }
 
 .modal-body::-webkit-scrollbar {
@@ -1186,7 +1263,7 @@ textarea#descricao{
 }
 
 .modal-body::-webkit-scrollbar-thumb {
-    background: rgba(255, 188, 0, 0.3);
+    background: rgba(255, 188, 0, 0.3);                             /* 🎨 dourado com alpha específico */
     border-radius: 4px;
 }
 
@@ -1202,7 +1279,8 @@ textarea#descricao{
     align-items: flex-start;
     justify-content: space-between;
     padding: clamp(4px, 0.9cqw, 10px) clamp(6px, 1.5cqw, 14px);
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(5px, 0.8cqw, 10px);
     border-left: 3px solid transparent;
     transition: background 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
@@ -1211,7 +1289,8 @@ textarea#descricao{
 }
 
 .membro-item:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.12);                          /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.12));     /* 🌅 FAGULHA – Fase 2 */
 }
 
 .membro-item .info-membro {
@@ -1229,13 +1308,14 @@ textarea#descricao{
     height: clamp(36px, 4cqw, 50px);
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid rgba(255, 188, 0, 0.1);
+    border: 1px solid rgba(255, 188, 0, 0.1);                       /* 🎨 dourado com alpha específico */
     flex-shrink: 0;
 }
 
 .membro-item .nome-membro {
     font-weight: 500;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.8rem, 1cqw, 1rem);
     word-break: break-word;
@@ -1245,8 +1325,9 @@ textarea#descricao{
 .membro-item .data-membro {
     font-size: 0.7rem;
     font-size: clamp(0.65rem, 2.5cqw, 0.85rem);
-    color: #888;
-    color: oklch(0.6268 0 0);
+    color: #888;                                                    /* fallback */
+    color: oklch(0.6268 0 0);                                       /* fallback moderno */
+    color: var(--texto-muted, oklch(0.6268 0 0));                   /* 🌅 FAGULHA – Fase 2 */
     margin-top: 3px;
 }
 
@@ -1277,18 +1358,22 @@ textarea#descricao{
 }
 
 .papel-criador {
-    background: rgba(255, 188, 0, 0.15);
-    color: #ffbc00;
+    background: rgba(255, 188, 0, 0.15);                            /* 🎨 dourado com alpha específico */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
 }
 
 .papel-admin {
-    background: rgba(76, 175, 80, 0.15);
-    color: #4caf50;
+    background: rgba(76, 175, 80, 0.15);                            /* 🎨 verde com alpha específico */
+    color: #4caf50;                                                 /* fallback */
+    color: var(--cor-sucesso, #4caf50);                             /* 🌅 FAGULHA – Fase 2 */
 }
 
 .papel-membro {
-    background: rgba(255, 255, 255, 0.05);
-    color: #aaa;
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ---------- BOTÕES DE AÇÃO NO MODAL ---------- */
@@ -1304,13 +1389,15 @@ textarea#descricao{
     transition: all 0.15s ease;
     line-height: 1;
     opacity: 0.7;
-    color: #ccc;
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-acao-membro:hover {
     opacity: 1;
     transform: scale(1.05);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-acao-membro:active {
@@ -1324,31 +1411,37 @@ textarea#descricao{
 }
 
 .btn-banir {
-    color: #ff6b6b;
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                                /* 🌅 FAGULHA – Fase 2 */
 }
 .btn-banir:hover {
-    color: #ff8a8a;
+    color: #ff8a8a;                                                 /* 🎨 vermelho-claro específico */
 }
 
 .btn-remover {
-    color: #ff6b6b;
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                                /* 🌅 FAGULHA – Fase 2 */
 }
 .btn-remover:hover {
-    color: #ff8a8a;
+    color: #ff8a8a;                                                 /* 🎨 vermelho-claro específico */
 }
 
 .btn-promover {
-    color: #4caf50;
+    color: #4caf50;                                                 /* fallback */
+    color: var(--cor-sucesso, #4caf50);                             /* 🌅 FAGULHA – Fase 2 */
 }
 .btn-promover:hover {
-    color: #66bb6a;
+    color: #66bb6a;                                                 /* fallback */
+    color: var(--cor-sucesso-hover, #66bb6a);                       /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-rebaixar {
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
 }
 .btn-rebaixar:hover {
-    color: #ffd44d;
+    color: #ffd44d;                                                 /* fallback */
+    color: var(--texto-dourado-hover, #ffd44d);                     /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ---------- RODAPÉ DO MODAL ---------- */
@@ -1358,7 +1451,8 @@ textarea#descricao{
     align-items: center;
     padding: 6px 12px ;
     padding: clamp(8px, 1vw, 14px) clamp(14px, 2vw, 24px);
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);                /* fallback */
+    border-top: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)); /* 🌅 FAGULHA – Fase 2 */
     flex-shrink: 0;
     flex-wrap: wrap;
     gap: 4px;
@@ -1367,31 +1461,36 @@ textarea#descricao{
 
 .contador-membros-modal {
     font-size: clamp(0.75rem, 0.9vw, 0.95rem);
-    color: #888;
-    color: oklch(98.511% 0.00011 271.152 / 0.402);
+    color: #888;                                                    /* fallback */
+    color: oklch(98.511% 0.00011 271.152 / 0.402);                  /* fallback moderno */
+    color: var(--texto-muted, oklch(98.511% 0.00011 271.152 / 0.402)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 #btn-fechar-modal-membros.btn-fechar-modal {
     position: static;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.06));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: clamp(12px, 2.5vw, 30px);
     padding: clamp(4px, 0.5vw, 8px) clamp(14px, 1.5vw, 24px);
-    color: #ccc;
+    color: #ccc;                                                    /* fallback */
+    color: var(--texto-secundario, #ccc);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.75rem;
     font-size: clamp(0.85rem, 0.8vw, 1.05rem);
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: inherit;
-    /* Mantém alinhado no fluxo do flex do rodapé */
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
 .btn-fechar-modal:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.1);                           /* fallback */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));   /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
@@ -1403,18 +1502,22 @@ textarea#descricao{
 
 .loading-membros i {
     font-size: clamp(1.5rem, 2.5vw, 2.5rem);
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
 }
 
 .loading-membros p {
-    color: #888;
+    color: #888;                                                    /* fallback */
+    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
     margin-top: clamp(6px, 0.8vw, 12px);
     font-size: clamp(0.85rem, 1vw, 1rem);
 }
 
 .btn-tentar-novamente {
-    background: #ffbc00;
-    color: #000;
+    background: #ffbc00;                                            /* fallback */
+    background: var(--texto-dourado, #ffbc00);                     /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: var(--bg-page-dark, #000);                              /* 🌅 FAGULHA – Fase 2 */
     border: none;
     padding: 4px 10px;
     padding: clamp(4px, 0.5vw, 8px) clamp(12px, 1.5vw, 20px);
@@ -1428,7 +1531,8 @@ textarea#descricao{
 }
 
 .btn-tentar-novamente:hover {
-    background: #ffd44d;
+    background: #ffd44d;                                            /* fallback */
+    background: var(--texto-dourado-hover, #ffd44d);               /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
@@ -1441,17 +1545,17 @@ textarea#descricao{
     border-radius: 16px;
     font-size: 0.85rem;
     font-size: clamp(0.9rem, 0.8vw, 1.1rem);
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.25);                          /* 🎨 branco com alpha específico */
     text-decoration: none;
-    border: 1px solid #1111;
+    border: 1px solid #1111;                                        /* 🎨 preto com alpha muito baixo */
     font-weight: 600;
-    color: #ffffcf;
-    color: oklch(0.9882 0.0617 107.48);
+    color: #ffffcf;                                                 /* fallback */
+    color: oklch(0.9882 0.0617 107.48);                             /* 🎨 amarelo-específico do botão */
 }
 
 
 .btn-bt-ver-lista:hover {
-    background: #2c2c3a;
+    background: #2c2c3a;                                            /* 🎨 cinza-roxo específico */
     transition: 0.3s;
 }
 
@@ -1466,13 +1570,13 @@ textarea#descricao{
 
 
 .main-comunidades  #btn-load-more-comunidades {
-    background: #faba0d;
-    background: oklch(0.8 0.19 76.05);
+    background: #faba0d;                                            /* fallback */
+    background: oklch(0.8 0.19 76.05);                              /* 🎨 amarelo-ouro específico do load-more */
     border: 1px solid var(--bt-borda-sutil);
     border-radius: 30px;
     padding: 10px 30px;
-    color: #1e1a1a;
-    color: oklch(0.09 0 1);
+    color: #1e1a1a;                                                 /* fallback */
+    color: oklch(0.09 0 1);                                         /* 🎨 preto-específico do texto */
     font-weight: 600;
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     display: inline-flex;
@@ -1482,8 +1586,9 @@ textarea#descricao{
 }
 
 .main-comunidades #btn-load-more-comunidades:hover {
-    background: rgba(255, 255, 255, 0.1);
-    background: oklch(1 0 0 / 0.1);
+    background: rgba(255, 255, 255, 0.1);                           /* fallback */
+    background: oklch(1 0 0 / 0.1);                                 /* fallback moderno */
+    background: var(--bg-input-hover, oklch(1 0 0 / 0.1));          /* 🌅 FAGULHA – Fase 2 */
     border-color: var(--bt-dourado);
     transform: translateY(-2px);
 }
@@ -1500,8 +1605,9 @@ textarea#descricao{
 .modal-search-box {
     padding: 6px 10px;
     padding: clamp(8px, 1vw, 14px) clamp(12px, 1.5vw, 18px);
-    background: rgba(0, 0, 0, 0.15);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.15);                                /* 🎨 preto com alpha específico */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);             /* fallback */
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.04)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .input-busca-membro {
@@ -1509,9 +1615,12 @@ textarea#descricao{
     padding: 4px 10px;
     padding: clamp(6px, 0.8vw, 10px) clamp(10px, 1.2vw, 16px);
     border-radius: clamp(6px, 0.8vw, 10px);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.8rem, 0.9vw, 0.95rem);
     transition: border-color 0.2s ease;
     font-family: inherit;
@@ -1519,12 +1628,14 @@ textarea#descricao{
 
 .input-busca-membro:focus-visible {
     outline: none;
-    border-color: #ffbc00;
-    background: rgba(255, 255, 255, 0.07);
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: var(--texto-dourado, #ffbc00);                   /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(255, 255, 255, 0.07);                          /* 🎨 branco com alpha específico */
 }
 
 .input-busca-membro::placeholder {
-    color: #666;
+    color: #666;                                                    /* fallback */
+    color: var(--texto-disabled, #666);                            /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ---------- MEMBRO BANIDO (opacidade reduzida) ---------- */
@@ -1534,24 +1645,25 @@ textarea#descricao{
 }
 
 .membro-banido .nome-membro {
-    color: #999;
+    color: #999;                                                    /* 🎨 cinza específico do banido */
 }
 
 .status-banido {
     font-size: 0.55rem;
     font-size: clamp(0.6rem, 0.65vw, 0.85rem);
-    color: #ff5252;
+    color: #ff5252;                                                 /* 🎨 vermelho-específico do status */
     margin-left: 6px;
     font-weight: 600;
 }
 
 .btn-carregar-mais-membros {
-    background: rgba(255, 188, 0, 0.08);
-    border: 1px solid rgba(255, 188, 0, 0.15);
+    background: rgba(255, 188, 0, 0.08);                            /* 🎨 dourado com alpha específico */
+    border: 1px solid rgba(255, 188, 0, 0.15);                      /* 🎨 dourado com alpha específico */
     border-radius: clamp(24px, 3vw, 30px);
     padding: 6px 12px;
     padding: clamp(4px, 0.5vw, 8px) clamp(14px, 1.8vw, 24px);
-    color: #ffbc00;
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     font-weight: 600;
     font-size: 0.75rem;
     font-size: clamp(0.8rem, 0.8vw, 1rem);
@@ -1564,8 +1676,8 @@ textarea#descricao{
 }
 
 .btn-carregar-mais-membros:hover {
-    background: rgba(255, 188, 0, 0.15);
-    border-color: rgba(255, 188, 0, 0.3);
+    background: rgba(255, 188, 0, 0.15);                            /* 🎨 dourado com alpha específico */
+    border-color: rgba(255, 188, 0, 0.3);                           /* 🎨 dourado com alpha específico */
     transform: scale(1.02);
 }
 
@@ -1578,7 +1690,7 @@ textarea#descricao{
 /* ---------- FALLBACKS PARA NAVEGADORES ANTIGOS ---------- */
 @supports not (backdrop-filter: blur(2px)) {
     .modal-overlay {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.7);                             /* fallback estrutural */
         -webkit-backdrop-filter: none;
         backdrop-filter: none;
     }
@@ -1633,10 +1745,10 @@ textarea#descricao{
 
 @supports not (background: oklch(0.18 0.02 250 / 0.95)) {
     .modal-container {
-        background: #1a1a2e94;
+        background: #1a1a2e94;                                      /* fallback estrutural */
     }
     .modal-overlay {
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.6);                             /* fallback estrutural */
     }
 }
 
@@ -1661,21 +1773,23 @@ textarea#descricao{
    ============================================================ */
 
 .comunidade-page .card-postar-inline-wrapper {
-    background: #16161d; /* eigengrau */
-    background: oklch(0.2035 0.0139 285.1);
+    background: #16161d; /* eigengrau */                            /* fallback */
+    background: oklch(0.2035 0.0139 285.1);                         /* 🎨 roxo-eigengrau específico do card-postar */
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border: 1px solid oklch(100% 0 0 / 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.06);                       /* fallback moderno */
+    border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     margin-bottom: 24px;
     overflow: hidden;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);                       /* 🎨 sombra específica */
 }
 
 .comunidade-page .card-postar-inline-wrapper:hover {
-    border-color: rgba(255, 255, 255, 0.12);
-    border-color: oklch(100% 0 0 / 0.12);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.12);                        /* fallback */
+    border-color: oklch(100% 0 0 / 0.12);                           /* fallback moderno */
+    border-color: var(--borda-card, oklch(100% 0 0 / 0.12));        /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);                      /* 🎨 sombra específica do hover */
 }
 
 /* Botão toggle – texto sempre à esquerda */
@@ -1686,8 +1800,9 @@ textarea#descricao{
     padding: 10px 14px;
     background: transparent;
     border: none;
-    color: #ccc;
-    color: oklch(80% 0 0);
+    color: #ccc;                                                    /* fallback */
+    color: oklch(80% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(80% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1rem, 1.2vw, 1.1rem);
     font-weight: 500;
     cursor: pointer;
@@ -1697,22 +1812,25 @@ textarea#descricao{
 }
 
 .comunidade-page .btn-toggle-postar:hover {
-    color: #fff;
-    color: oklch(100% 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     transition: background 0.2s ease;
 }
 
 .comunidade-page .btn-toggle-postar i {
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     font-size: 1.1rem;
     transition: transform 0.3s ease;
 }
 
 .comunidade-page .btn-toggle-postar .fa-chevron-down {
     margin-left: auto;
-    color: #666;
-    color: oklch(50% 0 0);
+    color: #666;                                                    /* fallback */
+    color: oklch(50% 0 0);                                          /* fallback moderno */
+    color: var(--texto-disabled, oklch(50% 0 0));                   /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-page .btn-toggle-postar[aria-expanded="true"] .fa-chevron-down {
@@ -1721,18 +1839,21 @@ textarea#descricao{
 
 /* Conteúdo expandido */
 .comunidade-page .postar-inline-conteudo {
-    background: rgba(255, 255, 255, 0.02);
-    background: oklch(100% 0 0 / 0.02);
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
-    border-top: 1px solid oklch(100% 0 0 / 0.04);
+    background: rgba(255, 255, 255, 0.02);                          /* fallback */
+    background: oklch(100% 0 0 / 0.02);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.02));            /* 🌅 FAGULHA – Fase 2 */
+    border-top: 1px solid rgba(255, 255, 255, 0.04);                /* fallback */
+    border-top: 1px solid oklch(100% 0 0 / 0.04);                   /* fallback moderno */
+    border-top: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.04)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* Área de texto – estilo Facebook dark */
 .comunidade-page .postar-inline-conteudo .area-texto-vivo {
-    background: rgba(207, 207, 207, 0.65);
-    background: oklch(0.87 0 0 / 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border: 1px solid oklch(100% 0 0 / 0.08);
+    background: rgba(207, 207, 207, 0.65);                          /* fallback */
+    background: oklch(0.87 0 0 / 0.65);                             /* 🎨 cinza-claro específico (estilo Facebook) */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.08);                       /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.08));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     padding: clamp(10px, 1.5vw, 14px);
     margin-bottom: 12px;
@@ -1740,10 +1861,12 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo .area-texto-vivo:focus-within {
-    border-color: #ffbc00;
-    border-color: oklch(83.276% 0.17139 82.036);
-    background: rgba(255, 255, 255, 0.06);
-    background: oklch(100% 0 0 / 0.06);
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036);                    /* fallback moderno */
+    border-color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(255, 255, 255, 0.06);                          /* fallback */
+    background: oklch(100% 0 0 / 0.06);                             /* fallback moderno */
+    background: var(--bg-input-hover, oklch(100% 0 0 / 0.06));      /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-page .postar-inline-conteudo #mensagem-vivo {
@@ -1754,8 +1877,8 @@ textarea#descricao{
     border: none;
     outline: none;
     resize: vertical;
-    color: #0f0f0f;
-    color: oklch(0 0 0 / 0.94);
+    color: #0f0f0f;                                                 /* fallback */
+    color: oklch(0 0 0 / 0.94);                                     /* 🎨 preto específico do texto (área clara) */
     font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.5;
@@ -1763,8 +1886,9 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo #mensagem-vivo::placeholder {
-    color: #777;
-    color: oklch(58% 0 0);
+    color: #777;                                                    /* fallback */
+    color: oklch(58% 0 0);                                          /* fallback moderno */
+    color: var(--texto-disabled, oklch(58% 0 0));                   /* 🌅 FAGULHA – Fase 2 */
     font-style: italic;
 }
 
@@ -1783,10 +1907,12 @@ textarea#descricao{
     height: clamp(60px, 10vw, 90px);
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border: 1px solid oklch(100% 0 0 / 0.08);
-    background: rgba(0, 0, 0, 0.3);
-    background: oklch(0% 0 0 / 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.08);                       /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.08));   /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(0, 0, 0, 0.3);                                 /* fallback */
+    background: oklch(0% 0 0 / 0.3);                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.3));       /* 🌅 FAGULHA – Fase 2 */
     flex-shrink: 0;
 }
 
@@ -1801,11 +1927,13 @@ textarea#descricao{
     position: absolute;
     top: 2px;
     right: 2px;
-    background: rgba(0, 0, 0, 0.7);
-    background: oklch(0% 0 0 / 0.7);
+    background: rgba(0, 0, 0, 0.7);                                 /* fallback */
+    background: oklch(0% 0 0 / 0.7);                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.7));       /* 🌅 FAGULHA – Fase 2 */
     border: none;
-    color: #fff;
-    color: oklch(100% 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
     width: clamp(18px, 2.5vw, 24px);
     height: clamp(18px, 2.5vw, 24px);
@@ -1818,8 +1946,8 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo .btn-remover-anexo:hover {
-    background: rgba(200, 40, 40, 0.85);
-    background: oklch(40% 0.15 30 / 0.85);
+    background: rgba(200, 40, 40, 0.85);                            /* fallback */
+    background: oklch(40% 0.15 30 / 0.85);                          /* 🎨 vermelho-escuro com alpha específico */
 }
 
 /* Barra de ações – ícones, contador, botão publicar */
@@ -1830,8 +1958,9 @@ textarea#descricao{
     justify-content: space-between;
     gap: clamp(8px, 1.5vw, 16px);
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    border-top: 1px solid oklch(100% 0 0 / 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);                /* fallback */
+    border-top: 1px solid oklch(100% 0 0 / 0.06);                   /* fallback moderno */
+    border-top: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-page .postar-inline-conteudo .acoes-esquerda {
@@ -1843,13 +1972,16 @@ textarea#descricao{
 .comunidade-page .postar-inline-conteudo .btn-acao-vivo {
     width: clamp(34px, 4.5vw, 46px);
     height: clamp(34px, 4.5vw, 46px);
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0 0 / 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border: 1px solid oklch(100% 0 0 / 0.06);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: oklch(100% 0 0 / 0.04);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.04));            /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.06);                       /* fallback moderno */
+    border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(1rem, 1.2vw, 1.2rem);
     cursor: pointer;
     display: flex;
@@ -1859,27 +1991,32 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo .btn-acao-vivo:hover {
-    background: rgba(255, 188, 0, 0.08);
-    background: oklch(83.276% 0.17139 82.036 / 0.08);
-    border-color: #ffbc00;
-    border-color: oklch(83.276% 0.17139 82.036);
-    color: #fff;
-    color: oklch(100% 0 0);
+    background: rgba(255, 188, 0, 0.08);                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036 / 0.08);               /* fallback moderno */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 8%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036);                    /* fallback moderno */
+    border-color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-page .postar-inline-conteudo .contador-caracteres {
     font-size: clamp(0.8rem, 0.9vw, 1rem);
-    color: #717171;
-    color: oklch(0.56 0 0);
+    color: #717171;                                                 /* fallback */
+    color: oklch(0.56 0 0);                                         /* fallback moderno */
+    color: var(--texto-disabled, oklch(0.56 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
     padding: 0 4px;
 }
 
 .comunidade-page .postar-inline-conteudo .btn-lancar-vivo {
-    background: #7cd632e8;
-    background: oklch(75% 0.15 130 / 0.9);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: #7cd632e8;                                          /* fallback */
+    background: oklch(75% 0.15 130 / 0.9);                          /* 🎨 verde-limão específico do lançar */
+    color: #000;                                                    /* fallback */
+    color: oklch(0% 0 0);                                           /* fallback moderno */
+    color: var(--bg-page-dark, oklch(0% 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     border: none;
     border-radius: 30px;
     padding: clamp(6px, 1vw, 10px) clamp(16px, 2vw, 28px);
@@ -1893,8 +2030,8 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo .btn-lancar-vivo:hover {
-    background: #c8ff00d3;
-    background: oklch(90% 0.2 120 / 0.85);
+    background: #c8ff00d3;                                          /* fallback */
+    background: oklch(90% 0.2 120 / 0.85);                          /* 🎨 verde-limão-claro específico */
     transform: scale(1.02);
 }
 
@@ -1902,20 +2039,23 @@ textarea#descricao{
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    background:#7cd632e8;
+    background:#7cd632e8;                                           /* 🎨 verde-limão específico do disabled */
 }
 
 /* Seletor de categoria (caso apareça) */
 .comunidade-page .postar-inline-conteudo .campo-categoria-vivo select {
-    background: rgba(255, 255, 255, 0.06);
-    background: oklch(100% 0 0 / 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border: 1px solid oklch(100% 0 0 / 0.08);
+    background: rgba(255, 255, 255, 0.06);                          /* fallback */
+    background: oklch(100% 0 0 / 0.06);                             /* fallback moderno */
+    background: var(--bg-input-hover, oklch(100% 0 0 / 0.06));      /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.08);                       /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.08));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 6px;
     padding: 6px 28px 6px 12px;
     font-size: clamp(0.85rem, 0.9vw, 0.95rem);
-    color: #eee;
-    color: oklch(95% 0 0);
+    color: #eee;                                                    /* fallback */
+    color: oklch(95% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(95% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
     cursor: pointer;
     outline: none;
@@ -1932,28 +2072,32 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo .campo-categoria-vivo select:focus-visible {
-    border-color: #ffbc00;
-    border-color: oklch(83.276% 0.17139 82.036);
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036);                    /* fallback moderno */
+    border-color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* Mensagem "Faça login para postar" */
 .comunidade-page .card-postar-inline {
     /* fallback para quando não há wrapper */
-    background: #16161d;
-    background: oklch(15% 0 0);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border: 1px solid oklch(100% 0 0 / 0.06);
+    background: #16161d;                                            /* fallback */
+    background: oklch(15% 0 0);                                     /* 🎨 roxo-eigengrau específico */
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.06);                       /* fallback moderno */
+    border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 16px;
     padding: 4px;
     margin-bottom: 24px;
     text-align: center;
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .comunidade-page .card-postar-inline i {
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* Link para Página Especializada ( Achados & Perdidos) */
@@ -1961,13 +2105,14 @@ textarea#descricao{
     margin-top: 8px;
     text-align: center;
     opacity: 0.75;
-    color: #1e1e1e;
-    color: oklch(0.2 0 0 / 0.7);
+    color: #1e1e1e;                                                 /* fallback */
+    color: oklch(0.2 0 0 / 0.7);                                    /* 🎨 preto com alpha específico */
     font-weight: bold;
     font-size: clamp(0.7rem, 2vw, 0.95rem);
 }
 .comunidade-page .card-postar-inline .link-pagina-especializada a {
-    color: var(--dourado);
+    color: var(--dourado);                                          /* fallback */
+    color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
 }
 .link-pagina-especializada a:hover {
@@ -1994,8 +2139,8 @@ textarea#descricao{
 
 /* Cada card – sem bordas laterais, apenas superior e inferior, fundo escuro */
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card {
-    background: #272733;
-    background: oklch(27.801% 0.02203 284.867);
+    background: #272733;                                            /* fallback */
+    background: oklch(27.801% 0.02203 284.867);                     /* 🎨 roxo-card específico do comunidades */
     border: none!important;
     border-radius: 8px;
     border-radius: clamp(6px , 1.2vw, 14px);
@@ -2010,8 +2155,9 @@ textarea#descricao{
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card:hover {
-    background: rgba(255, 255, 255, 0.02);
-    background: oklch(100% 0 0 / 0.02);
+    background: rgba(255, 255, 255, 0.02);                          /* fallback */
+    background: oklch(100% 0 0 / 0.02);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.02));            /* 🌅 FAGULHA – Fase 2 */
     box-shadow: none;
     transform: none;
 }
@@ -2033,8 +2179,9 @@ textarea#descricao{
     width: clamp(36px, 6cqh, 72px);
     height: clamp(36px, 6cqh, 72px);
     border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border: 1px solid oklch(100% 0 0 / 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.1);                        /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.1));    /* 🌅 FAGULHA – Fase 2 */
     flex-shrink: 0;
 }
 
@@ -2043,16 +2190,18 @@ textarea#descricao{
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 2.23cqi, 1.05rem);
     font-weight: 600;
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-time {
     font-size: 0.75rem;
     font-size: clamp(0.8rem, 2.25cqi, 1rem);
-    color: #888;
-    color: oklch(60% 0 0);
+    color: #888;                                                    /* fallback */
+    color: oklch(60% 0 0);                                          /* fallback moderno */
+    color: var(--texto-muted, oklch(60% 0 0));                      /* 🌅 FAGULHA – Fase 2 */
     margin-left: auto;
 }
 
@@ -2077,8 +2226,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-wrapper {
     -webkit-overflow-scrolling: touch;
     border-radius: 10px;
     margin: 10px 0;
-    background: #0a0a0a;
-    background: oklch(5% 0 0);
+    background: #0a0a0a;                                            /* fallback */
+    background: oklch(5% 0 0);                                      /* fallback moderno */
+    background: var(--bg-page-dark, oklch(5% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
 }
 
 body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-wrapper::-webkit-scrollbar {
@@ -2092,7 +2242,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item {
     min-height: 150px;
     max-height: 320px;
     max-height: clamp(180px, 60cqh, 360px);
-    background: #0a0a0a;
+    background: #0a0a0a;                                            /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2115,7 +2266,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     height: 100%;
     object-fit: contain;
     display: block;
-    background: #0a0a0a;
+    background: #0a0a0a;                                            /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
 }
 
 /* ============================================================
@@ -2155,7 +2307,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
 .carrossel-numero {
     font-size: 0.75rem;
     font-size: clamp(0.8rem, 3cqi, 1.05rem);
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.5);                                /* fallback */
+    color: var(--texto-terciario, rgba(255, 255, 255, 0.5));       /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
     margin-right: 8px;
     min-width: 30px;
@@ -2166,12 +2319,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.3);                           /* fallback */
+    background: var(--borda-media, rgba(255, 255, 255, 0.3));      /* 🌅 FAGULHA – Fase 2 */
     transition: all 0.3s ease;
     flex-shrink: 0;
 }
 .indicador.ativo {
-    background: #ff7300;
+    background: #ff7300;                                            /* 🎨 laranja-vivo específico do indicador ativo */
     transform: scale(1.3);
 }
 
@@ -2188,13 +2342,15 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
 }
 .carrossel-nav button {
     pointer-events: auto; /* os botões recebem eventos */
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.6);                                 /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.6));       /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(1.5px);
     backdrop-filter: blur(1.5px);
     border: none;
     border-radius: 50%;
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0.00011 271.152);                             /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0.00011 271.152));      /* 🌅 FAGULHA – Fase 2 */
     font-size: 1.5rem;
     font-size: clamp(0.75em, 5cqi, 1.1em);
     width: 44px;
@@ -2208,11 +2364,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     align-items: center;
     justify-content: center;
     transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);                         /* 🎨 sombra específica */
     z-index: 2;
 }
 .carrossel-nav button:hover {
-    background: rgba(255, 188, 0, 0.8);
+    background: rgba(255, 188, 0, 0.8);                             /* fallback */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 80%, transparent); /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.05);
 }
 .carrossel-nav button:active {
@@ -2225,8 +2382,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item img {
     display: flex;
     gap: 15px;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    border-top: 1px solid oklch(100% 0 0 / 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);                /* fallback */
+    border-top: 1px solid oklch(100% 0 0 / 0.06);                   /* fallback moderno */
+    border-top: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06)); /* 🌅 FAGULHA – Fase 2 */
     margin-top: 5px;
 }
 
@@ -2255,8 +2413,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     white-space: nowrap;
     text-overflow: ellipsis;
     line-height: 1.2;
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0 0 / 0.04);
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: oklch(100% 0 0 / 0.04);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.04));            /* 🌅 FAGULHA – Fase 2 */
     border: 1px solid transparent;
     border-radius: 10px;
     border-radius: clamp(8px, 1.3vw, 14px);
@@ -2264,15 +2423,18 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     padding: clamp(4px, 1.3cqi, 8px) clamp(10px, 2cqi, 14px);
     font-size: 0.8rem;
     font-size: clamp(0.86rem, 3cqi, 1em);
-    color: #ddd;
-    color: oklch(88% 0 0);
+    color: #ddd;                                                    /* fallback */
+    color: oklch(88% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(88% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
 }
 
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item.voted {
-    background: rgba(255, 188, 0, 0.15);
-    background: oklch(83.276% 0.17139 82.036 / 0.15);
-    border-color: #ffbc00;
-    border-color: oklch(83.276% 0.17139 82.036);
+    background: rgba(255, 188, 0, 0.15);                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036 / 0.15);               /* fallback moderno */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 15%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036);                    /* fallback moderno */
+    border-color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 
@@ -2372,8 +2534,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
    ================================================== */
 
 .subtitle {
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.5vw, 1.2rem);
     margin-bottom: 20px;
 }
@@ -2385,10 +2548,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 
 .btn-criar-comunidade {
     display: inline-flex;
-    background: #ffbc00;
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: #ffbc00;                                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036);                      /* fallback moderno */
+    background: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: oklch(0% 0 0);                                           /* fallback moderno */
+    color: var(--bg-page-dark, oklch(0% 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     padding: 5px 10px;
     padding: clamp(6px, 0.8vw, 12px) clamp(10px, 1.3vw, 16px);
     border-radius: 25px;
@@ -2402,8 +2567,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .btn-criar-comunidade:hover {
-    background: #ffd44d;
-    background: oklch(88% 0.15 80);
+    background: #ffd44d;                                            /* fallback */
+    background: oklch(88% 0.15 80);                                 /* fallback moderno */
+    background: var(--texto-dourado-hover, oklch(88% 0.15 80));     /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.01);
 }
 
@@ -2417,8 +2583,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     gap: 20px;
     text-align: center;
     justify-content: center;
-    color: #a5a5a5;
-    color: oklch(68% 0 0);
+    color: #a5a5a5;                                                 /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     grid-column: 1 / -1;
     padding: 30px;
 }
@@ -2428,16 +2595,18 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .comunidades-subtitulo {
-    color: #a5a5a5e1;
-    color: oklch(64.341% 0.00007 271.152);
+    color: #a5a5a5e1;                                               /* fallback */
+    color: oklch(64.341% 0.00007 271.152);                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(64.341% 0.00007 271.152));  /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.95rem, 1.5vw, 1.3rem);
     margin-bottom: 25px;
 }
 
 .campo-ajuda {
     display: block;
-    color: #aaaaaa;
-    color: oklch(0.76 0 0);
+    color: #aaaaaa;                                                 /* fallback */
+    color: oklch(0.76 0 0);                                         /* fallback moderno */
+    color: var(--texto-terciario, oklch(0.76 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.7rem, 1vw, 0.95rem);
     margin-top: 4px;
 }
@@ -2447,8 +2616,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    background: #0a0a0a;
-    background: oklch(5% 0 0);
+    background: #0a0a0a;                                            /* fallback */
+    background: oklch(5% 0 0);                                      /* fallback moderno */
+    background: var(--bg-page-dark, oklch(5% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     min-height: 100vh;
     height: auto;
     padding-top: 20px;
@@ -2474,10 +2644,11 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     margin: 0 auto;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border: 1px solid oklch(100% 0 0 / 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.05);                       /* fallback moderno */
+    border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.05));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 10px;
-    background: oklch(0.94 0 5);
+    background: oklch(0.94 0 5);                                    /* 🎨 off-white específico do form (comunidade criar) */
     margin-bottom: 15px;
 }
 
@@ -2488,8 +2659,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 
 .card-postar-inline .campo-grupo label {
     display: block;
-    color: #ccc;
-    color: oklch(80% 0 0);
+    color: #ccc;                                                    /* fallback */
+    color: oklch(80% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(80% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.9rem, 1.1vw, 1rem);
     margin-bottom: 6px;
     font-weight: 500;
@@ -2498,14 +2670,17 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 .card-postar-inline .campo-grupo input[type="text"],
 .card-postar-inline .campo-grupo textarea {
     width: 100%;
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(100% 0 0 / 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border: 1px solid oklch(100% 0 0 / 0.1);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: oklch(100% 0 0 / 0.05);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.05));            /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.1);                        /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.1));    /* 🌅 FAGULHA – Fase 2 */
     border-radius: 8px;
     padding: 10px;
-    color: #fff;
-    color: oklch(100% 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-size: 0.8rem;
     font-size: clamp(0.85rem, 1.1vw, 1.05rem);
     transition: border-color 0.3s ease;
@@ -2515,8 +2690,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 .card-postar-inline .campo-grupo input[type="text"]:focus-visible,
 .card-postar-inline .campo-grupo textarea:focus-visible {
     outline: none;
-    border-color: #ffbc00;
-    border-color: oklch(83.276% 0.17139 82.036);
+    border-color: #ffbc00;                                          /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036);                    /* fallback moderno */
+    border-color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .card-postar-inline .campo-grupo textarea {
@@ -2527,17 +2703,20 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 .input-slug-wrapper {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.03);
-    background: oklch(100% 0 0 / 0.03);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: oklch(100% 0 0 / 0.03);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.03));            /* 🌅 FAGULHA – Fase 2 */
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border: 1px solid oklch(100% 0 0 / 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.06);                       /* fallback moderno */
+    border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     padding: 0 12px;
 }
 
 .slug-prefixo {
-    color: #777;
-    color: oklch(58% 0 0);
+    color: #777;                                                    /* fallback */
+    color: oklch(58% 0 0);                                          /* fallback moderno */
+    color: var(--texto-disabled, oklch(58% 0 0));                   /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.8rem, 1vw, 0.9rem);
     white-space: nowrap;
     flex-shrink: 0;
@@ -2547,8 +2726,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     background: transparent;
     border: none;
     padding: 12px 8px;
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     width: 100%;
     outline: none;
 }
@@ -2557,10 +2737,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     position: relative;
     aspect-ratio: 16 / 9;
     max-height: 300px;
-    background: rgba(255, 255, 255, 0.03);
-    background: oklch(100% 0 0 / 0.03);
-    border: 2px dashed rgba(255, 255, 255, 0.1);
-    border: 2px dashed oklch(100% 0 0 / 0.1);
+    background: rgba(255, 255, 255, 0.03);                          /* fallback */
+    background: oklch(100% 0 0 / 0.03);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.03));            /* 🌅 FAGULHA – Fase 2 */
+    border: 2px dashed rgba(255, 255, 255, 0.1);                    /* fallback */
+    border: 2px dashed oklch(100% 0 0 / 0.1);                       /* fallback moderno */
+    border: 2px dashed var(--borda-media, oklch(100% 0 0 / 0.1));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 10px;
     overflow: hidden;
     display: flex;
@@ -2571,8 +2753,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .capa-preview-wrapper:hover {
-    border-color: rgba(255, 188, 0, 0.3);
-    border-color: oklch(83.276% 0.17139 82.036 / 0.3);
+    border-color: rgba(255, 188, 0, 0.3);                           /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036 / 0.3);              /* fallback moderno */
+    border-color: color-mix(in srgb, var(--texto-dourado, #ffbc00) 30%, transparent); /* 🌅 FAGULHA – Fase 2 */
 }
 
 .capa-preview-wrapper img {
@@ -2584,12 +2767,14 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 
 .capa-overlay {
     position: absolute;
-    background: rgba(0, 0, 0, 0.6);
-    background: oklch(0% 0 0 / 0.6);
+    background: rgba(0, 0, 0, 0.6);                                 /* fallback */
+    background: oklch(0% 0 0 / 0.6);                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.6));       /* 🌅 FAGULHA – Fase 2 */
     padding: 8px 16px;
     border-radius: 20px;
-    color: #fff;
-    color: oklch(100% 0 0);
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.85rem, 1.1vw, 1rem);
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
@@ -2608,24 +2793,29 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .btn-sugestao {
-    background: rgba(255, 188, 0, 0.08);
-    background: oklch(83.276% 0.17139 82.036 / 0.08);
-    border: 1px solid rgba(255, 188, 0, 0.15);
-    border: 1px solid oklch(83.276% 0.17139 82.036 / 0.15);
+    background: rgba(255, 188, 0, 0.08);                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036 / 0.08);               /* fallback moderno */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 8%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 188, 0, 0.15);                      /* fallback */
+    border: 1px solid oklch(83.276% 0.17139 82.036 / 0.15);         /* fallback moderno */
+    border: 1px solid color-mix(in srgb, var(--texto-dourado, #ffbc00) 15%, transparent); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 20px;
     padding: 4px 14px;
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.75rem, 1vw, 0.85rem);
     cursor: pointer;
     transition: 0.3s;
 }
 
 .btn-sugestao:hover {
-    background: rgba(255, 188, 0, 0.15);
-    background: oklch(83.276% 0.17139 82.036 / 0.15);
-    border-color: rgba(255, 188, 0, 0.3);
-    border-color: oklch(83.276% 0.17139 82.036 / 0.3);
+    background: rgba(255, 188, 0, 0.15);                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036 / 0.15);               /* fallback moderno */
+    background: color-mix(in srgb, var(--texto-dourado, #ffbc00) 15%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 188, 0, 0.3);                           /* fallback */
+    border-color: oklch(83.276% 0.17139 82.036 / 0.3);              /* fallback moderno */
+    border-color: color-mix(in srgb, var(--texto-dourado, #ffbc00) 30%, transparent); /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.02);
 }
 
@@ -2637,10 +2827,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .btn-principal {
-    background: #ffbc00;
-    background: oklch(83.276% 0.17139 82.036);
-    color: #000;
-    color: oklch(0% 0 0);
+    background: #ffbc00;                                            /* fallback */
+    background: oklch(83.276% 0.17139 82.036);                      /* fallback moderno */
+    background: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
+    color: #000;                                                    /* fallback */
+    color: oklch(0% 0 0);                                           /* fallback moderno */
+    color: var(--bg-page-dark, oklch(0% 0 0));                     /* 🌅 FAGULHA – Fase 2 */
     padding: 12px 24px;
     border-radius: 30px;
     font-weight: bold;
@@ -2653,19 +2845,22 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .btn-principal:hover {
-    background: #ffd44d;
-    background: oklch(88% 0.15 80);
+    background: #ffd44d;                                            /* fallback */
+    background: oklch(88% 0.15 80);                                 /* fallback moderno */
+    background: var(--texto-dourado-hover, oklch(88% 0.15 80));     /* 🌅 FAGULHA – Fase 2 */
     transform: scale(1.01);
 }
 
 .btn-secundario {
     background: transparent;
-    color: #aaa;
-    color: oklch(68% 0 0);
+    color: #aaa;                                                    /* fallback */
+    color: oklch(68% 0 0);                                          /* fallback moderno */
+    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
     padding: 12px 30px;
     border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border: 1px solid oklch(100% 0 0 / 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid oklch(100% 0 0 / 0.1);                        /* fallback moderno */
+    border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.1));    /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
     text-align: center;
     transition: 0.3s;
@@ -2673,10 +2868,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .btn-secundario:hover {
-    background: rgba(255, 255, 255, 0.05);
-    background: oklch(100% 0 0 / 0.05);
-    color: #fff;
-    color: oklch(100% 0 0);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: oklch(100% 0 0 / 0.05);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.05));            /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0 0);                                         /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
 }
 
 
@@ -2699,17 +2896,20 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .btn-ellipsis {
-    background: rgba(0, 0, 0, 0.45);
-    background: oklch(0% 0 0 / 0.45);
+    background: rgba(0, 0, 0, 0.45);                                 /* fallback */
+    background: oklch(0% 0 0 / 0.45);                                /* fallback moderno */
+    background: var(--bg-modal-overlay, oklch(0% 0 0 / 0.45));      /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(1.5px);
     backdrop-filter: blur(1.5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);                     /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
     width: 36px;
     height: 36px;
     width: clamp(36px, 2vw, 60px);
     height: clamp(36px, 2vw, 60px);
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.8);                                /* fallback */
+    color: var(--texto-secundario, rgba(255, 255, 255, 0.8));      /* 🌅 FAGULHA – Fase 2 */
     font-size: 1.2rem;
     position: relative;
     cursor: pointer;
@@ -2718,13 +2918,16 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     justify-content: center;
     justify-self: flex-end;
     transition: background 0.2s, transform 0.15s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);                       /* 🎨 sombra específica */
 }
 
 .btn-ellipsis:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);                          /* fallback */
+    background: var(--borda-card, rgba(255, 255, 255, 0.15));      /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.2);                         /* fallback */
+    border-color: var(--borda-card, rgba(255, 255, 255, 0.2));     /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-ellipsis:active {
@@ -2748,21 +2951,23 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     width: 100%;
     height: 100%;
     z-index: 99999;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.25);                                /* fallback */
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.25));      /* 🌅 FAGULHA – Fase 2 */
     cursor: default;
 }
 
 .ellipsis-menu {
     position: fixed;
-    background: rgba(20, 20, 32, 0.95);
+    background: rgba(20, 20, 32, 0.95);                             /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 32, 0.95));   /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
-    border: 1px solid rgba(255, 188, 0, 0.2);
+    border: 1px solid rgba(255, 188, 0, 0.2);                       /* 🎨 dourado com alpha específico */
     border-radius: 12px;
     padding: 6px 0;
     min-width: 150px;
     max-width: 260px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);                      /* 🎨 sombra específica do menu */
     z-index: 100000;
     font-family: 'Inter', system-ui, sans-serif;
     -webkit-user-select: none;
@@ -2777,7 +2982,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     padding: 10px 16px;
     background: transparent;
     border: none;
-    color: #fff;
+    color: #fff;                                                    /* fallback */
+    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
     cursor: pointer;
     font-family: inherit;
     font-size: 0.9rem;
@@ -2787,25 +2993,29 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 }
 
 .ellipsis-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
 }
 
 .ellipsis-item[data-acao="excluir"] {
-    color: #ff6b6b;
+    color: #ff6b6b;                                                 /* fallback */
+    color: var(--cor-erro, #ff6b6b);                                /* 🌅 FAGULHA – Fase 2 */
 }
 
 .ellipsis-item[data-acao="excluir"]:hover {
-    background: rgba(255, 50, 50, 0.15);
+    background: rgba(255, 50, 50, 0.15);                            /* 🎨 vermelho com alpha específico */
 }
 
 .ellipsis-item[data-acao="cancelar"] {
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
-    color: #888;
-    color: oklch(62.675% 0.00007 271.152);
+    border-top: 1px solid rgba(0, 0, 0, 0.12);                      /* 🎨 preto com alpha específico */
+    color: #888;                                                    /* fallback */
+    color: oklch(62.675% 0.00007 271.152);                          /* fallback moderno */
+    color: var(--texto-muted, oklch(62.675% 0.00007 271.152));      /* 🌅 FAGULHA – Fase 2 */
 }
 
 .ellipsis-item[data-acao="cancelar"]:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
 }
 
 .ellipsis-item:active {
@@ -2874,10 +3084,10 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 
 @supports not (backdrop-filter: blur(1.5px)) {
     .ellipsis-menu {
-        background: rgba(10, 10, 18, 0.97);
+        background: rgba(10, 10, 18, 0.97);                         /* fallback estrutural */
     }
     .btn-ellipsis {
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.7);                             /* fallback estrutural */
     }
 }
 
@@ -2905,8 +3115,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content {
     font-size: 0.85rem;
     font-size: clamp(0.8rem, 2.5cqi, 1.1rem);
     line-height: 1.6;
-    color: #eee;
-    color: oklch(95% 0 0);
+    color: #eee;                                                    /* fallback */
+    color: oklch(95% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(95% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     margin: 8px 0;
     overflow: hidden;
     max-height: 6rem;
@@ -2922,11 +3133,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .post-content.tem-mai
     position: absolute;
     bottom: 0;
     right: 0;
-    background: linear-gradient(to left, #16161d 70%, transparent);
-    background: linear-gradient(to left, oklch(15% 0 0) 70%, transparent);
+    background: linear-gradient(to left, #16161d 70%, transparent); /* fallback */
+    background: linear-gradient(to left, oklch(15% 0 0) 70%, transparent); /* 🎨 roxo-eigengrau do "ler mais" */
     padding-left: 30px;
-    color: #ffbc00;
-    color: oklch(83.276% 0.17139 82.036);
+    color: #ffbc00;                                                 /* fallback */
+    color: oklch(83.276% 0.17139 82.036);                           /* fallback moderno */
+    color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     font-weight: bold;
     font-size: 0.85rem;
     z-index: 10;
@@ -2946,10 +3158,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
     justify-content: center;
     gap: 6px;
     padding: 5px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
+    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #aaa;
+    background: rgba(255, 255, 255, 0.05);                          /* fallback */
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
+    color: #aaa;                                                    /* fallback */
+    color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     font-size: clamp(0.75rem, 1vw, 0.95rem);
     font-weight: 500;
     line-height: 1.4;
@@ -2966,24 +3181,29 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
 .btn-fofocar:hover,
 body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
 .btn-ver-mais:hover {
-    background: rgba(255, 255, 255, 0.1);
-    background: oklch(100% 0.00011 271.152 / 0.1);
-    color: #fff;
-    color: oklch(100% 0.00011 271.152);
-    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.1);                           /* fallback */
+    background: oklch(100% 0.00011 271.152 / 0.1);                  /* fallback moderno */
+    background: var(--bg-input-hover, oklch(100% 0.00011 271.152 / 0.1)); /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;                                                    /* fallback */
+    color: oklch(100% 0.00011 271.152);                             /* fallback moderno */
+    color: var(--texto-primario, oklch(100% 0.00011 271.152));      /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.16);                        /* fallback */
+    border-color: var(--borda-card, rgba(255, 255, 255, 0.16));    /* 🌅 FAGULHA – Fase 2 */
 }
 
 body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais:hover {
-    background: rgba(255, 188, 0, 0.15);
-    background: color-mix(in srgb, var(--dourado, #ffbc00) 15%, transparent);
-    border-color: rgba(255, 188, 0, 0.4);
-    border-color: color-mix(in srgb, var(--dourado, #ffbc00) 40%, transparent);
-    color: #ffbc00;
+    background: rgba(255, 188, 0, 0.15);                            /* fallback */
+    background: color-mix(in srgb, var(--dourado, #ffbc00) 15%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 188, 0, 0.4);                           /* fallback */
+    border-color: color-mix(in srgb, var(--dourado, #ffbc00) 40%, transparent); /* 🌅 FAGULHA – Fase 2 */
+    color: #ffbc00;                                                 /* fallback */
+    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     transform: translateY(-2px);
 }
 
 body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .btn-ver-mais:focus-visible {
-    outline: 2px solid #ffbc00;
+    outline: 2px solid #ffbc00;                                     /* fallback */
+    outline: 2px solid var(--texto-dourado, #ffbc00);               /* 🌅 FAGULHA – Fase 2 */
     outline-offset: 2px;
 }
 
@@ -2995,8 +3215,9 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     align-items: center;
     gap: 8px;
     padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    border-top: 1px solid oklch(100% 0 0 / 0.06);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);                /* fallback */
+    border-top: 1px solid oklch(100% 0 0 / 0.06);                   /* fallback moderno */
+    border-top: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06)); /* 🌅 FAGULHA – Fase 2 */
     margin-top: 6px;
 }
 
@@ -3067,7 +3288,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         padding: var(--ls-pad) var(--ls-pad-x);
         box-sizing: border-box;
         overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);                 /* 🎨 sombra específica do landscape */
         container-type: inline-size;
     }
 
@@ -3148,11 +3369,11 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         inset-inline-end: calc(var(--ls-avatar) * 1.15);
         z-index: 51;
         padding: 2px 6px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        border: 1px solid color-mix(in srgb, #ffd700 30%, transparent);
+        border: 1px solid rgba(255, 215, 0, 0.3);                   /* fallback */
+        border: 1px solid color-mix(in srgb, #ffd700 30%, transparent); /* 🎨 dourado-claro específico do selo ADM */
         border-radius: 6px;
-        background: rgba(255, 215, 0, 0.1);
-        background: color-mix(in srgb, #ffd700 10%, transparent);
+        background: rgba(255, 215, 0, 0.1);                         /* fallback */
+        background: color-mix(in srgb, #ffd700 10%, transparent);  /* 🎨 dourado-claro específico do selo ADM */
         font-size: calc(var(--ls-content-font) * 0.85);
     }
 
@@ -3210,9 +3431,11 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         min-height: 0;
         margin: 0;
         overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);                /* fallback */
+        border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
         border-radius: 10px;
-        background: #0a0a0a;
+        background: #0a0a0a;                                        /* fallback */
+        background: var(--bg-page-dark, #0a0a0a);                  /* 🌅 FAGULHA – Fase 2 */
     }
 
     /* Mosaico quando há mais de um anexo */
@@ -3243,7 +3466,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         min-height: 0;
         aspect-ratio: auto;
         overflow: hidden;
-        background: #0a0a0a;
+        background: #0a0a0a;                                        /* fallback */
+        background: var(--bg-page-dark, #0a0a0a);                  /* 🌅 FAGULHA – Fase 2 */
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3297,7 +3521,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         aspect-ratio: auto;
         overflow: hidden;
         scroll-snap-align: start;
-        background: #0a0a0a;
+        background: #0a0a0a;                                        /* fallback */
+        background: var(--bg-page-dark, #0a0a0a);                  /* 🌅 FAGULHA – Fase 2 */
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
@@ -3343,10 +3568,11 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         bottom: 0;
         z-index: 2;
         padding-left: 20px;
-        background: linear-gradient(to left, #16161d 70%, transparent);
-        background: linear-gradient(to left, oklch(15% 0 0) 70%, transparent);
-        color: #ffbc00;
-        color: oklch(83.276% 0.17139 82.036);
+        background: linear-gradient(to left, #16161d 70%, transparent); /* fallback */
+        background: linear-gradient(to left, oklch(15% 0 0) 70%, transparent); /* 🎨 roxo-eigengrau do "ler mais" */
+        color: #ffbc00;                                             /* fallback */
+        color: oklch(83.276% 0.17139 82.036);                       /* fallback moderno */
+        color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
         font-size: var(--ls-content-font);
         font-weight: bold;
         cursor: pointer;
@@ -3391,25 +3617,28 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         padding: 0;
         position: static;
         pointer-events: auto;
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.12);                /* fallback */
+        border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.12)); /* 🌅 FAGULHA – Fase 2 */
         border-radius: 50%;
-        background: rgba(0, 0, 0, 0.192);
-        color: #fff;
+        background: rgba(0, 0, 0, 0.192);                           /* 🎨 preto com alpha específico */
+        color: #fff;                                                /* fallback */
+        color: var(--texto-primario, #fff);                        /* 🌅 FAGULHA – Fase 2 */
         font-size: calc(var(--ls-nav-btn) * 0.48);
         line-height: 1;
         cursor: pointer;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);                 /* 🎨 sombra específica */
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .carrossel-nav button:hover {
-        background: rgba(255, 188, 0, 0.25);
-        background: color-mix(in srgb, var(--dourado, #ffbc00) 25%, transparent);
+        background: rgba(255, 188, 0, 0.25);                        /* fallback */
+        background: color-mix(in srgb, var(--dourado, #ffbc00) 25%, transparent); /* 🌅 FAGULHA – Fase 2 */
     }
 
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.carrossel-wrapper) .carrossel-nav button:focus-visible {
-        outline: 2px solid #ffbc00;
+        outline: 2px solid #ffbc00;                                 /* fallback */
+        outline: 2px solid var(--texto-dourado, #ffbc00);           /* 🌅 FAGULHA – Fase 2 */
         outline-offset: 2px;
     }
 
@@ -3477,9 +3706,11 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     padding: var(--ls-btn-pad-y) var(--ls-btn-pad-x);
     border: 1px solid transparent;
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.04);
-    background: oklch(100% 0 0 / 0.04);
-    color: #ddd;
+    background: rgba(255, 255, 255, 0.04);                          /* fallback */
+    background: oklch(100% 0 0 / 0.04);                             /* fallback moderno */
+    background: var(--bg-input, oklch(100% 0 0 / 0.04));            /* 🌅 FAGULHA – Fase 2 */
+    color: #ddd;                                                    /* fallback */
+    color: var(--texto-secundario, #ddd);                          /* 🌅 FAGULHA – Fase 2 */
     font-size: var(--ls-reaction-font, 0.9rem);
 }
 
@@ -3501,7 +3732,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         margin: 0;
         padding: var(--ls-gap) 0 4px;
         overflow: visible;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);            /* fallback */
+        border-top: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     }
 
     /* Rodapé posicionado fora do grid no carrossel */
@@ -3531,10 +3763,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         min-width: 0;
         margin: 0;
         padding: var(--ls-btn-pad-y) var(--ls-btn-pad-x);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);                /* fallback */
+        border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.05);
-        color: #aaa;
+        background: rgba(255, 255, 255, 0.05);                      /* fallback */
+        background: var(--bg-input, rgba(255, 255, 255, 0.05));    /* 🌅 FAGULHA – Fase 2 */
+        color: #aaa;                                                /* fallback */
+        color: var(--texto-terciario, #aaa);                       /* 🌅 FAGULHA – Fase 2 */
         font-size: var(--ls-btn-font);
         line-height: 1.25;
         letter-spacing: normal;
@@ -3571,7 +3806,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     .spotted-card .btn-fofocar:focus-visible,
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card .btn-ver-mais:focus-visible {
-        outline: 2px solid #ffbc00;
+        outline: 2px solid #ffbc00;                                 /* fallback */
+        outline: 2px solid var(--texto-dourado, #ffbc00);           /* 🌅 FAGULHA – Fase 2 */
         outline-offset: 2px;
     }
 
@@ -3613,7 +3849,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
             scrollbar-width: none;
             margin: var(--ls-gap) 0;
             border-radius: 10px;
-            background: #0a0a0a;
+            background: #0a0a0a;                                    /* fallback */
+            background: var(--bg-page-dark, #0a0a0a);              /* 🌅 FAGULHA – Fase 2 */
         }
 
         body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
