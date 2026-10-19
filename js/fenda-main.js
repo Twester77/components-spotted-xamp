@@ -160,9 +160,41 @@ window.fecharModalSair = function () {
 };
 
 function confirmarExclusao(idPost) {
-    if (confirm(" ATENÇÃO: Deseja mesmo apagar esse post?")) {
-        window.location.href = 'includes/excluir.php?id=' + idPost;
+    if (!confirm(" ATENÇÃO: Deseja mesmo apagar esse post?")) return;
+
+    const csrfToken = document.getElementById('csrf_token')?.value || '';
+    if (!csrfToken) {
+        alert('Erro de segurança. Recarregue a página.');
+        return;
     }
+
+    const formData = new FormData();
+    formData.append('id', idPost);
+    formData.append('csrf_token', csrfToken);
+
+    fetch('includes/excluir.php', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data.status !== 'success') {
+            throw new Error(data.message || 'Erro ao excluir.');
+        }
+        if (typeof window.exibirToast === 'function') {
+            window.exibirToast('✅ Post excluído!', 'sucesso');
+        }
+        window.location.reload();
+    })
+    .catch(err => {
+        console.error('[EXCLUIR] Erro:', err);
+        if (typeof window.exibirToast === 'function') {
+            window.exibirToast('❌ ' + (err.message || 'Erro ao excluir.'), 'erro');
+        } else {
+            alert('Erro ao excluir: ' + err.message);
+        }
+    });
 }
 
 function abrirDenuncia(idPost) {

@@ -415,26 +415,19 @@ function reforcarLayoutNosCards() {
         // Botão "Expurgar" (dono) ou "Denunciar" (visitante)
         const btnDanger = document.createElement('button');
         btnDanger.className = 'action-btn danger';
-        if (isOwner) {
+              if (isOwner) {
             btnDanger.innerHTML = '🗑️ Expurgar da Fenda';
             btnDanger.addEventListener('click', function(e) {
                 e.stopPropagation();
                 fecharPopup();
+                // 🔒 CORREÇÃO CSRF (Corrente – Bloco 1.4): sempre delega pra
+                // confirmarExclusao (que faz POST + CSRF). Removido o fallback
+                // inseguro que fazia POST sem token e podia falhar silencioso.
                 if (typeof window.confirmarExclusao === 'function') {
                     window.confirmarExclusao(postId);
                 } else {
-                    if (confirm('⚠️ Isso removerá o post permanentemente. Continuar?')) {
-                        fetch('includes/excluir.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: 'id=' + postId
-                        }).then(() => {
-                            if (typeof exibirToast === 'function') exibirToast('Post expurgado!');
-                            window.location.reload();
-                        });
-                    }
+                    console.error('[FEED] confirmarExclusao não encontrado. Recarregue a página.');
+                    alert('Erro de segurança. Recarregue a página e tente novamente.');
                 }
             });
         } else {

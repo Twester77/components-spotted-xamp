@@ -14,11 +14,15 @@
  * - Ondina
  *
  * 🐚 MARESIA – 2026-09-29 (Sprint 1, item 5/7)
- *    - Removido double escape no HTML do comentário. O `htmlspecialchars`
- *      era aplicado uma vez no capture (sanitização de entrada) e outra
- *      vez no render (dentro de nl2br). Resultado: `Amor & Ódio` virava
- *      `Amor &amp;amp; Ódio` na tela, e aspas duplicavam entities.
- *      A sanitização de entrada já é suficiente — o render só formata.
+ *    - Removido double escape no HTML do comentário.
+ *
+ * 🔧 CORREÇÃO CALMARIA/CORRENTE – 2026-10-13 (Bug #18)
+ *    - O INSERT de notificação usava `post_id` (coluna com FK pra `mensagens`).
+ *      Como o evento vive em `eventos`, o INSERT falhava silenciosamente
+ *      (mysqli_report OFF) — notificação de menção em evento nunca era criada.
+ *      Trocado para `evento_id` (coluna nova, FK pra `eventos`).
+ *      É o mesmo bug que a Calmaria corrigiu em processa-evento.php e
+ *      motor-notificacoes.php/notificacoes.php — este arquivo tinha ficado de fora.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -174,7 +178,7 @@ if ($stmt->execute()) {
     $stmt->close();
 
     // ============================================================
-    // 🔔 PROCESSAR MENÇÕES (@usuario) – AGORA COM TIPO 'evento'
+    // 🔔 PROCESSAR MENÇÕES (@usuario) – CORRIGIDO: usar evento_id
     // ============================================================
     if (!empty($comentario_raw) && preg_match_all('/@([a-zA-Z0-9\._]+)/', $comentario_raw, $matches)) {
         $mencoes = array_unique($matches[1]);
@@ -193,8 +197,8 @@ if ($stmt->execute()) {
                 if ($destinatario_id != $autor_id) {
                     $mensagem_notif = "@$autor_nome mencionou você em um comentário no evento \"$evento_nome\"";
 
-                    // 🔥 INSERE COM TIPO 'evento' E post_id = evento_id
-                    $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, post_id, tipo, mensagem, lida) VALUES (?, ?, 'evento', ?, 0)");
+                    // 🔧 CORREÇÃO (Bug #18): usa evento_id, não post_id
+                    $stmt_notif = $conn->prepare("INSERT INTO notificacoes (usuario_id, evento_id, tipo, mensagem, lida) VALUES (?, ?, 'evento', ?, 0)");
                     $stmt_notif->bind_param("iis", $destinatario_id, $evento_id, $mensagem_notif);
                     $stmt_notif->execute();
                     $stmt_notif->close();
@@ -215,13 +219,9 @@ if ($stmt->execute()) {
     $user = $stmt_user->get_result()->fetch_assoc();
     $stmt_user->close();
 
-    // 🔥 AVATAR DO AUTOR COM FALLBACK CENTRALIZADO
     $avatar = obterUrlComFallback($user['foto'] ?? null, 'uploads/ui/default.webp', null, true);
     $avatar_html = '<img src="' . htmlspecialchars($avatar) . '" class="avatar-p" style="border-radius:50%; width: 40px; height: 40px; margin-right:8px;" onerror="this.src=\'uploads/ui/default.webp\'">';
 
-    // 🐚 MARESIA – 2026-09-29 (item 5/7): removido htmlspecialchars() duplicado
-    // no texto. O $comentario_sanitizado já passou por htmlspecialchars no
-    // bloco 2. Reaplicar aqui causava double escape visual.
     $html = '
     <div class="bt-comentario-item" style="--cor-borda-glow: #ffbc00;">
         <div class="bt-comentario-meta">
