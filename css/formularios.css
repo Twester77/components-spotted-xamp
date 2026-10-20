@@ -356,10 +356,9 @@ select:focus-visible {
     justify-content: space-between;
     padding: 6px 10px;
     padding: clamp(8px, 1vw, 14px) clamp(10px, 1.5vw, 18px);
-
     background: rgba(0, 0, 0, 0.4);                                 /* fallback */
     background: oklch(0 0 0 / 0.4);                                 /* fallback moderno */
-    background: var(--bg-modal-content, oklch(0 0 0 / 0.4));        /* 🌅 FAGULHA – Fase 2 */
+   /* removido pelo Léo (não mexer): background: var(--bg-modal-content, oklch(0 0 0 / 0.4));     🌅 FAGULHA – Fase 2 */
 
     color: #fff;                                                    /* fallback */
     color: oklch(0.96 0 0);                                         /* fallback moderno */

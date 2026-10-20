@@ -489,8 +489,8 @@
     background: rgba(20, 20, 30, 0.5);                              /* fallback */
     background: oklch(15% 0 0 / 0.5);                               /* fallback moderno */
     background: var(--bg-modal-overlay, oklch(15% 0 0 / 0.5));      /* 🌅 FAGULHA – Fase 2 */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     border-radius: 12px;
     padding: 12px 18px;
 }
@@ -500,8 +500,9 @@
 .comunidade-actions .btn-editar-comunidade,
 .comunidade-actions .btn-gerenciar-membros {
     flex-shrink: 0;
+    gap: 5px;
     font-size: 0.85rem;
-    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
+    font-size: clamp(0.82rem, 1.1vw, 1.1rem);
     font-weight: 600;
     text-decoration: none;
     border-radius: 30px;
@@ -2466,7 +2467,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     .comunidade-actions .btn-gerenciar-membros {
         flex: 0 1 auto;
         width: 100%;
-        max-width: 180px;
+        max-width: 200px;
     }
 
     /* Formulário inline */

@@ -16,13 +16,22 @@ require_once __DIR__ . '/includes/upload_engine.php';
 
 $usuario_id = $_SESSION['usuario_id'];
 
-// Marca notificação como lida se veio com notif_id
-if (isset($_GET['notif_id'])) {
+// Marca notificação como lida se veio com notif_id assinado (HMAC)
+// 🐚 HORIZONTE – 2026-10-19: adicionado HMAC para evitar CSRF via GET.
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
     $notif_id = (int)$_GET['notif_id'];
-    $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
-    $stmt_notif->bind_param("ii", $notif_id, $usuario_id);
-    $stmt_notif->execute();
-    $stmt_notif->close();
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
+
+    if ($notif_id > 0 && $user_id > 0) {
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+            $stmt_notif->bind_param("ii", $notif_id, $user_id);
+            $stmt_notif->execute();
+            $stmt_notif->close();
+        }
+    }
 }
 
 // Query com INNER JOIN (apenas comunidades onde o usuário é admin/criador)

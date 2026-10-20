@@ -31,9 +31,12 @@ header('Content-Type: application/json');
 
 // ============================================================
 // 2. VALIDAÇÃO CSRF (obrigatória)
+// 🐚 HORIZONTE – 2026-10-19: `!==` trocado por `hash_equals` (timing safe)
 // ============================================================
 $csrf_token = $_POST['csrf_token'] ?? '';
-if (empty($csrf_token) || $csrf_token !== ($_SESSION['csrf_token'] ?? '')) {
+$csrf_sessao = $_SESSION['csrf_token'] ?? '';
+
+if (!is_string($csrf_token) || $csrf_token === '' || !is_string($csrf_sessao) || !hash_equals($csrf_sessao, $csrf_token)) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Token de segurança inválido.']);
     exit();
