@@ -1518,7 +1518,7 @@ body.pagina-post .header-principal {
     font-size: clamp(0.76rem, 0.382cqw + 0.625rem, 1rem);
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
     min-height: 50px;
-    max-width: 200px;
+    max-width: 100%;
 }
 
 .comentario-deletado-msg i {
@@ -1667,7 +1667,7 @@ body.pagina-post .header-principal {
     font-size: 0.7rem;
     font-size: clamp(0.75rem, 3.5cqi, 0.95rem);
     gap: 4px;
-    opacity: 0.6;
+    opacity: 0.8;
     color: #d1d1d1;                                               /* fallback */
     color: var(--texto-secundario, #d1d1d1);                      /* 🐚 FAROL – Fase 2 */
 }

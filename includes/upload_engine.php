@@ -21,6 +21,12 @@
  *     consulta real ao B2 – em vez de getDownloadUrl() (que só montava
  *     uma string local e nunca lançava exceção)."
  * - Brisa, a guardiã da blindagem
+ * 
+ * ☁️ DJÊ – 2026-10-22
+ *    "Atualizado o endpoint de exibição para utilizar o subdomínio dedicado
+ *     com CDN da Cloudflare (https://img.fendauniversity.com.br), blindando
+ *     definitivamente o limite de transações Class C do Backblaze B2."
+ * - Djê, a guardiã do Horizonte e do Subdomínio
  */
 
 // Inclui o B2Client (caminho relativo)
@@ -232,9 +238,6 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
         // ============================================================
         // 7. VERIFICAÇÃO DE INTEGRIDADE (REAL – auditoria da Djê)
         // ============================================================
-        // 🔥 O método fileExists() faz uma consulta HTTP real ao B2
-        // (b2_list_file_names). Diferente do getDownloadUrl() antigo,
-        // que apenas montava uma string local e nunca lançava exceção.
         try {
             error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2 (consulta real)...");
             if (!$b2->fileExists($remotePath)) {
@@ -278,14 +281,14 @@ function rollbackUpload($remotePath, $usuario_id = 0)
 function excluirArquivoB2($remotePath, $usuario_id = 0)
 {
     if (empty($remotePath)) {
-        logB2Event('WARNING', $usuario_id, 'DELETE', '', 0, 'Tentativa de excluir caminho vazio');
+        logB2Event('WARNING', $usuario_id, 'DELETE', '', 0, 'Tentativa de deletar caminho vazio');
         return true;
     }
     return deleteFromB2($remotePath, $usuario_id);
 }
 
 // ============================================================
-// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (FALLBACK)
+// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (COM SUBDOMÍNIO IMG)
 // ============================================================
 
 function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600)
@@ -311,7 +314,8 @@ function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600
         return null;
     }
 
-    return 'proxy.php?path=' . urlencode($caminhoLimpo);
+    // ☁️ APONTANDO DIRETAMENTE PARA O SUBDOMÍNIO BLINDADO DA CLOUDFLARE
+    return 'https://img.fendauniversity.com.br/proxy.php?path=' . urlencode($caminhoLimpo);
 }
 
 // ============================================================

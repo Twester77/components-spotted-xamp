@@ -2053,10 +2053,11 @@ textarea#descricao{
     border: 1px solid var(--borda-media, oklch(100% 0 0 / 0.08));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 6px;
     padding: 6px 28px 6px 12px;
+    font-size: 0.8rem;
     font-size: clamp(0.85rem, 0.9vw, 0.95rem);
     color: #eee;                                                    /* fallback */
-    color: oklch(95% 0 0);                                          /* fallback moderno */
-    color: var(--texto-secundario, oklch(95% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
+    color: oklch(80% 0 0);                                          /* fallback moderno */
+    color: var(--texto-secundario, oklch(80% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     font-weight: 500;
     cursor: pointer;
     outline: none;
