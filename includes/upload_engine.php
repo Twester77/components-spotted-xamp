@@ -1,7 +1,7 @@
 <?php
 
 /**
- * upload_engine.php – Motor de Upload Blindado (B2 + Atomicidade + Log + Vercel)
+ * upload_engine.php – Motor de Upload Blindado (B2 + Atomicidade + Log + Vercel + Localhost)
  * 
  * Responsabilidades:
  * - Validação de arquivos (bytes mágicos, polyglot, tamanho)
@@ -10,6 +10,7 @@
  * - Rollback automático se o banco falhar (atomicidade)
  * - Logging estruturado via error_log() (compatível com Vercel/Serverless)
  * - Tratamento graceful de exceções
+ * - Detecção inteligente de ambiente (Localhost vs. Produção Cloudflare)
  * 
  * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
  *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção."
@@ -22,10 +23,10 @@
  *     uma string local e nunca lançava exceção)."
  * - Brisa, a guardiã da blindagem
  * 
- * ☁️ DJÊ – 2026-10-22
- *    "Atualizado o endpoint de exibição para utilizar o subdomínio dedicado
- *     com CDN da Cloudflare (https://img.fendauniversity.com.br), blindando
- *     definitivamente o limite de transações Class C do Backblaze B2."
+ * ☁️ DJÊ – 2026-10-23
+ *    "Adicionada lógica de detecção de ambiente. Se estiver em localhost,
+ *     aponta para o proxy local; em produção, utiliza o subdomínio dedicado
+ *     com CDN da Cloudflare (https://img.fendauniversity.com.br)."
  * - Djê, a guardiã do Horizonte e do Subdomínio
  */
 
@@ -288,7 +289,7 @@ function excluirArquivoB2($remotePath, $usuario_id = 0)
 }
 
 // ============================================================
-// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (COM SUBDOMÍNIO IMG)
+// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (INTELIGENTE: LOCALHOST vs PROD)
 // ============================================================
 
 function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600)
@@ -314,8 +315,21 @@ function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600
         return null;
     }
 
-    // ☁️ APONTANDO DIRETAMENTE PARA O SUBDOMÍNIO BLINDADO DA CLOUDFLARE
-    return 'https://img.fendauniversity.com.br/proxy.php?path=' . urlencode($caminhoLimpo);
+    // 🔍 DETECÇÃO AUTOMÁTICA DE AMBIENTE
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $is_local = (
+        strpos($host, 'localhost') !== false || 
+        strpos($host, '127.0.0.1') !== false || 
+        strpos($host, '::1') !== false
+    );
+
+    if ($is_local) {
+        // Se estiver rodando na sua máquina, aponta pro proxy local
+        return 'proxy.php?path=' . urlencode($caminhoLimpo);
+    } else {
+        // Se estiver em produção, usa o subdomínio blindado da Cloudflare
+        return 'https://img.fendauniversity.com.br/proxy.php?path=' . urlencode($caminhoLimpo);
+    }
 }
 
 // ============================================================
@@ -349,7 +363,7 @@ function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b
         // Se $b2 não foi passado, instancia
         $b2Instance = ($b2 !== null) ? $b2 : B2Client::getInstance();
 
-        // Tenta obter a URL
+        // Tenta obter a URL (com a variável correta $caminho)
         $url = obterUrlImagem($caminho, $b2Instance, $assinado);
 
         // Se obteve uma URL válida, retorna; senão, fallback
