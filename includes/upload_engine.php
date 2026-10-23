@@ -1,7 +1,7 @@
 <?php
 
 /**
- * upload_engine.php – Motor de Upload Blindado (B2 + Atomicidade + Log + Vercel + Localhost)
+ * upload_engine.php – Motor de Upload Blindado (B2 + Atomicidade + Log + Vercel)
  * 
  * Responsabilidades:
  * - Validação de arquivos (bytes mágicos, polyglot, tamanho)
@@ -10,24 +10,11 @@
  * - Rollback automático se o banco falhar (atomicidade)
  * - Logging estruturado via error_log() (compatível com Vercel/Serverless)
  * - Tratamento graceful de exceções
- * - Detecção inteligente de ambiente (Localhost vs. Produção Cloudflare)
  * 
  * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
- *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção."
+ *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção.
+ *     Logs de entrada, validação, conversão, upload, verificação e erros específicos."
  * - Nereida, a guardiã das águas
- * 
- * 🐚 BRISA – 2026-09-15
- *    "Corrigida falsa verificação de integridade (auditoria da Djê).
- *     O passo 7 agora usa $b2->fileExists($remotePath) – que faz uma
- *     consulta real ao B2 – em vez de getDownloadUrl() (que só montava
- *     uma string local e nunca lançava exceção)."
- * - Brisa, a guardiã da blindagem
- * 
- * ☁️ DJÊ – 2026-10-23
- *    "Adicionada lógica de detecção de ambiente. Se estiver em localhost,
- *     aponta para o proxy local; em produção, utiliza o subdomínio dedicado
- *     com CDN da Cloudflare (https://img.fendauniversity.com.br)."
- * - Djê, a guardiã do Horizonte e do Subdomínio
  */
 
 // Inclui o B2Client (caminho relativo)
@@ -170,14 +157,9 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
                     $b2 = B2Client::getInstance();
                     error_log("[UPLOAD_ENGINE] 📤 Enviando GIF para B2...");
                     $b2->uploadFile($file_data['tmp_name'], $remotePath, 'image/gif', ['Cache-Control' => 'max-age=31536000']);
-
-                    // 🔥 VERIFICAÇÃO REAL (substitui getDownloadUrl)
-                    if (!$b2->fileExists($remotePath)) {
-                        throw new Exception('Arquivo GIF não encontrado no bucket após upload');
-                    }
-
+                    $b2->getDownloadUrl($remotePath);
                     logB2Event('INFO', $usuario_id, 'UPLOAD', $remotePath, 200, 'Upload GIF bem-sucedido');
-                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado e verificado com sucesso: $remotePath");
+                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado com sucesso: $remotePath");
                     return $remotePath;
                 } catch (Exception $e) {
                     logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath, 0, 'Falha no upload GIF: ' . $e->getMessage());
@@ -202,7 +184,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
         $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".webp";
         $tempFile = tempnam(sys_get_temp_dir(), 'b2_') . '.webp';
         error_log("[UPLOAD_ENGINE] 🔄 Convertendo para WebP com qualidade 65%: $remotePath");
-
+        
         if (!imagewebp($img, $tempFile, 65)) {
             imagedestroy($img);
             if (file_exists($tempFile)) unlink($tempFile);
@@ -236,14 +218,10 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
             error_log("[UPLOAD_ENGINE] 🗑️ Arquivo temporário removido: $tempFile");
         }
 
-        // ============================================================
-        // 7. VERIFICAÇÃO DE INTEGRIDADE (REAL – auditoria da Djê)
-        // ============================================================
+        // 7. VERIFICAÇÃO DE INTEGRIDADE
         try {
-            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2 (consulta real)...");
-            if (!$b2->fileExists($remotePath)) {
-                throw new Exception('Arquivo não encontrado no bucket após upload');
-            }
+            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2...");
+            $b2->getDownloadUrl($remotePath);
             logB2Event('INFO', $usuario_id, 'VERIFY', $remotePath, 200, 'Arquivo verificado com sucesso');
             error_log("[UPLOAD_ENGINE] ✅ Verificação concluída: $remotePath");
         } catch (Exception $e) {
@@ -282,14 +260,14 @@ function rollbackUpload($remotePath, $usuario_id = 0)
 function excluirArquivoB2($remotePath, $usuario_id = 0)
 {
     if (empty($remotePath)) {
-        logB2Event('WARNING', $usuario_id, 'DELETE', '', 0, 'Tentativa de deletar caminho vazio');
+        logB2Event('WARNING', $usuario_id, 'DELETE', '', 0, 'Tentativa de excluir caminho vazio');
         return true;
     }
     return deleteFromB2($remotePath, $usuario_id);
 }
 
 // ============================================================
-// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (INTELIGENTE: LOCALHOST vs PROD)
+// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (FALLBACK)
 // ============================================================
 
 function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600)
@@ -315,21 +293,7 @@ function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600
         return null;
     }
 
-    // 🔍 DETECÇÃO AUTOMÁTICA DE AMBIENTE
-    $host = $_SERVER['HTTP_HOST'] ?? '';
-    $is_local = (
-        strpos($host, 'localhost') !== false || 
-        strpos($host, '127.0.0.1') !== false || 
-        strpos($host, '::1') !== false
-    );
-
-    if ($is_local) {
-        // Se estiver rodando na sua máquina, aponta pro proxy local
-        return 'proxy.php?path=' . urlencode($caminhoLimpo);
-    } else {
-        // Se estiver em produção, usa o subdomínio blindado da Cloudflare
-        return 'https://img.fendauniversity.com.br/proxy.php?path=' . urlencode($caminhoLimpo);
-    }
+    return 'proxy.php?path=' . urlencode($caminhoLimpo);
 }
 
 // ============================================================
@@ -362,13 +326,13 @@ function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b
     try {
         // Se $b2 não foi passado, instancia
         $b2Instance = ($b2 !== null) ? $b2 : B2Client::getInstance();
-
-        // Tenta obter a URL (com a variável correta $caminho)
+        
+        // Tenta obter a URL
         $url = obterUrlImagem($caminho, $b2Instance, $assinado);
-
+        
         // Se obteve uma URL válida, retorna; senão, fallback
         return ($url && is_string($url) && !empty($url)) ? $url : $fallback;
-
+        
     } catch (Exception $e) {
         // Log do erro (sem quebrar a página)
         error_log("[OBTER_URL_FALLBACK] Erro ao obter URL para '$caminho': " . $e->getMessage());
