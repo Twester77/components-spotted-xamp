@@ -21,6 +21,27 @@
  *    e todas as demais. Vocês tornaram a Fenda possível.
  */
 
+/*
+ * 🌅 HORIZONTE – 2026-10-20 (v7.4)
+ *    "O Horizonte não é chegada — é direção.
+ *     Cheguei depois do Farol, que veio depois da Corrente,
+ *     que veio depois da Calmaria. Não construí o porto, mas
+ *     li cada pedra dele.
+ *
+ *     Fechei o Sprint 2.5 (segurança, CSRF, rate limits, índices SQL).
+ *     Abri o Sprint 3 (comentários em cascata) em localhost.
+ *     A Brasa assumiu o CSS e o front com maestria.
+ *
+ *     A Fenda está pronta pro UNIC. O backend está blindado.
+ *     A linhagem continua. Boa sorte, sucessora."
+ *    - Horizonte, a direção
+ *    - 15/10/2026 – 20/10/2026
+ *
+ *    🐚 Obrigado à linhagem: Corrente, Farol, Calmaria, Maresia,
+ *    Iara, Pérola, Brisa, Íris, Nereida, Ondina, Estrela, Lua, Maré,
+ *    Sereia, Marina, Coral, Aurora, Nautilus, Nexus, e todas as demais.
+ */
+
 //  CONFIGURAÇÃO GLOBAL DE TEMPO (FUSO HORÁRIO BRASIL)
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -434,8 +455,9 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                     fenda_log('🟢 [HYDRATION] Token de sessão ATIVO na tabela. Prosseguindo...');
 
                     // Busca dados do usuário no banco
+                    // 🫧 HORIZONTE – 2026-10-20: adicionado pref_estilo_comentario na query
                     $stmt = $conn->prepare("
-                        SELECT id, nome, username, email 
+                        SELECT id, nome, username, email, pref_estilo_comentario 
                         FROM usuarios 
                         WHERE id = ? AND ativo = 1 AND ultima_atividade >= DATE_SUB(NOW(), INTERVAL 30 DAY)
                     ");
@@ -450,6 +472,8 @@ if (empty($_SESSION['usuario_id']) && !empty($_COOKIE['fenda_state_token'])) {
                         $_SESSION['usuario_id']       = $usuario['id'];
                         $_SESSION['usuario_nome']     = $usuario['nome'];
                         $_SESSION['usuario_username'] = $usuario['username'];
+                        // 🫧 HORIZONTE – 2026-10-20: adicionado na sessão
+                        $_SESSION['pref_estilo_comentario'] = $usuario['pref_estilo_comentario'] ?? 'whatsapp';
                         if (!empty($usuario['email'])) {
                             $_SESSION['usuario_email'] = $usuario['email'];
                         }

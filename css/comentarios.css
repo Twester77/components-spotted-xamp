@@ -744,17 +744,18 @@
     color: var(--cor-borda-glow);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
     background-size: 30px 30px;
+    will-change: animation;
 }
 
 .comentario-item.vibe-ads .comentario-texto {
     color: #fff;
-    text-shadow: 0 0 8px var(--cor-borda-glow);
+    text-shadow: 0 0 4px var(--cor-borda-glow);
     font-weight: 400;
 }
 
 .comentario-item.vibe-ads .comentario-data {
     color: var(--cor-borda-glow);
-    text-shadow: 0 0 8px var(--cor-borda-glow);
+    text-shadow: 0 0 2px var(--cor-borda-glow);
     font-weight: bold;
 }
 
@@ -764,7 +765,7 @@
 
 .comentario-data {
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 2cqi, 0.95rem);
+    font-size: clamp(0.77rem, 2.2cqi, 0.96rem);
     color: #d6d6d6;                                               /* fallback */
     color: var(--texto-secundario, #d6d6d6);                      /* 🐚 FAROL – Fase 2 */
     opacity: 0.85;
@@ -1476,10 +1477,9 @@ body.pagina-post .header-principal {
 .spotted-card img {
     max-width: 100%;
     object-fit: contain;
-    max-height: 100vh;
+    max-height: 100dvh;
     background: transparent;
     border: none;
-    border-radius: 12px;
 }
 
 .comentario-media-item .gif-externo {
@@ -1498,11 +1498,9 @@ body.pagina-post .header-principal {
 
 .comentario-deletado-msg {
     text-align: center;
-    justify-content: left;
+    justify-content: center;
     letter-spacing: 0.5px;
     overflow: hidden;
-    align-self: flex-start;
-    max-width: min-content;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -1777,13 +1775,13 @@ body.pagina-post .header-principal {
 .comentario-autor {
     color: var(--cor-borda-glow, #70cde4);
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 2.2cqi, 1rem);
+    font-size: clamp(0.88rem, 2.2cqi, 1rem);
     font-weight: bold;
     flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     /* Removemos o max-width fixo para permitir que o nome se expanda até o limite da bolha */
-    max-width: 180px;
+    max-width: fit-content;
     width: 100%;
     word-break: break-word;
 }
@@ -1805,7 +1803,8 @@ body.pagina-post .header-principal {
 
 /* Comportamento específico para quando houver apenas 1 foto */
 .comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
-    display: block;
+    display: flex;
+    justify-content: center;
     max-width: 100%;
 }
 
@@ -1843,7 +1842,8 @@ body.pagina-post .header-principal {
 
 .comentario-media-item img.gif-externo {
     object-fit: contain;
-    background: rgba(0, 0, 0, 0.88);                              /* fica local – preto com alpha específico do gif */
+    background: (0, 0, 0, 0.88); /* fallback local */
+    background: var(--bg-card-hover-strong, rgba(0, 0, 0, 0.88));     /* antes local – agora com variável, alteração feita pelo Léo  */
     display: flex;
     justify-content: center;
 }
@@ -1852,7 +1852,6 @@ body.pagina-post .header-principal {
 .comentario-item.comentario-selecionado {
     position: relative ;
     border: none;
-    background: rgba(255, 187, 0, 0.075) ;                         /* fica local – dourado com alpha muito baixo */
     transition: background 0.3s ease;
 }
 

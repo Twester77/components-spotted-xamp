@@ -1,6 +1,6 @@
 <?php
 /**
- * proxy.php – Intermediário de imagens para Backblaze B2
+ * proxy.php – Intermediário de imagens para Backblaze B2 (com Cache Local para XAMPP)
  *
  * 🔧 ATUALIZAÇÃO NEREIDA – 2026-08-26
  *    "Adicionados logs detalhados para diagnóstico em produção.
@@ -8,6 +8,10 @@
  * 
  * 🔥 CORREÇÃO ÍRIS – 2026-08-27
  *    "Removidos todos os curl_close() para compatibilidade com PHP 8.5+."
+ * 
+ * 🚀 DJÊ & LÉO – 2026-10-23
+ *    "Adicionado cache local em disco para o ambiente de desenvolvimento (Localhost/XAMPP).
+ *     Economiza requisições Class C do B2 sem afetar o comportamento em produção."
  */
  
 // Carrega variáveis de ambiente
@@ -43,9 +47,42 @@ if (!in_array($ext, $allowed)) {
 error_log("[PROXY] ✅ Path validado: '$path' (ext: $ext)");
 
 // ============================================================
-// 2. CONFIGURAÇÃO DE SEGURANÇA SSL
+// 1.1 CACHE LOCAL EM DISCO (EXCLUSIVO PARA LOCALHOST / XAMPP)
 // ============================================================
 $is_production = (getenv('ENVIRONMENT') === 'production');
+
+if (!$is_production) {
+    $cacheDir = __DIR__ . '/uploads/cache-local/';
+    if (!is_dir($cacheDir)) {
+        @mkdir($cacheDir, 0755, true);
+    }
+    
+    // Normaliza o nome do arquivo para salvar em disco com segurança
+    $safeCacheName = md5($path) . '.' . $ext;
+    $localCacheFile = $cacheDir . $safeCacheName;
+
+    // Se já existe no disco local do XAMPP, serve imediatamente (Zero Cota Class C!)
+    if (file_exists($localCacheFile)) {
+        $mimeMap = [
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png'  => 'image/png',
+            'webp' => 'image/webp',
+            'gif'  => 'image/gif'
+        ];
+        $contentType = $mimeMap[$ext] ?? 'application/octet-stream';
+
+        header('Content-Type: ' . $contentType);
+        header('Cache-Control: public, max-age=86400');
+        header('X-Cache-Local: HIT');
+        readfile($localCacheFile);
+        exit;
+    }
+}
+
+// ============================================================
+// 2. CONFIGURAÇÃO DE SEGURANÇA SSL
+// ============================================================
 $verifySSL = $is_production ? true : false;
 error_log("[PROXY] verifySSL = " . ($verifySSL ? 'true' : 'false') . " (produção: " . ($is_production ? 'sim' : 'não') . ")");
 
@@ -124,6 +161,13 @@ try {
     }
 
     // ============================================================
+    // 5.1 SALVA NO CACHE LOCAL SE ESTIVER NO XAMPP
+    // ============================================================
+    if (!$is_production && isset($localCacheFile)) {
+        @file_put_contents($localCacheFile, $result['data']);
+    }
+
+    // ============================================================
     // 6. SERVE A IMAGEM
     // ============================================================
     $mimeMap = [
@@ -139,6 +183,9 @@ try {
     header('Cache-Control: public, max-age=86400');
     header('X-Content-Type-Options: nosniff');
     header('Content-Length: ' . strlen($result['data']));
+    if (!$is_production) {
+        header('X-Cache-Local: MISS');
+    }
     echo $result['data'];
     error_log("[PROXY] ✅ Imagem servida com sucesso: '$path' (" . strlen($result['data']) . " bytes)");
     exit;

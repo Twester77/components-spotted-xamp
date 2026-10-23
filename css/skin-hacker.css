@@ -810,14 +810,14 @@
     backdrop-filter: none;
     margin-bottom: 15px;
     position: relative;
-    animation: hacker-glitch 5s infinite alternate;
+    animation: hacker-glitch 4s infinite alternate;
 }
 
 [data-theme="hacker"] .comentario-item.vibe-neon .comentario-data,
 [data-theme="hacker"] .comentario-item.vibe-neon .comentario-autor {
     color: var(--hacker-green);
     font-weight: bold;
-    text-shadow: 0 0 8px var(--hacker-green);
+    text-shadow: 0 0 4px var(--hacker-green);
     opacity: 1;
 }
 
@@ -880,12 +880,12 @@
 /* --- HIGHLIGHT (comentário destacado) --- */
 @keyframes hacker-highlight {
     0% {
-        background-color: rgba(0, 255, 64, 0.897);
+        background-color: rgba(0, 255, 255, 0.897);
         box-shadow: 0 0 18px rgba(0, 255, 65, 0.3);
         border-left: 2px solid var(--hacker-green);
     }
     40% {
-        background-color: rgba(0, 255, 65, 0.2);
+        background-color: rgba(0, 247, 255, 0.2);
         box-shadow: 0 0 35px rgba(0, 255, 65, 0.6);
         border-left: 4px solid var(--hacker-green);
     }

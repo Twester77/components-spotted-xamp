@@ -71,14 +71,15 @@ $nova_notif_comunidade = isset($_POST['pref_notif_comunidade']) ? (int)$_POST['p
 $novo_swipe_balanga = isset($_POST['pref_swipe_balanga']) ? (int)$_POST['pref_swipe_balanga'] : 0;
 fenda_log("📝 preferência swipe balanga recebida: " . $novo_swipe_balanga);
 
+// 🫧 HORIZONTE – 2026-10-20: Captura a preferência de estilo de comentário (Cascata/WhatsApp)
+$pref_estilo_comentario = $_POST['pref_estilo_comentario'] ?? 'whatsapp';
+if (!in_array($pref_estilo_comentario, ['whatsapp', 'cascata'], true)) {
+    $pref_estilo_comentario = 'whatsapp';
+}
+
 // ============================================================
 // 🔒 AUDITORIA CORRENTE – 2026-10-13 (Sprint 2, Bloco 1.3)
 //    Sanitização de preferências visuais (whitelist + regex).
-//    Mesmo motivo do processa-cadastro.php: sem isso, um atacante
-//    podia injetar CSS via POST manipulado e obter CSS injection
-//    armazenado ao renderizar em ver-perfil.php.
-//
-//    Padrão espelhado do enviar-comentario.php (Pérola – 2026-09-18).
 // ============================================================
 $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
 if (!in_array($nova_vibe, $vibes_validas, true)) {
@@ -135,6 +136,7 @@ try {
         'pref_pip' => $novo_pip,
         'pref_badge' => $novo_badge,
         'pref_notif_comunidade' => $nova_notif_comunidade,
+        'pref_estilo_comentario' => $pref_estilo_comentario, // 🫧 HORIZONTE: Cascata
     ];
 
     if ($foto_nome !== null) {

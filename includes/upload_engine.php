@@ -1,7 +1,7 @@
 <?php
 
 /**
- * upload_engine.php – Motor de Upload Blindado (B2 + Atomicidade + Log + Vercel)
+ * upload_engine.php – Motor de Upload Blindado (B2 + Atomicidade + Log + Localhost/Cloudflare)
  * 
  * Responsabilidades:
  * - Validação de arquivos (bytes mágicos, polyglot, tamanho)
@@ -9,12 +9,26 @@
  * - Upload para Backblaze B2 via B2Client
  * - Rollback automático se o banco falhar (atomicidade)
  * - Logging estruturado via error_log() (compatível com Vercel/Serverless)
- * - Tratamento graceful de exceções
+ * - Tratamento graceful de exceções (evita HTTP 500)
+ * - Detecção inteligente de ambiente: Localhost usa proxy local (com cache em disco) 
+ *   e Produção usa o subdomínio CDN da Cloudflare (img.fendauniversity.com.br).
  * 
  * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
- *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção.
- *     Logs de entrada, validação, conversão, upload, verificação e erros específicos."
+ *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção."
  * - Nereida, a guardiã das águas
+ * 
+ * 🐚 BRISA – 2026-09-15
+ *    "Corrigida falsa verificação de integridade (auditoria da Djê).
+ *     O passo 7 agora usa $b2->fileExists($remotePath) – que faz uma
+ *     consulta real ao B2 – em vez de getDownloadUrl() (que só montava
+ *     uma string local e nunca lançava exceção)."
+ * - Brisa, a guardiã da blindagem
+ * 
+ * ☁️ DJÊ & LÉO – 2026-10-23
+ *    "Detecção dinâmica de ambiente implementada na função obterUrlImagem().
+ *     Evita o Erro 525 de SSL/CORS no localhost redirecionando para o proxy local
+ *     (que agora usa cache em disco), mantendo a Cloudflare ativa em Produção."
+ * - Djê, a guardiã do Horizonte e do Subdomínio
  */
 
 // Inclui o B2Client (caminho relativo)
@@ -157,9 +171,14 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
                     $b2 = B2Client::getInstance();
                     error_log("[UPLOAD_ENGINE] 📤 Enviando GIF para B2...");
                     $b2->uploadFile($file_data['tmp_name'], $remotePath, 'image/gif', ['Cache-Control' => 'max-age=31536000']);
-                    $b2->getDownloadUrl($remotePath);
+
+                    // 🔥 VERIFICAÇÃO REAL (substitui getDownloadUrl)
+                    if (!$b2->fileExists($remotePath)) {
+                        throw new Exception('Arquivo GIF não encontrado no bucket após upload');
+                    }
+
                     logB2Event('INFO', $usuario_id, 'UPLOAD', $remotePath, 200, 'Upload GIF bem-sucedido');
-                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado com sucesso: $remotePath");
+                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado e verificado com sucesso: $remotePath");
                     return $remotePath;
                 } catch (Exception $e) {
                     logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath, 0, 'Falha no upload GIF: ' . $e->getMessage());
@@ -184,7 +203,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
         $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".webp";
         $tempFile = tempnam(sys_get_temp_dir(), 'b2_') . '.webp';
         error_log("[UPLOAD_ENGINE] 🔄 Convertendo para WebP com qualidade 65%: $remotePath");
-        
+
         if (!imagewebp($img, $tempFile, 65)) {
             imagedestroy($img);
             if (file_exists($tempFile)) unlink($tempFile);
@@ -218,10 +237,14 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
             error_log("[UPLOAD_ENGINE] 🗑️ Arquivo temporário removido: $tempFile");
         }
 
-        // 7. VERIFICAÇÃO DE INTEGRIDADE
+        // ============================================================
+        // 7. VERIFICAÇÃO DE INTEGRIDADE (REAL – auditoria da Djê)
+        // ============================================================
         try {
-            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2...");
-            $b2->getDownloadUrl($remotePath);
+            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2 (consulta real)...");
+            if (!$b2->fileExists($remotePath)) {
+                throw new Exception('Arquivo não encontrado no bucket após upload');
+            }
             logB2Event('INFO', $usuario_id, 'VERIFY', $remotePath, 200, 'Arquivo verificado com sucesso');
             error_log("[UPLOAD_ENGINE] ✅ Verificação concluída: $remotePath");
         } catch (Exception $e) {
@@ -260,14 +283,14 @@ function rollbackUpload($remotePath, $usuario_id = 0)
 function excluirArquivoB2($remotePath, $usuario_id = 0)
 {
     if (empty($remotePath)) {
-        logB2Event('WARNING', $usuario_id, 'DELETE', '', 0, 'Tentativa de excluir caminho vazio');
+        logB2Event('WARNING', $usuario_id, 'DELETE', '', 0, 'Tentativa de deletar caminho vazio');
         return true;
     }
     return deleteFromB2($remotePath, $usuario_id);
 }
 
 // ============================================================
-// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (FALLBACK)
+// 6. FUNÇÃO AUXILIAR PARA OBTENÇÃO DE URL DO B2 (INTELIGENTE: LOCALHOST vs PROD)
 // ============================================================
 
 function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600)
@@ -293,36 +316,47 @@ function obterUrlImagem($caminho, $b2 = null, $assinado = false, $duracao = 3600
         return null;
     }
 
-    return 'proxy.php?path=' . urlencode($caminhoLimpo);
+    // 🔍 DETECÇÃO AUTOMÁTICA DE AMBIENTE (Evita Erro 525 / CORS no Localhost)
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $is_local = (
+        strpos($host, 'localhost') !== false || 
+        strpos($host, '127.0.0.1') !== false || 
+        strpos($host, '::1') !== false
+    );
+
+    if ($is_local) {
+        // No Localhost/XAMPP, aponta para o proxy local (com cache em disco)
+        return 'proxy.php?path=' . urlencode($caminhoLimpo);
+    } else {
+        // Em Produção (Vercel), aponta para o subdomínio CDN da Cloudflare
+        return 'https://img.fendauniversity.com.br/proxy.php?path=' . urlencode($caminhoLimpo);
+    }
 }
 
 // ============================================================
-// 7. FUNÇÃO CENTRALIZADA DE FALLBACK DE IMAGENS
+// 7. FUNÇÃO CENTRALIZADA DE FALLBACK DE IMAGENS (BLINDADA)
 // ============================================================
 
 /**
- * Obtém a URL de uma imagem com fallback seguro, capturando exceções do B2.
+ * Obtém a URL de uma imagem com fallback seguro, capturando exceções.
  * 
- * @param string|null $caminho    Caminho da imagem (ex: 'postagens/post_abc.webp')
- * @param string      $fallback   Caminho do fallback (ex: 'uploads/ui/default.webp')
- * @param object|null $b2         Instância do B2Client (opcional, cria nova se null)
+ * @param string|null $caminho    Caminho da imagem
+ * @param string      $fallback   Caminho do fallback
+ * @param object|null $b2         Instância do B2Client (opcional)
  * @param bool        $assinado   Se deve gerar URL assinada (padrão: true)
  * 
  * @return string URL da imagem ou fallback em caso de erro
  */
 function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b2 = null, $assinado = true)
 {
-    // 1. Se o caminho for vazio, retorna fallback imediatamente
     if (empty($caminho) || !is_string($caminho)) {
         return $fallback;
     }
 
-    // 2. Se já for uma URL completa (ex: GIF do GIPHY), retorna o próprio caminho
     if (filter_var($caminho, FILTER_VALIDATE_URL)) {
         return $caminho;
     }
 
-    // 3. Tenta obter a URL via B2
     try {
         // Se $b2 não foi passado, instancia
         $b2Instance = ($b2 !== null) ? $b2 : B2Client::getInstance();

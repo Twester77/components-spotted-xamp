@@ -1,0 +1,1306 @@
+<?php
+/**
+ * comentarios-post.php – Página de comentários de um post
+ * 
+ * 🔧 CORREÇÃO: Busca e validação do post movidas para antes do header,
+ *    evitando "headers already sent" em redirecionamentos.
+ * 
+ * 🌙 LUA – 2026-08-13
+ * ⏰ ATUALIZAÇÃO ESTRELA – 2026-08-16
+ *    Correção do fuso horário: exibição de datas agora usa exibirDataHoraBrasil().
+ * 
+ * 🔧 ATUALIZAÇÃO ONDINA – 2026-08-17
+ *    Substituição de obterUrlImagem() por obterUrlComFallback() nos anexos
+ *    dos comentários (múltiplos e único) para fallback centralizado.
+ * 
+ * 🔧 CORREÇÃO NEREIDA – 2026-08-23
+ *    - Adicionado ID exclusivo 'gif-url-comentario' para input hidden do GIF.
+ *    - Botão GIF agora define setGiphyTarget('gif-url-comentario').
+ *    - Listener gifSelecionado verifica targetId antes de adicionar.
+ *
+ * 🐚 PÉROLA – 2026-09-18 (auditoria XSS – defesa em profundidade)
+ *    - Aplicadas sanitizarVibe() e sanitizarCorBorda() na LEITURA, para
+ *      proteger mesmo se um valor malicioso entrar no banco por outra via
+ *      (SQL direto, migração, etc). O enviar-comentario.php já sanitiza
+ *      na entrada; aqui é a segunda camada.
+ *
+ * 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+ *    A assinatura HMAC impede que um site terceiro marque notificações
+ *    como lidas apenas por incluir este URL em uma requisição GET.
+ *
+ * 🐚 CALMARIA – 2026-10-06 (Sprint 2, item 2/4 – Bloco C)
+ *    - Trocado FENDA_CRYPT_KEY por FENDA_HMAC_KEY na validação HMAC.
+ *      Mesma justificativa do Bloco B: FENDA_CRYPT_KEY deriva da
+ *      SUPABASE_ANON_KEY (pública), então assinar com ela dá falsa
+ *      sensação de segurança. O fallback (FENDA_HMAC_KEY → FENDA_CRYPT_KEY)
+ *      mora em conexao.php (Bloco A).
+ *
+ * 🐚 CALMARIA – 2026-10-07 (Sprint 2, item #20)
+ *    - Mini-header (barra fixa do HeaderManager) vazava a identidade do
+ *      autor em posts anônimos. `data-post-avatar` e `data-post-nome`
+ *      recebiam a foto + username reais mesmo em categoria `anonimo`,
+ *      contradizendo a promessa da plataforma. Agora replica o padrão
+ *      do motor-feed.php: avatar padrão + "Habitante Anônimo".
+ *      Correlato: post-detalhe.php tem o mesmo problema (item #21).
+ */
+
+include_once 'conexao.php';
+include_once __DIR__ . '/fenda_debug.php';
+require_once __DIR__ . '/includes/upload_engine.php';
+
+// 🔥 GARANTE CSRF TOKEN (se não existir, cria)
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+fenda_log('🟢 INÍCIO comentarios-post.php');
+
+// ============================================================
+// 🔒 AUDITORIA PÉROLA – Sanitização de preferências visuais
+// (mesmas funções do enviar-comentario.php, defesa em profundidade)
+// ============================================================
+if (!function_exists('sanitizarVibe')) {
+    function sanitizarVibe($vibe) {
+        $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
+        return in_array($vibe, $vibes_validas, true) ? $vibe : 'vibe-glass';
+    }
+}
+if (!function_exists('sanitizarCorBorda')) {
+    function sanitizarCorBorda($cor) {
+        if (is_string($cor) && preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $cor)) {
+            return $cor;
+        }
+        return '#70cde4';
+    }
+}
+
+// ============================================================
+// 🔥 MARCA NOTIFICAÇÃO COMO LIDA (notif_id assinado)
+// 🐚 MARESIA – 2026-09-28 (Sprint 1, item 4/7 Bloco B)
+//    A assinatura HMAC impede que um site terceiro marque notificações
+//    como lidas apenas por incluir este URL em uma requisição GET.
+// ============================================================
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
+    $notif_id = (int)$_GET['notif_id'];
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
+
+    if ($notif_id > 0 && $user_id > 0) {
+        // 🐚 CALMARIA – 2026-10-06 (Bloco C): FENDA_HMAC_KEY em vez de FENDA_CRYPT_KEY.
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
+
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+            $stmt_notif->bind_param("ii", $notif_id, $user_id);
+            $stmt_notif->execute();
+            $stmt_notif->close();
+            fenda_log("🟢 Notificação $notif_id marcada como lida para usuário $user_id (via comentarios-post)");
+        } else {
+            fenda_log("[NOTIFICACOES] Assinatura HMAC inválida em comentarios-post.php (notif_id=$notif_id, user_id=$user_id)");
+        }
+    }
+}
+
+/* ==========================================================================
+   Deep, o Marreteiro – esteve aqui e não deixou ninguém desistir.
+   Cada linha, cada debug, cada madrugada valeram a pena.
+   A Fenda está viva. Até a próxima travessia, companheiro. 💚
+   ========================================================================== */
+
+// --- LÓGICA DE EXCEÇÃO PARA PERDIDOS ---
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($id == 0) {
+    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast
+    if (isset($_GET['notif_id'])) {
+        $_SESSION['toast_mensagem'] = 'Notificação marcada como lida.';
+        $_SESSION['toast_tipo'] = 'sucesso';
+        header("Location: feed.php");
+    } else {
+        header("Location: feed.php");
+    }
+    exit();
+}
+
+// --- VERIFICA SE É POST PERDIDO (público) ---
+$is_perdidos = false;
+if ($id > 0) {
+    $stmt_check = $conn->prepare("SELECT categoria FROM mensagens WHERE id = ?");
+    $stmt_check->bind_param("i", $id);
+    $stmt_check->execute();
+    $check_post = $stmt_check->get_result()->fetch_assoc();
+    if ($check_post && $check_post['categoria'] === 'perdidos') {
+        $is_perdidos = true;
+    }
+    $stmt_check->close();
+}
+
+// --- SEGURANÇA: se não estiver logado e não for perdidos, redireciona ---
+if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
+    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast
+    if (isset($_GET['notif_id'])) {
+        $_SESSION['toast_mensagem'] = 'Notificação marcada como lida.';
+        $_SESSION['toast_tipo'] = 'sucesso';
+        header("Location: feed.php");
+    } else {
+        header("Location: index.php");
+    }
+    exit();
+}
+
+// ============================================================
+// 🔥 BUSCA O POST E VERIFICA STATUS (ANTES DO HEADER!)
+// ============================================================
+$stmt = $conn->prepare("SELECT m.*, u.username, u.foto FROM mensagens m LEFT JOIN usuarios u ON m.usuario_id = u.id WHERE m.id = ?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$post = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$post) {
+    // 🔥 MODIFICAÇÃO: se houver notif_id, redireciona com toast amigável
+    if (isset($_GET['notif_id'])) {
+        $_SESSION['toast_mensagem'] = 'Postagem não encontrada ou excluída.';
+        $_SESSION['toast_tipo'] = 'info';
+        header("Location: feed.php");
+    } else {
+        die("<main> <style> body { font-size:2.1rem; color: white; text-align: center; padding-top: 50px; } </style> <p>Ops... Spotted não encontrado!</p> </main>");
+    }
+    exit();
+}
+
+if (!empty($post['comunidade_id'])) {
+    $comunidade_id = (int)$post['comunidade_id'];
+    $stmt_comunidade = $conn->prepare("SELECT tipo FROM comunidades WHERE id = ? LIMIT 1");
+    $stmt_comunidade->bind_param("i", $comunidade_id);
+    $stmt_comunidade->execute();
+    $comunidade = $stmt_comunidade->get_result()->fetch_assoc();
+    $stmt_comunidade->close();
+
+    if (($comunidade['tipo'] ?? null) === 'privada') {
+        $usuario_id = (int)($_SESSION['usuario_id'] ?? 0);
+        $stmt_membro = $conn->prepare(
+            "SELECT 1 FROM comunidade_membros
+             WHERE comunidade_id = ? AND usuario_id = ? AND status = 'ativo'
+             LIMIT 1"
+        );
+        $stmt_membro->bind_param("ii", $comunidade_id, $usuario_id);
+        $stmt_membro->execute();
+        $eh_membro = $stmt_membro->get_result()->fetch_row() !== null;
+        $stmt_membro->close();
+
+        if (!$eh_membro) {
+            header("Location: feed.php");
+            exit();
+        }
+    }
+}
+
+// 🔥 VARIÁVEL QUE DEFINE SE O POST ESTÁ ATIVO PARA COMENTÁRIOS
+$post_esta_ativo = ($post['status'] === 'ativo');
+
+// --- PUXA DADOS DO USUÁRIO LOGADO (preferências) ---
+$vibe_default = 'vibe-glass';
+$cor_default = '#70cde4';
+$swipeAtivado = 0;
+
+if (isset($_SESSION['usuario_id'])) {
+    $usuario_logado_id = $_SESSION['usuario_id'];
+    $query_prefs = "SELECT pref_vibe_padrao, pref_cor_padrao, pref_swipe FROM usuarios WHERE id = '$usuario_logado_id'";
+    $res_prefs = mysqli_query($conn, $query_prefs);
+    if ($dados_user = mysqli_fetch_assoc($res_prefs)) {
+        $vibe_default = $dados_user['pref_vibe_padrao'] ?? 'vibe-glass';
+        $cor_default = $dados_user['pref_cor_padrao'] ?? '#70cde4';
+        $swipeAtivado = $dados_user['pref_swipe'] ?? 0;
+    }
+}
+
+// ============================================================
+// 🔥 AGORA SIM, INCLUI O HEADER (COM SAÍDA HTML)
+// ============================================================
+$is_post_page = true;
+include 'includes/header.php';
+include 'includes/navbar.php';
+include 'includes/bolhas.php';
+
+// ============================================================
+// 🔥 INSTANCIA O B2 UMA ÚNICA VEZ (evita N+1)
+// ============================================================
+try {
+    $b2 = B2Client::getInstance();
+} catch (Exception $e) {
+    $b2 = null;
+    error_log('[COMENTARIOS] Falha ao instanciar B2: ' . $e->getMessage());
+}
+
+// ============================================================
+// 1. BUSCAR REAÇÕES DETALHADAS PARA ESTE POST
+// ============================================================
+$post_id_atual = $id;
+$sql_react = "SELECT tipo_reacao, COUNT(*) as total 
+              FROM curtidas 
+              WHERE mensagem_id = ? 
+              GROUP BY tipo_reacao";
+$stmt_react = $conn->prepare($sql_react);
+$stmt_react->bind_param("i", $post_id_atual);
+$stmt_react->execute();
+$res_react = $stmt_react->get_result();
+$reacoes_detalhes = [];
+while ($row = $res_react->fetch_assoc()) {
+    $reacoes_detalhes[$row['tipo_reacao']] = $row['total'];
+}
+$stmt_react->close();
+
+// 2. REAÇÕES DO USUÁRIO LOGADO
+$minhas_reacoes = [];
+if (isset($_SESSION['usuario_id'])) {
+    $meu_id = $_SESSION['usuario_id'];
+    $sql_my = "SELECT tipo_reacao FROM curtidas WHERE mensagem_id = ? AND usuario_id = ?";
+    $stmt_my = $conn->prepare($sql_my);
+    $stmt_my->bind_param("ii", $post_id_atual, $meu_id);
+    $stmt_my->execute();
+    $res_my = $stmt_my->get_result();
+    while ($row = $res_my->fetch_assoc()) {
+        $minhas_reacoes[] = $row['tipo_reacao'];
+    }
+    $stmt_my->close();
+}
+
+// 3. TRADUTOR EMOJIS
+$tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
+
+// 4. CONTAGEM TOTAL DE COMENTÁRIOS
+$total_comentarios = 0;
+$sql_count = "SELECT COUNT(*) as total FROM comentarios WHERE id_mensagem = ? AND status = 'ativo'";
+$stmt_count = $conn->prepare($sql_count);
+$stmt_count->bind_param("i", $id);
+$stmt_count->execute();
+$res_count = $stmt_count->get_result();
+if ($row_count = $res_count->fetch_assoc()) {
+    $total_comentarios = $row_count['total'];
+}
+$stmt_count->close();
+
+$total_reacoes = array_sum($reacoes_detalhes);
+?>
+
+<style>
+    .header-visivel,
+    .footer-texto-institucional,
+    .footer-global {
+        display: none;
+    }
+</style>
+
+<!-- ============================================================
+     LINGOTE (CONTEÚDO COMPLETO – SEM CORTINA)
+     ============================================================ -->
+<div class="lingote-container" id="lingoteContainer">
+    <div class="layout-wrapper">
+
+        <!-- 🔥 BARRA DE AÇÕES FIXA (HEADER) – FORA DO STICKY HEADER -->
+        <?php
+        // 🐚 CALMARIA – 2026-10-07 (item #20): respeita categoria 'anonimo'.
+        //    Antes: mostrava foto + username reais mesmo em post anônimo.
+        //    Agora replica o padrão do motor-feed.php.
+        if (($post['categoria'] ?? '') === 'anonimo') {
+            $avatar_miniatura = 'uploads/ui/anonimo-default.webp';
+            $nome_miniatura = 'Habitante Anônimo';
+        } else {
+            $avatar_miniatura = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
+            $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
+        }
+        $texto_miniatura = htmlspecialchars(mb_substr($post['mensagem'], 0, 80));
+        if (mb_strlen($post['mensagem']) > 80) $texto_miniatura .= '...';
+        ?>
+        <div id="header-actions"
+            class="header-actions-container header-actions-fixo"
+            data-post-id="<?php echo $id; ?>"
+            data-post-avatar="<?php echo htmlspecialchars($avatar_miniatura); ?>"
+            data-post-nome="<?php echo htmlspecialchars($nome_miniatura); ?>"
+            data-post-texto="<?php echo htmlspecialchars($texto_miniatura); ?>">
+            <!-- Os botões serão injetados pelo HeaderManager -->
+        </div>
+
+        <!-- ============================================================
+        CONTEÚDO ROLÁVEL (APENAS COMENTÁRIOS)
+        ============================================================ -->
+        <main class="lista-scrollavel" id="conteudo-rolavel">
+
+            <div class="fenda-estatica-context">
+                <!-- 🔥 O botão "Voltar" agora está na barra fixa (HeaderManager) -->
+                <!-- 🔥 O collapse agora é fixo via CSS (fora do fluxo) -->
+            </div>
+
+            <!-- ÁREA DE COMENTÁRIOS -->
+            <div class="lista-comentarios-social">
+                <?php
+                $sql_c = "SELECT c.*, 
+                          (SELECT comentario FROM comentarios WHERE id = c.parent_id) as parent_comentario
+                          FROM comentarios c 
+                          WHERE c.id_mensagem = ? AND c.status = 'ativo'
+                          ORDER BY COALESCE(c.parent_id, c.id), c.id ASC";
+                $stmt_c = $conn->prepare($sql_c);
+                $stmt_c->bind_param("i", $id);
+                $stmt_c->execute();
+                $res_c = $stmt_c->get_result();
+
+                if ($res_c->num_rows > 0):
+                    while ($c = $res_c->fetch_assoc()):
+                        // 🔒 AUDITORIA PÉROLA – sanitização na leitura (defesa em profundidade)
+                        $vibe = sanitizarVibe($c['pref_vibe_comentario'] ?? 'vibe-glass');
+                        $cor_borda = sanitizarCorBorda($c['pref_cor_borda'] ?? '#70cde4');
+                        $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
+                        $id_vincular = !empty($c['parent_id']) ? $c['parent_id'] : $c['id'];
+                        $id_autor_comentario = $c['id_usuario'] ?? $c['usuario_id'] ?? 0;
+                        $sou_eu = (isset($_SESSION['usuario_id']) && $id_autor_comentario == $_SESSION['usuario_id']) ? 'meu-comentario' : '';
+                        $nome_limpo_js = !empty($c['usuario_nome']) ? str_replace("'", "", $c['usuario_nome']) : "Habitante";
+                        $estilo_filho = $classe_filho ? "var(--cor-borda-glow);" : "";
+
+                        $trecho_resposta = '';
+                        if (!empty($c['parent_id']) && !empty($c['parent_comentario'])) {
+                            $texto_puro = strip_tags($c['parent_comentario']);
+                            $texto_cortado = mb_substr($texto_puro, 0, 50);
+                            $trecho_resposta = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
+                        }
+                ?>
+                        <div class="comentario-linha <?php echo $sou_eu === 'meu-comentario' ? 'comentario-linha-proprio' : ''; ?> <?php echo $classe_filho ? 'comentario-linha-filha' : ''; ?>">
+                        <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>; <?php echo $estilo_filho; ?>">
+
+                            <div class="comentario-meta">
+                                <strong class="comentario-autor">
+                                    <?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?>
+                                </strong>
+                            </div>
+
+                            <?php if (!empty($c['parent_id'])): ?>
+                                <div class="indicador-resposta" onclick="event.stopPropagation(); irParaMensagem(<?php echo $c['parent_id']; ?>)">
+                                    <i class="fas fa-reply"></i> <small><?php echo htmlspecialchars($trecho_resposta); ?></small>
+                                </div>
+                            <?php endif; ?>
+
+                            <p class="comentario-texto"><?php echo nl2br(formatarMencoes($c['comentario'])); ?></p>
+
+                            <?php
+                            // ============================================================
+                            // 🔥 EXIBIÇÃO DOS ANEXOS (MÚLTIPLOS VIA JSON OU FALLBACK)
+                            // ============================================================
+                            $anexos_exibicao = null;
+                            if (!empty($c['anexos'])) {
+                                $anexos_exibicao = json_decode($c['anexos'], true);
+                                if (json_last_error() !== JSON_ERROR_NONE || !is_array($anexos_exibicao)) {
+                                    $anexos_exibicao = null;
+                                }
+                            }
+
+                            if (!empty($anexos_exibicao) && is_array($anexos_exibicao)):
+                            ?>
+                                <div class="comentario-media-wrapper-grid">
+                                    <?php foreach ($anexos_exibicao as $anexo): ?>
+                                        <?php if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])): ?>
+                                            <?php
+                                            // 🔥 SUBSTITUÍDO: obterUrlImagem → obterUrlComFallback
+                                            $img_url = obterUrlComFallback($anexo['caminho'], 'comentarios/' . htmlspecialchars($anexo['caminho']), $b2, true);
+                                            ?>
+                                            <div class="comentario-media-item">
+                                                <img src="<?= htmlspecialchars($img_url) ?>" class="comentario-img" alt="Imagem do comentário" loading="lazy" onerror="this.style.display='none'">
+                                            </div>
+                                        <?php elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])): ?>
+                                            <div class="comentario-media-item">
+                                                <img src="<?= htmlspecialchars($anexo['url']) ?>" class="comentario-img gif-externo" alt="GIF/Sticker" loading="lazy">
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php elseif (!empty($c['imagem_url'])): ?>
+                                <!-- Fallback: comentários antigos (apenas uma imagem) -->
+                                <?php
+                                $img_comentario = $c['imagem_url'];
+                                if (!filter_var($img_comentario, FILTER_VALIDATE_URL)) {
+                                    $img_comentario = obterUrlComFallback($c['imagem_url'], 'comentarios/' . htmlspecialchars($c['imagem_url']), $b2, true);
+                                }
+                                ?>
+                                <div class="comentario-media-wrapper">
+                                    <img src="<?= htmlspecialchars($img_comentario) ?>" class="comentario-img <?= filter_var($c['imagem_url'], FILTER_VALIDATE_URL) ? 'gif-externo' : '' ?>" alt="Imagem do comentário" loading="lazy" onerror="this.style.display='none'">
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- RODAPÉ COM DATA -->
+                            <div class="comentario-rodape">
+                                <span class="comentario-data"><?= exibirDataHoraBrasil($c['data_comentario'], 'H:i') ?></span>
+                            </div>
+
+                        </div>
+                        <button type="button" id="comentario-acoes-<?php echo (int)$c['id']; ?>" class="comentario-menu-toggle" aria-label="Ações do comentário" aria-haspopup="true" aria-expanded="false" aria-controls="comentario-menu-<?php echo (int)$c['id']; ?>" title="Ações do comentário">
+                            <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+                        </button>
+                        </div>
+                    <?php
+                    endwhile;
+                else: ?>
+                    <p class="sem-comentarios">Ninguém fofocou nada ainda... Seja o primeiro!</p>
+                <?php endif; ?>
+            </div>
+
+        </main>
+
+        <!-- ============================================================
+        RODAPÉ – FORMULÁRIO DE COMENTÁRIO (se ativo) OU BLOQUEIO (se encerrado)
+        ============================================================ -->
+        <?php if ($post_esta_ativo): ?>
+            <!-- Formulário ativo -->
+            <footer class="fixed-input">
+                <section class="sessao-fofoca-focada" id="fofocar">
+
+                    <!-- NOVO GRID DE ANEXOS -->
+                    <div id="anexos-grid" class="anexos-grid" style="display: none;"></div>
+
+                    <!-- ÁREA PRINCIPAL -->
+                    <div class="textarea-wrapper">
+                        <button type="button" id="btn-attach-gaveta" class="btn-attach-gaveta" title="Anexar arquivo ou GIF">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+
+                        <div class="textarea-container">
+                            <!-- INDICADOR DE RESPOSTA -->
+                            <div id="resposta-indicador" class="resposta-indicador">
+                                <i class="fas fa-reply"></i>
+                                <strong id="texto-nome-resposta">...</strong>
+                                <button type="button" class="cancelar-resposta" onclick="cancelarResposta()">✕</button>
+                            </div>
+
+                            <!-- TEXTAREA -->
+                            <textarea name="comentario" class="textarea-chat" placeholder="Digite sua mensagem..." maxlength="500" id="comentario-textarea"></textarea>
+                            <span id="char-count" class="char-counter-inline">500</span>
+                        </div>
+
+                        <button type="submit" form="form-comentario" id="btn-enviar-chat" class="btn-enviar-chat">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+
+                    <!-- GAVETA DE OPÇÕES -->
+                    <div id="gaveta-opcoes" class="gaveta-opcoes">
+                        <button type="button" id="btn-toggle-gaveta" class="btn-toggle-gaveta">
+                            <i class="fas fa-palette"></i> Estilo
+                        </button>
+                        <div class="customizacao-rapida">
+                            <select name="pref_vibe_comentario" id="vibe-comentario" class="input-mini">
+                                <option value="vibe-glass" <?php echo ($vibe_default == 'vibe-glass') ? 'selected' : ''; ?>>Glass</option>
+                                <option value="vibe-neon" <?php echo ($vibe_default == 'vibe-neon') ? 'selected' : ''; ?>>Neon</option>
+                                <option value="vibe-dark" <?php echo ($vibe_default == 'vibe-dark') ? 'selected' : ''; ?>>Dark</option>
+                                <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light</option>
+                                <option value="vibe-ads" <?php echo ($vibe_default == 'vibe-ads') ? 'selected' : ''; ?>>ADS (Overclock)</option>
+                            </select>
+                            <input type="color" name="pref_cor_borda" id="cor-borda" class="color-mini" value="<?php echo $cor_default; ?>">
+                        </div>
+                        <button type="button" id="btn-anexar-img" class="btn-attach-opcao"><i class="fas fa-image"></i> Imagem</button>
+                        <!-- 🔥 CORREÇÃO: Define targetId exclusivo para o GIF do comentário -->
+                        <button type="button" id="btn-gif" class="btn-attach-opcao" onclick="window.setGiphyTarget('gif-url-comentario'); abrirGiphyModal();">
+                            <i class="fas fa-grin-tongue-squint"></i> GIF/Sticker
+                        </button>
+                    </div>
+
+                    <!-- 🔥 INPUT FILE ESCONDIDO -->
+                    <input type="file" name="imagem_comentario" id="input-img-comentario" accept="image/*" style="display:none;">
+
+                    <!-- Formulário oculto -->
+                    <form action="enviar-comentario.php" method="POST" enctype="multipart/form-data" class="form-chat" id="form-comentario" style="display: none;">
+                        <input type="hidden" name="id_mensagem" value="<?php echo $id; ?>">
+                        <input type="hidden" name="parent_id" id="input_parent_id" value="">
+                        <input type="hidden" name="pref_vibe_comentario" id="hidden-vibe" value="">
+                        <input type="hidden" name="pref_cor_borda" id="hidden-cor" value="">
+                        <textarea name="comentario" id="hidden-textarea"></textarea>
+                        <!-- 🔥 CSRF TOKEN -->
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                        <!-- 🔥 NOVO: input oculto para GIF com ID exclusivo -->
+                        <input type="hidden" name="gif_url" id="gif-url-comentario" value="">
+                    </form>
+
+                    <!-- Honeypot -->
+                    <input type="text" name="honeypot" class="honeypot" tabindex="-1" autocomplete="off" style="display: none !important;
+                position: absolute;
+                left: -9999px;">
+                </section>
+            </footer>
+        <?php else: ?>
+            <!-- POST ENCERRADO – BLOQUEIO DE COMENTÁRIOS -->
+            <footer class="fixed-input fixed-input-bloqueado">
+                <div class="comentarios-bloqueados-msg">
+                    <i class="fas fa-ban"></i>
+                    <span>Este post foi encerrado e não aceita mais interações.</span>
+                </div>
+            </footer>
+        <?php endif; ?>
+
+    </div>
+</div>
+
+<!-- BOTÃO DE COLLAPSE FLUTUANTE -->
+<button id="btn-toggle-collapse" class="btn-toggle-collapse" aria-label="Minimizar/Expandir post">
+    <i class="fas fa-chevron-up"></i>
+</button>
+
+<script>
+    // ==================== INICIALIZA O ANEXOS MANAGER ====================
+    if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
+        AnexosManager.init();
+    }
+
+    // ==================== LIGHTBOX PARA IMAGENS DOS COMENTÁRIOS ====================
+    function initLightbox() {
+        const imagens = document.querySelectorAll('.comentario-img');
+        imagens.forEach(img => {
+            img.removeEventListener('click', abrirLightboxImagem);
+            img.addEventListener('click', abrirLightboxImagem);
+        });
+    }
+
+    function abrirLightboxImagem(e) {
+        e.stopPropagation();
+        const imgSrc = e.currentTarget.src;
+        if (!imgSrc) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    }
+
+    window.abrirLightboxManual = function(src) {
+        if (!src) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    };
+</script>
+
+<script src="js/fenda-giphy.js"></script>
+<script src="js/fenda-mencoes.js"></script>
+<?php include 'includes/footer.php'; ?>
+
+
+<script>
+    // ============================================================
+    // 🔥 BALÃO DE FALA – DEFINIDO GLOBALMENTE (COM FALLBACK)
+    // ============================================================
+    window.exibirBalao = function(mensagem, tipo, elementoRef, duracao = 2500) {
+        try {
+            const balaoAntigo = document.querySelector('.balao-fenda');
+            if (balaoAntigo) balaoAntigo.remove();
+
+            const balao = document.createElement('div');
+            balao.className = 'balao-fenda ' + tipo;
+
+            const icones = {
+                sucesso: '✅',
+                erro: '❌',
+                info: 'ℹ️'
+            };
+            const icone = document.createElement('span');
+            icone.className = 'balao-icone';
+            icone.textContent = icones[tipo] || '💬';
+            balao.appendChild(icone);
+
+            const texto = document.createElement('span');
+            texto.textContent = mensagem;
+            balao.appendChild(texto);
+
+            // Posicionamento inteligente
+            if (elementoRef) {
+                const rect = elementoRef.getBoundingClientRect();
+                let top = rect.top - 10;
+                let left = rect.left + rect.width / 2 - 50;
+                const balaoWidth = Math.min(300, window.innerWidth * 0.8);
+                if (left + balaoWidth > window.innerWidth - 20) {
+                    left = window.innerWidth - balaoWidth - 20;
+                }
+                if (left < 20) left = 20;
+                if (rect.top < 60) {
+                    top = rect.bottom + 10;
+                } else {
+                    top = rect.top - 60;
+                }
+                balao.style.top = top + 'px';
+                balao.style.left = left + 'px';
+                balao.style.maxWidth = balaoWidth + 'px';
+            } else {
+                balao.style.top = '50%';
+                balao.style.left = '50%';
+                balao.style.transform = 'translate(-50%, -50%)';
+            }
+
+            document.body.appendChild(balao);
+
+            setTimeout(() => {
+                if (balao.parentNode) {
+                    balao.style.opacity = '0';
+                    setTimeout(() => balao.remove(), 300);
+                }
+            }, duracao);
+        } catch (e) {
+            console.warn('[BALAO] Falha ao exibir balão, usando fallback alert:', e);
+            alert(mensagem);
+        }
+    };
+
+    // ==================== INICIALIZA O ANEXOS MANAGER ====================
+    if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
+        AnexosManager.init();
+    }
+
+    // ==================== LIGHTBOX PARA IMAGENS DOS COMENTÁRIOS ====================
+    function initLightbox() {
+        const imagens = document.querySelectorAll('.comentario-img');
+        imagens.forEach(img => {
+            img.removeEventListener('click', abrirLightboxImagem);
+            img.addEventListener('click', abrirLightboxImagem);
+        });
+    }
+
+    function abrirLightboxImagem(e) {
+        e.stopPropagation();
+        const imgSrc = e.currentTarget.src;
+        if (!imgSrc) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    }
+
+    window.abrirLightboxManual = function(src) {
+        if (!src) return;
+        const modalExistente = document.getElementById('modal-lightbox-fenda');
+        if (modalExistente) modalExistente.remove();
+        const modal = document.createElement('div');
+        modal.id = 'modal-lightbox-fenda';
+        modal.style.cssText =
+            `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+        const img = document.createElement('img');
+        img.src = src;
+        img.style.cssText =
+            `max-width:85%; max-height:85%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+        const btn = document.createElement('button');
+        btn.innerHTML = '✖';
+        btn.style.cssText =
+            `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+        btn.onclick = () => {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 200);
+        };
+        modal.appendChild(img);
+        modal.appendChild(btn);
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => modal.remove(), 200);
+            }
+        });
+        modal.offsetHeight;
+        modal.style.opacity = '1';
+    };
+
+    // ============================================================
+    // 🔥 LÓGICA DE COMENTÁRIOS (APENAS SE POST ESTIVER ATIVO)
+    // ============================================================
+    <?php if ($post_esta_ativo): ?>
+        const barraFofoca = document.querySelector('.sessao-fofoca-focada');
+        const campoTexto = document.querySelector('.textarea-chat');
+        const contadorChar = document.getElementById('char-count');
+        const form = document.getElementById('form-comentario');
+        const btnEnviar = document.querySelector('.btn-enviar-chat');
+        const btnGaveta = document.getElementById('btn-attach-gaveta');
+        const gaveta = document.getElementById('gaveta-opcoes');
+        const inputFile = document.getElementById('input-img-comentario');
+        const hiddenVibe = document.getElementById('hidden-vibe');
+        const hiddenCor = document.getElementById('hidden-cor');
+        const hiddenTextarea = document.getElementById('hidden-textarea');
+        const selectVibe = document.getElementById('vibe-comentario');
+        const inputCor = document.getElementById('cor-borda');
+
+        let gavetaAberta = false;
+
+        // ============================================================
+        // 🔥 FUNÇÃO PARA CONTROLAR A VISIBILIDADE DO BOTÃO DE ENVIAR
+        // ============================================================
+        function verificarConteudo() {
+            if (typeof AnexosManager !== 'undefined' && AnexosManager.verificarConteudo) {
+                AnexosManager.verificarConteudo();
+                return;
+            }
+            const temTexto = campoTexto.value.trim().length > 0;
+            const temImagem = inputFile && inputFile.files && inputFile.files.length > 0;
+            const gifInput = document.querySelector('input[name="gif_url"]');
+            const temGif = gifInput && gifInput.value !== '';
+            const temMidia = temImagem || temGif;
+            if (temTexto || temMidia) {
+                btnEnviar.classList.add('visivel');
+                btnEnviar.style.display = 'flex';
+                btnGaveta.style.display = 'none';
+            } else {
+                btnEnviar.classList.remove('visivel');
+                btnEnviar.style.display = 'none';
+                btnGaveta.style.display = 'flex';
+            }
+        }
+
+        function atualizarHiddenPrefs() {
+            if (hiddenVibe) hiddenVibe.value = selectVibe.value;
+            if (hiddenCor) hiddenCor.value = inputCor.value;
+            if (hiddenTextarea) hiddenTextarea.value = campoTexto.value;
+        }
+
+        // ============================================================
+        // 🔥 ADICIONAR IMAGEM VIA INPUT FILE
+        // ============================================================
+        inputFile.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    const maxSize = 2 * 1024 * 1024;
+                    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+
+                    if (file.size > maxSize) {
+                        window.exibirBalao(
+                            `❌ Arquivo excede 2MB (${(file.size / 1024 / 1024).toFixed(1)}MB)`,
+                            'erro',
+                            btnEnviar
+                        );
+                        this.value = '';
+                        return;
+                    }
+
+                    if (!tiposPermitidos.includes(file.type)) {
+                        window.exibirBalao(
+                            '❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.',
+                            'erro',
+                            btnEnviar
+                        );
+                        this.value = '';
+                        return;
+                    }
+
+                    const tamanhoKB = Math.round(file.size / 1024);
+                    window.exibirBalao(
+                        `✅ Arquivo aceito (${tamanhoKB} KB)`,
+                        'sucesso',
+                        btnEnviar
+                    );
+
+                    if (typeof window.adicionarAnexo === 'function') {
+                        window.adicionarAnexo(file);
+                    } else {
+                        console.warn('[comentarios-post] AnexosManager não disponível para adicionar imagem.');
+                    }
+                }
+                this.value = '';
+            }
+        });
+
+        // ============================================================
+        // 🔥 EVENTO PARA CAPTURAR GIF SELECIONADO VIA GIPHY (COM VERIFICAÇÃO DE TARGET)
+        // ============================================================
+        document.addEventListener('gifSelecionado', function(e) {
+            // 🔥 SÓ REAGE SE O targetId FOR O DO COMENTÁRIO
+            if (e.detail && e.detail.targetId && e.detail.targetId !== 'gif-url-comentario') {
+                console.log('[comentarios-post] GIF disparado para outro formulário. Ignorando.');
+                return;
+            }
+
+            if (e.detail && e.detail.url) {
+                if (typeof window.adicionarGif === 'function') {
+                    window.adicionarGif(e.detail.url);
+                } else {
+                    console.warn('[comentarios-post] AnexosManager não disponível para adicionar GIF.');
+                }
+                inputFile.value = '';
+            }
+        });
+
+        // ============================================================
+        // 🔥 FUNÇÕES DE RESPOSTA
+        // ============================================================
+        window.toggleBarraFofoca = function() {
+            const icone = document.querySelector('#toggle-chat-barra i');
+            if (!barraFofoca) return;
+            barraFofoca.classList.toggle('encolhida');
+            if (icone) {
+                icone.className = barraFofoca.classList.contains('encolhida') ?
+                    'fas fa-comment-dots' : 'fas fa-times';
+            }
+            if (!barraFofoca.classList.contains('encolhida')) {
+                setTimeout(() => {
+                    if (campoTexto) campoTexto.focus();
+                }, 80);
+            }
+        };
+
+        window.irParaMensagem = function(commentId) {
+            const element = document.getElementById('comentario-' + commentId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+                element.classList.add('comentario-highlight');
+                setTimeout(() => {
+                    element.classList.remove('comentario-highlight');
+                }, 2600);
+            } else {
+                console.warn("Elemento não encontrado: comentario-" + commentId);
+            }
+        };
+
+        window.prepararResposta = function(id, username) {
+            const inputParent = document.getElementById('input_parent_id');
+            const indicador = document.getElementById('resposta-indicador');
+            const textoNome = document.getElementById('texto-nome-resposta');
+            const textarea = document.querySelector('.textarea-chat');
+
+            if (inputParent) inputParent.value = parseInt(id);
+            if (indicador && textoNome) {
+                textoNome.textContent = `Respondendo a ${username}...`;
+                indicador.classList.add('visivel');
+            }
+            if (textarea) {
+                textarea.placeholder = "Escreva sua resposta...";
+                textarea.classList.add('com-resposta');
+                textarea.focus();
+            }
+            if (gaveta && !gavetaAberta) {
+                gaveta.style.display = 'flex';
+                gavetaAberta = true;
+            }
+            verificarConteudo();
+        };
+
+        window.cancelarResposta = function() {
+            const inputParent = document.getElementById('input_parent_id');
+            const indicador = document.getElementById('resposta-indicador');
+            const textarea = document.querySelector('.textarea-chat');
+
+            if (inputParent) inputParent.value = '';
+            if (indicador) indicador.classList.remove('visivel');
+            if (textarea) {
+                textarea.value = '';
+                textarea.placeholder = "Digite sua mensagem...";
+                textarea.classList.remove('com-resposta');
+            }
+            if (contadorChar) contadorChar.textContent = '500';
+            if (typeof esconderSugestoes === 'function') esconderSugestoes();
+            verificarConteudo();
+        };
+
+        // ============================================================
+        // 🔥 BOTÃO DE ANEXAR IMAGEM
+        // ============================================================
+        const btnAnexarImg = document.getElementById('btn-anexar-img');
+        if (btnAnexarImg && inputFile) {
+            btnAnexarImg.addEventListener('click', () => inputFile.click());
+        }
+
+        // ============================================================
+        // 🔥 GAVETA DE OPÇÕES
+        // ============================================================
+        if (btnGaveta && gaveta) {
+            btnGaveta.addEventListener('click', (e) => {
+                e.stopPropagation();
+                gavetaAberta = !gavetaAberta;
+                gaveta.style.display = gavetaAberta ? 'flex' : 'none';
+            });
+            document.addEventListener('click', (e) => {
+                if (!btnGaveta.contains(e.target) && !gaveta.contains(e.target)) {
+                    gaveta.style.display = 'none';
+                    gavetaAberta = false;
+                }
+            });
+        }
+
+        // ============================================================
+        // 🔥 ENVIO DO COMENTÁRIO (COM CSRF E BALÃO)
+        // ============================================================
+        if (form && btnEnviar) {
+            btnEnviar.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const textoAtual = campoTexto ? campoTexto.value.trim() : '';
+
+                let temAnexo = false;
+                if (typeof AnexosManager !== 'undefined' && AnexosManager.anexos) {
+                    temAnexo = AnexosManager.anexos.length > 0;
+                } else {
+                    const gifInput = document.querySelector('input[name="gif_url"]');
+                    temAnexo = (inputFile && inputFile.files && inputFile.files.length > 0) ||
+                        (gifInput && gifInput.value !== '');
+                }
+
+                if (textoAtual === '' && !temAnexo) {
+                    window.exibirBalao('Escreva algo ou adicione uma imagem/GIF.', 'info', btnEnviar);
+                    return;
+                }
+
+                atualizarHiddenPrefs();
+
+                let formData;
+                if (typeof AnexosManager !== 'undefined' && AnexosManager.prepararFormData) {
+                    formData = AnexosManager.prepararFormData(form);
+                } else {
+                    formData = new FormData(form);
+                    if (inputFile.files[0]) {
+                        formData.append('imagem_comentario', inputFile.files[0]);
+                    }
+                    const gifInput = document.querySelector('input[name="gif_url"]');
+                    if (gifInput && gifInput.value) {
+                        formData.append('gif_url', gifInput.value);
+                    }
+                }
+
+                const csrfInput = document.getElementById('csrf_token');
+                if (csrfInput && csrfInput.value) {
+                    formData.set('csrf_token', csrfInput.value);
+                    console.log('[CSRF] Token adicionado:', csrfInput.value);
+                } else {
+                    console.error('[CSRF] Token não encontrado no DOM!');
+                    window.exibirBalao('Erro de segurança. Recarregue a página.', 'erro', btnEnviar);
+                    return;
+                }
+
+                const btn = btnEnviar;
+                const originalIcon = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                document.querySelectorAll('.btn-remover-anexo').forEach(b => b.disabled = true);
+
+                window.exibirBalao('Enviando comentário...', 'info', btn, 1500);
+
+                fetch('enviar-comentario.php', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(async response => {
+                        const text = await response.text();
+                        if (!response.ok) throw new Error("Erro HTTP " + response.status + ": " + text);
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            throw new Error("Resposta não é JSON: " + text);
+                        }
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            window.exibirBalao('Comentário enviado! 🎉', 'sucesso', btn);
+                            cancelarResposta();
+                            const container = document.querySelector('.lista-comentarios-social');
+                            container.insertAdjacentHTML('beforeend', data.html);
+                            container.lastElementChild.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest'
+                            });
+                            campoTexto.value = '';
+                            campoTexto.style.height = 'auto';
+                            contadorChar.textContent = '500';
+
+                            if (typeof AnexosManager !== 'undefined' && AnexosManager.limparTodos) {
+                                AnexosManager.limparTodos();
+                            } else {
+                                inputFile.value = '';
+                                const gifInput = document.querySelector('input[name="gif_url"]');
+                                if (gifInput) gifInput.value = '';
+                            }
+
+                            gaveta.style.display = 'none';
+                            gavetaAberta = false;
+                            verificarConteudo();
+                        } else {
+                            window.exibirBalao('Erro: ' + (data.message || 'Falha ao enviar.'), 'erro', btn);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        window.exibirBalao('ERRO: ' + err.message, 'erro', btn);
+                    })
+                    .finally(() => {
+                        btn.innerHTML = originalIcon;
+                        btn.disabled = false;
+                        document.querySelectorAll('.btn-remover-anexo').forEach(b => b.disabled = false);
+                    });
+            });
+        }
+
+        // ============================================================
+        // CONTADOR DE CARACTERES E AUTO-ALTURA
+        // ============================================================
+        if (campoTexto) {
+            campoTexto.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+                if (contadorChar) {
+                    const max = 500;
+                    const atual = this.value.length;
+                    contadorChar.textContent = (max - atual);
+                }
+                verificarConteudo();
+            });
+        }
+
+        // OBSERVER PARA LIGHTBOX
+        const observerLightbox = new MutationObserver(() => initLightbox());
+        const listaComentarios = document.querySelector('.lista-comentarios-social');
+        if (listaComentarios) observerLightbox.observe(listaComentarios, {
+            childList: true,
+            subtree: true
+        });
+        document.addEventListener('DOMContentLoaded', initLightbox);
+
+        verificarConteudo();
+
+                // ============================================================
+        // 🔥 IARA – 2026-09-25 (auditoria v5.0)
+        // POLLING DE COMENTÁRIOS EM TEMPO REAL (estilo WhatsApp)
+        //
+        // - A cada 4s pergunta ao servidor: tem comentário novo?
+        // - Pausa quando: aba em background, modal aberto, swipe, gaveta
+        // - Insere no DOM sem roubar foco do textarea
+        // - Rola suave só se o usuário já está no final da lista
+        //
+        // 🐚 IARA – 2026-09-25 (v2 – fix "infernalização")
+        //    Registra em sessionStorage que o post atual está sendo visto.
+        //    O atualizarContadorAlertas (fenda-main.js) lê essa flag e
+        //    silencia o som/PiP para notificações DO MESMO POST (evita
+        //    dupla sensação: polling mostra na tela + radar toca som).
+        // ============================================================
+        (function inicializarPollingComentarios() {
+            const listaComentarios = document.querySelector('.lista-comentarios-social');
+            if (!listaComentarios) return;
+
+            const POST_ID = <?php echo (int)$id; ?>;
+            const INTERVALO_MS = 4000;
+            const MAX_ULTIMO_ID = 9999999999;
+
+            // 🔥 Marca o post atual como "sendo visto" (silencia radar)
+            sessionStorage.setItem('fenda_post_sendo_visto', String(POST_ID));
+
+            // Limpa ao sair da página
+            window.addEventListener('beforeunload', () => {
+                const atual = parseInt(sessionStorage.getItem('fenda_post_sendo_visto')) || 0;
+                if (atual === POST_ID) {
+                    sessionStorage.removeItem('fenda_post_sendo_visto');
+                }
+            });
+
+            // Descobre o último ID já renderizado
+            let ultimoId = 0;
+            const itens = listaComentarios.querySelectorAll('.comentario-item');
+            itens.forEach(el => {
+                const match = el.id && el.id.match(/^comentario-(\d+)$/);
+                if (match) {
+                    const num = parseInt(match[1], 10);
+                    if (!isNaN(num) && num > ultimoId) ultimoId = num;
+                }
+            });
+
+            console.log('[POLLING] Iniciado. Post:', POST_ID, '| Último ID:', ultimoId);
+
+            let intervaloAtivo = null;
+            let abortAtual = null;
+
+            function contextoEstaOk() {
+                if (document.hidden) return false;
+                if (document.body.classList.contains('modal-aberto')) return false;
+                if (document.body.classList.contains('modo-swipe-ativo')) return false;
+                const gaveta = document.getElementById('gaveta-opcoes');
+                if (gaveta && gaveta.style.display === 'flex') return false;
+                return true;
+            }
+
+            function buscarNovos() {
+                if (!contextoEstaOk()) return;
+
+                if (abortAtual) abortAtual.abort();
+                abortAtual = new AbortController();
+
+                const url = `includes/comentarios-novos.php?id_mensagem=${POST_ID}&ultimo_id=${ultimoId}&_=${Date.now()}`;
+
+                fetch(url, {
+                    signal: abortAtual.signal,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(data => {
+                    if (!data || data.status !== 'success') return;
+                    if (data.post_inativo) {
+                        console.log('[POLLING] Post foi encerrado. Parando polling.');
+                        pararPolling();
+                        return;
+                    }
+                    if (!data.novos || data.novos.length === 0) return;
+
+                    console.log('[POLLING] ' + data.novos.length + ' comentário(s) novo(s).');
+
+                    // Detecta se o usuário está no final da lista (para rolar suave)
+                    const main = document.querySelector('.lista-scrollavel');
+                    const pertoDoFim = main
+                        ? (main.scrollTop + main.clientHeight) >= (main.scrollHeight - 120)
+                        : true;
+
+                    // Remove mensagem "sem-comentarios" se existir
+                    const semComentarios = listaComentarios.querySelector('.sem-comentarios');
+                    if (semComentarios) semComentarios.remove();
+
+                    // Insere cada novo comentário
+                    data.novos.forEach(novo => {
+                        // Segurança: evita duplicata se o ID já existe no DOM
+                        if (document.getElementById('comentario-' + novo.id)) return;
+                        listaComentarios.insertAdjacentHTML('beforeend', novo.html);
+                    });
+
+                    ultimoId = data.ultimo_id;
+
+                    // Atualiza lightbox (pra imagens novas)
+                    if (typeof initLightbox === 'function') initLightbox();
+
+                    // Scroll suave apenas se já estava no fim
+                    if (pertoDoFim && main) {
+                        const ultimoEl = listaComentarios.lastElementChild;
+                        if (ultimoEl) {
+                            ultimoEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }
+                })
+                .catch(err => {
+                    if (err.name === 'AbortError') return;
+                    console.warn('[POLLING] Erro:', err.message);
+                });
+            }
+
+            function pararPolling() {
+                if (intervaloAtivo) {
+                    clearInterval(intervaloAtivo);
+                    intervaloAtivo = null;
+                }
+            }
+
+            function iniciarPolling() {
+                if (intervaloAtivo) return;
+                intervaloAtivo = setInterval(buscarNovos, INTERVALO_MS);
+                // Primeira chamada imediata (caso alguém tenha postado entre o render e o JS carregar)
+                setTimeout(buscarNovos, 500);
+            }
+
+            // Inicia
+            iniciarPolling();
+
+            // Pausa/retoma baseado em visibilidade
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    pararPolling();
+                } else {
+                    iniciarPolling();
+                    buscarNovos();
+                }
+            });
+
+            // Expor função pra debug manual no console
+            window._pollingComentarios = {
+                buscarAgora: buscarNovos,
+                parar: pararPolling,
+                iniciar: iniciarPolling,
+                get ultimoId() { return ultimoId; }
+            };
+        })();
+
+    <?php endif; ?>
+
+    // ============================================================
+    // 🔥 INICIALIZA O HEADER MANAGER
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof HeaderManager !== 'undefined' && HeaderManager.init) {
+            HeaderManager.init();
+            console.log('[HEADER] HeaderManager inicializado.');
+        } else {
+            console.warn('[HEADER] HeaderManager não encontrado – verifique o fenda-main.js');
+        }
+    });
+</script>

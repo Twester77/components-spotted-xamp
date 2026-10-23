@@ -39,6 +39,18 @@ if ($u_id > 0 && isset($conn)) {
     }
 }
 
+// 🫧 HORIZONTE – 2026-10-20: Busca pref_estilo_comentario direto do banco
+// (não depende da sessão, que só é populada em auth-bridge/confirma-login)
+$pref_estilo_comentario = 'whatsapp';
+if ($u_id > 0 && isset($conn)) {
+    $stmt_estilo = $conn->prepare("SELECT pref_estilo_comentario FROM usuarios WHERE id = ?");
+    $stmt_estilo->bind_param("i", $u_id);
+    $stmt_estilo->execute();
+    $res_estilo = $stmt_estilo->get_result()->fetch_assoc();
+    $pref_estilo_comentario = $res_estilo['pref_estilo_comentario'] ?? 'whatsapp';
+    $stmt_estilo->close();
+}
+
 $ativar_modo_app = ($pref_swipe_real == 1 && $pagina_atual == 'feed.php');
 $ativar_modo_tinder = ($pref_swipe_balanga == 1 && $pagina_atual == 'balanga-teras.php');
 
@@ -46,7 +58,9 @@ $classe_tema = $tema_classe ?? '';
 $classe_pref = ($ativar_modo_app) ? 'modo-swipe-ativo feed-empilhado' : 'allow-hover';
 $classe_tinder = $ativar_modo_tinder ? 'modo-tinder-ativo' : '';
 
-$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe_pref $classe_tema $classe_tinder is-touch-device");
+$classe_estilo = 'estilo-' . $pref_estilo_comentario;
+
+$classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema $classe_estilo" : "$classe_pref $classe_tema $classe_tinder is-touch-device $classe_estilo");
 ?>
 
 <!DOCTYPE html>
@@ -71,16 +85,6 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <!-- PWA Manifest -->
     <?php
     // 🔥 CÁLCULO DE BASE PATH HÍBRIDO (serverless-safe)
-    // Usa REQUEST_URI (URL que o cliente pediu) em vez de SCRIPT_NAME
-    // (que na Vercel aponta para /api/index.php por causa do roteador).
-    //
-    // Remove o nome do arquivo .php do fim, preserva o diretório base.
-    // Testes:
-    //   /feed.php                       → ''            (produção)
-    //   /spotted-unifev/feed.php        → '/spotted-unifev'  (local)
-    //   /                               → ''            (raiz)
-    //   /spotted-unifev/                → '/spotted-unifev'
-    //   /motor-feed.php?offset=0        → ''            (query ignorada)
     $request_path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
     $basePath = preg_replace('#/[^/]*\.php$#', '', $request_path);
     $basePath = rtrim($basePath, '/');
@@ -109,7 +113,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
     <?php endif; ?>
 
     <!-- Lightbox -->
-    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'balanga-teras.php' || $pagina_atual == 'comentarios-post.php'|| $pagina_atual == 'central.php'|| $pagina_atual == 'comunidade.php'): ?>
+    <?php if ($pagina_atual == 'feed.php' || $pagina_atual == 'ver-perfil.php' || $pagina_atual == 'balanga-teras.php' || $pagina_atual == 'comentarios-post.php' || $pagina_atual == 'central.php' || $pagina_atual == 'comunidade.php'): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/lightbox.css') ?>">
     <?php endif; ?>
 
@@ -117,9 +121,15 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema" : "$classe
         <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
     <?php endif; ?>
 
-    <!-- Comentários -->
-    <?php if ($pagina_atual == 'comentarios-post.php'): ?>
-        <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
+    <!-- Comentários (Carrega no Feed, Central, Comunidade e na página cheia) -->
+    <?php if (in_array($pagina_atual, ['comentarios-post.php', 'feed.php', 'central.php', 'comunidade.php'])): ?>
+    <!-- Base (WhatsApp e Layout) -->
+    <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
+    
+    <!-- Cascata (Árvore e Drawer) - Carrega apenas se o usuário escolheu Cascata -->
+    <?php if (($pref_estilo_comentario ?? 'whatsapp') === 'cascata'): ?>
+        <link rel="stylesheet" href="<?= asset_versao('css/comentarios-cascata.css') ?>">
+    <?php endif; ?>
     <?php endif; ?>
 
     <!-- Swipe -->

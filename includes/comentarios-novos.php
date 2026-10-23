@@ -234,11 +234,12 @@ while ($c = $res->fetch_assoc()) {
     </button>
     </div>';
 
-    $novos[] = [
-        'id'     => (int)$c['id'],
-        'html'   => $comentario_html,
-        'autor'  => $nome_autor,
-    ];
+   $novos[] = [
+    'id'        => (int)$c['id'],
+    'parent_id' => !empty($c['parent_id']) ? (int)$c['parent_id'] : null, // 🫧 HORIZONTE: Cascata
+    'html'      => $comentario_html,
+    'autor'     => $nome_autor,
+];
 
     $novo_ultimo_id = max($novo_ultimo_id, (int)$c['id']);
 }

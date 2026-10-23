@@ -1,24 +1,27 @@
 /* ==========================================================================
-   COMENTÁRIOS – MODO CASCATA + DRAWER (REDDIT-STYLE V6)
+   COMENTÁRIOS – MODO CASCATA + DRAWER (FASE 5)
+   ==========================================================================
+   Escopo: body.estilo-cascata
+   Este arquivo só altera o que é específico do Cascata. O layout base
+   e o input continuam vindo do comentarios.css original.
    ========================================================================== */
 
-/* 1. ESCONDE O HEADER DINÂMICO */
-body.estilo-cascata .header-actions-fixo {
-    display: none !important;
+/* 1. CONTAINER PRINCIPAL (Limita a largura no PC) */
+body.estilo-cascata .lista-comentarios-social {
+    scroll-snap-type: none;
+    max-width: 800px;
+    margin: 20px auto;
+    width: 100%;
+    padding: 8px 12px;
 }
 
-/* Esconde o botão Expandir no modo cascata */
-body.estilo-cascata .btn-ver-mais {
-    display: none !important;
-}
-
-/* 2. O CARD (FORÇANDO FULL WIDTH) */
-body.estilo-cascata .comentario-item,
-body.estilo-cascata .comentario-item.meu-comentario {
+/* 2. O CARD DO COMENTÁRIO (GRID) */
+body.estilo-cascata .comentario-item {
     border-radius: 8px;
-    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.03); /* Borda quase invisível */
     background: var(--bg-card, rgba(17, 17, 17, 0.32));
-    box-shadow: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
@@ -29,40 +32,38 @@ body.estilo-cascata .comentario-item.meu-comentario {
         "btn     btn";
     align-items: center;
     gap: 6px 12px;
+    
     width: 100%;
-    max-width: 100% !important;
+    max-width: 100%;
     box-sizing: border-box;
-    padding: 12px 16px;
+    padding: 10px 14px;
     margin: 0 0 12px 0;
     align-self: stretch;
+    animation: none;
     transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-body.estilo-cascata .comentario-item:hover {
-    background: var(--bg-card-hover, rgba(0, 0, 0, 0.397));
-    border-color: var(--borda-media, rgba(255, 255, 255, 0.1));
-}
 
+/* Meu comentário no Cascata */
 body.estilo-cascata .comentario-item.meu-comentario {
-    border-left: 3px solid var(--cor-borda-glow, #70cde4);
+    border-left: 2px solid var(--cor-borda-glow, #70cde4);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
 }
 
-/* 3. GRID AREAS */
+/* 3. GRID AREAS (Organização do Card) */
 body.estilo-cascata .comentario-meta {
     grid-area: meta;
-    display: flex;
-    align-items: center;
     margin: 0;
-    padding: 0;
     min-width: 0;
 }
 
 body.estilo-cascata .comentario-rodape {
     grid-area: rodape;
-    display: flex;
     justify-content: flex-end;
     margin: 0;
-    padding-right: 28px;
+    padding-right: 28px; /* Espaço pro botão ⋯ */
     z-index: 2;
 }
 
@@ -70,37 +71,8 @@ body.estilo-cascata .indicador-resposta { grid-area: reply; margin: 0; }
 body.estilo-cascata .comentario-texto { grid-area: texto; margin: 0; }
 body.estilo-cascata .comentario-media-wrapper,
 body.estilo-cascata .comentario-media-wrapper-grid { grid-area: media; margin: 0; justify-self: center; }
-body.estilo-cascata .btn-responder { grid-area: btn; justify-self: start; margin: 0; }
 
-/* 4. TEXTOS E DATAS */
-body.estilo-cascata .comentario-autor {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--texto-dourado, #ffbc00);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: none;
-    margin: 0;
-}
-
-body.estilo-cascata .comentario-data {
-    font-size: 0.75rem;
-    color: var(--texto-muted, #888888);
-    opacity: 0.7;
-    font-weight: normal;
-    position: static;
-    margin: 0;
-}
-
-body.estilo-cascata .comentario-texto {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--texto-primario, #ffffff);
-    width: 100%;
-}
-
-/* 5. ESTRUTURA DA ÁRVORE */
+/* 4. ESTRUTURA DA ÁRVORE (Indentação) */
 body.estilo-cascata .comentario-linha {
     position: relative;
     display: flex;
@@ -110,88 +82,94 @@ body.estilo-cascata .comentario-linha {
     min-width: 0;
     margin: 0;
     gap: 0;
-    scroll-snap-align: none;
-    box-sizing: border-box;
 }
 
-body.estilo-cascata .comentario-linha.nivel-0 { margin-left: 0; padding-left: 0; border-left: none; margin-bottom: 16px; }
+body.estilo-cascata .comentario-linha.nivel-0 {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    margin-bottom: 16px;
+}
+
 body.estilo-cascata .comentario-linha.nivel-1,
 body.estilo-cascata .comentario-linha.nivel-2 {
     margin-left: 20px;
     padding-left: 16px;
-    border-left: 2px solid var(--borda-media, rgba(255, 255, 255, 0.1));
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
 }
+
 body.estilo-cascata .comentario-linha.nivel-2 > .comentario-linha.nivel-2 {
     border-left: none;
     padding-left: 0;
     margin-left: 0;
 }
 
-/* 6. BOTÕES */
-body.estilo-cascata .btn-responder {
-    background: none;
-    border: none;
-    color: var(--texto-muted, #8b949e);
-    font-size: 0.75rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    padding: 6px 0 0 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    align-self: flex-start;
-    transition: color 0.15s ease;
-}
-body.estilo-cascata .btn-responder:hover { color: var(--texto-dourado, #ffbc00); }
-
+/* 5. BOTÕES E MENU ⋯ */
 body.estilo-cascata .comentario-linha > .comentario-menu-toggle {
     position: absolute;
-    top: 12px; right: 12px;
-    width: 24px; height: 24px;
-    flex: none; opacity: 0; z-index: 2;
-    transition: opacity 0.2s ease, background 0.15s ease;
+    top: 10px;
+    flex: 0 0 22px;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    opacity: 0; /* Esconde até o hover */
+    z-index: 2;
+    transition: opacity 0.2s ease;
 }
-body.estilo-cascata .comentario-linha:hover > .comentario-menu-toggle,
-body.estilo-cascata .comentario-linha > .comentario-menu-toggle:focus-visible { opacity: 1; }
 
-/* 7. VIBES */
-body.estilo-cascata .comentario-item.vibe-dark {
-    background: rgba(22, 22, 29, 0.911); border-color: rgba(255, 255, 255, 0.1); color: #eeeeee;
+body.estilo-cascata .comentario-linha:hover > .comentario-menu-toggle {
+    opacity: 1;
 }
-body.estilo-cascata .comentario-item.vibe-glass {
-    background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+
+/* 6. GRID DE IMAGENS QUADRADAS */
+body.estilo-cascata .comentario-media-wrapper-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(60px, 150px));
+    grid-template-columns: repeat(2, minmax(15cqi, 30cqi));
+    gap: 4px;
+    max-width: 320px; /* Não deixa as imagens gigantes */
+    width: 100%;
 }
-body.estilo-cascata .comentario-item.vibe-light {
-    background: #f1f1f1; border-color: #ddd;
+
+body.estilo-cascata .comentario-media-item {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    border-radius: 6px;
+    overflow: hidden;
+    object-fit: cover;
 }
-body.estilo-cascata .comentario-item.vibe-light .comentario-texto,
-body.estilo-cascata .comentario-item.vibe-light .comentario-autor,
-body.estilo-cascata .comentario-item.vibe-light .comentario-data { color: #111; }
-body.estilo-cascata .comentario-item.vibe-neon,
-body.estilo-cascata .comentario-item.vibe-ads { animation: none; background: #000; }
+
+body.estilo-cascata .comentario-media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 7. ESCONDE O HEADER DINÂMICO E O BOTÃO EXPANDIR (NA PÁGINA INTEIRA) */
+body.estilo-cascata .header-actions-fixo { display: none; }
+body.estilo-cascata .btn-ver-mais { display: none; }
 
 
 /* ============================================================
-   O DRAWER (LINGUETA) - Agora unificado aqui
+   O DRAWER (LINGUETA)
    ============================================================ */
 .drawer-cmt-backdrop {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0, 0, 0, 0.6);
-    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.6));
+    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
     z-index: 100000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 .drawer-cmt-backdrop.ativo { opacity: 1; pointer-events: auto; }
 
 .drawer-cmt-panel {
     position: fixed; bottom: 0; left: 0; right: 0;
-    height: 90dvh; background: #0d1117;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.5);
+    height: 90dvh; background: var(--bg-modal-content, #0d1117);
+    border-radius: 25px 25px 0 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
     z-index: 100001; display: flex; flex-direction: column;
-    transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-    will-change: transform; box-sizing: border-box;
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
 }
 .drawer-cmt-panel.ativo { transform: translateY(0); }
 
@@ -199,9 +177,7 @@ body.estilo-cascata .comentario-item.vibe-ads { animation: none; background: #00
     width: 100%; padding: 12px 0; display: flex; justify-content: center;
     cursor: grab; flex-shrink: 0; touch-action: none;
 }
-.drawer-cmt-handle {
-    width: 40px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 4px;
-}
+.drawer-cmt-handle { width: 40px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
 .drawer-cmt-close {
     position: absolute; top: 15px; right: 15px;
     background: rgba(255, 255, 255, 0.05); border: none; color: #888;
@@ -214,126 +190,30 @@ body.estilo-cascata .comentario-item.vibe-ads { animation: none; background: #00
 .drawer-cmt-content {
     flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative;
 }
+
+/* CORREÇÃO CRÍTICA: O layout-wrapper do comentarios.css é 'fixed'. 
+   Dentro do Drawer, ele precisa ser 'relative' para não vazar e quebrar o app. */
 .drawer-cmt-content .layout-wrapper {
-    position: relative !important; height: 100% !important; width: 100% !important;
-    background: transparent !important; top: auto !important; left: auto !important;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    top: auto;
+    left: auto;
 }
-.drawer-cmt-content .header-actions-fixo,
-.drawer-cmt-content .btn-toggle-collapse { display: none !important; }
+
 .drawer-cmt-content .fixed-input {
-    position: relative !important; bottom: auto !important;
-    background: #0d1117 !important; border-top: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    bottom: auto;
+    background: transparent;
+    padding: 0;
     padding-bottom: 15px;
 }
 
-
-/* ============================================================
-   AJUSTES DE MÍDIA E BOTÕES NO DRAWER/CASCATA
-   ============================================================ */
-
-/* Garante que as imagens do grid não estourem o card */
-body.estilo-cascata .comentario-media-wrapper-grid {
-    max-width: 100%;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-body.estilo-cascata .comentario-media-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    cursor: zoom-in;
-    transition: transform 0.2s;
-}
-
-body.estilo-cascata .comentario-media-item img:hover {
-    transform: scale(1.02);
-}
-
-/* Ajuste nos botões do Drawer (para não ficarem colados nas bordas) */
-.drawer-cmt-content .textarea-wrapper {
-    padding: 8px 12px;
-    margin-bottom: 8px;
-}
-
-.drawer-cmt-content .btn-enviar-chat,
-.drawer-cmt-content .btn-attach-gaveta {
-    margin: 0 4px;
-}
-
-/* Se a imagem for única, ela pode ser maior */
-body.estilo-cascata .comentario-media-wrapper {
-    max-width: 100%;
-}
-
-body.estilo-cascata .comentario-media-wrapper img {
-    max-height: 250px; /* Evita que uma foto vertical gigante estoure a tela */
-    width: auto;
-    border-radius: 8px;
-    cursor: zoom-in;
-}
-
-/* ============================================================
-   AJUSTES FINAIS – LARGURA, IMAGENS, BORDAS E SWIPE
-   ============================================================ */
-
-/* 1. Limita a largura no Desktop (estilo Instagram/YouTube) */
-body.estilo-cascata .lista-comentarios-social {
-    max-width: 800px;
-    margin: 0 auto;
-    width: 100%;
-}
-
-/* 2. Deixa as bordas dos cards super discretas */
-body.estilo-cascata .comentario-item {
-    border: 1px solid rgba(255, 255, 255, 0.03); /* Quase invisível */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra leve pra destacar do fundo */
-}
-
-/* 3. Conserta o Grid de Imagens (quadradinhos perfeitos) */
-body.estilo-cascata .comentario-media-wrapper-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-    max-width: 300px; /* Não deixa o grid ficar gigante no desktop */
-}
-
-body.estilo-cascata .comentario-media-item {
-    aspect-ratio: 1 / 1;
-    width: 100%;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-body.estilo-cascata .comentario-media-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: zoom-in;
-}
-
-/* 4. Modo Swipe + Cascata: Volta a mostrar o Header Dinâmico */
+/* MODO SWIPE + CASCATA: Força o Header Dinâmico a aparecer */
 body.modo-swipe-ativo.estilo-cascata .header-actions-fixo {
-    display: flex ; /* Força a barra de ações a aparecer */
+    display: flex;
 }
 body.modo-swipe-ativo.estilo-cascata .comentario-linha > .comentario-menu-toggle {
-    display: none ; /* Esconde o ⋯ no swipe pra não duplicar */
-}
-body.modo-swipe-ativo.estilo-cascata .comentario-item {
-    border-radius: 8px; /* Mantém o formato de card */
-}
-
-/* 5. Modo Grid + Cascata: Botões do Card de Post */
-body.estilo-cascata .btn-ver-mais {
-    display: none ; /* Esconde o Expandir no Cascata */
-}
-
-body:not(.modo-swipe-ativo).estilo-cascata .btn-fofocar {
-    display: inline-flex ; /* Garante que o Fofocar apareça */
-}
-
-/* 6. Fix do Menu ⋯ (Ellipsis) */
-.comentario-ellipsis-menu {
-    z-index: 999999 ; /* Garante que fique acima de tudo na gaveta */
+    display: none; /* Esconde o ⋯ no swipe pra não duplicar as ações */
 }

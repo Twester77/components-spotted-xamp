@@ -2785,6 +2785,7 @@ const HeaderManager = {
     }
 };
 
+
 // ============================================================
 // EXPORTA FUNÇÕES GLOBAIS (para compatibilidade com o código atual)
 // ============================================================
@@ -3010,7 +3011,6 @@ window.exibirBalaoFenda = function (mensagem, tipo, elementoRef, duracao = 2500)
 };
 
 // ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
-// ==================== CONFIGURAR FORMULÁRIO DE PERFIL ====================
 // 🐚 IARA – 2026-09-25 (auditoria v5.0)
 //    - Unifica duas responsabilidades: validação de uploads de imagem
 //      (já existia) + validação em tempo real dos campos nome e
@@ -3186,6 +3186,98 @@ function configurarValidacaoNomeUsername() {
     validarNome();
     validarUsername();
 }
+
+/* ============================================================
+   🖼️ LIGHTBOX GLOBAL E UTILS (Fase 5 - Comentários em Cascata)
+   ============================================================ */
+
+// 1. Cria o modal de imagem em tela cheia
+window.abrirLightboxManual = function(src) {
+    if (!src) return;
+    const modalExistente = document.getElementById('modal-lightbox-fenda');
+    if (modalExistente) modalExistente.remove();
+    
+    const modal = document.createElement('div');
+    modal.id = 'modal-lightbox-fenda';
+    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+    
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = `max-width:85%; max-height:90%; object-fit:contain; border-radius:12px; box-shadow:0 0 20px rgba(0,0,0,0.5);`;
+    
+    const btn = document.createElement('button');
+    btn.innerHTML = '✖';
+    btn.style.cssText = `position:absolute; top:20px; right:20px; background:none; border:none; color:white; font-size:2rem; cursor:pointer; z-index:100001; font-weight:bold; text-shadow:0 0 5px black;`;
+    
+    btn.onclick = () => { modal.style.opacity = '0'; setTimeout(() => modal.remove(), 200); };
+    
+    modal.appendChild(img);
+    modal.appendChild(btn);
+    document.body.appendChild(modal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) { modal.style.opacity = '0'; setTimeout(() => modal.remove(), 200); }
+    });
+    modal.offsetHeight;
+    modal.style.opacity = '1';
+};
+
+// 2. Varre a página procurando por imagens de comentários
+window.initLightboxGlobal = function() {
+    const imagens = document.querySelectorAll('.comentario-img');
+    imagens.forEach(img => {
+        if (img._lightboxListener) return; // Evita duplicar listeners
+        img._lightboxListener = function(e) {
+            e.stopPropagation();
+            const imgSrc = e.currentTarget.src;
+            if (imgSrc) window.abrirLightboxManual(imgSrc);
+        };
+        img.addEventListener('click', img._lightboxListener);
+    });
+};
+
+// 3. Rola a tela até o comentário pai e destaca
+window.irParaMensagem = function(commentId) {
+    const el = document.getElementById('comentario-' + commentId);
+    if (!el) return;
+    
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.style.transition = 'background-color 0.4s ease';
+    el.style.backgroundColor = 'rgba(255, 188, 0, 0.25)';
+    
+    setTimeout(() => {
+        el.style.backgroundColor = '';
+    }, 2000);
+};
+
+// 4. MutationObserver para garantir o Lightbox em elementos injetados via AJAX/Polling
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.initLightboxGlobal === 'function') {
+        window.initLightboxGlobal();
+    }
+    
+    const lista = document.querySelector('.lista-comentarios-social') || document.body;
+    if (lista) {
+        const observer = new MutationObserver(() => {
+            if (typeof window.initLightboxGlobal === 'function') {
+                window.initLightboxGlobal();
+            }
+        });
+        observer.observe(lista, { childList: true, subtree: true });
+    }
+});
+
+// 5. Desativa o Long Press no Cascata (para não conflitar com o menu ⋯)
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.body.classList.contains('estilo-cascata')) {
+        const originalMostrarMenu = window.mostrarMenuAcoes;
+        window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
+            // No modo Cascata, o Long Press é bloqueado. O menu ⋯ assume.
+            if (document.body.classList.contains('estilo-cascata')) return;
+            if (typeof originalMostrarMenu === 'function') originalMostrarMenu(postId, isOwner, cardElement);
+        };
+    }
+});
 
 // ==================== LOGOUT VIA SUPABASE (NOVA FUNÇÃO) ====================
 window.deslogarUsuario = async function () {

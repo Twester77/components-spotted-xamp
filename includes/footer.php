@@ -165,6 +165,7 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
     </div>
 </div>
 
+<script src="<?= asset_versao('js/fenda-drawer.js') ?>"></script>
 <!-- SCRIPTS PRINCIPAIS (CARREGADOS NO RODAPÉ)  -->
 <script src="<?= asset_versao('js/fenda-main.js') ?>"></script>
 <script src="<?= asset_versao('js/fenda-acoes.js') ?>"></script>

@@ -24,7 +24,7 @@ $id_meu = $_SESSION['usuario_id'];
 $query = "SELECT id, nome, foto, bio, capa, username, atletica_id, 
           pref_vibe_padrao, pref_cor_padrao, pref_swipe, pref_bolhas, 
           pref_som_trilha, pref_som_notif, pref_pip, pref_badge, 
-          pref_notif_comunidade, pref_swipe_balanga 
+          pref_notif_comunidade, pref_swipe_balanga, pref_estilo_comentario 
           FROM usuarios WHERE id = '$id_meu'";
 $resultado = mysqli_query($conn, $query);
 $dados = mysqli_fetch_assoc($resultado);
@@ -210,6 +210,20 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                     <option value="vibe-light" <?php echo ($vibe_default == 'vibe-light') ? 'selected' : ''; ?>>Light (Solar)</option>
                     <option value="vibe-ads" <?php echo ($dados['pref_vibe_padrao'] == 'vibe-ads') ? 'selected' : ''; ?>>ADS (Overclock)</option>
                 </select>
+            </div>
+
+            <!-- 🫧 BRASA – Seletor de Estilo de Comentários -->
+            <div class="campo-grupo">
+                <label for="pref_estilo_comentario">
+                    <i class="fas fa-comments" aria-hidden="true"></i> Estilo dos Comentários
+                </label>
+                <select name="pref_estilo_comentario" id="pref_estilo_comentario" class="input-fenda-select">
+                    <option value="whatsapp" <?php echo ($dados['pref_estilo_comentario'] ?? 'whatsapp') === 'whatsapp' ? 'selected' : ''; ?>>WhatsApp (Bolhas)</option>
+                    <option value="cascata" <?php echo ($dados['pref_estilo_comentario'] ?? 'whatsapp') === 'cascata' ? 'selected' : ''; ?>>Cascata (Reddit-style)</option>
+                </select>
+                <small style=" margin-top:5px;">
+                    Escolha como os comentários são exibidos para você.
+                </small>
             </div>
 
             <!-- PiP -->
