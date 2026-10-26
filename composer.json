@@ -3,8 +3,7 @@
     "description": "A Fenda - Spotted Universitário",
     "type": "project",
     "require": {
-        "php": ">=8.2",
-        "ext-gd": "*"
+        "php": ">=8.2"
     },
     "config": {
         "optimize-autoloader": true,
