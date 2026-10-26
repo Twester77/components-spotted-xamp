@@ -373,6 +373,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     align-content: center;
     border: 1px solid rgba(255, 255, 255, 0.06);               /* fallback */
     border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
+    background-clip: padding-box;
+    padding-top: 10px;
     padding-top: clamp(10px, 1.5cqi, 25px);
     margin-top: 15px;
 }

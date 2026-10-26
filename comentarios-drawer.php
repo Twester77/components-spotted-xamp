@@ -8,6 +8,12 @@ include_once __DIR__ . '/fenda_debug.php';
 require_once __DIR__ . '/includes/upload_engine.php';
 require_once __DIR__ . '/includes/cascata-helper.php';
 
+// 🔥 GARANTE CSRF TOKEN (igual ao comentarios-post)
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// 🔒 Sanitização de preferências visuais (defesa em profundidade)
 if (!function_exists('sanitizarVibe')) {
     function sanitizarVibe($vibe) {
         $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
@@ -23,13 +29,58 @@ if (!function_exists('sanitizarCorBorda')) {
     }
 }
 
+// ============================================================
+// 🔥 PADRONIZAÇÃO DA SIG (MARCA NOTIFICAÇÃO COMO LIDA)
+// ============================================================
+if (isset($_GET['notif_id'], $_GET['sig']) && is_string($_GET['sig'])) {
+    $notif_id = (int)$_GET['notif_id'];
+    $sig_recebida = $_GET['sig'];
+    $user_id = (int)($_SESSION['usuario_id'] ?? 0);
+
+    if ($notif_id > 0 && $user_id > 0) {
+        $sig_esperada = hash_hmac('sha256', $notif_id . '|' . $user_id, FENDA_HMAC_KEY);
+        if (hash_equals($sig_esperada, $sig_recebida)) {
+            $stmt_notif = $conn->prepare("UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?");
+            $stmt_notif->bind_param("ii", $notif_id, $user_id);
+            $stmt_notif->execute();
+            $stmt_notif->close();
+            fenda_log("🟢 [DRAWER] Notificação $notif_id marcada como lida para usuário $user_id");
+        }
+    }
+}
+
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id == 0) {
     http_response_code(400);
-    echo 'ID inválido.';
+    echo '<p style="text-align:center; padding:20px; color:#ff6b6b;">ID inválido.</p>';
     exit();
 }
 
+// 🔒 VERIFICA SE É PERDIDOS (mesma regra do comentarios-post)
+$is_perdidos = false;
+$stmt_check = $conn->prepare("SELECT categoria, status FROM mensagens WHERE id = ?");
+$stmt_check->bind_param("i", $id);
+$stmt_check->execute();
+$check_post = $stmt_check->get_result()->fetch_assoc();
+if ($check_post && $check_post['categoria'] === 'perdidos') {
+    $is_perdidos = true;
+}
+$stmt_check->close();
+
+// 🚫 SE NÃO FOR PERDIDOS E O USUÁRIO NÃO ESTIVER LOGADO, BLOQUEIA
+// (Não usamos header() aqui porque estamos dentro de um fetch AJAX)
+if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
+    http_response_code(403);
+    echo '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#ff6b6b; padding:20px; text-align:center;">
+            <i class="fas fa-lock" style="font-size:2rem; margin-bottom:10px;"></i>
+            <p>Você precisa estar logado para ver os comentários deste post.</p>
+          </div>';
+    exit();
+}
+
+// ============================================================
+// PUXA PREFERÊNCIAS E DADOS DO POST
+// ============================================================
 $pref_estilo_comentario = 'whatsapp';
 $vibe_default = 'vibe-glass';
 $cor_default = '#70cde4';
@@ -46,16 +97,7 @@ if (isset($_SESSION['usuario_id'])) {
 
 try { $b2 = B2Client::getInstance(); } catch (Exception $e) { $b2 = null; }
 
-$stmt = $conn->prepare("SELECT status, categoria FROM mensagens WHERE id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$post_db = $stmt->get_result()->fetch_assoc();
-$stmt->close();
-$post_esta_ativo = ($post_db && $post_db['status'] === 'ativo');
-
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+$post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
 ?>
 
 <div class="layout-wrapper" id="drawer-comentarios-wrapper" style="height: 100%; display: flex; flex-direction: column;">
@@ -111,7 +153,7 @@ if (empty($_SESSION['csrf_token'])) {
     <?php if ($post_esta_ativo): ?>
         <footer class="fixed-input" style="position: relative; flex-shrink: 0;">
             <section class="sessao-fofoca-focada" id="fofocar">
-                <!-- AQUI ESTÁ O GRID DE ANEXOS -->
+                <!-- GRID DE ANEXOS -->
                 <div id="anexos-grid" class="anexos-grid" style="display: none;"></div>
                 
                 <div class="textarea-wrapper">
@@ -132,7 +174,7 @@ if (empty($_SESSION['csrf_token'])) {
                     </button>
                 </div>
                 
-                <!-- AQUI ESTÁ A GAVETA DE OPÇÕES -->
+                <!-- GAVETA DE OPÇÕES -->
                 <div id="gaveta-opcoes" class="gaveta-opcoes">
                     <button type="button" id="btn-toggle-gaveta" class="btn-toggle-gaveta">
                         <i class="fas fa-palette"></i> Estilo
@@ -206,7 +248,6 @@ if (empty($_SESSION['csrf_token'])) {
     
     let gavetaAberta = false;
 
-    // Lógica idêntica ao comentarios-post.php
     function verificarConteudo() {
         if (typeof AnexosManager !== 'undefined' && AnexosManager.verificarConteudo) {
             AnexosManager.verificarConteudo();
@@ -335,7 +376,6 @@ if (empty($_SESSION['csrf_token'])) {
                                 tempDiv.innerHTML = data.html;
                                 const novaLinha = tempDiv.firstElementChild;
                                 if (novaLinha) {
-                                    // AQUI: Não removemos mais a classe 'comentario-linha-proprio'
                                     novaLinha.classList.add('nivel-' + nivel);
                                     paiLinha.appendChild(novaLinha);
                                 }
@@ -426,7 +466,6 @@ if (empty($_SESSION['csrf_token'])) {
                                 tempDiv.innerHTML = novo.html;
                                 const novaLinha = tempDiv.firstElementChild;
                                 if (novaLinha) {
-                                    // AQUI: Não removemos mais a classe 'comentario-linha-proprio'
                                     novaLinha.classList.add('nivel-' + nivel);
                                     paiLinha.appendChild(novaLinha);
                                 }

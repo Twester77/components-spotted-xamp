@@ -802,7 +802,7 @@
     backdrop-filter: none;
     margin-bottom: 15px;
     position: relative;
-    animation: hacker-glitch 4s infinite alternate;
+    animation: none;
 }
 
 [data-theme="hacker"] .comentario-item.vibe-neon .comentario-data,
@@ -832,9 +832,9 @@
 [data-theme="hacker"] .comentario-item.vibe-ads {
     background-color: var(--hacker-bg);
     box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
-    animation: pulsar-luz 3s infinite ease-in-out;
+    animation: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E");
-    background-size: 30px 30px;
+    background-size: 50px 50px;
 }
 
 [data-theme="hacker"] .comentario-item.vibe-ads .comentario-texto {

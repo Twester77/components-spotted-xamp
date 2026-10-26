@@ -128,15 +128,15 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema $classe_est
         <link rel="stylesheet" href="<?= asset_versao('css/feed.css') ?>">
     <?php endif; ?>
 
-    <!-- Comentários (Carrega no Feed, Central, Comunidade e na página cheia) -->
-    <?php if (in_array($pagina_atual, ['comentarios-post.php', 'feed.php', 'central.php', 'comunidade.php'])): ?>
-    <!-- Base (WhatsApp e Layout) -->
-    <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
-    
-    <!-- Cascata (Árvore e Drawer) - Carrega apenas se o usuário escolheu Cascata -->
-    <?php if (($pref_estilo_comentario ?? 'whatsapp') === 'cascata'): ?>
-        <link rel="stylesheet" href="<?= asset_versao('css/comentarios-cascata.css') ?>">
-    <?php endif; ?>
+        <!-- Comentários (Carrega no Feed, Central, Comunidade, Perfil e na página cheia) -->
+    <?php if (in_array($pagina_atual, ['comentarios-post.php', 'feed.php', 'central.php', 'comunidade.php', 'ver-perfil.php'])): ?>
+        <!-- Base (WhatsApp e Layout) -->
+        <link rel="stylesheet" href="<?= asset_versao('css/comentarios.css') ?>">
+        
+        <!-- Cascata (Árvore e Drawer) - Carrega apenas se o usuário escolheu Cascata -->
+        <?php if (($pref_estilo_comentario ?? 'whatsapp') === 'cascata'): ?>
+            <link rel="stylesheet" href="<?= asset_versao('css/comentarios-cascata.css') ?>">
+        <?php endif; ?>
     <?php endif; ?>
 
     <!-- Swipe -->

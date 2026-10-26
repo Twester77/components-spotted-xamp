@@ -5,60 +5,54 @@
 window.abrirDrawerComentarios = function(postId) {
     if (!postId) return;
     
-    // Trava o scroll do body
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-aberto');
 
-    // Remove o drawer antigo se existir
     const backdropAntigo = document.getElementById('drawer-cmt-backdrop');
     const panelAntigo = document.getElementById('drawer-cmt-panel');
     if (backdropAntigo) backdropAntigo.remove();
     if (panelAntigo) panelAntigo.remove();
 
-    // Cria o Backdrop
     const backdrop = document.createElement('div');
     backdrop.id = 'drawer-cmt-backdrop';
     backdrop.className = 'drawer-cmt-backdrop';
     backdrop.onclick = window.fecharDrawerComentarios;
     document.body.appendChild(backdrop);
 
-    // Cria o Painel
     const panel = document.createElement('div');
     panel.id = 'drawer-cmt-panel';
     panel.className = 'drawer-cmt-panel';
     panel.innerHTML = `
-        <div class="drawer-cmt-handle-area">
-            <div class="drawer-cmt-handle"></div>
-        </div>
-        <button class="drawer-cmt-close" onclick="window.fecharDrawerComentarios()">
-            <i class="fas fa-times"></i>
-        </button>
+        <div class="drawer-cmt-handle-area"><div class="drawer-cmt-handle"></div></div>
+        <button class="drawer-cmt-close" onclick="window.fecharDrawerComentarios()"><i class="fas fa-times"></i></button>
         <div class="drawer-cmt-content" id="drawer-cmt-content">
             <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; flex-direction:column; gap:10px;">
-                <i class="fas fa-spinner fa-spin" style="font-size:2rem; font-size:clamp(2rem, 1.5vw, 4.5rem); color:#ffbc00;"></i>
+                <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#ffbc00;"></i>
                 <span>Abrindo fofocas...</span>
             </div>
         </div>
     `;
     document.body.appendChild(panel);
 
-    // Ativa animação
     requestAnimationFrame(() => {
         backdrop.classList.add('ativo');
         panel.classList.add('ativo');
     });
 
-    // Fetch
     fetch(`comentarios-drawer.php?id=${postId}&_=${Date.now()}`)
         .then(res => {
-            if (!res.ok) throw new Error('Erro ao carregar.');
+            if (!res.ok) {
+                // Se o PHP retornar 403 (não logado) ou 500 (erro interno), pegamos o texto de erro
+                return res.text().then(text => { throw new Error(text || 'Erro ao carregar.'); });
+            }
             return res.text();
         })
         .then(html => {
             const contentArea = document.getElementById('drawer-cmt-content');
+            if (!contentArea) return; // Usuário fechou antes do fetch terminar
+            
             contentArea.innerHTML = html;
             
-            // Re-injeta os scripts que vieram no HTML via fetch
             const scripts = contentArea.querySelectorAll('script');
             scripts.forEach(oldScript => {
                 const newScript = document.createElement('script');
@@ -67,18 +61,12 @@ window.abrirDrawerComentarios = function(postId) {
                 oldScript.parentNode.replaceChild(newScript, oldScript);
             });
 
-            // Configura o gesto de fechar (deslizar a alça pra baixo)
             configurarGestoFechar(panel);
 
-            // 🔥 NOVO: Se o teclado abrir (foco no textarea), expande o painel
             const textarea = contentArea.querySelector('.textarea-chat');
             if (textarea) {
                 textarea.addEventListener('focus', () => {
-                    // Pega a altura atual do painel inline (se vazia, é 90)
-                    const currentHeightStr = panel.style.height;
-                    const currentHeight = parseFloat(currentHeightStr) || 90;
-                    
-                    // Se estiver no modo "espiadinha" (35dvh), expande para 60dvh
+                    const currentHeight = parseFloat(panel.style.height) || 90;
                     if (currentHeight < 60) {
                         panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
                         panel.style.height = '60dvh';
@@ -87,13 +75,20 @@ window.abrirDrawerComentarios = function(postId) {
             }
         })
         .catch(err => {
+            console.error('[DRAWER] Erro no fetch:', err);
             const contentArea = document.getElementById('drawer-cmt-content');
-            contentArea.innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#ff6b6b;">
-                    <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:10px;"></i>
-                    <p>${err.message}</p>
-                </div>
-            `;
+            
+            // 🔥 SOLUÇÃO SEGURA: Mostra o erro dentro do painel, sem deletar o backdrop.
+            // O usuário pode ler a mensagem e clicar no X ou no backdrop para fechar.
+            if (contentArea) {
+                contentArea.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#ff6b6b; padding: 20px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:10px;"></i>
+                        <p>${err.message}</p>
+                        <button onclick="window.fecharDrawerComentarios()" style="margin-top: 15px; padding: 8px 16px; border-radius: 8px; background: #ff6b6b; border: none; color: white; font-weight: bold; cursor: pointer;">Fechar</button>
+                    </div>
+                `;
+            }
         });
 };
 

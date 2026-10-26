@@ -72,9 +72,9 @@
 @media (max-width: 600px) {
     .main-perfil-container-publico .capa-container {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     max-height: 152px;
-    aspect-ratio: 400 / 152;
+    aspect-ratio: 500 / 180;
  }
     
 } 
@@ -110,7 +110,7 @@
     object-fit: cover;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    border: 3px solid var(--aura-user, #ffbc00);                   /* 🎨 dinâmica via PHP — preservada */
+    border: 2px solid var(--aura-user, #ffbc00);                   /* 🎨 dinâmica via PHP — preservada */
     box-shadow: 0 0 8px var(--aura-user, #ffbc00)55;               /* 🎨 dinâmica via PHP — preservada */
     background: #0a0a0a;                                            /* fallback */
     background: var(--bg-page-dark, #0a0a0a);                     /* 🌅 FAGULHA – Fase 2 */
@@ -126,7 +126,7 @@
 }
 
 .perfil-imagem-trigger:focus-visible {
-    outline: 3px solid var(--aura-user, #ffbc00);                  /* 🎨 dinâmica via PHP — preservada */
+    outline: 2px solid var(--aura-user, #ffbc00);                  /* 🎨 dinâmica via PHP — preservada */
     outline-offset: 3px;
 }
 
@@ -335,9 +335,9 @@
 
 /* Bio */
 .bio-texto {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     /* Mínimo: 0.95rem | Ideal: escala fluida | Máximo: 1.25rem */
-    font-size: clamp(0.9rem, 0.2cqi + 0.5rem, 1.5rem);
+    font-size: clamp(0.88rem, 0.5cqi + 0.65rem, 1.2rem);
     width: 100%;
     max-width: 800px;
     /* Fallback para navegadores antigos que entendem apenas o motor SVG */
@@ -416,146 +416,113 @@
 }
 
 /* ================================================================
-   5. DEPOIMENTOS E AVALIAÇÕES (SOCIAL COLLAPSE)
+   5. ABAS DO PERFIL PÚBLICO E LIMITAÇÃO DE CONTEÚDO
    ================================================================ */
-.depoimentos-section,
-.avaliacoes-section {
+.perfil-abas-container {
     width: 100%;
-    max-width: 100%;
-    margin: 25px auto;
-    margin: clamp(20px, 2vw, 60px) auto;
-    padding: 0 15px;
-    padding: 0 clamp(12px, 3vw, 30px);
-}
-
-.depoimentos-header,
-.avaliacoes-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-    margin-bottom: clamp(10px, 1.5vw, 18px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);            /* fallback */
-    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
-    padding-bottom: 8px;
-    padding-bottom: clamp(6px, 1vw, 12px);
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.depoimentos-header h3,
-.avaliacoes-header h3 {
-    color: #ffbb00c0;                                               /* fallback */
-    color: oklch(79.64% 0.16302 84.414 / 0.879);                   /* fallback moderno */
-    color: var(--texto-dourado, oklch(79.64% 0.16302 84.414 / 0.879)); /* 🌅 FAGULHA – Fase 2 */
-    font-size: clamp(1.1rem, 1.6vw, 1.6rem);
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.depoimentos-actions,
-.avaliacoes-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    gap: clamp(6px, 1vw, 14px);
-    flex-wrap: wrap;
-}
-
-/* ================================================================
-   BOTÃO TOGGLE SOCIAL (COLLAPSE)
-   ================================================================ */
-.btn-toggle-social {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
-    border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
-    border-radius: 30px;
-    padding: clamp(4px, 0.6vw, 8px) clamp(12px, 1.5vw, 20px);
-    color: oklch(0.9 0 0 / 0.85);                                   /* fallback moderno */
-    color: var(--texto-secundario, oklch(0.9 0 0 / 0.85));         /* 🌅 FAGULHA – Fase 2 */
-    font-size: clamp(0.8rem, 0.9vw, 1.05rem);
-    cursor: pointer;
-    transition: 0.25s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Inter', sans-serif;
-}
-
-.btn-toggle-social:hover {
-    background: rgba(255, 255, 255, 0.05);                          /* fallback */
-    background: oklch(100% 0.00011 271.152 / 0.05);                /* fallback moderno */
-    background: var(--bg-input, oklch(100% 0.00011 271.152 / 0.05)); /* 🌅 FAGULHA – Fase 2 */
-    color: #fff;                                                    /* fallback */
-    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
-}
-
-.btn-toggle-social i {
-    transition: transform 0.3s ease;
-}
-
-.btn-toggle-social.aberto i {
-    transform: rotate(180deg);
-}
-
-/* ================================================================
-   COLLAPSE SOCIAL (Compatibilidade Universal: do Lumia ao iPhone 4+)
-   ================================================================ */
-
-.social-collapse-container {
-    width: 100%;
-    max-width: 900px;
+    max-width: 1600px;
     margin: 20px auto;
     padding: 0 12px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza o conteúdo abaixo */
 }
 
-/* Fallback base (Navegadores antigos / Dinossauros da web) */
-.social-collapse {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out;
-    background: #3a3a3a73;                                          /* fallback */
-    background: oklch(0.35 0 0 / 0.45);                            /* 🎨 cinza-escuro específico do collapse */
-    border-radius: 20px;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
+.perfil-abas-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05));
+    padding-bottom: 10px;
+    flex-wrap: wrap;
 }
 
-.social-collapse > div {
-    overflow: hidden;
+.aba-perfil {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--texto-secundario, #ccc);
+    font-size: clamp(0.86rem, 1.8vw, 1.35rem);
+    font-weight: 600;
+    padding: clamp(6px, 1vw, 10px) clamp(12px, 2vw, 20px);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
 }
 
-.social-collapse.aberto {
-    max-height: 2500px; /* Altura de segurança alta para os antigos */
-    transition: max-height 0.4s ease-out;
+.aba-perfil i {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    opacity: 0.7;
+    transition: opacity 0.25s ease;
 }
 
-/* Navegadores modernos: entra o Grid Layout fluido e sem travamentos */
-@supports (grid-template-rows: 0fr) {
-    .social-collapse {
-        max-height: none; 
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.28s ease-out;
-    }
-
-    .social-collapse > div {
-        min-height: 0; /* Fundamental para o grid conseguir colapsar totalmente */
-    }
-
-    .social-collapse.aberto {
-        max-height: none;
-        grid-template-rows: 1fr;
-    }
+.aba-perfil:hover {
+    background: var(--bg-input, rgba(255, 255, 255, 0.05));
+    color: var(--texto-primario, #fff);
 }
 
+.aba-perfil:hover i {
+    opacity: 1;
+}
 
+.aba-perfil.ativa {
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.1));
+    color: var(--dourado, #ffbc00);
+    border-color: var(--borda-dourada, rgba(255, 188, 0, 0.2));
+    box-shadow: 0 0 10px rgba(255, 188, 0, 0.05);
+}
+
+.aba-perfil.ativa i {
+    opacity: 1;
+}
+
+/* Conteúdo da aba (onde o motor-perfil.php injeta o HTML) */
+#perfil-conteudo {
+    min-height: 200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Garante que os filhos respeitem o max-width */
+}
+
+/* O Feed (Posts) precisa ocupar 100% e usar o grid do feed.css */
+#perfil-conteudo .container-feed {
+    width: 100%;
+    max-width: 1200px; /* Largura original do feed */
+    margin: 0 auto;
+    /* A classe .container-feed do feed.css já tem o display: grid */
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    align-items: start;
+}
+
+/* Feed (Posts) - Mantém largo para o grid */
+#perfil-conteudo .container-feed,
+#perfil-conteudo .feed-usuario-fenda {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Depoimentos e Avaliações - Limitados a 800px conforme solicitado */
+#perfil-conteudo .depoimentos-section,
+#perfil-conteudo .avaliacoes-section,
+#perfil-conteudo .depoimento-item,
+#perfil-conteudo .avaliacao-item {
+    width: 100%;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* ================================================================
-   DEPOIMENTOS (ESTILO ORKUT)
+   6. DEPOIMENTOS (ESTILO ORKUT)
    ================================================================ */
 .depoimento-item {
     background: rgba(255, 255, 255, 0.03);                          /* fallback */
@@ -567,9 +534,9 @@
     margin-bottom: clamp(10px, 1.2vw, 16px);
     border-left: 3px solid var(--aura-user, #ffbc00);              /* 🎨 dinâmica via PHP — preservada */
     transition: 0.2s;
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    box-sizing: border-box;
 }
 
 .avaliacao-item:hover,
@@ -645,6 +612,8 @@
     border-radius: 12px;
     border: 1px dashed rgba(255, 255, 255, 0.06);                   /* fallback */
     border: 1px dashed var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .loading-depoimentos {
@@ -657,13 +626,16 @@
 }
 
 /* ================================================================
-   AVALIAÇÕES (ESTRELAS ORKUT)
+   7. AVALIAÇÕES (ESTRELAS ORKUT)
    ================================================================ */
 .avaliacoes-container {
     display: flex;
     flex-direction: column;
     gap: 10px;
     gap: clamp(12px, 1.5vw, 25px);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .avaliacao-aviso {
@@ -682,6 +654,7 @@
     border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
+    box-sizing: border-box;
 }
 
 .avaliacao-header {
@@ -867,6 +840,8 @@
     border-radius: 12px;
     border: 1px dashed rgba(255, 255, 255, 0.06);                   /* fallback */
     border: 1px dashed var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .loading-avaliacoes {
@@ -879,7 +854,7 @@
 }
 
 /* ================================================================
-   BOTÃO ESCREVER DEPOIMENTO (LINK)
+   8. BOTÃO ESCREVER DEPOIMENTO (LINK)
    ================================================================ */
 .btn-escrever-depoimento {
     background: rgba(255, 188, 0, 0.10);                            /* 🎨 dourado com alpha específico */
@@ -902,7 +877,7 @@
 }
 
 /* ================================================================
-   FEED PESSOAL (DENTRO DO PERFIL)
+   9. FEED PESSOAL (DENTRO DO PERFIL)
    ================================================================ */
 .feed-usuario-fenda .container-feed {
     position: relative;
@@ -932,7 +907,7 @@
 }
 
 /* ================================================================
-   BOTÃO TOGGLE DEPOIMENTOS (legado – manter para compatibilidade)
+   10. BOTÃO TOGGLE DEPOIMENTOS (legado – manter para compatibilidade)
    ================================================================ */
 .btn-toggle-depoimentos {
     background: transparent;
@@ -964,7 +939,7 @@
 }
 
 /* ================================================================
-   PÁGINA DE ESCREVER DEPOIMENTO (FORMULÁRIO)
+   11. PÁGINA DE ESCREVER DEPOIMENTO (FORMULÁRIO)
    ================================================================ */
 .escrever-depoimento-page {
     max-width: 580px;
@@ -1136,7 +1111,7 @@
 }
 
 /* ================================================================
-   PÁGINA DE GERENCIAR DEPOIMENTOS
+   12. PÁGINA DE GERENCIAR DEPOIMENTOS
    ================================================================ */
 .gerenciar-depoimentos-page {
     max-width: 900px;
@@ -1306,49 +1281,33 @@
 }
 
 /* ================================================================
-   VIBES (ADS, DARK, GLASS, NEON, LIGHT)
-   ⚠️ MANTIDAS HARDCODED — identidade visual. O tema hacker vai
-   sobrescrever via [data-theme="hacker"] sem tocar nas variáveis.
+   13. VIBES (ADS, DARK, GLASS, NEON, LIGHT)
    ================================================================ */
 
-/* ==========================================================
-   VIBE ADS - BASE DO CONTAINER (FUNDO E GRADIENTE)
-   ========================================================== */
 .main-perfil-container-publico.vibe-ads {
     position: relative;
     overflow: hidden;
     min-height: 100vh;
+    min-height: 100dvh;
     background-color: #16161db0 ;                                   /* 🎨 identidade visual da vibe ADS */
-
-    /* Gradiente original de fundo isolado */
-    background-image: linear-gradient(45deg, rgba(2, 4, 18, 0.9) 0%, rgba(0, 240, 255, 0.04) 50%, rgba(2, 4, 18, 0.9) 100%) !important; /* 🎨 identidade visual da vibe ADS */
-    background-size: 200% 200%;
-    background-repeat: no-repeat;
-    background-position: 0% 0%;
-
     border: 1px solid rgba(255, 255, 255, 0.04);                    /* 🎨 identidade visual da vibe ADS */
     border-top: 4px solid var(--aura-user) ;                        /* 🎨 dinâmica via PHP — preservada */
     will-change: box-shadow, background-position, opacity, animation;
     animation: ads-neon-glow-pulse var(--vibe-ads-pulse-duration) infinite ease-in-out alternate;
 }
 
-/* ==========================================================
-   FUNDO ESTÁTICO: HEXÁGONOS COM MÁSCARA DINÂMICA (TI-DB SEGURO)
-   ========================================================== */
 .main-perfil-container-publico.vibe-ads::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 80vh;
+    height: 80dvh;
     z-index: 1;
     pointer-events: none;
-
-    /* A cor salva no TiDB pinta a máscara dos hexágonos de forma 100% garantida */
+    touch-action: none;
     background-color: var(--aura-user,#70cde4);                     /* 🎨 dinâmica via PHP — preservada */
-
-    /* Padrão de hexágono via máscara estêncil */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
     -webkit-mask-size: 80px 80px;
@@ -1357,26 +1316,16 @@
     mask-repeat: repeat;
     -webkit-mask-position: 0 0;
     mask-position: 0 0;
-
     will-change: opacity;
     animation: static-pulse-opacity var(--vibe-ads-pulse-duration, 5s) infinite ease-in-out alternate;
 }
 
 @keyframes static-pulse-opacity {
-    0% {
-        opacity: 0.25;
-    }
-    50% {
-        opacity: 0.5;
-    }
-    100% {
-        opacity: 0.25;
-    }
+    0% { opacity: 0.25; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.25; }
 }
 
-/* ==========================================================
-   HEXÁGONOS DINÂMICOS (GRADE DO DOM)
-   ========================================================== */
 .main-perfil-container-publico.vibe-ads .hex-bg {
     position: fixed;
     top: 80px;
@@ -1400,7 +1349,7 @@
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     background: rgba(0, 240, 255, 0.02);                            /* 🎨 identidade visual da vibe ADS */
     border: 1px solid var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
-    opacity: 0.3;
+    opacity: 0.5;
     transform: scale(0.85);
     transition: all 0.4s ease;
     will-change: transform, background, border-color, box-shadow;
@@ -1415,18 +1364,9 @@
 }
 
 @keyframes ads-neon-glow-pulse {
-    0% {
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4); /* 🎨 dinâmica via PHP — preservada */
-        border-top-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
-    }
-    50% {
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.6), 0 0 12px var(--aura-user, #70cde4); /* 🎨 dinâmica via PHP — preservada */
-        border-color: var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
-    }
-    100% {
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4); /* 🎨 dinâmica via PHP — preservada */
-        border-top-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
-    }
+    0% { box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4); border-top-color: var(--aura-user, #70cde4); }
+    50% { box-shadow: 0 0 8px rgba(0, 0, 0, 0.6), 0 0 12px var(--aura-user, #70cde4); border-color: var(--aura-user, #70cde4); }
+    100% { box-shadow: 0 0 4px rgba(0, 0, 0, 0.5), 0 0 8px var(--aura-user, #70cde4); border-top-color: var(--aura-user, #70cde4); }
 }
 
 .main-perfil-container-publico.vibe-ads p {
@@ -1435,36 +1375,26 @@
 }
 
 
-/* ==========================================================
-   VIBE DARK SUPREMA V5: CASTELO ASSOMBRADO (ULTRA LEVE)
-   ========================================================== */
-
 .main-perfil-container-publico.vibe-dark,
 .preview-perfil.vibe-dark {
     position: relative;
     overflow: hidden;
-    /* Trocamos o fundo sólido por uma névoa escura fixa usando OKLCH */
     background: #010203;                                            /* 🎨 identidade visual da vibe DARK */
     background: radial-gradient(circle at 50% 30%, oklch(0.15 0.02 280) 0%, oklch(0.08 0.01 260) 100%); /* 🎨 identidade visual da vibe DARK */
     border-top: 4px solid rgba(255, 0, 50, 0.4);                    /* 🎨 identidade visual da vibe DARK */
     border-radius: 14px;
     transition: transform 0.3s ease;
-    
-    /* PREPARAÇÃO PARA O RAIO: Ativa aceleração por hardware nativa */
     will-change: filter;
-    /* O efeito do raio: flashes rápidos que clareiam o fundo simulando tempestade */
     animation: raio-castelo 8s infinite ease-in-out;
 }
 
-/* ANIMAÇÃO DO RAIO (Simula relâmpagos clareando o castelo - ULTRA LEVE) */
 @keyframes raio-castelo {
     0%, 94%, 98%, 100% { filter: brightness(1) contrast(1); }
-    95% { filter: brightness(1.4) contrast(1.2); } /* Primeiro estouro do raio */
+    95% { filter: brightness(1.4) contrast(1.2); }
     96% { filter: brightness(1); }
-    97% { filter: brightness(1.6) contrast(1.3); } /* Segundo estouro (duplo clique clássico da natureza) */
+    97% { filter: brightness(1.6) contrast(1.3); }
 }
 
-/* 2. CAMADA DOS MORCEGOS (Otimizada) */
 .main-perfil-container-publico.vibe-dark::after,
 .preview-perfil.vibe-dark::after {
     content: '';
@@ -1472,23 +1402,20 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 85vh;
+    height: 85dvh;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.2; /* Um pouco mais sutil para combinar com o breu do castelo */
+    opacity: 0.25;
     background-color: var(--cor-aura, var(--aura-user, #70cde4));  /* 🎨 dinâmica via PHP — preservada */
-    
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
-    
     -webkit-mask-size: 180px 180px;
     mask-size: 180px 180px;
     -webkit-mask-repeat: repeat;
     mask-repeat: repeat;
-    
-    /* Removemos o 'will-change: animation' que criava texturas pesadas na memória */
     will-change: mask-position;
-    animation: revoadaDasSombras 20s linear infinite; /* Aumentado para 20s para suavizar a carga de CPU */
+    animation: revoadaDasSombras 20s linear infinite;
 }
 
 @keyframes revoadaDasSombras {
@@ -1496,14 +1423,12 @@
     100% { -webkit-mask-position: 420px -420px; mask-position: 420px -420px; }
 }
 
-/* Conteúdo interno acima de tudo */
 .main-perfil-container-publico.vibe-dark .preview-conteudo,
 .preview-perfil.vibe-dark .preview-conteudo {
     position: relative;
     z-index: 2;
 }
 
-/* 3. NOME COM CONTRASTE REDUZIDO PARA ALIVIAR O PROPRIETÁRIO DO INPUT */
 .main-perfil-container-publico.vibe-dark .nome-publico,
 .preview-perfil.vibe-dark .nome-publico,
 .main-perfil-container-publico.vibe-dark .preview-info .nome,
@@ -1512,22 +1437,16 @@
     font-weight: 900;
     letter-spacing: 1px;
     color: #ff1e38 !important;                                      /* 🎨 identidade visual da vibe DARK */
-    
-    /* REDUÇÃO DE SOMBRAS COMPLEXAS: Removemos o terceiro nível de blur borrado */
     text-shadow: 
         2px 2px 0px #3a0005,                                        /* 🎨 identidade visual da vibe DARK */
         0 0 6px rgba(255, 0, 40, 0.8);                              /* 🎨 identidade visual da vibe DARK */
-        
     display: inline-block;
     position: relative;
     z-index: 2;
-    
-    /* Correção do Heartbeat para não forçar repaints pesados */
     will-change: transform;
     animation: coracao-arrancado 1.5s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Animação do Coração (Simplificada apenas no transform scale) */
 @keyframes coracao-arrancado {
     0%, 100% { transform: scale(1); filter: brightness(1); }
     14% { transform: scale(1.06); filter: brightness(1.2); }
@@ -1535,7 +1454,6 @@
     42% { transform: scale(1.05); filter: brightness(1.1); }
 }
 
-/* Gotas de sangue pingando (Otimizado) */
 .main-perfil-container-publico.vibe-dark .nome-publico::after,
 .preview-perfil.vibe-dark .nome-publico::after {
     content: '';
@@ -1559,11 +1477,8 @@
     100% { transform: translateY(22px) scale(0.3); opacity: 0; }
 }
 
-
-/* --- VIBE NEON (Flicker) --- */
 .main-perfil-container-publico.vibe-neon {
     background: linear-gradient(to bottom, transparent 0%, var(--aura-user, #ff9100) 25%, #000 50%); /* 🎨 dinâmica via PHP — preservada */
-    /* CORRIGIDO: filter força o uso da GPU perfeitamente sem o overhead do box-shadow na memória */
     will-change: filter;
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
     border: 2px solid var(--aura-user, #ff9100);                    /* 🎨 dinâmica via PHP — preservada */
@@ -1583,21 +1498,14 @@
 .main-perfil-container-publico.vibe-neon .nome-publico,
 .main-perfil-container-publico.vibe-neon .stats-perfil span,
 .main-perfil-container-publico.vibe-neon .feed-usuario-fenda h3 {
-    /* CORRIGIDO: Um fallback simples para navegadores velhos e a sua mágica em OKLCH embaixo */
     color: #ffffffce;                                               /* 🎨 identidade visual da vibe NEON */
     color: oklch(from var(--aura-user, #ff9100) 0.90 0.03 h);      /* 🎨 dinâmica via PHP — preservada */
     filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.6));               /* 🎨 identidade visual da vibe NEON */
 }
 
-
-/* --- VIBE GLASS (Vidro V5 - Oklab Match) --- */
 .main-perfil-container-publico.vibe-glass {
-    /* Fallback impecável para navegadores legados */
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.45) 100%), #00bbff06; /* 🎨 identidade visual da vibe GLASS */
-    
-    /* ALTERADO: Agora rodando com interpolação matemática em Oklab para o reflexo físico perfeito */
     background: linear-gradient(in oklab 135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #70cde4) l c h / 0.3); /* 🎨 identidade visual da vibe GLASS */
-    
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     border: 1px solid oklch(1 0 0 / 0.35) ;                         /* 🎨 identidade visual da vibe GLASS */
@@ -1606,7 +1514,6 @@
     position: relative;
     animation: none;
     background-blend-mode: soft-light;
-    /* Força aceleração estável por hardware sem estourar o buffer de textura do iOS */
     transform: translateZ(0);
     will-change: opacity;
 }
@@ -1621,44 +1528,27 @@
     backdrop-filter: none;
 }
 
-
-
-/* --- VIBE LIGHT (Manhã Ensolarada & Sóbria V5) --- */
 .main-perfil-container-publico.vibe-light {
-    /* 1. FALLBACK: Gradiente clássico e confortável */
     background: linear-gradient(160deg, #fffcf0af 0%, #be9a45c0 80%); /* 🎨 identidade visual da vibe LIGHT */
-
-    /* 2. PRODUÇÃO (Oklab + OKLCH): Camada Dupla Otimizada */
     background:
-        /* CAMADA SUPERIOR: Interpolação em Oklab para o degradê ficar limpo e sedoso */
         linear-gradient(in oklab 165deg,
-            oklch(0.95 0.08 88 / 0.7) 0%,     /* Branco creme/gelo bem confortável */
-            oklch(1 0 0 / 0.04) 20%,          /* Zona de respiro (transparente) */
-            oklch(0.35 0.01 250 / 0.5) 100%   /* O cinza chumbo sutil no final */
+            oklch(0.95 0.08 88 / 0.7) 0%,     
+            oklch(1 0 0 / 0.04) 20%,          
+            oklch(0.35 0.01 250 / 0.5) 100%   
         ),
-        /* CAMADA INFERIOR: A aura do usuário suavizada fazendo a fusão por trás */
         oklch(from var(--aura-user, #ffa600) 0.85 0.04 h / 0.75);  /* 🎨 dinâmica via PHP — preservada */
-
-    /* CORRIGIDO: Explicitamos normal para a primeira camada e soft-light para a fusão com o fundo */
     background-blend-mode: normal, soft-light;
-
-    /* Mantém o vidro e bordas premium sem travar a GPU (sem will-change desnecessário) */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     border: 1px solid oklch(1 0 0 / 0.25);                         /* 🎨 identidade visual da vibe LIGHT */
     border-top: 6px solid var(--aura-user, #ffa600);               /* 🎨 dinâmica via PHP — preservada */
     border-radius: 16px 16px 0 0;
-
-    /* Sombra suave e elegante para tema claro */
     box-shadow:
         0 8px 20px oklch(0 0 0 / 0.08),                             /* 🎨 identidade visual da vibe LIGHT */
         inset 0 1px 1px oklch(1 0 0 / 0.5);                         /* 🎨 identidade visual da vibe LIGHT */
-        
-    /* Garante estabilidade de hardware durante transições ou swipes */
     transform: translateZ(0); 
 }
 
-/* Mantém o marrom terra nos textos que contrasta perfeitamente com o topo claro */
 .main-perfil-container-publico.vibe-light h3,
 .main-perfil-container-publico.vibe-light .btn-toggle-social,
 .main-perfil-container-publico.vibe-light .btn-toggle-depoimentos,
@@ -1669,16 +1559,13 @@
 
 .main-perfil-container-publico.vibe-light .spotted-card:hover {
     background: rgba(33, 33, 33, 0.4);   /* ← sugestão do Léo */
-
 }
 
 /* ================================================================
-   FALLBACKS GERAIS (CLAMP, BACKDROP-FILTER, LEGADOS)
+   14. FALLBACKS GERAIS E RESPONSIVIDADE
    ================================================================ */
 
-/* Fallback para navegadores sem backdrop-filter */
 @supports not (backdrop-filter: blur(1px)) {
-
     .depoimento-item,
     .avaliacao-item,
     .depoimento-form-container,
@@ -1690,42 +1577,16 @@
     }
 }
 
-/* Fallback para navegadores sem clamp() */
 @supports not (font-size: clamp(1rem, 1vw, 2rem)) {
-    .estrela {
-        font-size: 1.5rem;
-    }
-
-    .avaliacao-nome {
-        font-size: 1rem;
-    }
-
-    .avaliacao-media {
-        font-size: 0.9rem;
-    }
-
-    .btn-votar-estrela {
-        font-size: 0.8rem;
-        padding: 6px 16px;
-    }
-
-    .depoimento-item {
-        padding: 14px 18px;
-    }
-
-    .nome-publico {
-        font-size: 2rem;
-    }
-
-    .avatar-posicionador {
-        width: 100px;
-        height: 100px;
-    }
+    .estrela { font-size: 1.5rem; }
+    .avaliacao-nome { font-size: 1rem; }
+    .avaliacao-media { font-size: 0.9rem; }
+    .btn-votar-estrela { font-size: 0.8rem; padding: 6px 16px; }
+    .depoimento-item { padding: 14px 18px; }
+    .nome-publico { font-size: 2rem; }
+    .avatar-posicionador { width: 100px; height: 100px; }
 }
 
-/* ================================================================
-   RESPONSIVIDADE COMPLEMENTAR
-   ================================================================ */
 @media (max-width: 768px) {
     .main-perfil-container-publico.vibe-ads .hex-bg {
         top: 50px;
@@ -1744,7 +1605,6 @@
         mask-size: 70px 70px;
         -webkit-mask-repeat: repeat;
         mask-repeat: repeat;
-
     }
 
     .main-perfil-container-publico.vibe-ads .hex-item {
@@ -1792,17 +1652,13 @@
     }
 }
 
-
-    @media (min-width: 769px) {
+@media (min-width: 769px) {
     .main-perfil-container-publico.vibe-ads::after {
         background-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
         -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E");
-
-        
         -webkit-mask-size: 150px 150px;
         mask-size: 150px 150px;
-        
         -webkit-mask-repeat: repeat;
         mask-repeat: repeat;
     }
@@ -1832,22 +1688,18 @@
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
             border-top-color: var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
         }
-
         50% {
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15); /* 🎨 identidade visual da vibe ADS */
             border-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
         }
-
         100% {
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
             border-top-color: var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
         }
     }
-
 }
 
 @supports not (backdrop-filter: blur(2px)) {
-
     .depoimento-item,
     .avaliacao-item,
     .depoimento-form-container,
@@ -1858,75 +1710,38 @@
     }
 }
 
-
 @media (max-width: 480px) {
-    .estrela {
-        font-size: 1.35rem;
-    }
-
-    .avaliacao-nome {
-        font-size: 0.8rem;
-    }
-
-    .avaliacao-media {
-        font-size: 0.75rem;
-        padding: 2px 8px;
-    }
-
-    .btn-votar-estrela {
-        font-size: 0.7rem;
-        padding: 3px 10px;
-    }
-
-    .depoimento-avatar {
-        width: 30px;
-        height: 30px;
-    }
-
-    .nome-linha {
-        gap: 8px;
-    }
-
+    .estrela { font-size: 1.35rem; }
+    .avaliacao-nome { font-size: 0.8rem; }
+    .avaliacao-media { font-size: 0.75rem; padding: 2px 8px; }
+    .btn-votar-estrela { font-size: 0.7rem; padding: 3px 10px; }
+    .depoimento-avatar { width: 30px; height: 30px; }
+    .nome-linha { gap: 8px; }
+    
     .modal-depoimento-content {
         padding: 20px 16px 20px 16px;
         max-height: 85vh;
     }
-
-    .modal-depoimento-content .depoimento-form-container .botoes-rodape {
-        flex-direction: column;
-    }
-
+    
+    .modal-depoimento-content .depoimento-form-container .botoes-rodape { flex-direction: column; }
     .modal-depoimento-content .depoimento-form-container .btn-principal,
-    .modal-depoimento-content .depoimento-form-container .btn-secundario {
-        width: 100%;
-        flex: none;
-    }
-
-    .modal-depoimento-overlay {
-        padding-top: 12%;
-    }
-    .social-collapse-container {
-        padding: 0 8px;
-        margin: 15px auto;
-    }
+    .modal-depoimento-content .depoimento-form-container .btn-secundario { width: 100%; flex: none; }
+    .modal-depoimento-overlay { padding-top: 12%; }
+    .social-collapse-container { padding: 0 8px; margin: 15px auto; }
 }
 
 @media (orientation: portrait) and (max-height: 500px) {
-
     .avatar-posicionador {
         bottom: -45px;
         width: 56px;
         height: 56px;
     }
-
-    .perfil-header-container {
-        margin: 15px auto;
-    }
+    .perfil-header-container { margin: 15px auto; }
 }
 
 
 /* ================================================================
-   MODAL DE ESCREVER DEPOIMENTO (OVERLAY + CONTEÚDO)
+   15. MODAL DE ESCREVER DEPOIMENTO (OVERLAY + CONTEÚDO)
    ================================================================ */
 
 .modal-depoimento-overlay {
@@ -1939,7 +1754,6 @@
     background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.65));      /* 🌅 FAGULHA – Fase 2 */
     z-index: 99999;
     display: none;
-    /*  CORREÇÃO: Alinha no topo com padding para não ficar colado no topo */
     align-items: flex-start;
     justify-content: safe center;
     padding-top: 25vh;
@@ -1947,7 +1761,6 @@
     padding-left: 15px;
     padding-right: 15px;
     box-sizing: border-box;
-
 }
 
 .modal-depoimento-content {
@@ -1965,37 +1778,24 @@
     position: relative;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);                     /* 🎨 sombra específica do modal */
     animation: modalDepoimentoIn 0.25s ease-out;
-    /*  CORREÇÃO: Não deixa o modal esticar verticalmente */
     align-self: flex-start;
 }
 
-/*  CORREÇÃO: Scroll interno só se o conteúdo for muito grande */
-.modal-depoimento-content::-webkit-scrollbar {
-    width: 4px;
-}
-
+.modal-depoimento-content::-webkit-scrollbar { width: 4px; }
 .modal-depoimento-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.03);                          /* fallback */
-    background: var(--bg-input, rgba(255, 255, 255, 0.03));        /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-input, rgba(255, 255, 255, 0.03));
     border-radius: 4px;
 }
-
 .modal-depoimento-content::-webkit-scrollbar-thumb {
-    background: #ffbc00;                                            /* fallback */
-    background: var(--texto-dourado, #ffbc00);                     /* 🌅 FAGULHA – Fase 2 */
+    background: #ffbc00;
+    background: var(--texto-dourado, #ffbc00);
     border-radius: 4px;
 }
 
 @keyframes modalDepoimentoIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(-12px);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+    from { opacity: 0; transform: scale(0.95) translateY(-12px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .modal-depoimento-fechar {
@@ -2004,8 +1804,8 @@
     right: 16px;
     background: transparent;
     border: none;
-    color: #888;                                                    /* fallback */
-    color: var(--texto-muted, #888);                               /* 🌅 FAGULHA – Fase 2 */
+    color: #888;
+    color: var(--texto-muted, #888);
     font-size: 1.8rem;
     cursor: pointer;
     transition: 0.2s;
@@ -2013,12 +1813,11 @@
 }
 
 .modal-depoimento-fechar:hover {
-    color: #fff;                                                    /* fallback */
-    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    color: #fff;
+    color: var(--texto-primario, #fff);
     transform: rotate(90deg);
 }
 
-/* Estilos internos do formulário (reforço) */
 .modal-depoimento-content .depoimento-form-container {
     background: transparent;
     backdrop-filter: none;
