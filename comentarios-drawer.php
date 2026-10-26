@@ -180,26 +180,29 @@ if (empty($_SESSION['csrf_token'])) {
     }
     window._drawerJSInitialized = true;
 
-    const listaComentarios = document.querySelector('#drawer-comentarios-wrapper .lista-comentarios-social');
+    const wrapper = document.getElementById('drawer-comentarios-wrapper');
+    if (!wrapper) return;
+
+    const listaComentarios = wrapper.querySelector('.lista-comentarios-social');
     if (!listaComentarios) return;
 
     const POST_ID = <?php echo (int)$id; ?>;
     const IS_CASCATA = <?= json_encode($pref_estilo_comentario === 'cascata') ?>;
-    const campoTexto = document.querySelector('#drawer-comentarios-wrapper .textarea-chat');
-    const contadorChar = document.getElementById('char-count');
-    const btnEnviar = document.querySelector('#drawer-comentarios-wrapper .btn-enviar-chat');
-    const btnGaveta = document.querySelector('#drawer-comentarios-wrapper .btn-attach-gaveta');
-    const gaveta = document.getElementById('gaveta-opcoes');
-    const inputFile = document.getElementById('input-img-comentario');
-    const hiddenVibe = document.getElementById('hidden-vibe');
-    const hiddenCor = document.getElementById('hidden-cor');
-    const hiddenTextarea = document.getElementById('hidden-textarea');
-    const selectVibe = document.getElementById('vibe-comentario');
-    const inputCor = document.getElementById('cor-borda');
-    const form = document.getElementById('form-comentario');
-    const inputParent = document.getElementById('input_parent_id');
-    const indicador = document.getElementById('resposta-indicador');
-    const textoNome = document.getElementById('texto-nome-resposta');
+    const campoTexto = wrapper.querySelector('.textarea-chat');
+    const contadorChar = wrapper.querySelector('#char-count');
+    const btnEnviar = wrapper.querySelector('.btn-enviar-chat');
+    const btnGaveta = wrapper.querySelector('.btn-attach-gaveta');
+    const gaveta = wrapper.querySelector('#gaveta-opcoes');
+    const inputFile = wrapper.querySelector('#input-img-comentario');
+    const hiddenVibe = wrapper.querySelector('#hidden-vibe');
+    const hiddenCor = wrapper.querySelector('#hidden-cor');
+    const hiddenTextarea = wrapper.querySelector('#hidden-textarea');
+    const selectVibe = wrapper.querySelector('#vibe-comentario');
+    const inputCor = wrapper.querySelector('#cor-borda');
+    const form = wrapper.querySelector('#form-comentario');
+    const inputParent = wrapper.querySelector('#input_parent_id');
+    const indicador = wrapper.querySelector('#resposta-indicador');
+    const textoNome = wrapper.querySelector('#texto-nome-resposta');
     
     let gavetaAberta = false;
 
@@ -211,7 +214,7 @@ if (empty($_SESSION['csrf_token'])) {
         }
         const temTexto = campoTexto && campoTexto.value.trim().length > 0;
         const temImagem = inputFile && inputFile.files && inputFile.files.length > 0;
-        const gifInput = document.querySelector('input[name="gif_url"]');
+        const gifInput = wrapper.querySelector('input[name="gif_url"]');
         const temGif = gifInput && gifInput.value !== '';
         const temMidia = temImagem || temGif;
         if (temTexto || temMidia) {
@@ -244,7 +247,7 @@ if (empty($_SESSION['csrf_token'])) {
         });
     }
 
-    const btnAnexarImg = document.getElementById('btn-anexar-img');
+    const btnAnexarImg = wrapper.querySelector('#btn-anexar-img');
     if (btnAnexarImg && inputFile) {
         btnAnexarImg.addEventListener('click', () => inputFile.click());
     }
@@ -332,7 +335,7 @@ if (empty($_SESSION['csrf_token'])) {
                                 tempDiv.innerHTML = data.html;
                                 const novaLinha = tempDiv.firstElementChild;
                                 if (novaLinha) {
-                                    novaLinha.classList.remove('comentario-linha-filha', 'comentario-linha-proprio');
+                                    // AQUI: Não removemos mais a classe 'comentario-linha-proprio'
                                     novaLinha.classList.add('nivel-' + nivel);
                                     paiLinha.appendChild(novaLinha);
                                 }
@@ -423,7 +426,7 @@ if (empty($_SESSION['csrf_token'])) {
                                 tempDiv.innerHTML = novo.html;
                                 const novaLinha = tempDiv.firstElementChild;
                                 if (novaLinha) {
-                                    novaLinha.classList.remove('comentario-linha-filha', 'comentario-linha-proprio');
+                                    // AQUI: Não removemos mais a classe 'comentario-linha-proprio'
                                     novaLinha.classList.add('nivel-' + nivel);
                                     paiLinha.appendChild(novaLinha);
                                 }

@@ -13,11 +13,18 @@ function asset_versao($path)
     return $path . '?v=1.0.0';
 }
 
-$is_post_page = true;
+// ==================== SESSÃO E CONTEXTO ====================
 $u_id = $_SESSION['usuario_id'] ?? 0;
+
+// ==================== ROTA E ESTADO DA PÁGINA ====================
+$pagina_atual = basename($_SERVER['PHP_SELF']);
+$is_post_page = ($pagina_atual === 'comentarios-post.php');
+
+// ==================== PREFERÊNCIAS DEFAULT ====================
 $pref_swipe_real = 0;
 $pref_swipe_balanga = 0;
-$pagina_atual = basename($_SERVER['PHP_SELF']);
+$pref_estilo_comentario = 'whatsapp';
+
 
 if ($u_id > 0 && isset($conn)) {
     // Preferência de swipe do feed

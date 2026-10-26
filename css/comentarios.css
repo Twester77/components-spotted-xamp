@@ -130,7 +130,7 @@
    GARANTE QUE O LIGHTBOX DE IMAGEM FIQUE ACIMA DO LIGHTBOX DO POST
    ================================================== */
  #modal-imagem .modal-lightbox-fenda {
-    z-index: 1000000 !important; /* Maior que 999999 */
+    z-index: 1000000 ; /* Maior que 999999 */
 }
 
 
@@ -516,7 +516,7 @@
     justify-content: center;
     width: fit-content; 
     min-width: 140px;
-    min-width: clamp(120px , 49cqi, 180px);
+    min-width: clamp(120px , 50cqi, 180px);
     min-height: 50px;
     box-sizing: border-box;
     position: relative;
@@ -643,8 +643,8 @@
 
 .comentario-item.vibe-dark {
     background: rgba(22, 22, 29, 0.911);                          /* fica local – tom específico */
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     color: #eeeeee;                                               /* fallback */
     color: var(--texto-primario, #eeeeee);                        /* 🐚 FAROL – Fase 2 */
 }
@@ -765,7 +765,7 @@
 
 .comentario-data {
     font-size: 0.8rem;
-    font-size: clamp(0.77rem, 2.2cqi, 0.96rem);
+    font-size: clamp(0.76rem, 2.2cqi, 0.96rem);
     color: #d6d6d6;                                               /* fallback */
     color: var(--texto-secundario, #d6d6d6);                      /* 🐚 FAROL – Fase 2 */
     opacity: 0.85;
@@ -854,9 +854,9 @@
     border-radius: 999px;
     background: rgba(20, 20, 30, 0.88);                           /* fica local – alpha específico */
     background: linear-gradient(135deg, rgba(35, 28, 39, 0.96), rgba(12, 14, 25, 0.96)); /* fica local – gradiente específico do chat */
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -971,7 +971,8 @@
     padding: 4px 6px;
     padding-top: 8px;
     padding-right: 35px;
-    background: transparent ;
+    border-radius: 10px;
+    background: #ffffff0a;
     border: none;
     color: #fff;                                                  /* fallback */
     color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
@@ -1493,7 +1494,7 @@ body.pagina-post .header-principal {
     background: rgba(128, 128, 128, 0.1);                         /* fallback */
     background: oklch(from var(--cor-borda-glow) 0.5 0.01 h / 0.12); /* 🐚 FAROL – Fase 2 – aura cinza */
     border-right: 5px solid #888;                                 /* fica local – cinza de "deletado" */
-    opacity: 0.7;
+    opacity: 0.75;
 }
 
 .comentario-deletado-msg {
@@ -1504,18 +1505,18 @@ body.pagina-post .header-principal {
     box-sizing: border-box;
     position: relative;
     display: flex;
-    flex-direction: column;
     word-break: break-word;
     hyphens: auto;
-    padding: 6px;
+    padding-block: 6px;
+    padding-inline-start: 6px;
+    padding-inline-end: 14px;
     color: #878787;                                               /* fallback */
     color: var(--texto-muted, #878787);                           /* 🐚 FAROL – Fase 2 */
     font-style: italic;
     background-color: rgba(0, 0, 0, 0.05);                        /* fica local – alpha específico */
     font-size: 0.8rem;
-    font-size: clamp(0.76rem, 0.382cqw + 0.625rem, 1rem);
+    font-size: clamp(0.77rem, 0.5cqw + 0.65rem, 1rem);
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
-    min-height: 50px;
     max-width: 100%;
 }
 
@@ -1697,6 +1698,7 @@ body.pagina-post .header-principal {
     justify-content: center;
     width: 28px;
     height: 28px;
+    font-size: 0.9rem;
     margin: 0;
     padding: 0;
     border: 1px solid rgba(255, 188, 0, 0.25);                    /* fica local – alpha específico */
@@ -1723,10 +1725,14 @@ body.pagina-post .header-principal {
 
 .comentario-ellipsis-menu {
     position: fixed;
-    z-index: 100001;
+    z-index: 100005;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     display: flex;
     flex-direction: column;
-    min-width: 156px;
+    min-width: 150px;
     max-width: min(240px, calc(100vw - 16px));
     padding: 5px;
     border: 1px solid rgba(255, 188, 0, 0.28);                    /* fica local – alpha específico */
@@ -1735,9 +1741,9 @@ body.pagina-post .header-principal {
     background: var(--bg-modal-content, rgba(20, 20, 30, 0.97));  /* 🐚 FAROL – Fase 2 */
     color: #fff;                                                  /* fallback */
     color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
 }
 
 .comentario-menu-item {
@@ -1746,7 +1752,7 @@ body.pagina-post .header-principal {
     gap: 10px;
     width: 100%;
     min-height: 40px;
-    padding: 8px 11px;
+    padding: 8px 12px;
     border: 0;
     border-radius: 7px;
     background: transparent;
@@ -1870,3 +1876,4 @@ body.pagina-post .header-principal {
 .faixa-destaque.ativo {
     opacity: 1;
 }
+

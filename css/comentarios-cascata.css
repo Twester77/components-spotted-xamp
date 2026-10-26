@@ -1,24 +1,20 @@
 /* ==========================================================================
-   COMENTÁRIOS – MODO CASCATA + DRAWER (FASE 5)
-   ==========================================================================
-   Escopo: body.estilo-cascata
-   Este arquivo só altera o que é específico do Cascata. O layout base
-   e o input continuam vindo do comentarios.css original.
+   COMENTÁRIOS – MODO CASCATA + DRAWER (FASE 5 - VERSÃO HÍBRIDA)
    ========================================================================== */
 
-/* 1. CONTAINER PRINCIPAL (Limita a largura no PC) */
+/* 1. CONTAINER PRINCIPAL */
 body.estilo-cascata .lista-comentarios-social {
     scroll-snap-type: none;
-    max-width: 800px;
+    max-width: 700px; 
     margin: 20px auto;
     width: 100%;
     padding: 8px 12px;
 }
 
-/* 2. O CARD DO COMENTÁRIO (GRID) */
+/* 2. O CARD DO COMENTÁRIO (BENTO BOX) */
 body.estilo-cascata .comentario-item {
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.03); /* Borda quase invisível */
+    border: 1px solid rgba(255, 255, 255, 0.03);
     background: var(--bg-card, rgba(17, 17, 17, 0.32));
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     
@@ -31,48 +27,64 @@ body.estilo-cascata .comentario-item {
         "media   media"
         "btn     btn";
     align-items: center;
-    gap: 6px 12px;
     
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 10px 14px;
-    margin: 0 0 12px 0;
+    
+    /* 🛡️ Fallback duplo: iPhone 6S (iOS 9) */
+    padding: 10px 16px;
+    gap: 6px 12px;
+    margin-bottom: 12px;
+
+    /* 🚀 Moderno: Escala dinâmica com o tamanho da tela/teclado */
+    padding: clamp(6px, 1.2dvh, 14px) clamp(12px, 2dvh, 18px);
+    gap: clamp(6px, 1dvh, 10px) clamp(10px, 2dvh, 14px);
+    margin-bottom: clamp(10px, 1.8dvh, 16px);
+    
     align-self: stretch;
     animation: none;
-    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-
-/* Meu comentário no Cascata */
+/* Meu comentário */
 body.estilo-cascata .comentario-item.meu-comentario {
     border-left: 2px solid var(--cor-borda-glow, #70cde4);
     border-radius: 8px;
-    width: 100%;
-    max-width: 100%;
 }
 
-/* 3. GRID AREAS (Organização do Card) */
-body.estilo-cascata .comentario-meta {
-    grid-area: meta;
-    margin: 0;
-    min-width: 0;
+/* 3. GRID AREAS */
+body.estilo-cascata .comentario-meta { grid-area: meta; margin: 0; min-width: 0; }
+body.estilo-cascata .comentario-rodape { 
+    grid-area: rodape; 
+    justify-content: flex-end; 
+    margin: 0; 
+    padding-right: clamp(26px, 5vw, 36px); 
+    z-index: 2; 
 }
-
-body.estilo-cascata .comentario-rodape {
-    grid-area: rodape;
-    justify-content: flex-end;
-    margin: 0;
-    padding-right: 28px; /* Espaço pro botão ⋯ */
-    z-index: 2;
-}
-
 body.estilo-cascata .indicador-resposta { grid-area: reply; margin: 0; }
 body.estilo-cascata .comentario-texto { grid-area: texto; margin: 0; }
 body.estilo-cascata .comentario-media-wrapper,
 body.estilo-cascata .comentario-media-wrapper-grid { grid-area: media; margin: 0; justify-self: center; }
 
-/* 4. ESTRUTURA DA ÁRVORE (Indentação) */
+/* 4. O BENTO BOX SÓ COM ARROZ (COMENTÁRIO DELETADO) */
+body.estilo-cascata .comentario-item.comentario-deletado {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    border-left-color: transparent;
+    opacity: 0.6;
+}
+body.estilo-cascata .comentario-item.comentario-deletado .comentario-deletado-msg {
+    max-width: 100%;
+    text-align: center;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* 5. ESTRUTURA DA ÁRVORE (Indentação) */
 body.estilo-cascata .comentario-linha {
     position: relative;
     display: flex;
@@ -83,137 +95,97 @@ body.estilo-cascata .comentario-linha {
     margin: 0;
     gap: 0;
 }
-
-body.estilo-cascata .comentario-linha.nivel-0 {
-    margin-left: 0;
-    padding-left: 0;
-    border-left: none;
-    margin-bottom: 16px;
-}
-
+body.estilo-cascata .comentario-linha.nivel-0 { margin-left: 0; padding-left: 0; border-left: none; margin-bottom: 16px; }
 body.estilo-cascata .comentario-linha.nivel-1,
-body.estilo-cascata .comentario-linha.nivel-2 {
-    margin-left: 20px;
-    padding-left: 16px;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
-}
+body.estilo-cascata .comentario-linha.nivel-2 { margin-left: 20px; padding-left: 16px; border-left: 2px solid rgba(255, 255, 255, 0.1); }
+body.estilo-cascata .comentario-linha.nivel-2 > .comentario-linha.nivel-2 { border-left: none; padding-left: 0; margin-left: 0; }
 
-body.estilo-cascata .comentario-linha.nivel-2 > .comentario-linha.nivel-2 {
-    border-left: none;
-    padding-left: 0;
-    margin-left: 0;
-}
-
-/* 5. BOTÕES E MENU ⋯ */
+/* 6. BOTÕES E MENU ⋯ */
 body.estilo-cascata .comentario-linha > .comentario-menu-toggle {
     position: absolute;
     top: 10px;
-    flex: 0 0 22px;
     right: 10px;
-    width: 22px;
-    height: 22px;
-    opacity: 0; /* Esconde até o hover */
+    flex: 0 0 clamp(22px, 3vw, 30px);
+    width: clamp(22px, 3vw, 30px);
+    height: clamp(22px, 3vw, 30px);
+    opacity: 0;
     z-index: 2;
-    transition: opacity 0.2s ease;
+    transition: background 0.2s ease, opacity 0.2s ease;
+}
+body.estilo-cascata .comentario-linha:hover > .comentario-menu-toggle { opacity: 1; }
+
+@media (hover: none) {
+    body.estilo-cascata .comentario-linha > .comentario-menu-toggle { opacity: 1; }
 }
 
-body.estilo-cascata .comentario-linha:hover > .comentario-menu-toggle {
-    opacity: 1;
-}
-
-/* 6. GRID DE IMAGENS QUADRADAS */
+/* 7. GRID DE IMAGENS QUADRADAS */
 body.estilo-cascata .comentario-media-wrapper-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(60px, 150px));
     grid-template-columns: repeat(2, minmax(15cqi, 30cqi));
     gap: 4px;
-    max-width: 320px; /* Não deixa as imagens gigantes */
+    max-width: 320px;
     width: 100%;
 }
+body.estilo-cascata .comentario-media-item { aspect-ratio: 1 / 1; width: 100%; border-radius: 6px; overflow: hidden; object-fit: cover; }
+body.estilo-cascata .comentario-media-item img { width: 100%; height: 100%; object-fit: contain; }
 
-body.estilo-cascata .comentario-media-item {
-    aspect-ratio: 1 / 1;
-    width: 100%;
-    border-radius: 6px;
-    overflow: hidden;
-    object-fit: cover;
-}
-
-body.estilo-cascata .comentario-media-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-/* 7. ESCONDE O HEADER DINÂMICO E O BOTÃO EXPANDIR (NA PÁGINA INTEIRA) */
-body.estilo-cascata .header-actions-fixo { display: none; }
+/* 8. O BOTÃO EXPANDIR (NA PÁGINA INTEIRA) */
 body.estilo-cascata .btn-ver-mais { display: none; }
 
 
 /* ============================================================
-   O DRAWER (LINGUETA)
+   9. O DRAWER (LINGUETA)
    ============================================================ */
 .drawer-cmt-backdrop {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.6));
-    -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 100000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
 }
 .drawer-cmt-backdrop.ativo { opacity: 1; pointer-events: auto; }
 
 .drawer-cmt-panel {
     position: fixed; bottom: 0; left: 0; right: 0;
+    height: 85vh;
     height: 90dvh; background: var(--bg-modal-content, #0d1117);
+    max-width: 1200px;
+    justify-self: center;
+    width: 100%;
     border-radius: 25px 25px 0 0;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
     z-index: 100001; display: flex; flex-direction: column;
-    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    will-change: transform;
+    /* 🔥 Adicionado o height na transição */
+    transform: translateY(100%); 
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, height;
 }
+
 .drawer-cmt-panel.ativo { transform: translateY(0); }
 
-.drawer-cmt-handle-area {
-    width: 100%; padding: 12px 0; display: flex; justify-content: center;
-    cursor: grab; flex-shrink: 0; touch-action: none;
-}
-.drawer-cmt-handle { width: 40px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
-.drawer-cmt-close {
-    position: absolute; top: 15px; right: 15px;
-    background: rgba(255, 255, 255, 0.05); border: none; color: #888;
-    width: 32px; height: 32px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10; transition: 0.2s;
-}
-.drawer-cmt-close:hover { background: rgba(255, 100, 100, 0.2); color: #ff6b6b; }
+.drawer-cmt-handle-area { width: 100%; padding: 20px 0; display: flex; justify-content: center; cursor: grab; flex-shrink: 0; touch-action: none; }
+.drawer-cmt-handle { width: 40px; height: 5px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+.drawer-cmt-close { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.05); border: none; color: #888; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: 0.2s; }
+.drawer-cmt-close:hover { background: rgba(255, 100, 100, 0.45); color: #ff6b6b; }
 
-.drawer-cmt-content {
-    flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative;
-}
+.drawer-cmt-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+.drawer-cmt-content .layout-wrapper { position: relative; height: 100%; width: 100%;
+justify-content: center; /* 1. Fallback Seguro */
+justify-content: safe center; /* 2. Moderno (iOS 15+) */
+background: transparent; top: auto; left: auto; }
 
-/* CORREÇÃO CRÍTICA: O layout-wrapper do comentarios.css é 'fixed'. 
-   Dentro do Drawer, ele precisa ser 'relative' para não vazar e quebrar o app. */
-.drawer-cmt-content .layout-wrapper {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    background: transparent;
-    top: auto;
-    left: auto;
-}
+.drawer-cmt-content .fixed-input { position: relative; bottom: auto; background: transparent; padding: 0; padding-bottom: 15px; }
 
-.drawer-cmt-content .fixed-input {
-    position: relative;
-    bottom: auto;
-    background: transparent;
-    padding: 0;
-    padding-bottom: 15px;
-}
+/* Feedback Balão acima de tudo */
+.balao-fenda { z-index: 1000002; }
 
-/* MODO SWIPE + CASCATA: Força o Header Dinâmico a aparecer */
-body.modo-swipe-ativo.estilo-cascata .header-actions-fixo {
+/* ============================================================
+   10. FIX DO SWIPE E HEADER DINÂMICO (Lógica sem !important)
+   ============================================================ */
+
+/* Swipe: Força a aparecer usando especificidade */
+body.estilo-cascata .header-actions-container.ativo {
     display: flex;
 }
+/* Esconde o ⋯ no Swipe pra não duplicar */
 body.modo-swipe-ativo.estilo-cascata .comentario-linha > .comentario-menu-toggle {
-    display: none; /* Esconde o ⋯ no swipe pra não duplicar as ações */
+    display: none;
 }

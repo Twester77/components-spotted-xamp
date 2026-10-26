@@ -69,6 +69,22 @@ window.abrirDrawerComentarios = function(postId) {
 
             // Configura o gesto de fechar (deslizar a alça pra baixo)
             configurarGestoFechar(panel);
+
+            // 🔥 NOVO: Se o teclado abrir (foco no textarea), expande o painel
+            const textarea = contentArea.querySelector('.textarea-chat');
+            if (textarea) {
+                textarea.addEventListener('focus', () => {
+                    // Pega a altura atual do painel inline (se vazia, é 90)
+                    const currentHeightStr = panel.style.height;
+                    const currentHeight = parseFloat(currentHeightStr) || 90;
+                    
+                    // Se estiver no modo "espiadinha" (35dvh), expande para 60dvh
+                    if (currentHeight < 60) {
+                        panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                        panel.style.height = '60dvh';
+                    }
+                });
+            }
         })
         .catch(err => {
             const contentArea = document.getElementById('drawer-cmt-content');
@@ -105,31 +121,79 @@ function configurarGestoFechar(panel) {
     let startY = 0;
     let currentY = 0;
     let isDragging = false;
+    
+    // Pega a altura inicial do painel em pixels (90% da tela)
+    const alturaPainel = window.innerHeight * 0.9;
+    
+    // 🔥 OS 4 ESTADOS (em dvh)
+    const SNAP_POINTS = [0, 35, 60, 90]; 
 
-    handleArea.addEventListener('touchstart', (e) => {
-        startY = e.touches[0].clientY;
+    handleArea.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        
+        startY = e.clientY;
         isDragging = true;
-        panel.style.transition = 'none';
-    }, { passive: true });
+        
+        panel.style.transition = 'none'; // Desliga animação pra seguir o dedo/mouse
+        handleArea.setPointerCapture(e.pointerId);
+        e.preventDefault(); 
+    });
 
-    handleArea.addEventListener('touchmove', (e) => {
+    handleArea.addEventListener('pointermove', (e) => {
         if (!isDragging) return;
-        currentY = e.touches[0].clientY - startY;
+        
+        // 🔥 Sensibilidade: mouse move mais rápido que o dedo (1.3x)
+        const multiplicador = e.pointerType === 'mouse' ? 1.3 : 1; 
+        currentY = (e.clientY - startY) * multiplicador;
+        
         if (currentY > 0) {
-            panel.style.transform = `translateY(${currentY}px)`;
+            // Limita a altura mínima a 10px pra não sumir antes da hora
+            const novaAlturaPx = Math.max(10, alturaPainel - currentY);
+            const novaPct = (novaAlturaPx / window.innerHeight) * 100;
+            panel.style.height = `${novaPct}dvh`;
         }
-    }, { passive: true });
+    });
 
-    handleArea.addEventListener('touchend', () => {
+    handleArea.addEventListener('pointerup', (e) => {
         if (!isDragging) return;
         isDragging = false;
-        panel.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
         
-        if (currentY > 120) {
-            window.fecharDrawerComentarios();
-        } else {
-            panel.style.transform = 'translateY(0)';
+        // Calcula em qual altura (em dvh) o usuário soltou
+        const alturaFinalPx = Math.max(10, alturaPainel - currentY);
+        const alturaFinalDvh = (alturaFinalPx / window.innerHeight) * 100;
+
+        // Restaura a transição suave
+        panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
+
+        // 🔥 MATEMÁTICA DO SNAP: Encontra o ponto mais próximo
+        let pontoMaisProximo = SNAP_POINTS[0];
+        let menorDistancia = Math.abs(alturaFinalDvh - SNAP_POINTS[0]);
+
+        for (let i = 1; i < SNAP_POINTS.length; i++) {
+            const distancia = Math.abs(alturaFinalDvh - SNAP_POINTS[i]);
+            if (distancia < menorDistancia) {
+                menorDistancia = distancia;
+                pontoMaisProximo = SNAP_POINTS[i];
+            }
         }
+
+        // Aplica o estado vencedor
+        if (pontoMaisProximo === 0) {
+            // Se a altura final ficou abaixo de ~15dvh, considera fechado
+            window.fecharDrawerComentarios();
+            setTimeout(() => { panel.style.height = ''; }, 300); 
+        } else {
+            panel.style.height = `${pontoMaisProximo}dvh`;
+        }
+
+        currentY = 0; 
+    });
+
+    handleArea.addEventListener('pointercancel', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        panel.style.height = '90dvh';
         currentY = 0;
     });
 }

@@ -1848,20 +1848,18 @@ function initViewportTracker() {
 const AnexosManager = {
     anexos: [],
     maxItems: 4,
-    gridElement: null,
 
-    // Inicializa (chamar no DOMContentLoaded)
-    init() {
-        this.gridElement = document.getElementById('anexos-grid');
-        if (!this.gridElement) {
-            setTimeout(() => {
-                this.gridElement = document.getElementById('anexos-grid');
-                if (this.gridElement) console.log('[AnexosManager] Grid encontrado após retry.');
-            }, 500);
-        }
+    // 🔥 NOVO: Descobre em qual contexto o usuário está (Drawer, Modal ou Página)
+    _getContexto() {
+        const drawer = document.getElementById('drawer-comentarios-wrapper');
+        if (drawer) return drawer;
+
+        const modal = document.getElementById('modal-postar-fenda');
+        if (modal && modal.style.display !== 'none') return modal;
+
+        return document;
     },
 
-    // 🔥 ADICIONA UM ANEXO (COM VALIDAÇÃO, COMPRESSÃO E FEEDBACK VISUAL)
     async adicionar(file, tipo = 'imagem', url = null) {
         // ============================================================
         // 🔥 1. VALIDAÇÃO PARA ARQUIVOS DE IMAGEM (UPLOAD LOCAL)
@@ -1872,9 +1870,9 @@ const AnexosManager = {
 
             // 🔥 VALIDA TAMANHO
             if (file.size > maxSize) {
-                const mensagem = `❌ Arquivo excede o limite de 2MB. (${(file.size / 1024 / 1024).toFixed(1)}MB)`;
-                if (typeof mostrarFeedback === 'function') {
-                    mostrarFeedback(mensagem, 'erro');
+                const mensagem = `Arquivo excede o limite de 2MB. (${(file.size / 1024 / 1024).toFixed(1)}MB)`;
+                if (typeof window.exibirBalao === 'function') {
+                    window.exibirBalao(mensagem, 'erro');
                 } else {
                     alert(mensagem);
                 }
@@ -1883,19 +1881,18 @@ const AnexosManager = {
 
             // 🔥 VALIDA TIPO (MIME)
             if (!tiposPermitidos.includes(file.type)) {
-                const mensagem = `❌ Formato não suportado. Use JPG, PNG, WEBP ou GIF.`;
-                if (typeof mostrarFeedback === 'function') {
-                    mostrarFeedback(mensagem, 'erro');
+                if (typeof window.exibirBalao === 'function') {
+                    window.exibirBalao('Formato não suportado. Use JPG, PNG, WEBP ou GIF.', 'erro');
                 } else {
-                    alert(mensagem);
+                    alert('Formato não suportado.');
                 }
                 return false;
             }
 
             // 🔥 SE PASSOU NAS VALIDAÇÕES, EXIBE FEEDBACK DE SUCESSO
-            if (typeof mostrarFeedback === 'function') {
+            if (typeof window.exibirBalao === 'function') {
                 const tamanhoKB = Math.round(file.size / 1024);
-                mostrarFeedback(`✅ Arquivo aceito (${tamanhoKB} KB)`, 'sucesso');
+                window.exibirBalao(`Arquivo aceito (${tamanhoKB} KB)`, 'sucesso');
             }
 
             // 🔥 COMPRESSÃO: converte para WebP com orientação corrigida
@@ -1919,8 +1916,8 @@ const AnexosManager = {
         if (tipo === 'gif' && url) {
             const existe = this.anexos.some(item => item.tipo === 'gif' && item.url === url);
             if (existe) {
-                if (typeof mostrarFeedback === 'function') {
-                    mostrarFeedback(`⚠️ Este GIF já foi adicionado.`, 'erro');
+                if (typeof window.exibirBalao === 'function') {
+                    window.exibirBalao(`Este GIF já foi adicionado.`, 'erro');
                 }
                 return false;
             }
@@ -1930,9 +1927,9 @@ const AnexosManager = {
         // 🔥 3. LIMITE MÁXIMO DE ITENS (4)
         // ============================================================
         if (this.anexos.length >= this.maxItems) {
-            const mensagem = `⚠️ Máximo de ${this.maxItems} anexos por comentário.`;
-            if (typeof mostrarFeedback === 'function') {
-                mostrarFeedback(mensagem, 'erro');
+            const mensagem = `Máximo de ${this.maxItems} anexos por comentário.`;
+            if (typeof window.exibirBalao === 'function') {
+                window.exibirBalao(mensagem, 'erro');
             } else {
                 alert(mensagem);
             }
@@ -1959,8 +1956,9 @@ const AnexosManager = {
         // ============================================================
         this.renderizar();
 
-        // 🔥 APLICA BORDA VERDE NO ÚLTIMO ITEM ADICIONADO (FEEDBACK ESPACIAL)
-        const grid = this.gridElement;
+        const ctx = this._getContexto();
+        const grid = ctx.querySelector('#anexos-grid, .anexos-grid');
+        
         if (grid && grid.lastElementChild) {
             const ultimoItem = grid.lastElementChild;
             ultimoItem.style.boxSizing = 'border-box';
@@ -2002,14 +2000,17 @@ const AnexosManager = {
 
     // Renderiza o grid no DOM
     renderizar() {
-        if (!this.gridElement) return;
+        const ctx = this._getContexto();
+        const grid = ctx.querySelector('#anexos-grid, .anexos-grid');
+        
+        if (!grid) return;
         if (this.anexos.length === 0) {
-            this.gridElement.style.display = 'none';
-            this.gridElement.innerHTML = '';
+            grid.style.display = 'none';
+            grid.innerHTML = '';
             return;
         }
-        this.gridElement.style.display = 'flex';
-        this.gridElement.innerHTML = '';
+        grid.style.display = 'flex';
+        grid.innerHTML = '';
         this.anexos.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'anexo-item' + (item.status === 'uploading' ? ' uploading' : '');
@@ -2043,15 +2044,17 @@ const AnexosManager = {
                     }
                 }
             });
-            this.gridElement.appendChild(div);
+            grid.appendChild(div);
         });
     },
 
     // 🔥 VERIFICA SE HÁ CONTEÚDO (texto ou anexos) E AJUSTA OS BOTÕES
     verificarConteudo() {
-        const campoTexto = document.querySelector('.textarea-chat');
-        const btnEnviar = document.querySelector('.btn-enviar-chat');
-        const btnGaveta = document.querySelector('.btn-attach-gaveta');
+        const ctx = this._getContexto();
+        const campoTexto = ctx.querySelector('.textarea-chat');
+        const btnEnviar = ctx.querySelector('.btn-enviar-chat');
+        const btnGaveta = ctx.querySelector('.btn-attach-gaveta');
+        
         const temTexto = campoTexto && campoTexto.value.trim().length > 0;
         const temAnexo = this.anexos.length > 0;
         const atingiuLimite = this.anexos.length >= this.maxItems;
@@ -2253,16 +2256,19 @@ const HeaderManager = {
 
     init() {
         this.container = document.getElementById(this.containerId);
-        if (!this.container || this._initialized) return;
+        if (this._initialized) return;
         this._initialized = true;
 
-        this.postId = this.container.dataset.postId || null;
-        this.postAvatar = this.container.dataset.postAvatar || 'uploads/ui/default.webp';
-        this.postNome = this.container.dataset.postNome || 'Usuário';
-        this.postTexto = this.container.dataset.postTexto || '';
+        // 🔥 Só preenche os dados da miniatura se o container existir (Página de Post)
+        if (this.container) {
+            this.postId = this.container.dataset.postId || null;
+            this.postAvatar = this.container.dataset.postAvatar || 'uploads/ui/default.webp';
+            this.postNome = this.container.dataset.postNome || 'Usuário';
+            this.postTexto = this.container.dataset.postTexto || '';
+            this._mostrarMiniatura(false);
+        }
 
-        this._mostrarMiniatura(false);
-
+        // 🔥 Registra os eventos globais SEMPRE (para funcionar no Feed/Drawer também)
         document.addEventListener('pointerdown', (event) => this._iniciarPressao(event), { passive: true });
         document.addEventListener('pointermove', (event) => this._moverPressao(event), { passive: true });
         document.addEventListener('pointerup', (event) => this._cancelarPressao(event));
@@ -2534,14 +2540,13 @@ const HeaderManager = {
         this.contexto = contexto;
         this.dados = dados;
         this._mostrarAcoes(true);
-        this.container.classList.add('ativo');
+        if (this.container) this.container.classList.add('ativo');
 
         if (contexto === 'comentario' && dados.element) {
             setTimeout(() => {
                 if (this.contexto !== contexto || this.dados?.element !== dados.element) return;
                 document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
                 dados.element.classList.add('comentario-selecionado');
-                // 🔥 Cria a faixa de destaque
                 this._criarFaixaDestaque(dados.element);
             }, 200);
         }
@@ -2554,13 +2559,9 @@ const HeaderManager = {
         this._mostrarMiniatura(true);
 
         document.querySelectorAll('.comentario-item').forEach(el => el.classList.remove('comentario-selecionado'));
-        // 🔥 Remove a faixa de destaque
         this._removerFaixaDestaque();
     },
 
-    // ============================================================
-    // 🔥 FAIXA DE DESTAQUE (ESTILO WHATSAPP – FIXED E ATUALIZA DINÂMICA)
-    // ============================================================
     _criarFaixaDestaque(comentarioElement) {
         this._removerFaixaDestaque();
 
@@ -2588,35 +2589,27 @@ const HeaderManager = {
         document.body.appendChild(faixa);
         this._faixaElement = faixa;
 
-        // 🔥 Função que atualiza a posição E verifica se o comentário está visível
         const atualizarFaixa = () => {
             if (!this._faixaElement || !comentarioElement) return;
             const newRect = comentarioElement.getBoundingClientRect();
             const viewportHeight = window.innerHeight;
 
-            // Obtém a altura do header fixo e do footer (elementos que podem cobrir)
             const header = document.querySelector('.header-actions-fixo');
             const footer = document.querySelector('.fixed-input');
             const headerHeight = header ? header.offsetHeight : 0;
             const footerHeight = footer ? footer.offsetHeight : 0;
 
-            // Verifica se o comentário está parcialmente escondido atrás do header ou footer
             const topVisible = newRect.top >= headerHeight;
             const bottomVisible = newRect.bottom <= viewportHeight - footerHeight;
-
-            // A faixa só é visível se o comentário estiver completamente visível
             const isFullyVisible = topVisible && bottomVisible;
 
-            // Aplica opacidade condicionalmente
             this._faixaElement.style.opacity = isFullyVisible ? '1' : '0';
             this._faixaElement.style.top = newRect.top + 'px';
             this._faixaElement.style.height = newRect.height + 'px';
         };
 
-        // Guarda a referência da função para remover depois
         this._faixaUpdateHandler = atualizarFaixa;
 
-        // Escuta scroll no container de comentários
         const scrollContainer = document.querySelector('.lista-scrollavel');
         if (scrollContainer) {
             scrollContainer.addEventListener('scroll', this._faixaUpdateHandler);
@@ -2624,13 +2617,11 @@ const HeaderManager = {
             window.addEventListener('scroll', this._faixaUpdateHandler);
         }
 
-        // Também escuta resize para recalcular
         this._faixaResizeHandler = () => {
             if (this._faixaUpdateHandler) this._faixaUpdateHandler();
         };
         window.addEventListener('resize', this._faixaResizeHandler);
 
-        // Chama uma vez para posicionar e avaliar a visibilidade inicial
         setTimeout(atualizarFaixa, 50);
     },
 
@@ -2654,9 +2645,6 @@ const HeaderManager = {
         }
     },
 
-    // ============================================================
-    // MÉTODOS EXISTENTES (MINIATURA, AÇÕES, ETC.)
-    // ============================================================
     _mostrarMiniatura(animar = true) {
         if (!this.container) return;
 
@@ -2691,6 +2679,7 @@ const HeaderManager = {
     },
 
     _renderizarMiniatura() {
+        if (!this.container) return;
         this.container.innerHTML = `
             <button class="header-action-btn btn-voltar-fixo" style="flex-shrink: 0;" onclick="window.location.href='feed.php'">
                 <i class="fas fa-arrow-left"></i> Ir pro Feed
@@ -2740,6 +2729,7 @@ const HeaderManager = {
     },
 
     _renderizarAcoes() {
+        if (!this.container) return;
         this.container.innerHTML = '';
 
         if (this.contexto === 'comentario') {
@@ -3000,7 +2990,7 @@ window.exibirBalaoFenda = function (mensagem, tipo, elementoRef, duracao = 2500)
 
     document.body.appendChild(balao);
     // 🔥 Garante que o balão fique acima de drawers/modais (z-index do drawer = 999999)
-    balao.style.zIndex = '1000000';
+    balao.style.zIndex = '1000002';
 
     setTimeout(() => {
         if (balao.parentNode) {
@@ -3199,7 +3189,7 @@ window.abrirLightboxManual = function(src) {
     
     const modal = document.createElement('div');
     modal.id = 'modal-lightbox-fenda';
-    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000000; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
+    modal.style.cssText = `position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.73); display:flex; justify-content:center; align-items:center; z-index:1000001; cursor:pointer; user-select:none; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); opacity:0; transition:opacity 0.2s ease;`;
     
     const img = document.createElement('img');
     img.src = src;
@@ -3267,13 +3257,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// 5. Desativa o Long Press no Cascata (para não conflitar com o menu ⋯)
+// 5. Desativa o Long Press no Grid + Cascata (para não conflitar com o menu ⋯)
 document.addEventListener('DOMContentLoaded', () => {
     if (document.body.classList.contains('estilo-cascata')) {
         const originalMostrarMenu = window.mostrarMenuAcoes;
         window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
-            // No modo Cascata, o Long Press é bloqueado. O menu ⋯ assume.
-            if (document.body.classList.contains('estilo-cascata')) return;
+            // Bloqueia o long press do POST apenas no Grid + Cascata.
+            // No modo Swipe, o long press no card deve continuar funcionando.
+            if (document.body.classList.contains('estilo-cascata') && !document.body.classList.contains('modo-swipe-ativo')) {
+                return; 
+            }
             if (typeof originalMostrarMenu === 'function') originalMostrarMenu(postId, isOwner, cardElement);
         };
     }
@@ -3295,5 +3288,55 @@ window.deslogarUsuario = async function () {
     window.location.href = 'logout.php';
 };
 
-// Inicializa o viewport tracker
+// ==================== BALÃO DE FEEDBACK GLOBAL (Fase 5) ====================
+// Centralizado aqui para ser acessível por qualquer script, incluindo o Drawer.
+window.exibirBalao = function(mensagem, tipo, elementoRef, duracao = 2500) {
+    try {
+        const balaoAntigo = document.querySelector('.balao-fenda');
+        if (balaoAntigo) balaoAntigo.remove();
+        
+        const balao = document.createElement('div');
+        balao.className = 'balao-fenda ' + tipo;
+        
+        const icones = { sucesso: '✅', erro: '❌', info: 'ℹ️' };
+        const icone = document.createElement('span');
+        icone.className = 'balao-icone';
+        icone.textContent = icones[tipo] || '💬';
+        balao.appendChild(icone);
+        
+        const texto = document.createElement('span');
+        texto.textContent = mensagem;
+        balao.appendChild(texto);
+        
+        if (elementoRef) {
+            const rect = elementoRef.getBoundingClientRect();
+            let top = rect.top - 10;
+            let left = rect.left + rect.width / 2 - 50;
+            const balaoWidth = Math.min(300, window.innerWidth * 0.8);
+            if (left + balaoWidth > window.innerWidth - 20) left = window.innerWidth - balaoWidth - 20;
+            if (left < 20) left = 20;
+            if (rect.top < 60) top = rect.bottom + 10; else top = rect.top - 60;
+            balao.style.top = top + 'px';
+            balao.style.left = left + 'px';
+            balao.style.maxWidth = balaoWidth + 'px';
+        } else {
+            balao.style.top = '50%';
+            balao.style.left = '50%';
+            balao.style.transform = 'translate(-50%, -50%)';
+        }
+        
+        document.body.appendChild(balao);
+        balao.style.zIndex = '1000002';
+        
+        setTimeout(() => {
+            if (balao.parentNode) {
+                balao.style.opacity = '0';
+                setTimeout(() => balao.remove(), 300);
+            }
+        }, duracao);
+    } catch (e) {
+        console.error('[exibirBalao] Erro crítico:', e);
+    }
+};
+
 initViewportTracker();

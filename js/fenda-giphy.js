@@ -39,7 +39,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.75);
-            z-index: 40000;
+            z-index: 1000000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -49,17 +49,17 @@
         const modal = document.createElement('div');
         modal.style.cssText = `
             background: rgba(36, 36, 58, 0.45);
-            border-radius: 28px;
+            border-radius: 24px;
             width: 85%;
             max-width: 650px;
-            max-height: 80vh;
-            -webkit-backdrop-filter: blur(3px);
-            backdrop-filter: blur(3px);
+            max-height: 85vh;
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
             border: 1px solid rgba(255, 140, 0, 0.5);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         `;
 
         // Cabeçalho

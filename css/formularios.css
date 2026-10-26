@@ -3178,7 +3178,7 @@ textarea {
     background: transparent;
     max-width: 90%;
     max-width: 350px;
-    z-index: 5;
+    z-index: 1000003;
     margin: auto;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);                      /* 🎨 sombra específica */
     position: fixed;

@@ -394,48 +394,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
 <?php include 'includes/footer.php'; ?>
 
 <script>
-    window.exibirBalao = function(mensagem, tipo, elementoRef, duracao = 2500) {
-        try {
-            const balaoAntigo = document.querySelector('.balao-fenda');
-            if (balaoAntigo) balaoAntigo.remove();
-            const balao = document.createElement('div');
-            balao.className = 'balao-fenda ' + tipo;
-            const icones = { sucesso: '✅', erro: '❌', info: 'ℹ️' };
-            const icone = document.createElement('span');
-            icone.className = 'balao-icone';
-            icone.textContent = icones[tipo] || '💬';
-            balao.appendChild(icone);
-            const texto = document.createElement('span');
-            texto.textContent = mensagem;
-            balao.appendChild(texto);
-            if (elementoRef) {
-                const rect = elementoRef.getBoundingClientRect();
-                let top = rect.top - 10;
-                let left = rect.left + rect.width / 2 - 50;
-                const balaoWidth = Math.min(300, window.innerWidth * 0.8);
-                if (left + balaoWidth > window.innerWidth - 20) left = window.innerWidth - balaoWidth - 20;
-                if (left < 20) left = 20;
-                if (rect.top < 60) top = rect.bottom + 10; else top = rect.top - 60;
-                balao.style.top = top + 'px';
-                balao.style.left = left + 'px';
-                balao.style.maxWidth = balaoWidth + 'px';
-            } else {
-                balao.style.top = '50%';
-                balao.style.left = '50%';
-                balao.style.transform = 'translate(-50%, -50%)';
-            }
-            document.body.appendChild(balao);
-            setTimeout(() => {
-                if (balao.parentNode) {
-                    balao.style.opacity = '0';
-                    setTimeout(() => balao.remove(), 300);
-                }
-            }, duracao);
-        } catch (e) {
-            alert(mensagem);
-        }
-    };
-
     if (typeof AnexosManager !== 'undefined' && AnexosManager.init) { AnexosManager.init(); }
 
     <?php if ($post_esta_ativo): ?>
@@ -645,7 +603,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                     tempDiv.innerHTML = data.html;
                                     const novaLinha = tempDiv.firstElementChild;
                                     if (novaLinha) {
-                                        novaLinha.classList.remove('comentario-linha-filha', 'comentario-linha-proprio'); 
                                         novaLinha.classList.add('nivel-' + nivel);
                                         paiLinha.appendChild(novaLinha);
                                     }
@@ -771,7 +728,6 @@ $total_reacoes = array_sum($reacoes_detalhes);
                                     tempDiv.innerHTML = novo.html;
                                     const novaLinha = tempDiv.firstElementChild;
                                     if (novaLinha) {
-                                        novaLinha.classList.remove('comentario-linha-filha', 'comentario-linha-proprio');
                                         novaLinha.classList.add('nivel-' + nivel);
                                         paiLinha.appendChild(novaLinha);
                                     }

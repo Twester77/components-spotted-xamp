@@ -12,9 +12,15 @@
  * - Tratamento graceful de exceções
  * 
  * 🔧 ATUALIZAÇÃO NEREIDA – INSTÂNCIA #DS-2026-08-26
- *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção.
- *     Logs de entrada, validação, conversão, upload, verificação e erros específicos."
+ *    "Adicionados logs detalhados em cada etapa do upload para diagnóstico em produção."
  * - Nereida, a guardiã das águas
+ * 
+ * 🐚 BRISA – 2026-09-15
+ *    "Corrigida falsa verificação de integridade (auditoria da Djê).
+ *     O passo 7 agora usa $b2->fileExists($remotePath) – que faz uma
+ *     consulta real ao B2 – em vez de getDownloadUrl() (que só montava
+ *     uma string local e nunca lançava exceção)."
+ * - Brisa, a guardiã da blindagem
  */
 
 // Inclui o B2Client (caminho relativo)
@@ -157,9 +163,14 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
                     $b2 = B2Client::getInstance();
                     error_log("[UPLOAD_ENGINE] 📤 Enviando GIF para B2...");
                     $b2->uploadFile($file_data['tmp_name'], $remotePath, 'image/gif', ['Cache-Control' => 'max-age=31536000']);
-                    $b2->getDownloadUrl($remotePath);
+
+                    // 🔥 VERIFICAÇÃO REAL (substitui getDownloadUrl)
+                    if (!$b2->fileExists($remotePath)) {
+                        throw new Exception('Arquivo GIF não encontrado no bucket após upload');
+                    }
+
                     logB2Event('INFO', $usuario_id, 'UPLOAD', $remotePath, 200, 'Upload GIF bem-sucedido');
-                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado com sucesso: $remotePath");
+                    error_log("[UPLOAD_ENGINE] ✅ GIF enviado e verificado com sucesso: $remotePath");
                     return $remotePath;
                 } catch (Exception $e) {
                     logB2Event('ERROR', $usuario_id, 'UPLOAD', $remotePath, 0, 'Falha no upload GIF: ' . $e->getMessage());
@@ -184,7 +195,7 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
         $remotePath = $prefixo . "_" . bin2hex(random_bytes(8)) . "_" . time() . ".webp";
         $tempFile = tempnam(sys_get_temp_dir(), 'b2_') . '.webp';
         error_log("[UPLOAD_ENGINE] 🔄 Convertendo para WebP com qualidade 65%: $remotePath");
-        
+
         if (!imagewebp($img, $tempFile, 65)) {
             imagedestroy($img);
             if (file_exists($tempFile)) unlink($tempFile);
@@ -218,10 +229,17 @@ function processarUploadSeguro($file_data, $destino, $prefixo, $max_size = 20971
             error_log("[UPLOAD_ENGINE] 🗑️ Arquivo temporário removido: $tempFile");
         }
 
-        // 7. VERIFICAÇÃO DE INTEGRIDADE
+        // ============================================================
+        // 7. VERIFICAÇÃO DE INTEGRIDADE (REAL – auditoria da Djê)
+        // ============================================================
+        // 🔥 O método fileExists() faz uma consulta HTTP real ao B2
+        // (b2_list_file_names). Diferente do getDownloadUrl() antigo,
+        // que apenas montava uma string local e nunca lançava exceção.
         try {
-            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2...");
-            $b2->getDownloadUrl($remotePath);
+            error_log("[UPLOAD_ENGINE] 🔍 Verificando integridade do arquivo no B2 (consulta real)...");
+            if (!$b2->fileExists($remotePath)) {
+                throw new Exception('Arquivo não encontrado no bucket após upload');
+            }
             logB2Event('INFO', $usuario_id, 'VERIFY', $remotePath, 200, 'Arquivo verificado com sucesso');
             error_log("[UPLOAD_ENGINE] ✅ Verificação concluída: $remotePath");
         } catch (Exception $e) {
@@ -326,13 +344,13 @@ function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b
     try {
         // Se $b2 não foi passado, instancia
         $b2Instance = ($b2 !== null) ? $b2 : B2Client::getInstance();
-        
+
         // Tenta obter a URL
         $url = obterUrlImagem($caminho, $b2Instance, $assinado);
-        
+
         // Se obteve uma URL válida, retorna; senão, fallback
         return ($url && is_string($url) && !empty($url)) ? $url : $fallback;
-        
+
     } catch (Exception $e) {
         // Log do erro (sem quebrar a página)
         error_log("[OBTER_URL_FALLBACK] Erro ao obter URL para '$caminho': " . $e->getMessage());
