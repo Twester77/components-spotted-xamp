@@ -22,6 +22,10 @@
  *
  *    Não mexi em lógica de negócio: query, reações, carrossel, ellipsis
  *    e permissões continuam idênticas.
+ *
+ * 🔥 FASE 6 (Sprint 3) – Busca por Palavras-Chave:
+ *    - Adicionado parâmetro ?q=termo e filtro LIKE (mensagem e username).
+ *    - Rate limiting persistente (fenda_rate_limits) para proteger contra scraping.
  */
 
 include_once __DIR__ . '/conexao.php';
@@ -33,6 +37,50 @@ $categoria     = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 $tipo_feed     = isset($_GET['tipo']) ? $_GET['tipo'] : 'geral';
 $user_alvo     = isset($_GET['user']) ? $_GET['user'] : '';
 $comunidade_id = isset($_GET['comunidade_id']) ? (int)$_GET['comunidade_id'] : 0;
+$busca         = isset($_GET['q']) ? trim($_GET['q']) : ''; // 🔥 NOVO
+
+// ============================================================
+// 🔥 RATE LIMIT PARA BUSCA (Evita scraping)
+// ============================================================
+if (!empty($busca) && isset($_SESSION['usuario_id'])) {
+    $usuario_id_rate = (int)$_SESSION['usuario_id'];
+    $ip_rate = function_exists('obterIPReal') ? obterIPReal() : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+    $endpoint_rate = 'busca_feed';
+
+    // Garante que a tabela exista
+    $conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        endpoint VARCHAR(64) NOT NULL,
+        usuario_id INT NULL,
+        ip_address VARCHAR(45) NOT NULL,
+        tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_endpoint (endpoint),
+        INDEX idx_usuario (usuario_id),
+        INDEX idx_ip (ip_address),
+        INDEX idx_tentativa (tentativa)
+    )");
+
+    $stmt_rate = $conn->prepare("
+        SELECT
+            (SELECT COUNT(*) FROM fenda_rate_limits WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 1 MINUTE) AS user_total,
+            (SELECT COUNT(*) FROM fenda_rate_limits WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 1 MINUTE) AS ip_total
+    ");
+    $stmt_rate->bind_param('siis', $endpoint_rate, $usuario_id_rate, $endpoint_rate, $ip_rate);
+    $stmt_rate->execute();
+    $result_rate = $stmt_rate->get_result()->fetch_assoc();
+    $stmt_rate->close();
+
+    if ((int)($result_rate['user_total'] ?? 0) >= 15 || (int)($result_rate['ip_total'] ?? 0) >= 30) {
+        http_response_code(429);
+        echo "FIM_DADOS"; // O JS vai parar de carregar
+        exit;
+    }
+
+    $stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+    $stmt_log_rate->bind_param('sis', $endpoint_rate, $usuario_id_rate, $ip_rate);
+    $stmt_log_rate->execute();
+    $stmt_log_rate->close();
+}
 
 // ==================================================
 // 1. QUERY PRINCIPAL (COM SUBQUERIES PARA CONTAGENS)
@@ -76,6 +124,15 @@ if ($comunidade_id > 0) {
     $tipos .= "i";
     $params[] = $comunidade_id;
 }
+
+// 🔥 FILTRO DE BUSCA
+if (!empty($busca)) {
+    $filtros[] = "(m.mensagem LIKE ? OR u.username LIKE ?)";
+    $tipos .= "ss";
+    $params[] = "%$busca%";
+    $params[] = "%$busca%";
+}
+
 if (count($filtros) > 0) {
     $sql .= " AND " . implode(' AND ', $filtros);
 }

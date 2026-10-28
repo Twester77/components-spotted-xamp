@@ -3288,6 +3288,79 @@ window.deslogarUsuario = async function () {
     window.location.href = 'logout.php';
 };
 
+// ==================== BUSCA GLOBAL COM DEBOUNCE ====================
+(function() {
+    const inputBusca = document.getElementById('input-busca-global');
+    const btnLimpar = document.getElementById('btn-limpar-busca');
+    if (!inputBusca) return;
+
+    let debounceTimer = null;
+
+    function executarBusca(termo) {
+        const containerFeed = document.querySelector('.container-feed');
+        if (!containerFeed) return; // Se não tiver feed na página, aborta
+
+        // Pega o ID da comunidade se estivermos nela
+        const urlParams = new URLSearchParams(window.location.search);
+        const comunidadeId = urlParams.get('id') || '';
+        
+        // 🔥 NOVO: Pega a categoria da URL ou do atributo data-categoria do input
+        const categoriaUrl = urlParams.get('categoria') || '';
+        const categoriaInput = inputBusca.dataset.categoria || '';
+        const categoria = categoriaInput || categoriaUrl; // O input tem prioridade
+
+        // Monta a URL do motor
+        let url = `motor-feed.php?offset=0&q=${encodeURIComponent(termo)}&tipo=geral`;
+        if (comunidadeId) url += `&comunidade_id=${comunidadeId}`;
+        if (categoria) url += `&categoria=${categoria}`;
+
+        // Mostra loading
+        containerFeed.innerHTML = `<div style="text-align:center; padding:40px; color:#ffbc00;"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">Buscando...</p></div>`;
+
+        fetch(url)
+            .then(res => res.text())
+            .then(html => {
+                if (html.trim() === "FIM_DADOS") {
+                    containerFeed.innerHTML = `<p style="text-align:center; color:#aaa; padding:30px;">Nenhum resultado encontrado para "${termo}".</p>`;
+                } else {
+                    containerFeed.innerHTML = html;
+                    if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
+                        configurarPosts();
+                    }
+                    if (typeof iniciarTodosCarrosseis === 'function') iniciarTodosCarrosseis();
+                }
+            })
+            .catch(err => {
+                console.error('[BUSCA] Erro:', err);
+                containerFeed.innerHTML = `<p style="text-align:center; color:#ff6b6b; padding:30px;">Erro ao buscar. Tente novamente.</p>`;
+            });
+    }
+
+    // Evento de digitar
+    inputBusca.addEventListener('input', function() {
+        const termo = this.value.trim();
+        
+        // Mostra/esconde botão de limpar
+        if (btnLimpar) btnLimpar.style.display = termo.length > 0 ? 'block' : 'none';
+
+        // Debounce de 450ms
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            executarBusca(termo);
+        }, 450);
+    });
+
+    // Botão de limpar
+    if (btnLimpar) {
+        btnLimpar.addEventListener('click', function() {
+            inputBusca.value = '';
+            this.style.display = 'none';
+            executarBusca(''); // Limpa a busca e recarrega o feed normal
+            inputBusca.focus();
+        });
+    }
+})();
+
 // ==================== BALÃO DE FEEDBACK GLOBAL (Fase 5) ====================
 // Centralizado aqui para ser acessível por qualquer script, incluindo o Drawer.
 window.exibirBalao = function(mensagem, tipo, elementoRef, duracao = 2500) {

@@ -1086,7 +1086,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 #btn-marcar-todas-lidas.btn-fenda-padrao {
     font-size: 0.7rem;
-    font-size: clamp(0.75rem, 1.2cqw, 1.1rem);
+    font-size: clamp(0.75rem, 1.2cqw, 1.15rem);
     padding: 6px 12px;
     padding: clamp(6px, 1.5cqw, 10px) clamp(8px, 1.2cqw, 16px);
     background: rgba(255, 188, 0, 0.12);                           /* 🎨 dourado com alpha específico */
@@ -1095,6 +1095,13 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     border-radius: 30px;
     cursor: pointer;
 }
+
+#btn-marcar-todas-lidas.btn-fenda-padrao:hover
+{
+    background:#ff9b00;    
+    color: #0a0a0a;                       
+}
+
 
 #central-body .ver-todas-notif:hover {
     background: oklch(0.25 0 0 / 0.7);                             /* 🎨 cinza-escuro específico do hover */

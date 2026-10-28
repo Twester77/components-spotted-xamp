@@ -882,8 +882,9 @@ body.modal-aberto .fab-postar {
 
 
 .fenda-primary {
-    background: #ffbc00;
-    color: #000;
+    background: rgba(204, 201, 12, 0.1);
+    color: #dddddd;
+    border: 1px solid #faed3d ;
     padding: 12px 20px;
 }
 
@@ -891,7 +892,7 @@ body.modal-aberto .fab-postar {
 .fenda-outline {
     background: rgba(204, 66, 12, 0.1);
     color: #fa593d;
-    border: 1px solid #cc420c !important;
+    border: 1px solid #cc420c ;
     padding: 10px 20px;
 }
 
@@ -904,11 +905,14 @@ body.modal-aberto .fab-postar {
 
 .fenda-primary:hover {
     box-shadow: 0 0 15px rgba(255, 188, 0, 0.4);
+    background: #ffbc00;
+    border-color: #fff34d ;
+    color: #000;
 }
 
 .fenda-outline:hover {
     background: rgba(248, 78, 11, 0.753);
-    border-color: #ff824d !important;
+    border-color: #ff824d ;
     color: #dddddd;
 
 }
@@ -3012,9 +3016,10 @@ section.sessao-publicar .form-publicar .anexos-grid {
 }
 
 .btn-marcar-todas:hover {
-    background: rgba(255, 188, 0, 0.2);
+    background: var(--texto-dourado);
     border-color: var(--dourado, #ffbc00);
     transform: scale(1.02);
+    color: #0a0a0a;
 }
 
 .btn-marcar-todas:disabled {

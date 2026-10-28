@@ -51,13 +51,13 @@ $descricao = trim($_POST['descricao'] ?? '');
 $tipo = isset($_POST['tipo']) && in_array($_POST['tipo'], ['publica', 'privada']) ? $_POST['tipo'] : 'publica';
 
 // Validação básica
-if (empty($nome) || strlen($nome) < 3) {
+if (empty($nome) || mb_strlen($nome) < 3) {
     $_SESSION['erro_comunidade'] = 'O nome deve ter pelo menos 3 caracteres.';
     header("Location: " . ($modo === 'editar' ? "editar-comunidade.php?id=$id" : "criar-comunidade.php"));
     exit();
 }
 
-if (empty($slug) || !preg_match('/^[a-z0-9-]+$/', $slug) || strlen($slug) < 3) {
+if (empty($slug) || !preg_match('/^[a-z0-9-]+$/', $slug) || mb_strlen($slug) < 3) {
     $_SESSION['erro_comunidade'] = 'O slug deve conter apenas letras minúsculas, números e hífens.';
     header("Location: " . ($modo === 'editar' ? "editar-comunidade.php?id=$id" : "criar-comunidade.php"));
     exit();

@@ -1,15 +1,18 @@
 <?php
 include_once __DIR__ . '/../conexao.php';
-// 1. Garante que temos acesso à conexão e à sessão
 
 $u_id_bolhas = $_SESSION['usuario_id'] ?? 0;
 
 // 2. Se o usuário estiver logado, vamos buscar a preferência real dele
 if ($u_id_bolhas > 0) {
-    // Buscamos apenas o campo necessário
-    $sql_bolhas = "SELECT pref_bolhas FROM usuarios WHERE id = '$u_id_bolhas'";
-    $res_bolhas = mysqli_query($conn, $sql_bolhas);
-    $dados_bolhas = mysqli_fetch_assoc($res_bolhas);
+    // 🔥 CORREÇÃO BLINDAGEM (Blue Team): Prepared Statement em vez de interpolação
+    $sql_bolhas = "SELECT pref_bolhas FROM usuarios WHERE id = ?";
+    $stmt_bolhas = $conn->prepare($sql_bolhas);
+    $stmt_bolhas->bind_param("i", $u_id_bolhas);
+    $stmt_bolhas->execute();
+    $res_bolhas = $stmt_bolhas->get_result();
+    $dados_bolhas = $res_bolhas->fetch_assoc();
+    $stmt_bolhas->close();
     
     $exibir = $dados_bolhas['pref_bolhas'] ?? 1;
 } else {
@@ -33,4 +36,3 @@ if ($exibir == 0) {
     }
     ?>
 </div>
-

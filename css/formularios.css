@@ -2101,12 +2101,14 @@ section.sessao-publicar,
 }
 
 .main-perdidos {
-    width: 300px;
+    width: 100%;
     padding: 4px;
     width: clamp(300px, 95%, 1200px);
-    padding: clamp(8px, 3vw, 25px);
+    padding: clamp(6px, 3vw, 20px);
     margin: 20px auto;
     max-width: 95%;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-perdidos {

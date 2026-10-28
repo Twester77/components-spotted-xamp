@@ -137,7 +137,7 @@ body {
 main {
     flex: 1 0 auto;
     font-size: 0.9rem;
-    font-size: clamp(14px, 0.6vw + 0.625rem, 20px);
+    font-size: clamp(0.9rem, 0.6vw + 0.625rem, 1.25rem);
     max-width: 100vw;
     max-width: 100cqw;
     margin: 0 auto;
@@ -150,6 +150,14 @@ main {
 html {
     scroll-behavior: smooth;
 }
+
+.container-busca-feed { padding: 10px 15px; max-width: 800px; margin: 30px auto 15px auto; width: 100%; }
+.busca-wrapper { position: relative; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--borda-sutil); border-radius: 30px; padding: 5px 15px; transition: border-color 0.3s; }
+.busca-wrapper:focus-within { border-color: var(--dourado); box-shadow: 0 0 10px rgba(255, 188, 0, 0.2); }
+.busca-icone { color: var(--texto-muted); margin-right: 10px; }
+.busca-input { flex: 1; background: transparent; border: none; color: var(--texto-primario); font-size: 1rem; outline: none; padding: 8px 0; }
+.btn-limpar-busca { background: transparent; border: none; color: var(--texto-muted); cursor: pointer; padding: 5px; font-size: 1.1rem; transition: color 0.2s; }
+.btn-limpar-busca:hover { color: var(--cor-erro); }
 
 /* ============================================================
    🌅 FAGULHA — 2026-10-16 — Fase 5 (Hacker Theme)

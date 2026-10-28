@@ -18,6 +18,15 @@
 // "Substituição de obterUrlImagem() por obterUrlComFallback() para fallback centralizado
 //  em capa da comunidade e avatar dos solicitantes pendentes."
 // - Ondina
+//
+// 🔥 FASE 6 (Sprint 3) – Busca por Palavras-Chave:
+//    - Adicionada a barra de busca global no topo.
+//    - O JS agora passa o parâmetro ?q= para o motor-feed.php, permitindo
+//      filtrar os posts dentro da comunidade.
+//
+// 🔥 FASE 7 (Sprint 3) – Transferência de Dono:
+//    - Blindagem de query de permissão com bind_param.
+//    - Adicionado botão e modal para o criador transferir a posse.
 
 // ============================================================
 // 🔥 1. VALIDAÇÃO E REDIRECIONAMENTOS (ANTES DE QUALQUER SAÍDA)
@@ -69,13 +78,18 @@ $is_criador = false;
 $is_pendente = false;
 $is_banido = false;
 $status_usuario = null;
+$meu_id = $_SESSION['usuario_id'] ?? 0;
 
-if (isset($_SESSION['usuario_id'])) {
-    $meu_id = $_SESSION['usuario_id'];
+if ($meu_id > 0) {
     $is_criador = ($comunidade['criador_id'] == $meu_id);
 
-    $check = mysqli_query($conn, "SELECT papel, status FROM comunidade_membros WHERE comunidade_id = $id AND usuario_id = $meu_id");
-    if ($row = mysqli_fetch_assoc($check)) {
+    // 🔥 BLINDAGEM (Blue Team): Prepared Statement
+    $stmt_check = $conn->prepare("SELECT papel, status FROM comunidade_membros WHERE comunidade_id = ? AND usuario_id = ?");
+    $stmt_check->bind_param("ii", $id, $meu_id);
+    $stmt_check->execute();
+    $res_check = $stmt_check->get_result();
+    
+    if ($row = $res_check->fetch_assoc()) {
         $status_usuario = $row['status'];
         if ($row['status'] === 'ativo') {
             $is_membro = true;
@@ -86,6 +100,7 @@ if (isset($_SESSION['usuario_id'])) {
             $is_banido = true;
         }
     }
+    $stmt_check->close();
 }
 
 // 🔥 OBTÉM A URL DA CAPA VIA B2 COM FALLBACK CENTRALIZADO
@@ -121,6 +136,7 @@ if ($is_admin || $is_criador) {
     mysqli_stmt_close($stmt_pend);
 }
 ?>
+
 <main class="comunidade-page">
 
     <!-- ============================================================
@@ -210,6 +226,11 @@ if ($is_admin || $is_criador) {
                 <button class="btn-gerenciar-membros" onclick="abrirModalMembros(<?php echo $id; ?>)">
                     <i class="fas fa-users-cog"></i> Gerenciar membros
                 </button>
+                <?php if ($is_criador): ?>
+                    <button class="btn-transferir-dono" onclick="abrirModalTransferencia(<?php echo $id; ?>)" style="background:rgba(255,188,0,0.1); border:1px solid #ffbc00; color:#ffbc00; padding: 8px 16px; border-radius: 20px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                        <i class="fas fa-crown"></i> Transferir Posse
+                    </button>
+                <?php endif; ?>
             <?php endif; ?>
 
         <?php endif; ?>
@@ -247,7 +268,7 @@ if ($is_admin || $is_criador) {
             </div>
         </div>
     <?php elseif (($is_admin || $is_criador) && $total_pendentes == 0): ?>
-        <div style="margin: 12px 0; text-align:center; color:#666; color:oklch(0.5103 0 0); display: inline-block; font-size:0.85rem; font-size:clamp(0.9rem, 1.2cqi, 1.1rem); background:rgba(255,255,255,0.02); padding:12px; border-radius:8px;">
+        <div style="margin: 12px 0; text-align:center; color:#666; color:oklch(0.5103 0 0); display: inline-block; font-size:0.85rem; font-size:clamp(0.9rem, 1.2cqi, 1.15rem); letter-spacing: 0.5px; background:rgba(255,255,255,0.02); padding:12px; border-radius:8px;">
             <i class="fas fa-check-circle" style="color:#4caf50;"></i> Nenhuma solicitação pendente no momento.
         </div>
     <?php endif; ?>
@@ -293,6 +314,13 @@ if ($is_admin || $is_criador) {
     <!-- ============================================================
     FEED DA COMUNIDADE (usando motor-feed.php)
     ============================================================ -->
+    
+    <!-- 🔥 BARRA DE BUSCA DENTRO DA COMUNIDADE (Fase 6) -->
+    <?php 
+    $placeholder_busca = 'Buscar nesta comunidade...'; 
+    include 'includes/barra-busca.php'; 
+    ?>
+    
     <section class="feed-comunidade">
         <div class="container-feed" id="feed-comunidade">
             <!-- O feed será carregado via AJAX -->
@@ -302,6 +330,23 @@ if ($is_admin || $is_criador) {
         </div>
     </section>
 </main>
+
+<!-- 🔥 MODAL DE TRANSFERÊNCIA DE POSSE -->
+<div id="modal-transferir-dono" class="fenda-modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center;">
+    <div class="fenda-modal-content" style="background:#1a1a2e; padding:20px; border-radius:12px; max-width:400px; width:90%; border:1px solid #ffbc00;">
+        <h3 style="color:#ffbc00; margin-bottom:10px;">Transferir Posse</h3>
+        <p style="color:#ccc; font-size:0.9rem; margin-bottom:15px;">Você deixará de ser o criador e se tornará Administrador.</p>
+        
+        <select id="novo-dono-select" style="width:100%; padding:10px; margin-bottom:15px; background:#333; color:#fff; border:none; border-radius:5px;">
+            <option value="">Carregando membros...</option>
+        </select>
+
+        <div style="display:flex; gap:10px;">
+            <button type="button" onclick="confirmarTransferencia()" style="flex:1; background:#ffbc00; color:#000; border:none; padding:10px; border-radius:5px; cursor:pointer; font-weight:bold;">Confirmar</button>
+            <button type="button" onclick="document.getElementById('modal-transferir-dono').style.display='none'" style="flex:1; background:transparent; color:#ccc; border:1px solid #ccc; padding:10px; border-radius:5px; cursor:pointer;">Cancelar</button>
+        </div>
+    </div>
+</div>
 
 <script>
     // ============================================================
@@ -352,7 +397,10 @@ if ($is_admin || $is_criador) {
             btnLoad.disabled = true;
             btnLoad.innerText = 'CARREGANDO...';
         }
-        fetch(`motor-feed.php?offset=${offset}&comunidade_id=${comunidadeId}`)
+
+        const busca = new URLSearchParams(window.location.search).get('q') || '';
+        
+        fetch(`motor-feed.php?offset=${offset}&comunidade_id=${comunidadeId}&q=${encodeURIComponent(busca)}`)
             .then(response => response.text())
             .then(data => {
                 if (data.trim() === "FIM_DADOS") {
@@ -398,6 +446,96 @@ if ($is_admin || $is_criador) {
             conteudo.style.display = 'none';
             icon.className = 'fas fa-chevron-down';
         }
+    }
+
+    // ============================================================
+    // 🔥 TRANSFERIR POSSE (MODAL E AJAX)
+    // ============================================================
+    function abrirModalTransferencia(comunidadeId) {
+        const modal = document.getElementById('modal-transferir-dono');
+        const select = document.getElementById('novo-dono-select');
+        
+        modal.style.display = 'flex';
+        select.innerHTML = '<option value="">Carregando...</option>';
+
+        // Usa o endpoint listar-membros.php para pegar os membros ativos
+        fetch(`listar-membros.php?comunidade_id=${comunidadeId}&status=ativos`)
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const itens = doc.querySelectorAll('.membro-item');
+                
+                select.innerHTML = '<option value="">Selecione um membro...</option>';
+                itens.forEach(item => {
+                    const nome = item.querySelector('.nome-membro').textContent.replace('@', '');
+                    const usuarioId = item.dataset.usuario;
+                    
+                    // Não pode transferir para si mesmo
+                    if (usuarioId != <?php echo $meu_id; ?>) {
+                        const opt = document.createElement('option');
+                        opt.value = usuarioId;
+                        opt.textContent = nome;
+                        select.appendChild(opt);
+                    }
+                });
+            })
+            .catch(err => {
+                console.error('[TRANSFERIR] Erro ao buscar membros:', err);
+                select.innerHTML = '<option value="">Erro ao carregar membros.</option>';
+            });
+    }
+
+    function confirmarTransferencia() {
+        const select = document.getElementById('novo-dono-select');
+        const novoDonoId = select.value;
+        
+        if (!novoDonoId) {
+            alert('Selecione um membro para transferir a posse.');
+            return;
+        }
+
+        if (!confirm('Tem certeza absoluta? Você deixará de ser o criador e se tornará Admin.')) {
+            return;
+        }
+
+        const csrfToken = document.getElementById('csrf_token')?.value || '';
+        if (!csrfToken) {
+            alert('Erro de segurança. Recarregue a página.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('comunidade_id', comunidadeId);
+        formData.append('novo_dono_id', novoDonoId);
+        formData.append('csrf_token', csrfToken);
+
+        const btn = event.target;
+        btn.disabled = true;
+        btn.innerText = 'Transferindo...';
+
+        fetch('transferir-dono.php', {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.reload();
+            } else {
+                alert(data.message || 'Erro ao transferir.');
+                btn.disabled = false;
+                btn.innerText = 'Confirmar';
+            }
+        })
+        .catch(err => {
+            console.error('[TRANSFERIR] Erro:', err);
+            alert('Erro de conexão. Tente novamente.');
+            btn.disabled = false;
+            btn.innerText = 'Confirmar';
+        });
     }
 
     // ============================================================

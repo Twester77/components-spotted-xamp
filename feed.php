@@ -15,6 +15,12 @@ include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
 
+<!-- 🔥 BARRA DE BUSCA GLOBAL (Fase 6) -->
+<?php 
+$placeholder_busca = 'Buscar no feed...'; 
+include 'includes/barra-busca.php'; 
+?>
+
 <!-- Adicionado aria-label para indicar que este bloco é uma barra de ferramentas de controle -->
 <div class="controles-feed-topo" role="toolbar" aria-label="Controles do Feed">
     <!-- Adicionado aria-expanded e aria-controls vinculando dinamicamente o botão à gaveta de filtros -->
@@ -69,7 +75,7 @@ function recalcFeedLayout() {
 
     var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
     var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
-    var fontSizeUser = Math.max(0.68, Math.min(cardWidth / 600, 0.92));
+    var fontSizeUser = Math.max(0.7, Math.min(cardWidth / 600, 0.92));
     var fontSizeCategory = Math.max(0.82, Math.min(cardWidth / 480, 1.15));
     var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
     var avatarSize = Math.round(Math.max(36, Math.min(cardWidth * 0.12, 56)));
@@ -592,9 +598,11 @@ function reforcarLayoutNosCards() {
 
         const urlParams = new URLSearchParams(window.location.search);
         const categoria = urlParams.get('categoria') || '';
+        const busca = urlParams.get('q') || ''; // 🔥 NOVO: Captura o termo de busca
         currentCategoria = categoria;
 
-        fetch(`motor-feed.php?offset=${offset}&categoria=${categoria}&tipo=geral`)
+        // 🔥 Adicionado o parâmetro &q= na URL do fetch
+        fetch(`motor-feed.php?offset=${offset}&categoria=${categoria}&q=${encodeURIComponent(busca)}&tipo=geral`)
             .then(response => response.text())
             .then(data => {
                 if (data.trim() === "FIM_DADOS") {

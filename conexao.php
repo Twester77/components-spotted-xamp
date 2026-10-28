@@ -67,7 +67,8 @@ fenda_log('🔵 [CONEXAO] INÍCIO conexao.php (Vercel/Local)');
 
 // 🔥 Polyfill para str_ends_with (caso PHP < 8.0)
 if (!function_exists('str_ends_with')) {
-    function str_ends_with($haystack, $needle) {
+    function str_ends_with($haystack, $needle)
+    {
         if ($needle === '') return true;
         return substr($haystack, -strlen($needle)) === $needle;
     }
@@ -76,7 +77,8 @@ if (!function_exists('str_ends_with')) {
 // ============================================================
 // 🔍 FUNÇÃO PARA OBTER IP REAL DO CLIENTE (PROXY / VERCEL)
 // ============================================================
-function obterIPReal() {
+function obterIPReal()
+{
     $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
     // Verifica cabeçalhos de proxy reverso (Vercel, Cloudflare, etc.)
@@ -238,7 +240,8 @@ if (!defined('FENDA_HMAC_KEY')) {
 }
 
 if (!function_exists('fenda_encrypt_state')) {
-    function fenda_encrypt_state($plain_text) {
+    function fenda_encrypt_state($plain_text)
+    {
         $iv_len = openssl_cipher_iv_length('aes-256-cbc');
         $iv = openssl_random_pseudo_bytes($iv_len);
         $encrypted = openssl_encrypt($plain_text, 'aes-256-cbc', FENDA_CRYPT_KEY, 0, $iv);
@@ -247,7 +250,8 @@ if (!function_exists('fenda_encrypt_state')) {
 }
 
 if (!function_exists('fenda_decrypt_state')) {
-    function fenda_decrypt_state($encrypted_bundle) {
+    function fenda_decrypt_state($encrypted_bundle)
+    {
         $data = base64_decode($encrypted_bundle, true);
         if (!$data || !str_contains($data, '::')) return false;
         list($encrypted_text, $iv_encoded) = explode('::', $data, 2);
@@ -263,7 +267,8 @@ if (!function_exists('fenda_decrypt_state')) {
 // Reutilizada em toda a base para padronizar respostas de erro.
 // ============================================================
 if (!function_exists('fenda_is_ajax')) {
-    function fenda_is_ajax(): bool {
+    function fenda_is_ajax(): bool
+    {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH'])
             && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
     }
@@ -277,7 +282,8 @@ if (!function_exists('fenda_is_ajax')) {
 // envio de post, avaliações, etc).
 // ============================================================
 if (!function_exists('fenda_resposta_sessao_expirada')) {
-    function fenda_resposta_sessao_expirada($cookieDomain = null, $isProduction = false): void {
+    function fenda_resposta_sessao_expirada($cookieDomain = null, $isProduction = false): void
+    {
         // Destrói a sessão PHP
         $_SESSION = [];
         if (session_status() === PHP_SESSION_ACTIVE) {
@@ -319,7 +325,8 @@ if (!function_exists('fenda_resposta_sessao_expirada')) {
 // ⏰ FUNÇÃO UNIVERSAL PARA EXIBIR DATAS NO FUSO BRASILEIRO
 // ============================================================
 if (!function_exists('exibirDataHoraBrasil')) {
-    function exibirDataHoraBrasil($dataOriginal, $formato = 'd/m/Y H:i') {
+    function exibirDataHoraBrasil($dataOriginal, $formato = 'd/m/Y H:i')
+    {
         if (empty($dataOriginal)) {
             return '';
         }
@@ -588,13 +595,13 @@ if (!empty($_SESSION['usuario_id'])) {
             mysqli_query($conn, "UPDATE usuarios SET ultima_atividade = NOW() WHERE id = '$id_logado'");
             fenda_log('🔵 [CONEXAO] Atualizada ultima_atividade para usuário ' . $_SESSION['usuario_id'] . ' (throttle de 5min)');
         } else {
-            fenda_log('🔵 [CONEXAO] ultima_atividade ainda recente ('. $diferenca . 's), pulando update.');
+            fenda_log('🔵 [CONEXAO] ultima_atividade ainda recente (' . $diferenca . 's), pulando update.');
         }
     }
 }
 
 // ============================================================
-// ⚙️ MOTOR DE MENÇÕES
+// ⚙️ MOTOR DE MENÇÕES E HASHTAGS
 // ============================================================
 // 🐚 IARA – 2026-09-25 (auditoria v5.0)
 //    - Regex refeita. Antes: [^\s]+ capturava QUALQUER coisa sem
@@ -605,16 +612,23 @@ if (!empty($_SESSION['usuario_id'])) {
 //    - Adicionado urlencode() no href (defesa em profundidade).
 //    - Trocado preg_replace por preg_replace_callback para poder
 //      aplicar urlencode() no username de forma limpa.
+//
+// 🔥 FASE 6 (Sprint 3) – Hashtags:
+//    - Adicionado segundo preg_replace_callback para capturar #hashtags
+//      (aceitando acentos) e transformá-las em links de busca.
+//    - Ajuste no Regex para exigir espaço antes do # e não capturar
+//      entidades HTML como &#039;.
 if (!function_exists('formatarMencoes')) {
-    function formatarMencoes($texto) {
+    function formatarMencoes($texto)
+    {
         $texto = $texto ?? '';
         if ($texto === '') return '';
 
         // Escapa o texto primeiro (proteção XSS)
         $texto_seguro = htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 
-        // Substitui apenas @username válidos
-        return preg_replace_callback(
+        // 1. Substitui as Menções (@username)
+        $texto_seguro = preg_replace_callback(
             '/@([a-zA-Z0-9_.-]+)/',
             function ($matches) {
                 $username = $matches[1];
@@ -623,9 +637,23 @@ if (!function_exists('formatarMencoes')) {
             },
             $texto_seguro
         );
+
+        // 2. Substitui as Hashtags (#termo)
+        // A Regex agora exige que a hashtag seja precedida por um espaço ou início de texto.
+        $texto_seguro = preg_replace_callback(
+            '/(?<=^|\s)#([a-zA-Z0-9_À-ÿ-]+)/',
+            function ($matches) {
+                $termo = $matches[1];
+                $url = 'feed.php?q=%23' . urlencode($termo);
+                return '<a href="' . $url . '" style="color: #70cde4; font-weight: bold; text-decoration: none;">#' . $termo . '</a>';
+            },
+            $texto_seguro
+        );
+
+        return $texto_seguro;
     }
 }
-fenda_log('🔵 [CONEXAO] formatarMencoes definida');
+fenda_log('🔵 [CONEXAO] formatarMencoes definida (com suporte a hashtags)');
 
 // ============================================================
 // 🔑 DEFINIÇÃO DE CONSTANTES (via getenv)

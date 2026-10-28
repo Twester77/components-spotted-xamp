@@ -3,13 +3,17 @@ include_once __DIR__ . '/../conexao.php';
 
 if (isset($_SESSION['usuario_id'])):
     $meu_id_toolbar = $_SESSION['usuario_id'];
-    // Buscamos quem você segue
+    
+    // 🔥 CORREÇÃO BLINDAGEM (Blue Team): Prepared Statement
     $sql_seguindo = "SELECT u.nome, u.username, u.ultima_atividade 
                      FROM usuarios u 
                      INNER JOIN seguidores s ON u.id = s.id_seguido 
-                     WHERE s.id_seguidor = '$meu_id_toolbar' 
+                     WHERE s.id_seguidor = ? 
                      LIMIT 8";
-    $res_toolbar = mysqli_query($conn, $sql_seguindo);
+    $stmt_toolbar = $conn->prepare($sql_seguindo);
+    $stmt_toolbar->bind_param("i", $meu_id_toolbar);
+    $stmt_toolbar->execute();
+    $res_toolbar = $stmt_toolbar->get_result();
 ?>
     <!-- Adicionado role e label para identificar a barra lateral de ferramentas -->
     <div id="fenda-toolbar" class="toolbar-fechada" role="region" aria-label="Painel de Controle Lateral">
@@ -60,8 +64,8 @@ if (isset($_SESSION['usuario_id'])):
                 <label style="margin-bottom: 10px; display: block;">Seguindo:</label>
                 <div id="lista-amigos-toolbar">
                     <?php
-                    if (mysqli_num_rows($res_toolbar) > 0):
-                        while ($amigo = mysqli_fetch_assoc($res_toolbar)):
+                    if ($res_toolbar->num_rows > 0):
+                        while ($amigo = $res_toolbar->fetch_assoc()):
                             // Cálculo Online/Offline
                             $ultima = strtotime($amigo['ultima_atividade']);
                             $agora  = time();
@@ -72,7 +76,8 @@ if (isset($_SESSION['usuario_id'])):
                             <!-- aria-label informa o status online/offline do usuário antes do nome -->
                             <div class="status-user" aria-label="<?php echo $status_texto; ?>: <?php echo htmlspecialchars($amigo['nome']); ?>">
                                 <span class="status-dot <?php echo $status_classe; ?>" aria-hidden="true"></span>
-                                <a href="ver-perfil.php?user=<?php echo $amigo['username']; ?>" style="color: #fff; text-decoration: none;">
+                                <!-- 🔥 BLINDAGEM: htmlspecialchars no username na URL -->
+                                <a href="ver-perfil.php?user=<?php echo urlencode($amigo['username']); ?>" style="color: #fff; text-decoration: none;">
                                     <?php echo htmlspecialchars($amigo['nome']); ?>
                                 </a>
                             </div>
@@ -81,7 +86,9 @@ if (isset($_SESSION['usuario_id'])):
                         <div class="status-user" style="font-size: 0.8rem; opacity: 0.6;">
                             Nenhum tripulante seguido.
                         </div>
-                    <?php endif; ?>
+                    <?php endif; 
+                    $stmt_toolbar->close();
+                    ?>
                 </div>
             </div>
         </div>

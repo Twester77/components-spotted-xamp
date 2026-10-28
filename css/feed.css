@@ -51,10 +51,12 @@
 }
 
 .filtros-perdidos {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin: 20px 0;
+    display: flex; justify-content: center; 
+    gap: 15px;
+    margin-bottom: 30px; 
+    flex-wrap:wrap;
+    flex-direction: row;
+
 }
 
 /* ============================================================
@@ -1066,7 +1068,7 @@ span.data-post {
 /* --- 14.8. PC: modo revista --- */
 @media (min-width: 1024px) {
     .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
-        max-height: 400px;
+        max-height: 380px;
         object-fit: contain;
         background: #050505;                                       /* fica local – preto ainda mais escuro, específico de PC */
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * perdidos.php – Página de Achados & Perdidos
  * 
@@ -23,6 +24,10 @@
  *        3. $linha['username'] no aria-label do link "Ver detalhes"
  *      Embora username tenha validação na entrada (regex), a
  *      exibição sempre deve ser escapada — regra da Djê.
+ *
+ * 🔥 FASE 6 (Sprint 3) – Busca por Palavras-Chave:
+ *    - Adicionada barra de busca no topo, que herda o filtro global.
+ *    - A busca nesta página é restrita à categoria 'perdidos'.
  */
 
 include_once __DIR__ . '/conexao.php';
@@ -53,6 +58,8 @@ include 'includes/header.php';
 include 'includes/navbar.php';
 include 'includes/bolhas.php';
 ?>
+
+
 
 <main class="main-perdidos" id="conteudo-principal">
     <?php if (!$usuario_logado): ?>
@@ -137,7 +144,14 @@ include 'includes/bolhas.php';
         <?php endif; ?>
     </section>
 
-    <nav class="filtros-perdidos" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap:wrap; flex-direction: row;" aria-label="Filtros do feed">
+    <!-- 🔥 BARRA DE BUSCA RESTRITA AOS PERDIDOS (Fase 6) -->
+    <?php
+    $placeholder_busca = 'Buscar nos perdidos...';
+    $categoria_busca = 'perdidos'; // Força a busca a filtrar apenas esta categoria
+    include 'includes/barra-busca.php';
+    ?>
+
+    <nav class="filtros-perdidos" aria-label="Filtros do feed">
         <a href="perdidos.php?filtro=todos" class="btn-filtro <?php echo ($filtro == 'todos') ? 'ativo' : ''; ?>" <?php echo ($filtro == 'todos') ? 'aria-current="page"' : ''; ?>>Todos</a>
         <a href="perdidos.php?filtro=perdi" class="btn-filtro <?php echo ($filtro == 'perdi') ? 'ativo' : ''; ?>" <?php echo ($filtro == 'perdi') ? 'aria-current="page"' : ''; ?>>❌ Só Perdidos</a>
         <a href="perdidos.php?filtro=achei" class="btn-filtro <?php echo ($filtro == 'achei') ? 'ativo' : ''; ?>" <?php echo ($filtro == 'achei') ? 'aria-current="page"' : ''; ?>>✅ Só Achados</a>
@@ -180,12 +194,12 @@ include 'includes/bolhas.php';
                                 $anexos_html = '<div class="feed-anexos-grid">';
                                 foreach ($anexos_exibicao as $anexo) {
                                     if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
-                                    // 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.2): fallback circular.
-                                    //    Antes: 'postagens/' . htmlspecialchars($anexo['caminho']) passava o
-                                    //    próprio caminho com prefixo errado como fallback. Agora aponta para
-                                    //    'uploads/ui/fallback-post.webp', espelhando a correção do motor-feed.php.
-                                    $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);   
-                                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
+                                        // 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.2): fallback circular.
+                                        //    Antes: 'postagens/' . htmlspecialchars($anexo['caminho']) passava o
+                                        //    próprio caminho com prefixo errado como fallback. Agora aponta para
+                                        //    'uploads/ui/fallback-post.webp', espelhando a correção do motor-feed.php.
+                                        $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);
+                                        $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                                     } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
                                         $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
                                     }
@@ -229,7 +243,11 @@ include 'includes/bolhas.php';
         const balao = document.createElement('div');
         balao.className = 'balao-fenda ' + tipo;
 
-        const icones = { sucesso: '✅', erro: '❌', info: 'ℹ️' };
+        const icones = {
+            sucesso: '✅',
+            erro: '❌',
+            info: 'ℹ️'
+        };
         const icone = document.createElement('span');
         icone.className = 'balao-icone';
         icone.textContent = icones[tipo] || '💬';
@@ -499,51 +517,53 @@ include 'includes/bolhas.php';
             exibirBalao('Enviando post...', 'info', btnPublicar, 1500);
 
             fetch('enviar-post.php', {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(async response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
-                    return;
-                }
-                const text = await response.text();
-                if (!response.ok) {
-                    try {
-                        const errorJson = JSON.parse(text);
-                        throw new Error(errorJson.message || 'Erro no servidor');
-                    } catch (e) {
-                        throw new Error(text || 'Erro desconhecido');
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
-                }
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    throw new Error('Resposta inválida do servidor');
-                }
-            })
-            .then(data => {
-                if (data && data.status === 'success') {
-                    exibirBalao('Post publicado com sucesso! 🎉', 'sucesso', btnPublicar);
-                    PerdidosAnexos.limparTodos();
-                    textarea.value = '';
-                    contador.textContent = '0/600';
-                    PerdidosAnexos.verificarConteudo();
-                    window.location.reload();
-                } else {
-                    const msg = data?.message || 'Falha ao publicar.';
-                    exibirBalao('Erro: ' + msg, 'erro', btnPublicar);
-                }
-            })
-            .catch(err => {
-                console.error('Erro na requisição:', err);
-                exibirBalao('❌ ' + err.message, 'erro', btnPublicar);
-            })
-            .finally(() => {
-                btnPublicar.disabled = false;
-                btnPublicar.innerHTML = originalText;
-            });
+                })
+                .then(async response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                        return;
+                    }
+                    const text = await response.text();
+                    if (!response.ok) {
+                        try {
+                            const errorJson = JSON.parse(text);
+                            throw new Error(errorJson.message || 'Erro no servidor');
+                        } catch (e) {
+                            throw new Error(text || 'Erro desconhecido');
+                        }
+                    }
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        throw new Error('Resposta inválida do servidor');
+                    }
+                })
+                .then(data => {
+                    if (data && data.status === 'success') {
+                        exibirBalao('Post publicado com sucesso! 🎉', 'sucesso', btnPublicar);
+                        PerdidosAnexos.limparTodos();
+                        textarea.value = '';
+                        contador.textContent = '0/600';
+                        PerdidosAnexos.verificarConteudo();
+                        window.location.reload();
+                    } else {
+                        const msg = data?.message || 'Falha ao publicar.';
+                        exibirBalao('Erro: ' + msg, 'erro', btnPublicar);
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro na requisição:', err);
+                    exibirBalao('❌ ' + err.message, 'erro', btnPublicar);
+                })
+                .finally(() => {
+                    btnPublicar.disabled = false;
+                    btnPublicar.innerHTML = originalText;
+                });
         });
 
         contador.textContent = '0/600';

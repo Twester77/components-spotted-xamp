@@ -815,15 +815,15 @@
 
 @keyframes hacker-glitch {
     0%, 100% {
-        box-shadow: 0 0 5px var(--hacker-green), 0 0 10px rgba(0, 255, 0, 0.3);
+        box-shadow: 0 0 4px var(--hacker-green), 0 0 8px rgba(0, 255, 0, 0.3);
         border-left-color: var(--hacker-green);
     }
     10%, 30%, 50%, 70%, 90% {
-        box-shadow: 0 0 15px var(--hacker-green), 0 0 25px rgba(0, 255, 0, 0.5);
+        box-shadow: 0 0 10px var(--hacker-green), 0 0 20px rgba(0, 255, 0, 0.5);
         border-left-color: var(--hacker-green);
     }
     20%, 40%, 60%, 80% {
-        box-shadow: 0 0 2px var(--hacker-green), 0 0 5px rgba(0, 255, 0, 0.1);
+        box-shadow: 0 0 2px var(--hacker-green), 0 0 4px rgba(0, 255, 0, 0.1);
         border-left-color: rgba(0, 255, 0, 0.5);
     }
 }
@@ -831,7 +831,7 @@
 /* --- VIBE ADS: hexágonos --- */
 [data-theme="hacker"] .comentario-item.vibe-ads {
     background-color: var(--hacker-bg);
-    box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
+    box-shadow: 0 0 4px rgba(0, 255, 65, 0.3);
     animation: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E");
     background-size: 50px 50px;
@@ -1097,11 +1097,8 @@
 
 [data-theme="hacker"] .spotted-card.vibe-neon {
     border-color: var(--hacker-green);
-    box-shadow: 0 0 12px var(--hacker-green);
-    animation: hacker-glitch 5s infinite alternate;
+    animation: hacker-glitch 4.5s infinite alternate;
 }
-
-
 
 [data-theme="hacker"] .spotted-card[class*="vibe-"] .post-content,
 [data-theme="hacker"] .spotted-card[class*="vibe-"] .user-anonimo,
@@ -1115,12 +1112,12 @@
 }
 
 /* Hover do vibe-light — cinza-fumaça sutil */
-@supports (backdrop-filter: blur(2px)) {
+@supports (backdrop-filter: blur(1px)) {
     [data-theme="hacker"] body:not(.modo-swipe-ativo)
     .main-perfil-container-publico.vibe-light .spotted-card:hover {
         background: rgba(33, 33, 33, 0.4);
-        -webkit-backdrop-filter: blur(2px);
-        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(1px);
+        backdrop-filter: blur(1px);
         border-color: rgba(0, 255, 65, 0.5);
     }
 }
@@ -1340,18 +1337,13 @@
 [data-theme="hacker"] .box-diretrizes li:hover {
     background: var(--hacker-green);
     color: var(--hacker-hover-text);
-    transform: translateX(4px);
+    transform: translateY(3px);
 }
 
-[data-theme="hacker"] .box-diretrizes li:hover,
-[data-theme="hacker"] .box-diretrizes li:hover *,
-[data-theme="hacker"] .lista-conselhos li:hover,
-[data-theme="hacker"] .lista-conselhos li:hover *,
-[data-theme="hacker"] .bloco-diretrizes li:hover,
-[data-theme="hacker"] .bloco-diretrizes li:hover * {
-    color: var(--hacker-hover-text);
-    background: transparent;
-}
+[data-theme="hacker"] .box-diretrizes li strong:hover {
+    color: var(--hacker-hover-text); }
+
+
 
 /* --- MENSAGENS DE SISTEMA --- */
 [data-theme="hacker"] .post-content.tem-mais:not(.expandido)::after {

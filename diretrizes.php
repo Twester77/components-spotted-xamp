@@ -17,7 +17,7 @@ include 'includes/bolhas.php';
   }
 </style>
 
-<main style="max-width: 1000px; margin: auto;" id="conteudo-principal">
+<main style="max-width: 900px; margin: 15px auto;" id="conteudo-principal">
   
   <section aria-labelledby="titulo-termos">
     <h2 id="titulo-termos" style="font-family: 'Bebas Neue', sans-serif; font-size: 2rem; font-size: clamp(1.7rem, 4vw, 2.2rem); text-align: center; color: #fc900c; color:oklch(0.7533 0.1736 60.5); letter-spacing: 1px; margin-bottom:20px; margin-top:40px;">

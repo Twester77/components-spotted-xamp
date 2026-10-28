@@ -62,7 +62,8 @@ $comentario_raw = isset($_POST['comentario']) ? trim($_POST['comentario']) : '';
 $usuario_id = $_SESSION['usuario_id'];
 
 $comentario_sanitizado = strip_tags($comentario_raw);
-$comentario_sanitizado = htmlspecialchars($comentario_sanitizado, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+// O escape para XSS é feito na exibição (evento.php)
+
 
 fenda_log("📝 Comentário (sanitizado): " . $comentario_sanitizado);
 
