@@ -51,8 +51,11 @@
 }
 
 .filtros-perdidos {
-    display: flex; justify-content: center; 
-    gap: 15px;
+    display: flex; justify-content: center; align-items: center;
+    text-align: center; 
+    gap: 12px;
+    font-size: 0.88rem;
+    font-size: clamp(0.82rem, 1.2vw, 1.05rem);
     margin-bottom: 30px; 
     flex-wrap:wrap;
     flex-direction: row;
@@ -172,11 +175,13 @@ body:not(.modo-swipe-ativo) .post-content {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 380px;
+    max-width: 420px;
     -webkit-user-drag: none;
     -webkit-font-smoothing: antialiased;
     height: auto;
     scrollbar-width: none;
+    content-visibility: auto;
+    contain-intrinsic-size: 400px; /* Altura estimada do card */
     container-type: inline-size;
     container-name: container-card;
 }
@@ -411,19 +416,21 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
    9. BOTÃO FILTRO PERDIDOS E BADGES
    ============================================================ */
 .btn-filtro {
-    padding: 5px 14px;
+    padding: 6px 12px;
     background: rgba(255, 255, 255, 0.05);                        /* fallback */
     background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
     border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
     border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
-    border-radius: 24px;
+    border-radius: 16px;
     color: #fff;                                                   /* fallback */
     color: var(--texto-primario, #fff);                            /* 🐚 FAROL – Fase 2 */
+    flex: 1 1 120px;
+    max-width: 180px;
     text-decoration: none;
     font-weight: bold;
     transition: all 0.3s ease;
-    height: auto;
-    max-width: min-content;
+    min-height: 40px;
+    width: auto;
     margin-top: 20px;
     align-content: center;
 }
@@ -438,11 +445,11 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     color: #000;                                                    /* fica local – texto em fundo claro */
     border-color: var(--dourado);
     border-color: var(--texto-dourado, var(--dourado, #ffbc00));    /* 🐚 FAROL – Fase 2 */
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
     justify-content: center;
-    font-size: 0.95rem;
-    font-size: clamp(0.92rem, 0.2vw + 0.5rem, 1.3rem);
-    padding: 4px 12px;
+    font-size: 0.88rem;
+    font-size: clamp(0.82rem, 1.2vw, 1.05rem);
+    padding: 6px 12px;
     padding: clamp(4px, 0.5vw + 2px, 10px) 14px;
     align-content: center;
 }
@@ -485,6 +492,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
 .badge-achado {
     background: rgba(255, 255, 255, 0.192);
     border-left-style: solid ;
+    gap: 4px;
     max-width: 150px;
     max-width: clamp(15cqi, 25vw, 50cqi);
 }
@@ -529,11 +537,20 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     transform: translateX(2px);
 }
 
+small.usuario-perdido {
+    display: flex;
+    margin-left: auto;
+    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 3.5cqi, 1.05rem);
+    color: #ffbc00;
+    color: var(--texto-dourado, #ffbc00 );                                               
+}
+
 span.data-post {
     display: flex;
     margin-left: auto;
     font-size: 0.8rem;
-    font-size: clamp(0.75rem, 3.5cqi, 0.95rem);
+    font-size: clamp(0.77rem, 3.5cqi, 1rem);
     color: #fffff4;                                                /* fica local – branco levemente amarelado, específico de timestamp */
     font-weight: bold;
     opacity: 0.75;
@@ -553,9 +570,9 @@ span.data-post {
     align-items: center;
     display: inline-flex;
     border: none;
-    padding: 2px ;
-    font-size: 0.86rem;
-    font-size: clamp(0.82rem, 3cqi, 1.3rem);
+    padding: 3px ;
+    font-size: 0.84rem;
+    font-size: clamp(0.8rem, 2.65cqi, 1.25rem);
     font-kerning: normal;
     font-variant-ligatures: common-ligatures;
     text-rendering: auto; /* Garante performance máxima no scroll */
@@ -571,8 +588,8 @@ span.data-post {
     color: #ffff;                                                  /* fallback */
     color: var(--texto-primario, #ffff);                           /* 🐚 FAROL – Fase 2 */
     margin-left: auto;
-    font-size: 0.84rem;
-    font-size: clamp(0.8rem, 2.3cqi, 1.1rem);
+    font-size: 0.82rem;
+    font-size: clamp(0.78rem, 2.3cqi, 1.1rem);
     word-break: break-word;
     overflow-wrap: anywhere;
     font-kerning: normal;
@@ -606,14 +623,14 @@ span.data-post {
     padding: clamp(4px, 0.8cqi, 10px) clamp(10px, 1.5cqi, 16px);
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    z-index: 9999 !important;
+    z-index: 9999 ;
     border: 1px solid rgba(255, 255, 255, 0.08);                  /* fallback */
     border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🐚 FAROL – Fase 2 */
     white-space: nowrap;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;
+    transition: all 0.25s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease, visibility 0.2s;
     will-change: transform, opacity;
 }
 

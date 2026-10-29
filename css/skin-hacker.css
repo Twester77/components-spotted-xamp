@@ -1,42 +1,19 @@
 /* ==================================================================
-   🦾 SKIN HACKER — MODO TERMINAL ASCII (A FENDA) — V4.0 CONSOLIDADO
+   🦾 SKIN HACKER — MODO TERMINAL ASCII (A FENDA) — V4.1 OTIMIZADO
    ==================================================================
-   Refactor completo (Fagulha — 2026-10-16)
+   Refactor completo (Fagulha — 2026-10-16) | Otimizado (Brasa — 2026-10-28)
 
    HISTÓRICO:
    - V1.0 (~1100 linhas): override monolítico com body.hacker-mode
    - V2.0 (~570 linhas): refactor pra [data-theme="hacker"] + variáveis
    - V3.0 (~1300 linhas): consolidação das Fases 4.1-4.11 (com bagunça)
-   - V4.0 (atual): esmagrecido — 25 blocos duplicados unificados
+   - V4.0: esmagrecido — 25 blocos duplicados unificados
+   - V4.1: Scanline virou variável, sombras otimizadas, CRT local p/ modais.
 
    FILOSOFIA:
    - Cores/fundos/textos vêm de [data-theme="hacker"] (root.css)
    - Este arquivo só carrega EFEITOS que não cabem em variável
    - Seletor: [data-theme="hacker"] (atributo no <html>, via JS)
-
-   ESTRUTURA:
-     1. Fundação (cursor, seleção, radius)
-     2. Scrollbar + esconder elementos
-     3. CRT (scanline SVG + flicker)
-     4. Molduras ASCII + frames por categoria
-     5. Navegação (navbar, menu, dropdowns)
-     6. Formulários (inputs, buttons, textarea)
-     7. Mídia (avatares, imagens, ícones)
-     8. Meta (badges, reações, contadores)
-     9. Comentários + 5 vibes harmonizadas
-    10. Componentes (toolbar, login, perfil, footer, cards)
-    11. Tipografia + typing + performance swipe
-    12. Boot screen
-
-   OTIMIZAÇÕES:
-   - Scanline via SVG data-URI (GPU-friendly, sem repaint)
-   - translate3d + will-change (composição forçada)
-   - Glass fake via SVG pattern (0 FPS vs backdrop-filter)
-   - Morcegos do vibe-dark: área reduzida (35vh) + 30s
-   - Escala de verdes pra legibilidade prolongada
-
-   Legado da Sereia, da Maré, do Marreteiro, da Corrente, do Farol.
-   "O código que você vê aqui não é só sintaxe."
    ================================================================== */
 
 
@@ -58,6 +35,9 @@
 
     /* Boot screen */
     --boot-duration: 3.5s;
+
+    /* 🔥 CRT SCANLINE VARIÁVEL (Reutilizável) */
+    --hacker-crt-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Crect width='4' height='1' fill='%23000000' fill-opacity='0.5'/%3E%3Crect y='1' width='4' height='1' fill='%2300ff41' fill-opacity='0.15'/%3E%3Crect y='2' width='4' height='1' fill='%23000000' fill-opacity='0.5'/%3E%3Crect y='3' width='4' height='1' fill='%23000000' fill-opacity='0.5'/%3E%3C/svg%3E");
 }
 
 
@@ -112,6 +92,7 @@
 [data-theme="hacker"] .bubbles-container,
 [data-theme="hacker"] .bolha {
     display: none;
+    animation: none;
 }
 
 [data-theme="hacker"] .fixed-input {
@@ -124,45 +105,9 @@
 
 
 /* ==================================================================
-   3. CRT — SCANLINE (SVG data-URI, GPU-friendly) + FLICKER
+   3. CRT — SCANLINE GLOBAL (Otimizado) + FLICKER
    ================================================================== */
 
-[data-theme="hacker"] body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    pointer-events: none;
-
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Crect width='4' height='2' fill='%23000000' fill-opacity='0.15'/%3E%3Crect y='2' width='4' height='1' fill='%23ff0000' fill-opacity='0.02'/%3E%3Crect y='3' width='4' height='1' fill='%23000000' fill-opacity='0.02'/%3E%3C/svg%3E");
-    background-size: 4px 4px;
-    background-repeat: repeat;
-
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
-    will-change: transform;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-}
-
-[data-theme="hacker"] body::after {
-    content: " ";
-    position: fixed;
-    inset: 0;
-    z-index: 9998;
-    pointer-events: none;
-    background: oklch(0.861283 0.293072 142.4953 / 3%);
-    transform: translate3d(0, 0, 0);
-    will-change: opacity;
-    animation: flicker 0.15s infinite ease;
-}
-
-@keyframes flicker {
-    0% { opacity: 0.92; }
-    5% { opacity: 0.95; }
-    10% { opacity: 0.98; }
-    100% { opacity: 1; }
-}
 
 /* Desativa scanlines na Central (fundo claro) */
 [data-theme="hacker"] body.central-page::before,
@@ -173,12 +118,124 @@
 
 /* Desativa CRT durante swipe/tinder (performance) */
 [data-theme="hacker"] body.modo-swipe-ativo::before,
+[data-theme="hacker"] body:not(.modo-swipe-ativo)::before,
 [data-theme="hacker"] body.modo-swipe-ativo::after,
 [data-theme="hacker"] body.modo-tinder-ativo::before,
 [data-theme="hacker"] body.modo-tinder-ativo::after {
     display: none;
 }
 
+
+/* ============================================================
+   CRT SCANLINE GLOBAL E LOCALIZADO (VERSÃO FINAL - OTIMIZADA)
+   ============================================================ */
+
+/* 1. O SCANLINE DO BODY (De volta e visível!) */
+[data-theme="hacker"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999; /* Fica acima de tudo */
+    pointer-events: none;
+    /* Linhas verdes com 0.1 de opacidade */
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 65, 0.1) 0px,
+        rgba(0, 255, 65, 0.1) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    background-size: 100% 3px;
+    /* Garante que a GPU cuide disso */
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+/* Desativa CRT no Swipe (Performance) */
+[data-theme="hacker"] body.modo-swipe-ativo::before,
+[data-theme="hacker"] body.modo-tinder-ativo::before {
+    display: none;
+}
+
+/* 2. O POPUP PEQUENO (Hover no Reagir) */
+[data-theme="hacker"] .reacoes-popup {
+    background-color: #031403;
+    /* O grid verde do fundo */
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 65, 0.15) 0px,
+        rgba(0, 255, 65, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    background-size: 100% 3px;
+    border: 1px solid var(--hacker-green);
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+    border-radius: 6px;
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    overflow: hidden;
+}
+
+/* 3. O HOVER DOS EMOJIS (O Verde, SEM TRAVAR) */
+[data-theme="hacker"] .reacoes-popup span,
+[data-theme="hacker"] .reactions-popup-card .reaction-emoji {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 4px;
+    cursor: pointer;
+    /* Suaviza a cor e a sombra, mas NÃO o background-image */
+    transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    /* Garante o fundo transparente por padrão para o hover brilhar */
+    background-color: transparent;
+}
+
+[data-theme="hacker"] .reacoes-popup span:hover,
+[data-theme="hacker"] .reactions-popup-card .reaction-emoji:hover {
+    /* Fundo verde translúcido */
+    background-color: rgba(0, 255, 65, 0.3);
+    /* Borda e brilho verde */
+    border-color: var(--hacker-green);
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.8);
+    /* Zoom sutil */
+    transform: scale(1.15);
+    /* Texto branco para o emoji brilhar */
+    color: #fff;
+}
+
+/* 4. O POPUP GRANDE (Long Press) */
+[data-theme="hacker"] .reactions-popup-card {
+    position: relative;
+    border: 1px solid var(--hacker-green);
+    background: #031403;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+    overflow: hidden;
+}
+
+[data-theme="hacker"] .reactions-popup-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 65, 0.15) 0px,
+        rgba(0, 255, 65, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    background-size: 100% 3px;
+}
+
+/* Conteúdo Acima do CRT */
+[data-theme="hacker"] .reactions-popup-card > * {
+    position: relative;
+    z-index: 1;
+}
 
 /* ==================================================================
    4. MOLDURAS ASCII + FRAMES POR CATEGORIA
@@ -196,12 +253,20 @@
 
 [data-theme="hacker"] .spotted-card {
     border: none;
-    border-top: 2px double var(--hacker-green);
-    border-bottom: 2px double var(--hacker-green);
-    border-right: 2px double var(--glass-bg);
-    border-left: 2px double var(--glass-bg);
+    border-top: 1px double var(--hacker-green);
+    border-bottom: 1px double var(--hacker-green);
+    border-right: 1px double var(--glass-bg);
+    border-left: 1px double var(--glass-bg);
     box-shadow: none;
-    border-radius: 10px;
+    border-radius: 6px;
+}
+
+[data-theme="hacker"]  .container-feed.feed-empilhado,
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--hacker-bg);
 }
 
 [data-theme="hacker"] .feed-usuario-fenda .spotted-card {
@@ -212,7 +277,7 @@
 [data-theme="hacker"] .spotted-card:hover {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    box-shadow: 0 0 6px 0 var(--hacker-green);
+    box-shadow: 0 0 4px 0 var(--hacker-green);
 }
 
 /* Moldura superior padrão */
@@ -226,6 +291,8 @@
     left: -2px;
     right: -2px;
     color: var(--hacker-green);
+    pointer-events: none;
+    touch-action: none;
     font-family: monospace;
     font-weight: bold;
     white-space: nowrap;
@@ -316,7 +383,7 @@
 [data-theme="hacker"] .btn-header,
 [data-theme="hacker"] .submenu li a {
     color: var(--hacker-green);
-    text-shadow: 0 0 6px var(--hacker-green);
+    text-shadow: 0 1px 0 var(--hacker-green); /* Otimizado */
     text-transform: uppercase;
     transition: all 0.1s steps(2);
     position: relative;
@@ -335,7 +402,7 @@
     background-color: var(--hacker-hover-bg);
     color: var(--hacker-hover-text);
     padding-left: 25px;
-    box-shadow: 0 0 10px var(--hacker-green);
+    box-shadow: 0 0 6px var(--hacker-green);
     border-radius: 0;
     text-shadow: none;
     cursor: crosshair;
@@ -350,7 +417,7 @@
     content: ">";
     position: absolute;
     font-size: 1rem;
-    font-size: clamp(0.92rem, 1.65vw, 1.2rem);
+    font-size: clamp(0.92rem, 1.65vw, 1.15rem);
     left: 10px;
     color: var(--hacker-hover-text);
     font-weight: bold;
@@ -395,7 +462,7 @@
     border: 1px double var(--hacker-green);
     background: var(--hacker-bg);
     color: var(--hacker-green);
-    box-shadow: 0 0 8px rgba(0, 255, 65, 0.32);
+    box-shadow: 0 0 4px rgba(0, 255, 65, 0.32);
 }
 
 [data-theme="hacker"] .comentario-menu-item {
@@ -428,6 +495,7 @@
 [data-theme="hacker"] .btn-sair-fenda,
 [data-theme="hacker"] .btn-seguir-fenda,
 [data-theme="hacker"] #btn-load-more,
+[data-theme="hacker"] .bt-btn-load-more,
 [data-theme="hacker"] .btn-lancar,
 [data-theme="hacker"] .btn-editar-atalho,
 [data-theme="hacker"] .btn-finalizar-fenda,
@@ -493,6 +561,7 @@
 [data-theme="hacker"] .btn:hover,
 [data-theme="hacker"] .fenda-btn-glow:hover,
 [data-theme="hacker"] #btn-load-more:hover,
+[data-theme="hacker"] .bt-btn-load-more:hover,
 [data-theme="hacker"] .btn-sair-fenda:hover,
 [data-theme="hacker"] .btn-zarpar:hover,
 [data-theme="hacker"] .btn-enviar-fenda:hover,
@@ -597,10 +666,9 @@
 [data-theme="hacker"] .far,
 [data-theme="hacker"] .fab {
     color: var(--hacker-green);
-    text-shadow: 0 0 2px var(--hacker-green);
     opacity: 1;
     visibility: visible;
-    display: inline-block;
+    display: inline-flex;
     font-family: "Font Awesome 6 Free";
     animation: flicker 4s infinite ease-in;
 }
@@ -642,7 +710,7 @@
 [data-theme="hacker"] .badge-alertas {
     background: var(--hacker-bg);
     color: var(--hacker-green);
-    box-shadow: 0 0 8px var(--hacker-green);
+    box-shadow: 0 0 6px var(--hacker-green);
 }
 
 /* Reações */
@@ -656,36 +724,9 @@
 [data-theme="hacker"] .reacao-item.voted {
     background: rgba(0, 255, 0, 0.2);
     border-color: var(--hacker-green);
-    box-shadow: 0 0 8px var(--hacker-green);
+    box-shadow: 0 0 2px var(--hacker-green);
 }
 
-[data-theme="hacker"] .reacoes-popup {
-    border: 1px solid var(--hacker-green);
-    box-shadow: 0 0 6px rgba(0, 255, 0, 0.5);
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.5) 0px,
-        rgba(0, 0, 0, 0.5) 1px,
-        transparent 1px,
-        transparent 2px
-    ), #031403;
-    background-size: 100% 2px;
-    display: flex;
-    border-radius: 4px;
-    gap: 4px;
-}
-
-[data-theme="hacker"] .reacoes-popup span {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-}
-
-[data-theme="hacker"] .reacoes-popup span:hover {
-    filter: saturate(1.15) drop-shadow(0 0 2px var(--hacker-green));
-    background: oklch(0.86644 0.294827 142.4953 / 69.8%);
-}
 
 [data-theme="hacker"] .char-counter {
     font-size: 0.95rem;
@@ -696,7 +737,7 @@
 [data-theme="hacker"] .comentario-data,
 [data-theme="hacker"] .comentario-item.vibe-ads .comentario-data {
     color: var(--hacker-green-soft);
-    text-shadow: 0 0 4px var(--hacker-green-soft);
+    text-shadow: 0 1px 0 var(--hacker-green-soft); /* Otimizado */
     font-family: var(--hacker-font);
     font-weight: bold;
     opacity: 1;
@@ -710,16 +751,22 @@
 [data-theme="hacker"] .comentario-item,
 [data-theme="hacker"] .comentario-item.comentario-filho {
     border: 1px solid var(--hacker-green);
-    border-radius: 10px 10px 10px 2px;
+    border-radius: 10px 10px 10px 4px;
 }
 
 [data-theme="hacker"] .comentario-item.meu-comentario {
     border-radius: 8px 8px 2px 8px;
 }
 
+[data-theme="hacker"] body.estilo-cascata .comentario-item,
+[data-theme="hacker"] body.estilo-cascata .comentario-item.meu-comentario,
+[data-theme="hacker"] body.estilo-cascata .comentario-item.comentario-filho {
+    border-radius: 4px;
+}
+
 [data-theme="hacker"] .comentario-autor {
     color: var(--hacker-green);
-    text-shadow: 0 0 2px var(--hacker-green);
+    text-shadow: 0 1px 0 var(--hacker-green); /* Otimizado */
 }
 
 [data-theme="hacker"] .comentario-texto,
@@ -728,7 +775,6 @@
     font-family: monospace;
     color: var(--hacker-green-pastel);
     line-height: 1.5;
-    text-shadow: 0 0 3px rgba(192, 255, 192, 0.4);
 }
 
 /* --- VIBE DARK: preto fosco puro --- */
@@ -741,7 +787,7 @@
 
 [data-theme="hacker"] .comentario-item.vibe-dark .comentario-autor {
     color: var(--hacker-green);
-    text-shadow: 0 0 5px var(--hacker-green);
+    text-shadow: 0 1px 2px var(--hacker-green); /* Otimizado */
 }
 
 /* --- VIBE LIGHT: cinza-esverdeado, borda tracejada --- */
@@ -757,19 +803,19 @@
 
 [data-theme="hacker"] .comentario-item.vibe-light .comentario-autor {
     color: var(--hacker-green-soft);
-    text-shadow: 0 0 4px var(--hacker-green-soft);
+    text-shadow: 0 1px 1px var(--hacker-green-soft); /* Otimizado */
     font-weight: bold;
 }
 
 [data-theme="hacker"] .comentario-item.vibe-light .comentario-data {
     color: var(--hacker-green-soft);
-    text-shadow: 0 0 3px var(--hacker-green-soft);
+    text-shadow: 0 1px 0 var(--hacker-green-soft); /* Otimizado */
     opacity: 1;
 }
 
 [data-theme="hacker"] .comentario-item.vibe-light .comentario-texto {
     color: var(--hacker-green-pastel);
-    text-shadow: 0 0 3px rgba(192, 255, 192, 0.4);
+    /* text-shadow: 0 0 3px rgba(192, 255, 192, 0.4); -> REMOVIDO (Performance) */
 }
 
 [data-theme="hacker"] .comentario-item.vibe-light .indicador-resposta {
@@ -786,16 +832,15 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     border: 1px solid rgba(0, 220, 180, 0.55);
-    border-radius: 12px 12px 12px 3px;
     color: var(--hacker-green-pastel);
 }
 
 [data-theme="hacker"] .comentario-item.vibe-glass .comentario-autor {
     color: #66ffdd;
-    text-shadow: 0 0 4px rgba(0, 220, 180, 0.6);
+    text-shadow: 0 1px 1px rgba(0, 220, 180, 0.6); /* Otimizado */
 }
 
-/* --- VIBE NEON: glitch pulsante --- */
+/* --- VIBE NEON --- */
 [data-theme="hacker"] .comentario-item.vibe-neon {
     background: var(--hacker-bg);
     -webkit-backdrop-filter: none;
@@ -809,7 +854,7 @@
 [data-theme="hacker"] .comentario-item.vibe-neon .comentario-autor {
     color: var(--hacker-green);
     font-weight: bold;
-    text-shadow: 0 0 4px var(--hacker-green);
+    text-shadow: 0 1px 1px var(--hacker-green); /* Otimizado */
     opacity: 1;
 }
 
@@ -839,7 +884,7 @@
 
 [data-theme="hacker"] .comentario-item.vibe-ads .comentario-texto {
     color: var(--hacker-green);
-    text-shadow: 0 0 2px var(--hacker-green);
+    text-shadow: 0 1px 1px var(--hacker-green); /* Otimizado */
     font-family: var(--hacker-font);
 }
 
@@ -861,7 +906,7 @@
 [data-theme="hacker"] .comentario-deletado-msg,
 [data-theme="hacker"] .comentario-deletado-msg i {
     color: var(--hacker-green);
-    text-shadow: 0 0 4px var(--hacker-green);
+    text-shadow: 0 1px 1px var(--hacker-green); /* Otimizado */
     font-family: var(--hacker-font);
     font-weight: bold;
     opacity: 1;
@@ -988,7 +1033,7 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-light .stats-perfil span,
 [data-theme="hacker"] .main-perfil-container-publico.vibe-light .bio-texto {
     color: var(--hacker-green-pastel);
-    text-shadow: 0 0 3px rgba(192, 255, 192, 0.3);
+    /* text-shadow: 0 0 3px rgba(192, 255, 192, 0.3); -> REMOVIDO */
 }
 
 /* Container do perfil — vibe-glass */
@@ -1008,7 +1053,7 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-glass .stats-perfil span,
 [data-theme="hacker"] .main-perfil-container-publico.vibe-glass .bio-texto {
     color: #c0ffef;
-    text-shadow: 0 0 3px rgba(0, 220, 180, 0.4);
+    /* text-shadow: 0 0 3px rgba(0, 220, 180, 0.4); -> REMOVIDO */
 }
 
 /* Container do perfil — vibe-dark com morcegos */
@@ -1018,7 +1063,7 @@
 
 [data-theme="hacker"] .main-perfil-container-publico.vibe-dark .nome-publico {
     color: var(--hacker-green);
-    text-shadow: 0 0 8px var(--hacker-green);
+    text-shadow: 0 1px 2px var(--hacker-green); /* Otimizado */
     font-family: var(--hacker-font);
 }
 
@@ -1063,7 +1108,7 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
     background: rgba(0, 255, 64, 0.144);
     border-color: var(--hacker-green);
-    box-shadow: 0 0 10px var(--hacker-green);
+    box-shadow: 0 0 8px var(--hacker-green);
 }
 
 /* Spotted-card das 5 vibes no feed */
@@ -1074,7 +1119,6 @@
 [data-theme="hacker"] .spotted-card.vibe-ads {
     background: rgba(10, 22, 10, 0.88);
     color: var(--hacker-green-pastel);
-    border: 1px solid var(--hacker-green);
 }
 
 [data-theme="hacker"] .spotted-card.vibe-light {
@@ -1086,7 +1130,7 @@
 [data-theme="hacker"] .spotted-card.vibe-glass {
     background: rgba(0, 35, 40, 0.55);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath d='M-1 1l2-2M0 8l8-8M7 9l2-2' stroke='%2300dcb4' stroke-width='0.5' stroke-opacity='0.15' fill='none'/%3E%3C/svg%3E");
-    background-size: 8px 8px;
+    background-size: 10px 10px;
     border-color: rgba(0, 220, 180, 0.55);
 }
 
@@ -1098,6 +1142,110 @@
 [data-theme="hacker"] .spotted-card.vibe-neon {
     border-color: var(--hacker-green);
     animation: hacker-glitch 4.5s infinite alternate;
+    will-change: animation;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+/* ============================================================
+   VIBE ADS + HACKER THEME: TERMINAL SCANLINE GLITCH (BENTO FIX)
+   ============================================================ */
+
+/* 1. O CARD (Deixa visível e com o grid estático no fundo) */
+[data-theme="hacker"] .spotted-card.vibe-ads {
+    background-color: rgba(0, 12, 0, 0.95);
+    
+    /* Grid sutil de fundo (estático) */
+    background-image: 
+        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 2px, transparent 2px);
+    background-size: 30px 30px;
+    
+    border: 1px solid var(--hacker-green-glow);
+    position: relative;
+    overflow: visible; /* REC não é cortado */
+    
+    will-change: box-shadow;
+    animation: ads-hacker-glitch-border 3s infinite;
+}
+
+/* 2. O FUNDO ANIMADO (O feixe de luz que passa) */
+[data-theme="hacker"] .spotted-card.vibe-ads::before {
+    content: '';
+    position: absolute;
+    inset: 0; /* Cobre todo o card */
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none; /* Permite clicar nos botões */
+    
+    /* Gradiente que cria o feixe de luz verde */
+    background-image: linear-gradient(
+        to bottom, 
+        transparent 80%, 
+        rgba(0, 255, 65, 0.15) 90%, 
+        rgba(0, 255, 65, 0.6) 100%
+    );
+    background-size: 100% 100px; /* Altura do feixe */
+    background-repeat: no-repeat;
+    background-position: 0% -100px; /* Começa fora da tela (acima) */
+    
+    /* Animação descendo o feixe de luz */
+    will-change: background-position;
+    animation: ads-hacker-scanline 3.5s linear infinite;
+}
+
+/* 3. O CONTEÚDO (Fica acima do feixe de luz) */
+[data-theme="hacker"] .spotted-card.vibe-ads > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* 4. A ANIMAÇÃO DO FEIXE (Desce até o fundo) */
+@keyframes ads-hacker-scanline {
+    0% { background-position: 0% -100px; }
+    100% { background-position: 0% 100%; }
+}
+
+/* 5. O GLITCH NAS BORDAS */
+@keyframes ads-hacker-glitch-border {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        box-shadow: 0 0 5px rgba(0, 255, 65, 0.2), inset 0 0 5px rgba(0, 255, 65, 0.1);
+        border-color: rgba(0, 255, 65, 0.4);
+    }
+    20%, 24%, 55% {
+        box-shadow: 0 0 15px rgba(0, 255, 65, 0.6), inset 0 0 10px rgba(0, 255, 65, 0.3);
+        border-color: rgba(0, 255, 65, 0.8);
+    }
+}
+
+/* 6. O "REC" FLUTUANTE */
+[data-theme="hacker"] .spotted-card.vibe-ads::after {
+    content: '● REC';
+    position: absolute;
+    top: 12px;
+    right: 12px; 
+    font-family: var(--hacker-font);
+    font-size: 0.7rem;
+    color: var(--hacker-green);
+    z-index: 10;
+    pointer-events: none;
+    animation: ads-hacker-rec-blink 2s steps(1) infinite;
+}
+
+/* Espaço pro REC no header */
+[data-theme="hacker"] .spotted-card.vibe-ads .card-header {
+    padding-right: 70px;
+}
+
+@keyframes ads-hacker-rec-blink {
+    0%, 70% { opacity: 1; color: var(--hacker-green); }
+    71%, 100% { opacity: 0; color: transparent; }
+}
+
+/* Ajuste para o texto dentro do card não ficar ilegível */
+[data-theme="hacker"] .spotted-card.vibe-ads .post-content,
+[data-theme="hacker"] .spotted-card.vibe-ads .user-mention {
+    text-shadow: 0 1px 0 rgba(0, 255, 65, 0.5); /* Otimizado */
 }
 
 [data-theme="hacker"] .spotted-card[class*="vibe-"] .post-content,
@@ -1139,7 +1287,7 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-toggle-depoimentos,
 [data-theme="hacker"] .main-perfil-container-publico.vibe-glass .btn-escrever-depoimento {
     color: var(--hacker-cyan);
-    text-shadow: 0 0 3px rgba(0, 220, 180, 0.35);
+    text-shadow: 0 1px 0 rgba(0, 220, 180, 0.35); /* Otimizado */
     border: 1px solid rgba(0, 220, 180, 0.4);
     background: rgba(0, 220, 180, 0.08);
     font-family: var(--hacker-font);
@@ -1155,7 +1303,7 @@
     background: var(--hacker-cyan);
     border-color: var(--hacker-cyan);
     text-shadow: none;
-    box-shadow: 0 0 10px rgba(0, 220, 180, 0.5);
+    box-shadow: 0 0 6px rgba(0, 220, 180, 0.5);
 }
 
 [data-theme="hacker"] .main-perfil-container-publico.vibe-light .btn-toggle-social i,
@@ -1175,7 +1323,7 @@
     content: " [ SYSTEM_STABLE_V3.0 ] - SESSION_ACTIVE";
     display: block;
     text-align: center;
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     color: var(--hacker-green);
     opacity: 0.6;
 }
@@ -1219,7 +1367,7 @@
 
 [data-theme="hacker"] .card-habitante:hover {
     border-color: var(--hacker-green);
-    box-shadow: 0 0 15px var(--hacker-green);
+    box-shadow: 0 0 6px var(--hacker-green);
 }
 
 /* --- TABELAS / PAGINAÇÃO --- */
@@ -1298,19 +1446,19 @@
 [data-theme="hacker"] .bt-btn-filtro::before {
     background: conic-gradient(from var(--angulo-balada),
             #00ff41, #00ffcc, #00ffff, #00ff41);
-    filter: blur(5px);
+    filter: blur(4px);
 }
 
 [data-theme="hacker"] .bt-btn-filtro:hover {
     background: rgba(0, 255, 65, 0.08);
     border-color: var(--hacker-green);
     color: var(--hacker-green);
-    text-shadow: 0 0 4px var(--hacker-green);
+    text-shadow: 0 1px 1px var(--hacker-green); /* Otimizado */
 }
 
 [data-theme="hacker"] .bt-btn-filtro:active {
     background: conic-gradient(from 45deg, var(--hacker-green), var(--hacker-green));
-    text-shadow: 0 0 4px var(--hacker-green);
+    text-shadow: 0 1px 1px var(--hacker-green); /* Otimizado */
     color: var(--hacker-hover-text);
 }
 
@@ -1374,7 +1522,7 @@
     background: var(--hacker-hover-bg);
     color: var(--hacker-hover-text);
     border-color: var(--hacker-green);
-    box-shadow: 0 0 8px var(--hacker-green);
+    box-shadow: 0 0 6px var(--hacker-green);
 }
 
 [data-theme="hacker"] .btn-aprovar-depoimento:disabled,
@@ -1383,7 +1531,7 @@
 [data-theme="hacker"] .btn-rejeitar-depoimento:disabled,
 [data-theme="hacker"] .btn-rejeitar-solicitacao:disabled,
 [data-theme="hacker"] .btn-rejeitar-solicitacao-central:disabled {
-    opacity: 0.5;
+    opacity: 0.55;
     cursor: not-allowed;
     box-shadow: none;
 }
@@ -1510,6 +1658,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    transform: translate3d(-50%, -50%, 0px);
     transform: translate(-50%, -50%);
     max-width: 100%;
     max-height: 100%;
@@ -1547,7 +1696,7 @@
 
 .loading {
     height: 100%;
-    max-width: 600px;
+    max-width: 800px;
     background: #0f0;
     width: 0;
     animation: load-bar 4s ease-in-out forwards;
@@ -1567,3 +1716,4 @@
     50% { opacity: 0.3; filter: blur(4px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
+

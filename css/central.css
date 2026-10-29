@@ -1086,9 +1086,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 
 #btn-marcar-todas-lidas.btn-fenda-padrao {
     font-size: 0.7rem;
-    font-size: clamp(0.75rem, 1.2cqw, 1.15rem);
+    font-size: clamp(0.68rem, 2.2cqw, 1.15rem);
     padding: 6px 12px;
-    padding: clamp(6px, 1.5cqw, 10px) clamp(8px, 1.2cqw, 16px);
+    padding: clamp(5px, 1.5cqw, 10px) clamp(8px, 1.2cqw, 16px);
     background: rgba(255, 188, 0, 0.12);                           /* 🎨 dourado com alpha específico */
     color: #ff9b00;                                                /* 🎨 laranja-dourado específico */
     border: 1px solid rgba(255, 188, 0, 0.15);                     /* 🎨 dourado com alpha específico */
@@ -1099,7 +1099,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 #btn-marcar-todas-lidas.btn-fenda-padrao:hover
 {
     background:#ff9b00;    
-    color: #0a0a0a;                       
+    color: #0a0a0a;   
+    transition: 0.2s background ease-in;   
+    transform: translateY(4px);                 
 }
 
 

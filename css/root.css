@@ -151,12 +151,13 @@ html {
     scroll-behavior: smooth;
 }
 
-.container-busca-feed { padding: 10px 15px; max-width: 800px; margin: 30px auto 15px auto; width: 100%; }
-.busca-wrapper { position: relative; display: flex; align-items: center; background: var(--bg-input); border: 1px solid var(--borda-sutil); border-radius: 30px; padding: 5px 15px; transition: border-color 0.3s; }
-.busca-wrapper:focus-within { border-color: var(--dourado); box-shadow: 0 0 10px rgba(255, 188, 0, 0.2); }
+.container-busca-feed { padding: 10px 15px; max-width: 800px; margin: 30px auto 10px auto; width: 100%; }
+.busca-wrapper { position: relative; display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); background: var(--bg-input); border: 1px solid var(--borda-sutil); border-radius: 30px; padding: 5px 15px; transition: border-color 0.3s; }
+.busca-wrapper:focus-within { border-color: var(--dourado); box-shadow: 0 0 8px rgba(255, 188, 0, 0.2); }
 .busca-icone { color: var(--texto-muted); margin-right: 10px; }
-.busca-input { flex: 1; background: transparent; border: none; color: var(--texto-primario); font-size: 1rem; outline: none; padding: 8px 0; }
-.btn-limpar-busca { background: transparent; border: none; color: var(--texto-muted); cursor: pointer; padding: 5px; font-size: 1.1rem; transition: color 0.2s; }
+.busca-input { flex: 1; background: transparent; border: none; color: var(--texto-primario); font-size: 1rem; font-size: clamp(0.86rem, 0.6vw + 0.625rem, 1.15rem); outline: none; padding: 8px 0; }
+#input-busca-global { word-break: break-word; overflow-wrap:anywhere ; white-space: nowrap; overflow: hidden; }
+.btn-limpar-busca { background: transparent; border: none; color: #888; color: var(--texto-muted, #888); cursor: pointer; padding: 5px; font-size: 1.1rem; transition: color 0.2s; }
 .btn-limpar-busca:hover { color: var(--cor-erro); }
 
 /* ============================================================

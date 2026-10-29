@@ -499,7 +499,7 @@
     display: grid; 
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
-    align-items: start;
+    align-items: flex-start;
 }
 
 /* Feed (Posts) - Mantém largo para o grid */
@@ -516,7 +516,7 @@
 #perfil-conteudo .depoimento-item,
 #perfil-conteudo .avaliacao-item {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -1298,12 +1298,12 @@
 
 .main-perfil-container-publico.vibe-ads::after {
     content: '';
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 80vh;
-    height: 80dvh;
+    height: 75vh;
+    height: 75dvh;
     z-index: 1;
     pointer-events: none;
     touch-action: none;
@@ -1316,6 +1316,8 @@
     mask-repeat: repeat;
     -webkit-mask-position: 0 0;
     mask-position: 0 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     will-change: opacity;
     animation: static-pulse-opacity var(--vibe-ads-pulse-duration, 5s) infinite ease-in-out alternate;
 }

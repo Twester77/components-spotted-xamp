@@ -194,7 +194,7 @@ if ($is_admin || $is_criador) {
                     <button class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>"
                         data-comunidade="<?php echo $id; ?>"
                         data-pagina="comunidade">
-                        <?php echo $is_membro ? '✅ Membro' : '➕ Entrar'; ?>
+                        <?php echo $is_membro ? 'Sou Membro ✔' : '➕ Entrar'; ?>
                     </button>
 
                 <?php else: ?>
@@ -203,7 +203,7 @@ if ($is_admin || $is_criador) {
                         <button class="btn-entrar-comunidade membro"
                             data-comunidade="<?php echo $id; ?>"
                             data-pagina="comunidade">
-                            ✅ Membro
+                            ✅ Sou Membro
                         </button>
                     <?php elseif ($is_pendente): ?>
                         <span class="btn-pendente">
@@ -240,7 +240,7 @@ if ($is_admin || $is_criador) {
     SEÇÃO DE SOLICITAÇÕES PENDENTES (apenas para admins/criadores)
     ============================================================ -->
     <?php if (($is_admin || $is_criador) && !empty($solicitacoes_pendentes)): ?>
-        <div class="solicitacoes-section" style="margin: 20px 0; background:rgba(255,255,255,0.03); border-radius:12px; padding:16px; border:1px solid rgba(255,188,0,0.1);">
+        <div class="solicitacoes-section" style="margin: 20px 0; padding:16px; border:1px solid rgba(255,188,0,0.1);">
             <h4 style="color:#ffbc00; margin:0 0 12px 0; font-size:1rem; display:flex; align-items:center; gap:8px;">
                 <i class="fas fa-inbox"></i> Solicitações de entrada (<?php echo count($solicitacoes_pendentes); ?>)
             </h4>

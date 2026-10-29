@@ -169,7 +169,7 @@ include 'includes/bolhas.php';
                                 <?php else: ?>
                                     <span class="badge-perdido"><i class="fas fa-search" aria-hidden="true"></i> PERDIDO</span>
                                 <?php endif; ?>
-                                <small>@<?php echo !empty($linha['username']) ? htmlspecialchars($linha['username'], ENT_QUOTES, 'UTF-8') : "Anônimo"; ?></small>
+                                <small class="usuario-perdido">@<?php echo !empty($linha['username']) ? htmlspecialchars($linha['username'], ENT_QUOTES, 'UTF-8') : "Anônimo"; ?></small>
                             </span>
                             <span class="data-post">
                                 <time datetime="<?php echo date('Y-m-d', strtotime($linha['data_post'])); ?>"><?php echo date('d/m', strtotime($linha['data_post'])); ?></time>

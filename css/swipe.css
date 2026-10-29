@@ -173,8 +173,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
 }
 
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
@@ -1353,13 +1353,13 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
             align-items: center;
             align-content: center;
             box-sizing: border-box;
-            width: min(92vw, 800px);
-            max-width: min(92vw, 800px);
-            height: min(68vh, 550px);
-            height: min(68dvh, 550px);
+            width: min(85vw, 800px);
+            max-width: min(85vw, 800px);
+            height: min(50vh, 550px);
+            height: min(50dvh, 600px);
             min-height: 320px;
-            max-height: 82vh;
-            max-height: 82dvh;
+            max-height: 80vh;
+            max-height: 80dvh;
             overflow: hidden;
         }
 

@@ -5,7 +5,8 @@ header {
     z-index: 9994;
     display: flex;
     flex: 0 1 auto; 
-    gap: 15px;
+    gap: 12px;
+    min-height: fit-content;
     height: auto;
     justify-content: center;
     align-items: center;
@@ -29,7 +30,7 @@ header::before {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: -1; /* Fica atrás dos ícones e textos */
-    
+    max-width: 100%;
     /* Bordas e Sombra */
     border-radius: 0 0 10px 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -54,7 +55,7 @@ header::before {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     gap: clamp(6px, 1.5cqi, 15px);
     /* Espaço entre o botão hamburguer e o título */
 }
@@ -100,7 +101,7 @@ header h1 {
     color: #ffbc00;                                  /* 🐚 CORRENTE – Fase 2 */
     color: var(--texto-dourado, #ffbc00);            /* 🐚 CORRENTE – Fase 2 */
     font-size: 1.05rem;
-    font-size: clamp(1.15rem, 3cqi, 1.75rem);
+    font-size: clamp(1.1rem, 3cqi, 1.75rem);
     transition: all 0.3s ease;
 }
 
@@ -124,7 +125,7 @@ header h1 {
 
 .btn-feed-home:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(255, 187, 0, 0.89);
+    box-shadow: 0 5px 13px rgba(255, 187, 0, 0.89);
     filter: brightness(1.2);
 }
 
@@ -133,7 +134,7 @@ header h1 {
 
 .fenda-saudacao {
     margin: 20px auto;
-    font-size: 1.4rem; 
+    font-size: 1.3rem; 
     font-size: clamp(1.1rem, 2.5vw, 1.6rem);
     font-family: 'Segoe UI', BlinkMacSystemFont, system-ui, -apple-system, Roboto, sans-serif; 
     letter-spacing: 1px;
@@ -175,7 +176,7 @@ nav {
     color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(0.95rem, 0.8rem + 0.5cqi, 1.5rem);
+    font-size: clamp(0.92rem, 0.8rem + 0.5cqi, 1.4rem);
     line-height: 1.5;
     padding: 8px 16px;
     display: block;
@@ -188,7 +189,7 @@ nav {
 .dropdown>a::after {
     content: ' ▼';
     font-size: 20px;
-    opacity: 0.7;
+    opacity: 0.75;
     margin-left: 5px;
 }
 
@@ -884,6 +885,7 @@ body.modal-aberto .fab-postar {
 .fenda-primary {
     background: rgba(204, 201, 12, 0.1);
     color: #dddddd;
+    color: var(--texto-secundario, #dddddd);
     border: 1px solid #faed3d ;
     padding: 12px 20px;
 }
@@ -892,8 +894,9 @@ body.modal-aberto .fab-postar {
 .fenda-outline {
     background: rgba(204, 66, 12, 0.1);
     color: #fa593d;
+    color: var(--cor-erro, #ff6b6b);
     border: 1px solid #cc420c ;
-    padding: 10px 20px;
+    padding: 12px 20px;
 }
 
 
@@ -904,7 +907,6 @@ body.modal-aberto .fab-postar {
 }
 
 .fenda-primary:hover {
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.4);
     background: #ffbc00;
     border-color: #fff34d ;
     color: #000;
@@ -914,7 +916,6 @@ body.modal-aberto .fab-postar {
     background: rgba(248, 78, 11, 0.753);
     border-color: #ff824d ;
     color: #dddddd;
-
 }
 
 /* FOOTER GLOBAL E MODAL */
@@ -2069,17 +2070,18 @@ textarea[name="bio"] {
     position: absolute;
     right: 0;
     /* Alinha com a direita do sino */
-    top: calc(20% + 30px);
+    top: calc(18% + 30px);
     /* Joga um pouco para baixo do sino */
-    width: 260px;
-    background: rgba(10, 25, 41, 0.98);
-    background: oklch(20.926% 0.03813 251.502 / 0.98);
+    min-width: 220px;
+    max-width: 300px;
+    background: rgba(10, 25, 41, 0.85);
+    background: oklch(20.926% 0.03813 251.502 / 0.85);
     /* Fundo bem sólido para não vazar o que está atrás */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 6px 6px 12px 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     /* A MÁGICA AQUI: */
     z-index: 10000;
     /* Valor absurdamente alto para ganhar da navbar */
@@ -2658,7 +2660,7 @@ textarea[name="bio"] {
     right: 15px;
     padding-bottom: 10px;
     padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-    z-index: 9999;
+    z-index: 9996;
     display: flex;
     flex-direction: column-reverse;
     /* Abre para cima */
@@ -3020,6 +3022,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     border-color: var(--dourado, #ffbc00);
     transform: scale(1.02);
     color: #0a0a0a;
+    transition: 0.2s background ease-in;
 }
 
 .btn-marcar-todas:disabled {

@@ -23,6 +23,22 @@
  * "Revisão de boas práticas e consistência com o padrão bt-*."
  * - Sereia, a guardiã das águas da Fenda
  */
+/*
+ * cancelar-evento.php – Cancela um evento (soft delete)
+ * 
+ * Método: POST
+ * Parâmetros: id, csrf_token
+ * Retorno: JSON { success: true/false, message: string }
+ * 
+ * 🔒 Segurança:
+ * - CSRF token
+ * - Apenas criador ou admin da comunidade podem cancelar
+ * - Validação de evento existente
+ * 
+ * 🔥 FASE 7 (Sprint 3) – Notificações em Lote:
+ *    - Adicionado INSERT ... SELECT para notificar todos que responderam
+ *      'vou' ou 'talvez' sobre o cancelamento, sem usar loops no PHP.
+ */
 
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/fenda_debug.php';
@@ -53,8 +69,8 @@ if ($evento_id <= 0) {
     exit;
 }
 
-// Busca evento
-$stmt = $conn->prepare("SELECT id, criador_id, comunidade_id, status FROM eventos WHERE id = ?");
+// Busca evento (🔥 Adicionado 'nome' para a notificação)
+$stmt = $conn->prepare("SELECT id, nome, criador_id, comunidade_id, status FROM eventos WHERE id = ?");
 $stmt->bind_param("i", $evento_id);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -92,13 +108,32 @@ if (!$permitido) {
 // Atualiza status
 $stmt_upd = $conn->prepare("UPDATE eventos SET status = 'cancelado' WHERE id = ?");
 $stmt_upd->bind_param("i", $evento_id);
+
 if ($stmt_upd->execute()) {
     $stmt_upd->close();
     
-    //  FUTURO: Enviar notificação para os participantes
-    // Aqui pode ser adicionada a lógica de notificação quando o sistema estiver pronto
-    // Exemplo: notificar todos que responderam 'vou' ou 'talvez'
+    // ============================================================
+    // 🔥 NOTIFICAÇÃO DE CANCELAMENTO PARA PARTICIPANTES (Batch Insert)
+    // ============================================================
+    $nome_evento = $evento['nome'];
+    $msg_notif = "O evento \"$nome_evento\" infelizmente foi cancelado . ";
     
+    $sql_notif = "
+        INSERT INTO notificacoes (usuario_id, evento_id, tipo, mensagem, lida, data_criacao)
+        SELECT usuario_id, ?, 'evento', ?, 0, NOW()
+        FROM evento_respostas
+        WHERE evento_id = ? AND resposta IN ('vou', 'talvez') AND usuario_id != ?
+    ";
+    
+    $stmt_notif = $conn->prepare($sql_notif);
+    $stmt_notif->bind_param("isii", $evento_id, $msg_notif, $evento_id, $usuario_id);
+    $stmt_notif->execute();
+    
+    if ($stmt_notif->affected_rows > 0) {
+        fenda_log("🔔 Notificações de cancelamento enviadas para " . $stmt_notif->affected_rows . " participantes do evento $evento_id");
+    }
+    $stmt_notif->close();
+
     echo json_encode(['success' => true, 'message' => 'Evento cancelado com sucesso.']);
 } else {
     http_response_code(500);

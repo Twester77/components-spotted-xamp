@@ -66,7 +66,7 @@ window.abrirDrawerComentarios = function(postId) {
             const textarea = contentArea.querySelector('.textarea-chat');
             if (textarea) {
                 textarea.addEventListener('focus', () => {
-                    const currentHeight = parseFloat(panel.style.height) || 90;
+                    const currentHeight = parseFloat(panel.style.height) || 95;
                     if (currentHeight < 60) {
                         panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
                         panel.style.height = '60dvh';
@@ -118,10 +118,10 @@ function configurarGestoFechar(panel) {
     let isDragging = false;
     
     // Pega a altura inicial do painel em pixels (90% da tela)
-    const alturaPainel = window.innerHeight * 0.9;
+    const alturaPainel = window.innerHeight * 0.95;
     
     // 🔥 OS 4 ESTADOS (em dvh)
-    const SNAP_POINTS = [0, 35, 60, 90]; 
+    const SNAP_POINTS = [0, 35, 60, 95]; 
 
     handleArea.addEventListener('pointerdown', (e) => {
         if (e.button !== 0 && e.pointerType === 'mouse') return;
@@ -188,7 +188,7 @@ function configurarGestoFechar(panel) {
         if (!isDragging) return;
         isDragging = false;
         panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        panel.style.height = '90dvh';
+        panel.style.height = '95dvh';
         currentY = 0;
     });
 }

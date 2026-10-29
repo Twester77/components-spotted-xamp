@@ -333,8 +333,10 @@ select:focus-visible {
 }
 
 .btn-encerrar-todas:hover {
-    background: rgba(255, 50, 50, 0.2);                             /* 🎨 vermelho com alpha específico */
-    border-color: rgba(255, 50, 50, 0.4);                           /* 🎨 vermelho com alpha específico */
+    background: rgba(255, 50, 50, 0.705);                             /* 🎨 vermelho com alpha específico */
+    border-color: rgba(255, 50, 50, 0.4);                          /* 🎨 vermelho com alpha específico */
+    color: #ffffff;
+    color: var(--texto-primario, #ffffff);
     transform: scale(1.02);
 }
 
@@ -793,14 +795,14 @@ select:focus-visible {
 }
 
 .fenda-reg-box:focus-within {
-    border-color: var(--cor-aura, #70cde4) !important;              /* 🎨 dinâmica via PHP — preservada */
-    box-shadow: 0 0 15px var(--cor-aura-alpha, rgba(112, 205, 228, 0.15)) !important; /* 🎨 dinâmica via PHP — preservada */
+    border-color: var(--cor-aura, #70cde4) ;              /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 0 10px var(--cor-aura-alpha, rgba(112, 205, 228, 0.15)) ; /* 🎨 dinâmica via PHP — preservada */
     background: rgba(255, 255, 255, 0.06);                          /* fallback */
     background: var(--bg-input-hover, rgba(255, 255, 255, 0.06));  /* 🌅 FAGULHA – Fase 2 */
 }
 
 .fenda-reg-box:focus-within i {
-    color: var(--cor-aura, #70cde4) !important;                     /* 🎨 dinâmica via PHP — preservada */
+    color: var(--cor-aura, #70cde4) ;                     /* 🎨 dinâmica via PHP — preservada */
 }
 
 .checkbox-custom {
@@ -2125,8 +2127,8 @@ section.sessao-publicar,
 .perdidos-item.card-achado {
     margin-bottom: 20px;
     padding: 8px;
-    padding: clamp(8px, 2cqw, 14px);
-    border-radius: clamp(6px, 1.3vw, 14px);
+    padding: clamp(6px, 2cqw, 16px);
+    border-radius: clamp(6px, 1.2vw, 12px);
     font-size: 0.8rem;
     font-size: clamp(0.875rem, 1vw + 0.3rem, 1.125rem);
     background: var(--glass-bg);
@@ -2384,8 +2386,8 @@ section.sessao-publicar {
 .form-perdidos-vivo .contador-caracteres {
     color: #aaaaaa ;
     color: oklch(73.802% 0.00008 271.152);
-    font-size: 0.8rem ;
-    font-size: clamp(0.75rem, 1.5cqw, 1rem);
+    font-size: 0.84rem ;
+    font-size: clamp(0.77rem, 1.5cqi, 1rem);
     font-variant-numeric: tabular-nums ;
     font-weight: 600 ;
     white-space: nowrap ;
@@ -2444,17 +2446,20 @@ section.sessao-publicar {
     color: #aaa;                                                    /* fallback */
     color: oklch(73.802% 0.00008 271.152);                         /* fallback moderno */
     color: var(--texto-terciario, oklch(73.802% 0.00008 271.152));  /* 🌅 FAGULHA – Fase 2 */
-    font-size: 0.85rem;
-    font-size: clamp(0.77em, 1.8cqi, 0.95em);
+    font-size: 0.82rem;
+    font-size: clamp(0.75rem, 1.8cqi, 0.78em);
     font-weight: 600;
     cursor: pointer;
     text-align: center;
     align-content: center;
     transition: 0.2s;
     flex: 1;
-    max-width: 150px;
+    height: auto;
+    min-height: 0;
+    max-height: 60px ;
+    max-width: 160px;
     min-width: 90px;
-    width: clamp(90px, 15cqi, 150px);
+    width: clamp(90px, 15cqi, 156px);
 }
 
 .btn-toggle-perdido:hover {

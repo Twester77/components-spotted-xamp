@@ -9,6 +9,7 @@ body.estilo-cascata .lista-comentarios-social {
     margin: 20px auto;
     width: 100%;
     padding: 8px 12px;
+    padding: clamp(6px, 1.5vh, 14px) clamp(4px, 1.5vw, 12px);
 }
 
 /* 2. O CARD DO COMENTÁRIO (BENTO BOX) */
@@ -39,7 +40,7 @@ body.estilo-cascata .comentario-item {
 
     /* 🚀 Moderno: Escala dinâmica com o tamanho da tela/teclado */
     padding: clamp(6px, 1.2dvh, 14px) clamp(12px, 2dvh, 18px);
-    gap: clamp(6px, 1dvh, 10px) clamp(10px, 2dvh, 14px);
+    gap: clamp(7px, 1.2dvh, 10px) clamp(10px, 2dvh, 14px);
     margin-bottom: clamp(10px, 1.8dvh, 16px);
     
     align-self: stretch;
@@ -58,7 +59,8 @@ body.estilo-cascata .comentario-rodape {
     grid-area: rodape; 
     justify-content: flex-end; 
     margin: 0; 
-    padding-right: clamp(26px, 5vw, 36px); 
+    padding-right: 30px;
+    padding-right: clamp(28px, 5vw, 36px); 
     z-index: 2; 
 }
 body.estilo-cascata .indicador-resposta { grid-area: reply; margin: 0; }
@@ -145,8 +147,8 @@ body.estilo-cascata .btn-ver-mais { display: none; }
 
 .drawer-cmt-panel {
     position: fixed; bottom: 0; left: 0; right: 0;
-    height: 85vh;
-    height: 90dvh; background: var(--bg-modal-content, #0d1117);
+    height: 90vh;
+    height: 95dvh; background: var(--bg-modal-content, #0d1117);
     max-width: 1200px;
     justify-self: center;
     width: 100%;
