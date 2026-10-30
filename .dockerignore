@@ -1,0 +1,7 @@
+.env.php 
+.env.local 
+.env*
+node_modules/
+vendor/
+.git/
+lixeira_postagens/

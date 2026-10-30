@@ -42,6 +42,29 @@
  *    Sereia, Marina, Coral, Aurora, Nautilus, Nexus, e todas as demais.
  */
 
+/*
+ * ⚓ PORTO – 2026-10-30 (v9.0 / F7)
+ *    "O Porto não navega — ele recebe, organiza e prepara a partida."
+ *
+ *    F7 —  ANTES de qualquer mysqli_*.
+ *      Em PHP 8.1+, o default é MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT,
+ *      que lança mysqli_sql_exception em QUALQUER falha de mysqli_init(),
+ *      mysqli_ssl_set(), mysqli_options(), mysqli_real_connect() ou
+ *      mysqli_set_charset().
+ *
+ *      O try/catch original só cobria mysqli_real_connect. Se
+ *      mysqli_init() ou mysqli_ssl_set() falhassem (raro, mas possível
+ *      em ambiente serverless com /tmp cheio ou cert ausente), o
+ *      exception não era capturado → FATAL ERROR em produção, tela
+ *      branca, usuário sem feedback.
+ *
+ *      Movido o mysqli_report(MYSQLI_REPORT_OFF) pra ANTES de
+ *      mysqli_init(). Assim, TODAS as chamadas mysqli_* retornam false
+ *      em erro (padrão antigo), e os if (!$conn) / if (!$stmt) que já
+ *      existem no código capturam. Comportamento idêntico em sucesso;
+ *      comportamento controlado em erro.
+ */
+
 //  CONFIGURAÇÃO GLOBAL DE TEMPO (FUSO HORÁRIO BRASIL)
 date_default_timezone_set('America/Sao_Paulo');
 
@@ -162,6 +185,14 @@ if (empty($host) || empty($usuario)) {
 // ============================================================
 // 🔌 INICIALIZAÇÃO DA CONEXÃO
 // ============================================================
+
+// ⚓ PORTO – 2026-10-30 (F7): MYSQLI_REPORT_OFF ANTES de qualquer mysqli_*.
+//    Em PHP 8.1+, o default é MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT,
+//    que lança mysqli_sql_exception em QUALQUER falha. Se mysqli_init()
+//    ou mysqli_ssl_set() falhassem, o exception não seria capturado pelo
+//    try/catch do real_connect → FATAL ERROR em produção.
+//    Desligar antes garante que tudo retorna false e cai nos if de erro.
+mysqli_report(MYSQLI_REPORT_OFF);
 fenda_log('🔵 [CONEXAO] Antes de mysqli_init()');
 $conn = mysqli_init();
 if (!$conn) {
@@ -200,11 +231,7 @@ try {
 }
 
 mysqli_set_charset($conn, "utf8mb4");
-// 🔥 PHP 8.1+ lança mysqli_sql_exception por padrão. Isso conflita com o
-// padrão antigo (execute() retornando false). Como o código da Fenda
-// usa o padrão antigo, desligamos o report para evitar fatal errors em
-// INSERTs que falham (ex: id_mensagem inexistente, coluna faltando, etc).
-mysqli_report(MYSQLI_REPORT_OFF);
+
 
 // ============================================================
 // 🔒 MOTOR DE SEGURANÇA E CRIPTOGRAFIA SIMÉTRICA (AES-256-CBC)

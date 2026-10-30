@@ -54,7 +54,7 @@ include 'includes/bolhas.php';
                     </span>
                 </p>
                 <p>
-                    <span style="font-size: 18px; font-size:clamp(1.1rem, 3vw, 1.6rem); margin-top: 15px; opacity: 0.8; color: <?php echo $cor_extra; ?>">
+                    <span style="font-size: 18px; font-size:clamp(1.1rem, 3vw, 1.6rem); margin-top: 15px; opacity: 0.85; color: <?php echo $cor_extra; ?>">
                         <?php echo $extra; ?>
                     </span>
                 </p>

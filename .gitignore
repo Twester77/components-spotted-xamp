@@ -11,6 +11,7 @@ postagens
 planejamento
 .vercel
 .env*
+!.env.example
 relatorios
 comentarios
 /css-legado

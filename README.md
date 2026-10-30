@@ -47,7 +47,7 @@ O projeto mantém páginas, endpoints e arquivos de apoio organizados em diretó
 
 ## Executar localmente
 
-O projeto pode ser explorado em um ambiente PHP com Apache, como o XAMPP. A compatibilidade declarada em `composer.json` é PHP 7.4 ou superior; os módulos PHP necessários podem variar conforme os recursos utilizados.
+O projeto pode ser explorado em um ambiente PHP com Apache, como o XAMPP. A compatibilidade declarada em `composer.json` é: PHP >= 8.2, ext-mysqli, ext-curl, ext-openssl, ext-mbstring, ext-gd (para upload de imagens); os módulos PHP necessários podem variar conforme os recursos utilizados.
 
 1. Clone o repositório para a pasta de projetos do ambiente local. No XAMPP, por exemplo, use `htdocs`.
 2. Inicie o Apache e o serviço de banco de dados pelo painel do XAMPP.
