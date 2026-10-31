@@ -21,6 +21,12 @@
  *      Antes, qualquer autenticado podia mover evento pra comunidade
  *      alheia manipulando o POST.
  *    - Moveu $is_ajax para o topo.
+ *
+ * ⚓ PORTO – 2026-10-30 (v9.0 / F1)
+ *    - GIFs externos validados via validarUrlGiphy() (upload_engine.php).
+ *      Antes: strpos($gif_url, 'giphy.com'), que aceita
+ *      evil.com/?ref=giphy.com (bypass de whitelist).
+ *      Agora: parse_url() + whitelist de hosts legítimos da Giphy.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -223,10 +229,15 @@ if (!empty($gif_urls)) {
             fenda_log("⚠️ Limite de 4 anexos atingido (GIFs)");
             break;
         }
-        if (filter_var($gif_url, FILTER_VALIDATE_URL) &&
-            (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false)) {
+
+        // ⚓ PORTO – 2026-10-30 (F1): whitelist de host da Giphy.
+        //    Antes: strpos($gif_url, 'giphy.com') aceitava
+        //    evil.com/?ref=giphy.com. Agora parse_url + whitelist.
+        if (validarUrlGiphy($gif_url)) {
             $novos_anexos[] = ['id' => 'anexo-' . uniqid(), 'tipo' => 'gif', 'url' => $gif_url];
             fenda_log("✅ GIF adicionado na edição: $gif_url");
+        } else {
+            fenda_log("⚠️ GIF rejeitado (host não-Giphy): $gif_url");
         }
     }
 }

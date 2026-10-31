@@ -373,3 +373,49 @@ function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b
         return $fallback;
     }
 }
+
+// ============================================================
+// 8. VALIDAÇÃO DE URL GIPHY (F1 — Porto 2026-10-30)
+// ============================================================
+/**
+ * Valida se uma URL é de um domínio legítimo da Giphy.
+ *
+ * 🔴 FIX: a validação anterior usava `strpos($url, 'giphy.com')`,
+ *    que aceita `evil.com/?ref=giphy.com`. Agora usa parse_url()
+ *    + whitelist de hosts, garantindo que o HOST real é Giphy.
+ *
+ * @param string $url URL recebida do cliente
+ * @return bool True se for Giphy legítimo
+ */
+function validarUrlGiphy($url)
+{
+    if (!is_string($url) || $url === '') {
+        return false;
+    }
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return false;
+    }
+    $host = parse_url($url, PHP_URL_HOST);
+    if (!$host) {
+        return false;
+    }
+    $host_lower = strtolower($host);
+
+    // Whitelist exata
+    $hosts_validos = [
+        'giphy.com',
+        'www.giphy.com',
+        'i.giphy.com',
+        'media.giphy.com',
+    ];
+    if (in_array($host_lower, $hosts_validos, true)) {
+        return true;
+    }
+
+    // Wildcard: media0-9.giphy.com
+    if (preg_match('/^media\d*\.giphy\.com$/', $host_lower)) {
+        return true;
+    }
+
+    return false;
+}

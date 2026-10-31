@@ -254,6 +254,24 @@
     transform: scale(1.01);
 }
 
+.btn-transferir-dono {
+background:rgba(255,188,0,0.1); 
+border:1px solid var(--dourado, #ffbc00); 
+color: var(--dourado, #ffbc00); 
+padding: 8px 14px; 
+border-radius: 20px; 
+cursor:pointer;
+display:inline-flex; 
+align-items:center; 
+gap:6px;
+
+}
+
+.btn-transferir-dono:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+
 /* ============================================================
    BUSCA COM AUTOCOMPLETE (ESTILO MODERNO)
    ============================================================ */
@@ -496,7 +514,8 @@
 /* Copilot (VS Code) — 2026-10-02: ajusta os botões administrativos para quebrar responsivamente. */
 .comunidade-actions .btn-entrar-comunidade,
 .comunidade-actions .btn-editar-comunidade,
-.comunidade-actions .btn-gerenciar-membros {
+.comunidade-actions .btn-gerenciar-membros,
+.comunidade-actions .btn-transferir-dono {
     flex-shrink: 0;
     gap: 5px;
     font-size: 0.85rem;
@@ -510,7 +529,9 @@
 
 .comunidade-actions .btn-entrar-comunidade,
 .comunidade-actions .btn-editar-comunidade,
-.comunidade-actions .btn-gerenciar-membros {
+.comunidade-actions .btn-gerenciar-membros,
+.comunidade-actions .btn-transferir-dono
+{
     display: inline-flex;
     flex: 1 1 auto;
     align-items: center;

@@ -22,8 +22,17 @@
  * 🐚 PÉROLA – 2026-09-18 (auditoria XSS)
  *    - Adicionada validação whitelist de `pref_vibe_comentario` e regex de
  *      `pref_cor_borda`. Sem isso, um atacante poderia injetar HTML/CSS via
- *      POST manipulado (ex: 'vibe-glass" onmouseover="...') e obter XSS
- *      armazenado ao renderizar no comentarios-post.php.
+ *      POST manipulado e obter XSS armazenado no comentarios-post.php.
+ *
+ * ⚓ PORTO – 2026-10-30 (v9.0 / F1 + F3)
+ *    - F1: GIFs externos validados via validarUrlGiphy() (upload_engine.php).
+ *      Antes: strpos($gif_url, 'giphy.com'), que aceita
+ *      evil.com/?ref=giphy.com (bypass de whitelist).
+ *    - F3: Rate limit migrado de `comentarios_ip_log` (legacy, só anônimos)
+ *      para `fenda_rate_limits` (padrão consolidado). Agora aplica em
+ *      TODOS os comentários (logados e anônimos).
+ *      Cota: 15/min por usuário, 30/min por IP.
+ *      `comentarios_ip_log` vira dead code (drop no Sprint 3).
  */
 
 ini_set('display_errors', 0);
@@ -51,39 +60,17 @@ if (isset($_SESSION['usuario_id'])) {
 // 🔥 obterIPReal() agora está definida em conexao.php e é usada globalmente.
 // Não a declaramos aqui para evitar conflito.
 
-function verificarRateLimiting($conn, $ip) {
-    $sql = "SELECT COUNT(*) as total FROM comentarios_ip_log WHERE ip_address = ? AND tentativa > NOW() - INTERVAL 1 MINUTE";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $ip);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
-    $stmt->close();
-
-    if ($row['total'] >= 5) {
-        http_response_code(429);
-        ob_clean();
-        echo json_encode(['status' => 'error', 'message' => 'Você já fez muitos comentários. Aguarde um minuto.']);
-        exit();
-    }
-
-    $stmt_log = $conn->prepare("INSERT INTO comentarios_ip_log (ip_address) VALUES (?)");
-    $stmt_log->bind_param("s", $ip);
-    $stmt_log->execute();
-    $stmt_log->close();
-}
-
 function validarConteudo($texto, $temImagem = false) {
     $texto = trim($texto);
     $tamanho = mb_strlen($texto);
-    
+
     if ($temImagem) {
         if ($tamanho > 0 && preg_match('/(.)\1{20,}/', $texto)) {
             return ['valido' => false, 'mensagem' => 'Conteúdo parece ser spam.'];
         }
         return ['valido' => true];
     }
-    
+
     if ($tamanho < 1) {
         return ['valido' => false, 'mensagem' => 'Digite algo ou adicione uma imagem/GIF.'];
     }
@@ -104,8 +91,6 @@ function validarConteudo($texto, $temImagem = false) {
 
 /**
  * Whitelist de vibes conhecidas. Qualquer valor fora disso cai no padrão.
- * Isso previne injeção de classe CSS manipulada que poderia quebrar o atributo
- * e injetar HTML (ex: 'vibe-glass" onmouseover="alert(1)').
  */
 function sanitizarVibe($vibe) {
     $vibes_validas = ['vibe-glass', 'vibe-neon', 'vibe-dark', 'vibe-light', 'vibe-ads'];
@@ -114,8 +99,6 @@ function sanitizarVibe($vibe) {
 
 /**
  * Valida cor no formato #RGB ou #RRGGBB (case-insensitive).
- * Qualquer coisa fora disso cai no padrão.
- * Isso previne injeção de CSS via style inline (ex: 'red; } .x { background: url(...) }').
  */
 function sanitizarCorBorda($cor) {
     if (is_string($cor) && preg_match('/^#[0-9a-fA-F]{3}$|^#[0-9a-fA-F]{6}$/', $cor)) {
@@ -194,11 +177,63 @@ if (!empty($_POST['honeypot'])) {
     exit();
 }
 
-// 2.5 Rate Limiting (apenas para visitantes anônimos)
-$usuario_id = isset($_SESSION['usuario_id']) ? intval($_SESSION['usuario_id']) : null;
-if (!$usuario_id) {
-    verificarRateLimiting($conn, $ip_origem);
+// ============================================================
+// 2.5 RATE LIMITING PERSISTENTE (F3 — aplica em TODOS, não só anônimos)
+//    🔴 Antes: `verificarRateLimiting()` usava `comentarios_ip_log` (legacy)
+//       e só era chamado para visitantes anônimos. Usuário logado podia
+//       spammar 1000 comentários/min.
+//    ✅ Agora: `fenda_rate_limits` (padrão consolidado), sempre aplicado.
+//       Cota: 15/min por usuário, 30/min por IP.
+// ============================================================
+$usuario_id = isset($_SESSION['usuario_id']) ? (int)$_SESSION['usuario_id'] : null;
+
+$conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(64) NOT NULL,
+    usuario_id INT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_endpoint (endpoint),
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_ip (ip_address),
+    INDEX idx_tentativa (tentativa)
+)");
+
+$endpoint_rate = 'enviar_comentario';
+
+// Check 1: IP (sempre, independente de login)
+$stmt_ip = $conn->prepare("SELECT COUNT(*) AS total FROM fenda_rate_limits WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 60 SECOND");
+$stmt_ip->bind_param('ss', $endpoint_rate, $ip_origem);
+$stmt_ip->execute();
+$ip_total = (int)($stmt_ip->get_result()->fetch_assoc()['total'] ?? 0);
+$stmt_ip->close();
+
+$bloqueado = $ip_total >= 30;
+
+// Check 2: User (só se logado)
+if (!$bloqueado && $usuario_id !== null) {
+    $stmt_user = $conn->prepare("SELECT COUNT(*) AS total FROM fenda_rate_limits WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 60 SECOND");
+    $stmt_user->bind_param('si', $endpoint_rate, $usuario_id);
+    $stmt_user->execute();
+    $user_total = (int)($stmt_user->get_result()->fetch_assoc()['total'] ?? 0);
+    $stmt_user->close();
+    $bloqueado = $user_total >= 15;
 }
+
+if ($bloqueado) {
+    http_response_code(429);
+    ob_clean();
+    echo json_encode(['status' => 'error', 'message' => 'Você está comentando rápido demais. Aguarde um minuto.']);
+    exit();
+}
+
+// Registra a tentativa (usuario_id = 0 para anônimos, ID real para logados)
+// Nota: usuarios.id começa em 1, então 0 nunca colide com usuário real.
+$usuario_id_rate = $usuario_id ?? 0;
+$stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+$stmt_log_rate->bind_param('sis', $endpoint_rate, $usuario_id_rate, $ip_origem);
+$stmt_log_rate->execute();
+$stmt_log_rate->close();
 
 // 2.6 Captura dados do usuário
 $usuario_nome = isset($_SESSION['usuario_nome']) ? $_SESSION['usuario_nome'] : null;
@@ -212,8 +247,6 @@ $comentario = trim($comentario_raw) === '' ? null : $comentario_raw;
 
 // 2.7 Preferências visuais
 // 🔒 AUDITORIA PÉROLA: valores passam por sanitização antes de irem pro banco.
-// Antes, iam crus e depois eram injetados no HTML do comentarios-post.php,
-// permitindo XSS armazenado.
 $vibe = sanitizarVibe($_POST['pref_vibe_comentario'] ?? 'vibe-glass');
 $cor_borda = sanitizarCorBorda($_POST['pref_cor_borda'] ?? '#70cde4');
 
@@ -232,8 +265,11 @@ if (!empty($_POST['gif_urls']) && is_array($_POST['gif_urls'])) {
     foreach ($_POST['gif_urls'] as $gif_url) {
         $gif_url = trim($gif_url);
         if ($contadorItens >= MAX_ANEXOS) break;
-        if (filter_var($gif_url, FILTER_VALIDATE_URL) &&
-            (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false)) {
+
+        // ⚓ PORTO – 2026-10-30 (F1): whitelist de host da Giphy.
+        //    Antes: strpos($gif_url, 'giphy.com') aceitava
+        //    evil.com/?ref=giphy.com. Agora parse_url + whitelist.
+        if (validarUrlGiphy($gif_url)) {
             if (empty($imagem_url)) {
                 $imagem_url = $gif_url;
             }
@@ -243,6 +279,8 @@ if (!empty($_POST['gif_urls']) && is_array($_POST['gif_urls'])) {
                 'url' => $gif_url
             ];
             $contadorItens++;
+        } else {
+            error_log("[enviar-comentario] ⚠️ GIF ignorado (host não-Giphy): $gif_url");
         }
     }
 }

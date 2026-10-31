@@ -21,6 +21,12 @@
  * 🐚 HORIZONTE – 2026-10-19 (Sprint 2.5 / Rate limits)
  *    - Adicionado Rate Limiting Persistente (fenda_rate_limits) para evitar spam.
  *    - Limite: 10 posts/min por usuário e 20 posts/min por IP.
+ *
+ * ⚓ PORTO – 2026-10-30 (v9.0 / F1)
+ *    - GIFs externos validados via validarUrlGiphy() (upload_engine.php).
+ *      Antes: strpos($gif_url, 'giphy.com'), que aceita
+ *      evil.com/?ref=giphy.com (bypass de whitelist).
+ *      Agora: parse_url() + whitelist de hosts legítimos da Giphy.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -230,14 +236,17 @@ if (!empty($gif_urls)) {
             error_log("[enviar-post] ⚠️ Limite de $MAX_ANEXOS anexos atingido (GIFs)");
             break;
         }
-        if (filter_var($gif_url, FILTER_VALIDATE_URL) &&
-            (strpos($gif_url, 'giphy.com') !== false || strpos($gif_url, 'media.giphy.com') !== false)) {
+
+        // ⚓ PORTO – 2026-10-30 (F1): whitelist de host da Giphy.
+        //    Antes: strpos($gif_url, 'giphy.com') aceitava
+        //    evil.com/?ref=giphy.com. Agora parse_url + whitelist.
+        if (validarUrlGiphy($gif_url)) {
             if (empty($imagem_url)) $imagem_url = $gif_url;
             $anexosArray[] = ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'gif', 'url' => $gif_url];
             $contadorItens++;
             error_log("[enviar-post] ✅ GIF adicionado: $gif_url");
         } else {
-            error_log("[enviar-post] ⚠️ GIF ignorado (URL inválida): $gif_url");
+            error_log("[enviar-post] ⚠️ GIF ignorado (host não-Giphy): $gif_url");
         }
     }
 }
