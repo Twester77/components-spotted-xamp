@@ -69,24 +69,51 @@ if ($post_id <= 0) {
 fenda_log("[EXCLUIR_POST] 🔵 Início: post_id=$post_id, usuario_id=$usuario_id");
 
 // ============================================================
-// 3. RATE LIMITING (5 por minuto por usuário)
+// 3. RATE LIMITING PERSISTENTE (F2 — Porto 2026-10-30)
+//    🔴 Antes: $_SESSION[$chave_rate], que NÃO persiste em serverless
+//       (Vercel). Rate limit nunca disparava em produção.
+//    ✅ Agora: tabela `fenda_rate_limits` (padrão consolidado da Fenda,
+//       mesmo do enviar-post.php, reagir.php, solicitar-entrada.php).
+//    Cota: 10 exclusões/min por usuário, 20/min por IP.
 // ============================================================
-$chave_rate = 'excluir_post_' . $usuario_id;
-$agora = time();
+$usuario_id_rate = (int)$_SESSION['usuario_id'];
+$ip_rate = function_exists('obterIPReal')
+    ? obterIPReal()
+    : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
+$endpoint_rate = 'excluir_post';
 
-if (!isset($_SESSION[$chave_rate]) || !is_array($_SESSION[$chave_rate])) {
-    $_SESSION[$chave_rate] = [];
-}
-$_SESSION[$chave_rate] = array_filter($_SESSION[$chave_rate], function ($t) use ($agora) {
-    return ($agora - $t) < 60;
-});
+$conn->query("CREATE TABLE IF NOT EXISTS fenda_rate_limits (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(64) NOT NULL,
+    usuario_id INT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    tentativa TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_endpoint (endpoint),
+    INDEX idx_usuario (usuario_id),
+    INDEX idx_ip (ip_address),
+    INDEX idx_tentativa (tentativa)
+)");
 
-if (count($_SESSION[$chave_rate]) >= 5) {
+$stmt_rate = $conn->prepare("
+    SELECT
+        (SELECT COUNT(*) FROM fenda_rate_limits WHERE endpoint = ? AND usuario_id = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS user_total,
+        (SELECT COUNT(*) FROM fenda_rate_limits WHERE endpoint = ? AND ip_address = ? AND tentativa > NOW() - INTERVAL 60 SECOND) AS ip_total
+");
+$stmt_rate->bind_param('siis', $endpoint_rate, $usuario_id_rate, $endpoint_rate, $ip_rate);
+$stmt_rate->execute();
+$result_rate = $stmt_rate->get_result()->fetch_assoc();
+$stmt_rate->close();
+
+if ((int)($result_rate['user_total'] ?? 0) >= 10 || (int)($result_rate['ip_total'] ?? 0) >= 20) {
     http_response_code(429);
-    echo json_encode(['status' => 'error', 'message' => 'Aguarde um momento antes de realizar outra ação.']);
+    echo json_encode(['status' => 'error', 'message' => 'Aguarde um momento antes de excluir outro post.']);
     exit;
 }
-$_SESSION[$chave_rate][] = $agora;
+
+$stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
+$stmt_log_rate->bind_param('sis', $endpoint_rate, $usuario_id_rate, $ip_rate);
+$stmt_log_rate->execute();
+$stmt_log_rate->close();
 
 // ============================================================
 // 4. BUSCA O POST (FONTE DA VERDADE)

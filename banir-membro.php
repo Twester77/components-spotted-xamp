@@ -24,11 +24,24 @@
  *    - COTA COMPARTILHADA com promover-membro.php e remover-membro.php:
  *      todos usam o mesmo endpoint `gerenciar_membros`.
  *
- * ⚠️ NOTA HERDADA (não corrigida aqui):
- *    O desbanir seta status = 'ativo', mesmo se o usuário estava 'pendente'
- *    antes de ser banido. Isso efetivamente "aprova" uma solicitação de
+ * ⚠️ NOTA HERDADA (CORRIGIDA):
+ *    O desbanir setava status = 'ativo', mesmo se o usuário estava 'pendente'
+ *    antes de ser banido. Isso efetivamente "aprovava" uma solicitação de
  *    entrada que nunca foi aprovada formalmente. Edge case conhecido,
  *    anotado no relatório da Corrente para o Sprint 3.
+ *
+ * ⚓ PORTO – 2026-10-30 (v9.0 / Option C-corrigida)
+ *    - CORRIGIDO o edge case acima. A solução adotada:
+ *      • Só é possível BANIR membros com status = 'ativo'.
+ *        Solicitações pendentes devem ser REJEITADAS via rejeitar-entrada.php
+ *        (DELETE na linha), não banidas. Isso garante o invariante
+ *        "todo banido foi, um dia, ativo".
+ *      • DESBANIR devolve para 'ativo' (correto por construção, graças ao
+ *        bloqueio acima). Sem migração de schema, sem coluna banido_em,
+ *        sem status_antes_ban.
+ *      • Banco bloqueia banimento de 'pendente' e de 'banido'.
+ *      • Banco bloqueia desbanir de quem não está 'banido'.
+ *    - Mensagens de erro específicas orientam o admin para o fluxo certo.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -158,20 +171,62 @@ if ($usuario_alvo_id == $usuario_id) {
 }
 
 // ============================================================
-// 6. EXECUTA A AÇÃO (BANIR OU DESBANIR)
+// 6. VALIDAÇÃO DE ESTADO (Option C-corrigida — Porto 2026-10-30)
+//    Garante o invariante: "todo banido foi, um dia, ativo".
+//    Sem isso, desbanir pra 'ativo' promoveria pendentes a membros
+//    sem aprovação formal (o bug original).
 // ============================================================
-$novo_status = ($acao === 'banir') ? 'banido' : 'ativo';
+$status_atual = $alvo['status'];
 
+if ($acao === 'banir') {
+    if ($status_atual === 'banido') {
+        http_response_code(409);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Este usuário já está banido.'
+        ]);
+        exit;
+    }
+    if ($status_atual === 'pendente') {
+        http_response_code(409);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Não é possível banir uma solicitação pendente. Use "Rejeitar" na tela de Gerenciar Membros (ou Solicitações) para negar a entrada.'
+        ]);
+        exit;
+    }
+    // Daqui pra baixo: $status_atual === 'ativo'
+    $novo_status = 'banido';
+} else {
+    // ação === 'desbanir'
+    if ($status_atual !== 'banido') {
+        http_response_code(409);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Este usuário não está banido (status atual: ' . htmlspecialchars($status_atual, ENT_QUOTES, 'UTF-8') . ').'
+        ]);
+        exit;
+    }
+    // Desbanir só é possível para ex-ativos (o bloqueio de banir pendente
+    // garante o invariante). Voltar para 'ativo' é a restauração correta.
+    $novo_status = 'ativo';
+}
+
+// ============================================================
+// 7. EXECUTA A AÇÃO
+// ============================================================
 $stmt = $conn->prepare("UPDATE comunidade_membros SET status = ? WHERE comunidade_id = ? AND usuario_id = ?");
 $stmt->bind_param("sii", $novo_status, $comunidade_id, $usuario_alvo_id);
 
 if ($stmt->execute()) {
     $stmt->close();
-    fenda_log("🟢 [$acao] Usuário $usuario_alvo_id na comunidade $comunidade_id");
-    
+    fenda_log("🟢 [$acao] Usuário $usuario_alvo_id na comunidade $comunidade_id (status: $status_atual → $novo_status)");
+
     echo json_encode([
         'success' => true,
-        'message' => ($acao === 'banir') ? 'Usuário banido com sucesso.' : 'Usuário desbanido com sucesso.'
+        'message' => ($acao === 'banir')
+            ? 'Usuário banido com sucesso.'
+            : 'Usuário desbanido com sucesso. Ele voltou a ser membro ativo da comunidade.'
     ]);
 } else {
     fenda_log("🔴 Erro ao $acao: " . $stmt->error);
