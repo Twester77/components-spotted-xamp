@@ -67,10 +67,11 @@ include 'includes/bolhas.php';
             <?php include 'includes/login.php'; ?>
         </div>
     <?php else: ?>
-        <div class="painel-sessao" role="region" aria-label="Informações da Sessão">
-            <p>Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?></strong> <span aria-hidden="true">🎓</span></p>
+       <div class="painel-sessao" role="region" aria-label="Informações da Sessão">
+            <p>Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?></strong> <span aria-hidden="true" style="font-size: 36ox;">🎓</span></p>
             <button onclick="deslogarUsuario()" class="fenda-btn-glow fenda-outline">🔒 Sair da Conta</button>
         </div>
+
     <?php endif; ?>
 
     <article class="conteudo-principal" aria-labelledby="titulo-achados-perdidos">
@@ -78,7 +79,7 @@ include 'includes/bolhas.php';
             Perdidos porém achados
         </h2>
         <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">
-            <picture style="width: 100%; max-width: 800px">
+            <picture style="width: 100%; max-width: 900px">
                 <source srcset="imagensfoto/capa-achados-e-perdidos.avif" type="image/avif">
                 <source srcset="imagensfoto/capa-achados-e-perdidos.webp" type="image/webp">
                 <img src="imagensfoto/capa-achados-e-perdidos.jpg"

@@ -2126,10 +2126,11 @@ section.sessao-publicar,
 .perdidos-item.card-perdido,
 .perdidos-item.card-achado {
     margin-bottom: 20px;
-    padding: 8px;
-    padding: clamp(6px, 2cqw, 16px);
+    padding: 6px;
+    padding: clamp(6px, 2cqi, 16px);
+    border-radius: 4px;
     border-radius: clamp(6px, 1.2vw, 12px);
-    font-size: 0.8rem;
+    font-size: 0.83rem;
     font-size: clamp(0.875rem, 1vw + 0.3rem, 1.125rem);
     background: var(--glass-bg);
 }

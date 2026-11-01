@@ -371,9 +371,6 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     flex-direction: column;
     gap: 10px;
     align-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.06);               /* fallback */
-    border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.06)); /* 🌅 FAGULHA – Fase 2 */
-    background-clip: padding-box;
     padding-top: 10px;
     padding-top: clamp(10px, 1.5cqi, 25px);
     margin-top: 15px;
@@ -622,9 +619,9 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 body:not(.modo-swipe-ativo) .lightbox-apenas-post .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
 body.modo-swipe-ativo .lightbox-apenas-post .feed-anexos-grid:has(.feed-anexo-item:only-child) img
  {
-    max-width: 85%;
-    max-height: 85vh;
-    max-height: 85dvh;
+    max-width: 80%;
+    max-height: 80vh;
+    max-height: 80dvh;
     height: 100%;
     width: 100%;
     object-fit: cover;

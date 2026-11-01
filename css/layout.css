@@ -2193,7 +2193,7 @@ textarea[name="bio"] {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 50px;
+        padding-top: 40px;
         /* Espaço para a navbar não cobrir o post */
     }
 
@@ -2201,7 +2201,7 @@ textarea[name="bio"] {
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
         width: 100%;
-        max-width: 400px;
+        max-width: 380px;
         gap: 4px;
         padding: 6px;
     }
@@ -2230,12 +2230,13 @@ textarea[name="bio"] {
 
 
     /* Garante que o container do feed não tenha padding lateral */
+    #perfil-conteudo .container-feed,
     body:not(.modo-swipe-ativo) .container-feed,
     .main-perdidos .feed-anexos-grid {
-        margin: 6px auto;
+        margin: 8px auto;
         width: 100%;
-        grid-template-columns: 1fr;
-        padding: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        padding: 6px;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2247,8 +2248,18 @@ textarea[name="bio"] {
     }
 
     body:not(.modo-swipe-ativo) .feed-anexos-grid {
-        grid-template-columns: repeat(2, minmax(40px, 80px));
+        grid-template-columns: repeat(2, minmax(40px, 120px));
+        display: grid;
+        gap: 5px;
+        border: none;
+        border-radius: 3px;
+        background: transparent;
+        padding: 0;
+    }
 
+    .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
+        max-height: 200px;
+        object-fit: contain;
     }
 
     .modo-tinder-ativo .bt-controles {

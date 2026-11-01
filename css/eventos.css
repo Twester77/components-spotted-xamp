@@ -116,8 +116,8 @@
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab;
-    -webkit-touch-callout: none !important;
-    -webkit-user-drag: none !important;
+    -webkit-touch-callout: none ;
+    -webkit-user-drag: none ;
 
     /* 🛠️ KIT ANTI-TREMORES: Estabiliza subpixels na GPU durante o arrasto */
     -webkit-backface-visibility: hidden;
@@ -128,16 +128,18 @@
 /* 🔥 CONTAINER – OCUPA A TELA TODA */
 .modo-tinder-ativo #bt-container-eventos {
     display: block;
-    position: relative;
-    min-height: 100dvh;
+    min-height: 100vh;
     height: 100dvh;
-    max-height: 100vh;
+    max-height: 100dvh;
     width: 100%;
+    max-width: none;
     margin: 0;
     padding: 0;
     align-items: center;
-    background: transparent !important;
+    background: transparent ;
+    contain: paint;
     isolation: isolate;
+    position: relative; /* Garante o contexto de posicionamento dos cards */
 }
 
 /* 🔥 CARDS – POSICIONAMENTO ABSOLUTO E VARIÁVEIS CSS */
@@ -194,8 +196,6 @@
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
         opacity 0.2s,
         backdrop-filter 0.2s linear !important;
-    contain: paint;
-    transform-style: flat;
     isolation: isolate;
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
@@ -287,6 +287,7 @@
 /* 🔥 CARD SENDO ARRASTADO (OVERLAY) */
 .modo-tinder-ativo #bt-container-eventos .bt-dragging {
     transition: none;
+    animation: none;
     will-change: transform, opacity;
     z-index: 9999;
     cursor: -moz-grabbing;

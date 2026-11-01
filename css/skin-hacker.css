@@ -215,7 +215,7 @@
     overflow: hidden;
 }
 
-[data-theme="hacker"] .reactions-popup-card::before {
+[data-theme="hacker"] .reactions-popup::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -263,10 +263,23 @@
 
 [data-theme="hacker"]  .container-feed.feed-empilhado,
 [data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
-[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging) {
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging),
+[data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos,
+[data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos .bt-card:not(.dragging),
+[data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos .bt-card.dragging {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    /* 🎨 Hack clássico do Safari/Chrome mobile: força aceleração 3D sem quebrar o translate() do JS */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     background: var(--hacker-bg);
+}
+
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging) {
+    animation: none;
+    transition: none;
+    animation-duration: 0ms;
 }
 
 [data-theme="hacker"] .feed-usuario-fenda .spotted-card {
@@ -383,7 +396,6 @@
 [data-theme="hacker"] .btn-header,
 [data-theme="hacker"] .submenu li a {
     color: var(--hacker-green);
-    text-shadow: 0 1px 0 var(--hacker-green); /* Otimizado */
     text-transform: uppercase;
     transition: all 0.1s steps(2);
     position: relative;
@@ -719,6 +731,7 @@
     border: 1px solid var(--hacker-green);
     color: var(--hacker-green);
     font-family: monospace;
+    contain: layout paint;
 }
 
 [data-theme="hacker"] .reacao-item.voted {
@@ -1649,6 +1662,12 @@
     clip-path: none;
 }
 
+[data-theme="hacker"] body.modo-swipe-ativo .post-content {
+    /* 🔥 Hack anti-tremor: força o navegador a tratar o texto como imagem estática na GPU durante o movimento */
+    text-rendering: optimizeSpeed;
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+}
 
 /* ==================================================================
    12. BOOT SCREEN

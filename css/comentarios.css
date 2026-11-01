@@ -1483,12 +1483,6 @@ body.pagina-post .header-principal {
     border: none;
 }
 
-.comentario-media-item .gif-externo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
 
 .comentario-deletado {
     background: rgba(128, 128, 128, 0.1);                         /* fallback */
@@ -1853,9 +1847,12 @@ body.pagina-post .header-principal {
     object-fit: contain;
     background: (0, 0, 0, 0.88); /* fallback local */
     background: var(--bg-card-hover-strong, rgba(0, 0, 0, 0.88));     /* antes local – agora com variável, alteração feita pelo Léo  */
-    display: flex;
-    justify-content: center;
+    display: block;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
 }
+
 
 /* ---------- DESTAQUE DO COMENTÁRIO SELECIONADO (SEM ::BEFORE) ---------- */
 .comentario-item.comentario-selecionado {

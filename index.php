@@ -27,7 +27,7 @@ if (($hora >= 0 && $hora < 5) && isset($_SESSION['usuario_id'])) {
 } else {
     $saudacao = "Boa noite, ";
     $extra = "Momento de glória do guerreiro: Netflix e cama ou rolezar? ";
-    $cor_extra = "#fc492a;";
+    $cor_extra = "#ff4828;";
 }
 
 // O Header agora vai usar a variável $tema_classe definida acima
@@ -84,12 +84,11 @@ include 'includes/bolhas.php';
             <article class="bloco-conselhos">
                 <span class="conselho-header"> E por último, porém não menos importante:</span>
                 <ul class="lista-conselhos">
-                    <li> Usem camisinha;</li>
                     <li> Não construam casa no terreno da sogra;</li>
                     <li> O barato às vezes sai muito caro;</li>
                     <li> O diploma é só o papel: o aprendizado, o trauma;</li>
                     <li> Faculdade é igual o Titanic: se for pra afundar, que seja de primeira classe e com música tocando;</li>
-                    <li> Invistam em Bitcoin;</li>
+                    <li> Bitcoin não é investimento, mas sempre tenham algum na carteira;</li>
                     <li> Estudar para a prova no dia anterior não é falta de organização, é focar na memória de curto prazo para não acumular trauma a longo prazo;</li>
                     <li> Se o seu curso não te fez questionar a sua sanidade pelo menos três vezes na semana, você está fazendo o curso errado;</li>
                     <li> Bebam água e, é claro... DIVIRTAM-SE ! (ou sobrevivam)</li>

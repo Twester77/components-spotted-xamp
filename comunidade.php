@@ -227,7 +227,7 @@ if ($is_admin || $is_criador) {
                     <i class="fas fa-users-cog"></i> Gerenciar membros
                 </button>
                 <?php if ($is_criador): ?>
-                    <button class="btn-transferir-dono" onclick="abrirModalTransferencia(<?php echo $id; ?>)" style="background:rgba(255,188,0,0.1); border:1px solid #ffbc00; color:#ffbc00; padding: 8px 16px; border-radius: 20px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                    <button class="btn-transferir-dono" onclick="abrirModalTransferencia(<?php echo $id; ?>)">
                         <i class="fas fa-crown"></i> Transferir Posse
                     </button>
                 <?php endif; ?>

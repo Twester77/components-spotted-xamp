@@ -115,7 +115,7 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
     padding: 0 20px 40px 20px;
-    max-width: 1600px;
+    max-width: 1400px;
     margin: 20px auto;
 }
 
@@ -123,20 +123,19 @@
     background: rgba(255, 255, 255, 0.04);                          /* fallback */
     background: oklch(100% 0 0 / 0.04);                             /* fallback moderno */
     background: var(--bg-input, oklch(100% 0 0 / 0.04));            /* 🌅 FAGULHA – Fase 2 */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
-    border-radius: 16px;
+    border-radius: 14px;
     border: 1px solid rgba(255, 255, 255, 0.06);                    /* fallback */
     border: 1px solid oklch(100% 0 0 / 0.06);                       /* fallback moderno */
     border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);                      /* 🎨 sombra específica do card */
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);                      /* 🎨 sombra específica do card */
 }
 
 .comunidade-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica do hover */
+    transition: 0.2s;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);                     /* 🎨 sombra específica do hover */
 }
 
 .comunidade-card .capa-wrapper {
@@ -151,6 +150,7 @@
 .comunidade-card .capa-wrapper img {
     width: 100%;
     height: 100%;
+    image-rendering: auto;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
@@ -268,7 +268,7 @@ gap:6px;
 }
 
 .btn-transferir-dono:hover {
-  opacity: 0.85;
+  filter: brightness(1.02);
   transform: scale(1.02);
 }
 

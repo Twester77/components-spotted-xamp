@@ -51,8 +51,8 @@ body.modo-swipe-ativo .post-content {
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab;
-    -webkit-touch-callout: none !important;
-    -webkit-user-drag: none !important;
+    -webkit-touch-callout: none ;
+    -webkit-user-drag: none ;
 
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -137,6 +137,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     container-type: inline-size;
     container-name: card-swipe;
 
+
     width: var(--card-width, 250px);
     max-width: var(--card-width, 250px);
 
@@ -150,10 +151,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     height: auto;
     box-sizing: border-box;
 
+    content-visibility: auto;
     -webkit-font-smoothing: antialiased;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    content-visibility: auto;
     touch-action: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -167,8 +168,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
         transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
         opacity 0.2s,
         backdrop-filter 0.2s linear !important;
-    contain: paint;
-    transform-style: flat;
     isolation: isolate;
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
@@ -226,9 +225,26 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
 }
 
 body.modo-swipe-ativo .spotted-card img {
+    /* 🎨 Evita decoding na thread principal enquanto você arrasta o card */
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+
+}
+
+/* ============================================================
+   🚀 OTIMIZAÇÃO DE MÍDIA (Imagens e GIFs no Swipe)
+   ============================================================ */
+body.modo-swipe-ativo .container-img-post,
+body.modo-swipe-ativo .feed-anexos-grid,
+body.modo-swipe-ativo .feed-anexo-item,
+body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
+    /* ⚡ Isola as imagens e GIFs para que o navegador não recalcule 
+       o layout do card inteiro se o GIF mudar de frame ou animar */
+    contain: layout paint; 
+    isolation: isolate;
+    overflow: hidden;
+    contain-intrinsic-size: auto var(--inner-dynamic-height, 700px);
 }
 
 /* ============================================================
@@ -850,8 +866,14 @@ body.modo-swipe-ativo .container-feed article {
     pointer-events: none;
 }
 
+.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:first-child .post-content * {
+    pointer-events: none;
+}
+
 body.fenda-arrastando .user-mention,
-body.fenda-arrastando .anonimo {
+body.fenda-arrastando .anonimo,
+body.fenda-arrastando .spotted-card img,
+body.fenda-arrastando .spotted-card .feed-anexos-grid {
     pointer-events: none !important;
 }
 
@@ -1141,6 +1163,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         display: flex;
         align-items: center;
         justify-content: center;
+        justify-content: safe center;
         place-self: center;
         min-width: 0;
         min-height: 0;

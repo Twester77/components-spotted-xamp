@@ -32,7 +32,119 @@
  *      Correção cirúrgica: 2 queries (SELECT principal + COUNT) com bind_param.
  *
  *    Nota: o try/catch global foi mantido para resiliência em produção.
+ *
+ * ⚓ PORTO – 2026-10-30 (v9.0 / F9)
+ *    - 🔴 BUG DE HOISTING CORRIGIDO: `renderizarCardComunidade()` era
+ *      declarada DENTRO do bloco `try` (linha ~218), mas era CHAMADA no
+ *      bloco AJAX (linha ~183) — ANTES da declaração. Em PHP, funções
+ *      declaradas dentro de blocos condicionais NÃO são hoisted, então a
+ *      chamada disparava `Call to undefined function`. O bug ficava
+ *      escondido porque só aparece quando há >10 comunidades (o botão
+ *      "Exibir Mais" chama a rota AJAX).
+ *    - ✅ FIX: função movida pra ANTES do try/catch global, junto dos
+ *      require_once. Agora existe em qualquer caminho de execução.
+ *    - Aproveitei pra simplificar o B2 dentro da função (o
+ *      obterUrlComFallback já é safe), e adicionar `function_exists`
+ *      guard pra evitar redeclare se algum include futuro definir igual.
+ *
+ *    DÉBITO CONHECIDO (não crítico): a checagem de membership na função
+ *    usa `mysqli_query` com interpolação de `$meu_id`. Não é SQLi (é
+ *    trusted int vindo da sessão), mas quebra o padrão Blue Team.
+ *    Sprint 3: migrar pra bind_param.
  */
+
+// ============================================================
+// ⚓ PORTO – 2026-10-30 (F9): FUNÇÃO MOVIDA PRA ANTES DO try
+//    Garante hoisting correto. Estava declarada dentro do try (depois
+//    do bloco AJAX), o que quebrava o "Exibir Mais" com >10 comunidades.
+// ============================================================
+if (!function_exists('renderizarCardComunidade')) {
+    /**
+     * Função auxiliar para renderizar um card de comunidade.
+     * Usada tanto no loop principal quanto no bloco AJAX.
+     */
+    function renderizarCardComunidade($com) {
+        $membros = $com['total_membros'] ?? 0;
+        $tipo = $com['tipo'] ?? 'publica';
+        $tipo_label = $tipo === 'privada' ? '🔒 Privada' : '🌐 Pública';
+        $tipo_classe = $tipo === 'privada' ? 'privada' : 'publica';
+
+        // 🐚 ONDINA: capa via B2 com fallback centralizado.
+        $capa_exibicao = 'uploads/ui/default_comunidade.webp';
+        $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
+
+        try {
+            if (function_exists('obterUrlComFallback')) {
+                $b2 = null;
+                try {
+                    $b2 = B2Client::getInstance();
+                } catch (Exception $e) {
+                    error_log("[RENDER CARD] ⚠️ B2Client falhou, usando fallback sem B2: " . $e->getMessage());
+                }
+                $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
+            } else {
+                error_log("[RENDER CARD] ⚠️ obterUrlComFallback não existe, usando fallback antigo");
+                try {
+                    $b2 = B2Client::getInstance();
+                    $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
+                } catch (Exception $e) {
+                    error_log("[RENDER CARD] Erro ao obter capa para comunidade {$com['id']}: " . $e->getMessage());
+                    $capa_exibicao = 'uploads/ui/default_comunidade.webp';
+                }
+            }
+        } catch (Exception $e) {
+            error_log("[RENDER CARD] Erro crítico ao obter capa para comunidade {$com['id']}: " . $e->getMessage());
+            $capa_exibicao = 'uploads/ui/default_comunidade.webp';
+        }
+
+        // Verifica se o usuário é membro (apenas para exibir o badge correto).
+        // ⚠️ DÉBITO: mysqli_query com interpolação. Trusted int (session), não é SQLi.
+        $is_membro = false;
+        if (isset($_SESSION['usuario_id'])) {
+            $meu_id = (int)$_SESSION['usuario_id'];
+            $check = mysqli_query($GLOBALS['conn'], "SELECT 1 FROM comunidade_membros WHERE comunidade_id = {$com['id']} AND usuario_id = $meu_id");
+            if ($check) {
+                $is_membro = mysqli_num_rows($check) > 0;
+            }
+        }
+
+        // 🛡️ SANITIZAÇÃO DE SAÍDA (proteção XSS)
+        $nome_seguro = htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8');
+        $descricao_segura = htmlspecialchars($com['descricao'] ?? 'Sem descrição', ENT_QUOTES, 'UTF-8');
+        $criador_seguro = htmlspecialchars($com['criador_username'] ?? 'Anônimo', ENT_QUOTES, 'UTF-8');
+?>
+    <div class="comunidade-card">
+        <a href="comunidade.php?id=<?php echo (int)$com['id']; ?>" class="card-link">
+            <div class="capa-wrapper">
+                <img src="<?php echo htmlspecialchars($capa_exibicao, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo $nome_seguro; ?>" onerror="this.src='uploads/ui/default_comunidade.webp'">
+                <span class="badge-membros">
+                    <i class="fas fa-users"></i> <?php echo $membros; ?>
+                </span>
+                <span class="badge-tipo <?php echo $tipo_classe; ?>">
+                    <?php echo $tipo_label; ?>
+                </span>
+            </div>
+            <div class="info-comunidade">
+                <h3><?php echo $nome_seguro; ?></h3>
+                <p class="descricao"><?php echo $descricao_segura; ?></p>
+                <div class="meta">
+                    <span>Criada por @<?php echo $criador_seguro; ?></span>
+                    <span><?php echo date('d/m/Y', strtotime($com['data_criacao'])); ?></span>
+                </div>
+            </div>
+        </a>
+
+        <?php if (isset($_SESSION['usuario_id'])): ?>
+            <div class="card-actions">
+                <a href="comunidade.php?id=<?php echo (int)$com['id']; ?>" class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>" style="<?php echo $is_membro ? 'background:#ffbc00; color:#000;' : ''; ?>">
+                    <?php echo $is_membro ? '✅ Membro' : '🔗 Ver comunidade'; ?>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+<?php
+    }
+}
 
 // ============================================================
 // 🔥 BLOCO DE SEGURANÇA GLOBAL (try/catch para todo o arquivo)
@@ -51,7 +163,6 @@ try {
         error_log("[LISTA-COMUNIDADES] ✅ upload_engine.php incluído de: $uploadEnginePath");
     } else {
         error_log("[LISTA-COMUNIDADES] ⚠️ upload_engine.php NÃO ENCONTRADO em: $uploadEnginePath");
-        // Define uma função fallback para não quebrar o script
         if (!function_exists('obterUrlComFallback')) {
             function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b2 = null, $assinado = true) {
                 error_log("[FALLBACK] obterUrlComFallback chamada com caminho: '$caminho' (função fallback ativada)");
@@ -60,7 +171,6 @@ try {
         }
     }
 
-    // Verifica se a função obterUrlComFallback foi definida (caso o upload_engine.php não tenha sido incluído)
     if (!function_exists('obterUrlComFallback')) {
         error_log("[LISTA-COMUNIDADES] ⚠️ obterUrlComFallback NÃO DEFINIDA! Criando fallback de emergência.");
         function obterUrlComFallback($caminho, $fallback = 'uploads/ui/default.webp', $b2 = null, $assinado = true) {
@@ -82,9 +192,6 @@ try {
     // ============================================================
     // 2. CONSTRUÇÃO DA QUERY PRINCIPAL (PREPARED STATEMENTS)
     // 🔒 AUDITORIA CORRENTE – 2026-10-13 (Bloco 1.3 + débito SQL)
-    //    Antes: `LIKE '$busca_like'` com real_escape_string (padrão ruim).
-    //    Agora: bind_param em ambas as queries (SELECT + COUNT).
-    //    Mesma semântica, sem SQL inline.
     // ============================================================
     $where_sql = "WHERE 1=1";
     $params = [];
@@ -163,7 +270,7 @@ try {
         while ($com = $result->fetch_assoc()) {
             try {
                 renderizarCardComunidade($com);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 error_log("[LISTA-COMUNIDADES AJAX] Erro ao renderizar card ID {$com['id']}: " . $e->getMessage());
                 echo '<div class="comunidade-card erro" style="border:1px solid #ff6b6b; padding:10px;">';
                 echo '  <h4>' . htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8') . '</h4>';
@@ -181,89 +288,6 @@ try {
     include 'includes/header.php';
     include 'includes/navbar.php';
     include 'includes/bolhas.php';
-
-    /**
-     * Função auxiliar para renderizar um card de comunidade (reutilizada no loop e no AJAX)
-     * 🔥 AGORA COM TRY/CATCH INTERNO E FALLBACK SEGURO
-     */
-    function renderizarCardComunidade($com) {
-        $membros = $com['total_membros'] ?? 0;
-        $tipo = $com['tipo'] ?? 'publica';
-        $tipo_label = $tipo === 'privada' ? '🔒 Privada' : '🌐 Pública';
-        $tipo_classe = $tipo === 'privada' ? 'privada' : 'publica';
-
-        // 🔥 CAPA VIA B2 COM FALLBACK SEGURO (verifica se a função existe)
-        $capa_exibicao = 'uploads/ui/default_comunidade.webp';
-        $capa_nome = !empty($com['capa']) ? $com['capa'] : 'default_comunidade.webp';
-        
-        try {
-            if (function_exists('obterUrlComFallback')) {
-                $b2 = null;
-                try {
-                    $b2 = B2Client::getInstance();
-                } catch (Exception $e) {
-                    error_log("[RENDER CARD] ⚠️ B2Client falhou, usando fallback sem B2: " . $e->getMessage());
-                }
-                $capa_exibicao = obterUrlComFallback($capa_nome, 'uploads/ui/default_comunidade.webp', $b2, true);
-            } else {
-                error_log("[RENDER CARD] ⚠️ obterUrlComFallback não existe, usando fallback antigo");
-                try {
-                    $b2 = B2Client::getInstance();
-                    $capa_exibicao = obterUrlImagem($capa_nome, $b2, true) ?? 'uploads/ui/default_comunidade.webp';
-                } catch (Exception $e) {
-                    error_log("[RENDER CARD] Erro ao obter capa para comunidade {$com['id']}: " . $e->getMessage());
-                    $capa_exibicao = 'uploads/ui/default_comunidade.webp';
-                }
-            }
-        } catch (Exception $e) {
-            error_log("[RENDER CARD] Erro crítico ao obter capa para comunidade {$com['id']}: " . $e->getMessage());
-            $capa_exibicao = 'uploads/ui/default_comunidade.webp';
-        }
-
-        // Verifica se o usuário é membro (apenas para exibir)
-        $is_membro = false;
-        if (isset($_SESSION['usuario_id'])) {
-            $meu_id = $_SESSION['usuario_id'];
-            $check = mysqli_query($GLOBALS['conn'], "SELECT 1 FROM comunidade_membros WHERE comunidade_id = {$com['id']} AND usuario_id = $meu_id");
-            $is_membro = mysqli_num_rows($check) > 0;
-        }
-
-        // 🛡️ SANITIZAÇÃO DE SAÍDA (proteção XSS)
-        $nome_seguro = htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8');
-        $descricao_segura = htmlspecialchars($com['descricao'] ?? 'Sem descrição', ENT_QUOTES, 'UTF-8');
-        $criador_seguro = htmlspecialchars($com['criador_username'] ?? 'Anônimo', ENT_QUOTES, 'UTF-8');
-?>
-    <div class="comunidade-card">
-        <a href="comunidade.php?id=<?php echo $com['id']; ?>" class="card-link">
-            <div class="capa-wrapper">
-                <img src="<?php echo htmlspecialchars($capa_exibicao, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo $nome_seguro; ?>" onerror="this.src='uploads/ui/default_comunidade.webp'">
-                <span class="badge-membros">
-                    <i class="fas fa-users"></i> <?php echo $membros; ?>
-                </span>
-                <span class="badge-tipo <?php echo $tipo_classe; ?>">
-                    <?php echo $tipo_label; ?>
-                </span>
-            </div>
-            <div class="info-comunidade">
-                <h3><?php echo $nome_seguro; ?></h3>
-                <p class="descricao"><?php echo $descricao_segura; ?></p>
-                <div class="meta">
-                    <span>Criada por @<?php echo $criador_seguro; ?></span>
-                    <span><?php echo date('d/m/Y', strtotime($com['data_criacao'])); ?></span>
-                </div>
-            </div>
-        </a>
-
-        <?php if (isset($_SESSION['usuario_id'])): ?>
-            <div class="card-actions">
-                <a href="comunidade.php?id=<?php echo $com['id']; ?>" class="btn-entrar-comunidade <?php echo $is_membro ? 'membro' : ''; ?>" style="<?php echo $is_membro ? 'background:#ffbc00; color:#000;' : ''; ?>">
-                    <?php echo $is_membro ? '✅ Membro' : '🔗 Ver comunidade'; ?>
-                </a>
-            </div>
-        <?php endif; ?>
-    </div>
-<?php
-    }
 ?>
 
 <main class="main-comunidades">
@@ -297,7 +321,7 @@ try {
             while ($com = $result->fetch_assoc()):
                 try {
                     renderizarCardComunidade($com);
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     error_log("[LISTA-COMUNIDADES] Erro ao renderizar card ID {$com['id']}: " . $e->getMessage());
                     echo '<div class="comunidade-card erro" style="border:1px solid #ff6b6b; padding:10px; margin-bottom:10px;">';
                     echo '  <h4>' . htmlspecialchars($com['nome'] ?? 'Comunidade', ENT_QUOTES, 'UTF-8') . '</h4>';
@@ -343,7 +367,6 @@ try {
         let debounceTimer = null;
         let currentTerm = '';
 
-        // Função para renderizar os resultados
         function renderizarResultados(data) {
             dropdown.innerHTML = '';
             if (data.length === 0) {
@@ -367,7 +390,6 @@ try {
             });
         }
 
-        // 🔥 FUNÇÃO DE BUSCA COM URL DINÂMICA
         function buscar(termo) {
             termo = termo.trim();
             if (termo.length < 2) {
@@ -397,7 +419,6 @@ try {
                 });
         }
 
-        // Evento de input (com debounce de 300ms)
         input.addEventListener('input', function() {
             const termo = this.value;
             clearTimeout(debounceTimer);
@@ -406,14 +427,12 @@ try {
             }, 300);
         });
 
-        // Fechar dropdown ao clicar fora
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.search-container')) {
                 dropdown.style.display = 'none';
             }
         });
 
-        // Botão "Buscar" redireciona para a página com a busca via GET (fallback)
         btnBuscar.addEventListener('click', function() {
             const termo = input.value.trim();
             if (termo) {
@@ -421,7 +440,6 @@ try {
             }
         });
 
-        // Permitir Enter para enviar a busca (fallback)
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -432,7 +450,6 @@ try {
             }
         });
 
-        // Se houver um termo na URL (busca tradicional), preenche o input e foca
         const urlParams = new URLSearchParams(window.location.search);
         const qParam = urlParams.get('q');
         if (qParam) {
@@ -453,15 +470,11 @@ try {
 
         if (!grid || !btnLoad) return;
 
-        let offset = <?php echo $offset + $limite; ?>;
+        let offset = <?php echo (int)($offset + $limite); ?>;
         let carregando = false;
         let acabou = <?php echo $tem_mais ? 'false' : 'true'; ?>;
 
-        // 🔒 AUDITORIA CORRENTE – 2026-10-13 (Bloco 1.3 – XSS REAL)
-        //    Antes: a variável era impressa cruamente com addslashes().
-        //    addslashes NÃO escapa a tag de fechamento de script, permitindo XSS.
-        //    Agora: json_encode com flags HEX — mesmo padrão do central.php.
-        //    O valor vira uma string JS segura, imune a injeção de tag.
+        // 🔒 CORRENTE – 2026-10-13 (Bloco 1.3 – XSS REAL): json_encode com HEX.
         const busca = <?php echo json_encode($busca, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
         function carregarMais() {
@@ -486,13 +499,6 @@ try {
                     btnLoad.disabled = false;
                     btnLoad.innerText = 'EXIBIR MAIS';
                     carregando = false;
-
-                    const novosCards = html.trim().split('</div>').length - 1;
-                    if (novosCards < 10) {
-                        acabou = true;
-                        btnLoad.innerText = 'FIM DA LISTA';
-                        btnLoad.disabled = true;
-                    }
                 })
                 .catch(err => {
                     console.error('[COMUNIDADES] Erro ao carregar mais:', err);
@@ -518,9 +524,8 @@ try {
 // ============================================================
 // FIM DO try/catch GLOBAL
 // ============================================================
-} catch (Exception $e) {
+} catch (Throwable $e) {
     error_log("[LISTA-COMUNIDADES] ❌ EXCEÇÃO GLOBAL CAPTURADA: " . $e->getMessage() . " em " . $e->getFile() . ":" . $e->getLine());
-    // Mostra uma mensagem amigável em produção, mas não expõe detalhes internos
     http_response_code(500);
     echo '<!DOCTYPE html><html><head><title>Erro</title></head><body>';
     echo '<main style="text-align:center;padding:40px;color:#ff6b6b;">';

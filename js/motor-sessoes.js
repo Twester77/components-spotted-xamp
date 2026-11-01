@@ -99,7 +99,7 @@ function encerrarSessaoUnica(btn, sessaoId) {
             if (typeof exibirToast === 'function') {
                 exibirToast('✅ Sessão encerrada!', 'sucesso');
             } else {
-                alert('✅ Sessão encerrada!');
+                alert('Sessão encerrada!');
             }
         } else {
             // Tratamento de erros específicos

@@ -180,8 +180,6 @@ body:not(.modo-swipe-ativo) .post-content {
     -webkit-font-smoothing: antialiased;
     height: auto;
     scrollbar-width: none;
-    content-visibility: auto;
-    contain-intrinsic-size: 400px; /* Altura estimada do card */
     container-type: inline-size;
     container-name: container-card;
 }
@@ -214,6 +212,16 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
         transition: 0.3s ease;
     }
 }
+
+/* Ativa a renderização sob demanda apenas no feed normal de rolagem, 
+   onde não há JavaScript movendo os cards de lugar de forma absoluta */
+body:not(.modo-swipe-ativo) .container-feed .spotted-card {
+    content-visibility: auto;
+    /* 🎨 FALLBACK SEGURO: Se o card tiver imagem, ele assume ~450px. 
+       Se for só texto, o navegador calcula de forma flexível pelo 'auto'. */
+    contain-intrinsic-size: auto 420px; 
+}
+
 
 /* ============================================================
    5. CARREGAR MAIS / FIM / BOTÕES GENÉRICOS
@@ -412,6 +420,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     z-index: 1;
 }
 
+
 /* ============================================================
    9. BOTÃO FILTRO PERDIDOS E BADGES
    ============================================================ */
@@ -421,10 +430,10 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     background: var(--bg-input, rgba(255, 255, 255, 0.05));       /* 🐚 FAROL – Fase 2 */
     border: 1px solid rgba(255, 255, 255, 0.1);                   /* fallback */
     border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
-    border-radius: 16px;
+    border-radius: 14px;
     color: #fff;                                                   /* fallback */
     color: var(--texto-primario, #fff);                            /* 🐚 FAROL – Fase 2 */
-    flex: 1 1 120px;
+    flex: 1 1 100px;
     max-width: 180px;
     text-decoration: none;
     font-weight: bold;
@@ -513,7 +522,7 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     -webkit-user-drag: none;
     -webkit-touch-callout: none;
     font-size: 0.78rem;
-    font-size: clamp(0.72rem, 3cqi, 1rem);
+    font-size: clamp(0.72rem, 3.5cqi, 0.9rem);
     font-weight: 800;
     text-transform: uppercase;
     transition: 0.3s ease-in-out;
@@ -910,7 +919,7 @@ span.data-post {
 }
 
 .bio-box {
-    width: 100% !important;
+    width: 100% ;
     max-width: auto;
     margin: 20px 0;
     text-align: center;

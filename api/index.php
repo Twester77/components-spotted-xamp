@@ -69,18 +69,19 @@ function responder404(string $path): void
                 align-items: center;
                 justify-content: center;
                 min-height: 100vh;
+                height: 100dvh;
                 margin: 0;
                 padding: 20px;
                 text-align: center;
             }
 
             .container {
-                max-width: 600px;
+                max-width: 800px;
             }
 
             h1 {
                 color: #ffbc00;
-                font-size: 3rem;
+                font-size: 2.5rem;
                 font-size: clamp(3rem, 12vw, 5rem);
                 margin: 0 0 10px 0;
                 letter-spacing: 4px;
@@ -97,7 +98,7 @@ function responder404(string $path): void
                 display: inline-block;
                 background: #ffbc00;
                 color: #000;
-                padding: 12px 28px;
+                padding: 12px 24px;
                 border-radius: 30px;
                 text-decoration: none;
                 font-weight: bold;
@@ -214,7 +215,6 @@ if (strpos($relative, 'includes/') === 0) {
         'includes/excluir.php',              // 🔥 ADICIONADO (feed/ver-perfil via long press)
         'includes/excluir-comentario.php',
         'includes/contar_alertas.php',
-        'includes/checar-notificacoes.php',
         'includes/reagir.php',
         'includes/comunidade-actions.php',
         'includes/comentarios-novos.php',   // 🔥 ADICIONADO endpoint novo de comentarios

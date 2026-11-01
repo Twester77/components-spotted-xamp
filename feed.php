@@ -216,6 +216,7 @@ function reforcarLayoutNosCards() {
             }
             .reactions-actions .action-btn {
                 background: rgba(255, 255, 255, 0.03);
+                background: var(--borda-sutil, rgba(255, 255, 255, 0.05));
                 border: none;
                 border-radius: 60px;
                 padding: 8px 14px;
