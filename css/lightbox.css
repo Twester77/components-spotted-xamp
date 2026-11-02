@@ -398,15 +398,13 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     width: 100%;
 }
 
-.lightbox-comentarios-lista .comentario-item.vibe-ads,
-.lightbox-comentarios-lista .comentario-item.vibe-light,
-.lightbox-comentarios-lista .comentario-item.vibe-dark,
-.lightbox-comentarios-lista .comentario-item.vibe-neon,
-.lightbox-comentarios-lista .comentario-item.vibe-glass {
+.lightbox-comentarios-lista .comentario-item[class*="vibe-"],
+.lightbox-comentarios-lista body.estilo-cascata .comentario-item[class*="vibe-"]
+ {
     margin: 0;
+    gap: 4px 8px;
     padding: 5px 10px;
     padding: clamp(6px, 1cqi, 12px) clamp(10px, 1.5cqi, 16px);
-    border-radius: 12px;
     background: rgba(255, 255, 255, 0.06);                        /* fallback */
     background: var(--bg-input, rgba(255, 255, 255, 0.06));       /* 🌅 FAGULHA – Fase 2 */
     border-right: none;
@@ -419,7 +417,6 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-comentarios-lista .comentario-item .comentario-meta {
     padding: 4px 8px;
     padding: clamp(6px, 1cqi, 12px) clamp(8px, 1.5cqi, 16px);
-    border-radius: 12px;
     gap: 10px;
     display: flex;
     align-items: center;
@@ -461,8 +458,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-comentarios-lista  .comentario-item  .comentario-meta .comentario-data {
     font-size: 0.8rem;
-    font-size: clamp(0.77rem, 2cqi, 0.96rem);
-    opacity: 0.85;
+    font-size: clamp(0.77rem, 2cqi, 0.98rem);
+    opacity: 0.8;
     color: #ccc;                                                   /* fallback */
     color: oklch(84.522% 0.0001 271.152 / 0.8);                   /* fallback moderno */
     color: var(--texto-secundario, oklch(84.522% 0.0001 271.152 / 0.8)); /* 🌅 FAGULHA – Fase 2 */

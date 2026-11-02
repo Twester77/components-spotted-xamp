@@ -135,7 +135,7 @@
     content: "";
     position: fixed;
     inset: 0;
-    z-index: 9999; /* Fica acima de tudo */
+    z-index: 9994; /* Fica acima de tudo */
     pointer-events: none;
     /* Linhas verdes com 0.1 de opacidade */
     background-image: repeating-linear-gradient(
@@ -143,9 +143,9 @@
         rgba(0, 255, 65, 0.1) 0px,
         rgba(0, 255, 65, 0.1) 1px,
         transparent 1px,
-        transparent 3px
+        transparent 2px
     );
-    background-size: 100% 3px;
+    background-size: 100% 2px;
     /* Garante que a GPU cuide disso */
     transform: translate3d(0, 0, 0);
     will-change: transform;
@@ -166,11 +166,10 @@
         rgba(0, 255, 65, 0.15) 0px,
         rgba(0, 255, 65, 0.15) 1px,
         transparent 1px,
-        transparent 3px
+        transparent 2px
     );
-    background-size: 100% 3px;
+    background-size: 100% 2px;
     border: 1px solid var(--hacker-green);
-    box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
     border-radius: 6px;
     display: flex;
     gap: 4px;
@@ -226,9 +225,9 @@
         rgba(0, 255, 65, 0.15) 0px,
         rgba(0, 255, 65, 0.15) 1px,
         transparent 1px,
-        transparent 3px
+        transparent 2px
     );
-    background-size: 100% 3px;
+    background-size: 100% 2px;
 }
 
 /* Conteúdo Acima do CRT */
@@ -272,9 +271,9 @@
     /* 🎨 Hack clássico do Safari/Chrome mobile: força aceleração 3D sem quebrar o translate() do JS */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    background: var(--hacker-bg);
 }
 
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card[class*="vibe-"]::after,
 [data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
 [data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging) {
     animation: none;
@@ -632,7 +631,7 @@
 [data-theme="hacker"] .img-avatar-perfil,
 [data-theme="hacker"] .capa-img,
 [data-theme="hacker"] .insignia-atletica-link {
-    filter: sepia(0.3) brightness(0.9) contrast(1) grayscale(0.2);
+    filter: grayscale(1) brightness(0.9) contrast(1.1) sepia(1) hue-rotate(85deg) saturate(2.5) ;
     transition: filter 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
@@ -643,7 +642,7 @@
 [data-theme="hacker"] .capa-img:hover,
 [data-theme="hacker"] .avatar-p:hover,
 [data-theme="hacker"] .insignia-atletica-link:hover img {
-    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 8px var(--hacker-green));
+    filter: sepia(0.1) brightness(1.06) contrast(1.05) grayscale(0) drop-shadow(0 0 4px var(--hacker-green));
 }
 
 [data-theme="hacker"] .spotted-card-img:hover {
@@ -889,7 +888,7 @@
 /* --- VIBE ADS: hexágonos --- */
 [data-theme="hacker"] .comentario-item.vibe-ads {
     background-color: var(--hacker-bg);
-    box-shadow: 0 0 4px rgba(0, 255, 65, 0.3);
+    box-shadow: 0 0 2px rgba(0, 255, 65, 0.3);
     animation: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 60 60'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='none' stroke='%2300ff41' stroke-width='1.1' stroke-opacity='0.20'/%3E%3C/svg%3E");
     background-size: 50px 50px;
@@ -1121,7 +1120,7 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
     background: rgba(0, 255, 64, 0.144);
     border-color: var(--hacker-green);
-    box-shadow: 0 0 8px var(--hacker-green);
+    box-shadow: 0 0 6px var(--hacker-green);
 }
 
 /* Spotted-card das 5 vibes no feed */
@@ -1167,12 +1166,6 @@
 /* 1. O CARD (Deixa visível e com o grid estático no fundo) */
 [data-theme="hacker"] .spotted-card.vibe-ads {
     background-color: rgba(0, 12, 0, 0.95);
-    
-    /* Grid sutil de fundo (estático) */
-    background-image: 
-        linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 255, 65, 0.03) 2px, transparent 2px);
-    background-size: 30px 30px;
     
     border: 1px solid var(--hacker-green-glow);
     position: relative;
@@ -1226,7 +1219,7 @@
         border-color: rgba(0, 255, 65, 0.4);
     }
     20%, 24%, 55% {
-        box-shadow: 0 0 15px rgba(0, 255, 65, 0.6), inset 0 0 10px rgba(0, 255, 65, 0.3);
+        box-shadow: 0 0 12px rgba(0, 255, 65, 0.6), inset 0 0 12px rgba(0, 255, 65, 0.3);
         border-color: rgba(0, 255, 65, 0.8);
     }
 }
@@ -1235,10 +1228,10 @@
 [data-theme="hacker"] .spotted-card.vibe-ads::after {
     content: '● REC';
     position: absolute;
-    top: 12px;
-    right: 12px; 
+    top: 10px;
+    right: 25px; 
     font-family: var(--hacker-font);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--hacker-green);
     z-index: 10;
     pointer-events: none;
@@ -1247,7 +1240,7 @@
 
 /* Espaço pro REC no header */
 [data-theme="hacker"] .spotted-card.vibe-ads .card-header {
-    padding-right: 70px;
+    padding-right: 60px;
 }
 
 @keyframes ads-hacker-rec-blink {
@@ -1735,4 +1728,36 @@
     50% { opacity: 0.3; filter: blur(4px); }
     100% { opacity: 1; filter: blur(0) brightness(1); }
 }
+
+
+/* ============================================================
+   🦾 SEÇÃO HACKER LONG PRESS — VERSÃO GESTO LIVRE (60 FPS)
+   ============================================================ */
+[data-theme="hacker"] .modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active,
+[data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
+    background-image: none ;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
+    border: 2px dashed var(--hacker-green) ;
+    
+    /* 🚀 Hack de mestre: Não mexe no transform, deixando o JS arrastar livre! */
+    will-change: box-shadow, opacity;
+    animation: hacker-marretador-seguro 0.4s infinite steps(2) !important;
+}
+
+@keyframes hacker-marretador-seguro {
+    0%, 100% {
+        box-shadow: 0 0 2px var(--hacker-green), inset 0 0 1px var(--hacker-green);
+        opacity: 0.98;
+        outline: 1px solid transparent;
+    }
+    50% {
+        /* Sobrecarga de luz nas bordas sem mover um único pixel de lugar */
+        box-shadow: 0 0 8px var(--hacker-green-soft), inset 0 0 4px var(--hacker-green);
+        opacity: 0.85;
+        outline: 2px solid var(--hacker-green);
+        outline-offset: -4px; /* Pisca uma linha interna falsa */
+    }
+}
+
 

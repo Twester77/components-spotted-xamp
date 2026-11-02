@@ -2705,6 +2705,7 @@ body.modal-aberto #fenda-nexus {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    will-change: transform;
     transition: transform 0.3s ease;
 }
 
@@ -2740,6 +2741,7 @@ body.modal-aberto #fenda-nexus {
     text-align: center;
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
+    font-size: 0.86rem;
     font-size: clamp(0.9rem, 0.382vw + 0.625rem, 1.3rem);
 }
 

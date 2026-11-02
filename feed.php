@@ -75,7 +75,7 @@ function recalcFeedLayout() {
 
     var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
     var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
-    var fontSizeUser = Math.max(0.7, Math.min(cardWidth / 600, 0.92));
+    var fontSizeUser = Math.max(0.7, Math.min(cardWidth / 600, 0.95));
     var fontSizeCategory = Math.max(0.82, Math.min(cardWidth / 480, 1.15));
     var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
     var avatarSize = Math.round(Math.max(36, Math.min(cardWidth * 0.12, 56)));
@@ -147,7 +147,7 @@ function reforcarLayoutNosCards() {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.4);
+                background: rgba(0, 0, 0, 0.5);
                 -webkit-backdrop-filter: blur(3px);
                 backdrop-filter: blur(3px);
                 z-index: 30000;
@@ -220,8 +220,10 @@ function reforcarLayoutNosCards() {
                 border: none;
                 border-radius: 60px;
                 padding: 8px 14px;
+                min-height: 40px;
                 color: rgba(255, 255, 255, 0.6);
                 font-size: 0.9rem;
+                font-size:clamp(0.86rem, 1.2vw, 1.05rem);
                 font-weight: 500;
                 cursor: pointer;
                 transition: 0.2s;

@@ -2911,7 +2911,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     display: block;
     top: 5px;
     right: 5px;
-    padding: 4px 0;
+    padding: 8px 0;
     z-index: 10;
 }
 
@@ -3087,13 +3087,13 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     /* Ajuste para telas muito pequenas */
     @media (max-width: 480px) {
         .ellipsis-item {
-            font-size: 1rem;
-            padding: 14px 16px;
+            font-size: 0.96rem;
+            padding: 12px 14px;
         }
         .btn-ellipsis {
             width: 28px;
             height: 28px;
-            font-size: 1rem;
+            font-size: 0.96rem;
         }
     }
 

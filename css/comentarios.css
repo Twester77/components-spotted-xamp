@@ -716,8 +716,8 @@
     
     /* 🚀 Sombra neon moderna com a cor dinâmica do usuário */
     box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.5), 
-        0 0 15px oklch(from var(--cor-borda-glow) 0.65 0.1 h / 0.2);
+        0 4px 8px rgba(0, 0, 0, 0.5), 
+        0 0 12px oklch(from var(--cor-borda-glow) 0.65 0.1 h / 0.2);
 }
 
 
@@ -725,15 +725,15 @@
 
 @keyframes pulsar-luz {
     0% {
-        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
+        box-shadow: 0 0 8px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
     }
 
     50% {
-        box-shadow: 0 0 25px var(--cor-borda-glow), inset 0 0 15px var(--cor-borda-glow);
+        box-shadow: 0 0 20px var(--cor-borda-glow), inset 0 0 10px var(--cor-borda-glow);
     }
 
     100% {
-        box-shadow: 0 0 10px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
+        box-shadow: 0 0 8px var(--cor-borda-glow), inset 0 0 5px var(--cor-borda-glow);
     }
 }
 

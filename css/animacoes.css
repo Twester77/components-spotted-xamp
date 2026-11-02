@@ -18,6 +18,8 @@
     
     /* OTIMIZAÇÃO 1: Ativa a aceleração de hardware nativa na GPU */
     will-change: transform, opacity;
+    transform-style: flat;
+
     
     /* OTIMIZAÇÃO 2: Força o motor do navegador a renderizar em uma camada 3D separada */
     -webkit-backface-visibility: hidden;
@@ -38,6 +40,11 @@
     touch-action: none;
     user-select: none;
     overflow: hidden; 
+      /* 🚀 FEITIÇO DE DESEMPENHO DEFINITIVO:
+       Isola 100% o fluxo de pintura das bolhas para que elas não forcem
+       o redesenho dos cards do feed ou perfis durante a subida */
+    contain: strict;
+    isolation: isolate;
 }
 
 
@@ -123,7 +130,7 @@
     align-items: center;
     gap: 8px;
     font-weight: bold;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.2);                    /* fallback */
     border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🌅 FAGULHA – Fase 2 */
     animation: slideDown-toast 0.5s ease-out;
@@ -244,3 +251,5 @@
 body.modo-swipe-ativo .swipe-distribuicao {
     animation: swipe-distribuicao-keyframes 0.4s cubic-bezier(0.25, 1.2, 0.5, 1) forwards !important;
 }
+
+

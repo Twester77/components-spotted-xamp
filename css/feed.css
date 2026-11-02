@@ -198,7 +198,8 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
     background: var(--bg-card-hover, rgba(0, 0, 0, 0.397));        /* 🐚 FAROL – Fase 2 */
     border-color: rgba(255, 255, 255, 0.144);                     /* fallback */
     border-color: var(--borda-card, rgba(255, 255, 255, 0.144));   /* 🐚 FAROL – Fase 2 */
-    transition: 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+
 }
 
 @supports (backdrop-filter: blur(2px)) {
@@ -209,18 +210,17 @@ body:not(.modo-swipe-ativo) .spotted-card:hover {
         border-color: rgba(255, 255, 255, 0.14);                   /* fallback */
         border-color: var(--borda-card, rgba(255, 255, 255, 0.14)); /* 🐚 FAROL – Fase 2 */
         transform: translateY(-6px);
-        transition: 0.3s ease;
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s ease;
+
     }
 }
 
-/* Ativa a renderização sob demanda apenas no feed normal de rolagem, 
-   onde não há JavaScript movendo os cards de lugar de forma absoluta */
+/* Renderização sob demanda apenas no Grid tradicional de rolagem */
 body:not(.modo-swipe-ativo) .container-feed .spotted-card {
     content-visibility: auto;
-    /* 🎨 FALLBACK SEGURO: Se o card tiver imagem, ele assume ~450px. 
-       Se for só texto, o navegador calcula de forma flexível pelo 'auto'. */
     contain-intrinsic-size: auto 420px; 
 }
+
 
 
 /* ============================================================
@@ -685,7 +685,7 @@ span.data-post {
 
 .reacao-wrapper {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
 }
 
 .reacao-wrapper.popup-ativo .reacoes-popup {
@@ -816,7 +816,7 @@ span.data-post {
 .btn-reagir,
 .btn-fofocar,
 .reacao-wrapper {
-    pointer-events: auto !important;
+    pointer-events: auto ;
 }
 
 
@@ -946,6 +946,8 @@ span.data-post {
     background: rgba(255, 255, 255, 0.02);
     border: 2px solid rgba(255, 255, 255, 0.06);
     padding: 4px 2px;
+    contain: layout paint;
+    isolation: isolate;
 }
 
 .main-perdidos .feed-anexos-grid {
@@ -985,8 +987,8 @@ span.data-post {
     position: relative;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.15s ease;
+    contain: layout paint;
+    isolation: isolate;
 }
 
 .feed-anexo-item img {
@@ -995,7 +997,7 @@ span.data-post {
     object-fit: cover;
     object-position: center;
     display: block;
-    transition: transform 0.25s ease;
+    will-change: transform;
 }
 
 /* --- 14.3. 1 imagem: full bleed, sem cortes absurdos --- */

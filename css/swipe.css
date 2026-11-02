@@ -151,15 +151,18 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     height: auto;
     box-sizing: border-box;
 
-    content-visibility: auto;
-    -webkit-font-smoothing: antialiased;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    touch-action: none;
+    
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    /* 🚀 REGRAS DE HARDWARE CONSOLIDADAS (Sem travar o JS) */
+    -webkit-font-smoothing: antialiased;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: flat;
+    will-change: transform, opacity;
+    touch-action: none;
     transition: width 0.2s ease, max-height 0.2s ease, font-size 0.2s ease;
 }
 
@@ -170,8 +173,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
         backdrop-filter 0.2s linear !important;
     isolation: isolate;
     will-change: transform, opacity;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
 }
@@ -206,30 +207,32 @@ body.modo-swipe-ativo .post-content {
     flex-grow: 1;
 }
 
+
 /* ============================================================
-   5. PROTEÇÃO DE IMAGEM (ANTI-ONDAS)
+    5. PROTEÇÃO DE IMAGEM E ACELERAÇÃO MÁXIMA (Mídias e GIFs)
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: pixelated; /* Evita jank de redimensionamento nos GIFs */
+    width: 100%;
     max-height: calc(var(--card-max-height, 600px) * 0.5);
     height: var(--img-max-height, auto);
     object-fit: var(--img-fit, contain);
     background-color: var(--img-bg, transparent);
     align-items: center;
     justify-content: center;
-    width: 100%;
     border-radius: 8px;
-    animation: none;
-    image-rendering: auto;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+
 }
 
-body.modo-swipe-ativo .spotted-card img {
-    /* 🎨 Evita decoding na thread principal enquanto você arrasta o card */
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-
+body.modo-swipe-ativo .container-img-post,
+body.modo-swipe-ativo .feed-anexos-grid,
+body.modo-swipe-ativo .feed-anexo-item {
+    /* ⚡ Isola as imagens e GIFs para blindar reflows de frames */
+    contain: layout paint; 
+    isolation: isolate;
+    overflow: hidden;
+    contain-intrinsic-size: auto var(--inner-dynamic-height, 350px);
 }
 
 /* ============================================================
@@ -428,16 +431,25 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: block;
     position: absolute;
     background: rgba(0, 0, 0, 0.751);                              /* 🎨 preto-translúcido específico */
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
     border-radius: 0 0 20px 20px;
     padding: 15px;
     z-index: 9994;
+    contain: layout;
+    isolation: isolate;
+    max-height: 50vh;
     max-height: 50dvh;
     overflow-y: auto ;
     width: 100%;
     border-bottom: 3px solid #ff8c00;                              /* fallback */
     border-bottom: 3px solid var(--cor-principal-laranja, #ff8c00); /* 🌅 FAGULHA – Fase 2 */
+    /* 🚀 REGRAS DE HARDWARE CONSOLIDADAS */
+    contain: layout; /* Isola a geometria interna para a CPU não recalcular a árvore do DOM */
+    isolation: isolate; /* Protege o empilhamento do z-index */
+    
+    /* ⚡ Prepara a GPU para o deslizamento liso, eliminando engasgos no mobile */
+    will-change: transform, opacity; 
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     animation: slideDown-filtro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
@@ -1196,7 +1208,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
         gap: 4px;
         min-width: 0;
         margin: 0;
-        padding: 0;
+        padding-right: 40px;
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado
