@@ -57,6 +57,7 @@ if ($aba === 'depoimentos') {
     $_GET['usuario_id'] = $usuario_id;
     $_GET['status'] = 'aprovado';
     $_GET['limite'] = isset($_GET['limite']) ? (int)$_GET['limite'] : 3;
+    $mostrar_botao_depoimento = true;
     
     include 'motor-depoimentos.php';
     exit;

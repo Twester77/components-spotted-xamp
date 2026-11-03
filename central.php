@@ -176,9 +176,26 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
             }
 
             fetch(finalUrl)
-                .then(response => response.text())
-                .then(html => {
+                .then(async response => {
+                    const html = await response.text();
                     loading.style.display = 'none';
+
+                    if (response.status === 429) {
+                        body.innerHTML = '<p style="text-align:center; color:#ffbc00; padding:30px;">Você está buscando rápido demais. Aguarde um minuto e tente novamente.</p>';
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    if (html.trim() === 'FIM_DADOS') {
+                        body.innerHTML = abaId === 'posts'
+                            ? '<p style="text-align:center; color:#aaa; padding:30px;">Você ainda não fez nenhuma publicação.</p>'
+                            : '<p style="text-align:center; color:#aaa; padding:30px;">Nenhum registro encontrado nesta aba.</p>';
+                        return;
+                    }
+
                     body.innerHTML = html;
 
                     // 🔥 CONFIGURA POSTS (apenas se não estiver em modo swipe)

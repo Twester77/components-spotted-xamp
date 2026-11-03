@@ -314,8 +314,25 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             `;
 
             fetch(url + '&_=' + Date.now())
-                .then(res => res.text())
-                .then(html => {
+                .then(async response => {
+                    const html = await response.text();
+
+                    if (response.status === 429) {
+                        container.innerHTML = '<p style="text-align:center; color:#ffbc00; padding:20px;">Você está buscando rápido demais. Aguarde um minuto e tente novamente.</p>';
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    if (html.trim() === 'FIM_DADOS') {
+                        container.innerHTML = aba === 'posts'
+                            ? '<div class="container-feed"><p style="text-align:center; color:#aaa; padding:30px;">Este habitante ainda não fez nenhuma publicação.</p></div>'
+                            : '<p style="text-align:center; color:#aaa; padding:30px;">Nenhum dado encontrado.</p>';
+                        return;
+                    }
+
                     // 🔥 O SEGREDO ESTÁ AQUI: Se for posts, envolve no container-feed para pegar o grid!
                     if (aba === 'posts') {
                         container.innerHTML = `<div class="container-feed">${html}</div>`;
@@ -357,7 +374,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
         const btnFechar = document.getElementById('btn-fechar-modal-depoimento');
         const body = document.getElementById('modal-depoimento-body');
 
-        if (!btnAbrir || !modal) return;
+        if (!btnAbrir || !modal || !btnFechar || !body) return;
 
         function abrirModal() {
             const destinatarioId = btnAbrir.dataset.destinatario;
@@ -365,16 +382,18 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             body.innerHTML = '<div class="loading-depoimentos">Carregando formulário...</div>';
 
             fetch(`escrever-depoimento-modal.php?destinatario=${destinatarioId}`)
-                .then(res => res.text())
+                .then(async response => {
+                    const html = await response.text();
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return html;
+                })
                 .then(html => {
                     body.innerHTML = html;
-                    const csrfInput = body.querySelector('input[name="csrf_token"]');
-                    if (csrfInput) {
-                        csrfInput.value = document.getElementById('csrf_token')?.value || '';
-                    }
                     
                     // Handler do form
-                    const form = body.querySelector('#form-depoimento');
+                    const form = body.querySelector('#form-depoimento-modal');
                     if (form) {
                         form.addEventListener('submit', function(e) {
                             e.preventDefault();
@@ -410,6 +429,12 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
                             });
                         });
                     }
+                    const btnCancelar = body.querySelector('#btn-cancelar-modal-depoimento');
+                    if (btnCancelar) btnCancelar.addEventListener('click', fecharModal);
+                })
+                .catch(err => {
+                    console.error('[PERFIL DEPOIMENTOS] Erro ao carregar formulário:', err);
+                    body.innerHTML = '<p class="sem-depoimentos">Não foi possível carregar o formulário. Tente novamente.</p>';
                 });
         }
 
@@ -418,10 +443,134 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
             body.innerHTML = '';
         }
 
-        btnAbrir.addEventListener('click', abrirModal);
-        btnFechar.addEventListener('click', fecharModal);
-        modal.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.style.display === 'flex') fecharModal(); });
+        btnAbrir.onclick = abrirModal;
+        if (modal.dataset.eventsBound !== 'true') {
+            btnFechar.addEventListener('click', fecharModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) fecharModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.style.display === 'flex') fecharModal(); });
+            modal.dataset.eventsBound = 'true';
+        }
+    };
+
+    // ============================================================
+    // AVALIAÇÕES DO PERFIL
+    // ============================================================
+    window.initAvaliacoesActions = function() {
+        const container = document.getElementById('perfil-conteudo');
+        if (!container || !container.querySelector('.avaliacoes-container')) return;
+
+        const usuarioAvaliadoId = <?= (int)$id_visto ?>;
+        const notasSelecionadas = {};
+
+        function exibirFeedback(mensagem, tipo, elemento) {
+            if (typeof window.exibirBalao === 'function') {
+                window.exibirBalao(mensagem, tipo, elemento);
+            } else {
+                alert(mensagem);
+            }
+        }
+
+        async function recarregarAvaliacoes() {
+            const response = await fetch(`motor-avaliacoes.php?usuario_id=${usuarioAvaliadoId}&_=${Date.now()}`);
+            const html = await response.text();
+            if (!response.ok) {
+                throw new Error(`Não foi possível atualizar as avaliações (HTTP ${response.status}).`);
+            }
+            container.innerHTML = html;
+            window.initAvaliacoesActions();
+        }
+
+        container.querySelectorAll('.estrela').forEach(estrela => {
+            estrela.onclick = function() {
+                const tipo = this.dataset.tipo;
+                const nota = Number(this.dataset.nota);
+                if (!tipo || !Number.isInteger(nota) || nota < 1 || nota > 5) return;
+
+                notasSelecionadas[tipo] = nota;
+                const item = this.closest('.avaliacao-item');
+                if (!item) return;
+
+                item.querySelectorAll('.estrela').forEach((el, index) => {
+                    el.classList.remove('cheia', 'meia', 'vazia');
+                    el.classList.add(index < nota ? 'cheia' : 'vazia');
+                });
+
+                const btnVotar = item.querySelector('.btn-votar-estrela');
+                if (btnVotar) {
+                    btnVotar.disabled = false;
+                    btnVotar.textContent = `✅ Votar com ${nota} ★`;
+                }
+            };
+        });
+
+        container.querySelectorAll('.btn-votar-estrela').forEach(btn => {
+            btn.onclick = async function() {
+                const tipo = this.dataset.tipo;
+                const nota = notasSelecionadas[tipo];
+                if (!nota) {
+                    exibirFeedback('Selecione uma nota clicando nas estrelas primeiro.', 'info', this);
+                    return;
+                }
+
+                const csrfToken = document.getElementById('csrf_token')?.value || '';
+                if (!csrfToken) {
+                    exibirFeedback('Não foi possível validar a solicitação. Recarregue a página.', 'erro', this);
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('csrf_token', csrfToken);
+                formData.append('honeypot', '');
+                formData.append('usuario_id', usuarioAvaliadoId);
+                formData.append('tipo', tipo);
+                formData.append('nota', nota);
+
+                this.disabled = true;
+                this.textContent = 'Enviando...';
+
+                try {
+                    const response = await fetch('motor-avaliacoes.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const responseText = await response.text();
+                    let data;
+                    try {
+                        data = JSON.parse(responseText);
+                    } catch {
+                        throw new Error(`Resposta inválida do servidor (HTTP ${response.status}).`);
+                    }
+
+                    if (!response.ok || !data.sucesso) {
+                        if (response.status === 409) {
+                            try {
+                                await recarregarAvaliacoes();
+                            } catch (refreshError) {
+                                console.error('[PERFIL AVALIACOES] Falha ao atualizar após conflito:', refreshError);
+                            }
+                        }
+                        throw new Error(data.erro || `Não foi possível registrar o voto (HTTP ${response.status}).`);
+                    }
+
+                    exibirFeedback(data.mensagem || 'Voto registrado com sucesso!', 'sucesso', this);
+                    try {
+                        await recarregarAvaliacoes();
+                    } catch (refreshError) {
+                        console.error('[PERFIL AVALIACOES] Voto registrado, mas falhou a atualização:', refreshError);
+                        this.disabled = true;
+                        this.textContent = 'Voto registrado';
+                        exibirFeedback('Voto registrado, mas não foi possível atualizar as médias. Recarregue a aba.', 'info', this);
+                    }
+                } catch (err) {
+                    console.error('[PERFIL AVALIACOES] Erro ao votar:', err);
+                    if (container.contains(this)) {
+                        this.disabled = false;
+                        this.textContent = `✅ Votar com ${nota} ★`;
+                    }
+                    exibirFeedback(err.message || 'Erro ao registrar o voto.', 'erro', container.contains(this) ? this : container);
+                }
+            };
+        });
     };
 
     // ============================================================

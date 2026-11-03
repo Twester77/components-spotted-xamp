@@ -48,7 +48,7 @@
 [data-theme="hacker"] body {
     font-family: var(--hacker-font);
     cursor: crosshair;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
@@ -116,11 +116,13 @@
     display: none;
 }
 
-/* Desativa CRT durante swipe/tinder (performance) */
-[data-theme="hacker"] body.modo-swipe-ativo::before,
-[data-theme="hacker"] body:not(.modo-swipe-ativo)::before,
+/* O feed em grid usa scanlines nos próprios cards; evita a camada fixa da tela inteira. */
+[data-theme="hacker"] body:has(.controles-feed-topo):not(.modo-swipe-ativo)::before {
+    display: none;
+}
+
+/* Mantém o flicker desativado durante swipe/tinder */
 [data-theme="hacker"] body.modo-swipe-ativo::after,
-[data-theme="hacker"] body.modo-tinder-ativo::before,
 [data-theme="hacker"] body.modo-tinder-ativo::after {
     display: none;
 }
@@ -137,18 +139,14 @@
     inset: 0;
     z-index: 9994; /* Fica acima de tudo */
     pointer-events: none;
-    /* Linhas verdes com 0.1 de opacidade */
     background-image: repeating-linear-gradient(
         0deg,
-        rgba(0, 255, 65, 0.1) 0px,
-        rgba(0, 255, 65, 0.1) 1px,
+        rgba(0, 255, 65, 0.12) 0px,
+        rgba(0, 255, 65, 0.12) 1px,
         transparent 1px,
         transparent 2px
     );
     background-size: 100% 2px;
-    /* Garante que a GPU cuide disso */
-    transform: translate3d(0, 0, 0);
-    will-change: transform;
 }
 
 /* Desativa CRT no Swipe (Performance) */
@@ -198,7 +196,6 @@
     background-color: rgba(0, 255, 65, 0.3);
     /* Borda e brilho verde */
     border-color: var(--hacker-green);
-    box-shadow: 0 0 8px rgba(0, 255, 65, 0.8);
     /* Zoom sutil */
     transform: scale(1.15);
     /* Texto branco para o emoji brilhar */
@@ -1086,10 +1083,11 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 50vh;
+    height: 60vh;
+    height: 60dvh;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.2;
+    opacity: 0.3;
     background-color: var(--hacker-green);
 
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
@@ -1170,12 +1168,10 @@
     border: 1px solid var(--hacker-green-glow);
     position: relative;
     overflow: visible; /* REC não é cortado */
-    
-    will-change: box-shadow;
-    animation: ads-hacker-glitch-border 3s infinite;
+    box-shadow: 0 0 5px rgba(0, 255, 65, 0.2), inset 0 0 5px rgba(0, 255, 65, 0.1);
 }
 
-/* 2. O FUNDO ANIMADO (O feixe de luz que passa) */
+/* 2. Scanlines estáticas no card */
 [data-theme="hacker"] .spotted-card.vibe-ads::before {
     content: '';
     position: absolute;
@@ -1184,20 +1180,14 @@
     border-radius: inherit;
     pointer-events: none; /* Permite clicar nos botões */
     
-    /* Gradiente que cria o feixe de luz verde */
-    background-image: linear-gradient(
-        to bottom, 
-        transparent 80%, 
-        rgba(0, 255, 65, 0.15) 90%, 
-        rgba(0, 255, 65, 0.6) 100%
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 65, 0.1) 0px,
+        rgba(0, 255, 65, 0.1) 1px,
+        transparent 1px,
+        transparent 3px
     );
-    background-size: 100% 100px; /* Altura do feixe */
-    background-repeat: no-repeat;
-    background-position: 0% -100px; /* Começa fora da tela (acima) */
-    
-    /* Animação descendo o feixe de luz */
-    will-change: background-position;
-    animation: ads-hacker-scanline 3.5s linear infinite;
+    background-size: 100% 3px;
 }
 
 /* 3. O CONTEÚDO (Fica acima do feixe de luz) */
@@ -1229,13 +1219,12 @@
     content: '● REC';
     position: absolute;
     top: 10px;
-    right: 25px; 
+    right: 30px; 
     font-family: var(--hacker-font);
     font-size: 0.65rem;
     color: var(--hacker-green);
     z-index: 10;
     pointer-events: none;
-    animation: ads-hacker-rec-blink 2s steps(1) infinite;
 }
 
 /* Espaço pro REC no header */
@@ -1246,6 +1235,41 @@
 @keyframes ads-hacker-rec-blink {
     0%, 70% { opacity: 1; color: var(--hacker-green); }
     71%, 100% { opacity: 0; color: transparent; }
+}
+
+/* Reproduz o feixe e o glitch apenas durante interação com mouse */
+@media (hover: hover) and (pointer: fine) {
+    [data-theme="hacker"] .spotted-card.vibe-ads:hover,
+    [data-theme="hacker"] .spotted-card.vibe-ads:focus-within {
+        animation: ads-hacker-glitch-border 3s infinite;
+    }
+
+    [data-theme="hacker"] .spotted-card.vibe-ads:hover::before,
+    [data-theme="hacker"] .spotted-card.vibe-ads:focus-within::before {
+        background-image: linear-gradient(
+            to bottom,
+            transparent 80%,
+            rgba(0, 255, 65, 0.15) 90%,
+            rgba(0, 255, 65, 0.6) 100%
+        );
+        background-size: 100% 100px;
+        background-repeat: no-repeat;
+        background-position: 0% -100px;
+        animation: ads-hacker-scanline 3.5s linear infinite;
+    }
+
+    [data-theme="hacker"] .spotted-card.vibe-ads:hover::after,
+    [data-theme="hacker"] .spotted-card.vibe-ads:focus-within::after {
+        animation: ads-hacker-rec-blink 2s steps(1) infinite;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="hacker"] .spotted-card.vibe-ads,
+    [data-theme="hacker"] .spotted-card.vibe-ads::before,
+    [data-theme="hacker"] .spotted-card.vibe-ads::after {
+        animation: none !important;
+    }
 }
 
 /* Ajuste para o texto dentro do card não ficar ilegível */
@@ -1618,8 +1642,7 @@
 [data-theme="hacker"] .article p {
     overflow: hidden;
     white-space: normal;
-    display: block;
-    animation: typing-global 4s steps(20, end) forwards;
+    animation: typing-global 4s steps(15, end) forwards;
 }
 
 @keyframes typing-global {
@@ -1759,5 +1782,3 @@
         outline-offset: -4px; /* Pisca uma linha interna falsa */
     }
 }
-
-
