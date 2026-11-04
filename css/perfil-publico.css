@@ -494,12 +494,13 @@
 /* O Feed (Posts) precisa ocupar 100% e usar o grid do feed.css */
 #perfil-conteudo .container-feed {
     width: 100%;
-    max-width: 1200px; /* Largura original do feed */
+    max-width: 100%; /* Largura original do feed */
     margin: 0 auto;
     /* A classe .container-feed do feed.css já tem o display: grid */
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 20px;
+    padding-block: 0 8px;
     align-items: flex-start;
 }
 
@@ -508,7 +509,6 @@
 #perfil-conteudo .feed-usuario-fenda {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
     z-index: 1;
 }
 
@@ -1392,16 +1392,6 @@
     background: radial-gradient(circle at 50% 30%, oklch(0.15 0.02 280) 0%, oklch(0.08 0.01 260) 100%); /* 🎨 identidade visual da vibe DARK */
     border-top: 4px solid rgba(255, 0, 50, 0.4);                    /* 🎨 identidade visual da vibe DARK */
     border-radius: 14px;
-    transition: transform 0.3s ease;
-    will-change: filter;
-    animation: raio-castelo 8s infinite ease-in-out;
-}
-
-@keyframes raio-castelo {
-    0%, 94%, 98%, 100% { filter: brightness(1) contrast(1); }
-    95% { filter: brightness(1.4) contrast(1.2); }
-    96% { filter: brightness(1); }
-    97% { filter: brightness(1.6) contrast(1.3); }
 }
 
 .main-perfil-container-publico.vibe-dark::after,
@@ -1423,13 +1413,6 @@
     mask-size: 180px 180px;
     -webkit-mask-repeat: repeat;
     mask-repeat: repeat;
-    will-change: mask-position;
-    animation: revoadaDasSombras 20s linear infinite;
-}
-
-@keyframes revoadaDasSombras {
-    0% { -webkit-mask-position: 0 0; mask-position: 0 0; }
-    100% { -webkit-mask-position: 420px -420px; mask-position: 420px -420px; }
 }
 
 .main-perfil-container-publico.vibe-dark .preview-conteudo,
@@ -1548,16 +1531,12 @@
 .main-perfil-container-publico.vibe-glass {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.45) 100%), #00bbff06; /* 🎨 identidade visual da vibe GLASS */
     background: linear-gradient(in oklab 135deg, oklch(1 0 0 / 0.45) 0%, oklch(1 0 0 / 0.05) 45%, oklch(0 0 0 / 0.45) 100%), oklch(from var(--aura-user, #70cde4) l c h / 0.3); /* 🎨 identidade visual da vibe GLASS */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
     border: 1px solid oklch(1 0 0 / 0.35) ;                         /* 🎨 identidade visual da vibe GLASS */
     border-radius: 12px 12px 0 0;
     overflow: hidden;
     position: relative;
     animation: none;
     background-blend-mode: soft-light;
-    transform: translateZ(0);
-    will-change: opacity;
 }
 
 .main-perfil-container-publico.vibe-glass .depoimento-item,
@@ -1580,15 +1559,12 @@
         ),
         oklch(from var(--aura-user, #ffa600) 0.85 0.04 h / 0.75);  /* 🎨 dinâmica via PHP — preservada */
     background-blend-mode: normal, soft-light;
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
     border: 1px solid oklch(1 0 0 / 0.25);                         /* 🎨 identidade visual da vibe LIGHT */
     border-top: 6px solid var(--aura-user, #ffa600);               /* 🎨 dinâmica via PHP — preservada */
     border-radius: 16px 16px 0 0;
     box-shadow:
         0 8px 20px oklch(0 0 0 / 0.08),                             /* 🎨 identidade visual da vibe LIGHT */
         inset 0 1px 1px oklch(1 0 0 / 0.5);                         /* 🎨 identidade visual da vibe LIGHT */
-    transform: translateZ(0); 
 }
 
 .main-perfil-container-publico.vibe-light h3,

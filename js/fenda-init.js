@@ -9,10 +9,14 @@
 
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     const adapterName = isTouchDevice ? 'fenda-swipe-mobile.js' : 'fenda-swipe-pc.js';
+    const initScript = document.currentScript;
+    const adapterUrl = initScript
+        ? (isTouchDevice ? initScript.dataset.swipeMobile : initScript.dataset.swipePc)
+        : '';
 
     // Carrega diretamente o adapter (sem core)
     const script = document.createElement('script');
-    script.src = `js/${adapterName}`;
+    script.src = adapterUrl || `js/${adapterName}`;
     script.defer = true;
     script.onload = () => {
         console.log(`[FENDA INIT] Adapter ${adapterName} carregado com sucesso.`);

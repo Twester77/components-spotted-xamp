@@ -1,5 +1,7 @@
 /* ============================================================
    FENDA SWIPE MOBILE – COM MODAL GLOBAL (FUNÇÃO ÚNICA)
+   ⚓ COPILOT – 2026-11-03: reavalia vídeos Giphy após remover card
+   para reproduzir apenas a mídia do topo visível da pilha.
    ============================================================ */
 (function () {
     'use strict';
@@ -50,6 +52,17 @@
         card.classList.remove('card-long-press-active');
     }
 
+    function retomarVideoAoSoltar(card) {
+        if (!card || typeof window.retomarVideosGifDoCard !== 'function') return;
+        const retomar = () => {
+            window.removeEventListener('pointerup', retomar);
+            window.removeEventListener('pointercancel', retomar);
+            window.retomarVideosGifDoCard(card);
+        };
+        window.addEventListener('pointerup', retomar, { once: true });
+        window.addEventListener('pointercancel', retomar, { once: true });
+    }
+
     function animateExitAndRemove(card, x, y) {
         if (!card) return;
         removerEfeitoPrisma(card);
@@ -64,6 +77,9 @@
         setTimeout(() => {
             if (card && card.parentNode) {
                 card.remove();
+            }
+            if (typeof window.inicializarVideosGifFeed === 'function') {
+                window.inicializarVideosGifFeed(document);
             }
             if (typeof window.abastecerPilhaFenda === 'function') window.abastecerPilhaFenda();
             else window.dispatchEvent(new CustomEvent('fenda:cardRemoved'));
@@ -95,6 +111,9 @@
         moveDetected = false;
         activeCard = card;
         isDragging = true;
+        if (typeof window.pausarVideosGifDoCard === 'function') {
+            window.pausarVideosGifDoCard(activeCard);
+        }
 
         // 🛠️ PREPARAÇÃO DO TOQUE: Desliga transições antigas para o arrasto ser síncrono
         activeCard.classList.remove('com-transicao');
@@ -117,6 +136,7 @@
         longPressTimer = setTimeout(() => {
             if (!moveDetected && activeCard && isDragging) {
                 aplicarEfeitoPrisma(activeCard);
+                retomarVideoAoSoltar(activeCard);
                 isDragging = false;
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
                 activeCard.style.cursor = 'grab';
@@ -171,7 +191,12 @@
     function onPointerUp(e) {
         if (!isDragging || !activeCard) {
             if (longPressTimer) clearTimeout(longPressTimer);
-            if (activeCard) removerEfeitoPrisma(activeCard);
+            if (activeCard) {
+                removerEfeitoPrisma(activeCard);
+                if (typeof window.retomarVideosGifDoCard === 'function') {
+                    window.retomarVideosGifDoCard(activeCard);
+                }
+            }
             isDragging = false;
             activeCard = null;
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -206,7 +231,12 @@
                 animateExitAndRemove(card, 800, dy);
                 return;
             }
-            if (card._processing) return;
+            if (card._processing) {
+                if (typeof window.retomarVideosGifDoCard === 'function') {
+                    window.retomarVideosGifDoCard(card);
+                }
+                return;
+            }
             card._processing = true;
 
             const reagirComTimeout = async (cardRef, postId) => {
@@ -243,7 +273,12 @@
             // 2. Remove o transform inline para a classe CSS (.com-transicao) executar a animação de mola nativa
             card.style.transform = '';
 
-            setTimeout(() => { if (card) card.style.transition = 'none'; }, 300);
+            setTimeout(() => {
+                if (card) card.style.transition = 'none';
+                if (typeof window.retomarVideosGifDoCard === 'function') {
+                    window.retomarVideosGifDoCard(card);
+                }
+            }, 300);
             resumeObserverLogs();
         }
 
@@ -255,12 +290,16 @@
     function onPointerCancel(e) {
         if (activeCard) removerEfeitoPrisma(activeCard);
         if (activeCard && isDragging) {
+            const card = activeCard;
             if (activeCard) {
                 activeCard.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
                 activeCard.style.cursor = 'grab';
                 activeCard.classList.remove('dragging');
             }
             isDragging = false; activeCard = null;
+            if (typeof window.retomarVideosGifDoCard === 'function') {
+                window.retomarVideosGifDoCard(card);
+            }
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             if (longPressTimer) clearTimeout(longPressTimer);
             resetFeedback();

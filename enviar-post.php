@@ -27,6 +27,10 @@
  *      Antes: strpos($gif_url, 'giphy.com'), que aceita
  *      evil.com/?ref=giphy.com (bypass de whitelist).
  *      Agora: parse_url() + whitelist de hosts legítimos da Giphy.
+ *
+ * ⚓ COPILOT – 2026-11-03 (experimento de GIF em vídeo)
+ *    - Persiste URLs WebM/MP4 e poster somente após validar HTTPS e host
+ *      Giphy, mantendo a URL GIF como fallback retrocompatível.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -224,13 +228,38 @@ $anexosArray = [];
 $contadorItens = 0;
 const MAX_ANEXOS = 4;
 
+$obter_metadados_dimensoes = static function (string $arquivo, string $descricao): array {
+    $dimensoes = getimagesize($arquivo);
+    if ($dimensoes === false) {
+        error_log("[enviar-post] ⚠️ Não foi possível obter as dimensões de $descricao");
+        return [];
+    }
+
+    return [
+        'width' => (int)$dimensoes[0],
+        'height' => (int)$dimensoes[1]
+    ];
+};
+
 error_log("[enviar-post] 📎 Processando anexos...");
 
 // 4.1 - GIFs externos
 $gif_urls = isset($_POST['gif_urls']) && is_array($_POST['gif_urls']) ? $_POST['gif_urls'] : [];
+$gif_widths = isset($_POST['gif_widths']) && is_array($_POST['gif_widths']) ? $_POST['gif_widths'] : [];
+$gif_heights = isset($_POST['gif_heights']) && is_array($_POST['gif_heights']) ? $_POST['gif_heights'] : [];
+$gif_mp4s = isset($_POST['gif_mp4s']) && is_array($_POST['gif_mp4s']) ? $_POST['gif_mp4s'] : [];
+$gif_webms = isset($_POST['gif_webms']) && is_array($_POST['gif_webms']) ? $_POST['gif_webms'] : [];
+$gif_posters = isset($_POST['gif_posters']) && is_array($_POST['gif_posters']) ? $_POST['gif_posters'] : [];
+$validar_url_giphy_https = static function ($url): ?string {
+    if (!is_string($url) || strtolower((string)parse_url($url, PHP_URL_SCHEME)) !== 'https') {
+        return null;
+    }
+
+    return validarUrlGiphy($url) ? $url : null;
+};
 if (!empty($gif_urls)) {
     error_log("[enviar-post] 🎬 GIFs recebidos: " . count($gif_urls));
-    foreach ($gif_urls as $gif_url) {
+    foreach ($gif_urls as $index => $gif_url) {
         $gif_url = trim($gif_url);
         if ($contadorItens >= MAX_ANEXOS) {
             error_log("[enviar-post] ⚠️ Limite de $MAX_ANEXOS anexos atingido (GIFs)");
@@ -242,7 +271,27 @@ if (!empty($gif_urls)) {
         //    evil.com/?ref=giphy.com. Agora parse_url + whitelist.
         if (validarUrlGiphy($gif_url)) {
             if (empty($imagem_url)) $imagem_url = $gif_url;
-            $anexosArray[] = ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'gif', 'url' => $gif_url];
+            $anexo_gif = ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'gif', 'url' => $gif_url];
+            $largura = filter_var($gif_widths[$index] ?? null, FILTER_VALIDATE_INT);
+            $altura = filter_var($gif_heights[$index] ?? null, FILTER_VALIDATE_INT);
+            if ($largura !== false && $altura !== false
+                && $largura > 0 && $altura > 0 && $largura <= 10000 && $altura <= 10000) {
+                $anexo_gif['width'] = $largura;
+                $anexo_gif['height'] = $altura;
+            }
+            $poster = $validar_url_giphy_https($gif_posters[$index] ?? null);
+            $mp4 = $validar_url_giphy_https($gif_mp4s[$index] ?? null);
+            $webm = $validar_url_giphy_https($gif_webms[$index] ?? null);
+            if ($poster !== null) {
+                $anexo_gif['poster'] = $poster;
+            }
+            if ($mp4 !== null) {
+                $anexo_gif['mp4'] = $mp4;
+            }
+            if ($webm !== null) {
+                $anexo_gif['webm'] = $webm;
+            }
+            $anexosArray[] = $anexo_gif;
             $contadorItens++;
             error_log("[enviar-post] ✅ GIF adicionado: $gif_url");
         } else {
@@ -284,8 +333,12 @@ if (isset($_FILES['anexos']) && is_array($_FILES['anexos']['name']) && count(arr
             $erroUpload = true;
             break;
         }
+        $metadados_dimensoes = $obter_metadados_dimensoes($tmp_name, "imagem $key");
         $caminhosEnviados[] = $nome;
-        $anexosArray[] = ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'imagem', 'caminho' => $nome];
+        $anexosArray[] = array_merge(
+            ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'imagem', 'caminho' => $nome],
+            $metadados_dimensoes
+        );
         $contadorItens++;
         error_log("[enviar-post] ✅ Imagem enviada com sucesso: $nome");
     }
@@ -310,8 +363,12 @@ if (empty($anexosArray) && isset($_FILES['imagem']) && $_FILES['imagem']['error'
     error_log("[enviar-post] 🖼️ Fallback: processando imagem única...");
     $nome = processarUploadSeguro($_FILES['imagem'], 'postagens', 'post', 2 * 1024 * 1024, $usuario_id);
     if ($nome !== false) {
+        $metadados_dimensoes = $obter_metadados_dimensoes($_FILES['imagem']['tmp_name'], 'imagem única');
         $imagem_url = $nome;
-        $anexosArray[] = ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'imagem', 'caminho' => $nome];
+        $anexosArray[] = array_merge(
+            ['id' => 'anexo-' . uniqid() . '-' . bin2hex(random_bytes(4)), 'tipo' => 'imagem', 'caminho' => $nome],
+            $metadados_dimensoes
+        );
         $caminhosEnviados[] = $nome;
         error_log("[enviar-post] ✅ Imagem única enviada: $nome");
     } else {

@@ -184,6 +184,11 @@ body:not(.modo-swipe-ativo) .post-content {
     container-name: container-card;
 }
 
+.hacker-card-terminal-frame,
+.hacker-card-terminal-footer {
+    display: none;
+}
+
 .spotted-card::-webkit-scrollbar {
     display: none;
 }
@@ -192,26 +197,13 @@ body.modo-swipe-ativo .spotted-card * {
     pointer-events: none;
 }
 
-body:not(.modo-swipe-ativo) .spotted-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    background: rgba(0, 0, 0, 0.397);                              /* fallback */
-    background: var(--bg-card-hover, rgba(0, 0, 0, 0.397));        /* 🐚 FAROL – Fase 2 */
-    border-color: rgba(255, 255, 255, 0.144);                     /* fallback */
-    border-color: var(--borda-card, rgba(255, 255, 255, 0.144));   /* 🐚 FAROL – Fase 2 */
-    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-
-}
-
-@supports (backdrop-filter: blur(2px)) {
-     body:not(.modo-swipe-ativo) .spotted-card:hover {
-        background: rgba(0, 0, 0, 0.6);                            /* fica local – alpha distinto do hover comum */
-        -webkit-backdrop-filter: blur(2px);
-        backdrop-filter: blur(2px);
-        border-color: rgba(255, 255, 255, 0.14);                   /* fallback */
-        border-color: var(--borda-card, rgba(255, 255, 255, 0.14)); /* 🐚 FAROL – Fase 2 */
-        transform: translateY(-6px);
-        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s ease;
-
+@media (hover: hover) and (pointer: fine) {
+    body:not(.modo-swipe-ativo) .spotted-card:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        background: var(--bg-card-hover, rgba(0, 0, 0, 0.397));
+        border-color: var(--borda-card, rgba(255, 255, 255, 0.144));
+        transform: translateY(-4px);
+        transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
     }
 }
 
@@ -596,7 +588,6 @@ span.data-post {
     position: relative;
     color: #ffff;                                                  /* fallback */
     color: var(--texto-primario, #ffff);                           /* 🐚 FAROL – Fase 2 */
-    margin-left: auto;
     font-size: 0.82rem;
     font-size: clamp(0.78rem, 2.3cqi, 1.1rem);
     word-break: break-word;
@@ -969,7 +960,7 @@ span.data-post {
 }
 
 .main-perdidos .feed-anexos-grid:has(.feed-anexo-item:only-child) {
-    max-height: 380px;
+    max-height: 320px;
     max-width: 100%;
     height: 100%;
     width: 100%;
@@ -997,7 +988,25 @@ span.data-post {
     object-fit: cover;
     object-position: center;
     display: block;
-    will-change: transform;
+}
+
+.spotted-card .feed-anexo-item .feed-gif-video,
+.spotted-card .carrossel-item .feed-gif-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #0a0a0a;                                          /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);                     /* 🌅 FAGULHA – Fase 2 */
+}
+
+.spotted-card .feed-anexo-item .feed-gif-video {
+    object-fit: cover;
+}
+
+.spotted-card .feed-gif-video[hidden],
+.spotted-card .feed-gif-fallback[hidden] {
+    display: none !important;
 }
 
 /* --- 14.3. 1 imagem: full bleed, sem cortes absurdos --- */
@@ -1006,7 +1015,7 @@ span.data-post {
     padding: 0;
     border: none;
     background: transparent;
-    max-height: 400px;
+    max-height: 360px;
 }
 
 .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
@@ -1015,7 +1024,7 @@ span.data-post {
     aspect-ratio: auto;
     align-items: center;
     align-content: center;
-    border-radius: 8px;
+    border-radius: 5px;
     background: #0a0a0a;                                          /* fallback */
     background: var(--bg-page-dark, #0a0a0a);                     /* 🐚 FAROL – Fase 2 */
     box-shadow: none;
@@ -1096,7 +1105,7 @@ span.data-post {
 /* --- 14.8. PC: modo revista --- */
 @media (min-width: 1024px) {
     .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
-        max-height: 380px;
+        max-height: 350px;
         object-fit: contain;
         background: #050505;                                       /* fica local – preto ainda mais escuro, específico de PC */
     }
@@ -1137,7 +1146,6 @@ span.data-post {
     image-rendering: auto;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    will-change: transform;
 }
 
 .spotted-card .container-img-post {

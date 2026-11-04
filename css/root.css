@@ -125,14 +125,14 @@ html, body {
     max-width: 100vw;
     position: relative;
     width: 100%;
-    container-type: inline-size;
-    container-name: main-area;
     scrollbar-width: thin;
 }
 
 body {
     display: flex;
     flex-direction: column;
+    container-type: inline-size;
+    container-name: main-area;
 }
 
 main {
@@ -243,5 +243,4 @@ html {
     --aura-fallback: #00ff41;
     --aura-borda-avatar: #00ff41;
 }
-
 

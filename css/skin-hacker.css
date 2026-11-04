@@ -111,6 +111,7 @@
 
 /* Desativa scanlines na Central (fundo claro) */
 [data-theme="hacker"] body.central-page::before,
+[data-theme="hacker"] main#conteudo-rolavel::before,
 [data-theme="hacker"]:has(.central-usuario-container) body::before,
 [data-theme="hacker"]:has(.central-conteudo) body::before {
     display: none;
@@ -118,6 +119,11 @@
 
 /* O feed em grid usa scanlines nos próprios cards; evita a camada fixa da tela inteira. */
 [data-theme="hacker"] body:has(.controles-feed-topo):not(.modo-swipe-ativo)::before {
+    display: none;
+}
+
+/* O perfil público mantém o CRT nos cards sem a camada fixa sobre a página toda. */
+[data-theme="hacker"] body:has(.main-perfil-container-publico)::before {
     display: none;
 }
 
@@ -159,14 +165,6 @@
 [data-theme="hacker"] .reacoes-popup {
     background-color: #031403;
     /* O grid verde do fundo */
-    background-image: repeating-linear-gradient(
-        0deg,
-        rgba(0, 255, 65, 0.15) 0px,
-        rgba(0, 255, 65, 0.15) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-    background-size: 100% 2px;
     border: 1px solid var(--hacker-green);
     border-radius: 6px;
     display: flex;
@@ -211,22 +209,6 @@
     overflow: hidden;
 }
 
-[data-theme="hacker"] .reactions-popup::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    background-image: repeating-linear-gradient(
-        0deg,
-        rgba(0, 255, 65, 0.15) 0px,
-        rgba(0, 255, 65, 0.15) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-    background-size: 100% 2px;
-}
-
 /* Conteúdo Acima do CRT */
 [data-theme="hacker"] .reactions-popup-card > * {
     position: relative;
@@ -247,15 +229,6 @@
     box-shadow: none;
 }
 
-[data-theme="hacker"] .spotted-card {
-    border: none;
-    border-top: 1px double var(--hacker-green);
-    border-bottom: 1px double var(--hacker-green);
-    border-right: 1px double var(--glass-bg);
-    border-left: 1px double var(--glass-bg);
-    box-shadow: none;
-    border-radius: 6px;
-}
 
 [data-theme="hacker"]  .container-feed.feed-empilhado,
 [data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
@@ -289,8 +262,14 @@
     box-shadow: 0 0 4px 0 var(--hacker-green);
 }
 
+@media (hover: hover) and (pointer: fine) {
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card:hover {
+        transform: translateY(-6px);
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+    }
+}
+
 /* Moldura superior padrão */
-[data-theme="hacker"] .spotted-card::before,
 [data-theme="hacker"] .fenda-glass-container::before,
 [data-theme="hacker"] .main-perfil-container::before,
 [data-theme="hacker"] .sessao-publicar::before {
@@ -309,55 +288,125 @@
     z-index: 10;
 }
 
-/* Frames por categoria */
-[data-theme="hacker"] .spotted-card.anonimo::before {
-    content: "+== [ USER_NOT_FOUND ] ==================================================================================================+";
+[data-theme="hacker"] .spotted-card {
+    border-top: 2px solid var(--hacker-green, currentColor) !important;
+    border-bottom: 2px solid var(--hacker-green, currentColor) !important;
+    border-right: 1px dashed rgba(0, 255, 65, 0.14) !important;
+    border-left: 1px dashed rgba(0, 255, 65, 0.14) !important;
+    border-right: 1px dashed color-mix(in srgb, var(--glass-bg, var(--hacker-green)) 18%, transparent) !important;
+    border-left: 1px dashed color-mix(in srgb, var(--glass-bg, var(--hacker-green)) 18%, transparent) !important;
+    border-radius: 6px ;
+    box-shadow:none;
+}
+
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-frame,
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-footer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    gap: 0.3em;
+    width: 100%;
+    min-width: 0;
+    color: var(--hacker-green);
+    font-size: 0.85rem;
+    font: clamp(0.8rem, 3.6cqi, 1rem)/1.2 var(--hacker-font, monospace);
+    white-space: nowrap;
+}
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-frame {
+    margin-bottom: 0.45rem;
+}
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-footer {
+    margin-top: 0.45rem;
+}
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-label {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-label::before {
+    content: "[ SPOTTED_POST ]";
+}
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-rule {
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+}
+
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-corner {
+    flex: 0 0 auto;
+}
+
+[data-theme="hacker"] .spotted-card.anonimo .hacker-card-terminal-label::before {
+    content: "[ USER_NOT_FOUND ]";
     color: #ffffff;
 }
-[data-theme="hacker"] .spotted-card.perdidos::before {
-    content: "+== [ PROTOCOLO: GET_$ITEM ] ================================================================================================+";
+[data-theme="hacker"] .spotted-card.perdidos .hacker-card-terminal-label::before {
+    content: "[ PROTOCOLO: GET_$ITEM ]";
     color: #fcf809;
 }
-[data-theme="hacker"] .spotted-card.tenho-ranco::before {
-    content: "+== [ RuntimeError: High_Stress ] ===========================================================================================+";
+[data-theme="hacker"] .spotted-card.tenho-ranco .hacker-card-terminal-label::before {
+    content: "[ RuntimeError: High_Stress ]";
     color: #f33232;
 }
-[data-theme="hacker"] .spotted-card.elogio::before {
-    content: "+== [ LOVE_IS_IN_THE_AIR <3 ] ==================================================================================================+";
+[data-theme="hacker"] .spotted-card.elogio .hacker-card-terminal-label::before {
+    content: "[ LOVE_IS_IN_THE_AIR <3 ]";
     color: #f85caa;
 }
-[data-theme="hacker"] .spotted-card.games::before {
-    content: "+== [ Xinput_DInput DETECTADO ] ==================================================================================================+";
+[data-theme="hacker"] .spotted-card.games .hacker-card-terminal-label::before {
+    content: "[ Xinput_DInput DETECTADO ]";
     color: #00ffff;
 }
-[data-theme="hacker"] .spotted-card.academico::before {
-    content: "+== [ ARQUIVO_CIENTÍFICO ] ==================================================================================================+";
+[data-theme="hacker"] .spotted-card.academico .hacker-card-terminal-label::before {
+    content: "[ ARQUIVO_CIENTÍFICO ]";
     color: #b00bda;
 }
-[data-theme="hacker"] .spotted-card.caronas::before {
-    content: "+== [ SELECT * FROM unifev WHERE loc='houseofcaralho'] ========================================================================+";
+[data-theme="hacker"] .spotted-card.caronas .hacker-card-terminal-label::before {
+    content: "[ CARONAS: SELECT * FROM unifev ]";
     color: #969dc4;
 }
-[data-theme="hacker"] .spotted-card.esportes::before {
-    content: "+== [ JOIN_FOR_FUN ] ==========================================================================================================+";
+[data-theme="hacker"] .spotted-card.esportes .hacker-card-terminal-label::before {
+    content: "[ JOIN_FOR_FUN ]";
     color: #128a0ec2;
 }
-[data-theme="hacker"] .spotted-card.comunidade::before {
-    content: "+== [ COMMUNITY_LINK ] ======================================================================================================+";
+[data-theme="hacker"] .spotted-card.comunidade .hacker-card-terminal-label::before {
+    content: "[ COMMUNITY_LINK ]";
     color: #ffffffbe;
 }
-[data-theme="hacker"] .spotted-card.acaba-pelo-amor-de-deus::before {
-    content: "+== [ WARNING: OVERFLOW_EMOTIONAL ] ================================================================================+";
+[data-theme="hacker"] .spotted-card.acaba-pelo-amor-de-deus .hacker-card-terminal-label::before {
+    content: "[ WARNING: OVERFLOW_EMOTIONAL ]";
     color: #f78605;
 }
-[data-theme="hacker"] .spotted-card.desapego::before {
-    content: "+== [ MARKETPLACE_DESAPEGO ] ================================================================================================+";
+[data-theme="hacker"] .spotted-card.desapego .hacker-card-terminal-label::before {
+    content: "[ MARKETPLACE_DESAPEGO ]";
     color: #09c0fd;
+}
+
+[data-theme="hacker"] .spotted-card.selo-adm .selo-adm-badge {
+    border: 1px solid color-mix(in srgb, #ffd700 35%, transparent);
+    border-radius: 4px;
+    padding: 0.1em 0.35em;
+    background: color-mix(in srgb, #ffd700 10%, transparent);
+    color: #ffd700;
+    font-size: 0.72em;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
 }
 
 /* Esconde ASCII frames durante swipe (performance) */
 [data-theme="hacker"] body.modo-tinder-ativo .bt-card::before,
-[data-theme="hacker"] body.modo-swipe-ativo .spotted-card::before {
+[data-theme="hacker"] body.modo-swipe-ativo .hacker-card-terminal-frame {
+    display: none;
+}
+
+[data-theme="hacker"] body.modo-swipe-ativo .hacker-card-terminal-footer {
     display: none;
 }
 
@@ -927,12 +976,12 @@
 @keyframes hacker-highlight {
     0% {
         background-color: rgba(0, 255, 255, 0.897);
-        box-shadow: 0 0 18px rgba(0, 255, 65, 0.3);
+        box-shadow: 0 0 14px rgba(0, 255, 65, 0.3);
         border-left: 2px solid var(--hacker-green);
     }
     40% {
         background-color: rgba(0, 247, 255, 0.2);
-        box-shadow: 0 0 35px rgba(0, 255, 65, 0.6);
+        box-shadow: 0 0 32px rgba(0, 255, 65, 0.6);
         border-left: 4px solid var(--hacker-green);
     }
     100% {
@@ -1049,8 +1098,8 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-glass {
     background: rgba(0, 35, 40, 0.35);
     background-image: none;
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border-top: 4px solid rgba(0, 220, 180, 0.7);
     border-left: 1px solid rgba(0, 220, 180, 0.3);
     border-right: 1px solid rgba(0, 220, 180, 0.3);
@@ -1099,8 +1148,8 @@
     mask-repeat: repeat;
 
     contain: strict;
-    will-change: mask-position;
-    animation: revoadaDasSombras 30s linear infinite;
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
 }
 
 @keyframes revoadaDasSombras {
@@ -1151,10 +1200,25 @@
 
 [data-theme="hacker"] .spotted-card.vibe-neon {
     border-color: var(--hacker-green);
-    animation: hacker-glitch 4.5s infinite alternate;
-    will-change: animation;
+    box-shadow: 0 0 4px var(--hacker-green), 0 0 8px rgba(0, 255, 0, 0.3);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    [data-theme="hacker"] .spotted-card.vibe-neon:hover,
+    [data-theme="hacker"] .spotted-card.vibe-neon:focus-within {
+        animation: hacker-glitch 4.5s infinite alternate;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-theme="hacker"] .spotted-card.vibe-neon,
+    [data-theme="hacker"] .spotted-card.vibe-neon:hover,
+    [data-theme="hacker"] .spotted-card.vibe-neon:focus-within,
+    [data-theme="hacker"] .spotted-card.vibe-neon.touch-scanline-active {
+        animation: none !important;
+    }
 }
 
 /* ============================================================
@@ -1264,10 +1328,37 @@
     }
 }
 
+/* Em telas touch, o feixe aparece somente durante o toque no card. */
+[data-theme="hacker"] .spotted-card.vibe-ads.touch-scanline-active {
+    animation: ads-hacker-glitch-border 3s infinite;
+}
+
+[data-theme="hacker"] .spotted-card.vibe-ads.touch-scanline-active::before {
+    background-image: linear-gradient(
+        to bottom,
+        transparent 80%,
+        rgba(0, 255, 65, 0.15) 90%,
+        rgba(0, 255, 65, 0.6) 100%
+    );
+    background-size: 100% 100px;
+    background-repeat: no-repeat;
+    background-position: 0% -100px;
+    animation: ads-hacker-scanline 3.5s linear infinite;
+}
+
+[data-theme="hacker"] .spotted-card.vibe-ads.touch-scanline-active::after {
+    animation: ads-hacker-rec-blink 2s steps(1) infinite;
+}
+
+[data-theme="hacker"] .spotted-card.vibe-neon.touch-scanline-active {
+    animation: hacker-glitch 1.5s 2 alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
     [data-theme="hacker"] .spotted-card.vibe-ads,
     [data-theme="hacker"] .spotted-card.vibe-ads::before,
-    [data-theme="hacker"] .spotted-card.vibe-ads::after {
+    [data-theme="hacker"] .spotted-card.vibe-ads::after,
+    [data-theme="hacker"] .spotted-card.vibe-neon.touch-scanline-active {
         animation: none !important;
     }
 }
@@ -1294,8 +1385,8 @@
     [data-theme="hacker"] body:not(.modo-swipe-ativo)
     .main-perfil-container-publico.vibe-light .spotted-card:hover {
         background: rgba(33, 33, 33, 0.4);
-        -webkit-backdrop-filter: blur(1px);
-        backdrop-filter: blur(1px);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
         border-color: rgba(0, 255, 65, 0.5);
     }
 }
@@ -1477,6 +1568,11 @@
     background: conic-gradient(from var(--angulo-balada),
             #00ff41, #00ffcc, #00ffff, #00ff41);
     filter: blur(4px);
+}
+
+[data-theme="hacker"] .btn-fenda-padrao,
+[data-theme="hacker"] .bt-btn-filtro::before {
+    border:none;
 }
 
 [data-theme="hacker"] .bt-btn-filtro:hover {

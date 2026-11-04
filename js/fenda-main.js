@@ -202,6 +202,8 @@ function abrirDenuncia(idPost) {
 }
 
 // ==================== PERFIL DRAWER (GAVETA) ====================
+let perfilDrawerAbortController = null;
+
 window.abrirPerfilDrawer = function (e) {
     if (e) e.preventDefault();
 
@@ -210,32 +212,69 @@ window.abrirPerfilDrawer = function (e) {
     const backdrop = document.getElementById('drawer-backdrop');
 
     if (!drawer || !containerPerfil) return;
+    if (drawer.classList.contains('ativa')) return;
 
-    fetch('perfil.php?modo=gaveta&_=' + Date.now())
-        .then(res => res.text())
+    if (typeof window.suspenderVideosGifFeed === 'function') {
+        window.suspenderVideosGifFeed('perfil-drawer');
+    }
+
+    containerPerfil.innerHTML = '<p class="drawer-perfil-loading" role="status">Carregando configurações de perfil...</p>';
+    drawer.classList.add('ativa');
+    drawer.setAttribute('aria-hidden', 'false');
+    if (backdrop) backdrop.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+
+    const botaoConfig = document.querySelector('.btn-config');
+    if (botaoConfig) botaoConfig.setAttribute('aria-expanded', 'true');
+
+    const controller = new AbortController();
+    perfilDrawerAbortController = controller;
+
+    fetch('perfil.php?modo=gaveta&_=' + Date.now(), { signal: controller.signal })
+        .then(res => {
+            if (!res.ok) throw new Error(`Falha ao carregar o perfil (HTTP ${res.status}).`);
+            return res.text();
+        })
         .then(html => {
+            if (perfilDrawerAbortController !== controller || !drawer.classList.contains('ativa')) return;
+
             containerPerfil.innerHTML = html;
             if (typeof window.configurarFormularioPerfil === 'function') {
                 window.configurarFormularioPerfil();
             }
             inicializarPreferenciasAPartirDoDOM();
-
-            drawer.classList.add('ativa');
-            drawer.setAttribute('aria-hidden', 'false');
-            backdrop.style.display = 'block';
-            document.body.style.overflow = 'hidden';
+            perfilDrawerAbortController = null;
         })
-        .catch(err => console.error("Erro na Fenda:", err));
+        .catch(err => {
+            if (perfilDrawerAbortController !== controller) return;
+            perfilDrawerAbortController = null;
+            if (err.name === 'AbortError') return;
+
+            console.error('[PERFIL] Erro ao carregar a gaveta:', err);
+            containerPerfil.innerHTML = '<p class="drawer-perfil-error" role="alert">Não foi possível carregar as configurações. Feche e tente novamente.</p>';
+        });
 };
 
 window.fecharPerfilDrawer = function () {
     const drawer = document.getElementById('perfil-drawer');
     const backdrop = document.getElementById('drawer-backdrop');
 
-    drawer.classList.remove('ativa');
-    drawer.setAttribute('aria-hidden', 'true');
-    backdrop.style.display = 'none';
+    if (perfilDrawerAbortController) {
+        perfilDrawerAbortController.abort();
+        perfilDrawerAbortController = null;
+    }
+
+    if (drawer) {
+        drawer.classList.remove('ativa');
+        drawer.setAttribute('aria-hidden', 'true');
+    }
+    if (backdrop) backdrop.style.display = 'none';
+    const botaoConfig = document.querySelector('.btn-config');
+    if (botaoConfig) botaoConfig.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = 'auto';
+    if (typeof window.retomarVideosGifFeed === 'function') {
+        window.retomarVideosGifFeed('perfil-drawer');
+    }
 };
 
 function abrirModalPost() {
@@ -306,7 +345,252 @@ window.abrirGavetaControle = function () {
 
 
 // ==================== POSTS E MENUS ====================
+/* ============================================================
+   GIFs GIPHY COMO VÍDEO (EXPERIMENTO COPILOT – 2026-11-03)
+   Usa MP4/WebM apenas quando há suporte e IntersectionObserver.
+   Mantém o GIF como fallback e pausa vídeos fora da viewport.
+   ============================================================ */
+(function configurarReproducaoGifFeed() {
+    const videosInicializados = new WeakMap();
+    const alvosObservados = new WeakMap();
+    const videosAtivos = new Set();
+    const observador = 'IntersectionObserver' in window
+        ? new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const estado = alvosObservados.get(entry.target);
+                if (!estado) return;
+                estado.visivel = entry.isIntersecting && entry.intersectionRatio >= 0.05;
+                atualizarReproducao(estado);
+            });
+        }, { threshold: 0.05 })
+        : null;
+
+    function mostrarFallback(estado, animado = true) {
+        if (estado.fallbackAtivo) return;
+        estado.fallbackAtivo = true;
+        if (observador) observador.unobserve(estado.alvo);
+        estado.video.pause();
+        estado.video.hidden = true;
+        if (!estado.imagem) return;
+
+        const urlFallback = animado
+            ? estado.imagem.dataset.gifUrl
+            : estado.imagem.dataset.posterUrl;
+        if (urlFallback) estado.imagem.src = urlFallback;
+        estado.imagem.hidden = false;
+    }
+
+    function atualizarReproducao(estado) {
+        if (estado.fallbackAtivo) return;
+        let card = estado.video.parentElement;
+        while (card && !card.classList.contains('spotted-card')) {
+            card = card.parentElement;
+        }
+        const container = card && card.parentElement;
+        const swipeOculto = document.body.classList.contains('modo-swipe-ativo')
+            && container
+            && container.classList.contains('feed-empilhado')
+            && container.querySelector('.spotted-card') !== card;
+
+        if (!estado.visivel || swipeOculto) {
+            estado.video.pause();
+            return;
+        }
+
+        if (estado.interacaoAtiva) {
+            estado.video.pause();
+            return;
+        }
+
+        if (estado.suspensoes.size > 0) {
+            estado.video.pause();
+            return;
+        }
+
+        const prefereMovimentoReduzido = window.matchMedia
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefereMovimentoReduzido) {
+            mostrarFallback(estado, false);
+            return;
+        }
+
+        estado.video.hidden = false;
+        if (estado.imagem) estado.imagem.hidden = true;
+        const reproducao = estado.video.play();
+        if (reproducao && typeof reproducao.catch === 'function') {
+            reproducao.catch(() => mostrarFallback(estado));
+        }
+    }
+
+    window.inicializarVideosGifFeed = function(root = document) {
+        if (!root || typeof root.querySelectorAll !== 'function') return;
+
+        const videos = root.matches && root.matches('.feed-gif-video')
+            ? [root]
+            : root.querySelectorAll('.feed-gif-video');
+
+        for (let index = 0; index < videos.length; index++) {
+            const video = videos[index];
+            if (videosInicializados.has(video)) continue;
+
+            const imagem = video.parentElement
+                ? video.parentElement.querySelector('.feed-gif-fallback')
+                : null;
+            let fontesSuportadas = false;
+            if (typeof video.canPlayType === 'function') {
+                const fontes = video.querySelectorAll('source');
+                for (let fonteIndex = 0; fonteIndex < fontes.length; fonteIndex++) {
+                    const suporte = video.canPlayType(fontes[fonteIndex].type);
+                    if (suporte === 'probably' || suporte === 'maybe') {
+                        fontesSuportadas = true;
+                        break;
+                    }
+                }
+            }
+            const estado = {
+                video,
+                alvo: video.parentElement || video,
+                imagem,
+                visivel: false,
+                fallbackAtivo: false,
+                interacaoAtiva: false,
+                suspensoes: new Set()
+            };
+            videosInicializados.set(video, estado);
+            alvosObservados.set(estado.alvo, estado);
+            videosAtivos.add(video);
+
+            if (!observador || !fontesSuportadas) {
+                const prefereMovimentoReduzido = window.matchMedia
+                    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                mostrarFallback(estado, !prefereMovimentoReduzido);
+                continue;
+            }
+
+            video.addEventListener('error', () => mostrarFallback(estado));
+            observador.observe(estado.alvo);
+        }
+
+        // Reavalia o topo da pilha após um card de swipe sair do DOM.
+        videosAtivos.forEach((video) => {
+            if (!document.documentElement.contains(video)) {
+                videosAtivos.delete(video);
+                return;
+            }
+            const estado = videosInicializados.get(video);
+            if (estado) atualizarReproducao(estado);
+        });
+    };
+
+    window.pausarVideosGifDoCard = function(card) {
+        if (!card || typeof card.querySelectorAll !== 'function') return;
+        card.querySelectorAll('.feed-gif-video').forEach((video) => {
+            const estado = videosInicializados.get(video);
+            if (!estado) return;
+            estado.interacaoAtiva = true;
+            video.pause();
+        });
+    };
+
+    window.retomarVideosGifDoCard = function(card) {
+        if (!card || !document.documentElement.contains(card)
+            || typeof card.querySelectorAll !== 'function') return;
+        card.querySelectorAll('.feed-gif-video').forEach((video) => {
+            const estado = videosInicializados.get(video);
+            if (!estado) return;
+            estado.interacaoAtiva = false;
+            atualizarReproducao(estado);
+        });
+    };
+
+    window.suspenderVideosGifFeed = function(motivo) {
+        if (!motivo) return;
+        videosAtivos.forEach((video) => {
+            const estado = videosInicializados.get(video);
+            if (!estado) return;
+            estado.suspensoes.add(motivo);
+            video.pause();
+        });
+    };
+
+    window.retomarVideosGifFeed = function(motivo) {
+        if (!motivo) return;
+        videosAtivos.forEach((video) => {
+            const estado = videosInicializados.get(video);
+            if (!estado) return;
+            estado.suspensoes.delete(motivo);
+            atualizarReproducao(estado);
+        });
+    };
+})();
+
+(function configurarScanlineTouchAds() {
+    const cardsPorPonteiro = new Map();
+    const cardsAnimando = new Set();
+    const temporizadores = new WeakMap();
+
+    function limparPonteiro(pointerId) {
+        const card = cardsPorPonteiro.get(pointerId);
+        if (!card) return;
+        cardsPorPonteiro.delete(pointerId);
+        if (![...cardsPorPonteiro.values()].includes(card)) {
+            const temporizadorAnterior = temporizadores.get(card);
+            if (temporizadorAnterior) window.clearTimeout(temporizadorAnterior);
+            const temporizador = window.setTimeout(() => {
+                card.classList.remove('touch-scanline-active');
+                cardsAnimando.delete(card);
+                temporizadores.delete(card);
+            }, 3500);
+            temporizadores.set(card, temporizador);
+        }
+    }
+
+    document.addEventListener('pointerdown', (event) => {
+        if (event.pointerType !== 'touch'
+            || document.body.classList.contains('modo-swipe-ativo')
+            || !(event.target instanceof Element)) return;
+
+        const card = event.target.closest('.spotted-card.vibe-ads, .spotted-card.vibe-neon');
+        if (!card) return;
+        const temporizador = temporizadores.get(card);
+        if (temporizador) {
+            window.clearTimeout(temporizador);
+            temporizadores.delete(card);
+        }
+        if (card.classList.contains('touch-scanline-active')) {
+            card.classList.remove('touch-scanline-active');
+            void card.offsetWidth;
+        }
+        cardsPorPonteiro.set(event.pointerId, card);
+        card.classList.add('touch-scanline-active');
+        cardsAnimando.add(card);
+    });
+
+    document.addEventListener('pointerup', (event) => limparPonteiro(event.pointerId));
+    document.addEventListener('pointercancel', (event) => limparPonteiro(event.pointerId));
+    function limparTodasAsAnimacoes() {
+        cardsPorPonteiro.clear();
+        cardsAnimando.forEach((card) => {
+            const temporizador = temporizadores.get(card);
+            if (temporizador) window.clearTimeout(temporizador);
+            card.classList.remove('touch-scanline-active');
+            temporizadores.delete(card);
+        });
+        cardsAnimando.clear();
+    }
+
+    window.addEventListener('blur', limparTodasAsAnimacoes);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) limparTodasAsAnimacoes();
+    });
+})();
+
+window.inicializarVideosGifFeed(document);
+
 window.configurarPosts = function () {
+    if (typeof window.inicializarVideosGifFeed === 'function') {
+        window.inicializarVideosGifFeed(document);
+    }
 
     const posts = document.querySelectorAll('.post-content');
     posts.forEach(post => {
@@ -1345,10 +1629,6 @@ function initLingoteController() {
 document.addEventListener("DOMContentLoaded", function () {
     if (typeof atualizarInterfaceBolhas === 'function') atualizarInterfaceBolhas();
 
-    const btnConfig = document.querySelector('.btn-config');
-    if (btnConfig) {
-        btnConfig.addEventListener('click', window.abrirPerfilDrawer);
-    }
     // INICIALIZA O FORMULÁRIO DE PERFIL (drawer ou página direta)
     if (typeof window.configurarFormularioPerfil === 'function') {
         window.configurarFormularioPerfil();
@@ -1490,22 +1770,31 @@ if (modalFechamento) {
 
 let isAnimating = false; // Flag para impedir cliques rápidos (trava de segurança)
 
-// 1. Função de Execução com Delay (O efeito "Procurando Função")
+// 1. Executa a ação após um feedback breve da bússola.
 window.executarAcao = function (btn, graus, callback) {
     if (isAnimating) return; // Se já está girando, ignora novos cliques até terminar
 
     const ponteiro = document.getElementById('ponteiro-bussola');
+    const reduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     isAnimating = true; // Bloqueia o sistema durante a animação
     marcarBotaoAtivo(btn);
-    aplicarRotacao(ponteiro, graus);
+    if (!reduzirMovimento) aplicarRotacao(ponteiro, graus);
 
-    // Delay de 500ms para a bússola atingir a posição antes de disparar a função
-    setTimeout(() => {
-        toggleNexus(); // Fecha o leque
-        callback();    // Executa a função (abrir modal ou redirecionar)
-        isAnimating = false; // Libera o sistema para novos cliques
-    }, 500);
+    const concluirAcao = () => {
+        try {
+            toggleNexus();
+            callback();
+        } finally {
+            isAnimating = false;
+        }
+    };
+
+    if (reduzirMovimento || !ponteiro) {
+        concluirAcao();
+    } else {
+        setTimeout(concluirAcao, 420);
+    }
 };
 
 // 2. Função de Feedback Visual (Active)
@@ -1528,6 +1817,14 @@ function toggleNexus() {
     if (!nexus) return;
 
     nexus.classList.toggle('aberto');
+    if (typeof window.suspenderVideosGifFeed === 'function'
+        && typeof window.retomarVideosGifFeed === 'function') {
+        if (nexus.classList.contains('aberto')) {
+            window.suspenderVideosGifFeed('nexus-menu');
+        } else {
+            window.retomarVideosGifFeed('nexus-menu');
+        }
+    }
 
     // Se fechou, resetamos a bússola para o Norte e limpamos os destaques
     if (!nexus.classList.contains('aberto')) {
@@ -2334,6 +2631,10 @@ const HeaderManager = {
     _iniciarPressao(event) {
         if (event.button !== undefined && event.button !== 0) return;
         const target = event.target instanceof Element ? event.target : null;
+        if (target?.closest('#drawer-cmt-panel')) {
+            this._cancelarPressao();
+            return;
+        }
         if (
             this._menuElement
             && target
@@ -3233,7 +3534,7 @@ window.irParaMensagem = function(commentId) {
     
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.style.transition = 'background-color 0.4s ease';
-    el.style.backgroundColor = 'rgba(255, 188, 0, 0.25)';
+    el.style.backgroundColor = 'rgba(0, 255, 234, 0.25)';
     
     setTimeout(() => {
         el.style.backgroundColor = '';
@@ -3254,21 +3555,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         observer.observe(lista, { childList: true, subtree: true });
-    }
-});
-
-// 5. Desativa o Long Press no Grid + Cascata (para não conflitar com o menu ⋯)
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.body.classList.contains('estilo-cascata')) {
-        const originalMostrarMenu = window.mostrarMenuAcoes;
-        window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
-            // Bloqueia o long press do POST apenas no Grid + Cascata.
-            // No modo Swipe, o long press no card deve continuar funcionando.
-            if (document.body.classList.contains('estilo-cascata') && !document.body.classList.contains('modo-swipe-ativo')) {
-                return; 
-            }
-            if (typeof originalMostrarMenu === 'function') originalMostrarMenu(postId, isOwner, cardElement);
-        };
     }
 });
 

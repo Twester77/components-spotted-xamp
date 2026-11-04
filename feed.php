@@ -35,10 +35,12 @@ include 'includes/barra-busca.php';
 </div>
 
 <main class="main-fenda-total" id="conteudo-principal">
-    <!-- Feedbacks visuais ocultados do leitor de tela para não causar poluição auditiva durante o arraste -->
-    <div class="feedback-swipe feedback-direita" aria-hidden="true">🩶 AMEI</div>
-    <div class="feedback-swipe feedback-esquerda" aria-hidden="true">🗑️ DESCARTAR</div>
-    <div class="feedback-swipe feedback-cima" aria-hidden="true">💬 COMENTAR</div>
+    <?php if ($ativar_modo_app): ?>
+        <!-- Feedbacks visuais usados apenas pelos gestos do modo swipe -->
+        <div class="feedback-swipe feedback-direita" aria-hidden="true">🩶 AMEI</div>
+        <div class="feedback-swipe feedback-esquerda" aria-hidden="true">🗑️ DESCARTAR</div>
+        <div class="feedback-swipe feedback-cima" aria-hidden="true">💬 COMENTAR</div>
+    <?php endif; ?>
     <!-- O container começa vazio e o Motor preenche -->
     <!-- Adicionado aria-live para anunciar novos posts injetados dinamicamente via AJAX sem interromper a navegação -->
     <div class="container-feed" role="feed" aria-busy="false" aria-live="polite">
@@ -49,7 +51,13 @@ include 'includes/barra-busca.php';
     <button id="btn-load-more" class="btn-fenda-padrao">Exibir Mais Resultados</button>
 </div>
 
-<script src="js/fenda-init.js"></script>
+<?php if ($ativar_modo_app): ?>
+    <script
+        src="<?= asset_versao('js/fenda-init.js') ?>"
+        data-swipe-mobile="<?= asset_versao('js/fenda-swipe-mobile.js') ?>"
+        data-swipe-pc="<?= asset_versao('js/fenda-swipe-pc.js') ?>"
+    ></script>
+<?php endif; ?>
 
 <script>
 
@@ -414,10 +422,10 @@ function reforcarLayoutNosCards() {
         btnLerDepois.addEventListener('click', function(e) {
             e.stopPropagation();
             fecharPopup();
-            if (typeof exibirToast === 'function') {
-                exibirToast('📌 Post salvo para ler depois! (em breve)');
+            if (typeof window.exibirToast === 'function') {
+                window.exibirToast('Salvar posts para ler depois estará disponível em breve.', 'info');
             } else {
-                alert('Função em desenvolvimento.');
+                alert('Salvar posts para ler depois estará disponível em breve.');
             }
         });
 
@@ -440,11 +448,15 @@ function reforcarLayoutNosCards() {
                 }
             });
         } else {
-            btnDanger.innerHTML = '🚨 Denunciar post';
+            btnDanger.innerHTML = '🚨 Denunciar (em breve)';
             btnDanger.addEventListener('click', function(e) {
                 e.stopPropagation();
                 fecharPopup();
-                alert('🚨 Denúncia do post #' + postId + ' enviada aos ADMs.');
+                if (typeof window.exibirToast === 'function') {
+                    window.exibirToast('A denúncia de posts ainda não está disponível.', 'info');
+                } else {
+                    alert('A denúncia de posts ainda não está disponível.');
+                }
             });
         }
 
@@ -530,8 +542,7 @@ function reforcarLayoutNosCards() {
             if (document.body.classList.contains('modo-swipe-ativo')) return;
             const card = e.target.closest('.spotted-card');
             if (!card) return;
-            if (e.target.closest('.btn-reagir') || e.target.closest('.btn-fofocar') ||
-                e.target.closest('.reacoes-popup') || e.target.closest('.reacao-wrapper')) return;
+            if (e.target.closest('button, a, input, textarea, select, .reacoes-popup, .reacao-wrapper')) return;
             e.preventDefault();
             pressedCard = card;
             startX = e.clientX;
@@ -631,6 +642,11 @@ function reforcarLayoutNosCards() {
                         const qtdAntes = feedContainer.children.length;
                         if (offset === 0) feedContainer.innerHTML = '';
                         feedContainer.insertAdjacentHTML('beforeend', data);
+
+                        // Inicializa os vídeos dos cards novos, inclusive na pilha swipe.
+                        if (typeof window.inicializarVideosGifFeed === 'function') {
+                            window.inicializarVideosGifFeed(feedContainer);
+                        }
 
                         if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
                             configurarPosts();

@@ -347,7 +347,7 @@
     color: #fff;                                                  /* fallback */
     color: var(--texto-primario, #fff);                           /* 🐚 FAROL – Fase 2 */
     font-size: 0.9rem;
-    font-size: clamp(0.9rem, 2.5cqw, 1.2rem);
+    font-size: clamp(0.88rem, 2.5cqw, 1.2rem);
     min-width: 200px;
     max-width: 550px;
     cursor: pointer;
@@ -1544,7 +1544,7 @@
 .bt-btn-filtro::before {
     content: '';
     position: absolute;
-    inset: -3px;
+    inset: -2px;
     border-radius: inherit;
     z-index: -1;
     background: conic-gradient(from var(--angulo-balada),
@@ -1552,7 +1552,7 @@
             #ff007f,
             #00f0ff,
             oklch(83.276% 0.17139 82.036));
-    filter: blur(4px);
+    filter: blur(3px);
     animation:
         girarLuzesBalada 4s linear infinite,
         strobeBalada 0.6s ease-in-out infinite alternate;
@@ -2375,9 +2375,9 @@
 
     .bt-select-comunidade {
         max-width: 300px;
-        font-size: 0.85rem;
-        padding: 8px 14px;
-        padding-right: 30px;
+        font-size: 0.83rem;
+        padding: 6px 14px;
+        padding-right: 26px;
     }
 }
 

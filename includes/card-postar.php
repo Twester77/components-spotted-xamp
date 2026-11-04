@@ -16,6 +16,10 @@
  *     Exposição global de PostAnexos para permitir roteamento via evento."
  * - Nereida, a guardiã das águas
  *
+ * ⚓ COPILOT – 2026-11-03 (experimento de GIF em vídeo)
+ *    "Propaga URLs MP4/WebM e poster do Giphy no FormData, preservando
+ *     o GIF original para fallback e compatibilidade com navegadores antigos."
+ *
  * 🐚 IARA – 2026-09-24 (auditoria v5.0)
  *    - ADICIONADO HIDDEN csrf_token dentro do <form>. Sem isso, o
  *      enviar-post.php (que agora valida CSRF) retornaria 403 em
@@ -182,7 +186,7 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
     SCRIPTS (compartilhados)
     ============================================================ -->
 <script src="js/fenda-mencoes.js"></script>
-<script src="js/fenda-giphy.js"></script>
+<script src="<?= asset_versao('js/fenda-giphy.js') ?>"></script>
 
 <script>
     (function() {
@@ -280,7 +284,7 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
             maxItems: 4,
             gridElement: gridElement,
 
-            async adicionar(file, tipo = 'imagem', url = null) {
+            async adicionar(file, tipo = 'imagem', url = null, dimensoes = null, videos = null) {
                 console.log('[PostAnexos] adicionar() chamado com:', {
                     tipo,
                     url: url || 'N/A',
@@ -336,12 +340,24 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
 
                 const id = 'anexo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
                 const preview = tipo === 'gif' ? url : URL.createObjectURL(file);
+                const largura = Number(dimensoes && dimensoes.width);
+                const altura = Number(dimensoes && dimensoes.height);
+                const dimensoesValidas = Number.isInteger(largura) && Number.isInteger(altura)
+                    && largura > 0 && altura > 0 && largura <= 10000 && altura <= 10000;
+                const mp4 = videos && typeof videos.mp4 === 'string' ? videos.mp4 : '';
+                const webm = videos && typeof videos.webm === 'string' ? videos.webm : '';
+                const poster = videos && typeof videos.poster === 'string' ? videos.poster : '';
 
                 this.anexos.push({
                     id,
                     tipo,
                     file: tipo === 'imagem' ? file : null,
                     url: tipo === 'gif' ? url : null,
+                    width: dimensoesValidas ? largura : null,
+                    height: dimensoesValidas ? altura : null,
+                    mp4: tipo === 'gif' ? mp4 : '',
+                    webm: tipo === 'gif' ? webm : '',
+                    poster: tipo === 'gif' ? poster : '',
                     preview,
                     status: 'pending'
                 });
@@ -408,6 +424,10 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                     img.src = item.preview;
                     img.alt = 'Anexo ' + (index + 1);
                     img.loading = 'lazy';
+                    if (item.width && item.height) {
+                        img.width = item.width;
+                        img.height = item.height;
+                    }
                     div.appendChild(img);
 
                     const btn = document.createElement('button');
@@ -451,6 +471,11 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                         formData.append('anexos[]', item.file);
                     } else if (item.tipo === 'gif' && item.url) {
                         formData.append('gif_urls[]', item.url);
+                        formData.append('gif_widths[]', item.width || '');
+                        formData.append('gif_heights[]', item.height || '');
+                        formData.append('gif_mp4s[]', item.mp4 || '');
+                        formData.append('gif_webms[]', item.webm || '');
+                        formData.append('gif_posters[]', item.poster || '');
                     }
                 });
             }
@@ -502,7 +527,14 @@ $modo_atributo = $modo_inline ? 'inline' : 'modal';
                 } else {
                     console.warn('[gifHiddenInput] campo não encontrado.');
                 }
-                PostAnexos.adicionar(null, 'gif', e.detail.url);
+                PostAnexos.adicionar(null, 'gif', e.detail.url, {
+                    width: e.detail.width,
+                    height: e.detail.height
+                }, {
+                    mp4: e.detail.mp4,
+                    webm: e.detail.webm,
+                    poster: e.detail.poster
+                });
             }
         });
 

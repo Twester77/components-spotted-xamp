@@ -1,10 +1,9 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO v1.7.1 – Cache busting para proxy.php
-const CACHE_VERSION = 'fenda-v1.7.1';
+// 🛡️ VERSÃO v1.7.2 – Atualização das estratégias de cache
+const CACHE_VERSION = 'fenda-v1.7.2';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const STATIC_FILES = [
-  '',
   'index.php',
   'feed.php',
   'comentarios-post.php',
@@ -66,7 +65,10 @@ const EXTERNAL_DOMAINS = [
   'googleapis.com',
   'gstatic.com',
   'fonts.googleapis.com',
-  'cdnjs.cloudflare.com'
+  'cdnjs.cloudflare.com',
+  'giphy.com',
+  'giphyusercontent.com',
+  'img.fendauniversity.com.br'
 ];
 
 const AUTH_ROUTES = [
@@ -151,7 +153,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // ============================================================
-  // 🔥 REGRA 1: Cache-first para proxy.php (com SWR e limite)
+  // REGRA 1: Cache-first para proxy.php (com limite)
   // 🔥 CORREÇÃO: Usa a URL COMPLETA (com parâmetro v) como chave de cache
   // ============================================================
   if (url.pathname.includes('/proxy.php')) {
@@ -163,30 +165,29 @@ self.addEventListener('fetch', (event) => {
         return cache.match(cacheKey).then((cachedResponse) => {
           if (cachedResponse) {
             console.log('[SW] ✅ Servindo imagem do CACHE (com busting):', url.pathname);
-          } else {
-            console.log('[SW] 🌍 Buscando imagem da REDE (primeira vez):', url.pathname);
+            return cachedResponse;
           }
 
-          const fetchPromise = fetch(event.request).then((networkResponse) => {
+          console.log('[SW] 🌍 Buscando imagem da REDE (primeira vez):', url.pathname);
+          return fetch(event.request).then((networkResponse) => {
             if (networkResponse && networkResponse.status === 200) {
               console.log('[SW] 💾 Armazenando imagem no cache (com busting):', url.pathname);
               // 🔥 Armazena usando a URL completa como chave
-              cache.put(cacheKey, networkResponse.clone());
-              // Limpeza LRU: remove os mais antigos se exceder 100
-              cache.keys().then(keys => {
-                if (keys.length > 100) {
-                  console.log(`[SW] 🧹 Cache excedeu 100 itens (${keys.length}). Removendo os mais antigos...`);
-                  const toDelete = keys.slice(0, keys.length - 80);
-                  toDelete.forEach(key => cache.delete(key));
-                }
-              });
+              cache.put(cacheKey, networkResponse.clone())
+                .then(() => cache.keys())
+                .then(keys => {
+                  if (keys.length > 100) {
+                    console.log(`[SW] 🧹 Cache excedeu 100 itens (${keys.length}). Removendo os mais antigos...`);
+                    const toDelete = keys.slice(0, keys.length - 80);
+                    return Promise.all(toDelete.map(key => cache.delete(key)));
+                  }
+                })
+                .catch(error => console.warn('[SW] ⚠️ Falha ao armazenar imagem no cache:', error));
             } else {
               console.warn('[SW] ⚠️ Resposta da rede não foi OK (status:', networkResponse?.status, ') para:', url.pathname);
             }
             return networkResponse;
           });
-
-          return cachedResponse || fetchPromise;
         });
       })
     );
@@ -219,7 +220,9 @@ self.addEventListener('fetch', (event) => {
   // ============================================================
   // REGRA 3: Arquivos estáticos → cache-first
   // ============================================================
-  if (STATIC_FILES.some(staticPath => url.pathname === staticPath || url.pathname.endsWith(staticPath))) {
+  if (STATIC_FILES.some(staticPath => (
+    url.pathname === new URL(staticPath, self.registration.scope).pathname
+  ))) {
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         if (cachedResponse) {

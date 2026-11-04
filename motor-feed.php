@@ -26,6 +26,10 @@
  * 🔥 FASE 6 (Sprint 3) – Busca por Palavras-Chave:
  *    - Adicionado parâmetro ?q=termo e filtro LIKE (mensagem e username).
  *    - Rate limiting persistente (fenda_rate_limits) para proteger contra scraping.
+ *
+ * ⚓ COPILOT – 2026-11-03 (experimento de GIF em vídeo)
+ *    - Renderiza MP4/WebM com poster estático e mantém a URL GIF para
+ *      fallback; posts antigos com apenas `url` continuam usando <img>.
  */
 
 include_once __DIR__ . '/conexao.php';
@@ -221,6 +225,59 @@ if ($is_comunidade && $usuario_logado > 0) {
 // 3. LOOP DE EXIBIÇÃO (COM B2 INTEGRADO E GRID/CARROSSEL)
 // ==================================================
 $tradutor = ['amei' => '💖', 'perplecto' => '😲', 'haha' => '😂', 'ranco' => '🙄', 'forca' => '🫂', 'triste' => '😢', 'tendi-nada' => '🤔'];
+$priorizar_proxima_imagem = $offset === 0;
+$obter_atributos_carregamento = static function () use (&$priorizar_proxima_imagem): string {
+    if ($priorizar_proxima_imagem) {
+        $priorizar_proxima_imagem = false;
+        return ' loading="eager" fetchpriority="high"';
+    }
+
+    return ' loading="lazy" decoding="async"';
+};
+$obter_atributos_dimensoes = static function (array $anexo): string {
+    $largura = filter_var($anexo['width'] ?? null, FILTER_VALIDATE_INT);
+    $altura = filter_var($anexo['height'] ?? null, FILTER_VALIDATE_INT);
+
+    if ($largura === false || $altura === false || $largura < 1 || $altura < 1 || $largura > 10000 || $altura > 10000) {
+        return '';
+    }
+
+    return ' width="' . $largura . '" height="' . $altura . '"';
+};
+$gerar_html_gif = static function (
+    array $anexo,
+    string $classe_container,
+    string $atributos_carregamento,
+    string $atributos_dimensoes
+): string {
+    $gif_original = $anexo['url'] ?? '';
+    $mp4_original = $anexo['mp4'] ?? '';
+    $webm_original = $anexo['webm'] ?? '';
+    $poster_original = $anexo['poster'] ?? $gif_original;
+    $gif_url = is_string($gif_original) ? htmlspecialchars($gif_original, ENT_QUOTES, 'UTF-8') : '';
+    $mp4_url = is_string($mp4_original) ? htmlspecialchars($mp4_original, ENT_QUOTES, 'UTF-8') : '';
+    $webm_url = is_string($webm_original) ? htmlspecialchars($webm_original, ENT_QUOTES, 'UTF-8') : '';
+    $poster_url = is_string($poster_original) ? htmlspecialchars($poster_original, ENT_QUOTES, 'UTF-8') : $gif_url;
+
+    if ($mp4_url === '' && $webm_url === '') {
+        return '<div class="' . $classe_container . '"><img src="' . $gif_url . '"' . $atributos_carregamento . $atributos_dimensoes . ' alt="GIF do post"></div>';
+    }
+
+    $sources = '';
+    if ($webm_url !== '') {
+        $sources .= '<source src="' . $webm_url . '" type="video/webm">';
+    }
+    if ($mp4_url !== '') {
+        $sources .= '<source src="' . $mp4_url . '" type="video/mp4">';
+    }
+
+    return '<div class="' . $classe_container . '">'
+        . '<video class="feed-gif-video" muted loop playsinline preload="none" poster="' . $poster_url . '"' . $atributos_dimensoes . ' hidden aria-label="Animação GIF do post">'
+        . $sources
+        . '</video>'
+        . '<img class="feed-gif-fallback" src="' . $poster_url . '" data-gif-url="' . $gif_url . '" data-poster-url="' . $poster_url . '"' . $atributos_carregamento . $atributos_dimensoes . ' alt="GIF do post">'
+        . '</div>';
+};
 
 // 🔥 Instancia o B2 UMA ÚNICA VEZ antes do loop
 try {
@@ -292,9 +349,13 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
                     // 🔥 IARA: fallback correto (era 'postagens/' . $caminho — circular)
                     $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);
-                    $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
+                    $atributos_carregamento = $obter_atributos_carregamento();
+                    $atributos_dimensoes = $obter_atributos_dimensoes($anexo);
+                    $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($img_url) . '"' . $atributos_carregamento . $atributos_dimensoes . ' onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
-                    $anexos_html .= '<div class="carrossel-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
+                    $atributos_carregamento = $obter_atributos_carregamento();
+                    $atributos_dimensoes = $obter_atributos_dimensoes($anexo);
+                    $anexos_html .= $gerar_html_gif($anexo, 'carrossel-item', $atributos_carregamento, $atributos_dimensoes);
                 }
             }
             $anexos_html .= '</div>';
@@ -321,9 +382,13 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                 if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])) {
                     // 🔥 IARA: fallback correto (era 'postagens/' . $caminho — circular)
                     $img_url = obterUrlComFallback($anexo['caminho'], 'uploads/ui/fallback-post.webp', $b2, true);
-                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
+                    $atributos_carregamento = $obter_atributos_carregamento();
+                    $atributos_dimensoes = $obter_atributos_dimensoes($anexo);
+                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($img_url) . '"' . $atributos_carregamento . $atributos_dimensoes . ' onerror="this.style.display=\'none\'" alt="Imagem do post"></div>';
                 } elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])) {
-                    $anexos_html .= '<div class="feed-anexo-item"><img src="' . htmlspecialchars($anexo['url']) . '" loading="lazy" alt="GIF do post"></div>';
+                    $atributos_carregamento = $obter_atributos_carregamento();
+                    $atributos_dimensoes = $obter_atributos_dimensoes($anexo);
+                    $anexos_html .= $gerar_html_gif($anexo, 'feed-anexo-item', $atributos_carregamento, $atributos_dimensoes);
                 }
             }
             $anexos_html .= '</div>';
@@ -338,7 +403,8 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             // 🔥 IARA: fallback correto (era htmlspecialchars($nome_imagem) — circular)
             $img_url = obterUrlComFallback($nome_imagem, 'uploads/ui/fallback-post.webp', $b2, true);
         }
-        $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '" loading="lazy" onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
+        $atributos_carregamento = $obter_atributos_carregamento();
+        $anexos_html = '<div class="container-img-post"><img src="' . htmlspecialchars($img_url) . '"' . $atributos_carregamento . ' onerror="this.src=\'uploads/ui/fallback-post.webp\'" alt="Imagem do post"></div>';
     }
 
     // 🔥 DATA DO POST COM FUSO BRASILEIRO
@@ -366,14 +432,25 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         data-id="<?php echo $post_id_atual; ?>"
         <?php echo $data_comunidade_attr; ?>
         style="border: 2px solid <?php echo $cor_post; ?>">
+        <div class="hacker-card-terminal-frame" aria-hidden="true">
+            <span class="hacker-card-terminal-corner">+</span>
+            <span class="hacker-card-terminal-label"></span>
+            <span class="hacker-card-terminal-rule">================================================================!@#$%================================================================</span>
+            <span class="hacker-card-terminal-corner">+</span>
+        </div>
         <?php echo $ellipsis_html; ?>
         <div class="card-header">
             <span class="category-tag">#<?php echo strtoupper($categoria_atual); ?></span>
+            <?php if ($exibir_selo_adm): ?>
+                <span class="selo-adm-badge">ADM</span>
+            <?php endif; ?>
             <span class="post-time"><?php echo $data_post; ?></span>
         </div>
         <div class="user-info-post">
             <img src="<?php echo $avatar; ?>"
                 class="avatar-p"
+                width="48"
+                height="48"
                 decoding="async"
                 onerror="this.src='uploads/ui/default.webp';">
             <?php if ($categoria_atual !== 'anonimo'): ?>
@@ -409,6 +486,11 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
                     <i class="fas fa-expand"></i>Expandir 
                 </button>
             </div>
+        </div>
+        <div class="hacker-card-terminal-footer" aria-hidden="true">
+            <span class="hacker-card-terminal-corner">+</span>
+            <span class="hacker-card-terminal-rule">================================================================!@#$%================================================================</span>
+            <span class="hacker-card-terminal-corner">+</span>
         </div>
     </article>
 <?php

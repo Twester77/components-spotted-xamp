@@ -4,6 +4,10 @@
 
 window.abrirDrawerComentarios = function(postId) {
     if (!postId) return;
+
+    if (typeof window.HeaderManager?.limpar === 'function') {
+        window.HeaderManager.limpar();
+    }
     
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-aberto');
@@ -195,7 +199,9 @@ function configurarGestoFechar(panel) {
 
 // Intercepta o clique no botão "Fofocar" e no "Expandir"
 document.addEventListener('click', (e) => {
-    const btnFofocar = e.target.closest('.btn-fofocar');
+    const btnFofocar = e.target instanceof Element ? e.target.closest(
+        '.btn-fofocar, #lightbox-body a[href*="comentarios-post.php"]'
+    ) : null;
     if (btnFofocar) {
         // Se for swipe ou whatsapp, deixa o link normal agir.
         if (document.body.classList.contains('modo-swipe-ativo')) return;
@@ -206,9 +212,15 @@ document.addEventListener('click', (e) => {
         e.stopPropagation();
         const href = btnFofocar.getAttribute('href');
         if (href) {
-            const urlParams = new URLSearchParams(href.split('?')[1]);
-            const id = urlParams.get('id');
-            if (id) window.abrirDrawerComentarios(id);
+            const id = new URL(href, window.location.href).searchParams.get('id');
+            if (id) {
+                if (btnFofocar.closest('#lightbox-body')) {
+                    if (typeof window.fecharLightbox === 'function') {
+                        window.fecharLightbox();
+                    }
+                }
+                window.abrirDrawerComentarios(id);
+            }
         }
         return;
     }

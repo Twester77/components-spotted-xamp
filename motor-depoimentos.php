@@ -37,6 +37,19 @@ $stmt->bind_param("isi", $usuario_id, $status, $limite);
 $stmt->execute();
 $res = $stmt->get_result();
 
+if (!empty($mostrar_botao_depoimento)) {
+    $meu_id = (int)($_SESSION['usuario_id'] ?? 0);
+    if ($meu_id > 0 && $meu_id !== $usuario_id) {
+        ?>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:15px;">
+            <button type="button" class="btn-escrever-depoimento" id="btn-abrir-modal-depoimento" data-destinatario="<?= $usuario_id ?>">
+                <i class="fas fa-pen"></i> Escrever Depoimento
+            </button>
+        </div>
+        <?php
+    }
+}
+
 if ($res->num_rows === 0) {
     echo '<p class="sem-depoimentos">Nenhum depoimento ' . ($status === 'aprovado' ? 'aprovado' : 'pendente') . ' ainda.</p>';
     exit;

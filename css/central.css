@@ -191,13 +191,16 @@
     background-clip: padding-box;
     container-type: inline-size;
     container-name: central-conteudo;
-    border-radius: 20px;
-    padding: 15px;
+    border-radius: 16px;
+    
+    /* Clamp invertido : Telas grandes = padding menor (15px) | Telas pequenas = padding maior (~~23px) */
+    padding: clamp(12px, calc(20px - 2vw), 25px);
+    margin: 20px auto;
+    margin: clamp(10px, 1.5vw, 30px) auto;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     flex: 1;
     gap: 10px;
-    margin: 20px auto;
     min-height: 250px;
     width: 100%;
     overflow-y: auto ;
@@ -569,8 +572,10 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
    ---------------------------------------------------------------- */
 .central-comunidades-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+    gap: 16px;
+    padding: 10px;
+    padding: clamp(8px, 2vw, 20px);
     max-width: 100%;
 }
 
@@ -1531,13 +1536,13 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     }
 
     .central-conteudo {
-        padding: 20px;
-        max-height: calc(80vh - 40px);
+        max-height: calc(70vh - 40px);
+        max-height: calc(70dvh - 30px);
     }
 
     .central-comunidades-grid {
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+        gap: 12px;
     }
 
 }
@@ -1545,12 +1550,13 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 @media (max-width: 480px) {
     .central-comunidades-grid {
         grid-template-columns: 1fr;
+        gap: 8px;
     }
 
     .aba-central,
     .aba-central-link {
-        font-size: 0.75rem;
-        padding: 6px 10px;
+        font-size: 0.73rem;
+        padding: 6px 8px;
     }
 
     .aba-central i,

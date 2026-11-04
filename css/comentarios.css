@@ -49,11 +49,12 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(20, 20, 30, 0.92);                            /* fallback */
-    background: var(--bg-modal-content, rgba(20, 20, 30, 0.92));    /* 🐚 FAROL – Fase 2 */
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    background: rgba(20, 20, 30, 0.85);                            /* fallback */
+    background: var(--bg-modal-content, rgba(20, 20, 30, 0.74));    /* 🐚 FAROL – Fase 2 */
+    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(1px);
     padding: 6px 12px;
+    padding:clamp(4px, 1.5cqi, 12px) clamp(8px, 2cqi, 14px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);            /* fallback */
     border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🐚 FAROL – Fase 2 */
     display: flex;
@@ -64,8 +65,8 @@
     user-select: none;
     touch-action: none;
     -webkit-touch-callout: none;
-    gap: 12px;
-    max-height: 60px;
+    gap: 10px;
+    max-height: 80px;
     align-items: center;
     transition: all 0.3s ease;
 }
@@ -143,8 +144,8 @@
     height: clamp(30px, 6vmin, 48px);
     background: rgba(20, 20, 30, 0.92);  
     background: var(--bg-modal-content, rgba(20, 20, 30, 0.92));                          /* 🐚 FAROL – Fase 2 */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
     border: 1px solid rgba(255, 255, 255, 0.1);                    /* fallback */
     border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.1)); /* 🐚 FAROL – Fase 2 */
     border-radius: 50%;
@@ -154,7 +155,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     transition: all 0.25s ease;
     padding: 0;
     margin: 0;
@@ -374,7 +375,8 @@
 
 .header-actions-container {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    gap: clamp(8px, 1.5cqi, 12px);
     align-items: center;
     justify-content: center;
     justify-content: safe center;

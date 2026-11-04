@@ -419,11 +419,11 @@ nav {
     transform: translate3d(100%, -50%, 0);
     width: 280px;
     background: rgba(0, 20, 20, 0.67);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border: 1px solid #00ff00;
     border-radius: 15px 0 0 15px;
-    transition: transform 0.35s ease-out;
+    transition: transform 0.25s ease-out;
     z-index: 9995;
     padding: 12px;
     color: #00ff00;
@@ -1292,6 +1292,20 @@ footer a {
 .drawer-perfil-container.ativa {
     transform: translateX(0);
     /* Desliza para a posição 0 (dentro da tela) */
+}
+
+.drawer-perfil-loading,
+.drawer-perfil-error {
+    padding: 4rem 1.5rem;
+    text-align: center;
+}
+
+.drawer-perfil-loading {
+    color: var(--texto-secundario, #ccc);
+}
+
+.drawer-perfil-error {
+    color: var(--texto-erro, #ff6b6b);
 }
 
 .drawer-backdrop {
@@ -2163,18 +2177,22 @@ textarea[name="bio"] {
     position: relative;
 }
 
-.spotted-card.selo-adm::after {
-    content: 'ADM';
-    position: absolute;
-    top: 5px;
-    right: 40px;
-    /* Ajuste conforme o menu de opções */
-    font-size: 0.65rem;
-    font-size: clamp(0.65rem, 1.8cqi, 0.95rem);
+.selo-adm-badge {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-right: 5px;
+    margin-left: auto;
+    padding: 2px 4px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 4px;
+    background: rgba(255, 215, 0, 0.1);
+    font-size: clamp(0.64rem, 2cqi, 0.96rem);
     font-weight: bold;
-    color: #FFD700;                                                /* fica local – cor específica do selo */
+    color: #ffd700;
     letter-spacing: 2px;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
 }
 
 
@@ -2236,7 +2254,7 @@ textarea[name="bio"] {
     .main-perdidos .feed-anexos-grid {
         margin: 8px auto;
         width: 100%;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         padding: 6px;
     }
 
@@ -2259,7 +2277,7 @@ textarea[name="bio"] {
     }
 
     .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
-        max-height: 200px;
+        max-height: 220px;
         object-fit: contain;
     }
 
@@ -2618,7 +2636,7 @@ textarea[name="bio"] {
 
     .central-conteudo {
         border-radius: 12px;
-        padding: 10px;
+        padding: 15px;
         margin: 10px auto;
         min-height: 200px;
     }
@@ -2740,8 +2758,6 @@ body.modal-aberto #fenda-nexus {
     cursor: pointer;
     white-space: nowrap;
     text-align: center;
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
     font-size: 0.86rem;
     font-size: clamp(0.9rem, 0.382vw + 0.625rem, 1.3rem);
 }
@@ -2786,8 +2802,15 @@ body.modal-aberto #fenda-nexus {
 
 /* O Ponteiro: Animação suave e origem no centro */
 #ponteiro-bussola {
-    transform-origin: center;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #ponteiro-bussola {
+        transition: none !important;
+    }
 }
 
 /* Classes de rotação (que o JS vai aplicar) */
@@ -3344,4 +3367,3 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
     
 }
-

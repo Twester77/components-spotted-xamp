@@ -139,8 +139,8 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema $classe_est
         <?php endif; ?>
     <?php endif; ?>
 
-    <!-- Swipe -->
-    <?php if ($pagina_atual == 'feed.php'): ?>
+    <!-- Swipe só é necessário quando a preferência ativa o modo empilhado -->
+    <?php if ($pagina_atual == 'feed.php' && $ativar_modo_app): ?>
         <link rel="stylesheet" href="<?= asset_versao('css/swipe.css') ?>">
     <?php endif; ?>
 

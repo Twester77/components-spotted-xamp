@@ -417,9 +417,9 @@ $total_comentarios = $apenas_post ? 0 : count($comentarios);
     <!-- Rodapé com ação – SÓ SE NÃO FOR `apenas_post` -->
     <?php if (!$apenas_post): ?>
         <div class="lightbox-footer">
-            <button class="btn-fofocar lightbox-btn-comentar" onclick="window.location.href='comentarios-post.php?id=<?php echo intval($id); ?>#fofocar'">
+            <a class="btn-fofocar lightbox-btn-comentar" href="comentarios-post.php?id=<?php echo intval($id); ?>#fofocar">
                 <i class="fas fa-comment"></i> Comentar
-            </button>
+            </a>
         </div>
     <?php endif; ?>
 

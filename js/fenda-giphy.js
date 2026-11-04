@@ -217,11 +217,25 @@
         }
     }
 
+    /* COPILOT – 2026-11-03: conserva poster, fallback GIF e variantes de vídeo da Giphy. */
     function mostrarResultados(gifs) {
         resultsContainer.innerHTML = '';
         gifs.forEach(gif => {
-            const imgUrl = gif.images.fixed_height_downsampled?.url || gif.images.original?.url;
+            const imagemGif = gif.images.fixed_height_downsampled?.url
+                ? gif.images.fixed_height_downsampled
+                : gif.images.original;
+            const imgUrl = imagemGif?.url;
             if (!imgUrl) return;
+            const imagemVideo = gif.images.fixed_height || gif.images.original;
+            const mp4Url = imagemVideo?.mp4 || gif.images.original?.mp4 || null;
+            const webmUrl = imagemVideo?.webm || gif.images.original?.webm || null;
+            const posterUrl = gif.images.fixed_height_still?.url
+                || gif.images.original_still?.url
+                || imgUrl;
+            const largura = Number(imagemGif.width);
+            const altura = Number(imagemGif.height);
+            const dimensoesValidas = Number.isInteger(largura) && Number.isInteger(altura)
+                && largura > 0 && altura > 0 && largura <= 10000 && altura <= 10000;
 
             const item = document.createElement('div');
             item.style.cssText = `
@@ -237,12 +251,21 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                selecionarGif(imgUrl);
+                selecionarGif(
+                    imgUrl,
+                    dimensoesValidas ? largura : null,
+                    dimensoesValidas ? altura : null,
+                    { mp4: mp4Url, webm: webmUrl, poster: posterUrl }
+                );
             });
 
             const img = document.createElement('img');
             img.src = imgUrl;
             img.style.cssText = 'width: 100%; height: auto; display: block;';
+            if (dimensoesValidas) {
+                img.width = largura;
+                img.height = altura;
+            }
             item.appendChild(img);
             resultsContainer.appendChild(item);
         });
@@ -251,7 +274,7 @@
     // ============================================================
     // SELEÇÃO DO GIF – VERSÃO PURIFICADA (SEM CHAMADA GLOBAL)
     // ============================================================
-    function selecionarGif(url) {
+    function selecionarGif(url, width, height, videos = {}) {
         if (isSelecting) {
             console.warn('[GIPHY] Seleção em andamento, ignorando clique duplicado.');
             return;
@@ -272,7 +295,15 @@
         // 🔥 PASSO 2: Dispara evento customizado para que os ouvintes decidam o que fazer
         // NÃO chamamos mais window.adicionarGif aqui – cada formulário escuta e age.
         document.dispatchEvent(new CustomEvent('gifSelecionado', {
-            detail: { url: url, targetId: gifTargetInputId }
+            detail: {
+                url: url,
+                targetId: gifTargetInputId,
+                width: width,
+                height: height,
+                mp4: videos.mp4,
+                webm: videos.webm,
+                poster: videos.poster
+            }
         }));
 
         // 🔥 PASSO 3: Foca no campo de texto (se houver)
