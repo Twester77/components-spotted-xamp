@@ -760,63 +760,6 @@ function reforcarLayoutNosCards() {
         });
     });
 
-    // ==================== REAÇÕES (VERSÃO SEGURA) ====================
-    const _reacaoEmAndamento = {};
-
-    window.enviarReacao = async function(postId, tipoReacao) {
-        const tradutorEmojis = {
-            'amei': '💖',
-            'perplecto': '😲',
-            'haha': '😂',
-            'ranco': '🙄',
-            'forca': '🫂',
-            'triste': '😢',
-            'tendi-nada': '🤔'
-        };
-
-        const chave = `${postId}_${tipoReacao}`;
-        if (_reacaoEmAndamento[chave]) {
-            console.warn('[REAÇÃO] Aguardando processamento da reação anterior para o post', postId);
-            return;
-        }
-        _reacaoEmAndamento[chave] = true;
-
-        try {
-            const response = await fetch(`includes/reagir.php?id=${postId}&tipo=${tipoReacao}`);
-            if (response.status === 429) {
-                alert("Calma lá! O motor da Fenda precisa respirar.");
-                delete _reacaoEmAndamento[chave];
-                throw new Error("Rate limit exceeded");
-            }
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const data = await response.json();
-            if (data.status === 'success') {
-                const containerReacoes = document.getElementById(`reacoes-post-${postId}`);
-                if (containerReacoes) {
-                    containerReacoes.innerHTML = '';
-                    Object.keys(data.contagens).forEach(tipo => {
-                        const total = data.contagens[tipo];
-                        if (total > 0) {
-                            const emoji = tradutorEmojis[tipo] || '👍';
-                            const classeVoted = data.minhas_reacoes.includes(tipo) ? 'voted' : '';
-                            containerReacoes.insertAdjacentHTML(
-                                'beforeend',
-                                `<span class="reacao-item ${classeVoted}">${emoji} ${total}</span>`
-                            );
-                        }
-                    });
-                }
-            }
-            return data;
-        } catch (err) {
-            if (err.message !== "Rate limit exceeded") console.error("[REAÇÃO] Erro:", err);
-            throw err;
-        } finally {
-            delete _reacaoEmAndamento[chave];
-        }
-    };
-
     // ==================== RADAR DE MARACUTAIA (SWIPE) ====================
     let radarBloqueado = false;
 

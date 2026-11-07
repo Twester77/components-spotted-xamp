@@ -1294,8 +1294,9 @@
     background-color: #16161db0 ;                                   /* 🎨 identidade visual da vibe ADS */
     border: 1px solid rgba(255, 255, 255, 0.04);                    /* 🎨 identidade visual da vibe ADS */
     border-top: 4px solid var(--aura-user) ;    
-    contain: paint;
     isolation: isolate;                    /* 🎨 dinâmica via PHP — preservada */
+    -webkit-backface-visibility: hidden;
+    backface-visibility:hidden;
     will-change: box-shadow, background-position, opacity, animation;
     animation: ads-neon-glow-pulse var(--vibe-ads-pulse-duration) infinite ease-in-out alternate;
 }
@@ -1337,16 +1338,16 @@
 
 .main-perfil-container-publico.vibe-ads .hex-bg {
     position: fixed;
-    top: 80px;
-    left: 0;
-    width: 100vw;
-    height: calc(100vh - 100px);
+    inset: 0;
+    width: auto;
+    height: 100vh;
+    height: 100dvh;
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    grid-auto-rows: 56px;
+    grid-auto-rows: minmax(56px, 1fr);
     gap: 15px;
     padding: 0;
     opacity: 0.6;
@@ -1360,8 +1361,7 @@
     border: 1px solid var(--aura-user, #70cde4);                    /* 🎨 dinâmica via PHP — preservada */
     opacity: 0.5;
     transform: scale(0.85);
-    transition: all 0.4s ease;
-    will-change: transform, background, border-color, box-shadow;
+    transition: transform 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
 }
 
 .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active {
@@ -1392,6 +1392,25 @@
     background: radial-gradient(circle at 50% 30%, oklch(0.15 0.02 280) 0%, oklch(0.08 0.01 260) 100%); /* 🎨 identidade visual da vibe DARK */
     border-top: 4px solid rgba(255, 0, 50, 0.4);                    /* 🎨 identidade visual da vibe DARK */
     border-radius: 14px;
+}
+
+.main-perfil-container-publico.vibe-dark {
+    animation: dark-castle-lightning 26s linear infinite;
+}
+
+@keyframes dark-castle-lightning {
+    0%, 96.6%, 100% { filter: brightness(1) contrast(1); }
+    96.8% { filter: brightness(1.55) contrast(1.2); }
+    97% { filter: brightness(0.92) contrast(1.05); }
+    97.2% { filter: brightness(1.35) contrast(1.12); }
+    97.5% { filter: brightness(1) contrast(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-perfil-container-publico.vibe-dark {
+        animation: none;
+        filter: none;
+    }
 }
 
 .main-perfil-container-publico.vibe-dark::after,
@@ -1607,10 +1626,8 @@
 
 @media (max-width: 768px) {
     .main-perfil-container-publico.vibe-ads .hex-bg {
-        top: 50px;
-        height: calc(100vh - 50px);
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-        grid-auto-rows: 44px;
+        grid-auto-rows: minmax(44px, 1fr);
         gap: 10px;
         opacity: 0.7;
     }
@@ -1683,7 +1700,7 @@
 
     .main-perfil-container-publico.vibe-ads .hex-bg {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        grid-auto-rows: 78px;
+        grid-auto-rows: minmax(78px, 1fr);
         gap: 20px;
         opacity: 0.3;
     }

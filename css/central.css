@@ -223,7 +223,7 @@
     font-size: clamp(2rem, 15cqi, 4rem);
     color: #ffbc00;                                                /* fallback */
     color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
-    animation: spin 1s linear infinite;
+    animation: fenda-spin 1s linear infinite;
 }
 
 /* Fallback para navegadores que não suportam clamp */

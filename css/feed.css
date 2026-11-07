@@ -800,8 +800,8 @@ span.data-post {
     align-items: center;
     white-space: nowrap;
     bottom: 0;
-    border-top: 2px solid rgba(255, 255, 255, 0.199);
-    gap: 10px;
+    border-top: 1px solid var(--borda-media, rgba(255, 255, 255, 0.2)); /* 🐚 FAROL – Fase 2 */
+    gap: 12px;
 }
 
 .btn-reagir,
@@ -882,15 +882,18 @@ span.data-post {
     color: var(--texto-secundario, #ccc);                         /* 🐚 FAROL – Fase 2 */
     text-decoration: none;
     background: rgba(255, 255, 255, 0.06);
-    border-radius: 16px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     gap: 8px;
+    padding: 4px 8px;
+    padding: 0.3em 0.5em;
     display: inline-flex;
     align-items: center;
-    font-size: 0.78rem;
+    font-size: 0.77rem;
     font-size: clamp(0.7em, 4.2cqi, 1em);
     font-weight: 600;
+    font-family: "Inter", sans-serif;
     text-transform: uppercase;
     background: transparent;
     border: none;

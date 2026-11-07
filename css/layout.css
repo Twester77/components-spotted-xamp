@@ -188,10 +188,82 @@ nav {
 /* lógica de setinha no dropdown */
 .dropdown>a::after {
     content: ' ▼';
-    font-size: 20px;
-    opacity: 0.75;
+    font-size: 12px;
+    opacity: 0.7;
     margin-left: 5px;
 }
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 5px;
+    gap: 8px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.37);
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    z-index: 100;
+
+}
+
+.menu-item:hover>a {
+    background: rgba(255, 255, 255, 0.11);
+    border-radius: 5px;
+}
+
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown:hover>a::after {
+    content: ' ▲';
+}
+
+.submenu {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 10px 10px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100px;
+    padding: 5px;
+    box-shadow: 0px 8px 14px rgba(0, 0, 0, 0.4);
+    list-style: none;
+    z-index: 10000;
+}
+
+.submenu li a {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.021);
+    font-size: 0.9rem;
+    font-size: clamp(0.85rem, 2cqw, 1.2rem);
+    font-weight: normal;
+    text-align: left;
+    color: #d4b8b8;
+    padding: 6px 12px;
+    line-height: 1.3;
+}
+
+.submenu li:hover {
+    background: rgba(255, 255, 255, 0.11);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+}
+
+.submenu li:hover a {
+    color: #ff8c00;
+    transition: color 0.3s ease;
+}
+
+.menu-item:hover .submenu {
+    display: flex;
+    flex-direction: column;
+}
+
 
 
 /* Sidebar simples, limpa e com scroll funcional */
@@ -728,85 +800,6 @@ body.modal-aberto .fab-postar {
     transform: translateY(-2px);
 }
 
-
-.menu {
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    padding: 5px;
-    gap: 8px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.37);
-    width: 100%;
-    justify-content: center;
-    position: relative;
-    z-index: 100;
-
-}
-
-.menu-item:hover>a {
-    background: rgba(255, 255, 255, 0.11);
-    border-radius: 5px;
-}
-
-
-.dropdown {
-    position: relative;
-}
-
-/*  setinha no dropdown */
-.dropdown>a::after {
-    content: ' ▼';
-    font-size: 10px;
-    opacity: 0.5;
-    margin-left: 5px;
-}
-
-.dropdown:hover>a::after {
-    content: ' ▲';
-}
-
-.submenu {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 0 0 10px 10px;
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 100px;
-    padding: 5px;
-    box-shadow: 0px 8px 14px rgba(0, 0, 0, 0.4);
-    list-style: none;
-    z-index: 10000;
-}
-
-.submenu li a {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.021);
-    font-size: 0.9rem;
-    font-size: clamp(0.85rem, 2cqw, 1.2rem);
-    font-weight: normal;
-    text-align: left;
-    color: #d4b8b8;
-    padding: 6px 12px;
-    line-height: 1.3;
-}
-
-.submenu li:hover {
-    background: rgba(255, 255, 255, 0.11);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
-}
-
-.submenu li:hover a {
-    color: #ff8c00;
-    transition: color 0.3s ease;
-}
-
-.menu-item:hover .submenu {
-    display: flex;
-    flex-direction: column;
-}
 
 /* CORREÇÃO DA SIDEBAR  */
 
@@ -2482,7 +2475,7 @@ textarea[name="bio"] {
         font-size: clamp(0.8rem, 1.5cqi, 1rem);
         font-weight: bold;
         white-space: nowrap;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         max-height: 35vh;
         z-index: 98;
         position: fixed;
@@ -2926,7 +2919,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     gap: 8px;
     background: rgba(0, 0, 0, 0.2);
     grid-auto-rows: minmax(100px, auto);
-    padding: 6px 0 6px 0;
+    padding: 5px 0 5px 0;
     align-items: center;
     justify-items: center;
     justify-content: center;
@@ -2980,7 +2973,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     transform: translate(-50%, -50%);
     color: #ffbc00;
     font-size: 1.1rem;
-    animation: spin 2s linear infinite;
+    animation: fenda-spin 2s linear infinite;
     display: none;
     /* oculto por padrão */
 }

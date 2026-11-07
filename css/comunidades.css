@@ -2182,6 +2182,11 @@ textarea#descricao{
     transform: none;
 }
 
+  body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .hacker-card-terminal-frame,
+  body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .hacker-card-terminal-footer {
+    display: none;
+  }
+
 /* Avatar e cabeçalho */
     body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .user-info-post {
     display: flex;
@@ -2911,7 +2916,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     display: block;
     top: 5px;
     right: 5px;
-    padding: 8px 0;
+    padding: 6px 0;
     z-index: 10;
 }
 
@@ -3175,12 +3180,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card
     padding: 5px 10px;
     border: 1px solid rgba(255, 255, 255, 0.08);                    /* fallback */
     border: 1px solid var(--borda-media, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
-    border-radius: 20px;
+    border-radius: 16px;
     background: rgba(255, 255, 255, 0.05);                          /* fallback */
     background: var(--bg-input, rgba(255, 255, 255, 0.05));        /* 🌅 FAGULHA – Fase 2 */
     color: #aaa;                                                    /* fallback */
     color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
-    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    font-size: clamp(0.75rem, 1vw, 0.96rem);
     font-weight: 500;
     line-height: 1.4;
     font-family: inherit;
@@ -3355,7 +3360,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
     body:not(.modo-swipe-ativo) .comunidade-page
     .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
     .card-actions-ellipsis {
-        position: absolute;
+        position: relative;
         top: var(--ls-pad);
         right: var(--ls-pad);
         z-index: 50;

@@ -522,7 +522,7 @@ select:focus-visible {
     border-top: 2px solid #ff6b6b;                                  /* fallback */
     border-top: 2px solid var(--cor-erro, #ff6b6b);                 /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: fenda-spin 0.8s linear infinite;
 }
 
 .toast-sessoes-encerradas {
@@ -583,7 +583,7 @@ select:focus-visible {
     border-top: 2px solid #ff6b6b;                                  /* fallback */
     border-top: 2px solid var(--cor-erro, #ff6b6b);                 /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: fenda-spin 0.8s linear infinite;
     vertical-align: middle;
 }
 
@@ -595,7 +595,7 @@ select:focus-visible {
     border-top: 2px solid #ff6b6b;                                  /* fallback */
     border-top: 2px solid var(--cor-erro, #ff6b6b);                 /* 🌅 FAGULHA – Fase 2 */
     border-radius: 50%;
-    animation: spin 0.7s linear infinite;
+    animation: fenda-spin 0.7s linear infinite;
     vertical-align: middle;
 }
 
@@ -2136,10 +2136,10 @@ section.sessao-publicar,
 }
 
 section.sessao-publicar {
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
     border: 1px solid rgba(255, 255, 255, 0.007);                   /* 🎨 quase transparente — específico */
-    padding: 12px;
+    padding: 10px;
     margin: 20px auto;
     box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.37);                   /* 🎨 sombra específica */
     max-width: 300px;
@@ -2147,7 +2147,7 @@ section.sessao-publicar {
     background-color: #49414121;                                    /* fallback */
     background: rgba(0, 0, 0, 0.45);                                /* fallback */
     background: var(--bg-modal-overlay, rgba(0, 0, 0, 0.45));      /* 🌅 FAGULHA – Fase 2 */
-    border-radius: 20px;
+    border-radius: 16px;
     height: auto;
 }
 

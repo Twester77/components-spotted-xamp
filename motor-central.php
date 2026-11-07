@@ -227,7 +227,7 @@ if ($aba === 'notificacoes') {
 // 5. ABA: FAVORITOS (EM BREVE)
 // ============================================================
 if ($aba === 'favoritos') {
-    echo '<p style="text-align:center; color:#aaa; padding:30px;">⭐ Funcionalidade de favoritos em breve!</p>';
+    echo '<p style="text-align:center; color:#aaa; color:var(--texto-terciario); padding:30px;">⭐ Funcionalidade de favoritos em breve!</p>';
     exit;
 }
 
@@ -235,7 +235,7 @@ if ($aba === 'favoritos') {
 // 6. ABA: MARKETPLACE (EM BREVE)
 // ============================================================
 if ($aba === 'marketplace') {
-    echo '<p style="text-align:center; color:#aaa; padding:30px;">🛒 Funcionalidade de marketplace em breve!</p>';
+    echo '<p style="text-align:center; color:#aaa; color:var(--texto-terciario); padding:30px;">🛒 Funcionalidade de marketplace em breve!</p>';
     exit;
 }
 

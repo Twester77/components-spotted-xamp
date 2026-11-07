@@ -122,11 +122,19 @@
     display: none;
 }
 
-/* O perfil público mantém o CRT nos cards sem a camada fixa sobre a página toda. */
-[data-theme="hacker"] body:has(.main-perfil-container-publico)::before {
+/* A lista de comentários mantém o CRT nos cards sem a camada fixa sobre a página toda. */
+[data-theme="hacker"] body:has(.lista-comentarios-social)::before
+[data-theme="hacker"] body:has(.lista-scrollavel)::before {
+    display: none;
+} 
+
+[data-theme="hacker"] body:has(.main-perfil-container-publico[class*="vibe-"])::before
+{
     display: none;
 }
 
+
+[data-theme="hacker"] body:has(.main-perfil-container-publico)::before 
 /* Mantém o flicker desativado durante swipe/tinder */
 [data-theme="hacker"] body.modo-swipe-ativo::after,
 [data-theme="hacker"] body.modo-tinder-ativo::after {
@@ -156,6 +164,7 @@
 }
 
 /* Desativa CRT no Swipe (Performance) */
+[data-theme="hacker"] body:not(.modo-tinder-ativo)::before,
 [data-theme="hacker"] body.modo-swipe-ativo::before,
 [data-theme="hacker"] body.modo-tinder-ativo::before {
     display: none;
@@ -249,6 +258,8 @@
     animation: none;
     transition: none;
     animation-duration: 0ms;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 [data-theme="hacker"] .feed-usuario-fenda .spotted-card {
@@ -299,7 +310,7 @@
     box-shadow:none;
 }
 
-
+/* Moldura inferior padrão */
 [data-theme="hacker"] .spotted-card .hacker-card-terminal-frame,
 [data-theme="hacker"] .spotted-card .hacker-card-terminal-footer {
     display: flex;
@@ -310,14 +321,15 @@
     min-width: 0;
     color: var(--hacker-green);
     font-size: 0.85rem;
-    font: clamp(0.8rem, 3.6cqi, 1rem)/1.2 var(--hacker-font, monospace);
+    line-height: 1.25;
+    font: clamp(0.82rem, 3.6cqi, 1rem)/1.2 var(--hacker-font, monospace);
     white-space: nowrap;
 }
 
-[data-theme="hacker"] .spotted-card .hacker-card-terminal-frame {
+[data-theme="hacker"] .spotted-card .hacker-card-terminal-frame{
     margin-bottom: 0.45rem;
-}
 
+}
 [data-theme="hacker"] .spotted-card .hacker-card-terminal-footer {
     margin-top: 0.45rem;
 }
@@ -343,50 +355,123 @@
     flex: 0 0 auto;
 }
 
+/* 4.1 - Molduras por categoria de post (cores e textos) */
+
+
 [data-theme="hacker"] .spotted-card.anonimo .hacker-card-terminal-label::before {
     content: "[ USER_NOT_FOUND ]";
     color: #ffffff;
 }
+[data-theme="hacker"] .spotted-card.anonimo .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.anonimo  .hacker-card-terminal-rule {
+    color: #ffffff;
+}
+
+
+
 [data-theme="hacker"] .spotted-card.perdidos .hacker-card-terminal-label::before {
     content: "[ PROTOCOLO: GET_$ITEM ]";
     color: #fcf809;
 }
+[data-theme="hacker"] .spotted-card.perdidos .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.perdidos  .hacker-card-terminal-rule {
+    color: #fcf809;
+}
+
+
+
 [data-theme="hacker"] .spotted-card.tenho-ranco .hacker-card-terminal-label::before {
     content: "[ RuntimeError: High_Stress ]";
     color: #f33232;
 }
+[data-theme="hacker"] .spotted-card.tenho-ranco .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.tenho-ranco  .hacker-card-terminal-rule {
+    color: #f33232;
+}
+
+
 [data-theme="hacker"] .spotted-card.elogio .hacker-card-terminal-label::before {
     content: "[ LOVE_IS_IN_THE_AIR <3 ]";
     color: #f85caa;
 }
+[data-theme="hacker"] .spotted-card.elogio .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.elogio .hacker-card-terminal-rule {
+    color: #f85caa;
+}
+
+
 [data-theme="hacker"] .spotted-card.games .hacker-card-terminal-label::before {
     content: "[ Xinput_DInput DETECTADO ]";
     color: #00ffff;
 }
+[data-theme="hacker"] .spotted-card.games .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.games .hacker-card-terminal-rule {
+    color: #00ffff;
+}
+
+
 [data-theme="hacker"] .spotted-card.academico .hacker-card-terminal-label::before {
     content: "[ ARQUIVO_CIENTÍFICO ]";
     color: #b00bda;
 }
+[data-theme="hacker"] .spotted-card.academico .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.academico .hacker-card-terminal-rule {
+    color: #b00bda;
+}
+
+
 [data-theme="hacker"] .spotted-card.caronas .hacker-card-terminal-label::before {
     content: "[ CARONAS: SELECT * FROM unifev ]";
     color: #969dc4;
 }
+[data-theme="hacker"] .spotted-card.caronas  .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.caronas  .hacker-card-terminal-rule {
+    color: #969dc4;
+}
+
+
 [data-theme="hacker"] .spotted-card.esportes .hacker-card-terminal-label::before {
     content: "[ JOIN_FOR_FUN ]";
     color: #128a0ec2;
 }
+[data-theme="hacker"] .spotted-card.esportes  .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.esportes  .hacker-card-terminal-rule {
+    color: #128a0ec2;
+}
+
+
+
 [data-theme="hacker"] .spotted-card.comunidade .hacker-card-terminal-label::before {
     content: "[ COMMUNITY_LINK ]";
     color: #ffffffbe;
 }
+[data-theme="hacker"] .spotted-card.comunidade  .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.comunidade  .hacker-card-terminal-rule {
+    color: #ffffffbe;
+}
+
+
+
 [data-theme="hacker"] .spotted-card.acaba-pelo-amor-de-deus .hacker-card-terminal-label::before {
     content: "[ WARNING: OVERFLOW_EMOTIONAL ]";
     color: #f78605;
 }
+[data-theme="hacker"] .spotted-card.acaba-pelo-amor-de-deus  .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.acaba-pelo-amor-de-deus  .hacker-card-terminal-rule {
+    color: #f78605;
+}
+
+
 [data-theme="hacker"] .spotted-card.desapego .hacker-card-terminal-label::before {
     content: "[ MARKETPLACE_DESAPEGO ]";
     color: #09c0fd;
 }
+[data-theme="hacker"] .spotted-card.desapego  .hacker-card-terminal-corner,
+[data-theme="hacker"] .spotted-card.desapego  .hacker-card-terminal-rule {
+    color: #09c0fd;
+}
+
+
 
 [data-theme="hacker"] .spotted-card.selo-adm .selo-adm-badge {
     border: 1px solid color-mix(in srgb, #ffd700 35%, transparent);
@@ -459,7 +544,7 @@
     background-color: var(--hacker-hover-bg);
     color: var(--hacker-hover-text);
     padding-left: 25px;
-    box-shadow: 0 0 6px var(--hacker-green);
+    box-shadow: 0 0 3px var(--hacker-green);
     border-radius: 0;
     text-shadow: none;
     cursor: crosshair;
@@ -468,14 +553,17 @@
 [data-theme="hacker"] .navbar-nav .nav-link:hover::before,
 [data-theme="hacker"] .menu li a:hover::before,
 [data-theme="hacker"] .lista-conselhos li:hover::before,
+[data-theme="hacker"] .bloco-diretrizes li:hover::before,
+[data-theme="hacker"] .btn-editar-atalho:hover::before,
 [data-theme="hacker"] .btn-zarpar::before,
 [data-theme="hacker"] .btn-ficar-terra::before,
+[data-theme="hacker"] .fenda-btn-glow .fenda-outline::before,
 [data-theme="hacker"] .dropdown-item:hover::before {
     content: ">";
     position: absolute;
     font-size: 1rem;
-    font-size: clamp(0.92rem, 1.65vw, 1.15rem);
-    left: 10px;
+    font-size: clamp(0.88rem, 1.65vw, 1.15rem);
+    left: 12px;
     color: var(--hacker-hover-text);
     font-weight: bold;
     animation: blink-cursor 0.5s infinite;
@@ -619,6 +707,7 @@
 [data-theme="hacker"] .fenda-btn-glow:hover,
 [data-theme="hacker"] #btn-load-more:hover,
 [data-theme="hacker"] .bt-btn-load-more:hover,
+[data-theme="hacker"] .btn-editar-atalho:hover,
 [data-theme="hacker"] .btn-sair-fenda:hover,
 [data-theme="hacker"] .btn-zarpar:hover,
 [data-theme="hacker"] .btn-enviar-fenda:hover,
@@ -631,6 +720,7 @@
     padding-left: 25px;
 }
 
+[data-theme="hacker"] .btn-editar-atalho::before,
 [data-theme="hacker"] .btn::before,
 [data-theme="hacker"] .fenda-btn-glow::before,
 [data-theme="hacker"] #btn-load-more::before {
@@ -674,7 +764,6 @@
 [data-theme="hacker"] .avatar-p,
 [data-theme="hacker"] .avatar-busca,
 [data-theme="hacker"] .img-comunidade-grande,
-[data-theme="hacker"] .img-avatar-perfil,
 [data-theme="hacker"] .capa-img,
 [data-theme="hacker"] .insignia-atletica-link {
     filter: grayscale(1) brightness(0.9) contrast(1.1) sepia(1) hue-rotate(85deg) saturate(2.5) ;
@@ -714,14 +803,14 @@
 }
 
 /* Ícones Font Awesome */
-[data-theme="hacker"] i,
-[data-theme="hacker"] .fa-solid,
-[data-theme="hacker"] .fa-regular,
-[data-theme="hacker"] [class*="fa-"],
-[data-theme="hacker"] .fas,
+[data-theme="hacker"] i:not(.fa-spin),
+[data-theme="hacker"] .fa-solid:not(.fa-spin),
+[data-theme="hacker"] .fa-regular:not(.fa-spin),
+[data-theme="hacker"] [class*="fa-"]:not(.fa-spin),
+[data-theme="hacker"] .fas:not(.fa-spin),
 [data-theme="hacker"] .spotted-card .user-info-post::after,
-[data-theme="hacker"] .far,
-[data-theme="hacker"] .fab {
+[data-theme="hacker"] .far:not(.fa-spin),
+[data-theme="hacker"] .fab:not(.fa-spin) {
     color: var(--hacker-green);
     opacity: 1;
     visibility: visible;
@@ -1074,6 +1163,7 @@
     background-image: none;
     border-top: 4px solid var(--hacker-green);
     color: var(--hacker-green);
+    contain: layout paint; 
 }
 
 /* Container do perfil — vibe-light */
@@ -1114,10 +1204,6 @@
     /* text-shadow: 0 0 3px rgba(0, 220, 180, 0.4); -> REMOVIDO */
 }
 
-/* Container do perfil — vibe-dark com morcegos */
-[data-theme="hacker"] .main-perfil-container-publico.vibe-dark {
-    position: relative;
-}
 
 [data-theme="hacker"] .main-perfil-container-publico.vibe-dark .nome-publico {
     color: var(--hacker-green);
@@ -1161,13 +1247,26 @@
 [data-theme="hacker"] .main-perfil-container-publico.vibe-ads .hex-item,
 [data-theme="hacker"] .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item {
     border-color: var(--hacker-green);
+    background: rgba(0, 240, 255, 0.02);
+    /* Transiciona apenas opacidade e transform (Propriedades baratas para a GPU) */
+    transition: transform 0.2s ease, opacity 0.2s ease; 
 }
 
 [data-theme="hacker"] .main-perfil-container-publico.vibe-ads .hex-item.dynamic.active,
 [data-theme="hacker"] .main-perfil-container-publico.vibe-ads.perfil-gold .hex-item.dynamic.active {
-    background: rgba(0, 255, 64, 0.144);
-    border-color: var(--hacker-green);
-    box-shadow: 0 0 6px var(--hacker-green);
+    /* Fallback seguro para dispositivos legados (iOS antigo / Android antigo) */
+   background: rgba(0, 255, 64, 0.144);
+   /* Navegadores modernos usarão esta linha e ignorarão a de cima */
+   background: oklch(86.851% 0.27806 144.422 / 14.4%);
+ 
+    /* 🎨 Mistura matemática perfeita: 50% verde canônico / 50% cor máxima do banco em OKLCH com opacidade */
+   background: color-mix(
+        in oklch, 
+        oklch(from var(--aura-user) 0.86851 0.27806 144.422 / 14.4%), 
+        var(--hacker-green)
+    );
+    border-color: oklch(from var(--aura-user) 0.88 0.08 h);
+    box-shadow: 0 0 4px var(--hacker-green);
 }
 
 /* Spotted-card das 5 vibes no feed */
@@ -1206,8 +1305,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-    [data-theme="hacker"] .spotted-card.vibe-neon:hover,
-    [data-theme="hacker"] .spotted-card.vibe-neon:focus-within {
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-neon:hover,
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-neon:focus-within {
         animation: hacker-glitch 4.5s infinite alternate;
     }
 }
@@ -1216,7 +1315,8 @@
     [data-theme="hacker"] .spotted-card.vibe-neon,
     [data-theme="hacker"] .spotted-card.vibe-neon:hover,
     [data-theme="hacker"] .spotted-card.vibe-neon:focus-within,
-    [data-theme="hacker"] .spotted-card.vibe-neon.touch-scanline-active {
+    [data-theme="hacker"] .spotted-card.vibe-neon.touch-scanline-active,
+    [data-theme="hacker"] .spotted-card.vibe-neon::before {
         animation: none !important;
     }
 }
@@ -1249,9 +1349,9 @@
         rgba(0, 255, 65, 0.1) 0px,
         rgba(0, 255, 65, 0.1) 1px,
         transparent 1px,
-        transparent 3px
+        transparent 2px
     );
-    background-size: 100% 3px;
+    background-size: 100% 2px;
 }
 
 /* 3. O CONTEÚDO (Fica acima do feixe de luz) */
@@ -1282,7 +1382,7 @@
 [data-theme="hacker"] .spotted-card.vibe-ads::after {
     content: '● REC';
     position: absolute;
-    top: 10px;
+    top: 30px;
     right: 30px; 
     font-family: var(--hacker-font);
     font-size: 0.65rem;
@@ -1303,13 +1403,13 @@
 
 /* Reproduz o feixe e o glitch apenas durante interação com mouse */
 @media (hover: hover) and (pointer: fine) {
-    [data-theme="hacker"] .spotted-card.vibe-ads:hover,
-    [data-theme="hacker"] .spotted-card.vibe-ads:focus-within {
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads:hover,
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads:focus-within {
         animation: ads-hacker-glitch-border 3s infinite;
     }
 
-    [data-theme="hacker"] .spotted-card.vibe-ads:hover::before,
-    [data-theme="hacker"] .spotted-card.vibe-ads:focus-within::before {
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads:hover::before,
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads:focus-within::before {
         background-image: linear-gradient(
             to bottom,
             transparent 80%,
@@ -1322,8 +1422,8 @@
         animation: ads-hacker-scanline 3.5s linear infinite;
     }
 
-    [data-theme="hacker"] .spotted-card.vibe-ads:hover::after,
-    [data-theme="hacker"] .spotted-card.vibe-ads:focus-within::after {
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads:hover::after,
+    [data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads:focus-within::after {
         animation: ads-hacker-rec-blink 2s steps(1) infinite;
     }
 }
@@ -1546,6 +1646,71 @@
     background: var(--hacker-bg);
     border: 1px solid var(--hacker-green);
     color: var(--hacker-green);
+}
+
+
+[data-theme="hacker"] .btn-mudar-avatar,
+[data-theme="hacker"] .btn-mudar-capa { 
+    background: var(--hacker-bg);
+    border: 1px solid var(--hacker-green);
+}
+
+[data-theme="hacker"] .btn-mudar-avatar:hover,
+[data-theme="hacker"] .btn-mudar-capa:hover {
+    background: var(--hacker-green-glow, rgba(0, 255, 65, 0.4));
+}
+[data-theme="hacker"] .btn-mudar-avatar i:hover,
+[data-theme="hacker"] .btn-mudar-capa i:hover{
+    color: var(--hacker-hover-text, rgba(0, 0, 0, 0.8));
+}
+
+/* Evita efeitos decorativos caros enquanto os cards estão sendo arrastados. */
+[data-theme="hacker"] body.modo-swipe-ativo .spotted-card.vibe-ads,
+[data-theme="hacker"] body.modo-swipe-ativo .spotted-card.vibe-neon {
+    animation: none ;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+
+[data-theme="hacker"] body.modo-swipe-ativo .feed-empilhado .spotted-card:first-child.vibe-neon::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: 20;
+    border: 1px solid var(--hacker-green);
+    border-radius: inherit;
+    box-shadow: 0 0 4px var(--hacker-green), inset 0 0 4px rgba(0, 255, 0, 0.25);
+    opacity: 0.3;
+    pointer-events: none;
+    animation: hacker-neon-swipe-flicker 5.2s steps(1, end) infinite;
+}
+
+@keyframes hacker-neon-swipe-flicker {
+    0%, 62%, 67%, 88%, 100% { opacity: 0.3; }
+    63% { opacity: 0.8; }
+    64% { opacity: 0.12; }
+    65% { opacity: 0.65; }
+    66% { opacity: 0.3; }
+    89% { opacity: 0.65; }
+    90% { opacity: 0.2; }
+}
+
+[data-theme="hacker"] body.modo-swipe-ativo .spotted-card.vibe-ads::before,
+[data-theme="hacker"] body.modo-swipe-ativo .spotted-card.vibe-ads::after {
+    content: none ;
+    display: none ;
+    animation: none ;
+    background: none ;
+}
+
+[data-theme="hacker"] body.modo-swipe-ativo .spotted-card.card-long-press-active {
+    animation: none ;
+    box-shadow: none;
+    opacity: 1;
+    outline: none;
+    will-change: auto;
 }
 
 [data-theme="hacker"] .btn-filtro.ativo,

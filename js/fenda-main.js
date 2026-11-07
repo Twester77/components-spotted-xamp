@@ -1537,15 +1537,44 @@ window.irParaLinkPip = function (link) {
 };
 
 // ==================== REAÇÕES ====================
-window.enviarReacao = function (postId, tipo) {
-    fetch(`includes/reagir.php?id=${postId}&tipo=${tipo}`)
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'success') {
-                window.atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
+const reacoesEmAndamento = new Set();
+
+window.enviarReacao = async function (postId, tipoReacao) {
+    const chave = `${postId}_${tipoReacao}`;
+    if (reacoesEmAndamento.has(chave)) {
+        console.warn('[REAÇÃO] Aguarde a reação anterior deste post.');
+        return;
+    }
+
+    reacoesEmAndamento.add(chave);
+    try {
+        const query = new URLSearchParams({
+            id: String(postId),
+            tipo: String(tipoReacao)
+        });
+        const response = await fetch(`includes/reagir.php?${query}`);
+        if (response.status === 429) {
+            window.alert('Calma lá! O motor da Fenda precisa respirar.');
+            throw new Error('Rate limit exceeded');
+        }
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const data = await response.json();
+        if (data.status === 'success') {
+            if (!data.contagens || typeof data.contagens !== 'object') {
+                throw new Error('Resposta de reação sem contagens válidas.');
             }
-        })
-        .catch(err => console.error("[REACAO] Erro:", err));
+            window.atualizarInterfaceReacao(postId, data.contagens, data.minhas_reacoes);
+        }
+        return data;
+    } catch (error) {
+        if (error.message !== 'Rate limit exceeded') {
+            console.error('[REAÇÃO] Erro:', error);
+        }
+        throw error;
+    } finally {
+        reacoesEmAndamento.delete(chave);
+    }
 };
 
 window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
@@ -1559,10 +1588,11 @@ window.atualizarInterfaceReacao = function (postId, contagens, minhas = []) {
     Object.keys(contagens).forEach(tipo => {
         const emoji = tradutor[tipo] || '👍';
         const total = contagens[tipo];
+        if (Number(total) <= 0) return;
         const classeVoted = (minhas && minhas.includes(tipo)) ? 'voted' : '';
         const span = document.createElement('span');
         span.className = `reacao-item ${classeVoted}`;
-        span.innerHTML = `${emoji} ${total}`;
+        span.textContent = `${emoji} ${total}`;
         container.appendChild(span);
     });
 };

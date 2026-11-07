@@ -79,7 +79,7 @@ $total_seguidores = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as t
 
 <style>
     .avatar-main {
-        border: 3px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>;
+        border: 2px solid <?php echo $is_presenca ? 'var(--dourado)' : $cor_user; ?>;
         box-shadow: 0 0 8px <?php echo $cor_user; ?>55;
     }
     <?php if ($is_presenca): ?>
