@@ -106,6 +106,18 @@
    MODO SWIPE – ESTILO IDÊNTICO AO SWIPE.CSS (ADAPTADO)
    ================================================================ */
 
+
+.modo-tinder-ativo main#bt-conteudo-principal  {
+    overflow: hidden;
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    padding: 0;
+}
+
 /* 🔥 CONFIGURAÇÃO BASE DO MODO SWIPE */
 .modo-tinder-ativo .bt-card,
 .modo-tinder-ativo .bt-card * {
@@ -137,7 +149,7 @@
     padding: 0;
     align-items: center;
     background: transparent ;
-    contain: paint;
+    contain: layout paint;
     isolation: isolate;
     position: relative; /* Garante o contexto de posicionamento dos cards */
 }

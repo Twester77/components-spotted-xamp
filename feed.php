@@ -82,7 +82,7 @@ function recalcFeedLayout() {
         : Math.round(Math.min(vh * 0.92, 700));
 
     var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
-    var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.6));
+    var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.5));
     var fontSizeUser = Math.max(0.7, Math.min(cardWidth / 600, 0.95));
     var fontSizeCategory = Math.max(0.82, Math.min(cardWidth / 480, 1.15));
     var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));

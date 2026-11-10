@@ -176,7 +176,8 @@ nav {
     color: #ffffff;
     text-decoration: none;
     font-weight: bold;
-    font-size: clamp(0.92rem, 0.8rem + 0.5cqi, 1.4rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.86rem, 0.6rem + 0.5cqi, 1.2rem);
     line-height: 1.5;
     padding: 8px 16px;
     display: block;
@@ -238,7 +239,7 @@ nav {
 .submenu li a {
     border-bottom: 1px solid rgba(255, 255, 255, 0.021);
     font-size: 0.9rem;
-    font-size: clamp(0.85rem, 2cqw, 1.2rem);
+    font-size: clamp(0.86rem, 0.5rem + 0.5cqi, 1.2rem);
     font-weight: normal;
     text-align: left;
     color: #d4b8b8;
@@ -248,8 +249,8 @@ nav {
 
 .submenu li:hover {
     background: rgba(255, 255, 255, 0.11);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
 }
@@ -817,7 +818,7 @@ body.modal-aberto .fab-postar {
     /* Esconde por padrão */
     width: 100%;
     box-shadow: none;
-    top: 0 !important;
+    top: 0 ;
 }
 
 /* 3. Faz o submenu abrir quando passa o mouse no menu-item */
@@ -1390,7 +1391,7 @@ footer a {
     width: 100%;
     max-width: 800px;
     margin: 25px auto;
-    background: transparent !important;
+    background: transparent ;
     border: none;
 }
 
@@ -2048,7 +2049,6 @@ textarea {
     flex-direction: column;
     background: #00000094;
     background: oklch(0% 0 0 / 0.58);
-    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 24px 20px;
     margin: 0 auto 20px auto;
@@ -2247,7 +2247,7 @@ textarea[name="bio"] {
     .main-perdidos .feed-anexos-grid {
         margin: 8px auto;
         width: 100%;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         padding: 6px;
     }
 
@@ -2742,17 +2742,35 @@ body.modal-aberto #fenda-nexus {
 }
 
 .nexus-item {
-    background: rgba(20, 11, 0, 0.397);                             /* fica local – marrom específico */
-    border: 1px solid var(--cor-borda-glow, #00ff00);
-    padding: 10px;
-    border-radius: 12px;
+    background: var(--bg-card, #2c2c2c);                             /* fica local – marrom específico */
+    border: 1px var(--cor-borda-glow, #00ff00);
+    border-style: none;
+    padding: 7px 10px;
+    border-radius: 8px;
     color: #fff;                                                    /* fallback */
     color: var(--texto-primario, #fff);                             /* 🐚 FAROL – Fase 2 */
     cursor: pointer;
+    -webkit-user-select:none;
+    user-select:none;
+    touch-action: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout:none;
     white-space: nowrap;
     text-align: center;
     font-size: 0.86rem;
-    font-size: clamp(0.9rem, 0.382vw + 0.625rem, 1.3rem);
+    font-size: clamp(0.9rem, 0.382vw + 0.625rem, 1.25rem);
+    -webkit-backdrop-filter:blur(1px);
+    backdrop-filter: blur(1px);
+    z-index: 9995;
+
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .nexus-item:hover {
+        background: var(--bg-card-hover,);
+        transform: translateY(-6px);
+        transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
 }
 
 @keyframes surgimentoMenu {
@@ -3314,6 +3332,8 @@ section.sessao-publicar .form-publicar .anexos-grid {
     [data-theme="hacker"] body .comentario-texto,
     [data-theme="hacker"] body .hacker-booting,
     .modo-swipe-ativo .spotted-card,
+    .modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active,
+    body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active 
     .main-perfil-container-publico.vibe-ads {
         animation: none !important;
     }
@@ -3334,7 +3354,7 @@ section.sessao-publicar .form-publicar .anexos-grid {
     }
 
     .main-perfil-container-publico.vibe-dark::after {
-        opacity: 0.2;
+        opacity: 0.25;
         background-position: 0px 0px;
     }
 

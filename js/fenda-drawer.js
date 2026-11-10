@@ -120,20 +120,19 @@ function configurarGestoFechar(panel) {
     let startY = 0;
     let currentY = 0;
     let isDragging = false;
+    let rafId = null; // 🚀 O famigerado requestAnimationFrame para otimizar os frames!
     
-    // Pega a altura inicial do painel em pixels (90% da tela)
     const alturaPainel = window.innerHeight * 0.95;
-    
-    // 🔥 OS 4 ESTADOS (em dvh)
     const SNAP_POINTS = [0, 35, 60, 95]; 
 
     handleArea.addEventListener('pointerdown', (e) => {
+        if (!e.isPrimary) return; // Proteção contra multi-toque louco
         if (e.button !== 0 && e.pointerType === 'mouse') return;
         
         startY = e.clientY;
         isDragging = true;
         
-        panel.style.transition = 'none'; // Desliga animação pra seguir o dedo/mouse
+        panel.style.transition = 'none'; 
         handleArea.setPointerCapture(e.pointerId);
         e.preventDefault(); 
     });
@@ -141,15 +140,20 @@ function configurarGestoFechar(panel) {
     handleArea.addEventListener('pointermove', (e) => {
         if (!isDragging) return;
         
-        // 🔥 Sensibilidade: mouse move mais rápido que o dedo (1.3x)
         const multiplicador = e.pointerType === 'mouse' ? 1.3 : 1; 
         currentY = (e.clientY - startY) * multiplicador;
         
         if (currentY > 0) {
-            // Limita a altura mínima a 10px pra não sumir antes da hora
-            const novaAlturaPx = Math.max(10, alturaPainel - currentY);
-            const novaPct = (novaAlturaPx / window.innerHeight) * 100;
-            panel.style.height = `${novaPct}dvh`;
+            // 🚀 Otimização com requestAnimationFrame: atualiza a altura sincronizada com o refresh da tela,
+            // evitando sobrecarga de cálculos e travamentos no navegador!
+            if (rafId) cancelAnimationFrame(rafId);
+            
+            rafId = requestAnimationFrame(() => {
+                if (!isDragging) return;
+                const novaAlturaPx = Math.max(10, alturaPainel - currentY);
+                const novaPct = (novaAlturaPx / window.innerHeight) * 100;
+                panel.style.height = `${novaPct}dvh`;
+            });
         }
     });
 
@@ -157,14 +161,15 @@ function configurarGestoFechar(panel) {
         if (!isDragging) return;
         isDragging = false;
         
-        // Calcula em qual altura (em dvh) o usuário soltou
+        if (rafId) cancelAnimationFrame(rafId);
+        
         const alturaFinalPx = Math.max(10, alturaPainel - currentY);
         const alturaFinalDvh = (alturaFinalPx / window.innerHeight) * 100;
 
-        // Restaura a transição suave
+        // Restaura a transição suave para o encaixe (snap)
         panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
 
-        // 🔥 MATEMÁTICA DO SNAP: Encontra o ponto mais próximo
+        // 🧮 Matemática do Snap
         let pontoMaisProximo = SNAP_POINTS[0];
         let menorDistancia = Math.abs(alturaFinalDvh - SNAP_POINTS[0]);
 
@@ -176,9 +181,7 @@ function configurarGestoFechar(panel) {
             }
         }
 
-        // Aplica o estado vencedor
         if (pontoMaisProximo === 0) {
-            // Se a altura final ficou abaixo de ~15dvh, considera fechado
             window.fecharDrawerComentarios();
             setTimeout(() => { panel.style.height = ''; }, 300); 
         } else {
@@ -191,6 +194,7 @@ function configurarGestoFechar(panel) {
     handleArea.addEventListener('pointercancel', () => {
         if (!isDragging) return;
         isDragging = false;
+        if (rafId) cancelAnimationFrame(rafId);
         panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
         panel.style.height = '95dvh';
         currentY = 0;

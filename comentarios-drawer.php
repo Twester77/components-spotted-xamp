@@ -101,7 +101,7 @@ $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
 ?>
 
 <div class="layout-wrapper" id="drawer-comentarios-wrapper" style="height: 100%; display: flex; flex-direction: column;">
-    <main class="lista-scrollavel" id="conteudo-rolavel" style="flex: 1; overflow-y: auto;">
+    <main class="lista-scrollavel" id="conteudo-rolavel">
         <div class="fenda-estatica-context"></div>
         
         <div class="lista-comentarios-social">

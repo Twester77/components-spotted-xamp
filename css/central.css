@@ -665,7 +665,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     max-width: 100%;
     min-height: 100px;
     max-height: 260px;
-    max-height: clamp(100px, 30dvh, 350px);
+    max-height: clamp(100px, 30dvh, 320px);
     display: flex;
     align-items: center;
     justify-content: center;

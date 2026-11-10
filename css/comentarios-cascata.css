@@ -156,12 +156,21 @@ body.estilo-cascata .btn-ver-mais { display: none; }
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
     z-index: 100001; display: flex; flex-direction: column;
     /* 🔥 Adicionado o height na transição */
-    transform: translateY(100%); 
+     /* Isola layout e pintura interna da página de fundo */
+    contain: layout paint;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    /* Fallback 2D caso algum motor legado engasgue com 3D */
+    transform: translateY(100%);
+    /* Força camada de composição na GPU desde o início */
+    transform: translate3d(0, 100%, 0);
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    will-change: transform, height;
 }
 
-.drawer-cmt-panel.ativo { transform: translateY(0); }
+.drawer-cmt-panel.ativo { 
+    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
+    will-change: transform; }
 
 .drawer-cmt-handle-area { width: 100%; padding: 20px 0; display: flex; justify-content: center; cursor: grab; flex-shrink: 0; touch-action: none; }
 .drawer-cmt-handle { width: 40px; height: 5px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }

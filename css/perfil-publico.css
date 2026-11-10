@@ -35,6 +35,25 @@
     overflow: visible;
 }
 
+/* Congela animações do perfil público quando o drawer de comentários está ativo */
+
+/* Pausa animações do perfil e dos cards quando o drawer está aberto */
+body:has(.drawer-cmt-panel.ativo) .main-perfil-container-publico,
+body:has(.drawer-cmt-panel.ativo) .main-perfil-container-publico::before,
+body:has(.drawer-cmt-panel.ativo) .main-perfil-container-publico::after,
+body:has(.drawer-cmt-panel.ativo) .main-perfil-container-publico *,
+body:has(.drawer-cmt-panel.ativo) .main-perfil-container-publico *::before,
+body:has(.drawer-cmt-panel.ativo) .main-perfil-container-publico *::after,
+body.modal-aberto .main-perfil-container-publico,
+body.modal-aberto .main-perfil-container-publico::before,
+body.modal-aberto .main-perfil-container-publico::after,
+body.modal-aberto .main-perfil-container-publico *,
+body.modal-aberto .main-perfil-container-publico *::before,
+body.modal-aberto .main-perfil-container-publico *::after {
+    animation-play-state: paused !important;
+}
+
+
 /* ================================================================
    2. CAPA + AVATAR (UNIFICADO)
    ================================================================ */
@@ -499,7 +518,7 @@
     /* A classe .container-feed do feed.css já tem o display: grid */
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-    gap: 20px;
+    gap: 25px;
     padding-block: 0 8px;
     align-items: flex-start;
 }
@@ -508,7 +527,7 @@
 #perfil-conteudo .container-feed,
 #perfil-conteudo .feed-usuario-fenda {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     z-index: 1;
 }
 
@@ -1395,7 +1414,7 @@
 }
 
 .main-perfil-container-publico.vibe-dark {
-    animation: dark-castle-lightning 26s linear infinite;
+    animation: dark-castle-lightning 20s linear infinite;
 }
 
 @keyframes dark-castle-lightning {
@@ -1418,6 +1437,7 @@
     content: '';
     position: absolute;
     top: 0;
+    top: calc(20vh - 80px);
     left: 0;
     width: 100%;
     height: 85vh;
@@ -1428,8 +1448,8 @@
     background-color: var(--cor-aura, var(--aura-user, #70cde4));  /* 🎨 dinâmica via PHP — preservada */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
     mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
-    -webkit-mask-size: 180px 180px;
-    mask-size: 180px 180px;
+    -webkit-mask-size: 120px 120px;
+    mask-size: 120px 120px;
     -webkit-mask-repeat: repeat;
     mask-repeat: repeat;
 }
@@ -1471,7 +1491,7 @@
     position: absolute;
     bottom: -8px;
     left: 50%;
-    width: 4px;
+    width: 6px;
     height: 10px;
     background: #ff002b;                                            /* 🎨 identidade visual da vibe DARK */
     border-radius: 50%;
@@ -1493,57 +1513,66 @@
    ================================================================ */
 
 .main-perfil-container-publico.vibe-neon {
-    background: linear-gradient(to bottom, transparent 0%, var(--aura-user, #ff9100) 25%, #000 50%); /* 🎨 dinâmica via PHP — preservada */
-    border: 2px solid var(--aura-user, #ff9100);                    /* 🎨 dinâmica via PHP — preservada */
-    
-    /* 🚀 ISOLAMENTO GRÁFICO HARDWARE */
-    contain: paint;
+    /* Fundo base escuro (é o que aparece quando a luz neon "apaga") */
+    background: #050505;
+    border: 2px solid color-mix(in srgb, var(--aura-user, #ff9100) 20%, #000);
     isolation: isolate;
     position: relative;
 }
 
-/* ⚡ O FANTASMA DO GLITCH (Faz a placa de neon piscar na GPU sem forçar repaints no fundo) */
+/* ⚡ CAMADA DE LUZ NEON: Carrega o gradiente + borda + halo de topo */
 .main-perfil-container-publico.vibe-neon::before {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 0;
+    z-index: 0; /* Fica atrás dos textos e cards, mas acima do fundo #050505 */
     border-radius: inherit;
     
-    /* Box-shadow estático que serve como a potência máxima do neon */
-    box-shadow: 0 0 8px var(--aura-user, #ff9100), inset 0 0 8px var(--aura-user, #ff9100); /* 🎨 dinâmica via PHP — preservada */
-    
-    /* 🧠 O segredo: Altera apenas a opacidade do brilho nos mesmos tempos que você calibrou! */
-    will-change: opacity;
-    animation: neon-flicker-gpu-core 4s infinite alternate ease-in-out;
+    /* O próprio gradiente de luz pisca junto com a borda e o brilho superior */
+    background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--aura-user, #ff9100) 35%, transparent) 0%,
+        color-mix(in srgb, var(--aura-user, #ff9100) 75%, transparent) 220px,
+        #050505 480px
+    );
+    border: 2px solid var(--aura-user, #ff9100);
+    box-shadow: inset 0 12px 28px -10px var(--aura-user, #ff9100);
+
+    /* Brilho concentrado só no topo (zero box-shadow gigante na página toda) */
+    animation: neon-flicker-gpu-core 4s infinite steps(1, end);
 }
 
-/* 🎥 LINHA DO TEMPO DA RECONSTRUÇÃO DA ANIMAÇÃO (Flicker realista preservado) */
+/* 🎥 FLICKER NÍTIDO: Pisca o painel de luz inteiro sem repaints */
 @keyframes neon-flicker-gpu-core {
     0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 0.8;
+        opacity: 1;
     }
     20%, 24%, 55% {
-        opacity: 0.25; /* Queda rápida de energia na luz do neon */
+        opacity: 0.18; /* Queda de energia visível em toda a luz do topo e na borda */
     }
 }
 
-/* Garantia de que as informações do bento fiquem seguras acima do brilho */
+/* Garante que capa, avatar e cards fiquem acima da luz de fundo */
 .main-perfil-container-publico.vibe-neon > * {
     position: relative;
     z-index: 1;
 }
 
-/* 📝 TIPOGRAFIA NEON ULTRA LEVE (Substituído drop-shadow por text-shadow acelerado) */
+/* 📝 TIPOGRAFIA NEON ULTRA LEVE */
 .main-perfil-container-publico.vibe-neon .nome-publico,
 .main-perfil-container-publico.vibe-neon .stats-perfil span,
 .main-perfil-container-publico.vibe-neon .feed-usuario-fenda h3 {
-    color: #ffffffce;                                               /* 🎨 identidade visual da vibe NEON */
-    color: oklch(from var(--aura-user, #ff9100) 0.90 0.03 h);      /* 🎨 dinâmica via PHP — preservada */
-    
-    /* 🔥 Substituição cirúrgica: Entrega o contorno escuro borrado idêntico, mas rodando liso */
+    color: #ffffffce;
+    color: oklch(from var(--aura-user, #ff9100) 0.90 0.03 h);
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.85);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-perfil-container-publico.vibe-neon::before {
+        animation: none;
+        opacity: 1;
+    }
 }
 
 
@@ -1720,18 +1749,42 @@
 
     @keyframes ads-neon-glow-pulse {
         0% {
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
             border-top-color: var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
         }
         50% {
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15); /* 🎨 identidade visual da vibe ADS */
+            box-shadow: 0 0 14px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 240, 255, 0.15); /* 🎨 identidade visual da vibe ADS */
             border-color: var(--aura-user, #70cde4);                /* 🎨 dinâmica via PHP — preservada */
         }
         100% {
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(0, 240, 255, 0.06); /* 🎨 identidade visual da vibe ADS */
             border-top-color: var(--aura-user, #70cde4);            /* 🎨 dinâmica via PHP — preservada */
         }
     }
+
+    
+.main-perfil-container-publico.vibe-dark::after,
+.preview-perfil.vibe-dark::after {
+    content: '';
+    position: absolute;
+    top: calc(40vh - 80px);
+    width: 100%;
+    height: 60vh;
+    height: 60dvh;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.2;
+    background-color: var(--cor-aura, var(--aura-user, #70cde4));  /* 🎨 dinâmica via PHP — preservada */
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z' fill='%23ffffff'/%3E%3C/svg%3E");
+    -webkit-mask-size: 160px 160px;
+    mask-size: 160px 160px;
+    grid-auto-rows: minmax(56px, 1fr);
+    gap: 20px;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+}
+
 }
 
 @supports not (backdrop-filter: blur(2px)) {
@@ -1948,7 +2001,7 @@
     width: 100%;
     border-radius: 8px;
     object-fit: contain;
-    max-height: 250px;
+    max-height: 300px;
     max-height: calc(var(--card-max-height, 550px) * 0.6);
     height: var(--img-max-height, auto);
     object-fit: var(--img-fit, contain);
@@ -2092,6 +2145,8 @@
             max-width: 100%;
             
             /* 🔥 O TEU AJUSTE: 25dvh + Clamps de segurança */
+            /* Fallback para navegadores antigos (iOS 9) */
+            height: 25vh; 
             height: 25dvh; 
             min-height: 180px;   /* Nunca menor que isso (tipo um selo) */
             max-height: 250px;   /* Nunca maior que isso (tipo um outdoor) */
@@ -2100,13 +2155,10 @@
             margin-inline: auto;
             object-fit: contain; /* Mantém a foto inteira sem cortar */
             
-            /* Fallback para navegadores antigos (iOS 9) */
-            height: 25vh; 
-            height: 25dvh;
         }
 
         #perfil-conteudo .feed-anexos-grid:not(:has(.feed-anexo-item:only-child)) {
-            width: min(100%, 260px);
+            width: min(100%, 220px);
             max-height: none;
             margin-inline: auto;
         }
@@ -2129,7 +2181,7 @@
         }
 
         #perfil-conteudo .feed-anexos-grid:not(:has(.feed-anexo-item:only-child)) {
-            width: min(100%, 250px);
+            width: min(100%, 220px);
         }
     }
 }

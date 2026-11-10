@@ -58,6 +58,7 @@
     scrollbar-color: var(--hacker-bg) var(--hacker-green);
 }
 
+   
 [data-theme="hacker"] body p,
 [data-theme="hacker"] body .comentario-texto,
 [data-theme="hacker"] body input,
@@ -123,23 +124,22 @@
 }
 
 /* A lista de comentários mantém o CRT nos cards sem a camada fixa sobre a página toda. */
-[data-theme="hacker"] body:has(.lista-comentarios-social)::before
+[data-theme="hacker"] body:has(.lista-comentarios-social)::before,
 [data-theme="hacker"] body:has(.lista-scrollavel)::before {
     display: none;
 } 
 
-[data-theme="hacker"] body:has(.main-perfil-container-publico[class*="vibe-"])::before
-{
+[data-theme="hacker"] body:has(.main-perfil-container-publico[class*="vibe-"])::before,
+[data-theme="hacker"] body:has(.main-perfil-container-publico)::before {
     display: none;
 }
 
-
-[data-theme="hacker"] body:has(.main-perfil-container-publico)::before 
 /* Mantém o flicker desativado durante swipe/tinder */
 [data-theme="hacker"] body.modo-swipe-ativo::after,
 [data-theme="hacker"] body.modo-tinder-ativo::after {
     display: none;
 }
+
 
 
 /* ============================================================
@@ -240,27 +240,21 @@
 
 
 [data-theme="hacker"]  .container-feed.feed-empilhado,
+[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card[class*="vibe-"]::after,
 [data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
-[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging),
 [data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos,
 [data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos .bt-card:not(.dragging),
 [data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos .bt-card.dragging {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    animation: none;
+    transition: none;
+    animation-duration: 0ms;
     /* 🎨 Hack clássico do Safari/Chrome mobile: força aceleração 3D sem quebrar o translate() do JS */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card[class*="vibe-"]::after,
-[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card.dragging,
-[data-theme="hacker"]  .container-feed.feed-empilhado .spotted-card:not(.dragging) {
-    animation: none;
-    transition: none;
-    animation-duration: 0ms;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-}
 
 [data-theme="hacker"] .feed-usuario-fenda .spotted-card {
     border-top: 2px double var(--aura-user);
@@ -280,24 +274,6 @@
     }
 }
 
-/* Moldura superior padrão */
-[data-theme="hacker"] .fenda-glass-container::before,
-[data-theme="hacker"] .main-perfil-container::before,
-[data-theme="hacker"] .sessao-publicar::before {
-    content: "+==================================================================+==============================================================+";
-    position: absolute;
-    top: -22px;
-    left: -2px;
-    right: -2px;
-    color: var(--hacker-green);
-    pointer-events: none;
-    touch-action: none;
-    font-family: monospace;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    z-index: 10;
-}
 
 [data-theme="hacker"] .spotted-card {
     border-top: 2px solid var(--hacker-green, currentColor) !important;
@@ -306,7 +282,7 @@
     border-left: 1px dashed rgba(0, 255, 65, 0.14) !important;
     border-right: 1px dashed color-mix(in srgb, var(--glass-bg, var(--hacker-green)) 18%, transparent) !important;
     border-left: 1px dashed color-mix(in srgb, var(--glass-bg, var(--hacker-green)) 18%, transparent) !important;
-    border-radius: 6px ;
+    border-radius: 8px ;
     box-shadow:none;
 }
 
@@ -556,6 +532,7 @@
 [data-theme="hacker"] .bloco-diretrizes li:hover::before,
 [data-theme="hacker"] .btn-editar-atalho:hover::before,
 [data-theme="hacker"] .btn-zarpar::before,
+[data-theme="hacker"] .login-btn:hover::before,
 [data-theme="hacker"] .btn-ficar-terra::before,
 [data-theme="hacker"] .fenda-btn-glow .fenda-outline::before,
 [data-theme="hacker"] .dropdown-item:hover::before {
@@ -686,6 +663,7 @@
     color: var(--hacker-hover-text);
 }
 
+
 [data-theme="hacker"] .btn-attach-gaveta:hover {
     background: var(--hacker-green);
 }
@@ -722,6 +700,7 @@
 
 [data-theme="hacker"] .btn-editar-atalho::before,
 [data-theme="hacker"] .btn::before,
+[data-theme="hacker"] .login-btn:before,
 [data-theme="hacker"] .fenda-btn-glow::before,
 [data-theme="hacker"] #btn-load-more::before {
     content: ">";
@@ -1166,6 +1145,34 @@
     contain: layout paint; 
 }
 
+/* ==================================================================
+   OTIMIZAÇÃO VIBE NEON NO TEMA HACKER (ZERO PESO NA GPU)
+   ================================================================== */
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-neon {
+    /* Mantém o fundo preto do terminal e borda verde discreta */
+    background: var(--hacker-bg);
+    border: 2px solid rgba(0, 255, 65, 0.25);
+    /* Remove o contain: paint para não cortar a borda acesa do ::before */
+    contain: layout style; 
+}
+
+[data-theme="hacker"] .main-perfil-container-publico.vibe-neon::before {
+    /* Troca o degradê colorido pesado por um brilho verde minimalista de terminal */
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 255, 65, 0.14) 5%,
+        rgba(0, 255, 65, 0.04) 220px,
+        transparent 450px
+    );
+    border: 2px double var(--hacker-green);
+    /* Remove o box-shadow inset pesado para economizar memória de vídeo */
+    box-shadow: none;
+    background-clip: padding-box;
+    animation: neon-flicker-gpu-core 4s infinite steps(1, end);
+}
+
+
 /* Container do perfil — vibe-light */
 [data-theme="hacker"] .main-perfil-container-publico.vibe-light {
     background: rgba(25, 35, 25, 0.92);
@@ -1216,6 +1223,7 @@
     display: block;
     position: fixed;
     top: 0;
+    top: calc(20vh - 80px);
     left: 0;
     width: 100%;
     height: 60vh;
@@ -1293,13 +1301,13 @@
 }
 
 [data-theme="hacker"] .spotted-card.vibe-dark {
-    background: rgba(5, 10, 5, 0.92);
+    background: rgba(26, 24, 40, 0.6);
     border-color: var(--hacker-green);
 }
 
 [data-theme="hacker"] .spotted-card.vibe-neon {
     border-color: var(--hacker-green);
-    box-shadow: 0 0 4px var(--hacker-green), 0 0 8px rgba(0, 255, 0, 0.3);
+    box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
@@ -1639,13 +1647,13 @@
 [data-theme="hacker"] .bt-btn-principal,
 [data-theme="hacker"] .btn-filtro,
 [data-theme="hacker"] .btn-fenda-padrao,
-[data-theme="hacker"] .btn-enviar-chat,
 [data-theme="hacker"] body:not(.modo-swipe-ativo) #btn-abrir-filtros,
 [data-theme="hacker"] body.modo-swipe-ativo #btn-abrir-filtros,
 [data-theme="hacker"] .preview-botao {
     background: var(--hacker-bg);
     border: 1px solid var(--hacker-green);
     color: var(--hacker-green);
+    border-radius: 8px;
 }
 
 
@@ -1684,7 +1692,7 @@
     box-shadow: 0 0 4px var(--hacker-green), inset 0 0 4px rgba(0, 255, 0, 0.25);
     opacity: 0.3;
     pointer-events: none;
-    animation: hacker-neon-swipe-flicker 5.2s steps(1, end) infinite;
+    animation: hacker-neon-swipe-flicker 4.5s steps(1, end) infinite;
 }
 
 @keyframes hacker-neon-swipe-flicker {
@@ -1878,6 +1886,7 @@
     text-transform: uppercase;
     border-bottom: 1px dashed var(--hacker-green);
     display: inline-block;
+    overflow: hidden;
     padding-right: 15px;
 }
 

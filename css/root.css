@@ -42,7 +42,7 @@
     --bg-page-dark: #0d0d0d;
     --bg-card: rgba(17, 17, 17, 0.32);
     --bg-central: oklch(0.7 0 0 / 0.24);
-    --bg-card-hover: rgba(0, 0, 0, 0.397);
+    --bg-card-hover: rgba(0, 0, 0, 0.36);
     --bg-card-hover-strong: rgba(0,0,0,0.6); /*.spotted-card:hover (com backdrop) - 🐚 FAROL – Fase 2 (PEC) */
     --bg-modal-overlay: rgba(0, 0, 0, 0.5);
     --bg-modal-content: rgba(20, 20, 30, 0.92);

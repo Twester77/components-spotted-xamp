@@ -2166,9 +2166,9 @@ textarea#descricao{
     border-radius: clamp(6px , 1.2vw, 14px);
     display: flex;
     justify-content: center;
-    padding: 2px;
+    padding: 3px;
     margin: 0;
-    max-width: 700px;
+    max-width: 600px;
     width: 100%;
     box-shadow: none;
     transition: background 0.2s ease;
@@ -2266,7 +2266,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .carrossel-item {
     aspect-ratio: auto;
     min-height: 150px;
     max-height: 320px;
-    max-height: clamp(180px, 60cqh, 360px);
+    max-height: clamp(120px, 60cqh, 320px);
     background: #0a0a0a;                                            /* fallback */
     background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
     display: flex;

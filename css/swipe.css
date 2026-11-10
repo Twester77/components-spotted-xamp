@@ -51,8 +51,8 @@ body.modo-swipe-ativo .post-content {
     cursor: -moz-grab;
     cursor: -webkit-grab;
     cursor: grab;
-    -webkit-touch-callout: none ;
-    -webkit-user-drag: none ;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
 
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -97,6 +97,7 @@ body.modo-swipe-ativo .container-feed {
     display: block;
     height: 100dvh;
     min-height: 100vh;
+    contain: layout paint;
     position: relative;
     max-width: none;
     -webkit-user-select: none;
@@ -127,8 +128,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
 
     /* 🔥 Border-radius discreto (antes era até 20px) */
     border-radius: clamp(6px, 1.8cqi, 14px);
-    border: 1px solid rgba(255, 255, 255, 0.15);                   /* fallback */
-    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.15)); /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.15));
+    /* 🌅 FAGULHA – Fase 2 */
 
     --pos-x: 0px;
     --pos-y: 0px;
@@ -145,13 +148,13 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     padding: clamp(0.65em, 3.8cqi, 1.1em);
 
     font-size: var(--card-font-size, 0.95rem);
-    font-size: clamp(0.9em, 2.5cqi, 1.3em);
+    font-size: clamp(0.7em, 2cqi, 1.15em);
 
     max-height: var(--card-max-height, 700px);
     height: auto;
     box-sizing: border-box;
 
-    
+
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
@@ -214,7 +217,8 @@ body.modo-swipe-ativo .post-content {
    ============================================================ */
 body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
     image-rendering: -webkit-optimize-contrast;
-    image-rendering: pixelated; /* Evita jank de redimensionamento nos GIFs */
+    image-rendering: pixelated;
+    /* Evita jank de redimensionamento nos GIFs */
     width: 100%;
     max-height: calc(var(--card-max-height, 600px) * 0.5);
     height: var(--img-max-height, auto);
@@ -230,7 +234,7 @@ body.modo-swipe-ativo .container-img-post,
 body.modo-swipe-ativo .feed-anexos-grid,
 body.modo-swipe-ativo .feed-anexo-item {
     /* ⚡ Isola as imagens e GIFs para blindar reflows de frames */
-    contain: layout paint; 
+    contain: layout paint;
     isolation: isolate;
     overflow: hidden;
     contain-intrinsic-size: auto var(--inner-dynamic-height, 350px);
@@ -245,7 +249,7 @@ body.modo-swipe-ativo .feed-anexo-item,
 body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     /* ⚡ Isola as imagens e GIFs para que o navegador não recalcule 
        o layout do card inteiro se o GIF mudar de frame ou animar */
-    contain: layout paint; 
+    contain: layout paint;
     isolation: isolate;
     overflow: hidden;
     contain-intrinsic-size: auto var(--inner-dynamic-height, 700px);
@@ -308,15 +312,18 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     cursor: -webkit-grabbing;
     cursor: grabbing;
     -webkit-font-smoothing: antialiased;
-    background: rgba(10, 10, 10, 0.541);                           /* 🎨 preto-translúcido específico do dragging */
+    background: rgba(10, 10, 10, 0.541);
+    /* 🎨 preto-translúcido específico do dragging */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
 
 .container-feed.feed-empilhado .spotted-card.dragging:hover {
     box-shadow: none;
-    border-color: rgba(255, 255, 255, 0.15);                       /* fallback */
-    border-color: var(--borda-card, rgba(255, 255, 255, 0.15));   /* 🌅 FAGULHA – Fase 2 */
+    border-color: rgba(255, 255, 255, 0.15);
+    /* fallback */
+    border-color: var(--borda-card, rgba(255, 255, 255, 0.15));
+    /* 🌅 FAGULHA – Fase 2 */
 }
 
 .feed-empilhado .spotted-card:not(:first-child) {
@@ -388,8 +395,10 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     align-items: center;
     transform: translateX(-50%);
     z-index: 9995;
-    background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301)); /* 🎨 paleta do filtro swipe — específica */
-    color: #000000d0;                                              /* 🎨 preto-translúcido específico do filtro swipe */
+    background: linear-gradient(145deg, #fbff00, rgba(214, 252, 0, 0.301));
+    /* 🎨 paleta do filtro swipe — específica */
+    color: #000000d0;
+    /* 🎨 preto-translúcido específico do filtro swipe */
     padding: 3px 8px;
     padding: clamp(4px, 1.5cqw, 12px) clamp(10px, 1.5cqw, 16px);
     font-size: 0.75rem;
@@ -397,9 +406,12 @@ body.modo-swipe-ativo #btn-abrir-filtros {
     border-radius: 25px;
     font-weight: bold;
     white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);                     /* 🎨 sombra específica */
-    border: 1px solid rgba(255, 255, 255, 0.2);                     /* fallback */
-    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2)); /* 🌅 FAGULHA – Fase 2 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    /* 🎨 sombra específica */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* fallback */
+    border: 1px solid var(--borda-card, rgba(255, 255, 255, 0.2));
+    /* 🌅 FAGULHA – Fase 2 */
     background-clip: padding-box;
     pointer-events: auto;
     transition:
@@ -415,7 +427,8 @@ body.modo-swipe-ativo #btn-abrir-filtros::before {
     inset: -3px;
     border-radius: inherit;
     z-index: -1;
-    background: #fbff00;                                           /* 🎨 amarelo-limão específico do filtro swipe */
+    background: #fbff00;
+    /* 🎨 amarelo-limão específico do filtro swipe */
     background: conic-gradient(from var(--angulo-motoserra-swipe),
             #fbff00,
             rgba(214, 252, 0, 0.2),
@@ -431,7 +444,8 @@ body.modo-swipe-ativo #btn-abrir-filtros::before {
 body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     display: block;
     position: absolute;
-    background: rgba(0, 0, 0, 0.751);                              /* 🎨 preto-translúcido específico */
+    background: rgba(0, 0, 0, 0.751);
+    /* 🎨 preto-translúcido específico */
     border-radius: 0 0 20px 20px;
     padding: 15px;
     z-index: 9994;
@@ -439,16 +453,20 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     isolation: isolate;
     max-height: 50vh;
     max-height: 50dvh;
-    overflow-y: auto ;
+    overflow-y: auto;
     width: 100%;
-    border-bottom: 3px solid #ff8c00;                              /* fallback */
-    border-bottom: 3px solid var(--cor-principal-laranja, #ff8c00); /* 🌅 FAGULHA – Fase 2 */
+    border-bottom: 3px solid #ff8c00;
+    /* fallback */
+    border-bottom: 3px solid var(--cor-principal-laranja, #ff8c00);
+    /* 🌅 FAGULHA – Fase 2 */
     /* 🚀 REGRAS DE HARDWARE CONSOLIDADAS */
-    contain: layout; /* Isola a geometria interna para a CPU não recalcular a árvore do DOM */
-    isolation: isolate; /* Protege o empilhamento do z-index */
-    
+    contain: layout;
+    /* Isola a geometria interna para a CPU não recalcular a árvore do DOM */
+    isolation: isolate;
+    /* Protege o empilhamento do z-index */
+
     /* ⚡ Prepara a GPU para o deslizamento liso, eliminando engasgos no mobile */
-    will-change: transform, opacity; 
+    will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     animation: slideDown-filtro 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -465,6 +483,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
         transform: translateY(-100%);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -499,8 +518,10 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     /* Otimização GPU */
     contain: strict;
 
-    color: #ffffff;                                                /* fallback */
-    color: var(--texto-primario, #ffffff);                         /* 🌅 FAGULHA – Fase 2 */
+    color: #ffffff;
+    /* fallback */
+    color: var(--texto-primario, #ffffff);
+    /* 🌅 FAGULHA – Fase 2 */
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -508,8 +529,10 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
     font-family: 'Inter', BlinkMacSystemFont, system-ui, -apple-system, sans-serif;
 
     text-shadow:
-        0 2px 6px rgba(0, 0, 0, 0.55),                             /* 🎨 sombra específica do texto */
-        0 0 15px rgba(0, 0, 0, 0.35);                              /* 🎨 sombra específica do texto */
+        0 2px 6px rgba(0, 0, 0, 0.55),
+        /* 🎨 sombra específica do texto */
+        0 0 15px rgba(0, 0, 0, 0.35);
+    /* 🎨 sombra específica do texto */
 
     display: flex;
     align-items: center;
@@ -523,11 +546,15 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 .feedback-swipe::after {
     content: '';
     position: absolute;
-    background: #ffffff;                                           /* fallback */
-    background: var(--texto-primario, #ffffff);                    /* 🌅 FAGULHA – Fase 2 */
+    background: #ffffff;
+    /* fallback */
+    background: var(--texto-primario, #ffffff);
+    /* 🌅 FAGULHA – Fase 2 */
     box-shadow:
-        0 0 12px rgba(255, 255, 255, 0.95),                        /* 🎨 sombra específica do acento */
-        0 0 28px rgba(255, 255, 255, 0.45);                        /* 🎨 sombra específica do acento */
+        0 0 12px rgba(255, 255, 255, 0.95),
+        /* 🎨 sombra específica do acento */
+        0 0 28px rgba(255, 255, 255, 0.45);
+    /* 🎨 sombra específica do acento */
     pointer-events: none;
     border-radius: 5px;
     z-index: 2;
@@ -553,21 +580,26 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 
     /* 🎨 gradiente verde-neon específico do feedback "AMEI" — mantido hardcoded */
     background: linear-gradient(to right,
-        rgba(52, 211, 92, 1) 0%,
-        rgba(52, 211, 92, 0.92) 18%,
-        rgba(52, 211, 92, 0.65) 42%,
-        rgba(52, 211, 92, 0.32) 62%,
-        rgba(52, 211, 92, 0.12) 80%,
-        oklch(0.3951 0.1215 253.34) 100%);
+            rgba(52, 211, 92, 1) 0%,
+            rgba(52, 211, 92, 0.92) 18%,
+            rgba(52, 211, 92, 0.65) 42%,
+            rgba(52, 211, 92, 0.32) 62%,
+            rgba(52, 211, 92, 0.12) 80%,
+            oklch(0.3951 0.1215 253.34) 100%);
 
     border-radius: 20px 0 0 20px;
-    border: 1px solid rgba(255, 255, 255, 0.22);                    /* 🎨 alpha específico */
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    /* 🎨 alpha específico */
     border-right: none;
     box-shadow:
-        inset 2px 0 18px rgba(255, 255, 255, 0.22),                 /* 🎨 sombra interna específica */
-        inset -10px 0 30px rgba(0, 0, 0, 0.22),                     /* 🎨 sombra interna específica */
-        -12px 0 36px rgba(52, 211, 92, 0.32),                       /* 🎨 sombra verde-neon específica */
-        0 8px 28px rgba(0, 0, 0, 0.34);                             /* 🎨 sombra específica */
+        inset 2px 0 18px rgba(255, 255, 255, 0.22),
+        /* 🎨 sombra interna específica */
+        inset -10px 0 30px rgba(0, 0, 0, 0.22),
+        /* 🎨 sombra interna específica */
+        -12px 0 36px rgba(52, 211, 92, 0.32),
+        /* 🎨 sombra verde-neon específica */
+        0 8px 28px rgba(0, 0, 0, 0.34);
+    /* 🎨 sombra específica */
 }
 
 .feedback-direita::after {
@@ -596,21 +628,26 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 
     /* 🎨 gradiente vermelho-neon específico do feedback "DESCARTAR" — mantido hardcoded */
     background: linear-gradient(to left,
-        rgba(255, 75, 75, 1) 0%,
-        rgba(255, 75, 75, 0.92) 18%,
-        rgba(255, 75, 75, 0.65) 42%,
-        rgba(255, 75, 75, 0.32) 62%,
-        rgba(255, 75, 75, 0.12) 80%,
-        oklch(0.3951 0.1215 253.34) 100%);
+            rgba(255, 75, 75, 1) 0%,
+            rgba(255, 75, 75, 0.92) 18%,
+            rgba(255, 75, 75, 0.65) 42%,
+            rgba(255, 75, 75, 0.32) 62%,
+            rgba(255, 75, 75, 0.12) 80%,
+            oklch(0.3951 0.1215 253.34) 100%);
 
     border-radius: 0 20px 20px 0;
-    border: 1px solid rgba(255, 255, 255, 0.22);                    /* 🎨 alpha específico */
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    /* 🎨 alpha específico */
     border-left: none;
     box-shadow:
-        inset -2px 0 18px rgba(255, 255, 255, 0.22),                /* 🎨 sombra interna específica */
-        inset 10px 0 30px rgba(0, 0, 0, 0.22),                      /* 🎨 sombra interna específica */
-        12px 0 36px rgba(255, 75, 75, 0.32),                        /* 🎨 sombra vermelha-neon específica */
-        0 8px 28px rgba(0, 0, 0, 0.34);                             /* 🎨 sombra específica */
+        inset -2px 0 18px rgba(255, 255, 255, 0.22),
+        /* 🎨 sombra interna específica */
+        inset 10px 0 30px rgba(0, 0, 0, 0.22),
+        /* 🎨 sombra interna específica */
+        12px 0 36px rgba(255, 75, 75, 0.32),
+        /* 🎨 sombra vermelha-neon específica */
+        0 8px 28px rgba(0, 0, 0, 0.34);
+    /* 🎨 sombra específica */
 }
 
 .feedback-esquerda::after {
@@ -641,18 +678,23 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 
     /* 🎨 gradiente azul-ciano específico do feedback "COMENTAR" — mantido hardcoded */
     background: linear-gradient(135deg,
-        rgba(56, 191, 248, 0.70) 0%,
-        rgba(56, 189, 248, 0.85) 50%,
-        rgba(56, 189, 248, 1) 100%);
+            rgba(56, 191, 248, 0.70) 0%,
+            rgba(56, 189, 248, 0.85) 50%,
+            rgba(56, 189, 248, 1) 100%);
 
     border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.32);                    /* 🎨 alpha específico */
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    /* 🎨 alpha específico */
 
     box-shadow:
-        inset 0 2px 0 rgba(255, 255, 255, 0.42),                    /* 🎨 sombra interna específica */
-        inset 0 -2px 0 rgba(0, 0, 0, 0.14),                         /* 🎨 sombra interna específica */
-        0 12px 36px rgba(0, 0, 0, 0.38),                            /* 🎨 sombra específica */
-        0 0 32px rgba(56, 189, 248, 0.45);                          /* 🎨 sombra azul-ciano específica */
+        inset 0 2px 0 rgba(255, 255, 255, 0.42),
+        /* 🎨 sombra interna específica */
+        inset 0 -2px 0 rgba(0, 0, 0, 0.14),
+        /* 🎨 sombra interna específica */
+        0 12px 36px rgba(0, 0, 0, 0.38),
+        /* 🎨 sombra específica */
+        0 0 32px rgba(56, 189, 248, 0.45);
+    /* 🎨 sombra azul-ciano específica */
 }
 
 .feedback-cima::after {
@@ -667,6 +709,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
    RESPONSIVO — LANDSCAPE
    ============================================================ */
 @media (orientation: landscape) and (max-height: 600px) {
+
     .feedback-direita,
     .feedback-esquerda {
         top: 6vh;
@@ -698,6 +741,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
    RESPONSIVO — TABLET / PC
    ============================================================ */
 @media (min-width: 900px) {
+
     .feedback-direita,
     .feedback-esquerda {
         top: 12vh;
@@ -727,6 +771,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
    MOBILE (≤600px) — bandas concentradas no centro
    ============================================================ */
 @media (max-width: 600px) {
+
     .feedback-direita,
     .feedback-esquerda {
         top: 18vh;
@@ -765,6 +810,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
    MOBILE PEQUENO (≤400px)
    ============================================================ */
 @media (max-width: 400px) {
+
     .feedback-direita,
     .feedback-esquerda {
         top: 22vh;
@@ -796,6 +842,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
    ============================================================ */
 
 @supports not (height: 100dvh) {
+
     .feedback-direita,
     .feedback-esquerda {
         height: 78vh;
@@ -821,6 +868,7 @@ body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
 }
 
 @supports not (writing-mode: vertical-rl) {
+
     .feedback-direita,
     .feedback-esquerda {
         writing-mode: horizontal-tb;
@@ -943,8 +991,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .feed-anexo-item {
     min-width: 0;
     min-height: 0;
     overflow: hidden;
-    background: #0a0a0a;                                           /* fallback */
-    background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
+    background: #0a0a0a;
+    /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);
+    /* 🌅 FAGULHA – Fase 2 */
     border-radius: 6px;
     display: flex;
     align-items: center;
@@ -967,8 +1017,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post {
     max-width: 100%;
     border-radius: 4px;
     object-fit: contain;
-    background: #0a0a0a;                                           /* fallback */
-    background: var(--bg-page-dark, #0a0a0a);                      /* 🌅 FAGULHA – Fase 2 */
+    background: #0a0a0a;
+    /* fallback */
+    background: var(--bg-page-dark, #0a0a0a);
+    /* 🌅 FAGULHA – Fase 2 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -998,9 +1050,12 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post {
     position: absolute;
     bottom: 8px;
     right: 8px;
-    background: rgba(0, 0, 0, 0.6);                                /* 🎨 preto-translúcido específico do contador */
-    color: #fff;                                                   /* fallback */
-    color: var(--texto-primario, #fff);                            /* 🌅 FAGULHA – Fase 2 */
+    background: rgba(0, 0, 0, 0.6);
+    /* 🎨 preto-translúcido específico do contador */
+    color: #fff;
+    /* fallback */
+    color: var(--texto-primario, #fff);
+    /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
     padding: 2px 10px;
     font-size: 0.7rem;
@@ -1013,30 +1068,39 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post {
    ============================================================ */
 .modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active,
 body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
-    box-shadow: 0px 4px 10px rgba(255, 140, 0, 0.4);               /* 🎨 laranja com alpha específico do long-press */
-    background-image: linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 60%); /* 🎨 gradiente de shimmer específico */
+    box-shadow: 0px 4px 10px rgba(255, 140, 0, 0.4);
+    /* 🎨 laranja com alpha específico do long-press */
+    background-image: linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 60%);
+    /* 🎨 gradiente de shimmer específico */
     background-size: 200% 100%;
     animation: shimmer-pulse 0.6s infinite ease-in-out !important;
-    backdrop-filter: brightness(1.05) saturate(1.1);
+    backdrop-filter: brightness(1.03) saturate(1.05);
     transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s;
     will-change: transition;
+    filter: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    touch-action: none;
+    -webkit-touch-callout:none;
+    -webkit-user-drag: none;
 }
 
 @keyframes shimmer-pulse {
-    from { background-position: 200% 0; }
-    to { background-position: -200% 0; }
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
 }
 
 body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
-    background-image: none;
-    animation: none !important;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    transition: none;
+    animation:none;
     will-change: transform, opacity;
 }
 
@@ -1075,7 +1139,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         padding: var(--ls-pad-y) var(--ls-pad-x);
         gap: var(--ls-gap);
         border-radius: var(--ls-radius);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);                 /* 🎨 sombra específica do landscape */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        /* 🎨 sombra específica do landscape */
         overflow: hidden;
 
         display: grid;
@@ -1122,10 +1187,12 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         margin: 0;
         padding: 0;
         border: none;
-        background: #0000004f;                                     /* 🎨 preto com alpha específico da mídia landscape */
+        background: #0000004f;
+        /* 🎨 preto com alpha específico da mídia landscape */
         border-radius: calc(var(--ls-radius) * 0.7);
         overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);                 /* 🎨 sombra específica */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        /* 🎨 sombra específica */
     }
 
     /* Mosaico de anexos */
@@ -1137,23 +1204,20 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         align-content: stretch;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: minmax(0, 1fr);
         aspect-ratio: unset;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
         width: 100%;
         height: 100%;
         min-width: 0;
         min-height: 0;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item img {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item img {
         width: 100%;
         height: 100%;
         max-width: 100%;
@@ -1162,21 +1226,17 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         aspect-ratio: 1 / 1;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-template-rows: minmax(0, 1fr);
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
         grid-template-rows: repeat(2, minmax(0, 1fr));
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child)
-    .feed-anexo-item:first-child {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
         grid-row: 1 / span 2;
         grid-column: 1;
     }
@@ -1190,8 +1250,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         min-width: 0;
         min-height: 0;
         overflow: hidden;
-        background: #0a0a0a;                                       /* fallback */
-        background: var(--bg-page-dark, #0a0a0a);                  /* 🌅 FAGULHA – Fase 2 */
+        background: #0a0a0a;
+        /* fallback */
+        background: var(--bg-page-dark, #0a0a0a);
+        /* 🌅 FAGULHA – Fase 2 */
         border-radius: 4px;
     }
 
@@ -1205,8 +1267,10 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
-        background: #0a0a0a;                                       /* fallback */
-        background: var(--bg-page-dark, #0a0a0a);                  /* 🌅 FAGULHA – Fase 2 */
+        background: #0a0a0a;
+        /* fallback */
+        background: var(--bg-page-dark, #0a0a0a);
+        /* 🌅 FAGULHA – Fase 2 */
     }
 
     /* COLUNA 2: cabeçalho */
@@ -1260,9 +1324,12 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         -ms-hyphens: auto;
         font-size: var(--ls-text-font);
         line-height: 1.35;
-        color: #d1d1d1;                                            /* fallback */
-        color: oklch(86.07% 0.0001 271.152);                       /* fallback moderno */
-        color: var(--texto-secundario, oklch(86.07% 0.0001 271.152)); /* 🌅 FAGULHA – Fase 2 */
+        color: #d1d1d1;
+        /* fallback */
+        color: oklch(86.07% 0.0001 271.152);
+        /* fallback moderno */
+        color: var(--texto-secundario, oklch(86.07% 0.0001 271.152));
+        /* 🌅 FAGULHA – Fase 2 */
         word-break: break-word;
         overflow-wrap: anywhere;
     }
@@ -1284,23 +1351,25 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         box-sizing: border-box;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .reacoes-gravadas .reacao-item {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .reacoes-gravadas .reacao-item {
         display: block;
         flex: 0 1 auto;
         min-width: 0;
         max-width: 100px;
-        max-width: clamp(55px, 16cqi, 120px); /* Garante que contagens absurdas não estourem a pílula */
+        max-width: clamp(55px, 15cqi, 120px);
+        /* Garante que contagens absurdas não estourem a pílula */
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        line-height: 1.25;
         box-sizing: border-box;
         padding: 3px 6px;
-        border-radius: 20px;
-        color: #ddd;                                               /* fallback */
-        color: oklch(89.755% 0.0001 271.152);                      /* fallback moderno */
-        color: var(--texto-secundario, oklch(89.755% 0.0001 271.152)); /* 🌅 FAGULHA – Fase 2 */
+        border-radius: 16px;
+        color: #ddd;
+        /* fallback */
+        color: oklch(89.755% 0.0001 271.152);
+        /* fallback moderno */
+        color: var(--texto-secundario, oklch(89.755% 0.0001 271.152));
+        /* 🌅 FAGULHA – Fase 2 */
         font-size: var(--ls-reaction-font);
     }
 
@@ -1367,18 +1436,17 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
 /* Tablet e telas maiores: mídia e conteúdo lado a lado */
 @media (min-width: 600px) and (min-height: 601px) {
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card
-    .reacoes-gravadas .reacao-item {
-        font-size: clamp(0.88rem, 2.7cqi, 1.2rem);
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .reacoes-gravadas .reacao-item {
+        font-size: 0.82rem;
+        font-size: clamp(0.86rem, 2.5cqi, 1.1rem);
         padding: 4px 8px;
-        padding: 0.3em 0.5em;
+        padding: clamp(0.3em, 1.2cqi, 0.5em) clamp(0.5em, 1.6cqi, 0.8em);
     }
 
     @supports selector(:has(*)) {
 
         /* Card com mídia */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) {
             display: grid;
             grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
             grid-template-rows: auto auto minmax(0, 1fr) auto;
@@ -1389,40 +1457,35 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             box-sizing: border-box;
             width: min(85vw, 800px);
             max-width: min(85vw, 800px);
-            height: min(50vh, 550px);
-            height: min(50dvh, 600px);
-            min-height: 320px;
-            max-height: 80vh;
-            max-height: 80dvh;
+            /* 👇 AJUSTE DE ALTURA DINÂMICA COM TRAVAS */
+            height: auto;
+            /* Permite crescer com o conteúdo */
+            min-height: 27vh;
+            /* Fallback para iOS antigo */
+            min-height: 27dvh;
+            /* Mínimo de 30% da tela visível */
+            max-height: min(80vh, 600px);
+            /* Fallback: nunca passa de 80% da tela ou 600px */
+            max-height: min(80dvh, 600px);
+            /* Moderno: teto máximo de 600px */
+
             overflow: hidden;
         }
 
         /* Filhos do card-body participam do grid do card */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .card-body {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .card-body {
             display: contents;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .card-actions-ellipsis,
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .footer-links {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .card-actions-ellipsis,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .footer-links {
             display: none;
         }
 
         /* Mídia na primeira coluna */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid,
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .container-img-post,
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .carrossel-wrapper {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .container-img-post,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .carrossel-wrapper {
             grid-column: 1;
             grid-row: 1 / -1;
             align-self: center;
@@ -1437,15 +1500,15 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: #0a0a0a;                                   /* fallback */
-            background: var(--bg-page-dark, #0a0a0a);              /* 🌅 FAGULHA – Fase 2 */
+            background: #0a0a0a;
+            /* fallback */
+            background: var(--bg-page-dark, #0a0a0a);
+            /* 🌅 FAGULHA – Fase 2 */
             border-radius: clamp(6px, 1vw, 12px);
         }
 
         /* Grade padrão para mosaicos */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid {
             display: grid;
             width: 100%;
             height: auto;
@@ -1468,9 +1531,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         }
 
         /* Uma imagem */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:only-child) {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
             grid-template-rows: minmax(0, 1fr);
@@ -1478,61 +1539,45 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         }
 
         /* Duas imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             grid-template-rows: minmax(0, 1fr);
             aspect-ratio: 2 / 1;
         }
 
         /* Três imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
             grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
             grid-template-rows: repeat(2, minmax(0, 1fr));
             aspect-ratio: 1 / 1;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child)
-        .feed-anexo-item:first-child {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
             grid-column: 1;
             grid-row: 1 / span 2;
         }
 
         /* Quatro imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             grid-template-rows: repeat(2, minmax(0, 1fr));
             aspect-ratio: 1 / 1;
         }
 
         /* Cinco ou mais imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
             grid-template-columns: repeat(4, minmax(0, 1fr));
             grid-template-rows: repeat(2, minmax(0, 1fr));
             aspect-ratio: 2 / 1;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexos-grid:has(.feed-anexo-item:nth-child(5))
-        .feed-anexo-item:first-child {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) .feed-anexo-item:first-child {
             grid-column: 1 / span 2;
             grid-row: 1 / span 2;
         }
 
         /* Imagens centralizadas nas células */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexo-item {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexo-item {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1540,20 +1585,16 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             min-height: 0;
             overflow: hidden;
             aspect-ratio: auto;
-            background: #0a0a0a;                                   /* fallback */
-            background: var(--bg-page-dark, #0a0a0a);              /* 🌅 FAGULHA – Fase 2 */
+            background: #0a0a0a;
+            /* fallback */
+            background: var(--bg-page-dark, #0a0a0a);
+            /* 🌅 FAGULHA – Fase 2 */
             border-radius: clamp(4px, 0.6vw, 8px);
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .feed-anexo-item img,
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .container-img-post img,
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .carrossel-item img {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexo-item img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .container-img-post img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .carrossel-item img {
             display: block;
             width: 100%;
             height: 100%;
@@ -1562,14 +1603,14 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             margin: 0;
             object-fit: contain;
             object-position: center;
-            background: #0a0a0a;                                   /* fallback */
-            background: var(--bg-page-dark, #0a0a0a);              /* 🌅 FAGULHA – Fase 2 */
+            background: #0a0a0a;
+            /* fallback */
+            background: var(--bg-page-dark, #0a0a0a);
+            /* 🌅 FAGULHA – Fase 2 */
         }
 
         /* Cabeçalho na coluna direita */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .card-header {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .card-header {
             grid-column: 2;
             grid-row: 1;
             align-self: center;
@@ -1578,9 +1619,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         }
 
         /* Autor na coluna direita */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .user-info-post {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .user-info-post {
             grid-column: 2;
             grid-row: 2;
             align-self: center;
@@ -1589,9 +1628,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         }
 
         /* Texto na coluna direita */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .post-content {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .post-content {
             grid-column: 2;
             grid-row: 3;
             align-self: start;
@@ -1606,14 +1643,12 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             word-break: normal;
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            -webkit-line-clamp: 10;
-            line-clamp: 10;
+            -webkit-line-clamp: 8;
+            line-clamp: 8;
         }
 
         /* Reações abaixo do texto */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .reacoes-gravadas {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .reacoes-gravadas {
             grid-column: 2;
             grid-row: 4;
             align-self: center;
@@ -1624,9 +1659,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             margin: 0;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)
-        .reacoes-gravadas .reacao-item {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .reacoes-gravadas .reacao-item {
             flex: 0 1 auto;
             min-width: 0;
             max-width: 100%;
@@ -1636,8 +1669,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         }
 
         /* Card sem mídia */
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
             display: flex;
             flex-direction: column;
             align-items: stretch;
@@ -1653,18 +1685,14 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             overflow-y: auto;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper))
-        .card-body {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .card-body {
             display: flex;
             flex-direction: column;
             gap: clamp(8px, 1.2vh, 14px);
             min-width: 0;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper))
-        .post-content {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .post-content {
             align-self: stretch;
             min-width: 0;
             max-height: min(45dvh, 18rem);
@@ -1689,30 +1717,28 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             overflow: auto;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexos-grid {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid {
             display: grid;
             width: 100%;
             max-width: 100%;
             aspect-ratio: 1 / 1;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexo-item {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item {
             display: flex;
             align-items: center;
             justify-content: center;
             min-width: 0;
             min-height: 0;
             overflow: hidden;
-            background: #0a0a0a;                                   /* fallback */
-            background: var(--bg-page-dark, #0a0a0a);              /* 🌅 FAGULHA – Fase 2 */
+            background: #0a0a0a;
+            /* fallback */
+            background: var(--bg-page-dark, #0a0a0a);
+            /* 🌅 FAGULHA – Fase 2 */
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexo-item img,
-        body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .container-img-post img {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post img {
             display: block;
             width: 100%;
             height: 100%;
@@ -1735,15 +1761,14 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
    19. PC (telas largas) — MODO REVISTA
    ============================================================ */
 @media (min-width: 1024px) {
-    body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
         max-height: 70vh;
         object-fit: contain;
-        background: #050505;                                       /* 🎨 preto-ainda-mais-escuro específico do PC */
+        background: #050505;
+        /* 🎨 preto-ainda-mais-escuro específico do PC */
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .spotted-card {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .spotted-card {
         max-width: min(var(--card-width, 650px), 650px);
     }
 }
@@ -1752,22 +1777,21 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
    20. FALLBACK SEM :has() (Lumia, iPhone 4, J5)
    ============================================================ */
 @supports not selector(:has(*)) {
-    body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexos-grid {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(80px, 1fr));
         gap: 6px;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexo-item {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item {
         aspect-ratio: 1 / 1;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado
-        .spotted-card .feed-anexo-item img {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img {
         object-fit: contain;
-        background: #0a0a0a;                                       /* fallback */
-        background: var(--bg-page-dark, #0a0a0a);                  /* 🌅 FAGULHA – Fase 2 */
+        background: #0a0a0a;
+        /* fallback */
+        background: var(--bg-page-dark, #0a0a0a);
+        /* 🌅 FAGULHA – Fase 2 */
     }
 }

@@ -2949,10 +2949,11 @@ form[action="confirma-login.php"] a {
     padding: 8px;
     float: none;
     border-radius: 16px;
+    contain: content;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     border: 1px solid #cccccc;                                      /* 🎨 cinza-claro específico */
-    max-width: 800px;
+    max-width: 700px;
     background: #0d0d0db4;                                          /* 🎨 preto com alpha específico */
 }
 
