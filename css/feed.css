@@ -121,9 +121,9 @@
     flex-grow: 1;
     white-space: pre-wrap;
     color: #f2f2f2;                                                /* fica local – tom levemente mais claro que --texto-secundario */
-    max-height: 6rem;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
+    max-height: 4.5rem;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     box-orient: vertical;
     transition: max-height 0.4s ease-in-out;
@@ -736,7 +736,7 @@ span.data-post {
     padding: 0.3em 0.55em;
     font-size: 0.8rem;
     font-size: clamp(0.82rem, calc(0.76rem + 0.25cqi), 1rem);
-    font-size: clamp(0.8em, 3.5cqi, 1.2em);
+    font-size: clamp(0.8em, 3.5cqi, 1.1em);
     border-radius: 8px;
     border: 1px solid rgba(255, 188, 0, 0.2);                     /* fallback */
     border: 1px solid var(--borda-dourada, rgba(255, 188, 0, 0.2)); /* 🐚 FAROL – Fase 2 */
@@ -819,8 +819,8 @@ span.data-post {
     border: 1px solid var(--aura-borda-avatar, #ff9f0f);          /* 🐚 FAROL – Fase 2 */
     width: 40px;
     height: 40px;
-    width: clamp(38px, 15cqi, 60px);
-    height: clamp(38px, 15cqi, 60px);
+    width: clamp(38px, 13cqi, 56px);
+    height: clamp(38px, 13cqi, 56px);
     border-radius: 50%;
     -moz-background-clip: padding-box;
     -webkit-background-clip: padding-box;

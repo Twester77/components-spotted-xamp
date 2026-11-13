@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>translateL — teste manual</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #0a0a0a;
+            color: #fff;
+            font-family: system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .container-feed {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .spotted-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 320px;
+            max-width: 85vw;
+            padding: 20px;
+            background: #1a1a2e;
+            border: 2px solid #70cde4;
+            border-radius: 14px;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            transition: none;
+        }
+
+        /* Z-Index corrigido para a pilha (Card 1 na frente) */
+        .spotted-card:nth-child(1) { z-index: 100; }
+        .spotted-card:nth-child(2) {
+            transform: translate(-54%, -42%) rotate(-2deg) scale(0.95);
+            opacity: 0.75;
+            z-index: 90;
+            pointer-events: none;
+        }
+        .spotted-card:nth-child(3) {
+            transform: translate(-58%, -39%) rotate(-4deg) scale(0.9);
+            opacity: 0.45;
+            z-index: 80;
+            pointer-events: none;
+        }
+
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .category-tag { color: #ffbc00; font-weight: bold; }
+        .card-body { font-size: 1rem; line-height: 1.5; }
+        .debug-panel {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ffbc00;
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            max-height: 120px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="modo-swipe-ativo">
+
+    <div class="container-feed" id="feed">
+        <article class="spotted-card" data-id="1">
+            <div class="card-header">
+                <span class="category-tag">#ACADEMICO</span>
+                <span>12:34</span>
+            </div>
+            <div class="card-body">
+                <p>Post #1 — Arraste para a direita (amei), esquerda (descartar), cima (comentar), ou long press (menu).</p>
+            </div>
+        </article>
+        <article class="spotted-card" data-id="2">
+            <div class="card-header">
+                <span class="category-tag">#ELOGIO</span>
+                <span>12:35</span>
+            </div>
+            <div class="card-body">
+                <p>Post #2 — Este card fica atrás na pilha.</p>
+            </div>
+        </article>
+        <article class="spotted-card" data-id="3">
+            <div class="card-header">
+                <span class="category-tag">#PERDIDOS</span>
+                <span>12:36</span>
+            </div>
+            <div class="card-body">
+                <p>Post #3 — Este também.</p>
+            </div>
+        </article>
+    </div>
+
+    <div class="debug-panel" id="debug">Aguardando translateL...</div>
+
+    <script src="../js/translateL-core.js"></script>
+    <script>
+        const debug = document.getElementById('debug');
+        function log(msg) {
+            debug.textContent = msg;
+            console.log(msg);
+        }
+
+        // Aplica preset.feed() nos cards
+        document.querySelectorAll('.spotted-card').forEach(card => {
+            TranslateL.init(card, TranslateL.presets.feed({
+                hooks: {
+                    onSwipeRight: (c, id) => log('✅ Swipe → no card ' + id + ' (amei)'),
+                    onSwipeLeft: (c, id) => {
+                        log('🗑️ Swipe ← no card ' + id + ' (descartar)');
+                        // O motor remove o card após a animação
+                    },
+                    onSwipeUp: (c, id) => log('💬 Swipe ↑ no card ' + id + ' (comentar)'),
+                    onLongPress: (c, id) => log('⋮ Long press no card ' + id),
+                    onDragStart: (c) => log('👆 Arrraste iniciado no card ' + c.dataset.id),
+                    onCardRemoved: (c, id, dir) => log('❌ Card ' + id + ' removido (' + dir + ')')
+                }
+            }));
+        });
+
+        // Listener do evento translate-l-action (fallback acessível)
+        document.getElementById('feed').addEventListener('translate-l-action', (e) => {
+            const d = e.detail;
+            log('♿ Fallback acionado: action=' + d.action + ', card=' + d.id +
+                (d.via ? ' (via ' + d.via + ')' : ''));
+
+            // NOVO: Simula a remoção do card para ações de saída via teclado/voz
+            if (['right', 'left', 'up'].includes(d.action)) {
+                // 1. Desabilita o motor para este card (limpa contextos)
+                TranslateL.destroy(d.card);
+                
+                // 2. Aplica a animação de saída
+                d.card.style.transition = 'transform 0.3s ease-out, opacity 0.3s';
+                const exitX = d.action === 'right' ? 800 : (d.action === 'left' ? -800 : 0);
+                const exitY = d.action === 'up' ? -800 : 0;
+                d.card.style.transform = 'translate(calc(-50% + ' + exitX + 'px), calc(-50% + ' + exitY + 'px)) rotate(45deg) scale(0.95)';
+                d.card.style.opacity = '0';
+                d.card.style.pointerEvents = 'none';
+                
+                // 3. Remove do DOM após a animação
+                setTimeout(() => {
+                    if (d.card.parentNode) {
+                        d.card.parentNode.removeChild(d.card);
+                        log('❌ Card ' + d.id + ' removido via Fallback (' + d.action + ')');
+                    }
+                }, 300);
+            }
+        });
+
+        log('translateL v' + TranslateL.version + ' carregado. ' +
+            document.querySelectorAll('.spotted-card').length + ' cards gerenciados.');
+    </script>
+</body>
+</html>

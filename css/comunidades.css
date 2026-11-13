@@ -3308,7 +3308,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         padding: var(--ls-pad) var(--ls-pad-x);
         box-sizing: border-box;
         overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);                 /* 🎨 sombra específica do landscape */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);                 /* 🎨 sombra específica do landscape */
         container-type: inline-size;
     }
 

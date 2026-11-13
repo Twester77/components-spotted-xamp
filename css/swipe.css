@@ -287,9 +287,9 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     transform: perspective(400px) translate(-62%, -36%) rotate(-6deg) scale(0.85);
     opacity: 0.2 !important;
     z-index: 7;
-    pointer-events: none !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
+    pointer-events: none ;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
     will-change: transform, opacity;
 }
 

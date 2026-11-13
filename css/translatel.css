@@ -1,0 +1,232 @@
+/* ============================================================================
+ * translateL.css — Protocolo translateL (Swipe Acessível)
+ * ============================================================================
+ *
+ * Versão:  0.1.0
+ * Spec:    docs/acessibilidade.md §2-§3, docs/compatibilidade.md §3
+ * Autor:   Instância Concha
+ *
+ * Estratégia de 3 camadas (docs/arquitetura.md §3):
+ *   Camada 1 — Gating de input (física do navegador, não estética)
+ *   Camada 2 — Estados do motor (drag, spring back, long press)
+ *   Camada 3 — Progressive enhancement (@supports + @property)
+ *
+ * NOTA IMPORTANTE: este arquivo é OPCIONAL. O motor injeta automaticamente
+ * um <style> com o conteúdo das camadas 1 e 2 se `injectCoreCSS` não for
+ * 'never'. Este arquivo existe para:
+ *   (a) Projetos com CSP estrito que preferem carregar via <link>;
+ *   (b) Leitura e auditoria por humanos (a banca do TCC);
+ *   (c) Ponto de partida para customização.
+ * ============================================================================ */
+
+/* ═══════════════════════════════════════════════════════════════════
+ * CAMADA 1 — GATING DE INPUT (a "chave de ignição")
+ *
+ * Essas propriedades dizem ao navegador: "este card é arrastável; não
+ * role a página, não selecione texto, não abra o menu de contexto do
+ * Safari, não faça drag de imagem".
+ *
+ * Sem elas, o motor NÃO FUNCIONA no mobile (o toque vira scroll).
+ * Por isso são injetadas via JS por padrão — o consumidor não pode
+ * "esquecer" de incluir.
+ *
+ * Aplicadas por classe (`.translate-l-card`), NÃO por style inline.
+ * Isso permite sobrescrita controlada em casos especiais.
+ * ═══════════════════════════════════════════════════════════════════ */
+
+.translate-l-card {
+    /* Impede o navegador de interpretar o toque como scroll/pan */
+    touch-action: none;
+    -ms-touch-action: none;
+
+    /* Impede seleção acidental do texto ao arrastar */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
+    /* Safari mobile: impede o "callout" (lupa) e o arraste de imagem */
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+
+    /* Cursor de "agarra" (desktop) */
+    cursor: grab;
+    cursor: -webkit-grab;
+
+    /* Otimização de renderização (GPU hint) */
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* Escape hatch para casos onde o card precisa permitir scroll vertical
+ * mas ainda ser swipeable horizontalmente. O consumidor aplica
+ * data-translate-l-scrollable e gerencia o conflito no hook onDragStart. */
+.translate-l-card[data-translate-l-scrollable="true"] {
+    touch-action: pan-y;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * CAMADA 2 — ESTADOS DO MOTOR
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* Durante o arraste: sem transição (movimento instantâneo ao dedo).
+ * O motor já seta `style.transition = 'none'`, mas esta regra atua
+ * como defesa em profundidade caso o inline falhe. */
+.translate-l-card.translate-l-dragging {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    transition: none !important;
+    will-change: transform, opacity;
+}
+
+/* Spring back: retorno elástico ao soltar sem atingir o threshold.
+ * O consumidor aplica esta classe via opção `transitionClass` (o
+ * motor já adiciona/remove).
+ * Curva: cubic-bezier com overshoot (mesma do swipe.css original). */
+.translate-l-card.translate-l-transition {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    will-change: transform;
+}
+
+/* Long press: efeito "prisma" (shimmer animado) durante os 400ms
+ * antes do menu de ações. Herdado de .card-long-press-active do feed. */
+.translate-l-card.translate-l-long-press {
+    box-shadow: 0 4px 10px rgba(255, 140, 0, 0.4);
+    background-image: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 60%
+    );
+    background-size: 200% 100%;
+    animation: translateLShimmer 0.6s infinite ease-in-out;
+}
+
+@keyframes translateLShimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * CAMADA 3 — PROGRESSIVE ENHANCEMENT (futuro, não bloqueia nada)
+ *
+ * O motor hoje usa `inline style.transform` (compatível com iOS 9.3).
+ * Quando o piso de compatibilidade subir (Safari ≥ 16.4, Firefox ≥ 128,
+ * Chrome ≥ 85 — todos com @property estável), a migração é:
+ *
+ *   1. Remover `card.style.transform = ...` do motor.
+ *   2. Aplicar a classe `.translate-l-stack-child` (abaixo).
+ *   3. O transform vira responsabilidade do CSS.
+ *
+ * Tudo isto está protegido por @supports. Navegadores antigos NÃO
+ * entram neste bloco e continuam usando o inline style.
+ * ═══════════════════════════════════════════════════════════════════ */
+
+@supports (transform: translate3d(var(--pos-x, 0px), var(--pos-y, 0px), 0)) {
+
+    /* Registra as custom properties como tipos estritos.
+     * Isso permite interpolação suave quando animadas via transition. */
+    @property --pos-x {
+        syntax: '<length>';
+        initial-value: 0px;
+        inherits: false;
+    }
+
+    @property --pos-y {
+        syntax: '<length>';
+        initial-value: 0px;
+        inherits: false;
+    }
+
+    @property --swipe-rot {
+        syntax: '<angle>';
+        initial-value: 0deg;
+        inherits: false;
+    }
+
+    /* Modo "stack child": usado quando o consumidor opta pelo CSS-based
+     * transform. Requer que o card esteja posicionado (top: 50%; left: 50%)
+     * e que o container seja stacking context. */
+    .translate-l-card.translate-l-stack-child {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:
+            translate3d(
+                calc(-50% + var(--pos-x, 0px)),
+                calc(-50% + var(--pos-y, 0px)),
+                0
+            )
+            rotate(var(--swipe-rot, 0deg));
+    }
+
+    /* Durante o drag, o inline style (se presente) vence — mas se o motor
+     * estiver no modo CSS-based, esta regra evita transição. */
+    .translate-l-card.translate-l-stack-child.translate-l-dragging {
+        transition: none;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * ACESSIBILIDADE — prefers-reduced-motion
+ *
+ * Referência: docs/acessibilidade.md §5
+ * WCAG 2.1 — 2.3.3 (Animation from Interactions)
+ * ═══════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    /* Remove transição de spring back (vira instantâneo) */
+    .translate-l-card.translate-l-transition {
+        transition-duration: 0.01ms !important;
+    }
+
+    /* Remove o shimmer do long press */
+    .translate-l-card.translate-l-long-press {
+        animation: none !important;
+        box-shadow: 0 0 0 2px rgba(255, 188, 0, 0.6);
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * FALLBACK ACESSÍVEL — estilos visuais extras
+ *
+ * O CSS do fallback em si já é injetado pelo motor (ensureFallbackCSS,
+ * §5 do core.js). Aqui apenas refinamos o visual quando o arquivo
+ * translateL.css está presente.
+ * ═══════════════════════════════════════════════════════════════════ */
+
+.translate-l-fallback {
+    font-family: inherit;
+}
+
+.translate-l-fallback button {
+    transition: background 0.15s ease;
+}
+
+.translate-l-fallback button[data-translate-l-action="right"]:hover {
+    background: rgba(52, 211, 92, 0.15);
+    border-color: rgba(52, 211, 92, 0.6);
+}
+
+.translate-l-fallback button[data-translate-l-action="left"]:hover {
+    background: rgba(255, 75, 75, 0.15);
+    border-color: rgba(255, 75, 75, 0.6);
+}
+
+.translate-l-fallback button[data-translate-l-action="up"]:hover {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: rgba(56, 189, 248, 0.6);
+}
+
+/* Botão de voz ativo (gravando): pulso vermelho discreto */
+.translate-l-fallback button[data-translate-l-action="voice"][aria-pressed="true"] {
+    background: rgba(255, 75, 75, 0.25);
+    border-color: #ff4b4b;
+    animation: translateLVoicePulse 1.2s infinite ease-in-out;
+}
+
+@keyframes translateLVoicePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 75, 75, 0.4); }
+    50%      { box-shadow: 0 0 0 6px rgba(255, 75, 75, 0); }
+}

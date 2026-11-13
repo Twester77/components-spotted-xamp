@@ -939,8 +939,8 @@ select:focus-visible {
 
 .btn-cor-sugestao:hover {
     transform: scale(1.1);
-    border-color: #fff !important;                                  /* fallback */
-    border-color: var(--texto-primario, #fff) !important;           /* 🌅 FAGULHA – Fase 2 */
+    border-color: #fff ;                                  /* fallback */
+    border-color: var(--texto-primario, #fff) ;           /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-cor-sugestao:active {
@@ -1286,7 +1286,7 @@ select:focus-visible {
 
 /* --- VIBE NEON (preview) --- */
 .preview-perfil.vibe-neon {
-    background: linear-gradient(to bottom, transparent 0%, var(--cor-aura, var(--aura-user, #ff9100)) 25%, #000 50%) !important; /* 🎨 dinâmica via PHP — preservada */
+    background: linear-gradient(to bottom, transparent 0%, var(--cor-aura, var(--aura-user, #ff9100)) 25%, #000 50%) ; /* 🎨 dinâmica via PHP — preservada */
     animation: neon-flicker-subtle 4s infinite alternate ease-in-out;
     border: 1px solid var(--cor-aura, var(--aura-user, #ff9100));   /* 🎨 dinâmica via PHP — preservada */
     border-radius: 16px;
@@ -1327,12 +1327,12 @@ select:focus-visible {
     background: linear-gradient(135deg,
         oklch(1 0 0 / 0.45) 0%,
         oklch(1 0 0 / 0.05) 45%,
-        oklch(0 0 0 / 0.45) 100%), oklch(from var(--cor-aura, var(--aura-user, #70cde4)) l c h / 0.3) !important; /* 🎨 dinâmica via PHP — preservada */
+        oklch(0 0 0 / 0.45) 100%), oklch(from var(--cor-aura, var(--aura-user, #70cde4)) l c h / 0.3) ; /* 🎨 dinâmica via PHP — preservada */
     background-blend-mode: soft-light;
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
-    border: 1px solid oklch(1 0 0 / 0.35) !important;               /* 🎨 identidade visual vibe-glass */
-    box-shadow: 0 16px 32px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) !important; /* 🎨 identidade visual vibe-glass */
+    border: 1px solid oklch(1 0 0 / 0.35) ;               /* 🎨 identidade visual vibe-glass */
+    box-shadow: 0 16px 32px oklch(0 0 0 / 0.45), inset 0 1.5px 2px oklch(1 0 0 / 0.4) ; /* 🎨 identidade visual vibe-glass */
     border-radius: 16px;
     position: relative;
     overflow: hidden;
@@ -1367,9 +1367,9 @@ select:focus-visible {
         ),
         oklch(from var(--cor-aura, var(--aura-user, #ffbc00)) 0.94 0.04 h / 0.75); /* 🎨 dinâmica via PHP — preservada */
     background-blend-mode: soft-light;
-    border: 1px solid oklch(1 0 0 / 0.25) !important;               /* 🎨 identidade visual vibe-light */
-    border-top: 4px solid var(--cor-aura, var(--aura-user, #ffbc00)) !important; /* 🎨 dinâmica via PHP — preservada */
-    box-shadow: 0 8px 32px oklch(0 0 0 / 0.08), inset 0 1px 1px oklch(1 0 0 / 0.5) !important; /* 🎨 identidade visual vibe-light */
+    border: 1px solid oklch(1 0 0 / 0.25) ;               /* 🎨 identidade visual vibe-light */
+    border-top: 4px solid var(--cor-aura, var(--aura-user, #ffbc00)) ; /* 🎨 dinâmica via PHP — preservada */
+    box-shadow: 0 8px 32px oklch(0 0 0 / 0.08), inset 0 1px 1px oklch(1 0 0 / 0.5) ; /* 🎨 identidade visual vibe-light */
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
     border-radius: 16px;
@@ -2234,7 +2234,7 @@ section.sessao-publicar {
 }
 
 .form-publicar textarea {
-    display: flex !important;
+    display: flex ;
     min-height: 80px;
     max-height: 150px;
     line-height: 1.4;
@@ -2602,7 +2602,7 @@ section.sessao-publicar {
     position: relative;
     align-content: center;
     border-radius: 50%;
-    border: none !important;
+    border: none ;
     -webkit-mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%); /* 🎨 gradiente específico do mask */
     mask-image: radial-gradient(circle, black 40%, rgba(0, 0, 0, 0) 75%);          /* 🎨 gradiente específico do mask */
     transition: transform 0.3s ease;

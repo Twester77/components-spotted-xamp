@@ -957,7 +957,7 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 12px 8px;
-    padding: clamp(15px, 3vw, 35px) clamp(10px, 2vw, 20px);
+    padding: clamp(15px, 3vw, 35px) clamp(8px, 2.5vw, 20px);
     background: var(--bt-fundo-escuro, #0a0a0a);                 /* fallback */
     background: var(--bg-page-dark, var(--bt-fundo-escuro, #0a0a0a)); /* 🐚 FAROL – Fase 2 */
     min-height: 100dvh;
@@ -1101,7 +1101,7 @@
     padding: clamp(12px, 1.5vw, 20px);
     margin: 20px 0;
     margin: clamp(12px, 2vw, 25px) 0;
-    max-width: 800px;
+    max-width: 700px;
     width: 100%;
     place-self: center;
     align-items: center;
@@ -1187,6 +1187,15 @@
 .bt-participantes {
     margin: 20px auto;
     margin: clamp(15px, 2vw, 30px) auto;
+    max-height: 300px;
+    max-height: clamp(120px, 35vh, 350px);
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.bt-participante::-webkit-scrollbar{
+    display: none;
 }
 
 .bt-participantes h3 {
@@ -1204,6 +1213,8 @@
     flex-direction: row;
     justify-content: space-between;
     gap: 20px;
+    padding-top: 20px;
+    padding-top: calc(20px + env(safe-area-inset-bottom, 0px));
 }
 
 .bt-avatar-item {
@@ -1215,18 +1226,18 @@
 }
 
 .bt-avatar-item img {
-    width: 40px;
-    height: 40px;
-    width: clamp(38px, 6vw, 60px);
-    height: clamp(38px, 6vw, 60px);
+    width: 42px;
+    height: 42px;
+    width: clamp(40px, 6vw, 64px);
+    height: clamp(40px, 6vw, 64px);
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid rgba(255, 188, 0, 0.3);
 }
 
 .bt-avatar-item span {
-    font-size: 0.75rem;
-    font-size: clamp(0.75rem, 0.85vw, 0.95rem);
+    font-size: 0.8rem;
+    font-size: clamp(0.78rem, 0.85vw, 0.97rem);
     color: var(--bt-texto-cinza, #aeaeae);                        /* fallback */
     color: var(--texto-terciario, var(--bt-texto-cinza, #aeaeae)); /* 🐚 FAROL – Fase 2 */
     position: relative;
@@ -1299,8 +1310,10 @@
    8. COMENTÁRIOS NA PÁGINA DE DETALHES
    ================================================================ */
 .bt-comentarios {
-    margin-top: clamp(20px, 3vw, 36px);
+    margin-top: 20px;
+    margin-top: clamp(15px, 3vw, 35px);
     border-top: 1px solid var(--bt-borda-sutil);
+    padding-top: 12px ;
     padding-top: clamp(16px, 2vw, 24px);
 }
 
@@ -1316,7 +1329,12 @@
     max-height: 75vh;
     max-height: calc(70dvh - 60px);
     padding-right: 6px;
+    padding-bottom: 20px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: 80px;
+    scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     scrollbar-width: thin;
+    justify-content: center;
     justify-content: safe center;
     scrollbar-color: #70cde4;
     scroll-behavior: smooth;
@@ -1339,11 +1357,11 @@
 
 .bt-comentarios h3 {
     font-size: 1rem;
-    font-size: clamp(0.95rem, 3.05cqw, 1.5rem);
+    font-size: clamp(0.96rem, 3.05cqw, 1.4rem);
     color: #fff;                                                  /* fallback */
     color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     margin-bottom: 15px;
-    margin-bottom: clamp(12px, 1.5vw, 20px);
+    margin-bottom: clamp(10px, 1.5vw, 20px);
 }
 
 .bt-comentario-item {
@@ -1429,6 +1447,7 @@
     display: flex;
     align-items: flex-end;
     gap: 10px;
+    max-width: 650px;
     resize: vertical;
     max-height: 220px;
     min-height: 60px;
@@ -2381,7 +2400,7 @@
     }
 
     .bt-form-comentario {
-        padding: 8px 10px;
+        padding: 6px 10px;
         gap: 6px;
     }
 
@@ -2509,7 +2528,7 @@
     }
 
     #bt-container-eventos .bt-card .bt-descricao {
-        max-height: 4.5em;
+        max-height: 4.5rem;
         margin-block: 2px;
         -webkit-line-clamp: 4;
         line-clamp: 4;
