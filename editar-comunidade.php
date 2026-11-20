@@ -143,8 +143,8 @@ $tipo_atual = $comunidade['tipo'] ?? 'publica';
             <!-- Capa atual (VIA B2) -->
             <div class="campo-grupo">
                 <label><i class="fas fa-image"></i> Capa Atual</label>
-                <div class="capa-atual-wrapper" style="aspect-ratio: 16/9; background: rgba(255,255,255,0.03); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06);">
-                    <img src="<?php echo htmlspecialchars($capa_exibicao); ?>" alt="Capa atual" style="width: 100%; height: 100%; object-fit: cover; max-height:300px" onerror="this.src='uploads/ui/default_comunidade.webp'">
+                <div class="capa-atual-wrapper" style="aspect-ratio: 16/9;">
+                    <img src="<?php echo htmlspecialchars($capa_exibicao); ?>" alt="Capa atual" style="width: 100%; height: 100%; object-fit: cover; " onerror="this.src='uploads/ui/default_comunidade.webp'">
                 </div>
             </div>
 

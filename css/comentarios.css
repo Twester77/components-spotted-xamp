@@ -228,8 +228,8 @@
     padding-right: max(8px + env(safe-area-inset-right, 0px));
     padding-bottom: 20px;
     padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-    scroll-padding-bottom: 80px;
-    scroll-padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    scroll-padding-bottom: 100px;
+    scroll-padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
 
 }
 
@@ -708,9 +708,6 @@
     border: 1px solid oklch(from var(--cor-borda-glow) 0.65 0.05 h / 0.2);
     box-shadow: inset 0 1px 1px oklch(from var(--cor-borda-glow) 1 0 h / 0.1);
     
-    /* Efeito de desfoque jateado (Glassmorphism) */
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
 }
 
 /* Efeito de flutuação e brilho neon dinâmico ao passar o mouse */
@@ -718,7 +715,7 @@
     transition: box-shadow 0.3s ease;
     
     /* 🛡️ Fallback de sombra estável para navegadores antigos */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     
     /* 🚀 Sombra neon moderna com a cor dinâmica do usuário */
     box-shadow: 
@@ -786,8 +783,8 @@
 .comentario-texto {
     color: #ddd;                                                  /* fallback */
     color: var(--texto-secundario, #ddd);                         /* 🐚 FAROL – Fase 2 */
-    font-size: 0.95rem;
-    font-size: clamp(0.9rem, 2.4cqi, 1.05rem);
+    font-size: 0.92rem;
+    font-size: clamp(0.87rem, 2.4cqi, 1.05rem);
     line-height: 1.4;
     white-space: pre-wrap;
     word-break: break-word;
@@ -840,10 +837,11 @@
     gap: 6px;
     border-radius: 16px;
     padding: 4px 8px;
+    padding: clamp(4px, 1cqi, 6px) clamp(8px, 1.5cqi, 14px);
     background: transparent;
     position: relative;
     width: 100%;
-    max-width: 900px;
+    max-width: 800px;
     box-sizing: border-box;
     margin: 0 auto;
     z-index: 9999;
@@ -856,20 +854,22 @@
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
-    padding: 4px;
+    padding: 5px 8px;
+    padding-block: 5px; 
+    padding-inline: 10px;
     border: 1px solid rgba(255, 188, 0, 0.22);                    /* fica local – alpha específico */
-    border-radius: 999px;
+    border-radius: 32px;
     background: rgba(20, 20, 30, 0.88);                           /* fica local – alpha específico */
     background: linear-gradient(135deg, rgba(35, 28, 39, 0.96), rgba(12, 14, 25, 0.96)); /* fica local – gradiente específico do chat */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.05);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .textarea-wrapper:focus-within {
     border-color: var(--cor-borda-glow, #ffbc00);
-    box-shadow: 0 0 0 2px rgba(255, 188, 0, 0.12), 0 3px 14px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 0 0 2px rgba(255, 188, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.28);
 }
 
 /* ==================================================
@@ -883,7 +883,7 @@
     position: relative;
     background: transparent;
     border: 0;
-    border-radius: 0;
+    border-radius: 14px;
     min-height: 40px;
     max-height: 120px;
     overflow: hidden;
@@ -977,7 +977,7 @@
     display: flex;
     padding: 4px 6px;
     padding-top: 8px;
-    padding-right: 35px;
+    padding-right: 36px;
     border-radius: 10px;
     background: #ffffff0a;
     border: none;
@@ -1092,8 +1092,9 @@
     max-height: 50dvh;
     max-width: 250px;
     width: auto;
+    max-width: 180px;
     max-width: clamp(120px, 35cqi, 320px);
-    background: rgba(0, 0, 0, 0.92);                              /* fica local – preto com alpha específico do chat */
+    background: rgba(0, 0, 0, 0.82);                              /* fica local – preto com alpha específico do chat */
     -webkit-backdrop-filter: blur(1px);
     backdrop-filter: blur(1px);
     overflow-y: auto;
@@ -1103,6 +1104,8 @@
     box-sizing: border-box;
     z-index: 1000;
     flex-direction: column;
+    justify-content: center;
+    justify-content: safe center;
     gap: 8px;
 }
 
@@ -1257,6 +1260,7 @@ select#vibe-comentario {
         max-width: 63%;
     }
 
+    
     .comentario-linha-filha {
         width: calc(100% - 20px);
         margin-left: 20px;
@@ -1465,8 +1469,8 @@ body.pagina-post .header-principal {
     color: #ffffff;                                               /* fallback */
     color: var(--texto-primario, #ffffff);                        /* 🐚 FAROL – Fase 2 */
     transition: background 0.3s;
-    min-width: 60px;
-    min-height: 28px;
+    min-width: 70px;
+    min-height: 30px;
     align-content: center;
     max-width: fit-content;
     word-break: break-all;
@@ -1484,6 +1488,7 @@ body.pagina-post .header-principal {
 .spotted-card img {
     max-width: 100%;
     object-fit: contain;
+    max-height: 100vh;
     max-height: 100dvh;
     background: transparent;
     border: none;
@@ -1500,8 +1505,10 @@ body.pagina-post .header-principal {
 .comentario-deletado-msg {
     text-align: center;
     justify-content: center;
+    align-items: center;
     letter-spacing: 0.5px;
     overflow: hidden;
+    min-height: 60px;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -1515,8 +1522,8 @@ body.pagina-post .header-principal {
     font-style: italic;
     background-color: rgba(0, 0, 0, 0.05);                        /* fica local – alpha específico */
     font-size: 0.8rem;
-    font-size: clamp(0.77rem, 0.5cqw + 0.65rem, 1rem);
-    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+    font-size: clamp(0.77rem, 0.5cqw + 0.65rem, 1.03rem);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
     max-width: 100%;
 }
 
@@ -1566,13 +1573,13 @@ body.pagina-post .header-principal {
     border: none;
     color: rgba(255, 255, 255, 0.7);                              /* fica local – alpha específico */
     cursor: pointer;
-    padding: 8px 10px;
-    font-size: 1.2rem;
+    padding: 6px 10px;
+    font-size: 1.15rem;
     font-weight: bold;
     transition: 0.2s;
     pointer-events: none;
     line-height: 1;
-    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .btn-excluir-comentario,
@@ -1691,6 +1698,9 @@ body.pagina-post .header-principal {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    text-rendering: auto; /* Garante performance máxima no scroll */
 }
 
 .comentario-menu-toggle {
@@ -1783,7 +1793,7 @@ body.pagina-post .header-principal {
 .comentario-autor {
     color: var(--cor-borda-glow, #70cde4);
     font-size: 0.9rem;
-    font-size: clamp(0.88rem, 2.2cqi, 1rem);
+    font-size: clamp(0.87rem, 2.2cqi, 1rem);
     font-weight: bold;
     flex: 1;
     overflow: hidden;
@@ -1798,7 +1808,8 @@ body.pagina-post .header-principal {
 .comentario-media-wrapper-grid {
     display: grid;
     /* Força sempre 2 colunas dinâmicas (50% do espaço disponível cada) */
-    grid-template-columns: repeat(2, minmax(60px, 120px)); 
+    grid-template-columns: repeat(2, minmax(50px, 120px)); 
+    grid-template-columns: repeat(2, minmax(12cqi, 25cqi)); 
     gap: 5px;
     padding: 4px 0;
     /* SOLUÇÃO CHAVE: O container abraça estritamente o tamanho das imagens */
@@ -1813,16 +1824,14 @@ body.pagina-post .header-principal {
 .comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
     display: flex;
     justify-content: center;
-    max-width: 100%;
+    max-width: 220px;
+    max-width: clamp(120px, 25vh, 250px);
 }
 
 .comentario-media-item {
     width: 100%; 
-    aspect-ratio: 1/1;
-    max-width: 150px; 
-    max-height: 25vh; 
-    max-height: 25dvh;
-    border-radius: 12px;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.4);
     background: var(--bg-card-hover-strong, rgba(0, 0, 0, 0.88));     /* antes local – agora com variável, alteração feita pelo Léo  */
@@ -1834,7 +1843,7 @@ body.pagina-post .header-principal {
 
 /* Quando for uma foto única, ela pode expandir um pouco mais para dar destaque */
 .comentario-media-item:only-child {
-    max-width: 250px;
+    max-width: 220px;
 }
 
 .comentario-media-item:hover {
@@ -1851,7 +1860,7 @@ body.pagina-post .header-principal {
 
 .comentario-media-item img.gif-externo {
     object-fit: contain;
-    background: (0, 0, 0, 0.88); /* fallback local */
+    background: rgba(0, 0, 0, 0.88); /* fallback local */
     background: var(--bg-card-hover-strong, rgba(0, 0, 0, 0.88));     /* antes local – agora com variável, alteração feita pelo Léo  */
     display: block;
     justify-self: center;

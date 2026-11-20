@@ -429,9 +429,11 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $data_comunidade_attr = ($comunidade_do_post > 0) ? 'data-comunidade-id="' . $comunidade_do_post . '"' : '';
 ?>
     <article class="spotted-card <?php echo $categoria_atual; ?> <?php echo $vibe_post; ?> <?php echo $classe_admin; ?> <?php echo $classe_selo_adm; ?>"
-        data-id="<?php echo $post_id_atual; ?>"
-        <?php echo $data_comunidade_attr; ?>
-        style="border: 2px solid <?php echo $cor_post; ?>">
+    data-id="<?php echo $post_id_atual; ?>"
+    data-owner="<?php echo $sou_eu ? 'true' : 'false'; ?>"
+    <?php echo $data_comunidade_attr; ?>
+    style="border: 2px solid <?php echo $cor_post; ?>">
+    
         <div class="hacker-card-terminal-frame" aria-hidden="true">
             <span class="hacker-card-terminal-corner">+</span>
             <span class="hacker-card-terminal-label"></span>

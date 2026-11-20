@@ -558,8 +558,8 @@ if (empty($_SESSION['csrf_token'])) {
             background:rgba(0,0,0,0.85);
             display:flex; justify-content:center; align-items:center;
             z-index:1000000; cursor:pointer;
-            user-select:none; -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
+            user-select:none; -webkit-backdrop-filter: blur(3px);
+            backdrop-filter: blur(3px);
             opacity:0; transition:opacity 0.2s ease;
         `;
 
@@ -568,7 +568,7 @@ if (empty($_SESSION['csrf_token'])) {
             img.style.cssText = `
             max-width:90%; max-height:90%;
             object-fit:contain; border-radius:8px;
-            box-shadow:0 0 30px rgba(0,0,0,0.5);
+            box-shadow:0 0 25px rgba(0,0,0,0.5);
         `;
 
             const btnFechar = document.createElement('button');

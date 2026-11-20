@@ -2,8 +2,11 @@
    FENDA DRAWER COMENTÁRIOS – BRASA (FASE 5 - FINAL)
    ============================================================ */
 
+let _drawerTecladoHandler = null;
+
 window.abrirDrawerComentarios = function(postId) {
     if (!postId) return;
+
 
     if (typeof window.HeaderManager?.limpar === 'function') {
         window.HeaderManager.limpar();
@@ -16,6 +19,12 @@ window.abrirDrawerComentarios = function(postId) {
     const panelAntigo = document.getElementById('drawer-cmt-panel');
     if (backdropAntigo) backdropAntigo.remove();
     if (panelAntigo) panelAntigo.remove();
+
+    if (_drawerTecladoHandler && window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', _drawerTecladoHandler);
+        window.visualViewport.removeEventListener('scroll', _drawerTecladoHandler);
+        _drawerTecladoHandler = null;
+    }
 
     const backdrop = document.createElement('div');
     backdrop.id = 'drawer-cmt-backdrop';
@@ -37,6 +46,34 @@ window.abrirDrawerComentarios = function(postId) {
         </div>
     `;
     document.body.appendChild(panel);
+
+        if (window.visualViewport) {
+        let timerTeclado = null;
+        _drawerTecladoHandler = () => {
+            if (!document.body.contains(panel)) return;
+            clearTimeout(timerTeclado);
+            timerTeclado = setTimeout(() => {
+                const alturaVisivel = window.visualViewport.height;
+                const offsetTop = window.visualViewport.offsetTop;
+                const tecladoAberto = alturaVisivel < window.innerHeight * 0.85;
+
+                panel.style.transition = 'height 0.2s ease, transform 0.2s ease';
+
+                if (tecladoAberto) {
+                    const alturaAtual = panel.getBoundingClientRect().height;
+                    if (alturaAtual > alturaVisivel * 0.95) {
+                        panel.style.height = `${alturaVisivel * 0.95}px`;
+                    }
+                    panel.style.transform = `translate3d(0, ${offsetTop}px, 0)`;
+                } else {
+                    panel.style.transform = 'translate3d(0, 0, 0)';
+                }
+            }, 100);
+        };
+        window.visualViewport.addEventListener('resize', _drawerTecladoHandler);
+        window.visualViewport.addEventListener('scroll', _drawerTecladoHandler);
+    }
+
 
     requestAnimationFrame(() => {
         backdrop.classList.add('ativo');
@@ -100,6 +137,13 @@ window.fecharDrawerComentarios = function() {
     const backdrop = document.getElementById('drawer-cmt-backdrop');
     const panel = document.getElementById('drawer-cmt-panel');
     
+        if (_drawerTecladoHandler && window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', _drawerTecladoHandler);
+        window.visualViewport.removeEventListener('scroll', _drawerTecladoHandler);
+        _drawerTecladoHandler = null;
+    }
+
+
     if (backdrop && panel) {
         panel.style.transform = 'translateY(100%)';
         backdrop.classList.remove('ativo');
@@ -120,17 +164,18 @@ function configurarGestoFechar(panel) {
     let startY = 0;
     let currentY = 0;
     let isDragging = false;
-    let rafId = null; // 🚀 O famigerado requestAnimationFrame para otimizar os frames!
-    
-    const alturaPainel = window.innerHeight * 0.95;
-    const SNAP_POINTS = [0, 35, 60, 95]; 
+    let rafId = null;
+    let alturaPainel = window.innerHeight * 0.95;
 
     handleArea.addEventListener('pointerdown', (e) => {
-        if (!e.isPrimary) return; // Proteção contra multi-toque louco
+        if (!e.isPrimary) return;
         if (e.button !== 0 && e.pointerType === 'mouse') return;
         
         startY = e.clientY;
         isDragging = true;
+        
+        // Pega a altura atual exata (sem pulo ao retomar o arraste)
+        alturaPainel = panel.getBoundingClientRect().height;
         
         panel.style.transition = 'none'; 
         handleArea.setPointerCapture(e.pointerId);
@@ -143,49 +188,34 @@ function configurarGestoFechar(panel) {
         const multiplicador = e.pointerType === 'mouse' ? 1.3 : 1; 
         currentY = (e.clientY - startY) * multiplicador;
         
-        if (currentY > 0) {
-            // 🚀 Otimização com requestAnimationFrame: atualiza a altura sincronizada com o refresh da tela,
-            // evitando sobrecarga de cálculos e travamentos no navegador!
-            if (rafId) cancelAnimationFrame(rafId);
-            
-            rafId = requestAnimationFrame(() => {
-                if (!isDragging) return;
-                const novaAlturaPx = Math.max(10, alturaPainel - currentY);
-                const novaPct = (novaAlturaPx / window.innerHeight) * 100;
-                panel.style.height = `${novaPct}dvh`;
-            });
-        }
+        if (rafId) cancelAnimationFrame(rafId);
+        
+        rafId = requestAnimationFrame(() => {
+            if (!isDragging) return;
+            // Limita entre 10px (mínimo) e 95% da tela (máximo)
+            const novaAlturaPx = Math.min(window.innerHeight * 0.95, Math.max(10, alturaPainel - currentY));
+            const novaPct = (novaAlturaPx / window.innerHeight) * 100;
+            panel.style.height = `${novaPct}dvh`;
+        });
     });
 
-    handleArea.addEventListener('pointerup', (e) => {
+    handleArea.addEventListener('pointerup', () => {
         if (!isDragging) return;
         isDragging = false;
         
         if (rafId) cancelAnimationFrame(rafId);
         
-        const alturaFinalPx = Math.max(10, alturaPainel - currentY);
+        const alturaFinalPx = Math.min(window.innerHeight * 0.95, Math.max(10, alturaPainel - currentY));
         const alturaFinalDvh = (alturaFinalPx / window.innerHeight) * 100;
 
-        // Restaura a transição suave para o encaixe (snap)
         panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
 
-        // 🧮 Matemática do Snap
-        let pontoMaisProximo = SNAP_POINTS[0];
-        let menorDistancia = Math.abs(alturaFinalDvh - SNAP_POINTS[0]);
-
-        for (let i = 1; i < SNAP_POINTS.length; i++) {
-            const distancia = Math.abs(alturaFinalDvh - SNAP_POINTS[i]);
-            if (distancia < menorDistancia) {
-                menorDistancia = distancia;
-                pontoMaisProximo = SNAP_POINTS[i];
-            }
-        }
-
-        if (pontoMaisProximo === 0) {
+        // Se soltou abaixo de 30dvh, fecha totalmente; senão, fica na posição livre escolhida
+        if (alturaFinalDvh < 30) {
             window.fecharDrawerComentarios();
             setTimeout(() => { panel.style.height = ''; }, 300); 
         } else {
-            panel.style.height = `${pontoMaisProximo}dvh`;
+            panel.style.height = `${alturaFinalDvh}dvh`;
         }
 
         currentY = 0; 
@@ -200,6 +230,7 @@ function configurarGestoFechar(panel) {
         currentY = 0;
     });
 }
+
 
 // Intercepta o clique no botão "Fofocar" e no "Expandir"
 document.addEventListener('click', (e) => {

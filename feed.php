@@ -16,19 +16,17 @@ include 'includes/bolhas.php';
 ?>
 
 <!-- 🔥 BARRA DE BUSCA GLOBAL (Fase 6) -->
-<?php 
-$placeholder_busca = 'Buscar no feed...'; 
-include 'includes/barra-busca.php'; 
+<?php
+$placeholder_busca = 'Buscar no feed...';
+include 'includes/barra-busca.php';
 ?>
 
 <!-- Adicionado aria-label para indicar que este bloco é uma barra de ferramentas de controle -->
 <div class="controles-feed-topo" role="toolbar" aria-label="Controles do Feed">
-    <!-- Adicionado aria-expanded e aria-controls vinculando dinamicamente o botão à gaveta de filtros -->
     <button type="button" id="btn-abrir-filtros" class="btn-fenda-padrao" onclick="toggleFiltrosMobile()" aria-expanded="false" aria-controls="gaveta-filtros-swipe">
         <i class="fas fa-filter" aria-hidden="true"></i> CATEGORIAS
     </button>
 
-    <!-- Adicionado aria-hidden e role para esconder a gaveta do leitor enquanto estiver fechada -->
     <div id="gaveta-filtros-swipe" class="filtros-wrapper-retratil" role="region" aria-label="Painel de Filtros por Categoria" aria-hidden="true">
         <?php include 'includes/filtros.php'; ?>
     </div>
@@ -36,13 +34,10 @@ include 'includes/barra-busca.php';
 
 <main class="main-fenda-total" id="conteudo-principal">
     <?php if ($ativar_modo_app): ?>
-        <!-- Feedbacks visuais usados apenas pelos gestos do modo swipe -->
         <div class="feedback-swipe feedback-direita" aria-hidden="true">🩶 AMEI</div>
         <div class="feedback-swipe feedback-esquerda" aria-hidden="true">🗑️ DESCARTAR</div>
         <div class="feedback-swipe feedback-cima" aria-hidden="true">💬 COMENTAR</div>
     <?php endif; ?>
-    <!-- O container começa vazio e o Motor preenche -->
-    <!-- Adicionado aria-live para anunciar novos posts injetados dinamicamente via AJAX sem interromper a navegação -->
     <div class="container-feed" role="feed" aria-busy="false" aria-live="polite">
     </div>
 </main>
@@ -52,72 +47,63 @@ include 'includes/barra-busca.php';
 </div>
 
 <?php if ($ativar_modo_app): ?>
-    <script
-        src="<?= asset_versao('js/fenda-init.js') ?>"
-        data-swipe-mobile="<?= asset_versao('js/fenda-swipe-mobile.js') ?>"
-        data-swipe-pc="<?= asset_versao('js/fenda-swipe-pc.js') ?>"
-    ></script>
+    <!-- Integração Protocolo translateL (Fase 2.2) -->
+    <script src="<?= asset_versao('js/translateL-core.js') ?>"></script>
+    <link rel="stylesheet" href="<?= asset_versao('css/translateL.css') ?>">
 <?php endif; ?>
 
 <script>
+    // ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
+    function recalcFeedLayout() {
+        if (!document.body.classList.contains('modo-swipe-ativo')) return;
 
-// ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
-function recalcFeedLayout() {
-    if (!document.body.classList.contains('modo-swipe-ativo')) return;
+        var vw = window.innerWidth;
+        var vh = window.innerHeight;
+        var isLandscape = vw > vh;
 
-    var vw = window.innerWidth;
-    var vh = window.innerHeight;
-    var isLandscape = vw > vh;
+        var larguraDisponivel = Math.max(1, vw - 32);
+        var larguraAlvo = isLandscape ? Math.min(vw * 0.72, 680) : Math.min(vw * 0.70, 550);
+        var cardWidth = Math.round(Math.min(larguraDisponivel, Math.max(240, larguraAlvo)));
 
-    // Mantém a largura responsiva sem ultrapassar as bordas da tela.
-    var larguraDisponivel = Math.max(1, vw - 32);
-    var larguraAlvo = isLandscape
-        ? Math.min(vw * 0.72, 680)
-        : Math.min(vw * 0.70, 550);
-    var cardWidth = Math.round(Math.min(larguraDisponivel, Math.max(240, larguraAlvo)));
+        var maxCardHeight = isLandscape ? Math.round(Math.min(vh * 0.85, 550)) : Math.round(Math.min(vh * 0.92, 700));
 
-    // Compatível com o limite do card definido no CSS para swipe landscape.
-    var maxCardHeight = isLandscape
-        ? Math.round(Math.min(vh * 0.85, 550))
-        : Math.round(Math.min(vh * 0.92, 700));
+        var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
+        var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.5));
+        var fontSizeUser = Math.max(0.7, Math.min(cardWidth / 600, 0.95));
+        var fontSizeCategory = Math.max(0.82, Math.min(cardWidth / 480, 1.15));
+        var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
+        var avatarSize = Math.round(Math.max(38, Math.min(cardWidth * 0.12, 56)));
+        var innerDynamicHeight = Math.round(maxCardHeight * 0.55);
 
-    var cardPadding = Math.round(Math.min(32, Math.max(12, cardWidth * 0.05)));
-    var fontSize = Math.max(0.9, Math.min(cardWidth / 230, 1.5));
-    var fontSizeUser = Math.max(0.7, Math.min(cardWidth / 600, 0.95));
-    var fontSizeCategory = Math.max(0.82, Math.min(cardWidth / 480, 1.15));
-    var textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
-    var avatarSize = Math.round(Math.max(36, Math.min(cardWidth * 0.12, 56)));
-    var innerDynamicHeight = Math.round(maxCardHeight * 0.55);
+        var root = document.documentElement;
+        root.style.setProperty('--card-width', cardWidth + 'px');
+        root.style.setProperty('--card-padding', cardPadding + 'px');
+        root.style.setProperty('--card-font-size', fontSize + 'rem');
+        root.style.setProperty('--text-max-height', textMaxHeight + 'px');
+        root.style.setProperty('--card-max-height', maxCardHeight + 'px');
+        root.style.setProperty('--avatar-size', avatarSize + 'px');
+        root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
+        root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
+        root.style.setProperty('--user-info-font-size', fontSizeUser + 'rem');
+        root.style.setProperty('--category-icon-font-size', fontSizeCategory + 'rem');
+        root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
+        root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
+    }
 
-    var root = document.documentElement;
-    root.style.setProperty('--card-width', cardWidth + 'px');
-    root.style.setProperty('--card-padding', cardPadding + 'px');
-    root.style.setProperty('--card-font-size', fontSize + 'rem');
-    root.style.setProperty('--text-max-height', textMaxHeight + 'px');
-    root.style.setProperty('--card-max-height', maxCardHeight + 'px');
-    root.style.setProperty('--avatar-size', avatarSize + 'px');
-    root.style.setProperty('--img-bg', isLandscape ? '#000' : 'transparent');
-    root.style.setProperty('--img-fit', isLandscape ? 'contain' : 'cover');
-    root.style.setProperty('--user-info-font-size', fontSizeUser + 'rem');
-    root.style.setProperty('--category-icon-font-size', fontSizeCategory + 'rem');
-    root.style.setProperty('--img-max-height', isLandscape ? innerDynamicHeight + 'px' : 'none');
-    root.style.setProperty('--inner-dynamic-height', innerDynamicHeight + 'px');
-}
+    var layoutTimeout;
 
-var layoutTimeout;
+    function debounceLayout() {
+        clearTimeout(layoutTimeout);
+        layoutTimeout = setTimeout(recalcFeedLayout, 120);
+    }
 
-function debounceLayout() {
-    clearTimeout(layoutTimeout);
-    layoutTimeout = setTimeout(recalcFeedLayout, 120);
-}
+    window.addEventListener('load', recalcFeedLayout);
+    window.addEventListener('resize', debounceLayout);
+    window.addEventListener('orientationchange', debounceLayout);
 
-window.addEventListener('load', recalcFeedLayout);
-window.addEventListener('resize', debounceLayout);
-window.addEventListener('orientationchange', debounceLayout);
-
-function reforcarLayoutNosCards() {
-    recalcFeedLayout();
-}
+    function reforcarLayoutNosCards() {
+        recalcFeedLayout();
+    }
 
     // ==================== TOGGLE FILTROS ====================
     window.toggleFiltrosMobile = function() {
@@ -139,216 +125,79 @@ function reforcarLayoutNosCards() {
     window._modalAberto = false;
 
     // ================================================================
-    //  🔥 NOVO POPUP DE REAÇÕES RÁPIDAS (LONG PRESS) – APROVADO V3
+    //  🔥 NOVO POPUP DE REAÇÕES RÁPIDAS (LONG PRESS) – COM FOCUS TRAP
     // ================================================================
 
-    // Injeção dos estilos essenciais para o popup (fallback)
     (function injectPopupStyles() {
         if (document.getElementById('fenda-reaction-styles')) return;
         const style = document.createElement('style');
         style.id = 'fenda-reaction-styles';
         style.textContent = `
-            /* Overlay do popup */
             .reactions-popup-overlay {
                 position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                -webkit-backdrop-filter: blur(3px);
-                backdrop-filter: blur(3px);
-                z-index: 30000;
-                display: none;
-                align-items: flex-start;
-                justify-content: center;
-                padding-top: 10%;
-                padding-bottom: 5%;
-                font-family: 'Inter', system-ui, sans-serif;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0, 0, 0, 0.35);
+                -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+                z-index: 30000; display: none; align-items: flex-start; justify-content: center;
+                padding-top: 10%; padding-bottom: 8%; font-family: 'Inter', system-ui, sans-serif;
             }
-            .reactions-popup-overlay.active {
-                display: flex;
-            }
+            .reactions-popup-overlay.active { display: flex; }
             .reactions-popup-card {
-                background: rgba(20, 20, 32, 0.95);
-                border: 1px solid rgba(255, 188, 0, 0.3);
-                border-radius: 28px;
-                padding: 20px 16px 18px 16px;
-                max-width: 500px;
-                width: 90%;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-                transform: scale(0.95) translateY(10px);
+                background: rgba(20, 20, 32, 0.95); border: 1px solid rgba(255, 188, 0, 0.3);
+                border-radius: 28px; padding: 20px 16px 18px 16px; max-width: 500px; width: 90%;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7); transform: scale(0.95) translateY(10px);
                 animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-                -webkit-user-select: none;
-                -ms-user-select: none;
-                -moz-user-select: none;
-                user-select: none;
-                position: relative;
+                -webkit-user-select:none; -moz-user-select:none;
+                user-select: none; position: relative;
             }
-            .reactions-grid {
-                display: grid;
-                grid-template-columns: repeat(7, 1fr);
-                gap: 6px;
-                margin-bottom: 10px;
-            }
+            .reactions-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 10px; }
             .reaction-emoji {
-                font-size: clamp(1.1rem, 3.5vw, 1.7rem);
-                padding: 4px 2px;
-                text-align: center;
-                border-radius: 16px;
-                cursor: pointer;
-                transition: all 0.15s ease;
-                background: rgba(255, 255, 255, 0.03);
-                border: 2px solid transparent;
-                line-height: 1.4;
-                -webkit-tap-highlight-color: transparent;
+                font-size: clamp(1.1rem, 3.5vw, 1.6rem); padding: 4px 2px; text-align: center;
+                border-radius: 16px; cursor: pointer; transition: all 0.15s ease;
+                background: rgba(255, 255, 255, 0.03); border: 2px solid transparent; line-height: 1.4;
             }
-            .reaction-emoji:hover {
-                background: rgba(255, 255, 255, 0.08);
-                transform: scale(1.12);
-            }
-            .reaction-emoji:active {
-                transform: scale(0.88);
-                background: rgba(255, 188, 0, 0.15);
-                border-color: rgba(255, 188, 0, 0.3);
-            }
-            .reactions-divider {
-                border: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.06);
-                margin: 8px 0 12px 0;
-            }
-            .reactions-actions {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
+            .reaction-emoji:hover { background: rgba(255, 255, 255, 0.08); transform: scale(1.12); }
+            .reaction-emoji:focus-visible { outline: 2px solid #ffbc00; background: rgba(255, 188, 0, 0.15); border-color: #ffbc00; }
+            .reactions-divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.06); margin: 8px 0 12px 0; }
+            .reactions-actions { display: flex; flex-direction: column; gap: 4px; }
             .reactions-actions .action-btn {
-                background: rgba(255, 255, 255, 0.03);
-                background: var(--borda-sutil, rgba(255, 255, 255, 0.05));
-                border: none;
-                border-radius: 60px;
-                padding: 8px 14px;
-                min-height: 40px;
-                color: rgba(255, 255, 255, 0.6);
-                font-size: 0.9rem;
-                font-size:clamp(0.86rem, 1.2vw, 1.05rem);
-                font-weight: 500;
-                cursor: pointer;
-                transition: 0.2s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                font-family: inherit;
+                background: rgba(255, 255, 255, 0.03); border: none; border-radius: 60px;
+                padding: 8px 14px; min-height: 40px; color: rgba(255, 255, 255, 0.6);
+                font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s;
+                display: flex; align-items: center; justify-content: center; width: 100%; font-family: inherit;
             }
-            .reactions-actions .action-btn:hover {
-                background: rgba(255, 255, 255, 0.06);
-                color: #fff;
-            }
-            .reactions-actions .action-btn.danger {
-                color: rgba(255, 100, 100, 0.6);
-            }
-            .reactions-actions .action-btn.danger:hover {
-                background: rgba(255, 50, 50, 0.18);
-                color: #ff6b6b;
-            }
-            .reactions-actions .action-btn.primary {
-                color: #6af;
-            }
-            .reactions-actions .action-btn.primary:hover {
-                background: rgba(0, 150, 255, 0.12);
-                color: #8bf;
-            }
-            .reactions-actions .action-btn.bookmark {
-                color: #f0c27f;
-            }
-            .reactions-actions .action-btn.bookmark:hover {
-                background: rgba(255, 188, 0, 0.08);
-                color: #ffbc00;
-            }
-            /* Animação "+1" */
-            .plus-one-anim {
-                position: fixed;
-                pointer-events: none;
-                z-index: 30001;
-                font-size: 2.3rem;
-                font-weight: 800;
-                text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-                animation: floatUp 0.9s ease-out forwards;
-                will-change: transform, opacity;
-            }
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            @keyframes popIn {
-                to { transform: scale(1) translateY(0); }
-            }
-            @keyframes floatUp {
-                0% { opacity: 1; transform: translateY(0) scale(1); }
-                100% { opacity: 0; transform: translateY(-100px) scale(1.3); }
-            }
-            /* Responsividade híbrida (1x7 → 4+3) */
+            .reactions-actions .action-btn:hover, .reactions-actions .action-btn:focus-visible { background: rgba(255, 255, 255, 0.06); color: #fff; outline: 2px solid #ffbc00; }
+            .reactions-actions .action-btn.danger { color: rgba(255, 100, 100, 0.6); }
+            .reactions-actions .action-btn.danger:hover, .reactions-actions .action-btn.danger:focus-visible { background: rgba(255, 50, 50, 0.18); color: #ff6b6b; }
+            .reactions-actions .action-btn.primary { color: #6af; }
+            .reactions-actions .action-btn.primary:hover, .reactions-actions .action-btn.primary:focus-visible { background: rgba(0, 150, 255, 0.12); color: #8bf; }
+            .reactions-actions .action-btn.bookmark { color: #f0c27f; }
+            .reactions-actions .action-btn.bookmark:hover, .reactions-actions .action-btn.bookmark:focus-visible { background: rgba(255, 188, 0, 0.08); color: #ffbc00; }
+            .plus-one-anim { position: fixed; pointer-events: none; z-index: 30001; font-size: 2.3rem; font-weight: 800; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); animation: floatUp 0.9s ease-out forwards; }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes popIn { to { transform: scale(1) translateY(0); } }
+            @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-100px) scale(1.3); } }
             @media (max-width: 360px) {
-                .reactions-popup-card {
-                    max-width: 280px;
-                    padding: 14px 10px 12px 10px;
-                    border-radius: 22px;
-                }
-                .reactions-grid {
-                    grid-template-columns: repeat(4, 1fr);
-                    grid-template-rows: auto auto;
-                    gap: 2px;
-                    max-width: 260px;
-                    margin: 0 auto 12px auto;
-                }
-                .reaction-emoji {
-                    font-size: clamp(1rem, 4vw, 1.4rem);
-                    padding: 4px 1px;
-                    border-radius: 12px;
-                }
-                .reaction-emoji:last-child {
-                    grid-column: span 1;
-                    align-content: center;
-                }
-                .reactions-actions .action-btn {
-                    font-size: 0.75rem;
-                    padding: 5px 8px;
-                    margin-top:5px;
-                }
+                .reactions-popup-card { max-width: 280px; padding: 14px 10px 12px 10px; border-radius: 22px; }
+                .reactions-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: auto auto; gap: 2px; max-width: 260px; margin: 0 auto 12px auto; }
+                .reaction-emoji { font-size: clamp(1rem, 4vw, 1.4rem); padding: 4px 1px; border-radius: 12px; }
+                .reactions-actions .action-btn { font-size: 0.75rem; padding: 5px 8px; margin-top:5px; }
             }
             @media (max-width: 480px) {
-                .reactions-popup-card {
-                    padding: 16px 12px 14px 12px;
-                    border-radius: 22px;
-                }
-                .reaction-emoji {
-                    font-size: clamp(1.1rem, 4vw, 1.6rem);
-                    padding: 4px 1px;
-                }
-                .plus-one-anim {
-                    font-size: 1.8rem;
-                }
-            }
-            @media (pointer: coarse) {
-                .reaction-emoji:hover {
-                    transform: none;
-                }
-                .reaction-emoji:active {
-                    transform: scale(0.88);
-                }
+                .reactions-popup-card { padding: 16px 12px 14px 12px; border-radius: 22px; }
+                .reaction-emoji { font-size: clamp(1.1rem, 4vw, 1.6rem); padding: 4px 1px; }
+                .plus-one-anim { font-size: 1.8rem; }
             }
         `;
         document.head.appendChild(style);
     })();
 
-    // ==================== MODAL DE AÇÕES (NOVA VERSÃO) ====================
     window.mostrarMenuAcoes = function(postId, isOwner, cardElement) {
         if (window._activeModal) return;
         window._modalAberto = true;
         const targetCard = cardElement || null;
+        const previouslyFocused = document.activeElement;
 
-        // Obtém a cor da aura
         let auraColor = '#ffbc00';
         if (targetCard) {
             const computed = getComputedStyle(targetCard);
@@ -368,31 +217,42 @@ function reforcarLayoutNosCards() {
             'tendi-nada': '🤔'
         };
 
-        // Cria o overlay
         const overlay = document.createElement('div');
         overlay.className = 'reactions-popup-overlay active';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Menu de ações do post');
 
-        // Card do popup
         const popup = document.createElement('div');
         popup.className = 'reactions-popup-card';
+        popup.setAttribute('tabindex', '-1');
 
-        // Grid de reações
         const grid = document.createElement('div');
         grid.className = 'reactions-grid';
 
         Object.entries(REACTIONS).forEach(([tipo, emoji]) => {
             const btn = document.createElement('div');
             btn.className = 'reaction-emoji';
+            btn.setAttribute('tabindex', '0');
+            btn.setAttribute('role', 'button');
+            btn.setAttribute('aria-label', 'Reagir com ' + emoji);
             btn.textContent = emoji;
             btn.dataset.reaction = tipo;
-            btn.addEventListener('click', function(e) {
+
+            const triggerReaction = function(e) {
                 e.stopPropagation();
                 fecharPopup();
-                if (typeof window.enviarReacao === 'function') {
-                    window.enviarReacao(postId, tipo);
-                }
+                if (typeof window.enviarReacao === 'function') window.enviarReacao(postId, tipo);
                 criarAnimacaoMaisUm(emoji, targetCard, auraColor);
                 if (navigator.vibrate) navigator.vibrate(20);
+            };
+
+            btn.addEventListener('click', triggerReaction);
+            btn.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    triggerReaction(e);
+                }
             });
             grid.appendChild(btn);
         });
@@ -403,73 +263,44 @@ function reforcarLayoutNosCards() {
         const actions = document.createElement('div');
         actions.className = 'reactions-actions';
 
-        // Botão "Ver mais"
-        const btnVerMais = document.createElement('button');
-        btnVerMais.className = 'action-btn primary';
-        btnVerMais.innerHTML = 'ⓘ Ver mais detalhes';
-        btnVerMais.addEventListener('click', function(e) {
+        const criarBtn = (html, classe, cb) => {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn ' + classe;
+            btn.innerHTML = html;
+            btn.addEventListener('click', cb);
+            actions.appendChild(btn);
+        };
+
+        criarBtn(' Ver mais detalhes', 'primary', function(e) {
             e.stopPropagation();
             fecharPopup();
-            if (typeof window.abrirLightbox === 'function') {
-                window.abrirLightbox(postId);
-            }
+            if (typeof window.abrirLightbox === 'function') window.abrirLightbox(postId);
         });
 
-        // Botão "Ler Depois" (futuro)
-        const btnLerDepois = document.createElement('button');
-        btnLerDepois.className = 'action-btn bookmark';
-        btnLerDepois.innerHTML = '📌 Ler Depois';
-        btnLerDepois.addEventListener('click', function(e) {
+        criarBtn(' Ler Depois', 'bookmark', function(e) {
             e.stopPropagation();
             fecharPopup();
-            if (typeof window.exibirToast === 'function') {
-                window.exibirToast('Salvar posts para ler depois estará disponível em breve.', 'info');
-            } else {
-                alert('Salvar posts para ler depois estará disponível em breve.');
-            }
+            if (typeof window.exibirToast === 'function') window.exibirToast('Salvar posts para ler depois estará disponível em breve.', 'info');
+            else alert('Salvar posts para ler depois estará disponível em breve.');
         });
 
-        // Botão "Expurgar" (dono) ou "Denunciar" (visitante)
-        const btnDanger = document.createElement('button');
-        btnDanger.className = 'action-btn danger';
-              if (isOwner) {
-            btnDanger.innerHTML = '🗑️ Expurgar da Fenda';
-            btnDanger.addEventListener('click', function(e) {
+        if (isOwner) {
+            criarBtn(' Expurgar da Fenda', 'danger', function(e) {
                 e.stopPropagation();
                 fecharPopup();
-                // 🔒 CORREÇÃO CSRF (Corrente – Bloco 1.4): sempre delega pra
-                // confirmarExclusao (que faz POST + CSRF). Removido o fallback
-                // inseguro que fazia POST sem token e podia falhar silencioso.
-                if (typeof window.confirmarExclusao === 'function') {
-                    window.confirmarExclusao(postId);
-                } else {
-                    console.error('[FEED] confirmarExclusao não encontrado. Recarregue a página.');
-                    alert('Erro de segurança. Recarregue a página e tente novamente.');
-                }
+                if (typeof window.confirmarExclusao === 'function') window.confirmarExclusao(postId);
+                else alert('Erro de segurança. Recarregue a página e tente novamente.');
             });
         } else {
-            btnDanger.innerHTML = '🚨 Denunciar (em breve)';
-            btnDanger.addEventListener('click', function(e) {
+            criarBtn(' Denunciar (em breve)', 'danger', function(e) {
                 e.stopPropagation();
                 fecharPopup();
-                if (typeof window.exibirToast === 'function') {
-                    window.exibirToast('A denúncia de posts ainda não está disponível.', 'info');
-                } else {
-                    alert('A denúncia de posts ainda não está disponível.');
-                }
+                if (typeof window.exibirToast === 'function') window.exibirToast('A denúncia de posts ainda não está disponível.', 'info');
+                else alert('A denúncia de posts ainda não está disponível.');
             });
         }
 
-        // Botão "Voltar"
-        const btnClose = document.createElement('button');
-        btnClose.className = 'action-btn';
-        btnClose.innerHTML = '✖️ Voltar ao Feed';
-        btnClose.addEventListener('click', fecharPopup);
-
-        actions.appendChild(btnVerMais);
-        actions.appendChild(btnLerDepois);
-        actions.appendChild(btnDanger);
-        actions.appendChild(btnClose);
+        criarBtn('✖️ Voltar ao Feed', '', fecharPopup);
 
         popup.appendChild(grid);
         popup.appendChild(divider);
@@ -477,26 +308,66 @@ function reforcarLayoutNosCards() {
         overlay.appendChild(popup);
         document.body.appendChild(overlay);
 
+        // 🔥 Adiciona a classe para desligar o blur dos cards
+        document.body.classList.add('menu-aberto');
+
+        // Focus Trap
+        setTimeout(() => {
+            const focusable = popup.querySelectorAll('button, [role="button"], [tabindex="0"]');
+            if (focusable.length > 0) focusable[0].focus();
+        }, 50);
+
         function fecharPopup() {
             if (overlay.parentNode) overlay.remove();
             window._modalAberto = false;
             window._activeModal = null;
+
+            // 🔥 Remove a classe para restaurar o blur
+            document.body.classList.remove('menu-aberto');
+
             if (targetCard && targetCard.classList) {
                 targetCard.classList.remove('card-long-press-active');
+                if (window.TranslateL) TranslateL.clearLongPress(targetCard);
             }
-            document.removeEventListener('keydown', escHandler);
+            document.removeEventListener('keydown', trapFocus);
+            if (previouslyFocused && previouslyFocused.focus) {
+                previouslyFocused.focus();
+            }
         }
 
-        // Fecha ao clicar no fundo
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) fecharPopup();
         });
 
-        // Fecha com ESC
-        function escHandler(e) {
-            if (e.key === 'Escape') fecharPopup();
+        // Lógica de Focus Trap
+        function trapFocus(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                fecharPopup();
+                return;
+            }
+            if (e.key !== 'Tab') return;
+
+            const focusable = Array.from(popup.querySelectorAll('button, [role="button"], [tabindex="0"]'));
+            if (focusable.length === 0) return;
+
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
         }
-        document.addEventListener('keydown', escHandler);
+
+        document.addEventListener('keydown', trapFocus);
 
         window._activeModal = overlay;
         if (navigator.vibrate) navigator.vibrate(30);
@@ -508,10 +379,8 @@ function reforcarLayoutNosCards() {
         const rect = cardElement.getBoundingClientRect();
         const x = rect.left + rect.width / 2;
         const y = rect.top + 20;
-
         const anterior = document.querySelector('.plus-one-anim');
         if (anterior) anterior.remove();
-
         const el = document.createElement('div');
         el.className = 'plus-one-anim';
         el.textContent = '+1 ' + emoji;
@@ -520,10 +389,7 @@ function reforcarLayoutNosCards() {
         el.style.color = auraColor;
         el.style.textShadow = `0 0 30px ${auraColor}55, 0 4px 20px rgba(0,0,0,0.5)`;
         document.body.appendChild(el);
-
-        el.addEventListener('animationend', function() {
-            el.remove();
-        });
+        el.addEventListener('animationend', () => el.remove());
         setTimeout(() => {
             if (el.parentNode) el.remove();
         }, 1500);
@@ -531,18 +397,16 @@ function reforcarLayoutNosCards() {
 
     // ==================== LONG PRESS NO MODO GRID ====================
     function initGridLongPress() {
-        let timer = null;
-        let pressedCard = null;
-        let startX = 0,
+        let timer = null,
+            pressedCard = null,
+            startX = 0,
             startY = 0;
         const MOVE_THRESHOLD = 10;
 
         function onPointerDown(e) {
-            if (window._modalAberto) return;
-            if (document.body.classList.contains('modo-swipe-ativo')) return;
+            if (window._modalAberto || document.body.classList.contains('modo-swipe-ativo')) return;
             const card = e.target.closest('.spotted-card');
-            if (!card) return;
-            if (e.target.closest('button, a, input, textarea, select, .reacoes-popup, .reacao-wrapper')) return;
+            if (!card || e.target.closest('button, a, input, textarea, select, .reacoes-popup, .reacao-wrapper')) return;
             e.preventDefault();
             pressedCard = card;
             startX = e.clientX;
@@ -574,10 +438,6 @@ function reforcarLayoutNosCards() {
             pressedCard = null;
             startX = startY = 0;
         }
-        document.removeEventListener('pointerdown', onPointerDown);
-        document.removeEventListener('pointermove', onPointerMove);
-        document.removeEventListener('pointerup', onPointerUp);
-        document.removeEventListener('pointercancel', onPointerUp);
         document.addEventListener('pointerdown', onPointerDown);
         document.addEventListener('pointermove', onPointerMove);
         document.addEventListener('pointerup', onPointerUp);
@@ -585,17 +445,16 @@ function reforcarLayoutNosCards() {
     }
 
     // ==================== GERENCIAMENTO DO FEED (AJAX) ====================
-    let offset = 0;
-    let loadingMore = false;
-    let currentCategoria = '';
-    let feedAcabou = false;
+    let offset = 0,
+        loadingMore = false,
+        currentCategoria = '',
+        feedAcabou = false;
     const btnLoad = document.getElementById('btn-load-more');
     const feedContainer = document.querySelector('.container-feed');
 
     function carregarFeedGeral(reset = false) {
         if (loadingMore) return;
         loadingMore = true;
-
         if (reset) {
             offset = 0;
             feedAcabou = false;
@@ -606,29 +465,26 @@ function reforcarLayoutNosCards() {
                 btnLoad.style.display = 'inline-block';
             }
         }
-
         if (feedContainer) feedContainer.setAttribute('aria-busy', 'true');
         if (btnLoad) btnLoad.disabled = true;
 
         const urlParams = new URLSearchParams(window.location.search);
         const categoria = urlParams.get('categoria') || '';
-        const busca = urlParams.get('q') || ''; // 🔥 NOVO: Captura o termo de busca
+        const busca = urlParams.get('q') || '';
         currentCategoria = categoria;
 
-        // 🔥 Adicionado o parâmetro &q= na URL do fetch
         fetch(`motor-feed.php?offset=${offset}&categoria=${categoria}&q=${encodeURIComponent(busca)}&tipo=geral`)
             .then(response => response.text())
             .then(data => {
                 if (data.trim() === "FIM_DADOS") {
                     feedAcabou = true;
-
-                    if (offset === 0 && feedContainer) {
+                    // 🔥 FIX: Verifica se o container está vazio, e não o offset
+                    if (feedContainer && feedContainer.querySelectorAll('.spotted-card').length === 0) {
                         if (document.body.classList.contains('modo-swipe-ativo')) {
                             feedContainer.innerHTML = '';
                             exibirRadar();
                         } else {
-                            feedContainer.innerHTML =
-                                "<p style='text-align:center; color:#ccc; font-size:clamp(0.85rem, 2.5vw, 1.3rem)'>Nenhum post encontrado.</p>";
+                            feedContainer.innerHTML = "<p style='text-align:center; color:#ccc; font-size:clamp(0.85rem, 2.5vw, 1.3rem)'>Nenhum post encontrado.</p>";
                         }
                     }
                     if (btnLoad) {
@@ -637,60 +493,42 @@ function reforcarLayoutNosCards() {
                     }
                 } else {
                     feedAcabou = false;
-
                     if (feedContainer) {
                         const qtdAntes = feedContainer.children.length;
                         if (offset === 0) feedContainer.innerHTML = '';
                         feedContainer.insertAdjacentHTML('beforeend', data);
 
-                        // Inicializa os vídeos dos cards novos, inclusive na pilha swipe.
-                        if (typeof window.inicializarVideosGifFeed === 'function') {
-                            window.inicializarVideosGifFeed(feedContainer);
-                        }
-
-                        if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
-                            configurarPosts();
-                        }
+                        if (typeof window.inicializarVideosGifFeed === 'function') window.inicializarVideosGifFeed(feedContainer);
+                        if (window.TranslateL) TranslateL.rebind(feedContainer, TranslateL.presets.feed());
+                        if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) configurarPosts();
 
                         const novosCards = Array.from(feedContainer.children).slice(qtdAntes);
                         const isSwipe = document.body.classList.contains('modo-swipe-ativo');
-
                         novosCards.forEach((card, idx) => {
                             if (isSwipe) {
                                 card.classList.add('swipe-distribuicao');
-                                const delay = Math.min(idx * 0.12, 0.6);
-                                card.style.animationDelay = `${delay}s`;
-                                const onEnd = () => {
+                                card.style.animationDelay = `${Math.min(idx * 0.12, 0.6)}s`;
+                                card.addEventListener('animationend', () => {
                                     card.classList.remove('swipe-distribuicao');
                                     card.style.animationDelay = '';
-                                    card.removeEventListener('animationend', onEnd);
-                                };
-                                card.addEventListener('animationend', onEnd, {
+                                }, {
                                     once: true
                                 });
                             } else {
                                 card.classList.add('grid-card-entrada');
-                                const delay = Math.min(idx * 0.05, 0.4);
-                                card.style.animationDelay = `${delay}s`;
-                                const onEnd = () => {
+                                card.style.animationDelay = `${Math.min(idx * 0.05, 0.4)}s`;
+                                card.addEventListener('animationend', () => {
                                     card.classList.remove('grid-card-entrada');
                                     card.style.animationDelay = '';
-                                    card.removeEventListener('animationend', onEnd);
-                                };
-                                card.addEventListener('animationend', onEnd, {
+                                }, {
                                     once: true
                                 });
                             }
                         });
 
-                        if (isSwipe && feedContainer && !feedContainer.classList.contains('feed-empilhado')) {
-                            feedContainer.classList.add('feed-empilhado');
-                        }
-
-                        setTimeout(function() {
-                            if (typeof reforcarLayoutNosCards === 'function') {
-                                reforcarLayoutNosCards();
-                            }
+                        if (isSwipe && feedContainer && !feedContainer.classList.contains('feed-empilhado')) feedContainer.classList.add('feed-empilhado');
+                        setTimeout(() => {
+                            if (typeof reforcarLayoutNosCards === 'function') reforcarLayoutNosCards();
                         }, 50);
                     }
                     offset += 10;
@@ -705,16 +543,13 @@ function reforcarLayoutNosCards() {
             .finally(() => {
                 loadingMore = false;
                 if (feedContainer) feedContainer.setAttribute('aria-busy', 'false');
-                if (btnLoad && !document.body.classList.contains('modo-swipe-ativo') && btnLoad.innerText !== "FIM DO FEED") {
-                    btnLoad.disabled = false;
-                }
+                if (btnLoad && !document.body.classList.contains('modo-swipe-ativo') && btnLoad.innerText !== "FIM DO FEED") btnLoad.disabled = false;
             });
     }
 
     function exibirRadar() {
-        if (!document.body.classList.contains('modo-swipe-ativo')) return;
-        if (feedContainer.querySelector('.fim-dos-cards-vibe')) return;
-        const radarHtml = `
+        if (!document.body.classList.contains('modo-swipe-ativo') || feedContainer.querySelector('.fim-dos-cards-vibe')) return;
+        feedContainer.insertAdjacentHTML('beforeend', `
             <div class="fim-dos-cards-vibe">
                 <i class="fas fa-ghost" style="display:block;"></i>
                 <strong>A Fenda foi Limpa!</strong>
@@ -723,26 +558,17 @@ function reforcarLayoutNosCards() {
                     <i class="fas fa-sync-alt" style="margin-right:8px;"></i> RADAR DE MARACUTAIA
                 </button>
             </div>
-        `;
-        feedContainer.insertAdjacentHTML('beforeend', radarHtml);
+        `);
     }
 
-    // ==================== EVENTO DE CLIQUE DO BOTÃO ====================
     if (btnLoad) {
         btnLoad.addEventListener('click', function(e) {
             e.preventDefault();
-            if (document.body.classList.contains('modo-swipe-ativo')) return;
-            if (loadingMore) {
-                console.warn("[BOTÃO] Aguarde, já carregando...");
-                return;
-            }
+            if (document.body.classList.contains('modo-swipe-ativo') || loadingMore) return;
             carregarFeedGeral(false);
         });
-    } else {
-        console.error("[BOTÃO] Elemento #btn-load-more não encontrado!");
     }
 
-    // ==================== REAÇÕES ====================
     document.addEventListener('click', function(e) {
         const btnReagir = e.target.closest('.btn-reagir');
         if (btnReagir) {
@@ -755,54 +581,30 @@ function reforcarLayoutNosCards() {
             return;
         }
         if (e.target.closest('.reacoes-popup')) return;
-        document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => {
-            w.classList.remove('popup-ativo');
-        });
+        document.querySelectorAll('.reacao-wrapper.popup-ativo').forEach(w => w.classList.remove('popup-ativo'));
     });
 
-    // ==================== RADAR DE MARACUTAIA (SWIPE) ====================
     let radarBloqueado = false;
 
     window.abastecerPilhaFenda = function() {
-        if (!feedContainer) return;
-        if (!document.body.classList.contains('modo-swipe-ativo')) return;
+        if (!feedContainer || !document.body.classList.contains('modo-swipe-ativo')) return;
         if (!feedAcabou) {
-            const cardsRestantes = feedContainer.querySelectorAll('.spotted-card').length;
-            if (cardsRestantes <= 4) {
-                if (btnLoad && !btnLoad.disabled && !loadingMore) {
-                    carregarFeedGeral(false);
-                }
-            }
+            if (feedContainer.querySelectorAll('.spotted-card').length <= 4 && btnLoad && !btnLoad.disabled && !loadingMore) carregarFeedGeral(false);
             return;
         }
-        const cardsRestantes = feedContainer.querySelectorAll('.spotted-card').length;
-        if (cardsRestantes === 0) {
-            exibirRadar();
-        }
+        if (feedContainer.querySelectorAll('.spotted-card').length === 0) exibirRadar();
     };
 
     window.reiniciarPilhaFenda = function() {
-        if (radarBloqueado) {
-            console.log("[RADAR] Calma lá, muito rolo estraga o feed!");
-            return;
-        }
+        if (radarBloqueado) return;
         radarBloqueado = true;
-
-        if (typeof window.fecharLightbox === 'function') {
-            window.fecharLightbox();
-        }
-
+        if (typeof window.fecharLightbox === 'function') window.fecharLightbox();
         offset = 0;
         feedAcabou = false;
         if (feedContainer) {
             const radarExistente = feedContainer.querySelector('.fim-dos-cards-vibe');
             if (radarExistente) radarExistente.remove();
-            feedContainer.innerHTML = `
-                <div style="text-align:center; padding:40px; color:#ff8c00;">
-                    <i class="fas fa-sync-alt fa-spin" style="font-size:2rem; margin-bottom:10px;"></i>
-                    <p style="color:#fff;">Escaneando novas maracutaias...</p>
-                </div>
-            `;
+            feedContainer.innerHTML = `<div style="text-align:center; padding:40px; color:#ff8c00;"><i class="fas fa-sync-alt fa-spin" style="font-size:2rem; margin-bottom:10px;"></i><p style="color:#fff;">Escaneando novas maracutaias...</p></div>`;
         }
         if (btnLoad) {
             btnLoad.disabled = false;
@@ -815,15 +617,10 @@ function reforcarLayoutNosCards() {
         }, 1500);
     };
 
-    // ==================== OBSERVADOR PARA ALTERNÂNCIA DE MODOS ====================
     const observerModoSwipe = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'class') {
-                if (!document.body.classList.contains('modo-swipe-ativo')) {
-                    if (typeof configurarPosts === 'function') {
-                        configurarPosts();
-                    }
-                }
+            if (mutation.attributeName === 'class' && !document.body.classList.contains('modo-swipe-ativo')) {
+                if (typeof configurarPosts === 'function') configurarPosts();
             }
         });
     });

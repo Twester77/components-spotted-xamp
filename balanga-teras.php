@@ -2,7 +2,7 @@
 
 /**
  * balanga-teras.php – Página principal do Balanga Teras (Swipe de Eventos)
- * 
+ *
  * 🔧 ÚLTIMA REVISÃO – LUZ (2026-08-14)
  * - Adicionado filtro por comunidade (select com comunidades do usuário)
  * - Integração com swipe-eventos.php via parâmetro comunidade_id
@@ -31,6 +31,13 @@
  *      da página. Fix complementar ao do enviar-resposta-evento.php (que
  *      agora só rotaciona após validações passarem, no sucesso) e ao
  *      do evento.php inline.
+ *
+ * 🚀 FASE 2.3: Integração com o Protocolo translateL (Swipe Acessível).
+ *    - O motor bt-swipe.js foi aposentado.
+ *    - Função de cálculo de layout (btRecalcularLayout) restaurada e blindada.
+ *    - TranslateL assume física, acessibilidade e portal de comandos.
+ *    - Adicionado controle de performance (menu-aberto) para evitar blur duplo.
+ *    - Correção do typeof TranslateL (objeto) e injeção de data-owner.
  */
 
 require_once __DIR__ . '/auth_check.php';
@@ -74,7 +81,6 @@ $stmt_com->close();
 ?>
 
 <div class="bt-controles" role="toolbar" aria-label="Controles do Balanga Teras">
-    <!--  FILTRO POR COMUNIDADE (NOVO) -->
     <div class="bt-filtro-comunidade">
         <select id="bt-filtro-comunidade" class="bt-select-comunidade">
             <option value="0">🌐 Todas as comunidades</option>
@@ -85,7 +91,6 @@ $stmt_com->close();
             <?php endforeach; ?>
         </select>
     </div>
-    <!--  FILTROS POR STATUS (já existentes) -->
     <button type="button" id="bt-btn-filtros" class="bt-btn-filtro" onclick="btToggleFiltros()" aria-expanded="false">
         <i class="fas fa-filter" aria-hidden="true"></i> FILTRAR EVENTOS
     </button>
@@ -110,9 +115,86 @@ $stmt_com->close();
     <button id="bt-btn-load-more" class="bt-btn-load-more">Exibir Mais Eventos</button>
 </div>
 
+<!-- Integração Protocolo translateL (Fase 2.3) -->
+<script src="<?= asset_versao('js/translateL-core.js') ?>"></script>
+<link rel="stylesheet" href="<?= asset_versao('css/translateL.css') ?>">
+
 <script>
     // ============================================================
-    // 1. TOGGLE FILTROS
+    // 1. CÁLCULO DE LAYOUT DOS CARDS (Restaurado Completo do bt-swipe.js)
+    // ============================================================
+    let recalculando = false;
+    let layoutTimeout;
+
+    window.btRecalcularLayout = function() {
+        if (recalculando) return;
+        if (!document.body.classList.contains('modo-tinder-ativo')) return;
+
+        const container = document.getElementById('bt-container-eventos');
+        if (!container) return;
+
+        recalculando = true;
+
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const isLandscape = vw > vh;
+        const isCompactLandscape = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
+
+        const cardWidth = isCompactLandscape ?
+            Math.round(Math.max(320, Math.min(vw * 0.90, 1000))) :
+            isLandscape ?
+            Math.round(Math.max(320, Math.min(vw * 0.60, 600))) :
+            Math.round(Math.max(240, Math.min(vw * 0.70, 550)));
+
+        let maxCardHeight;
+        if (isCompactLandscape) {
+            maxCardHeight = Math.round(Math.min(vh * 0.82, 420));
+        } else if (isLandscape) {
+            maxCardHeight = Math.round(Math.min(vh * 0.85, 650));
+        } else {
+            maxCardHeight = Math.round(Math.min(vh * 0.92, 700));
+        }
+
+        const cardPadding = isCompactLandscape ?
+            Math.round(Math.max(10, Math.min(24, cardWidth * 0.035))) :
+            Math.round(Math.max(12, cardWidth * 0.05));
+        const fontSize = Math.max(0.9, Math.min(cardWidth / 240, 1.6));
+
+        const tituloSize = fontSize * 1.2;
+        const metaSize = fontSize * 0.8;
+        const textMaxHeight = Math.round(Math.max(80, cardWidth * 0.25));
+        const capaHeight = Math.round(Math.min(cardWidth * 0.5625, maxCardHeight * 0.65));
+
+        const root = document.documentElement;
+        root.style.setProperty('--bt-card-width', cardWidth + 'px');
+        root.style.setProperty('--bt-card-padding', cardPadding + 'px');
+        root.style.setProperty('--bt-card-font-size', fontSize + 'rem');
+        root.style.setProperty('--bt-titulo-size', tituloSize + 'rem');
+        root.style.setProperty('--bt-meta-size', metaSize + 'rem');
+        root.style.setProperty('--bt-text-max-height', textMaxHeight + 'px');
+        root.style.setProperty('--bt-card-max-height', maxCardHeight + 'px');
+        root.style.setProperty('--bt-capa-height', capaHeight + 'px');
+        root.style.setProperty('--bt-container-height', Math.min(vh * 0.8, 800) + 'px');
+
+        document.querySelectorAll('.bt-card').forEach(card => {
+            card.style.width = cardWidth + 'px';
+            card.style.maxWidth = cardWidth + 'px';
+        });
+
+        recalculando = false;
+    };
+
+    window.addEventListener('resize', function() {
+        clearTimeout(layoutTimeout);
+        layoutTimeout = setTimeout(window.btRecalcularLayout, 120);
+    });
+    window.addEventListener('orientationchange', function() {
+        clearTimeout(layoutTimeout);
+        layoutTimeout = setTimeout(window.btRecalcularLayout, 120);
+    });
+
+    // ============================================================
+    // 2. TOGGLE FILTROS
     // ============================================================
     function btToggleFiltros() {
         const gaveta = document.getElementById('bt-gaveta-filtros');
@@ -127,7 +209,70 @@ $stmt_com->close();
     }
 
     // ============================================================
-    // 2. CARREGAR EVENTOS (AJAX) – COM FILTRO POR COMUNIDADE
+    // 3. FUNÇÃO GLOBAL DE ENVIO DE RESPOSTA
+    // ============================================================
+    window.enviarRespostaEvento = function(eventoId, opcao, card) {
+        const csrfToken = document.getElementById('csrf_token')?.value || '';
+        if (!csrfToken) {
+            console.error('[BALANGA] CSRF token não encontrado.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('evento_id', eventoId);
+        formData.append('opcao', opcao);
+        formData.append('csrf_token', csrfToken);
+
+        fetch('enviar-resposta-evento.php', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.csrf_token) {
+                    document.querySelectorAll('input[name="csrf_token"]').forEach(inp => inp.value = data.csrf_token);
+                }
+
+                if (data.success) {
+                    if (card && data.contagens) {
+                        const vouSpan = card.querySelector('.bt-participacao span:nth-child(1)');
+                        const naoVouSpan = card.querySelector('.bt-participacao span:nth-child(2)');
+                        const talvezSpan = card.querySelector('.bt-participacao span:nth-child(3)');
+                        if (vouSpan) vouSpan.innerHTML = '<i class="fas fa-user-check"></i> ' + (data.contagens.vou || 0) + ' Sim';
+                        if (naoVouSpan) naoVouSpan.innerHTML = '<i class="fas fa-user-minus"></i> ' + (data.contagens.nao_vou || 0) + ' Não';
+                        if (talvezSpan) talvezSpan.innerHTML = '<i class="fas fa-user-clock"></i> ' + (data.contagens.talvez || 0) + ' Talvez';
+                    }
+
+                    if (card) {
+                        card.querySelectorAll('.bt-btn-resposta').forEach(b => {
+                            b.classList.remove('ativo-vou', 'ativo-talvez', 'ativo-nao');
+                        });
+                        const btnMap = {
+                            'vou': 'ativo-vou',
+                            'talvez': 'ativo-talvez',
+                            'nao_vou': 'ativo-nao'
+                        };
+                        const btnAtivo = card.querySelector(`.bt-btn-resposta[data-opcao="${opcao}"]`);
+                        if (btnAtivo) btnAtivo.classList.add(btnMap[opcao]);
+                    }
+
+                    if (typeof exibirToast === 'function') {
+                        exibirToast('Resposta registrada! 🎉');
+                    }
+                } else {
+                    console.warn('[BALANGA] Erro ao registrar resposta:', data.message);
+                }
+            })
+            .catch(err => {
+                console.error('[BALANGA] Erro na requisição:', err);
+            });
+    };
+
+    // ============================================================
+    // 4. CARREGAR EVENTOS (AJAX)
     // ============================================================
     let btOffset = 0;
     let btCarregando = false;
@@ -135,7 +280,15 @@ $stmt_com->close();
     const btnLoad = document.getElementById('bt-btn-load-more');
     const loadWrapper = document.getElementById('bt-load-more-wrapper');
     const container = document.getElementById('bt-container-eventos');
-    const usuarioId = <?= (int)$_SESSION['usuario_id'] ?>; // para verificar dono
+    const usuarioId = <?= (int)$_SESSION['usuario_id'] ?>;
+
+    const presetBalanga = TranslateL.presets.balanga({
+        hooks: {
+            onLongPress: function(card, id, isOwner) {
+                window.btMostrarMenuAcoes(card);
+            }
+        }
+    });
 
     function btCarregarEventos(reset = false) {
         if (btCarregando) return;
@@ -165,15 +318,20 @@ $stmt_com->close();
             .then(data => {
                 if (data.trim() === "FIM_DADOS") {
                     btAcabou = true;
-                    if (btOffset === 0) {
-                        container.innerHTML = `
-                            <div class="bt-empty">
-                                <i class="fas fa-calendar-plus"></i>
-                                <strong>Nenhum evento encontrado!</strong>
-                                <p>Que tal criar um evento para movimentar a Fenda?</p>
-                                <button onclick="window.location.href='criar-evento.php'" class="bt-btn-empty">Criar Evento</button>
-                            </div>
-                        `;
+                    // 🔥 FIX: Verifica se o container está vazio, e não o offset
+                    if (container && container.querySelectorAll('.bt-card').length === 0) {
+                        if (document.body.classList.contains('modo-tinder-ativo')) {
+                            exibirRadarBalanga();
+                        } else {
+                            container.innerHTML = `
+                <div class="bt-empty">
+                    <i class="fas fa-calendar-plus"></i>
+                    <strong>Nenhum evento encontrado!</strong>
+                    <p>Que tal criar um evento para movimentar a Fenda?</p>
+                    <button onclick="window.location.href='criar-evento.php'" class="bt-btn-empty">Criar Evento</button>
+                </div>
+            `;
+                        }
                     }
                     if (document.body.classList.contains('modo-tinder-ativo')) {
                         if (loadWrapper) loadWrapper.style.display = 'none';
@@ -188,7 +346,27 @@ $stmt_com->close();
                     if (btOffset === 0) container.innerHTML = '';
                     container.insertAdjacentHTML('beforeend', data);
                     document.dispatchEvent(new CustomEvent('btCardsCarregados'));
+
                     btAtivarBotoesResposta();
+
+                    // 🔥 PONTE: Injeta data-owner nos cards com base no data-criador
+                    container.querySelectorAll('.bt-card').forEach(card => {
+                        const criadorId = parseInt(card.dataset.criador || '0');
+                        if (criadorId === usuarioId) {
+                            card.setAttribute('data-owner', 'true');
+                        } else {
+                            card.setAttribute('data-owner', 'false');
+                        }
+                    });
+
+                    if (window.TranslateL) {
+                        TranslateL.rebind(container, presetBalanga);
+                    }
+
+                    if (typeof window.btRecalcularLayout === 'function') {
+                        window.btRecalcularLayout();
+                    }
+
                     btOffset += 10;
 
                     if (document.body.classList.contains('modo-tinder-ativo')) {
@@ -214,7 +392,7 @@ $stmt_com->close();
     }
 
     // ============================================================
-    // 3. BOTÃO "EXIBIR MAIS" (grid)
+    // 5. BOTÃO "EXIBIR MAIS" (grid)
     // ============================================================
     if (btnLoad) {
         btnLoad.addEventListener('click', function(e) {
@@ -225,7 +403,7 @@ $stmt_com->close();
     }
 
     // ============================================================
-    // 4. RESPOSTAS RÁPIDAS (Vou/Não vou/Talvez)
+    // 6. RESPOSTAS RÁPIDAS NO MODO GRID
     // ============================================================
     function btAtivarBotoesResposta() {
         document.querySelectorAll('.bt-btn-resposta').forEach(btn => {
@@ -258,10 +436,6 @@ $stmt_com->close();
             })
             .then(response => response.json())
             .then(data => {
-                // 🐚 CALMARIA – 2026-10-08 (item #5): defesa em profundidade.
-                //    Atualiza todos os hidden csrf_token com o valor devolvido
-                //    pelo backend (novo no sucesso, atual no erro). Assim o
-                //    próximo clique usa o token certo, sem 403 "Token inválido".
                 if (data && typeof data.csrf_token === 'string' && data.csrf_token !== '') {
                     document.querySelectorAll('input[name="csrf_token"]').forEach(inp => {
                         inp.value = data.csrf_token;
@@ -308,7 +482,7 @@ $stmt_com->close();
     }
 
     // ============================================================
-    // 5. RADAR "BUSCAR EVENTOS" + TRANSIÇÃO SUAVE
+    // 7. RADAR "BUSCAR EVENTOS" + TRANSIÇÃO SUAVE
     // ============================================================
     function exibirRadarBalanga() {
         if (!document.body.classList.contains('modo-tinder-ativo')) return;
@@ -349,7 +523,7 @@ $stmt_com->close();
     };
 
     // ============================================================
-    // 6. ABASTECER PILHA (chamado pelo bt-swipe)
+    // 8. ABASTECER PILHA
     // ============================================================
     window.btAbastecerPilha = function() {
         if (!container || !document.body.classList.contains('modo-tinder-ativo')) return;
@@ -362,7 +536,7 @@ $stmt_com->close();
     };
 
     // ============================================================
-    // 7. OBSERVADOR DE ALTERNÂNCIA GRID ↔ SWIPE
+    // 9. OBSERVADOR DE ALTERNÂNCIA GRID ↔ SWIPE
     // ============================================================
     const observerModoTinder = new MutationObserver(() => {
         const isSwipe = document.body.classList.contains('modo-tinder-ativo');
@@ -374,7 +548,10 @@ $stmt_com->close();
             const radar = container.querySelector('.bt-radar');
             if (radar) radar.remove();
         }
-        btRecalcularLayout();
+        if (typeof TranslateL !== 'undefined' && isSwipe) {
+            TranslateL.rebind(container, presetBalanga);
+        }
+        if (typeof window.btRecalcularLayout === 'function') window.btRecalcularLayout();
     });
     observerModoTinder.observe(document.body, {
         attributes: true,
@@ -382,28 +559,23 @@ $stmt_com->close();
     });
 
     // ============================================================
-    // 8. LONG PRESS – MENU DE AÇÕES (com overlay, igual ao feed)
+    // 10. LONG PRESS – MENU DE AÇÕES
     // ============================================================
-    let longPressTimer = null;
-    let longPressCard = null;
-    let startXLP = 0, startYLP = 0;
-    const MOVE_THRESHOLD_LP = 10;
     let menuAberto = false;
 
-    function btMostrarMenuAcoes(card) {
+    window.btMostrarMenuAcoes = function(card) {
         const eventoId = card.dataset.id;
         const criadorId = parseInt(card.dataset.criador || '0');
         const isOwner = (criadorId === usuarioId);
 
         if (!eventoId) return;
         if (menuAberto) return;
-        // 🔥 DJÊ: força a parada do swipe antes de abrir o menu de ações.
-    // Sem isso, o card continua em isDragging=true e captura pointermove,
-    // causando o bug de "dragging + long press ao mesmo tempo".
-    if (typeof window.btForcarParada === 'function') {
-        window.btForcarParada();
-    }
+        // 🔥 CORREÇÃO: typeof de objeto, não função
+        if (window.TranslateL && typeof window.TranslateL.stop === 'function') {
+            window.TranslateL.stop(card);
+        }
 
+        const previouslyFocused = document.activeElement;
         const vw = window.innerWidth;
         const popupWidth = Math.min(Math.max(160, vw * 0.5), 320);
         const fontSize = Math.min(Math.max(0.8, vw * 0.015), 1.05);
@@ -412,37 +584,19 @@ $stmt_com->close();
         const overlay = document.createElement('div');
         overlay.className = 'bt-actions-overlay';
         overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
-            z-index: 99998;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.2s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+            z-index: 1000000; /* Z-INDEX ACIMA DO PORTAL (999999) */
+            display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease;
         `;
 
         const menu = document.createElement('div');
         menu.className = 'bt-actions-popup';
         menu.style.cssText = `
-            background: rgba(10, 10, 10, 0.5);
-            border: 1px solid rgba(255,188,0,0.3);
-            border-radius: 16px;
-            padding: 8px 0;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-            min-width: ${popupWidth}px;
-            max-width: 85vw;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-            animation: btPopupIn 0.2s ease-out;
-            font-size: ${fontSize}rem;
+            background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(255,188,0,0.3); border-radius: 16px;
+            padding: 8px 0; user-select: none; min-width: ${popupWidth}px; max-width: 85vw;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6); animation: btPopupIn 0.2s ease-out; font-size: ${fontSize}rem;
+            position: relative;
         `;
 
         menu.innerHTML = `
@@ -463,7 +617,54 @@ $stmt_com->close();
 
         overlay.appendChild(menu);
         document.body.appendChild(overlay);
+
+        // 🔥 Desliga o blur dos cards do fundo para performance
+        document.body.classList.add('menu-aberto');
+
         menuAberto = true;
+
+        // Focus Trap
+        setTimeout(() => {
+            const firstBtn = menu.querySelector('button');
+            if (firstBtn) firstBtn.focus();
+        }, 50);
+
+        function fecharMenu(overlayEl) {
+            if (overlayEl && overlayEl.parentNode) overlayEl.remove();
+
+            // 🔥 Restaura o blur dos cards
+            document.body.classList.remove('menu-aberto');
+
+            menuAberto = false;
+            if (card && window.TranslateL) TranslateL.clearLongPress(card);
+            document.removeEventListener('keydown', trapFocus);
+            if (previouslyFocused && previouslyFocused.focus) previouslyFocused.focus();
+        }
+
+        function trapFocus(e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                fecharMenu(overlay);
+                return;
+            }
+            if (e.key !== 'Tab') return;
+            const focusable = Array.from(menu.querySelectorAll('button'));
+            if (focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey) {
+                if (document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            } else {
+                if (document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
+        document.addEventListener('keydown', trapFocus);
 
         menu.querySelectorAll('.bt-action-item').forEach(item => {
             item.addEventListener('click', function(e) {
@@ -473,11 +674,8 @@ $stmt_com->close();
                 if (acao === 'detalhes') {
                     window.location.href = 'evento.php?id=' + eventoId;
                 } else if (acao === 'favoritar') {
-                    if (typeof exibirToast === 'function') {
-                        exibirToast('📌 Evento salvo nos favoritos! (em breve)');
-                    } else {
-                        alert('Funcionalidade em desenvolvimento.');
-                    }
+                    if (typeof exibirToast === 'function') exibirToast('📌 Evento salvo nos favoritos! (em breve)');
+                    else alert('Funcionalidade em desenvolvimento.');
                 } else if (acao === 'excluir') {
                     const confirmado = confirm('Tem certeza que deseja cancelar este evento? Esta ação é definitiva e notificará os participantes.');
                     if (confirmado) {
@@ -487,142 +685,70 @@ $stmt_com->close();
                         formData.append('csrf_token', csrfToken);
 
                         fetch('cancelar-evento.php', {
-                            method: 'POST',
-                            body: formData,
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                if (typeof exibirToast === 'function') {
-                                    exibirToast('🗑️ Evento cancelado com sucesso!', 'sucesso');
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    if (typeof exibirToast === 'function') exibirToast('🗑️ Evento cancelado com sucesso!', 'sucesso');
+                                    else alert('Evento cancelado!');
+                                    const cardEl = document.querySelector(`.bt-card[data-id="${eventoId}"]`);
+                                    if (cardEl) cardEl.remove();
+                                    if (typeof window.btAbastecerPilha === 'function') window.btAbastecerPilha();
                                 } else {
-                                    alert('Evento cancelado!');
+                                    alert(data.message || 'Erro ao cancelar evento.');
                                 }
-                                const cardEl = document.querySelector(`.bt-card[data-id="${eventoId}"]`);
-                                if (cardEl) cardEl.remove();
-                                if (typeof window.btAbastecerPilha === 'function') {
-                                    window.btAbastecerPilha();
-                                }
-                            } else {
-                                alert(data.message || 'Erro ao cancelar evento.');
-                            }
-                        })
-                        .catch(err => {
-                            console.error('[BALANGA] Erro ao cancelar:', err);
-                            alert('Erro de conexão. Tente novamente.');
-                        });
+                            })
+                            .catch(err => {
+                                console.error('[BALANGA] Erro ao cancelar:', err);
+                                alert('Erro de conexão. Tente novamente.');
+                            });
                     }
                 }
             });
         });
 
         overlay.addEventListener('click', function(e) {
-            if (e.target === overlay) {
-                fecharMenu(overlay);
-            }
+            if (e.target === overlay) fecharMenu(overlay);
         });
-
-        function fecharMenu(overlayEl) {
-            if (overlayEl && overlayEl.parentNode) overlayEl.remove();
-            menuAberto = false;
-            longPressCard = null;
-        }
 
         if (!document.getElementById('bt-popup-styles')) {
             const style = document.createElement('style');
             style.id = 'bt-popup-styles';
             style.textContent = `
-                @keyframes fadeIn {
-                    from { opacity:0; }
-                    to { opacity:1; }
-                }
-                @keyframes btPopupIn {
-                    from { opacity:0; transform:scale(0.95) translateY(10px); }
-                    to { opacity:1; transform:scale(1) translateY(0); }
-                }
-                .bt-actions-item:hover {
-                    background: rgba(255, 255, 255, 0.20);
-                }
-                .bt-action-item[data-acao="excluir"]:hover {
-                    background: rgba(255,50,50,0.12);
-                    color: #ff8a8a;
-                }
-                .bt-actions-popup {
-                    min-width: 200px ;
-                }
+                @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+                @keyframes btPopupIn { from { opacity:0; transform:scale(0.95) translateY(10px); } to { opacity:1; transform:scale(1) translateY(0); } }
+                .bt-actions-item:hover { background: rgba(255, 255, 255, 0.20); }
+                .bt-action-item[data-acao="excluir"]:hover { background: rgba(255,50,50,0.12); color: #ff8a8a; }
+                .bt-actions-popup { min-width: 200px; }
                 @media (max-width: 480px) {
-                    .bt-actions-popup {
-                        min-width: 140px ;
-                    }
-                    .bt-action-item {
-                        padding: 8px 12px ;
-                    }
+                    .bt-actions-popup { min-width: 140px; }
+                    .bt-action-item { padding: 8px 12px; }
                 }
             `;
             document.head.appendChild(style);
         }
     }
 
-    // Configura o long press no container
-    container.addEventListener('pointerdown', function(e) {
-        if (menuAberto) return;
-        const card = e.target.closest('.bt-card');
-        if (!card) return;
-        if (e.target.closest('.bt-btn-resposta') || e.target.closest('.bt-btn-detalhes') || e.target.closest('a')) return;
-        if (!document.body.classList.contains('modo-tinder-ativo')) return;
-
-        longPressCard = card;
-        startXLP = e.clientX;
-        startYLP = e.clientY;
-        longPressTimer = setTimeout(() => {
-            if (longPressCard && !menuAberto) {
-                btMostrarMenuAcoes(longPressCard);
-                longPressCard = null;
-            }
-        }, 400);
-    });
-
-    container.addEventListener('pointermove', function(e) {
-        if (!longPressCard) return;
-        const dx = Math.abs(e.clientX - startXLP);
-        const dy = Math.abs(e.clientY - startYLP);
-        if (dx > MOVE_THRESHOLD_LP || dy > MOVE_THRESHOLD_LP) {
-            clearTimeout(longPressTimer);
-            longPressCard = null;
-        }
-    });
-
-    container.addEventListener('pointerup', function() {
-        clearTimeout(longPressTimer);
-        if (!menuAberto) longPressCard = null;
-    });
-
-    container.addEventListener('pointercancel', function() {
-        clearTimeout(longPressTimer);
-        if (!menuAberto) longPressCard = null;
-    });
-
     // ============================================================
-    // 9. LISTENER PARA MUDANÇA NO FILTRO DE COMUNIDADE
+    // 11. LISTENER FILTRO COMUNIDADE E INICIALIZAÇÃO
     // ============================================================
     document.getElementById('bt-filtro-comunidade')?.addEventListener('change', function() {
-        btCarregarEventos(true); // Recarrega do zero com o novo filtro
-    });
-
-    // ============================================================
-    // 10. INICIALIZAÇÃO
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', function() {
         btCarregarEventos(true);
     });
 
-    console.log('[BALANGA] Balanga Teras inicializado com sucesso!');
+    document.addEventListener('DOMContentLoaded', function() {
+        btCarregarEventos(true);
+        if (window.TranslateL) {
+            TranslateL.init(container, presetBalanga);
+        }
+    });
+
+    console.log('[BALANGA] Balanga Teras inicializado com sucesso (Fase 2.3 + Acessibilidade Corrigida)!');
 </script>
 
 <?php include 'includes/footer.php'; ?>
-<!-- 🐚 CORRENTE – 2026-10-13 (Sprint 2, Bloco 4.3): substituído time() por filemtime().
-     Antes, o ?v= mudava a cada segundo, anulando completamente o cache HTTP do
-     arquivo. Agora o ?v= acompanha a última modificação real do bt-swipe.js —
-     cache dura até o arquivo ser de fato alterado. -->
-<script src="js/bt-swipe.js?v=<?= filemtime(__DIR__ . '/js/bt-swipe.js') ?>"></script>

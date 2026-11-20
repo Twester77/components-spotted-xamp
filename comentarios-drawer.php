@@ -100,7 +100,7 @@ try { $b2 = B2Client::getInstance(); } catch (Exception $e) { $b2 = null; }
 $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
 ?>
 
-<div class="layout-wrapper" id="drawer-comentarios-wrapper" style="height: 100%; display: flex; flex-direction: column;">
+<div class="layout-wrapper" id="drawer-comentarios-wrapper" style="display: flex; flex-direction: column;">
     <main class="lista-scrollavel" id="conteudo-rolavel">
         <div class="fenda-estatica-context"></div>
         

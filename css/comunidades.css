@@ -159,6 +159,19 @@
     transform: scale(1.02);
 }
 
+.capa-atual-wrapper {
+aspect-ratio: 16/9; 
+background: rgba(255,255,255,0.03); 
+background: var(--bg-input, rgba(255,255,255,0.05));
+border-radius: 12px; 
+align-items: center;
+align-content: center;
+overflow: hidden; 
+border: 1px solid rgba(255,255,255,0.06);
+border: 1px solid var(--borda-sutil, rgba(255,255,255,0.05));
+
+}
+
 .comunidade-card .badge-membros {
     position: absolute;
     top: 10px;
@@ -244,13 +257,13 @@
     background: rgba(255, 255, 255, 0.05);                          /* fallback */
     background: oklch(100% 0 0 / 0.05);                             /* fallback moderno */
     background: var(--bg-input, oklch(100% 0 0 / 0.05));            /* 🌅 FAGULHA – Fase 2 */
-    color: #aaa;                                                    /* fallback */
-    color: oklch(68% 0 0);                                          /* fallback moderno */
-    color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
+    color: #ffff;                                                   /* fallback */
+    color: var(--texto-primario, oklch(96% 0 0));                   /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-entrar-comunidade:hover {
-    opacity: 0.85;
+    background: var(--bg-input-hover, oklch(100% 0 0 / 0.1));
+    filter: brightness(0.8);
     transform: scale(1.01);
 }
 
@@ -431,6 +444,7 @@ gap:6px;
 
 .search-result-descricao {
     font-size: 0.8rem;
+    font-size: clamp(0.77rem, 1vw, 0.92rem);
     color: #aaa;                                                    /* fallback */
     color: var(--texto-terciario, #aaa);                           /* 🌅 FAGULHA – Fase 2 */
     white-space: nowrap;
@@ -450,7 +464,8 @@ gap:6px;
 .comunidade-capa {
     position: relative;
     aspect-ratio: 16 / 9;
-    max-width: 980px;
+    max-width: 75vh;
+    max-width: 75dvh;
     overflow: hidden;
     border-radius: 8px;
     background: #111;                                               /* fallback */
@@ -459,16 +474,19 @@ gap:6px;
     margin-bottom: 20px;
     align-self: center;
     justify-self: center;
-    justify-content: center;
+    object-position: center 25%;
     align-content: center;
 }
 
 .comunidade-capa img {
     width: 100%;
-    height: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     transform: translateZ(0);
     image-rendering: auto;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .comunidade-capa .overlay {
@@ -501,14 +519,16 @@ gap:6px;
 .comunidade-actions {
     display: flex;
     align-items: center;
+    max-width: 800px;
     gap: 15px;
-    margin-bottom: 20px;
+    margin: 20px auto;
     flex-wrap: wrap;
-    background: rgba(20, 20, 30, 0.5);                              /* fallback */
-    background: oklch(15% 0 0 / 0.5);                               /* fallback moderno */
-    background: var(--bg-modal-overlay, oklch(15% 0 0 / 0.5));      /* 🌅 FAGULHA – Fase 2 */
+    background: #9e9e9e3d;                               /* fallback local */
+    background: var(--bg-input, rgba(255,255,255, 0.05));      /* 🌅 FAGULHA – Fase 2 */
+    border: rgba(255,255,255, 0.03);
+    border: 1px solid var(--borda-sutil, rgba(255,255,255, 0.05));
     border-radius: 12px;
-    padding: 12px 18px;
+    padding: 12px 20px;
 }
 
 /* Copilot (VS Code) — 2026-10-02: ajusta os botões administrativos para quebrar responsivamente. */
@@ -519,7 +539,7 @@ gap:6px;
     flex-shrink: 0;
     gap: 5px;
     font-size: 0.85rem;
-    font-size: clamp(0.8em, 1.1vw, 1.05rem);
+    font-size: clamp(0.8em, 1.1vw, 1rem);
     font-weight: 600;
     text-decoration: none;
     border-radius: 30px;
@@ -595,7 +615,6 @@ gap:6px;
     flex-direction: column;
     gap: 15px;
     padding: 0 3px;
-
 }
 
 
@@ -607,8 +626,9 @@ gap:6px;
     border: 1px solid rgba(255, 255, 255, 0.05);                    /* fallback */
     border: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05)); /* 🌅 FAGULHA – Fase 2 */
     border-radius: 12px;
+    align-content: center;
     width: 100%;
-    max-width: 1200px;
+    max-width: 900px;
     padding: 20px 15px;
     margin: 0 auto 20px auto;
 }
@@ -1145,7 +1165,7 @@ textarea#descricao{
     gap: clamp(4px, 0.6vw, 8px);
     background: rgba(255, 188, 0, 0.12);                            /* 🎨 dourado com alpha específico */
     color: #ffbc00;                                                 /* fallback */
-    color: var(--texto-dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
+    color: var(--dourado, #ffbc00);                           /* 🌅 FAGULHA – Fase 2 */
     border: 1px solid rgba(255, 188, 0, 0.2);                       /* 🎨 dourado com alpha específico */
     border-radius: clamp(20px, 3vw, 30px);
     padding: 8px 20px;
@@ -1822,7 +1842,7 @@ textarea#descricao{
     color: #ccc;                                                    /* fallback */
     color: oklch(80% 0 0);                                          /* fallback moderno */
     color: var(--texto-secundario, oklch(80% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
-    font-size: clamp(1rem, 1.2vw, 1.1rem);
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
     font-weight: 500;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease ;
@@ -1989,8 +2009,9 @@ textarea#descricao{
 }
 
 .comunidade-page .postar-inline-conteudo .btn-acao-vivo {
-    width: clamp(34px, 4.5vw, 46px);
-    height: clamp(34px, 4.5vw, 46px);
+    width: clamp(36px, 4.5vw, 46px);
+    height: clamp(36px, 4.5vw, 46px);
+    padding: 4px;
     background: rgba(255, 255, 255, 0.04);                          /* fallback */
     background: oklch(100% 0 0 / 0.04);                             /* fallback moderno */
     background: var(--bg-input, oklch(100% 0 0 / 0.04));            /* 🌅 FAGULHA – Fase 2 */
@@ -2001,12 +2022,18 @@ textarea#descricao{
     color: #aaa;                                                    /* fallback */
     color: oklch(68% 0 0);                                          /* fallback moderno */
     color: var(--texto-terciario, oklch(68% 0 0));                  /* 🌅 FAGULHA – Fase 2 */
-    font-size: clamp(1rem, 1.2vw, 1.2rem);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: 0.2s;
+}
+
+.comunidade-page .postar-inline-conteudo .btn-acao-vivo i {
+    font-size: clamp(0.92rem, 1.2vw, 1.2rem);
+    align-self: center;
+    align-content: center;
+    align-items: center;
 }
 
 .comunidade-page .postar-inline-conteudo .btn-acao-vivo:hover {
@@ -2107,7 +2134,10 @@ textarea#descricao{
     border: 1px solid var(--borda-sutil, oklch(100% 0 0 / 0.06));   /* 🌅 FAGULHA – Fase 2 */
     border-radius: 16px;
     padding: 4px;
-    margin-bottom: 24px;
+    padding: clamp(4px, 2vw, 10px);
+    max-width: 800px;
+    width: 100%;
+    margin: 24px auto;
     text-align: center;
     color: #aaa;                                                    /* fallback */
     color: oklch(68% 0 0);                                          /* fallback moderno */
@@ -2121,20 +2151,21 @@ textarea#descricao{
 }
 
 /* Link para Página Especializada ( Achados & Perdidos) */
-.comunidade-page .card-postar-inline .link-pagina-especializada {
+.comunidade-page .card-postar-inline .link-pagina-especializada small {
     margin-top: 8px;
     text-align: center;
-    opacity: 0.75;
+    opacity: 0.8;
     color: #1e1e1e;                                                 /* fallback */
     color: oklch(0.2 0 0 / 0.7);                                    /* 🎨 preto com alpha específico */
     font-weight: bold;
-    font-size: clamp(0.7rem, 2vw, 0.95rem);
+    font-size: clamp(0.73rem, 2vw, 0.97rem);
 }
 .comunidade-page .card-postar-inline .link-pagina-especializada a {
     color: var(--dourado);                                          /* fallback */
     color: var(--texto-dourado, var(--dourado, #ffbc00));          /* 🌅 FAGULHA – Fase 2 */
     text-decoration: none;
 }
+
 .link-pagina-especializada a:hover {
     text-decoration: underline;
 }
@@ -2538,12 +2569,22 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     .comunidade-page .comunidade-actions {
         padding: 6px 12px;
     }
+
+   
+
 }
 
 @media (min-width: 601px) and (max-width: 900px) {
      .comunidades-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .comunidade-capa {
+    aspect-ratio: 16 / 8;
+    min-height: 220px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
    
 }
 
@@ -2551,7 +2592,12 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
      .comunidades-grid {
         grid-template-columns: repeat(3, 1fr);
     }
-   
+
+    .comunidade-capa {
+    max-width: 45vw;
+    max-width: 45dvw;
+}
+
 }
 
 /* ==================================================
@@ -2645,6 +2691,7 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
     background: oklch(5% 0 0);                                      /* fallback moderno */
     background: var(--bg-page-dark, oklch(5% 0 0));                 /* 🌅 FAGULHA – Fase 2 */
     min-height: 100vh;
+    min-height: 100dvh;
     height: auto;
     padding-top: 20px;
     -webkit-backdrop-filter: none;
@@ -2761,7 +2808,6 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 .capa-preview-wrapper {
     position: relative;
     aspect-ratio: 16 / 9;
-    max-height: 300px;
     background: rgba(255, 255, 255, 0.03);                          /* fallback */
     background: oklch(100% 0 0 / 0.03);                             /* fallback moderno */
     background: var(--bg-input, oklch(100% 0 0 / 0.03));            /* 🌅 FAGULHA – Fase 2 */
@@ -3265,8 +3311,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
         --ls-nav-btn: 32px;
         --ls-btn-pad-y: 4px;
         --ls-btn-pad-x: 8px;
-        --ls-btn-font: 0.85rem;
-        --ls-content-font: 0.77rem;
+        --ls-btn-font: 0.84rem;
+        --ls-content-font: 0.78rem;
         --ls-reaction-font: 0.85rem;
         --ls-avatar: 40px;
     }
@@ -3290,6 +3336,8 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .footer-links {
                 1.05rem
             );
             --ls-avatar: clamp(34px, 10dvh, 52px);
+            --ls-content-font: clamp(0.75rem, 3vh, 0.88rem);
+
         }
     }
 

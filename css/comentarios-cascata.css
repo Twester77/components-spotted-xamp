@@ -5,19 +5,34 @@
 /* 1. CONTAINER PRINCIPAL */
 body.estilo-cascata .lista-comentarios-social {
     scroll-snap-type: none;
-    max-width: 700px; 
+    max-width: 650px; 
     margin: 20px auto;
     width: 100%;
     padding: 8px 12px;
-    padding: clamp(6px, 1.5vh, 14px) clamp(4px, 1.5vw, 12px);
+    padding: clamp(6px, 1.5vh, 14px) clamp(5px, 2vw, 18px);
 }
+
+.lista-scrollavel {
+    touch-action: pan-y;
+    scroll-snap-type: none;
+    scroll-snap-align: none;
+}
+
+body.estilo-cascata  .sessao-fofoca-focada {
+    max-width: 700px;
+    border-radius: 10px;
+    padding: 4px 8px;
+    padding: clamp(6px, 1.2cqi, 8px) clamp(10px, 1.5cqi, 16px);
+    background: transparent;
+}
+
 
 /* 2. O CARD DO COMENTÁRIO (BENTO BOX) */
 body.estilo-cascata .comentario-item {
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.03);
     background: var(--bg-card, rgba(17, 17, 17, 0.32));
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -39,8 +54,8 @@ body.estilo-cascata .comentario-item {
     margin-bottom: 12px;
 
     /* 🚀 Moderno: Escala dinâmica com o tamanho da tela/teclado */
-    padding: clamp(6px, 1.2dvh, 14px) clamp(12px, 2dvh, 18px);
-    gap: clamp(7px, 1.2dvh, 10px) clamp(10px, 2dvh, 14px);
+    padding: clamp(6px, 1.2dvh, 12px) clamp(8px, 1.8dvh, 15px);
+    gap: clamp(8px, 1.2dvh, 10px) clamp(10px, 2dvh, 16px);
     margin-bottom: clamp(10px, 1.8dvh, 16px);
     
     align-self: stretch;
@@ -123,9 +138,10 @@ body.estilo-cascata .comentario-linha:hover > .comentario-menu-toggle { opacity:
 /* 7. GRID DE IMAGENS QUADRADAS */
 body.estilo-cascata .comentario-media-wrapper-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(15cqi, 30cqi));
-    gap: 4px;
-    max-width: 320px;
+    grid-template-columns: repeat(2, minmax(50px, 150px));
+    grid-template-columns: repeat(2, minmax(15cqi, 25cqi));
+    gap: 5px;
+    max-width: 250px;
     width: 100%;
 }
 body.estilo-cascata .comentario-media-item { aspect-ratio: 1 / 1; width: 100%; border-radius: 6px; overflow: hidden; object-fit: cover; }
@@ -149,7 +165,7 @@ body.estilo-cascata .btn-ver-mais { display: none; }
     position: fixed; bottom: 0; left: 0; right: 0;
     height: 90vh;
     height: 95dvh; background: var(--bg-modal-content, #0d1117);
-    max-width: 1200px;
+    max-width: 900px;
     justify-self: center;
     width: 100%;
     border-radius: 25px 25px 0 0;
@@ -173,12 +189,13 @@ body.estilo-cascata .btn-ver-mais { display: none; }
     will-change: transform; }
 
 .drawer-cmt-handle-area { width: 100%; padding: 20px 0; display: flex; justify-content: center; cursor: grab; flex-shrink: 0; touch-action: none; }
-.drawer-cmt-handle { width: 40px; height: 5px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+.drawer-cmt-handle { width: 40px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
 .drawer-cmt-close { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.05); border: none; color: #888; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; transition: 0.2s; }
 .drawer-cmt-close:hover { background: rgba(255, 100, 100, 0.45); color: #ff6b6b; }
 
 .drawer-cmt-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-.drawer-cmt-content .layout-wrapper { position: relative; height: 100%; width: 100%;
+.drawer-cmt-content .layout-wrapper { position: relative; height: 100vh; top: auto;
+    left: auto; width: 100%;
 justify-content: center; /* 1. Fallback Seguro */
 justify-content: safe center; /* 2. Moderno (iOS 15+) */
 background: transparent; top: auto; left: auto; }

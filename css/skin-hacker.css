@@ -247,9 +247,7 @@
 [data-theme="hacker"]  .modo-tinder-ativo #bt-container-eventos .bt-card.dragging {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    animation: none;
     transition: none;
-    animation-duration: 0ms;
     /* 🎨 Hack clássico do Safari/Chrome mobile: força aceleração 3D sem quebrar o translate() do JS */
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
@@ -505,6 +503,8 @@
     text-transform: uppercase;
     transition: all 0.1s steps(2);
     position: relative;
+    align-content: center;
+    align-items: center;
     background: transparent;
 }
 
@@ -531,6 +531,7 @@
 [data-theme="hacker"] .lista-conselhos li:hover::before,
 [data-theme="hacker"] .bloco-diretrizes li:hover::before,
 [data-theme="hacker"] .btn-editar-atalho:hover::before,
+[data-theme="hacker"] .main-perdidos .btn-lancar::before,
 [data-theme="hacker"] .btn-zarpar::before,
 [data-theme="hacker"] .login-btn:hover::before,
 [data-theme="hacker"] .btn-ficar-terra::before,
@@ -538,9 +539,10 @@
 [data-theme="hacker"] .dropdown-item:hover::before {
     content: ">";
     position: absolute;
+    align-items: center;
     font-size: 1rem;
-    font-size: clamp(0.88rem, 1.65vw, 1.15rem);
-    left: 12px;
+    font-size: clamp(0.86rem, 1.65vw, 1.15rem);
+    left: 10px;
     color: var(--hacker-hover-text);
     font-weight: bold;
     animation: blink-cursor 0.5s infinite;
@@ -685,6 +687,7 @@
 [data-theme="hacker"] .fenda-btn-glow:hover,
 [data-theme="hacker"] #btn-load-more:hover,
 [data-theme="hacker"] .bt-btn-load-more:hover,
+[data-theme="hacker"] .btn-lancar:hover,
 [data-theme="hacker"] .btn-editar-atalho:hover,
 [data-theme="hacker"] .btn-sair-fenda:hover,
 [data-theme="hacker"] .btn-zarpar:hover,
@@ -694,8 +697,9 @@
 [data-theme="hacker"] .login-btn:hover {
     background-color: var(--hacker-hover-bg);
     color: var(--hacker-hover-text);
-    box-shadow: 0 0 8px var(--hacker-green);
+    box-shadow: 0 0 4px var(--hacker-green);
     padding-left: 25px;
+    align-items: center;
 }
 
 [data-theme="hacker"] .btn-editar-atalho::before,
@@ -1108,10 +1112,13 @@
 [data-theme="hacker"] .fenda-glass-container,
 [data-theme="hacker"] form[action="confirma-login.php"] .container {
     background: rgba(0, 0, 0, 0.8);
-    border: 1px solid var(--hacker-green);
+    border: 1px solid var(--hacker-green); /* Linha interna */
+    outline: 1px solid var(--hacker-green); /* Linha externa */
+    outline-offset: 4px; /* Tamanho do gap entre as bordas */
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
 }
+
 
 [data-theme="hacker"] .fenda-reg-box input {
     background: var(--hacker-bg);
@@ -1390,8 +1397,8 @@
 [data-theme="hacker"] .spotted-card.vibe-ads::after {
     content: '● REC';
     position: absolute;
-    top: 30px;
-    right: 30px; 
+    top: 25px;
+    right: 25px; 
     font-family: var(--hacker-font);
     font-size: 0.65rem;
     color: var(--hacker-green);
@@ -1400,8 +1407,8 @@
 }
 
 /* Espaço pro REC no header */
-[data-theme="hacker"] .spotted-card.vibe-ads .card-header {
-    padding-right: 60px;
+[data-theme="hacker"] body:not(.modo-swipe-ativo) .spotted-card.vibe-ads .card-header {
+    padding-right: 50px;
 }
 
 @keyframes ads-hacker-rec-blink {

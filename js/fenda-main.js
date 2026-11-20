@@ -3564,7 +3564,7 @@ window.irParaMensagem = function(commentId) {
     
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.style.transition = 'background-color 0.4s ease';
-    el.style.backgroundColor = 'rgba(0, 255, 234, 0.25)';
+    el.style.backgroundColor = 'rgba(0, 255, 234, 0.40)';
     
     setTimeout(() => {
         el.style.backgroundColor = '';
@@ -3640,16 +3640,26 @@ window.deslogarUsuario = async function () {
                     containerFeed.innerHTML = `<p style="text-align:center; color:#aaa; padding:30px;">Nenhum resultado encontrado para "${termo}".</p>`;
                 } else {
                     containerFeed.innerHTML = html;
+                    
                     if (typeof configurarPosts === 'function' && !document.body.classList.contains('modo-swipe-ativo')) {
                         configurarPosts();
                     }
-                    if (typeof iniciarTodosCarrosseis === 'function') iniciarTodosCarrosseis();
+                    if (typeof iniciarTodosCarrosseis === 'function') {
+                        iniciarTodosCarrosseis();
+                    }
+                    
+                    // 🔥 1. Inicializa GIFs/Vídeos nos resultados da busca (Djê)
+                    if (typeof window.inicializarVideosGifFeed === 'function') {
+                        window.inicializarVideosGifFeed(containerFeed);
+                    }
+
+                    // 🔥 2. Rebinda os cards para a física do Swipe (Concha)
+                    // (Só roda no feed/comunidades no modo swipe, ignorando o modo grid e o Balanga)
+                    if (window.TranslateL && document.body.classList.contains('modo-swipe-ativo')) {
+                        TranslateL.rebind(containerFeed, TranslateL.presets.feed());
+                    }
                 }
             })
-            .catch(err => {
-                console.error('[BUSCA] Erro:', err);
-                containerFeed.innerHTML = `<p style="text-align:center; color:#ff6b6b; padding:30px;">Erro ao buscar. Tente novamente.</p>`;
-            });
     }
 
     // Evento de digitar

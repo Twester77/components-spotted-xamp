@@ -141,13 +141,13 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     container-name: card-swipe;
 
 
-    width: var(--card-width, 250px);
-    max-width: var(--card-width, 250px);
+    width: var(--card-width, 260px);
+    max-width: var(--card-width, 260px);
 
     padding: var(--card-padding, 14px);
     padding: clamp(0.65em, 3.8cqi, 1.1em);
 
-    font-size: var(--card-font-size, 0.95rem);
+    font-size: var(--card-font-size, 0.88rem);
     font-size: clamp(0.7em, 2cqi, 1.15em);
 
     max-height: var(--card-max-height, 700px);
@@ -181,6 +181,13 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     backdrop-filter: blur(3px);
 }
 
+.container-feed.feed-empilhado .spotted-card.translate-l-dragging {
+    filter: none;
+    transition: none;
+    -webkit-backdrop-filter: none ;
+    backdrop-filter: none ;
+}
+
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
     .feed-empilhado .spotted-card {
         transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot));
@@ -196,8 +203,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar-p,
 body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     width: var(--avatar-size, 40px);
     height: var(--avatar-size, 40px);
-    width: clamp(36px, 12cqi, 60px);
-    height: clamp(36px, 12cqi, 60px);
+    width: clamp(38px, 12cqi, 60px);
+    height: clamp(38px, 12cqi, 60px);
     flex-shrink: 0;
 }
 
@@ -230,15 +237,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .container-img-post img {
 
 }
 
-body.modo-swipe-ativo .container-img-post,
-body.modo-swipe-ativo .feed-anexos-grid,
-body.modo-swipe-ativo .feed-anexo-item {
-    /* ⚡ Isola as imagens e GIFs para blindar reflows de frames */
-    contain: layout paint;
-    isolation: isolate;
-    overflow: hidden;
-    contain-intrinsic-size: auto var(--inner-dynamic-height, 350px);
-}
 
 /* ============================================================
    🚀 OTIMIZAÇÃO DE MÍDIA (Imagens e GIFs no Swipe)
@@ -252,7 +250,7 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     contain: layout paint;
     isolation: isolate;
     overflow: hidden;
-    contain-intrinsic-size: auto var(--inner-dynamic-height, 700px);
+    contain-intrinsic-size: auto var(--inner-dynamic-height, 650px);
 }
 
 /* ============================================================
@@ -1097,11 +1095,27 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     }
 }
 
-body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
+
+/* ============================================================
+   EXTERMINADOR DO ZUMBI BLUR (Performance de GPU)
+   ============================================================ */
+
+/* 1. Abordagem moderna para navegadores com :has() (Safari 15.4+, Chrome 105+) */
+@supports selector(:has(*)) {
+    body:has(.reactions-popup-overlay.active) .container-feed.feed-empilhado .spotted-card[class*="vibe-"],
+    body:has(.bt-actions-overlay) .bt-card[class*="vibe-"] {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        transition: none;
+    }
+}
+
+/* 2. Fallback universal para iPhone 6S / browsers antigos via classe no Body */
+body.menu-aberto .container-feed.feed-empilhado .spotted-card[class*="vibe-"],
+body.menu-aberto .bt-card[class*="vibe-"] {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
-    animation:none;
-    will-change: transform, opacity;
+    transition: none;
 }
 
 /* ============================================================
@@ -1129,9 +1143,11 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         --ls-text-font: 0.78rem;
         --ls-reaction-font: 0.78rem;
 
-        width: min(var(--card-width, 420px), calc(100vw - 16px));
+        width: calc(100vw - 16px);
+        max-width: var(--card-width, 400px);
+        width: min(var(--card-width, 400px), calc(100vw - 16px));
         max-width: min(var(--card-width, 640px), 680px, calc(100vw - 16px));
-        max-height: 420px;
+        max-height: 450px;
         max-height: var(--card-max-height, min(85dvh, 550px));
         height: auto;
         box-sizing: border-box;
@@ -1158,8 +1174,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             --ls-gap: clamp(4px, 1.2dvh, 8px);
             --ls-gap-x: clamp(6px, 1.4vw, 14px);
             --ls-avatar: clamp(30px, 8dvh, 42px);
-            --ls-text-font: clamp(0.72rem, 2.2dvh, 0.95rem);
-            --ls-reaction-font: clamp(0.7rem, 1.8dvh, 0.85rem);
+            --ls-text-font: clamp(0.73rem, 2.2dvh, 0.95rem);
+            --ls-reaction-font: clamp(0.72rem, 1.8dvh, 0.85rem);
         }
     }
 
@@ -1283,7 +1299,6 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
         gap: 4px;
         min-width: 0;
         margin: 0;
-        padding-right: 40px;
     }
 
     /* COLUNA 2: autor */
@@ -1460,13 +1475,13 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card.card-long-press-active {
             /* 👇 AJUSTE DE ALTURA DINÂMICA COM TRAVAS */
             height: auto;
             /* Permite crescer com o conteúdo */
-            min-height: 27vh;
+            min-height: 30vh;
             /* Fallback para iOS antigo */
-            min-height: 27dvh;
+            min-height: 30dvh;
             /* Mínimo de 30% da tela visível */
-            max-height: min(80vh, 600px);
-            /* Fallback: nunca passa de 80% da tela ou 600px */
-            max-height: min(80dvh, 600px);
+            max-height: min(85vh, 650px);
+            /* Fallback: nunca passa de 85% da tela ou 600px */
+            max-height: min(85dvh, 650px);
             /* Moderno: teto máximo de 600px */
 
             overflow: hidden;

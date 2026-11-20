@@ -837,7 +837,7 @@ body.modal-aberto .fab-postar {
 /* O Container que segura a onda no index */
 .fenda-container {
     width: 100%;
-    max-width: clamp(300px, 100%, 800px);
+    max-width: clamp(300px, 100%, 850px);
     margin: 0 auto;
     padding: 20px 0px;
     box-sizing: border-box;
@@ -2080,8 +2080,9 @@ textarea[name="bio"] {
     /* Alinha com a direita do sino */
     top: calc(18% + 30px);
     /* Joga um pouco para baixo do sino */
-    min-width: 220px;
-    max-width: 300px;
+    min-width: clamp(180px, 55vw, 320px);
+    width: auto;
+    max-width: 400px;
     background: rgba(10, 25, 41, 0.85);
     background: oklch(20.926% 0.03813 251.502 / 0.85);
     /* Fundo bem sólido para não vazar o que está atrás */
@@ -2198,7 +2199,7 @@ textarea[name="bio"] {
 
 /* 1. CELULARES MUITO BAIXOS (iPhone 4 deitado, S20 deitado) */
 @media (orientation: landscape) and (max-height: 360px),
-(orientation: portrait) and (max-height: 480px) {
+(orientation: portrait) and (max-height: 500px) {
 
     /* Forçamos 1 coluna só. 2 colunas em 320px de altura é suicídio de layout */
     main.container-feed {
@@ -2213,9 +2214,9 @@ textarea[name="bio"] {
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
         width: 100%;
-        max-width: 380px;
+        max-width: 350px;
         gap: 4px;
-        padding: 6px;
+        padding: 4px;
     }
 
 
@@ -2248,7 +2249,7 @@ textarea[name="bio"] {
         margin: 8px auto;
         width: 100%;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        padding: 6px;
+        padding: 8px;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2258,11 +2259,15 @@ textarea[name="bio"] {
         margin-right: 0;
         box-sizing: border-box;
     }
+    .container-feed.feed-empilhado {
+    width: 100%;
+    margin: 15px auto;
+}
 
     body:not(.modo-swipe-ativo) .feed-anexos-grid {
-        grid-template-columns: repeat(2, minmax(40px, 120px));
+        grid-template-columns: repeat(2, minmax(40px, 100px));
         display: grid;
-        gap: 5px;
+        gap: 4px;
         border: none;
         border-radius: 3px;
         background: transparent;
@@ -2664,8 +2669,8 @@ textarea[name="bio"] {
         position: absolute;
         bottom: -70px;
         bottom: clamp(-70px, 10cqi, -110px);
-        width: clamp(70px, 10cqi, 110px);
-        height: clamp(70px, 10cqi, 110px);
+        width: clamp(80px, 10cqi, 120px);
+        height: clamp(80px, 10cqi, 120px);
         aspect-ratio: 1/1;
     }
 
@@ -2847,14 +2852,14 @@ body.modal-aberto #fenda-nexus {
 /* Oeste */
 
 /* Link para Página Especializada ( Achados & Perdidos) */
-.link-pagina-especializada {
+.link-pagina-especializada small {
     margin-top: 8px;
     text-align: center;
     opacity: 0.75;
     color: #ffffff;                                              /* fallback */
     color: var(--texto-primario, #ffffff);                       /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
-    font-size: clamp(0.7rem, 2vw, 0.95rem);
+    font-size: clamp(0.75rem, 2vw, 1rem);
 }
 
 .link-pagina-especializada a {

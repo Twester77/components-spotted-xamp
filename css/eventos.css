@@ -43,7 +43,7 @@
     /* será sobrescrito pelo JS */
     --bt-card-max-height: 650px;
     /* será sobrescrito pelo JS */
-    --bt-capa-height: 300px;
+    --bt-capa-height: 260px;
     /* será sobrescrito pelo JS */
     --bt-container-height: 800px;
 }
@@ -145,7 +145,7 @@
     max-height: 100dvh;
     width: 100%;
     max-width: none;
-    margin: 0;
+    margin: 20px auto;
     padding: 0;
     align-items: center;
     background: transparent ;
@@ -170,6 +170,7 @@
     background-clip: padding-box;
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.15);
+    -webkit-backdrop-filter: none;
     backdrop-filter: none;
 
     /* 🔥 VARIÁVEIS DE FÍSICA (IGUAL AO FEED) */
@@ -178,7 +179,7 @@
     --swipe-rot: 0deg;
 
     /* 🔥 LARGURA DINÂMICA (CONTROLADA PELO JS) */
-    width: var(--bt-card-width, 300px);
+    width: var(--bt-card-width, auto);
     max-width: var(--bt-card-width, 650px);
     padding: var(--bt-card-padding, clamp(10px, 2cqi, 20px));
     font-size: var(--bt-card-font-size, clamp(0.85rem, 2.5cqi, 1.1rem));
@@ -203,6 +204,29 @@
     }
 }
 
+@media (hover: hover) and (pointer: fine) {
+    body:not(.modo-tinder-ativo) .bt-card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        background: var(--bg-card-hover-strong, rgba(0, 0, 0, 0.4));
+        border-color: var(--borda-card, rgba(255, 255, 255, 0.15));
+        transform: translateY(-6px);
+        transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+     body.modo-tinder-ativo .bt-card:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        background: var(--bg-card-hover-strong, rgba(0, 0, 0, 0.4));
+        border-color: var(--borda-card, rgba(255, 255, 255, 0.15));
+    }
+}
+
+/* Renderização sob demanda apenas no Grid tradicional de rolagem */
+body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 400px; 
+}
+
+
 /* 🔥 QUANDO O CARD NÃO ESTÁ SENDO ARRASTADO (REBOTE ELÁSTICO) */
 .modo-tinder-ativo #bt-container-eventos .bt-card:not(.dragging) {
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
@@ -212,13 +236,20 @@
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+
+.modo-tinder-ativo #bt-container-eventos .bt-card.translate-l-dragging {
+    filter: none;
+    transition: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 /* 🔥 CAPA DINÂMICA (usando variável do JS) */
 .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa {
-    height: var(--bt-capa-height, 300px);
+    max-height: var(--bt-capa-height, 300px);
     min-height: 140px;
     aspect-ratio: auto;
     /* remove o fixo 16/9 */
@@ -244,6 +275,8 @@
     filter: none;
     image-rendering: auto;
     contain: paint;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     transform: translateZ(0);
@@ -631,10 +664,10 @@
    4. CARDS (bt-card) – Estilos base (grid e swipe compartilham)
    ================================================================ */
 .bt-card {
-    background: var(--bt-fundo-card, #1a1a2e94);                 /* fallback */
+    background: rgba(21, 21, 29, 0.46);                 /* fallback */
     background: var(--bg-card, var(--bt-fundo-card, #1a1a2e94));  /* 🐚 FAROL – Fase 2 */
-    border: 1px solid var(--bt-borda-sutil);                      /* fallback */
-    border: 1px solid var(--borda-sutil, var(--bt-borda-sutil));  /* 🐚 FAROL – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.05);                      /* fallback */
+    border: 1px solid var(--borda-sutil);  /* 🐚 FAROL – Fase 2 */
     border-radius: clamp(10px, 1.5vw, 16px);
     padding: 10px;
     padding: clamp(8px, 1.5vw, 20px);
@@ -661,7 +694,7 @@
 
 .bt-card.em-andamento {
     border-color: rgba(255, 68, 68, 0.5);                         /* fica local – vermelho específico */
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.08);
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.08);
 }
 
 .bt-card.agendado {
@@ -957,7 +990,7 @@
     max-width: 900px;
     margin: 0 auto;
     padding: 12px 8px;
-    padding: clamp(15px, 3vw, 35px) clamp(8px, 2.5vw, 20px);
+    padding: clamp(12px, 3vw, 30px) clamp(8px, 2.5vw, 20px);
     background: var(--bt-fundo-escuro, #0a0a0a);                 /* fallback */
     background: var(--bg-page-dark, var(--bt-fundo-escuro, #0a0a0a)); /* 🐚 FAROL – Fase 2 */
     min-height: 100dvh;
@@ -1200,11 +1233,11 @@
 
 .bt-participantes h3 {
     font-size: 1rem;
-    font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+    font-size: clamp(0.96rem, 1.5vw, 1.3rem);
     color: #fff;                                                  /* fallback */
     color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
     margin-bottom: 12px;
-    margin-bottom: clamp(10px, 1.2vw, 18px);
+    margin-bottom: clamp(10px, 1.2vw, 20px);
 }
 
 .bt-lista-avatares {
@@ -1228,8 +1261,8 @@
 .bt-avatar-item img {
     width: 42px;
     height: 42px;
-    width: clamp(40px, 6vw, 64px);
-    height: clamp(40px, 6vw, 64px);
+    width: clamp(40px, 6vw, 65px);
+    height: clamp(40px, 6vw, 65px);
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid rgba(255, 188, 0, 0.3);
@@ -1376,7 +1409,9 @@
 }
 
 .bt-comentario-item:hover {
-    background: rgba(255, 255, 255, 0.12);                       /* fica local – alpha específico do hover */
+    background: rgba(255, 255, 255, 0.12);                       /* fallback local */
+    background: var(--bg-input-hover, rgba(255, 255, 255, 0.12)); 
+
 }
 
 .bt-comentario-meta {
@@ -1493,14 +1528,15 @@
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    width: clamp(36px, 8cqi, 60px);
-    height: clamp(36px, 8cqi, 60px);
+    width: clamp(36px, 8cqi, 64px);
+    height: clamp(36px, 8cqi, 64px);
     border: none;
     border-radius: 50%;
     background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824)); /* fallback */
     background: var(--laranja-fenda);
     color: #000;                                                  /* fica local – texto em fundo claro */
     font-size: 1rem;
+    font-size: clamp(0.94rem, 2vw, 1.2rem);
     cursor: pointer;
     transition: background 0.2s, transform 0.15s;
     display: flex;
@@ -2558,8 +2594,8 @@
         height: min(68dvh, 360px);
         min-height: min(200px, 60vh);
         min-height: min(200px, 60dvh);
-        max-height: 68vh;
-        max-height: 68dvh;
+        max-height: 80vh;
+        max-height: 80dvh;
     }
 
     .modo-tinder-ativo #bt-container-eventos .bt-card .bt-capa {

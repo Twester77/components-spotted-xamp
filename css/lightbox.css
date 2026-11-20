@@ -310,7 +310,15 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     max-width: 100%;
     margin: 0 auto;
     width: 100%;
+    max-width: 380px;
+    /* Fallback para iPhone 6s (iOS 15): 
+       Mínimo de 260px, tenta ocupar 70% da tela (70vw), e trava no máximo de 370px (2 colunas de 180px + 10px de gap) */
+    max-width: clamp(260px, 75vw, 380px);
+    /* Navegadores modernos sobrescrevem a linha de cima */
+    max-width: 75cqw;
     display: grid;
+    /* Fallback: 2 colunas de até 180px (ou 50% cada) */
+    grid-template-columns: repeat(2, 180px);
     grid-template-columns: repeat(2, minmax(0, 180px));
     gap: 10px;
     -webkit-background-clip: padding-box;
@@ -326,8 +334,8 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-reacoes .reacao-placeholder {
     justify-content: safe center;
     display: flex;
-    font-size: 0.85rem;
-    font-size: clamp(0.75rem, 3cqi, 1rem);
+    font-size: 0.82rem;
+    font-size: clamp(0.77rem, 3cqi, 1rem);
     width: 100%;
     text-align: center;
     margin-top: 15px;
@@ -609,7 +617,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 .lightbox-apenas-post .lightbox-post-body img,
 .lightbox-apenas-post .lightbox-post-body img {
     max-width: 100%;
-    max-height: 420px;
+    max-height: 400px;
     object-fit: contain;
     border-radius: clamp(6px, 2cqi, 16px);
     display: block;
@@ -640,7 +648,7 @@ body.modo-swipe-ativo .lightbox-apenas-post .lightbox-post-body .feed-anexos-gri
     margin: 0 auto;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 300px));
+    grid-template-columns: repeat(2, minmax(0, 260px));
     gap: 10px;
     justify-content: center;
     align-items: center;

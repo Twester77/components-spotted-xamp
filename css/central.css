@@ -153,7 +153,7 @@
     background: rgba(255, 188, 0, 0.12);                           /* 🎨 dourado com alpha específico */
     color: #ffbc00;                                                /* fallback */
     color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
-    box-shadow: inset 3px 0 0 #ffbc00;                             /* 🎨 dourado exato como indicador */
+    box-shadow: inset 3px 0 0 var(--texto-dourado, #70cde4);       /* 🎨 dourado exato como indicador */
 }
 
 .aba-central-link {
@@ -575,7 +575,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
     gap: 16px;
     padding: 10px;
-    padding: clamp(8px, 2vw, 20px);
+    padding: clamp(8px, 1.8vw, 20px);
     max-width: 100%;
 }
 
@@ -843,16 +843,16 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     background: var(--bg-input-hover, rgba(255, 255, 255, 0.08)); /* 🌅 FAGULHA – Fase 2 */
     color: #ccc;                                                   /* fallback */
     color: var(--texto-secundario, #ccc);                         /* 🌅 FAGULHA – Fase 2 */
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;        /* fallback */
-    border: 1px solid var(--bg-input-hover, rgba(255, 255, 255, 0.08)) !important; /* 🌅 FAGULHA – Fase 2 */
+    border: 1px solid rgba(255, 255, 255, 0.08) ;        /* fallback */
+    border: 1px solid var(--bg-input-hover, rgba(255, 255, 255, 0.08)) ; /* 🌅 FAGULHA – Fase 2 */
 }
 
 .btn-rejeitar-depoimento:hover {
     background: rgba(255, 60, 60, 0.15);                          /* 🎨 vermelho com alpha específico */
     color: #ff6b6b;                                                /* fallback */
     color: var(--cor-erro, #ff6b6b);                              /* 🌅 FAGULHA – Fase 2 */
-    border-color: #ff6b6b !important;                              /* fallback */
-    border-color: var(--cor-erro, #ff6b6b) !important;            /* 🌅 FAGULHA – Fase 2 */
+    border-color: #ff6b6b ;                              /* fallback */
+    border-color: var(--cor-erro, #ff6b6b) ;            /* 🌅 FAGULHA – Fase 2 */
 }
 
 .depoimento-pendente-acoes button:disabled {
@@ -904,7 +904,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     flex: 0 0 100%;
     width: 100%;
     min-width: 100%;
-    padding-right: 56px;
+    padding-right: 45px;
     transition: transform 0.18s ease-out;
 }
 
@@ -1550,7 +1550,7 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 @media (max-width: 480px) {
     .central-comunidades-grid {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 10px;
     }
 
     .aba-central,

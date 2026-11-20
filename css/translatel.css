@@ -77,6 +77,8 @@
     cursor: grabbing;
     cursor: -webkit-grabbing;
     transition: none !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     will-change: transform, opacity;
 }
 
@@ -85,7 +87,7 @@
  * motor já adiciona/remove).
  * Curva: cubic-bezier com overshoot (mesma do swipe.css original). */
 .translate-l-card.translate-l-transition {
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     will-change: transform;
 }
 
@@ -100,6 +102,17 @@
         rgba(255, 255, 255, 0) 60%
     );
     background-size: 200% 100%;
+    backdrop-filter: brightness(1.03) saturate(1.05);
+    transition: background-image 0.2s, box-shadow 0.2s, backdrop-filter 0.2s;
+    will-change: transition;
+    filter: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    touch-action: none;
+    -webkit-touch-callout:none;
+    -webkit-user-drag: none;
     animation: translateLShimmer 0.6s infinite ease-in-out;
 }
 
@@ -107,6 +120,8 @@
     from { background-position: 200% 0; }
     to   { background-position: -200% 0; }
 }
+
+
 
 /* ═══════════════════════════════════════════════════════════════════
  * CAMADA 3 — PROGRESSIVE ENHANCEMENT (futuro, não bloqueia nada)

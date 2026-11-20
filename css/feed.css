@@ -133,8 +133,8 @@
 body:not(.modo-swipe-ativo) .post-content {
     display: -webkit-box;
     margin: 5px 0;
-    font-size: 0.88rem;
-    font-size: clamp(0.85rem, 1.041vw, 1.05rem);
+    font-size: 0.9rem;
+    font-size: clamp(0.86rem, 1.041vw, 1.05rem);
     overflow: hidden;
     -moz-user-select: text;
     -ms-user-select: text;
@@ -143,7 +143,7 @@ body:not(.modo-swipe-ativo) .post-content {
 }
 
 .post-content.expandido {
-    max-height: 2000px;
+    max-height: 1800px;
     overflow: visible;
 }
 
@@ -158,7 +158,7 @@ body:not(.modo-swipe-ativo) .post-content {
     color: var(--texto-dourado, var(--dourado, #ffbc00));           /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
     font-size: 0.75rem;
-    font-size: clamp(0.7rem, 0.8cqi, 0.9rem);
+    font-size: clamp(0.72rem, 0.8cqi, 0.9rem);
 }
 
 /* ============================================================
@@ -175,7 +175,7 @@ body:not(.modo-swipe-ativo) .post-content {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     -webkit-user-drag: none;
     -webkit-font-smoothing: antialiased;
     height: auto;
@@ -198,14 +198,24 @@ body.modo-swipe-ativo .spotted-card * {
 }
 
 @media (hover: hover) and (pointer: fine) {
-    body:not(.modo-swipe-ativo) .spotted-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        background: var(--bg-card-hover, rgba(0, 0, 0, 0.397));
-        border-color: var(--borda-card, rgba(255, 255, 255, 0.144));
-        transform: translateY(-4px);
-        transition: transform 0.22s cubic-bezier(0.25, 1, 0.5, 1);
-    }
+  body:not(.modo-swipe-ativo) .spotted-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--sombra-card-hover);
+    background: var(--bg-card-hover, rgba(0, 0, 0, 0.397));
+    transform: translateY(-6px);
+    transition:
+      box-shadow 0.22s cubic-bezier(0.25, 1, 0.5, 1),
+      background 0.22s cubic-bezier(0.25, 1, 0.5, 1),
+  }
+
+  body.modo-swipe-ativo .spotted-card:hover {
+    background: var(--bg-card-hover, rgba(0, 0, 0, 0.8));
+     transition:
+      background 0.22s cubic-bezier(0.25, 1, 0.5, 1),
+  }
+
 }
+
 
 /* Renderização sob demanda apenas no Grid tradicional de rolagem */
 body:not(.modo-swipe-ativo) .container-feed .spotted-card {
@@ -228,8 +238,8 @@ body:not(.modo-swipe-ativo) .container-feed .spotted-card {
 
 #btn-load-more {
     transition: transform 0.2s ease, background 0.3s ease;
-    font-size: 0.8rem;
-    font-size: clamp(0.75rem, 1.85vw, 1rem);
+    font-size: 0.82rem;
+    font-size: clamp(0.76rem, 1.85vw, 1.05rem);
     -webkit-user-select: none;
     user-select: none;
 }
@@ -331,7 +341,7 @@ body:not(.modo-swipe-ativo) .container-feed .spotted-card {
 }
 
 .spotted-card.academico {
-    background: linear-gradient(145deg, rgba(135, 26, 179, 0.22), rgba(61, 6, 78, 0.12));
+    background: linear-gradient(145deg, rgba(135, 26, 179, 0.22), rgba(61, 6, 78, 0.048));
 }
 
 .spotted-card.desapego {
@@ -542,7 +552,7 @@ small.usuario-perdido {
     display: flex;
     margin-left: auto;
     font-size: 0.85rem;
-    font-size: clamp(0.8rem, 3.5cqi, 1.05rem);
+    font-size: clamp(0.82rem, 1.5vw, 1.05rem);
     color: #ffbc00;
     color: var(--texto-dourado, #ffbc00 );                                               
 }
@@ -550,8 +560,8 @@ small.usuario-perdido {
 span.data-post {
     display: flex;
     margin-left: auto;
-    font-size: 0.8rem;
-    font-size: clamp(0.77rem, 3.5cqi, 1rem);
+    font-size: 0.82rem;
+    font-size: clamp(0.77rem, 2vw, 1rem);
     color: #fffff4;                                                /* fica local – branco levemente amarelado, específico de timestamp */
     font-weight: bold;
     opacity: 0.75;
@@ -588,8 +598,8 @@ span.data-post {
     position: relative;
     color: #ffff;                                                  /* fallback */
     color: var(--texto-primario, #ffff);                           /* 🐚 FAROL – Fase 2 */
-    font-size: 0.82rem;
-    font-size: clamp(0.78rem, 2.3cqi, 1.1rem);
+    font-size: 0.83rem;
+    font-size: clamp(0.8rem, 2.5cqi, 1.1rem);
     word-break: break-word;
     overflow-wrap: anywhere;
     font-kerning: normal;
@@ -644,7 +654,8 @@ span.data-post {
     max-width: 100%;
     min-width: 0;
     min-height: 0;
-    margin: 6px 0;
+    margin: 6px auto;
+    align-items: center;
     align-content: start;
     box-sizing: border-box;
 }
@@ -733,10 +744,10 @@ span.data-post {
     background: var(--bg-input-hover, rgba(255, 255, 255, 0.08)); /* 🐚 FAROL – Fase 2 */
     /* Padding enxuto para contagens grandes */
     padding: 3px 6px;
-    padding: 0.3em 0.55em;
+    padding: 0.3em 0.5em;
     font-size: 0.8rem;
     font-size: clamp(0.82rem, calc(0.76rem + 0.25cqi), 1rem);
-    font-size: clamp(0.8em, 3.5cqi, 1.1em);
+    font-size: clamp(0.8em, 4cqi, 1.1em);
     border-radius: 8px;
     border: 1px solid rgba(255, 188, 0, 0.2);                     /* fallback */
     border: 1px solid var(--borda-dourada, rgba(255, 188, 0, 0.2)); /* 🐚 FAROL – Fase 2 */
@@ -932,6 +943,7 @@ span.data-post {
 .feed-anexos-grid {
     display: grid;
     justify-content: center;
+    align-items: center;
     grid-template-columns: repeat(2, minmax(70px, 100px));
     grid-template-columns: repeat(2, minmax(15cqi, 25cqi));
     gap: 15px;
@@ -944,25 +956,28 @@ span.data-post {
     isolation: isolate;
 }
 
-.main-perdidos .feed-anexos-grid {
+/* 1. Para 2 ou mais itens (peso: 5 classes - vence o peso 4 do nth-child) */
+.main-perdidos .spotted-card.perdidos-item .card-body .feed-anexos-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(80px, 120px));
     grid-template-columns: repeat(2, minmax(15cqi, 30cqi));
+    grid-template-rows: auto;
+    width: 100%;
+    max-width: 35vh;
+    max-width: 35dvh;
     gap: 8px;
-    margin-top: 5px;
+    align-items: center;
+    align-content: center;
+    margin: 5px auto;
+    aspect-ratio: auto;
     overflow: hidden;
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.096);
     padding: 8px 0;
 }
 
-.main-perdidos .feed-anexo-item {
-    aspect-ratio: auto;
-    border-radius: 6px;
-    background: rgba(0, 0, 0, 0.12);
-}
-
-.main-perdidos .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+/* 2. Para APENAS 1 item (peso: 7 - sempre vence a regra de cima) */
+.main-perdidos .spotted-card.perdidos-item .card-body .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+    display: block;
     max-height: 320px;
     max-width: 100%;
     height: 100%;
@@ -970,7 +985,16 @@ span.data-post {
     background: transparent;
     object-fit: cover;
     border-radius: 4px;
+    padding: 0;
 }
+
+
+.main-perdidos .feed-anexo-item {
+    aspect-ratio: auto;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.12);
+}
+
 
 /* --- 14.2. Item base (agora ÚNICA definição — sem duplicação) --- */
 .feed-anexo-item {
@@ -999,6 +1023,9 @@ span.data-post {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    max-height: 250px;
+    max-height: 30vh;
+    max-height: 30dvh;
     background: #0a0a0a;                                          /* fallback */
     background: var(--bg-page-dark, #0a0a0a);                     /* 🌅 FAGULHA – Fase 2 */
 }
@@ -1018,7 +1045,7 @@ span.data-post {
     padding: 0;
     border: none;
     background: transparent;
-    max-height: 360px;
+    max-height: 350px;
 }
 
 .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-anexo-item {
@@ -1058,7 +1085,7 @@ span.data-post {
     display: grid;
     grid-template-columns: 2fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 6px;
+    gap: 8px;
     aspect-ratio: 3 / 2;
     border: none;
     background: transparent;
@@ -1172,6 +1199,7 @@ span.data-post {
         width: min(100%, 300px);
         max-height: none;
         overflow: visible;
+        margin: 0 auto;
         margin-inline: auto;
     }
 
@@ -1182,7 +1210,7 @@ span.data-post {
         width: auto;
         max-width: 100%;
         height: auto;
-        max-height: 260px;
+        max-height: 300px;
         margin-inline: auto;
         object-fit: contain;
     }
@@ -1196,6 +1224,7 @@ span.data-post {
             height: auto;
             max-height: none;
             overflow: visible;
+            margin: 6px auto;
             margin-inline: auto;
         }
 

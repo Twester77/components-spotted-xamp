@@ -38,7 +38,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1000000;
             display: flex;
             align-items: center;
@@ -53,8 +53,8 @@
             width: 85%;
             max-width: 650px;
             max-height: 85vh;
-            -webkit-backdrop-filter: blur(2px);
-            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(1px);
+            backdrop-filter: blur(1px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
