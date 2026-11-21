@@ -1,8 +1,7 @@
 /* ============================================================================
  * translateL-core.js — Protocolo translateL (Swipe Acessível)
  * ============================================================================
- * Versão:    0.1.10 (Fase 3 - Fix UP Balanga e Radar)
- * ============================================================================ 
+ * Versão:    0.1.11 (Fase 3 - Homologação Final e Acessibilidade Mobile)
  * Branch:    feature/translateL-integracao
  * Spec:      docs/arquitetura.md, docs/api.md, docs/acessibilidade.md
  * 
@@ -16,7 +15,7 @@
 (function (global) {
     'use strict';
 
-    var VERSION = '0.1.10';
+    var VERSION = '0.1.11';
 
     var STATE = {
         IDLE: 'IDLE', PRESSING: 'PRESSING', DRAGGING: 'DRAGGING',
@@ -96,6 +95,7 @@
     var contexts = new WeakMap(), managedCards = new WeakSet(), containerListeners = new WeakSet(), activeByPointer = new Map();
 
     var isKeyboardNavigation = false;
+    var isPointerDown = false; // 🔥 Rastreador físico com delay para evitar race condition de clique
     var globalListenersAttached = false;
 
     function ensureGlobalListeners() {
@@ -108,6 +108,16 @@
 
         window.addEventListener('pointerdown', function() {
             isKeyboardNavigation = false;
+            isPointerDown = true;
+        }, { capture: true, passive: true });
+        
+        window.addEventListener('pointerup', function() {
+            // 🔥 O SEGREDO DA DJÊ: Delay de 150ms para o navegador terminar de emitir o focusin do clique
+            setTimeout(function() { isPointerDown = false; }, 150);
+        }, { capture: true, passive: true });
+
+        window.addEventListener('pointercancel', function() {
+            setTimeout(function() { isPointerDown = false; }, 150);
         }, { capture: true, passive: true });
     }
 
@@ -193,9 +203,9 @@
 
         card.addEventListener('focusin', function(e) {
             if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
-            var isFocusVisible = false;
-            try { isFocusVisible = card.matches(':focus-visible'); } catch (err) {}
-            if (!isKeyboardNavigation && !isFocusVisible) return;
+            
+            // 🔥 SOLUÇÃO FINAL: Se o ponteiro (mouse/toque) está pressionado ou acabou de soltar (150ms), ignora.
+            if (isPointerDown) return;
             
             var portal = getOrCreatePortal();
             portal.innerHTML = ''; portal.appendChild(fallback);
@@ -245,8 +255,26 @@
         for (var i = 0; i < children.length; i++) {
             var card = children[i];
             if (!managedCards.has(card)) continue;
-            if (card === topCard) { card.setAttribute('tabindex', '0'); card.style.outline = 'none'; }
-            else { card.setAttribute('tabindex', '-1'); }
+            
+            if (card === topCard) {
+                // É o topo: limpa restrições e permite interação/leitura
+                card.setAttribute('tabindex', '0');
+                card.style.outline = 'none';
+                card.removeAttribute('aria-hidden');
+                card.removeAttribute('inert');
+            } else {
+                // É card de trás: esconde do Tab e do TalkBack
+                if (card.contains(document.activeElement) && document.activeElement !== document.body) {
+                    document.activeElement.blur(); // Tira o foco antes de esconder para evitar erro de aria-hidden
+                }
+                card.setAttribute('tabindex', '-1');
+                card.setAttribute('aria-hidden', 'true');
+                
+                // Inert é o padrão W3C moderno para bloquear leitores de tela
+                if ('inert' in HTMLElement.prototype) {
+                    card.setAttribute('inert', '');
+                }
+            }
         }
     }
 
@@ -428,7 +456,7 @@
         safeCall(ctx.options.hooks.onDragEnd, ctx.card, direction);
         if (direction === 'right') safeCall(ctx.options.hooks.onSwipeRight, ctx.card, ctx.id);
         else if (direction === 'left') safeCall(ctx.options.hooks.onSwipeLeft, ctx.card, ctx.id);
-        else if (direction === 'up') safeCall(ctx.options.hooks.onSwipeUp, ctx.card, ctx.id); // NOVO: Dispara hook do UP se for swipe
+        else if (direction === 'up') safeCall(ctx.options.hooks.onSwipeUp, ctx.card, ctx.id);
         setTimeout(function () { if (ctx.state === STATE.EXITING) enterRemoved(ctx, direction); }, duration + 20);
     }
 
@@ -528,7 +556,6 @@
                     safeCall(ctx.options.hooks.onLongPress, ctx.card, ctx.id, isOwner);
                 } 
                 else if (action === 'voice') {
-                    // 🔥 NOVO: Garante que o comando de voz seja reativo via evento externo
                     toggleVoice(ctx);
                 }
             });
@@ -602,7 +629,7 @@
                 onSwipeLeft: function (card, id) { if (typeof window.enviarRespostaEvento === 'function') window.enviarRespostaEvento(id, 'nao_vou', card); },
                 onSwipeUp: function (card, id) { if (typeof window.enviarRespostaEvento === 'function') window.enviarRespostaEvento(id, 'talvez', card); },
                 onBeforeLongPress: function (card, id) { if (typeof window.forcarParadaSwipe === 'function') window.forcarParadaSwipe(); },
-                onCardRemoved: function () { if (typeof window.btAbastecerPilha === 'function') window.btAbastecerPilha(); } // Corrigido para chamar o Radar do Balanga
+                onCardRemoved: function () { if (typeof window.btAbastecerPilha === 'function') window.btAbastecerPilha(); }
             },
             accessibility: { labels: { right: 'Vou', left: 'Não vou', up: 'Talvez', menu: 'Abrir menu do evento', voice: 'Ativar comandos de voz' } },
             voice: { enabled: true, lang: 'pt-BR' }
