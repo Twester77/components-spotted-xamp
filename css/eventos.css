@@ -37,7 +37,7 @@
     --bt-card-font-size: clamp(0.85rem, 1.5cqi, 1.4rem);
     --bt-titulo-size: clamp(1rem, 3cqi, 1.7rem);
     /* será sobrescrito pelo JS */
-    --bt-meta-size: clamp(0.8em, 4.5cqi, 1.3em);
+    --bt-meta-size: clamp(0.78em, 4.5cqi, 1.3em);
     /* será sobrescrito pelo JS */
     --bt-text-max-height: 80px;
     /* será sobrescrito pelo JS */
@@ -493,11 +493,13 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
 .modo-tinder-ativo .bt-controles {
     left: 50%;
     transform: translate(-50%, 0);
-
+    /* 2. fallback de espaçamento */
+    margin: 15px auto 10px auto;
     /* 3. Espaçamento controlado em relação ao header */
-    margin-block: 15px;
+    margin-block-start: 15px;
     margin-block-end: 10px;
     margin-inline: auto;
+    justify-content: center; /* fallback pra dispositivos antigos */
     /* Garante centralização perfeita no PC */
     justify-content: safe center;
     align-items: center;
@@ -505,7 +507,8 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
     z-index: 98;
     background: #16162dc0;
     max-width: 800px;
-    /* Evita colapsar e virar fita (seu bug anterior) */
+    /* Evita colapsar e virar fita (meu bug anterior) */
+    min-height: clamp(60px, 15vh, 180px);
     min-height: clamp(60px, 15cqi, 180px);
     max-height: calc(100dvh - var(--altura-estimada-header) - 30px);
     overflow: hidden;

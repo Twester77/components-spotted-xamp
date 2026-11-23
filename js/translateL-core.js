@@ -1,7 +1,7 @@
 /* ============================================================================
  * translateL-core.js — Protocolo translateL (Swipe Acessível)
  * ============================================================================
- * Versão:    0.1.11 (Fase 3 - Homologação Final e Acessibilidade Mobile)
+ * Versão:    0.1.11-DEBUG (Fase 3 - Instrumentação para TalkBack)
  * Branch:    feature/translateL-integracao
  * Spec:      docs/arquitetura.md, docs/api.md, docs/acessibilidade.md
  * 
@@ -15,7 +15,7 @@
 (function (global) {
     'use strict';
 
-    var VERSION = '0.1.11';
+    var VERSION = '0.1.11-DEBUG';
 
     var STATE = {
         IDLE: 'IDLE', PRESSING: 'PRESSING', DRAGGING: 'DRAGGING',
@@ -27,7 +27,7 @@
         threshold: 120, moveStartThreshold: 10, rotationFactor: 25,
         scaleOnDrag: 1.02, scaleOnExit: 0.95, exitAnimationDuration: 300,
         springDuration: 400, longPressDelay: 400, upSwipeTolerance: 80,
-        upSwipeBehavior: 'navigate', // 'navigate' (Feed) ou 'swipe' (Balanga)
+        upSwipeBehavior: 'navigate',
         modeClass: null, bodyDraggingClass: 'translate-l-arrastando',
         dragClass: 'translate-l-dragging', transitionClass: 'translate-l-transition',
         longPressClass: 'translate-l-long-press',
@@ -95,7 +95,7 @@
     var contexts = new WeakMap(), managedCards = new WeakSet(), containerListeners = new WeakSet(), activeByPointer = new Map();
 
     var isKeyboardNavigation = false;
-    var isPointerDown = false; // 🔥 Rastreador físico com delay para evitar race condition de clique
+    var isPointerDown = false;
     var globalListenersAttached = false;
 
     function ensureGlobalListeners() {
@@ -103,21 +103,30 @@
         globalListenersAttached = true;
 
         window.addEventListener('keydown', function(e) {
-            if (e.key === 'Tab' || e.keyCode === 9) isKeyboardNavigation = true;
+            if (e.key === 'Tab' || e.keyCode === 9) {
+                isKeyboardNavigation = true;
+                console.log('[TL-DEBUG] keydown Tab detectado');
+            }
         }, true);
 
         window.addEventListener('pointerdown', function() {
             isKeyboardNavigation = false;
             isPointerDown = true;
+            console.log('[TL-DEBUG] pointerdown: isPointerDown = true');
         }, { capture: true, passive: true });
         
         window.addEventListener('pointerup', function() {
-            // 🔥 O SEGREDO DA DJÊ: Delay de 150ms para o navegador terminar de emitir o focusin do clique
-            setTimeout(function() { isPointerDown = false; }, 150);
+            setTimeout(function() { 
+                isPointerDown = false; 
+                console.log('[TL-DEBUG] pointerup (após 150ms): isPointerDown = false');
+            }, 150);
         }, { capture: true, passive: true });
 
         window.addEventListener('pointercancel', function() {
-            setTimeout(function() { isPointerDown = false; }, 150);
+            setTimeout(function() { 
+                isPointerDown = false; 
+                console.log('[TL-DEBUG] pointercancel (após 150ms): isPointerDown = false');
+            }, 150);
         }, { capture: true, passive: true });
     }
 
@@ -202,11 +211,18 @@
         });
 
         card.addEventListener('focusin', function(e) {
+            console.log('[TL-DEBUG] focusin disparado!', { target: e.target.tagName, class: e.target.className });
+            
             if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
             
-            // 🔥 SOLUÇÃO FINAL: Se o ponteiro (mouse/toque) está pressionado ou acabou de soltar (150ms), ignora.
-            if (isPointerDown) return;
+            console.log('[TL-DEBUG] Foco chegou no card. Estado atual:', { isPointerDown: isPointerDown });
             
+            if (isPointerDown) {
+                console.log('[TL-DEBUG] BLOQUEADO: isPointerDown é true. Portal NÃO abre.');
+                return;
+            }
+            
+            console.log('[TL-DEBUG] LIBERADO: Montando portal...');
             var portal = getOrCreatePortal();
             portal.innerHTML = ''; portal.appendChild(fallback);
             
@@ -234,14 +250,23 @@
             portal.style.visibility = 'visible';
             
             var firstBtn = fallback.querySelector('button');
-            if (firstBtn) setTimeout(function() { firstBtn.focus(); }, 50);
+            if (firstBtn) {
+                setTimeout(function() { 
+                    firstBtn.focus(); 
+                    console.log('[TL-DEBUG] Foco enviado para o botão do portal. ActiveElement:', document.activeElement.tagName);
+                }, 50);
+            }
         });
         
         card.setAttribute('tabindex', '0');
         
         var hidePortal = function(e) {
+            console.log('[TL-DEBUG] focusout disparado!', { relatedTarget: e.relatedTarget ? e.relatedTarget.tagName : 'null' });
             var portal = document.getElementById('translate-l-portal');
-            if (portal && !portal.contains(e.relatedTarget) && !card.contains(e.relatedTarget)) portal.style.display = 'none';
+            if (portal && !portal.contains(e.relatedTarget) && !card.contains(e.relatedTarget)) {
+                console.log('[TL-DEBUG] Fechando portal (foco saiu).');
+                portal.style.display = 'none';
+            }
         };
         fallback.addEventListener('focusout', hidePortal);
         card.addEventListener('focusout', hidePortal);
@@ -257,20 +282,16 @@
             if (!managedCards.has(card)) continue;
             
             if (card === topCard) {
-                // É o topo: limpa restrições e permite interação/leitura
                 card.setAttribute('tabindex', '0');
                 card.style.outline = 'none';
                 card.removeAttribute('aria-hidden');
                 card.removeAttribute('inert');
             } else {
-                // É card de trás: esconde do Tab e do TalkBack
                 if (card.contains(document.activeElement) && document.activeElement !== document.body) {
-                    document.activeElement.blur(); // Tira o foco antes de esconder para evitar erro de aria-hidden
+                    document.activeElement.blur();
                 }
                 card.setAttribute('tabindex', '-1');
                 card.setAttribute('aria-hidden', 'true');
-                
-                // Inert é o padrão W3C moderno para bloquear leitores de tela
                 if ('inert' in HTMLElement.prototype) {
                     card.setAttribute('inert', '');
                 }
@@ -602,7 +623,7 @@
         var preset = {
             modeClass: 'modo-swipe-ativo', bodyDraggingClass: 'fenda-arrastando', dragClass: 'translate-l-dragging', transitionClass: 'translate-l-transition', longPressClass: 'translate-l-long-press',
             feedbackSelectors: { right: '.feedback-swipe.feedback-direita', left: '.feedback-swipe.feedback-esquerda', up: '.feedback-swipe.feedback-cima' }, feedbackPosition: 'viewport',
-            upSwipeBehavior: 'navigate', // Feed navega
+            upSwipeBehavior: 'navigate',
             hooks: {
                 onSwipeRight: function (card, id) { if (typeof window.enviarReacao === 'function') { try { var p = window.enviarReacao(id, 'amei'); if (p && p.catch) p.catch(noop); } catch (e) { console.error(e); } } },
                 onSwipeLeft: function (card, id) { if (card.getAttribute('data-owner') === 'true' && typeof window.confirmarExclusao === 'function') window.confirmarExclusao(id); },
@@ -623,7 +644,7 @@
         var preset = {
             modeClass: 'modo-tinder-ativo', bodyDraggingClass: 'bt-arrastando', dragClass: 'translate-l-dragging', transitionClass: 'translate-l-transition', longPressClass: 'translate-l-long-press',
             feedbackSelectors: { right: '.bt-feedback.bt-feedback-direita', left: '.bt-feedback.bt-feedback-esquerda', up: '.bt-feedback.bt-feedback-cima' }, feedbackPosition: 'viewport',
-            upSwipeBehavior: 'swipe', // Balanga descarta o card
+            upSwipeBehavior: 'swipe',
             hooks: {
                 onSwipeRight: function (card, id) { if (typeof window.enviarRespostaEvento === 'function') window.enviarRespostaEvento(id, 'vou', card); else console.warn('enviarRespostaEvento não exposto.'); },
                 onSwipeLeft: function (card, id) { if (typeof window.enviarRespostaEvento === 'function') window.enviarRespostaEvento(id, 'nao_vou', card); },

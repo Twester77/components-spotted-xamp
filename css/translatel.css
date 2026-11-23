@@ -199,7 +199,7 @@
     /* Remove o shimmer do long press */
     .translate-l-card.translate-l-long-press {
         animation: none !important;
-        box-shadow: 0 0 0 2px rgba(255, 188, 0, 0.6);
+        box-shadow: 0 0 0 4px rgba(255, 188, 0, 0.6);
     }
 }
 

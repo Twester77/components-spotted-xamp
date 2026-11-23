@@ -2761,9 +2761,10 @@ body:not(.modo-swipe-ativo) .comunidade-page .spotted-card .reacao-item {
 
 .card-postar-inline .campo-grupo input[type="text"]:focus-visible,
 .card-postar-inline .campo-grupo textarea:focus-visible {
-    outline: none;
+    outline: 2px #ff8c00;
+    outline: 2px var(--cor-principal-laranja, #ff8c00);
+    outline-offset: 2px;
     border-color: #ffbc00;                                          /* fallback */
-    border-color: oklch(83.276% 0.17139 82.036);                    /* fallback moderno */
     border-color: var(--texto-dourado, oklch(83.276% 0.17139 82.036)); /* 🌅 FAGULHA – Fase 2 */
 }
 

@@ -53,7 +53,7 @@ include 'includes/barra-busca.php';
 <?php endif; ?>
 
 <script>
-    // ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
+ // ==================== MOTOR DE LAYOUT UNIVERSAL (HÍBRIDO) ====================
     function recalcFeedLayout() {
         if (!document.body.classList.contains('modo-swipe-ativo')) return;
 
@@ -61,9 +61,12 @@ include 'includes/barra-busca.php';
         var vh = window.innerHeight;
         var isLandscape = vw > vh;
 
-        var larguraDisponivel = Math.max(1, vw - 32);
-        var larguraAlvo = isLandscape ? Math.min(vw * 0.72, 680) : Math.min(vw * 0.70, 550);
-        var cardWidth = Math.round(Math.min(larguraDisponivel, Math.max(240, larguraAlvo)));
+        var larguraDisponivel = Math.max(1, vw - 24);
+        var larguraAlvo = isLandscape
+            ? Math.min(vw * 0.82, 800)
+            : Math.min(vw * 0.68, 390);
+        var larguraMinima = isLandscape ? 240 : 235;
+        var cardWidth = Math.round(Math.min(larguraDisponivel, Math.max(larguraMinima, larguraAlvo)));
 
         var maxCardHeight = isLandscape ? Math.round(Math.min(vh * 0.85, 550)) : Math.round(Math.min(vh * 0.92, 700));
 
@@ -554,8 +557,8 @@ include 'includes/barra-busca.php';
                 <i class="fas fa-ghost" style="display:block;"></i>
                 <strong>A Fenda foi Limpa!</strong>
                 <p>Você leu tudo por aqui ou o feed chegou ao fim.</p>
-                <button onclick="window.reiniciarPilhaFenda()" class="btn-fenda-padrao" style="background:#ff8c00; color:#fff; border:none; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">
-                    <i class="fas fa-sync-alt" style="margin-right:8px;"></i> RADAR DE MARACUTAIA
+                <button onclick="window.reiniciarPilhaFenda()" class="btn-fenda-padrao" style=" cursor:pointer; font-weight:bold;">
+                    <i class="fas fa-sync-alt" style="margin-right:10px;"></i> RADAR DE MARACUTAIA
                 </button>
             </div>
         `);

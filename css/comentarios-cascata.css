@@ -22,10 +22,34 @@ body.estilo-cascata  .sessao-fofoca-focada {
     max-width: 700px;
     border-radius: 10px;
     padding: 4px 8px;
-    padding: clamp(6px, 1.2cqi, 8px) clamp(10px, 1.5cqi, 16px);
+    padding: clamp(3px, 0.8dvh, 6px) clamp(8px, 1.5cqi, 14px);
     background: transparent;
 }
 
+.drawer-cmt-content .textarea-wrapper {
+    /* 🛡️ Fallback clássico */
+    padding: 4px 8px;
+    border-radius: 26px;
+    /* 🚀 Moderno fluido */
+    padding-block: clamp(3px, 0.7dvh, 5px);
+    padding-inline: clamp(8px, 2vw, 10px);
+}
+
+.drawer-cmt-content .textarea-container {
+    /* 🛡️ Fallback clássico */
+    min-height: 36px;
+    /* 🚀 Moderno fluido */
+    min-height: clamp(34px, 5dvh, 40px);
+}
+
+.drawer-cmt-content .textarea-chat {
+    /* 🛡️ Fallback clássico (elimina a sobra vazia abaixo de 1 linha) */
+    min-height: 36px;
+    padding: 7px 36px 5px 6px;
+    line-height: 1.3;
+    /* 🚀 Moderno fluido */
+    min-height: clamp(34px, 5dvh, 40px);
+}
 
 /* 2. O CARD DO COMENTÁRIO (BENTO BOX) */
 body.estilo-cascata .comentario-item {
@@ -152,7 +176,7 @@ body.estilo-cascata .btn-ver-mais { display: none; }
 
 
 /* ============================================================
-   9. O DRAWER (LINGUETA)
+   9. O DRAWER (LINGUETA - GPU TRANSLATE + FALLBACK + LANDSCAPE)
    ============================================================ */
 .drawer-cmt-backdrop {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -162,31 +186,46 @@ body.estilo-cascata .btn-ver-mais { display: none; }
 .drawer-cmt-backdrop.ativo { opacity: 1; pointer-events: auto; }
 
 .drawer-cmt-panel {
+    --drawer-panel-y: 0px;
+    --drawer-footer-y: 0px;
     position: fixed; bottom: 0; left: 0; right: 0;
     height: 90vh;
-    height: 95dvh; background: var(--bg-modal-content, #0d1117);
+    height: 95dvh;
+    background: var(--bg-modal-content, #0d1117);
     max-width: 900px;
     justify-self: center;
     width: 100%;
     border-radius: 25px 25px 0 0;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
     z-index: 100001; display: flex; flex-direction: column;
-    /* 🔥 Adicionado o height na transição */
-     /* Isola layout e pintura interna da página de fundo */
     contain: layout paint;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    /* Fallback 2D caso algum motor legado engasgue com 3D */
+    will-change: transform;
+    /* 🛡️ 1. Fallback Seguro (iOS 9–14 / motores legados) */
     transform: translateY(100%);
-    /* Força camada de composição na GPU desde o início */
     transform: translate3d(0, 100%, 0);
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.drawer-cmt-panel.ativo { 
+.drawer-cmt-panel.ativo {
     transform: translateY(0);
-    transform: translate3d(0, 0, 0);
-    will-change: transform; }
+    transform: translate3d(0, var(--drawer-panel-y, 0px), 0);
+}
+
+/* 🚀 2. Moderno (Individual Transform Properties — sem duplicar com transform) */
+@supports (translate: 0 0) {
+    .drawer-cmt-panel {
+        will-change: translate;
+        transform: none;
+        translate: 0 100% 0;
+        transition: translate 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .drawer-cmt-panel.ativo {
+        transform: none;
+        translate: 0 var(--drawer-panel-y, 0px) 0;
+    }
+}
 
 .drawer-cmt-handle-area { width: 100%; padding: 20px 0; display: flex; justify-content: center; cursor: grab; flex-shrink: 0; touch-action: none; }
 .drawer-cmt-handle { width: 40px; height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
@@ -194,13 +233,73 @@ body.estilo-cascata .btn-ver-mais { display: none; }
 .drawer-cmt-close:hover { background: rgba(255, 100, 100, 0.45); color: #ff6b6b; }
 
 .drawer-cmt-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-.drawer-cmt-content .layout-wrapper { position: relative; height: 100vh; top: auto;
-    left: auto; width: 100%;
-justify-content: center; /* 1. Fallback Seguro */
-justify-content: safe center; /* 2. Moderno (iOS 15+) */
-background: transparent; top: auto; left: auto; }
+.drawer-cmt-content .lista-scrollavel {
+    overscroll-behavior-y: contain;
+}
+.drawer-cmt-content .layout-wrapper {
+    position: relative;
+    height: 100%;
+    top: auto;
+    left: auto;
+    width: 100%;
+    justify-content: center; /* 1. Fallback Seguro */
+    justify-content: safe center; /* 2. Moderno (iOS 15+) */
+    background: transparent;
+}
 
-.drawer-cmt-content .fixed-input { position: relative; bottom: auto; background: transparent; padding: 0; padding-bottom: 15px; }
+.drawer-cmt-content .fixed-input {
+    position: relative;
+    bottom: auto;
+    z-index: 20;
+    background: transparent;
+    padding: 0;
+    /* 🛡️ Fallback clássico */
+    padding-bottom: 10px;
+    /* 🚀 Moderno com notch/barra de gestos */
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
+    /* 🛡️ 1. Fallback Seguro: mantém .sessao-fofoca-focada visível com o drawer encolhido */
+    transform: translateY(0);
+    transform: translate3d(0, var(--drawer-footer-y, 0px), 0);
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@supports (translate: 0 0) {
+    .drawer-cmt-content .fixed-input {
+        will-change: translate;
+        transform: none;
+        translate: 0 var(--drawer-footer-y, 0px) 0;
+        transition: translate 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+}
+
+/* 📱 Modo compacto para Landscape (evita textarea e handle roubarem a tela com teclado aberto) */
+@media (orientation: landscape) and (max-height: 500px) {
+    .drawer-cmt-panel {
+        height: 98vh;
+        height: 98dvh;
+        border-radius: 16px 16px 0 0;
+    }
+    .drawer-cmt-handle-area {
+        padding: 8px 0;
+    }
+    .drawer-cmt-close {
+        top: 6px;
+        right: 10px;
+        width: 28px;
+        height: 28px;
+    }
+    .drawer-cmt-content .fixed-input {
+        padding-bottom: 4px;
+        padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+    }
+    .drawer-cmt-content .textarea-chat {
+        min-height: 36px;
+        max-height: 72px;
+    }
+}
 
 /* Feedback Balão acima de tudo */
 .balao-fenda { z-index: 1000002; }

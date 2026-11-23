@@ -1,12 +1,11 @@
 /* ============================================================
-   FENDA DRAWER COMENTÁRIOS – BRASA (FASE 5 - FINAL)
+   FENDA DRAWER COMENTÁRIOS – BRASA (FASE 5 - GPU TRANSLATE)
    ============================================================ */
 
 let _drawerTecladoHandler = null;
 
 window.abrirDrawerComentarios = function(postId) {
     if (!postId) return;
-
 
     if (typeof window.HeaderManager?.limpar === 'function') {
         window.HeaderManager.limpar();
@@ -40,40 +39,85 @@ window.abrirDrawerComentarios = function(postId) {
         <button class="drawer-cmt-close" onclick="window.fecharDrawerComentarios()"><i class="fas fa-times"></i></button>
         <div class="drawer-cmt-content" id="drawer-cmt-content">
             <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; flex-direction:column; gap:10px;">
-                <i class="fas fa-spinner fa-spin" style="font-size:2rem; color:#ffbc00;"></i>
+                <i class="fas fa-spinner fa-spin" style="font-size:2rem; font-size: clamp(2rem, 2.5vw, 5rem); color:#ffbc00;"></i>
                 <span>Abrindo fofocas...</span>
             </div>
         </div>
     `;
     document.body.appendChild(panel);
 
-        if (window.visualViewport) {
-        let timerTeclado = null;
+    const state = {
+        offsetY: 0,
+        parkedRatio: 0,
+        keyboardBottomOffset: 0,
+        vvOffsetTop: 0,
+        aplicarPosicao(comTransicao, atualizarScrollPadding = false) {
+            const footer = panel.querySelector('.fixed-input');
+            const transicaoCSS = comTransicao ? '' : 'none';
+            panel.style.transition = transicaoCSS;
+            if (footer) footer.style.transition = transicaoCSS;
+
+            const panelY = Math.max(0, state.offsetY + state.vvOffsetTop);
+            // Compensa tanto o offset do drawer quanto o recuo total do teclado + scroll do visualViewport
+            const footerY = -(state.offsetY + state.keyboardBottomOffset);
+
+            panel.style.setProperty('--drawer-panel-y', `${panelY}px`);
+            panel.style.setProperty('--drawer-footer-y', `${footerY}px`);
+
+            if (atualizarScrollPadding) {
+                const lista = panel.querySelector('.lista-scrollavel');
+                if (lista) {
+                    const extraBottom = Math.max(0, state.offsetY + state.keyboardBottomOffset);
+                    lista.style.paddingBottom = extraBottom > 0
+                        ? `calc(20px + ${extraBottom}px + env(safe-area-inset-bottom, 0px))`
+                        : '';
+                }
+            }
+        }
+    };
+    panel._drawerState = state;
+
+    const sincronizarViewport = (comTransicao = true) => {
+        if (!document.body.contains(panel) || !window.visualViewport) return;
+
+        const layoutHeight = window.innerHeight;
+        const vvHeight = window.visualViewport.height;
+        const vvOffsetTop = window.visualViewport.offsetTop;
+        const keyboardBottomOffset = Math.max(0, layoutHeight - vvHeight);
+        const keyboardInset = Math.max(0, keyboardBottomOffset - vvOffsetTop);
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const limiarTeclado = isLandscape ? 40 : 60;
+        const tecladoAberto = keyboardInset > limiarTeclado || vvHeight < layoutHeight * 0.85;
+
+        state.keyboardBottomOffset = tecladoAberto ? keyboardBottomOffset : 0;
+        state.vvOffsetTop = tecladoAberto ? vvOffsetTop : 0;
+
+        if (tecladoAberto) {
+            state.offsetY = 0;
+            state.parkedRatio = 0;
+        } else {
+            const panelHeight = panel.getBoundingClientRect().height || (layoutHeight * 0.95);
+            const maxOffset = Math.max(0, panelHeight - 160);
+            state.offsetY = Math.min(maxOffset, state.parkedRatio * layoutHeight);
+        }
+
+        state.aplicarPosicao(comTransicao, true);
+    };
+
+    if (window.visualViewport) {
+        let rafViewport = null;
+        let timerSettle = null;
         _drawerTecladoHandler = () => {
             if (!document.body.contains(panel)) return;
-            clearTimeout(timerTeclado);
-            timerTeclado = setTimeout(() => {
-                const alturaVisivel = window.visualViewport.height;
-                const offsetTop = window.visualViewport.offsetTop;
-                const tecladoAberto = alturaVisivel < window.innerHeight * 0.85;
+            if (rafViewport) cancelAnimationFrame(rafViewport);
+            rafViewport = requestAnimationFrame(() => sincronizarViewport(false));
 
-                panel.style.transition = 'height 0.2s ease, transform 0.2s ease';
-
-                if (tecladoAberto) {
-                    const alturaAtual = panel.getBoundingClientRect().height;
-                    if (alturaAtual > alturaVisivel * 0.95) {
-                        panel.style.height = `${alturaVisivel * 0.95}px`;
-                    }
-                    panel.style.transform = `translate3d(0, ${offsetTop}px, 0)`;
-                } else {
-                    panel.style.transform = 'translate3d(0, 0, 0)';
-                }
-            }, 100);
+            clearTimeout(timerSettle);
+            timerSettle = setTimeout(() => sincronizarViewport(true), 120);
         };
         window.visualViewport.addEventListener('resize', _drawerTecladoHandler);
         window.visualViewport.addEventListener('scroll', _drawerTecladoHandler);
     }
-
 
     requestAnimationFrame(() => {
         backdrop.classList.add('ativo');
@@ -83,14 +127,13 @@ window.abrirDrawerComentarios = function(postId) {
     fetch(`comentarios-drawer.php?id=${postId}&_=${Date.now()}`)
         .then(res => {
             if (!res.ok) {
-                // Se o PHP retornar 403 (não logado) ou 500 (erro interno), pegamos o texto de erro
                 return res.text().then(text => { throw new Error(text || 'Erro ao carregar.'); });
             }
             return res.text();
         })
         .then(html => {
             const contentArea = document.getElementById('drawer-cmt-content');
-            if (!contentArea) return; // Usuário fechou antes do fetch terminar
+            if (!contentArea) return;
             
             contentArea.innerHTML = html;
             
@@ -103,24 +146,25 @@ window.abrirDrawerComentarios = function(postId) {
             });
 
             configurarGestoFechar(panel);
+            sincronizarViewport(false);
 
             const textarea = contentArea.querySelector('.textarea-chat');
             if (textarea) {
                 textarea.addEventListener('focus', () => {
-                    const currentHeight = parseFloat(panel.style.height) || 95;
-                    if (currentHeight < 60) {
-                        panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                        panel.style.height = '60dvh';
+                    if (state.parkedRatio > 0.35) {
+                        state.offsetY = 0;
+                        state.parkedRatio = 0;
+                        state.aplicarPosicao(true, true);
                     }
+                    // Recheca após a animação da barra de sugestões do teclado Android (Gboard/Samsung)
+                    setTimeout(() => sincronizarViewport(true), 90);
+                    setTimeout(() => sincronizarViewport(true), 260);
                 });
             }
         })
         .catch(err => {
             console.error('[DRAWER] Erro no fetch:', err);
             const contentArea = document.getElementById('drawer-cmt-content');
-            
-            // 🔥 SOLUÇÃO SEGURA: Mostra o erro dentro do painel, sem deletar o backdrop.
-            // O usuário pode ler a mensagem e clicar no X ou no backdrop para fechar.
             if (contentArea) {
                 contentArea.innerHTML = `
                     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:#ff6b6b; padding: 20px; text-align: center;">
@@ -137,15 +181,19 @@ window.fecharDrawerComentarios = function() {
     const backdrop = document.getElementById('drawer-cmt-backdrop');
     const panel = document.getElementById('drawer-cmt-panel');
     
-        if (_drawerTecladoHandler && window.visualViewport) {
+    if (_drawerTecladoHandler && window.visualViewport) {
         window.visualViewport.removeEventListener('resize', _drawerTecladoHandler);
         window.visualViewport.removeEventListener('scroll', _drawerTecladoHandler);
         _drawerTecladoHandler = null;
     }
 
-
     if (backdrop && panel) {
-        panel.style.transform = 'translateY(100%)';
+        const footer = panel.querySelector('.fixed-input');
+        panel.style.transition = '';
+        if (footer) footer.style.transition = '';
+        panel.style.removeProperty('--drawer-panel-y');
+        panel.style.removeProperty('--drawer-footer-y');
+        panel.classList.remove('ativo');
         backdrop.classList.remove('ativo');
         
         setTimeout(() => {
@@ -159,25 +207,25 @@ window.fecharDrawerComentarios = function() {
 
 function configurarGestoFechar(panel) {
     const handleArea = panel.querySelector('.drawer-cmt-handle-area');
-    if (!handleArea) return;
+    const state = panel._drawerState;
+    if (!handleArea || !state) return;
     
     let startY = 0;
-    let currentY = 0;
+    let startOffsetY = 0;
     let isDragging = false;
     let rafId = null;
-    let alturaPainel = window.innerHeight * 0.95;
+    let panelHeight = window.innerHeight * 0.95;
 
     handleArea.addEventListener('pointerdown', (e) => {
         if (!e.isPrimary) return;
         if (e.button !== 0 && e.pointerType === 'mouse') return;
         
         startY = e.clientY;
+        startOffsetY = state.offsetY;
         isDragging = true;
+        panelHeight = panel.getBoundingClientRect().height || (window.innerHeight * 0.95);
         
-        // Pega a altura atual exata (sem pulo ao retomar o arraste)
-        alturaPainel = panel.getBoundingClientRect().height;
-        
-        panel.style.transition = 'none'; 
+        state.aplicarPosicao(false, false);
         handleArea.setPointerCapture(e.pointerId);
         e.preventDefault(); 
     });
@@ -186,51 +234,46 @@ function configurarGestoFechar(panel) {
         if (!isDragging) return;
         
         const multiplicador = e.pointerType === 'mouse' ? 1.3 : 1; 
-        currentY = (e.clientY - startY) * multiplicador;
+        const deltaY = (e.clientY - startY) * multiplicador;
+        const maxDrag = Math.max(0, panelHeight - 130);
+        const nextOffsetY = Math.min(maxDrag, Math.max(0, startOffsetY + deltaY));
         
         if (rafId) cancelAnimationFrame(rafId);
         
         rafId = requestAnimationFrame(() => {
             if (!isDragging) return;
-            // Limita entre 10px (mínimo) e 95% da tela (máximo)
-            const novaAlturaPx = Math.min(window.innerHeight * 0.95, Math.max(10, alturaPainel - currentY));
-            const novaPct = (novaAlturaPx / window.innerHeight) * 100;
-            panel.style.height = `${novaPct}dvh`;
+            state.offsetY = nextOffsetY;
+            state.aplicarPosicao(false, false);
         });
     });
 
     handleArea.addEventListener('pointerup', () => {
         if (!isDragging) return;
         isDragging = false;
-        
         if (rafId) cancelAnimationFrame(rafId);
-        
-        const alturaFinalPx = Math.min(window.innerHeight * 0.95, Math.max(10, alturaPainel - currentY));
-        const alturaFinalDvh = (alturaFinalPx / window.innerHeight) * 100;
 
-        panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        const visibleHeight = panelHeight - state.offsetY;
+        const visibleDvh = (visibleHeight / window.innerHeight) * 100;
 
-        // Se soltou abaixo de 30dvh, fecha totalmente; senão, fica na posição livre escolhida
-        if (alturaFinalDvh < 30) {
+        // Se deixou menos de 30dvh visível, fecha; senão, estaciona com o textbox livre
+        if (visibleDvh < 30) {
             window.fecharDrawerComentarios();
-            setTimeout(() => { panel.style.height = ''; }, 300); 
         } else {
-            panel.style.height = `${alturaFinalDvh}dvh`;
+            const maxParkedOffset = Math.max(0, panelHeight - 165);
+            state.offsetY = Math.min(maxParkedOffset, Math.max(0, state.offsetY));
+            state.parkedRatio = state.offsetY / window.innerHeight;
+            state.aplicarPosicao(true, true);
         }
-
-        currentY = 0; 
     });
 
     handleArea.addEventListener('pointercancel', () => {
         if (!isDragging) return;
         isDragging = false;
         if (rafId) cancelAnimationFrame(rafId);
-        panel.style.transition = 'height 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        panel.style.height = '95dvh';
-        currentY = 0;
+        state.offsetY = startOffsetY;
+        state.aplicarPosicao(true, false);
     });
 }
-
 
 // Intercepta o clique no botão "Fofocar" e no "Expandir"
 document.addEventListener('click', (e) => {
@@ -238,11 +281,9 @@ document.addEventListener('click', (e) => {
         '.btn-fofocar, #lightbox-body a[href*="comentarios-post.php"]'
     ) : null;
     if (btnFofocar) {
-        // Se for swipe ou whatsapp, deixa o link normal agir.
         if (document.body.classList.contains('modo-swipe-ativo')) return;
         if (!document.body.classList.contains('estilo-cascata')) return;
 
-        // No Cascata: intercepta e abre o Drawer
         e.preventDefault();
         e.stopPropagation();
         const href = btnFofocar.getAttribute('href');

@@ -865,6 +865,7 @@ body.modal-aberto .fab-postar {
     border-radius: 12px;
     font-weight: bold;
     font-size: 16px;
+    letter-spacing: 1px;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -2214,9 +2215,9 @@ textarea[name="bio"] {
     /* O Card precisa ser mais "magro" em altura para caber na tela */
     article.spotted-card {
         width: 100%;
-        max-width: 350px;
+        max-width: 360px;
         gap: 4px;
-        padding: 4px;
+        padding: 6px;
     }
 
 
@@ -2441,6 +2442,7 @@ textarea[name="bio"] {
         content: '';
         position: absolute;
         inset: -3px;
+        opacity: 1;
         /* Espessura da borda um pouquinho maior*/
         border-radius: inherit;
         z-index: -1;
@@ -2859,7 +2861,7 @@ body.modal-aberto #fenda-nexus {
     color: #ffffff;                                              /* fallback */
     color: var(--texto-primario, #ffffff);                       /* 🐚 FAROL – Fase 2 */
     font-weight: bold;
-    font-size: clamp(0.75rem, 2vw, 1rem);
+    font-size: clamp(0.75rem, 2vw, 0.96rem);
 }
 
 .link-pagina-especializada a {

@@ -147,8 +147,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
     padding: var(--card-padding, 14px);
     padding: clamp(0.65em, 3.8cqi, 1.1em);
 
-    font-size: var(--card-font-size, 0.88rem);
-    font-size: clamp(0.7em, 2cqi, 1.15em);
+    font-size: var(--card-font-size, 0.9rem);
+    font-size: clamp(0.7em, 2cqi, 1.1em);
 
     max-height: var(--card-max-height, 700px);
     height: auto;
@@ -184,8 +184,8 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
 .container-feed.feed-empilhado .spotted-card.translate-l-dragging {
     filter: none;
     transition: none;
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
 }
 
 @supports (transform: translate(var(--pos-x), var(--pos-y))) {
@@ -193,6 +193,27 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card {
         transform: translate3d(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y)), 0px) rotate(var(--swipe-rot));
         transform: translate(calc(-50% + var(--pos-x)), calc(-50% + var(--pos-y))) rotate(calc(var(--swipe-rot)));
         transition: none;
+    }
+}
+
+
+/* Cards só de texto (Base / Mobile Portrait): pouco texto = compacto (68vw), muito texto = estica (84vw) */
+@supports selector(:has(*)) {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
+        width: auto;
+        width: -moz-fit-content;
+        width: fit-content;
+        /* 🛡️ Fallback clássico */
+        min-width: 68vw;
+        max-width: 84vw;
+        /* 🚀 Moderno */
+        min-width: min(68vw, 300px);
+        max-width: min(84vw, 450px);
+    }
+
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .post-content {
+        width: 100%;
+        margin: 5px 0;
     }
 }
 
@@ -285,9 +306,9 @@ body.modo-swipe-ativo .feed-empilhado .spotted-card .avatar {
     transform: perspective(400px) translate(-62%, -36%) rotate(-6deg) scale(0.85);
     opacity: 0.2 !important;
     z-index: 7;
-    pointer-events: none ;
-    -webkit-backdrop-filter: none ;
-    backdrop-filter: none ;
+    pointer-events: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     will-change: transform, opacity;
 }
 
@@ -423,6 +444,7 @@ body.modo-swipe-ativo #btn-abrir-filtros::before {
     content: '';
     position: absolute;
     inset: -3px;
+    opacity: 1;
     border-radius: inherit;
     z-index: -1;
     background: #fbff00;
@@ -1081,7 +1103,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
     -moz-user-select: none;
     user-select: none;
     touch-action: none;
-    -webkit-touch-callout:none;
+    -webkit-touch-callout: none;
     -webkit-user-drag: none;
 }
 
@@ -1102,6 +1124,7 @@ body:not(.modo-swipe-ativo) .spotted-card.card-long-press-active {
 
 /* 1. Abordagem moderna para navegadores com :has() (Safari 15.4+, Chrome 105+) */
 @supports selector(:has(*)) {
+
     body:has(.reactions-popup-overlay.active) .container-feed.feed-empilhado .spotted-card[class*="vibe-"],
     body:has(.bt-actions-overlay) .bt-card[class*="vibe-"] {
         -webkit-backdrop-filter: none;
@@ -1143,12 +1166,12 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         --ls-text-font: 0.78rem;
         --ls-reaction-font: 0.78rem;
 
-        width: calc(100vw - 16px);
-        max-width: var(--card-width, 400px);
-        width: min(var(--card-width, 400px), calc(100vw - 16px));
-        max-width: min(var(--card-width, 640px), 680px, calc(100vw - 16px));
-        max-height: 450px;
-        max-height: var(--card-max-height, min(85dvh, 550px));
+        /* 🛡️ Fallback clássico */
+        width: 82vw;
+        max-width: 800px;
+        /* 🚀 Moderno (respeita --card-width do feed.php) */
+        width: min(var(--card-width, 82vw), calc(100vw - 24px));
+        max-width: min(var(--card-width, 800px), 800px, calc(100vw - 24px));
         height: auto;
         box-sizing: border-box;
 
@@ -1196,7 +1219,8 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         grid-row: 1 / -1;
         width: 100%;
         height: 100%;
-        max-height: 100%;
+        max-height: 66vh;
+        max-height: min(66dvh, 270px);
         min-width: 0;
         min-height: 0;
         aspect-ratio: unset;
@@ -1257,12 +1281,14 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         grid-column: 1;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item {
+  body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item {
         display: flex;
         align-items: center;
         justify-content: center;
         justify-content: safe center;
-        place-self: center;
+        place-self: stretch;
+        width: 100%;
+        height: 100%;
         min-width: 0;
         min-height: 0;
         overflow: hidden;
@@ -1276,7 +1302,9 @@ body.menu-aberto .bt-card[class*="vibe-"] {
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img,
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post img,
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .carrossel-item img,
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-gif-video {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item .feed-gif-video,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .carrossel-item .feed-gif-video,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post .feed-gif-video {
         display: block;
         width: 100%;
         height: 100%;
@@ -1388,10 +1416,19 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         font-size: var(--ls-reaction-font);
     }
 
-    /* Posts sem imagem */
+    /* Posts sem imagem no Mobile Landscape: curto fica compacto (240px–340px); textão estica até 760px */
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
         display: flex;
         flex-direction: column;
+        width: auto;
+        width: -moz-fit-content;
+        width: fit-content;
+        /* 🛡️ Fallback clássico */
+        min-width: 42vw;
+        max-width: 82vw;
+        /* 🚀 Moderno */
+        min-width: clamp(240px, 42vw, 340px);
+        max-width: min(var(--card-width, 82vw), 760px, calc(100vw - 24px));
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .card-body {
@@ -1402,6 +1439,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
     }
 
     body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .post-content {
+        width: 100%;
         max-height: 100%;
         overflow: hidden;
         font-size: 0.85rem;
@@ -1445,7 +1483,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
 }
 
 /* ============================================================
-   RESPONSIVIDADE PARA TELAS MAIORES
+   RESPONSIVIDADE PARA TELAS MAIORES (MODO REVISTA / GRID)
    ============================================================ */
 
 /* Tablet e telas maiores: mídia e conteúdo lado a lado */
@@ -1461,46 +1499,43 @@ body.menu-aberto .bt-card[class*="vibe-"] {
     @supports selector(:has(*)) {
 
         /* Card com mídia */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) {
             display: grid;
             grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
             grid-template-rows: auto auto minmax(0, 1fr) auto;
-            column-gap: clamp(12px, 2vw, 20px);
+            column-gap: clamp(14px, 2.2vw, 24px);
             row-gap: clamp(8px, 1.2vh, 14px);
             align-items: center;
             align-content: center;
             box-sizing: border-box;
-            width: min(85vw, 800px);
-            max-width: min(85vw, 800px);
-            /* 👇 AJUSTE DE ALTURA DINÂMICA COM TRAVAS */
+            /* 🛡️ Fallback clássico */
+            width: 86vw;
+            max-width: 920px;
+            min-height: 27vh;
+            max-height: 85vh;
+            /* 🚀 Moderno */
+            width: min(86vw, 920px);
+            max-width: min(86vw, 920px);
             height: auto;
-            /* Permite crescer com o conteúdo */
-            min-height: 30vh;
-            /* Fallback para iOS antigo */
-            min-height: 30dvh;
-            /* Mínimo de 30% da tela visível */
-            max-height: min(85vh, 650px);
-            /* Fallback: nunca passa de 85% da tela ou 600px */
-            max-height: min(85dvh, 650px);
-            /* Moderno: teto máximo de 600px */
-
+            min-height: 27svh;
+            max-height: min(85dvh, 740px);
             overflow: hidden;
         }
 
         /* Filhos do card-body participam do grid do card */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .card-body {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .card-body {
             display: contents;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .card-actions-ellipsis,
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .footer-links {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .card-actions-ellipsis,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .footer-links {
             display: none;
         }
 
         /* Mídia na primeira coluna */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid,
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .container-img-post,
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .carrossel-wrapper {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .container-img-post,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .carrossel-wrapper {
             grid-column: 1;
             grid-row: 1 / -1;
             align-self: center;
@@ -1523,7 +1558,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         }
 
         /* Grade padrão para mosaicos */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid {
             display: grid;
             width: 100%;
             height: auto;
@@ -1545,54 +1580,54 @@ body.menu-aberto .bt-card[class*="vibe-"] {
             background: transparent;
         }
 
-        /* Uma imagem */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:only-child) {
+        /* Uma imagem/vídeo */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:only-child) {
             display: grid;
             grid-template-columns: minmax(0, 1fr);
             grid-template-rows: minmax(0, 1fr);
             aspect-ratio: 1 / 1;
         }
 
-        /* Duas imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
+        /* Duas imagens/vídeos */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:nth-child(2):last-child) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             grid-template-rows: minmax(0, 1fr);
             aspect-ratio: 2 / 1;
         }
 
-        /* Três imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
+        /* Três imagens/vídeos */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) {
             grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
             grid-template-rows: repeat(2, minmax(0, 1fr));
             aspect-ratio: 1 / 1;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
             grid-column: 1;
             grid-row: 1 / span 2;
         }
 
-        /* Quatro imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
+        /* Quatro imagens/vídeos */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:nth-child(4):last-child) {
             grid-template-columns: repeat(2, minmax(0, 1fr));
             grid-template-rows: repeat(2, minmax(0, 1fr));
             aspect-ratio: 1 / 1;
         }
 
-        /* Cinco ou mais imagens */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
+        /* Cinco ou mais imagens/vídeos */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) {
             grid-template-columns: repeat(4, minmax(0, 1fr));
             grid-template-rows: repeat(2, minmax(0, 1fr));
             aspect-ratio: 2 / 1;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) .feed-anexo-item:first-child {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) .feed-anexo-item:first-child {
             grid-column: 1 / span 2;
             grid-row: 1 / span 2;
         }
 
-        /* Imagens centralizadas nas células */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexo-item {
+        /* Imagens e GIFs/Vídeos centralizados nas células */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexo-item {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1607,9 +1642,13 @@ body.menu-aberto .bt-card[class*="vibe-"] {
             border-radius: clamp(4px, 0.6vw, 8px);
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .feed-anexo-item img,
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .container-img-post img,
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .carrossel-item img {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexo-item img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-anexo-item video,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .container-img-post img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .container-img-post video,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .carrossel-item img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .carrossel-item video,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .feed-gif-video {
             display: block;
             width: 100%;
             height: 100%;
@@ -1625,7 +1664,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         }
 
         /* Cabeçalho na coluna direita */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .card-header {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .card-header {
             grid-column: 2;
             grid-row: 1;
             align-self: center;
@@ -1634,7 +1673,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         }
 
         /* Autor na coluna direita */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .user-info-post {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .user-info-post {
             grid-column: 2;
             grid-row: 2;
             align-self: center;
@@ -1643,7 +1682,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         }
 
         /* Texto na coluna direita */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .post-content {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .post-content {
             grid-column: 2;
             grid-row: 3;
             align-self: start;
@@ -1658,12 +1697,12 @@ body.menu-aberto .bt-card[class*="vibe-"] {
             word-break: normal;
             display: -webkit-box;
             -webkit-box-orient: vertical;
-            -webkit-line-clamp: 8;
-            line-clamp: 8;
+            -webkit-line-clamp: 10;
+            line-clamp: 10;
         }
 
         /* Reações abaixo do texto */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .reacoes-gravadas {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .reacoes-gravadas {
             grid-column: 2;
             grid-row: 4;
             align-self: center;
@@ -1674,7 +1713,7 @@ body.menu-aberto .bt-card[class*="vibe-"] {
             margin: 0;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper) .reacoes-gravadas .reacao-item {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .reacoes-gravadas .reacao-item {
             flex: 0 1 auto;
             min-width: 0;
             max-width: 100%;
@@ -1683,34 +1722,41 @@ body.menu-aberto .bt-card[class*="vibe-"] {
             text-overflow: ellipsis;
         }
 
-        /* Card sem mídia */
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) {
+        /* Cards só de texto no Modo Revista (telas >= 600px x 601px) */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video)) {
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            gap: clamp(8px, 1.2vh, 14px);
+            gap: clamp(10px, 1.4vh, 16px);
             box-sizing: border-box;
-            width: min(92vw, 800px);
-            max-width: min(92vw, 800px);
+            width: auto;
+            width: -moz-fit-content;
+            width: fit-content;
+            /* 🛡️ Fallback clássico */
+            min-width: 55vw;
+            max-width: 84vw;
+            max-height: 84vh;
+            /* 🚀 Moderno */
+            min-width: clamp(420px, 55vw, 520px);
+            max-width: min(84vw, 680px);
             height: auto;
             min-height: 0;
-            max-height: 82vh;
-            max-height: 82dvh;
+            max-height: 84svh;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .card-body {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video)) .card-body {
             display: flex;
             flex-direction: column;
-            gap: clamp(8px, 1.2vh, 14px);
+            gap: clamp(10px, 1.4vh, 16px);
             min-width: 0;
         }
 
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper)) .post-content {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video)) .post-content {
             align-self: stretch;
             min-width: 0;
-            max-height: min(45dvh, 18rem);
+            max-height: min(55dvh, 24rem);
             margin: 0;
             overflow: auto;
             text-align: left;
@@ -1726,9 +1772,13 @@ body.menu-aberto .bt-card[class*="vibe-"] {
             align-items: stretch;
             gap: 10px;
             box-sizing: border-box;
-            width: min(92vw, 800px);
-            max-width: min(92vw, 800px);
-            max-height: 82vh;
+            /* 🛡️ Fallback clássico */
+            width: 84vw;
+            max-width: 780px;
+            max-height: 85vh;
+            /* 🚀 Moderno */
+            width: min(84vw, 780px);
+            max-width: min(84vw, 780px);
             overflow: auto;
         }
 
@@ -1753,12 +1803,40 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         }
 
         body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img,
-        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post img {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item video,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post img,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .container-img-post video,
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-gif-video {
             display: block;
             width: 100%;
             height: 100%;
             object-fit: contain;
             object-position: center;
+        }
+    }
+}
+
+/* Landscape em telas >= 600x601 (Tablet deitado / Notebooks pequenos) */
+@media (min-width: 600px) and (min-height: 601px) and (orientation: landscape) {
+    @supports selector(:has(*)) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video)) {
+            /* 🛡️ Fallback clássico */
+            min-width: 48vw;
+            max-width: 84vw;
+            /* 🚀 Moderno */
+            min-width: clamp(460px, 46vw, 560px);
+            max-width: min(84vw, 880px);
+        }
+    }
+
+    @supports not selector(:has(*)) {
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card {
+            /* 🛡️ Fallback clássico */
+            width: 84vw;
+            max-width: 880px;
+            /* 🚀 Moderno */
+            width: min(84vw, 880px);
+            max-width: min(84vw, 880px);
         }
     }
 }
@@ -1772,19 +1850,55 @@ body.menu-aberto .bt-card[class*="vibe-"] {
     }
 }
 
+
 /* ============================================================
    19. PC (telas largas) — MODO REVISTA
    ============================================================ */
 @media (min-width: 1024px) {
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
-        max-height: 70vh;
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexos-grid:has(.feed-anexo-item:only-child) video,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-gif-video {
+        max-height: 58vh;
         object-fit: contain;
         background: #050505;
         /* 🎨 preto-ainda-mais-escuro específico do PC */
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .spotted-card {
-        max-width: min(var(--card-width, 650px), 650px);
+    @supports selector(:has(*)) {
+        /* Card com mídia no PC: largura de revista enxuta + teto de altura equilibrado */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) {
+            /* 🛡️ Fallback clássico */
+            width: 76vw;
+            max-width: 850px;
+            min-height: 32vh;
+            max-height: 72vh;
+            /* 🚀 Moderno */
+            width: min(76vw, 850px);
+            max-width: min(76vw, 850px);
+            min-height: 32svh;
+            max-height: min(72dvh, 650px);
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video) .post-content {
+            -webkit-line-clamp: 10;
+            line-clamp: 10;
+        }
+
+        /* Card só de texto no PC: piso largo (480px–560px), crescimento até 820px e teto enxuto */
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video)) {
+            /* 🛡️ Fallback clássico */
+            min-width: 42vw;
+            max-width: 74vw;
+            max-height: 70vh;
+            /* 🚀 Moderno */
+            min-width: clamp(480px, 40vw, 560px);
+            max-width: min(74vw, 820px);
+            max-height: 70svh;
+        }
+
+        body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card:not(:has(.feed-anexos-grid, .container-img-post, .carrossel-wrapper, .feed-gif-video)) .post-content {
+            max-height: min(46dvh, 21rem);
+        }
     }
 }
 
@@ -1802,7 +1916,9 @@ body.menu-aberto .bt-card[class*="vibe-"] {
         aspect-ratio: 1 / 1;
     }
 
-    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img {
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item img,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-anexo-item video,
+    body.modo-swipe-ativo .container-feed.feed-empilhado .spotted-card .feed-gif-video {
         object-fit: contain;
         background: #0a0a0a;
         /* fallback */

@@ -3,7 +3,7 @@
         
         <button type="button" class="nexus-item" onclick="executarAcao(this, 0, abrirModalPost)">Criar Post</button>
 
-        <button type="button" class="nexus-item" onclick="executarAcao(this, 90, toggleToolbar)">Config.Rápidas</button>
+        <button type="button" class="nexus-item" onclick="executarAcao(this, 90, toggleToolbar)">Atalhos</button>
 
         <button type="button" class="nexus-item" onclick="executarAcao(this, 180, function(){ window.location.href='index.php'; })">Início</button>
         

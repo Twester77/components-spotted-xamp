@@ -380,7 +380,9 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 6pxa;
     gap: clamp(4px, 1cqi, 10px);
+    padding: 5px 0;
     padding: clamp(4px, 0.8vw, 10px) 0;
     position: relative;
     z-index: 2;
@@ -400,6 +402,8 @@ body:not(.modo-swipe-ativo) .central-conteudo .spotted-card:hover {
 }
 
 .indicador {
+    width: 5px;
+    height: 5px;
     width: clamp(6px, 1cqi, 10px);
     height: clamp(6px, 1cqi, 10px);
     border-radius: 50%;

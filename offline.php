@@ -13,7 +13,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: 'Inter', sans-serif;
+            height: 100dvh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             margin: 0;
             padding: 20px;
             text-align: center;
@@ -25,7 +26,7 @@
             border: 1px solid #ffbc00;
             border-radius: 20px;
             padding: 30px;
-            max-width: 400px;
+            max-width: 600px;
             color: #fff;
         }
         .offline-card i {

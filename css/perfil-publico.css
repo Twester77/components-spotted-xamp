@@ -134,9 +134,9 @@ body.modal-aberto .main-perfil-container-publico *::after {
     object-fit: cover;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    border: 2px solid var(--aura-user, #ffbc00);
+    border: 2px solid var(--aura-user, #70cde4);
     /* 🎨 dinâmica via PHP — preservada */
-    box-shadow: 0 0 8px var(--aura-user, #ffbc00)55;
+    box-shadow: 0 0 5px var(--aura-user, #70cde4);
     /* 🎨 dinâmica via PHP — preservada */
     background: #0a0a0a;
     /* fallback */
@@ -156,7 +156,7 @@ body.modal-aberto .main-perfil-container-publico *::after {
 .perfil-imagem-trigger:focus-visible {
     outline: 2px solid var(--aura-user, #ffbc00);
     /* 🎨 dinâmica via PHP — preservada */
-    outline-offset: 3px;
+    outline-offset: 2px;
 }
 
 .capa-imagem-trigger {
@@ -2435,7 +2435,8 @@ body.modal-aberto .main-perfil-container-publico *::after {
     margin: 6px 0;
 }
 
-#perfil-conteudo .container-img-post img {
+#perfil-conteudo .container-img-post img,
+#perfil-conteudo .container-img-post .feed-gif-video {
     display: block;
     width: 100%;
     border-radius: 8px;
@@ -2475,7 +2476,8 @@ body.modal-aberto .main-perfil-container-publico *::after {
         box-shadow: none;
     }
 
-    #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+    #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
+    #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-gif-video {
         width: 100%;
         height: auto;
         object-fit: contain;
@@ -2492,6 +2494,9 @@ body.modal-aberto .main-perfil-container-publico *::after {
         border: none;
         background: transparent;
         padding: 0;
+        margin: auto;
+        margin-inline: auto;
+        
     }
 
     /* --- 3 imagens: 1 grande + 2 empilhadas (Google Drive) --- */
@@ -2505,7 +2510,8 @@ body.modal-aberto .main-perfil-container-publico *::after {
         border: none;
         background: transparent;
         padding: 0;
-        margin: 5px auto;
+        margin: auto;
+        margin-inline: auto;
     }
 
     #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
@@ -2525,7 +2531,8 @@ body.modal-aberto .main-perfil-container-publico *::after {
         background: transparent;
         padding: 0;
         aspect-ratio: 1 / 1;
-        margin: 6px auto;
+        margin: auto;
+        margin-inline: auto;
         /* Centraliza o quadrado dentro do card */
 
     }
@@ -2586,7 +2593,8 @@ body.modal-aberto .main-perfil-container-publico *::after {
             margin-inline: auto;
         }
 
-        #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+        #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
+        #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-gif-video {
             width: auto;
             max-width: 100%;
 
@@ -2594,11 +2602,12 @@ body.modal-aberto .main-perfil-container-publico *::after {
             /* Fallback para navegadores antigos (iOS 9) */
             height: 25vh;
             height: 25dvh;
-            min-height: 180px;
+            min-height: 100px;
             /* Nunca menor que isso (tipo um selo) */
-            max-height: 250px;
+            max-height: 260px;
             /* Nunca maior que isso (tipo um outdoor) */
-
+            margin: 0 auto;
+            /* fallback antigo */
             margin-block: 0;
             margin-inline: auto;
             object-fit: contain;
@@ -2620,7 +2629,9 @@ body.modal-aberto .main-perfil-container-publico *::after {
     }
 
     #perfil-conteudo .container-img-post img,
-    #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) img {
+    #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) img,
+    #perfil-conteudo .container-img-post .feed-gif-video,
+    #perfil-conteudo .feed-anexos-grid:has(.feed-anexo-item:only-child) .feed-gif-video {
         max-height: 220px;
     }
 

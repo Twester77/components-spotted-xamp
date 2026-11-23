@@ -262,7 +262,9 @@
 
 /* 7.2 Imagens individuais (fallback) */
 body:not(.modo-swipe-ativo) .lightbox-post-body img,
-body.modo-swipe-ativo .lightbox-post-body img {
+body.modo-swipe-ativo .lightbox-post-body img,
+body:not(.modo-swipe-ativo) .lightbox-post-body .feed-gif-video,
+body.modo-swipe-ativo .lightbox-post-body .feed-gif-video {
     height: 100%;
     width: 100%;
     object-fit: contain;
@@ -272,7 +274,9 @@ body.modo-swipe-ativo .lightbox-post-body img {
 }
 
 body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexo-item:only-child img,
-body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child img {
+body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child img,
+body:not(.modo-swipe-ativo) .lightbox-post-body .feed-anexo-item:only-child .feed-gif-video,
+body.modo-swipe-ativo .lightbox-post-body .feed-anexo-item:only-child .feed-gif-video  {
     height: 100%;
     width: 100%;
     object-fit: contain;
@@ -387,7 +391,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 
 .lightbox-comentarios-titulo {
     font-size: 1rem;
-    font-size: clamp(0.96rem, 3.5cqi, 1.5rem);
+    font-size: clamp(0.96rem, 3.5cqi, 1.4rem);
     color: #aaa;                                                   /* fallback */
     color: oklch(73.802% 0.00008 271.152);                        /* fallback moderno */
     color: var(--texto-terciario, oklch(73.802% 0.00008 271.152)); /* 🌅 FAGULHA – Fase 2 */
@@ -418,14 +422,16 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     border-right: none;
     border-left: 3px solid var(--cor-borda-glow, #70cde4);         /* 🎨 dinâmica via PHP — preservada */
     min-width: 0;
+    width: auto;
     max-width: 100%;
     animation: none;
 }
 
 .lightbox-comentarios-lista .comentario-item .comentario-meta {
     padding: 4px 8px;
+    padding: clamp(6px, 1vw, 12px) clamp(8px, 1.5vw, 16px);
     padding: clamp(6px, 1cqi, 12px) clamp(8px, 1.5cqi, 16px);
-    gap: 12px;
+    gap: 15px;
     gap: clamp(10px, 3.5cqi, 25px);
     display: flex;
     justify-content: flex-start;
@@ -503,8 +509,10 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
 /* 10. RODAPÉ (botão Comentar) */
 .lightbox-footer {
     display: flex;
-    gap: clamp(8px, 1.5cqi, 14px);
+    gap: 10px;
+    gap: clamp(8px, 1.5vw, 14px);
     justify-content: flex-end;
+    padding-top: 12px;
     padding-top: clamp(10px, 1.5cqi, 16px);
 }
 
@@ -513,11 +521,13 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
     border: 1px solid rgba(255, 188, 0, 0.25);                     /* 🎨 dourado com alpha específico */
     color: #ffbc00;                                                /* fallback */
     color: var(--texto-dourado, #ffbc00);                          /* 🌅 FAGULHA – Fase 2 */
+    padding: 5px 12px;
     padding: clamp(6px, 1cqi, 10px) clamp(14px, 2.5cqi, 24px);
     border-radius: 30px;
     cursor: pointer;
     font-weight: 600;
-    font-size: clamp(0.8rem, 1.2cqi, 0.95rem);
+    font-size: 0.84rem;
+    font-size: clamp(0.8rem, 1.2cqi, 0.96rem);
     transition: 0.2s;
     display: inline-flex;
     align-items: center;
