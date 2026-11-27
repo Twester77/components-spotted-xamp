@@ -97,7 +97,7 @@ function encerrarSessaoUnica(btn, sessaoId) {
                 }, 300);
             }
             if (typeof exibirToast === 'function') {
-                exibirToast('✅ Sessão encerrada!', 'sucesso');
+                exibirToast(' Sessão encerrada!', 'sucesso');
             } else {
                 alert('Sessão encerrada!');
             }

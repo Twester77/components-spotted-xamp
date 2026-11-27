@@ -296,10 +296,11 @@ select:focus-visible {
     color: var(--texto-dourado, oklch(83.276% 0.17139 82.036));     /* 🌅 FAGULHA – Fase 2 */
     margin: 0;
     font-size: 1rem;
-    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    font-size: clamp(0.96rem, 1.3vw, 1.25rem);
     display: flex;
     align-items: center;
     gap: 6px;
+    gap: clamp(8px, 1.5vw, 15px);
     flex-wrap: wrap;
 }
 
@@ -421,9 +422,10 @@ select:focus-visible {
     background: oklch(0.85 0.29 141.38 / 12%);                      /* 🎨 verde com alpha específico */
 }
 
+
 .sessao-item.sessao-atual .sessao-dispositivo::after {
-    content: " (sessão atual)";
-    font-size: 0.7rem;
+    content: " (Sessão Atual)";
+    font-size: 0.73rem;
     color: #0d0d0d ;                                                 /* fallback */
     color: var(--bg-page-dark, oklch(0.16 0 0));                              /* 🎨 laranja-dourado específico */
     font-weight: 400;
@@ -502,8 +504,10 @@ select:focus-visible {
 }
 
 .btn-encerrar-sessao:hover {
-    background: rgba(255, 50, 50, 0.16);                            /* 🎨 vermelho com alpha específico */
+    background: rgba(255, 50, 50, 0.644);                            /* 🎨 vermelho com alpha específico */
     border-color: rgba(255, 50, 50, 0.3);                           /* 🎨 vermelho com alpha específico */
+    color: #fff;
+    color: var(--texto-primario, #fff);
     transform: scale(1.03);
 }
 
@@ -2158,10 +2162,10 @@ textarea {
 .perdidos-item.card-achado {
     margin-bottom: 20px;
     padding: 6px;
-    padding: clamp(4px, 1.5cqi, 12px);
+    padding: clamp(5px, 1.5cqi, 12px);
     border-radius: 4px;
     border-radius: clamp(6px, 1.2vw, 14px);
-    font-size: 0.84rem;
+    font-size: 0.85rem;
     font-size: clamp(0.875rem, 1vw + 0.3rem, 1.125rem);
     background: var(--glass-bg);
 }
@@ -3193,6 +3197,7 @@ textarea {
     border-radius: 16px;
     padding: 0;
     background: transparent;
+    min-width: 220px;
     max-width: 90%;
     max-width: 350px;
     z-index: 1000003;
@@ -3270,7 +3275,7 @@ textarea {
 }
 
 .dialog-btn-sim:hover {
-    background: rgba(220, 53, 69, 0.4);                             /* 🎨 vermelho com alpha específico */
+    background: rgba(220, 53, 69, 0.45);                             /* 🎨 vermelho com alpha específico */
 }
 
 .dialog-btn-nao {

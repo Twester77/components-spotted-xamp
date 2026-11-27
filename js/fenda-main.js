@@ -159,8 +159,10 @@ window.fecharModalSair = function () {
     if (modal) modal.style.display = 'none';
 };
 
-function confirmarExclusao(idPost) {
-    if (!confirm(" ATENÇÃO: Deseja mesmo apagar esse post?")) return;
+// 🔥 ECO-07: Substituição do window.confirm() pelo <dialog> nativo assíncrono
+async function confirmarExclusao(idPost) {
+    const confirmado = await window.exibirConfirmacao("Deseja mesmo apagar esse post?", "⚠️ Excluir Post");
+    if (!confirmado) return;
 
     const csrfToken = document.getElementById('csrf_token')?.value || '';
     if (!csrfToken) {
@@ -219,8 +221,12 @@ window.abrirPerfilDrawer = function (e) {
     }
 
     containerPerfil.innerHTML = '<p class="drawer-perfil-loading" role="status">Carregando configurações de perfil...</p>';
+    
+    // 🔥 ECO-02: Remove o inert ao abrir
+    drawer.inert = false;
     drawer.classList.add('ativa');
     drawer.setAttribute('aria-hidden', 'false');
+    
     if (backdrop) backdrop.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
@@ -264,13 +270,18 @@ window.fecharPerfilDrawer = function () {
         perfilDrawerAbortController = null;
     }
 
+    // 🔥 ECO-01/02: Devolve o foco antes de aplicar inert
+    const botaoConfig = document.querySelector('.btn-config');
+    if (botaoConfig) botaoConfig.focus();
+
     if (drawer) {
+        drawer.inert = true; // 🔥 ECO-02: Aplica inert ao fechar
         drawer.classList.remove('ativa');
         drawer.setAttribute('aria-hidden', 'true');
     }
     if (backdrop) backdrop.style.display = 'none';
-    const botaoConfig = document.querySelector('.btn-config');
     if (botaoConfig) botaoConfig.setAttribute('aria-expanded', 'false');
+    
     document.body.style.overflow = 'auto';
     if (typeof window.retomarVideosGifFeed === 'function') {
         window.retomarVideosGifFeed('perfil-drawer');
@@ -1501,18 +1512,29 @@ window.toggleJanelaNotificacoes = function () {
     // 🔥 REMOVIDO: limpeza automática do badge – agora só limpa quando o usuário clica em uma notificação ou acessa a página.
 
     const box = document.getElementById('dropdown-notificacoes');
-    if (box.style.display === 'none' || box.style.display === '') {
+    const trigger = document.querySelector('.notificacao-trigger');
+    
+    if (!box || !trigger) return;
+
+    const isHidden = box.style.display === 'none' || box.style.display === '';
+    
+    if (isHidden) {
         // 🔥 Usa o motor-notificacoes.php via notificacoes-rapidas.php (com timestamp para evitar cache)
         fetch('notificacoes-rapidas.php?t=' + Date.now())
             .then(res => res.text())
             .then(html => {
                 box.innerHTML = html;
                 box.style.display = 'block';
-                // 🔥 O badge NÃO é mais limpo aqui – mantemos até que o usuário interaja.
+                // 🔥 ECO-04: Sincroniza aria
+                box.setAttribute('aria-hidden', 'false');
+                trigger.setAttribute('aria-expanded', 'true');
             })
             .catch(err => console.error('[NOTIF] Erro ao carregar:', err));
     } else {
         box.style.display = 'none';
+        // 🔥 ECO-04: Sincroniza aria
+        box.setAttribute('aria-hidden', 'true');
+        trigger.setAttribute('aria-expanded', 'false');
     }
 };
 
@@ -1614,16 +1636,28 @@ window.addEventListener('click', function (event) {
     const clicouNaNotif = event.target.closest('.notificacao-wrapper') || event.target.closest('#btn-notificacoes');
     const clicouNoPost = event.target.closest('.post-content');
 
-    if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
-        document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
+       if (!clicouNoMenu && !clicouNaReacao && !clicouNoPost) {
+        document.querySelectorAll('.menu-item.dropdown').forEach(m => {
+            m.classList.remove('active');
+            // 🔥 ECO-05: Reseta aria-expanded do gatilho ao clicar fora
+            const trigger = m.querySelector('.menu-trigger');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        });
         document.querySelectorAll('.reacoes-popup').forEach(p => {
             p.style.visibility = 'hidden';
             p.style.opacity = '0';
         });
     }
+
     if (!clicouNaNotif) {
         const box = document.getElementById('dropdown-notificacoes');
-        if (box) box.style.display = 'none';
+        const trigger = document.querySelector('.notificacao-trigger');
+        // 🔥 ECO-04: Reseta aria ao fechar pelo clique fora
+        if (box) {
+            box.style.display = 'none';
+            box.setAttribute('aria-hidden', 'true');
+        }
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
     }
 });
 
@@ -1665,17 +1699,27 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log('[PERFIL] configurarFormularioPerfil() executado.');
     }
 
-    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > a');
+    // 🔥 ECO-05: Alterado o seletor de 'a' para '.menu-trigger'
+    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > .menu-trigger');
     dropdownLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             if (window.innerWidth <= 1024) {
                 const pai = this.parentElement;
                 const estaAberto = pai.classList.contains('active');
+                
                 if (!estaAberto) {
                     e.preventDefault();
                     e.stopPropagation();
-                    document.querySelectorAll('.menu-item.dropdown').forEach(m => m.classList.remove('active'));
+                    document.querySelectorAll('.menu-item.dropdown').forEach(m => {
+                        m.classList.remove('active');
+                        const t = m.querySelector('.menu-trigger');
+                        if (t) t.setAttribute('aria-expanded', 'false');
+                    });
                     pai.classList.add('active');
+                    this.setAttribute('aria-expanded', 'true');
+                } else {
+                    pai.classList.remove('active');
+                    this.setAttribute('aria-expanded', 'false');
                 }
             }
         });
@@ -1866,22 +1910,26 @@ function toggleNexus() {
 
 
 // ==================== MODAL DE CONFIRMAÇÃO (DIALOG NATIVO - GLOBAL) ====================
+let _fecharConfirmacaoAtiva = null;
+
 window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') {
+    // Se já houver uma confirmação aberta, encerra a anterior como cancelada antes de abrir a nova
+    if (typeof _fecharConfirmacaoAtiva === 'function') {
+        _fecharConfirmacaoAtiva(false);
+    }
+
     return new Promise((resolve) => {
         const dialog = document.getElementById('dialog-confirmacao');
         if (!dialog) {
-            // Fallback seguro (caso o dialog não exista)
             console.warn('[exibirConfirmacao] Dialog não encontrado, usando confirm()');
-            const confirmado = confirm(mensagem);
-            resolve(confirmado);
+            resolve(confirm(mensagem));
             return;
         }
 
-        // Define título e mensagem
+        const elementoAnterior = document.activeElement;
         document.getElementById('dialog-titulo').textContent = titulo;
         document.getElementById('dialog-mensagem').textContent = mensagem;
 
-        // Remove listeners antigos para evitar duplicação
         const btnSim = document.getElementById('dialog-btn-sim');
         const btnNao = document.getElementById('dialog-btn-nao');
         const newSim = btnSim.cloneNode(true);
@@ -1889,25 +1937,83 @@ window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') 
         btnSim.parentNode.replaceChild(newSim, btnSim);
         btnNao.parentNode.replaceChild(newNao, btnNao);
 
-        // Configura os botões
-        newSim.addEventListener('click', function () {
-            dialog.close();
+        let finalizado = false;
+
+        // Bloqueia arraste de cards (translateL) e cliques na camada de trás enquanto aberto
+        const bloquearInteracaoExterna = (e) => {
+            if (!dialog.contains(e.target)) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        };
+
+        // Impede que o foco escape para o card de trás (evita abrir o portal do translateL)
+        const manterFocoNoDialog = (e) => {
+            if (dialog.open && !dialog.contains(e.target)) {
+                e.stopPropagation();
+                newNao.focus();
+            }
+        };
+
+        const keyHandler = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                fecharDialog(false);
+                return;
+            }
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                if (document.activeElement === newNao) {
+                    newSim.focus();
+                } else {
+                    newNao.focus();
+                }
+            }
+        };
+
+        const fecharDialog = (resultado) => {
+            if (finalizado) return;
+            finalizado = true;
+
+            if (_fecharConfirmacaoAtiva === fecharDialog) {
+                _fecharConfirmacaoAtiva = null;
+            }
+
+            document.removeEventListener('keydown', keyHandler, true);
+            document.removeEventListener('pointerdown', bloquearInteracaoExterna, true);
+            document.removeEventListener('click', bloquearInteracaoExterna, true);
+            document.removeEventListener('focusin', manterFocoNoDialog, true);
+
+            if (dialog.open) dialog.close();
             window._modalAberto = false;
-            resolve(true);
-        });
 
-        newNao.addEventListener('click', function () {
-            dialog.close();
-            window._modalAberto = false;
-            resolve(false);
-        });
+            if (
+                elementoAnterior &&
+                elementoAnterior !== document.body &&
+                document.body.contains(elementoAnterior) &&
+                typeof elementoAnterior.focus === 'function'
+            ) {
+                elementoAnterior.focus();
+            }
 
-        // 🔥 REMOVIDO: listener que fechava ao clicar fora
-        // Agora o diálogo só fecha pelos botões.
+            resolve(resultado);
+        };
 
-        // Abre como pop-up flutuante (não bloqueante)
+        _fecharConfirmacaoAtiva = fecharDialog;
+
+        newSim.addEventListener('click', () => fecharDialog(true));
+        newNao.addEventListener('click', () => fecharDialog(false));
+
+        document.addEventListener('keydown', keyHandler, true);
+        document.addEventListener('pointerdown', bloquearInteracaoExterna, true);
+        document.addEventListener('click', bloquearInteracaoExterna, true);
+        document.addEventListener('focusin', manterFocoNoDialog, true);
+
         window._modalAberto = true;
         dialog.show();
+
+        setTimeout(() => newNao.focus(), 50);
     });
 };
 
@@ -3564,7 +3670,7 @@ window.irParaMensagem = function(commentId) {
     
     el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     el.style.transition = 'background-color 0.4s ease';
-    el.style.backgroundColor = 'rgba(0, 255, 234, 0.40)';
+    el.style.backgroundColor = 'rgba(0, 255, 234, 0.25)';
     
     setTimeout(() => {
         el.style.backgroundColor = '';
@@ -3611,10 +3717,26 @@ window.deslogarUsuario = async function () {
     if (!inputBusca) return;
 
     let debounceTimer = null;
+    let buscaAbortController = null;
+
+    function renderizarMensagemBusca(containerFeed, texto) {
+        containerFeed.innerHTML = '';
+        const p = document.createElement('p');
+        p.style.textAlign = 'center';
+        p.style.color = '#aaa';
+        p.style.padding = '30px';
+        p.textContent = texto;
+        containerFeed.appendChild(p);
+    }
 
     function executarBusca(termo) {
         const containerFeed = document.querySelector('.container-feed');
         if (!containerFeed) return; // Se não tiver feed na página, aborta
+
+        if (buscaAbortController) {
+            buscaAbortController.abort();
+        }
+        buscaAbortController = new AbortController();
 
         // Pega o ID da comunidade se estivermos nela
         const urlParams = new URLSearchParams(window.location.search);
@@ -3625,19 +3747,40 @@ window.deslogarUsuario = async function () {
         const categoriaInput = inputBusca.dataset.categoria || '';
         const categoria = categoriaInput || categoriaUrl; // O input tem prioridade
 
-        // Monta a URL do motor
-        let url = `motor-feed.php?offset=0&q=${encodeURIComponent(termo)}&tipo=geral`;
-        if (comunidadeId) url += `&comunidade_id=${comunidadeId}`;
-        if (categoria) url += `&categoria=${categoria}`;
+        // Subcategoria opcional quando estiver em perdidos.php?filtro=achei|perdi
+        const filtroUrl = urlParams.get('filtro') || '';
+
+        // Monta a URL do motor (tipo=perdidos exclusivo da página Achados e Perdidos)
+        const isPaginaPerdidos = containerFeed.classList.contains('feed-filtrado')
+            || /(?:^|\/)perdidos(?:\.php)?$/i.test(window.location.pathname);
+        const tipoMotor = (isPaginaPerdidos && categoria === 'perdidos') ? 'perdidos' : 'geral';
+
+        let url = `motor-feed.php?offset=0&q=${encodeURIComponent(termo)}&tipo=${tipoMotor}`;
+        if (comunidadeId) url += `&comunidade_id=${encodeURIComponent(comunidadeId)}`;
+        if (categoria) url += `&categoria=${encodeURIComponent(categoria)}`;
+        if (categoria === 'perdidos' && (filtroUrl === 'achei' || filtroUrl === 'perdi')) {
+            url += `&subcategoria=${encodeURIComponent(filtroUrl)}`;
+        }
 
         // Mostra loading
         containerFeed.innerHTML = `<div style="text-align:center; padding:40px; color:#ffbc00;"><i class="fas fa-spinner fa-spin fa-2x"></i><p style="margin-top:10px;">Buscando...</p></div>`;
 
-        fetch(url)
-            .then(res => res.text())
+        fetch(url, { signal: buscaAbortController.signal })
+            .then(res => {
+                if (res.status === 429) {
+                    throw new Error('RATE_LIMIT');
+                }
+                if (!res.ok) {
+                    throw new Error(`HTTP_${res.status}`);
+                }
+                return res.text();
+            })
             .then(html => {
                 if (html.trim() === "FIM_DADOS") {
-                    containerFeed.innerHTML = `<p style="text-align:center; color:#aaa; padding:30px;">Nenhum resultado encontrado para "${termo}".</p>`;
+                    const msg = termo
+                        ? `Nenhum resultado encontrado para "${termo}".`
+                        : 'Nenhum item encontrado por enquanto.';
+                    renderizarMensagemBusca(containerFeed, msg);
                 } else {
                     containerFeed.innerHTML = html;
                     
@@ -3660,8 +3803,17 @@ window.deslogarUsuario = async function () {
                     }
                 }
             })
+            .catch(err => {
+                if (err.name === 'AbortError') return;
+                if (err.message === 'RATE_LIMIT') {
+                    renderizarMensagemBusca(containerFeed, 'Calma lá! Muitas buscas seguidas. Aguarde um minutinho.');
+                } else {
+                    console.error('[BUSCA] Erro ao consultar motor-feed:', err);
+                    renderizarMensagemBusca(containerFeed, 'Não foi possível concluir a busca agora.');
+                }
+            });
     }
-
+    
     // Evento de digitar
     inputBusca.addEventListener('input', function() {
         const termo = this.value.trim();

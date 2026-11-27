@@ -261,7 +261,7 @@ border: 1px solid var(--borda-sutil, rgba(255,255,255,0.05));
     color: var(--texto-primario, oklch(96% 0 0));                   /* 🌅 FAGULHA – Fase 2 */
 }
 
-.btn-entrar-comunidade:hover {
+.btn-entrar-comunidade.membro:hover {
     background: var(--bg-input-hover, oklch(100% 0 0 / 0.1));
     filter: brightness(0.8);
     transform: scale(1.01);

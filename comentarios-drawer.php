@@ -127,15 +127,57 @@ $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
                     foreach ($todos_comentarios as $c) {
                         $vibe = sanitizarVibe($c['pref_vibe_comentario'] ?? 'vibe-glass');
                         $cor_borda = sanitizarCorBorda($c['pref_cor_borda'] ?? '#70cde4');
-                        $sou_eu = (isset($_SESSION['usuario_id']) && $c['id_usuario'] == $_SESSION['usuario_id']) ? 'meu-comentario' : '';
+                        $id_autor_comentario = $c['id_usuario'] ?? $c['usuario_id'] ?? 0;
+                        $sou_eu = (isset($_SESSION['usuario_id']) && !empty($id_autor_comentario) && (int)$id_autor_comentario === (int)$_SESSION['usuario_id']) ? 'meu-comentario' : '';
                         $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
+
+                        $trecho_resposta = '';
+                        if (!empty($c['parent_id']) && !empty($c['parent_comentario'])) {
+                            $texto_puro = strip_tags($c['parent_comentario']);
+                            $texto_cortado = mb_substr($texto_puro, 0, 50);
+                            $trecho_resposta = mb_strlen($texto_puro) > 50 ? $texto_cortado . '...' : $texto_cortado;
+                        }
                         ?>
                         <div class="comentario-linha <?php echo $sou_eu === 'meu-comentario' ? 'comentario-linha-proprio' : ''; ?> <?php echo $classe_filho ? 'comentario-linha-filha' : ''; ?>">
                             <div class="comentario-item <?php echo $vibe . ' ' . $classe_filho . ' ' . $sou_eu; ?>" id="comentario-<?php echo $c['id']; ?>" style="--cor-borda-glow: <?php echo $cor_borda; ?>;">
                                 <div class="comentario-meta">
                                     <strong class="comentario-autor"><?php echo !empty($c['usuario_nome']) ? "@" . htmlspecialchars($c['usuario_nome']) : "👤 Anônimo"; ?></strong>
                                 </div>
+                                <?php if (!empty($c['parent_id'])): ?>
+                                    <div class="indicador-resposta" onclick="event.stopPropagation(); irParaMensagem(<?php echo $c['parent_id']; ?>)">
+                                        <i class="fas fa-reply"></i> <small><?php echo htmlspecialchars($trecho_resposta); ?></small>
+                                    </div>
+                                <?php endif; ?>
                                 <p class="comentario-texto"><?php echo nl2br(formatarMencoes($c['comentario'])); ?></p>
+                                <?php
+                                $anexos_exibicao = null;
+                                if (!empty($c['anexos'])) {
+                                    $anexos_exibicao = json_decode($c['anexos'], true);
+                                    if (json_last_error() !== JSON_ERROR_NONE || !is_array($anexos_exibicao)) $anexos_exibicao = null;
+                                }
+                                if (!empty($anexos_exibicao) && is_array($anexos_exibicao)):
+                                ?>
+                                    <div class="comentario-media-wrapper-grid">
+                                        <?php foreach ($anexos_exibicao as $anexo): ?>
+                                            <?php if ($anexo['tipo'] === 'imagem' && !empty($anexo['caminho'])): ?>
+                                                <?php $img_url = obterUrlComFallback($anexo['caminho'], 'comentarios/' . htmlspecialchars($anexo['caminho']), $b2, true); ?>
+                                                <div class="comentario-media-item"><img src="<?= htmlspecialchars($img_url) ?>" class="comentario-img" loading="lazy" onerror="this.style.display='none'"></div>
+                                            <?php elseif ($anexo['tipo'] === 'gif' && !empty($anexo['url'])): ?>
+                                                <div class="comentario-media-item"><img src="<?= htmlspecialchars($anexo['url']) ?>" class="comentario-img gif-externo" loading="lazy"></div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php elseif (!empty($c['imagem_url'])): ?>
+                                    <?php
+                                    $img_comentario = $c['imagem_url'];
+                                    if (!filter_var($img_comentario, FILTER_VALIDATE_URL)) {
+                                        $img_comentario = obterUrlComFallback($c['imagem_url'], 'comentarios/' . htmlspecialchars($c['imagem_url']), $b2, true);
+                                    }
+                                    ?>
+                                    <div class="comentario-media-wrapper">
+                                        <img src="<?= htmlspecialchars($img_comentario) ?>" class="comentario-img <?= filter_var($c['imagem_url'], FILTER_VALIDATE_URL) ? 'gif-externo' : '' ?>" loading="lazy" onerror="this.style.display='none'">
+                                    </div>
+                                <?php endif; ?>
                                 <div class="comentario-rodape"><span class="comentario-data"><?= exibirDataHoraBrasil($c['data_comentario'], 'H:i') ?></span></div>
                             </div>
                             <button type="button" id="comentario-acoes-<?php echo (int)$c['id']; ?>" class="comentario-menu-toggle"><i class="fas fa-ellipsis-h"></i></button>
@@ -221,6 +263,10 @@ $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
         }
     }
     window._drawerJSInitialized = true;
+
+    if (typeof AnexosManager !== 'undefined' && AnexosManager.init) {
+        AnexosManager.init();
+    }
 
     const wrapper = document.getElementById('drawer-comentarios-wrapper');
     if (!wrapper) return;
@@ -328,8 +374,16 @@ $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
         novoBtnEnviar.addEventListener('click', function(e) {
             e.preventDefault();
             const textoAtual = campoTexto ? campoTexto.value.trim() : '';
-            if (textoAtual === '') {
-                if (typeof window.exibirBalao === 'function') window.exibirBalao('Escreva algo!', 'info');
+            let temAnexo = false;
+            if (typeof AnexosManager !== 'undefined' && AnexosManager.anexos) {
+                temAnexo = AnexosManager.anexos.length > 0;
+            } else {
+                const gifInput = wrapper.querySelector('input[name="gif_url"]');
+                temAnexo = (inputFile && inputFile.files && inputFile.files.length > 0) || (gifInput && gifInput.value !== '');
+            }
+
+            if (textoAtual === '' && !temAnexo) {
+                if (typeof window.exibirBalao === 'function') window.exibirBalao('Escreva algo ou adicione uma imagem/GIF.', 'info');
                 return;
             }
 
@@ -340,6 +394,13 @@ $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
                 formData = AnexosManager.prepararFormData(form);
             } else {
                 formData = new FormData(form);
+                if (inputFile && inputFile.files && inputFile.files[0]) {
+                    formData.append('imagem_comentario', inputFile.files[0]);
+                }
+                const gifInput = wrapper.querySelector('input[name="gif_url"]');
+                if (gifInput && gifInput.value) {
+                    formData.append('gif_url', gifInput.value);
+                }
             }
             
             novoBtnEnviar.disabled = true;
@@ -356,10 +417,17 @@ $post_esta_ativo = ($check_post && $check_post['status'] === 'ativo');
                     if (typeof window.exibirBalao === 'function') window.exibirBalao('Enviado!', 'sucesso');
                     const parentIdEnviado = inputParent.value;
                     campoTexto.value = '';
+                    campoTexto.style.height = 'auto';
                     inputParent.value = '';
                     if (indicador) indicador.classList.remove('visivel');
                     if (contadorChar) contadorChar.textContent = '500';
-                    if (typeof AnexosManager !== 'undefined' && AnexosManager.limparTodos) AnexosManager.limparTodos();
+                    if (typeof AnexosManager !== 'undefined' && AnexosManager.limparTodos) {
+                        AnexosManager.limparTodos();
+                    } else {
+                        if (inputFile) inputFile.value = '';
+                        const gifInput = wrapper.querySelector('input[name="gif_url"]');
+                        if (gifInput) gifInput.value = '';
+                    }
                     gaveta.style.display = 'none';
                     gavetaAberta = false;
                     verificarConteudo();

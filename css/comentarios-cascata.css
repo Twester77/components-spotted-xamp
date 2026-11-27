@@ -55,8 +55,6 @@ body.estilo-cascata  .sessao-fofoca-focada {
 body.estilo-cascata .comentario-item {
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.03);
-    background: var(--bg-card, rgba(17, 17, 17, 0.32));
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;

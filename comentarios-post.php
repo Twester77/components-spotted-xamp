@@ -206,7 +206,9 @@ $total_reacoes = array_sum($reacoes_detalhes);
             $nome_miniatura = 'Habitante Anônimo';
         } else {
             $avatar_miniatura = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default.webp', $b2, true);
-            $nome_miniatura = !empty($post['username']) ? '@' . htmlspecialchars($post['username']) : 'Usuário';
+            $nome_miniatura = !empty($post['username'])
+                ? '@' . htmlspecialchars($post['username'])
+                : ($is_perdidos ? '@Anônimo' : 'Usuário');
         }
         $texto_miniatura = htmlspecialchars(mb_substr($post['mensagem'], 0, 80));
         if (mb_strlen($post['mensagem']) > 80) $texto_miniatura .= '...';
@@ -247,7 +249,7 @@ $total_reacoes = array_sum($reacoes_detalhes);
                             $cor_borda = sanitizarCorBorda($c['pref_cor_borda'] ?? '#70cde4');
                             $classe_filho = !empty($c['parent_id']) ? "comentario-filho" : "";
                             $id_autor_comentario = $c['id_usuario'] ?? $c['usuario_id'] ?? 0;
-                            $sou_eu = (isset($_SESSION['usuario_id']) && $id_autor_comentario == $_SESSION['usuario_id']) ? 'meu-comentario' : '';
+                            $sou_eu = (isset($_SESSION['usuario_id']) && !empty($id_autor_comentario) && (int)$id_autor_comentario === (int)$_SESSION['usuario_id']) ? 'meu-comentario' : '';
                             $estilo_filho = $classe_filho ? "var(--cor-borda-glow);" : "";
 
                             $trecho_resposta = '';

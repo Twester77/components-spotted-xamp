@@ -30,6 +30,13 @@
  * ⚓ COPILOT – 2026-11-03 (experimento de GIF em vídeo)
  *    - Renderiza MP4/WebM com poster estático e mantém a URL GIF para
  *      fallback; posts antigos com apenas `url` continuam usando <img>.
+ *
+ * 🛡️ DJÊ – 2026-11-26 (hotfix privacidade na busca + Achados e Perdidos)
+ *    - Visitantes deslogados só podem consultar categoria === 'perdidos' (403 nos demais).
+ *    - Rate limit da busca aplicado também por IP para visitantes deslogados.
+ *    - Filtro opcional de subcategoria ('achei'/'perdi') quando categoria === 'perdidos'.
+ *    - LEFT JOIN condicional apenas quando categoria === 'perdidos' (preserva posts órfãos @Anônimo).
+ *    - Card limpo (.perdidos-item, sem Reagir/Fofocar/Expandir) quando tipo === 'perdidos'.
  */
 
 include_once __DIR__ . '/conexao.php';
@@ -37,17 +44,37 @@ require_once __DIR__ . '/includes/upload_engine.php';
 
 /* MOTOR UNIVERSAL DA FENDA - OTIMIZADO (SEM N+1) */
 $offset        = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
-$categoria     = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+$categoria     = isset($_GET['categoria']) ? trim($_GET['categoria']) : '';
+$subcategoria  = isset($_GET['subcategoria']) ? trim($_GET['subcategoria']) : '';
 $tipo_feed     = isset($_GET['tipo']) ? $_GET['tipo'] : 'geral';
 $user_alvo     = isset($_GET['user']) ? $_GET['user'] : '';
 $comunidade_id = isset($_GET['comunidade_id']) ? (int)$_GET['comunidade_id'] : 0;
 $busca         = isset($_GET['q']) ? trim($_GET['q']) : ''; // 🔥 NOVO
 
+$usuario_logado = isset($_SESSION['usuario_id']) ? (int)$_SESSION['usuario_id'] : 0;
+
+// ============================================================
+// 🔒 BARREIRA DE PRIVACIDADE: deslogado só acessa 'perdidos'
+// ============================================================
+if ($usuario_logado <= 0) {
+    if ($categoria !== 'perdidos') {
+        http_response_code(403);
+        echo "FIM_DADOS";
+        exit();
+    }
+    if ($tipo_feed !== 'perdidos') {
+        $tipo_feed = 'geral';
+    }
+    $user_alvo     = '';
+    $comunidade_id = 0;
+}
+
 // ============================================================
 // 🔥 RATE LIMIT PARA BUSCA (Evita scraping)
 // ============================================================
-if (!empty($busca) && isset($_SESSION['usuario_id'])) {
-    $usuario_id_rate = (int)$_SESSION['usuario_id'];
+if (!empty($busca)) {
+    $usuario_id_rate = $usuario_logado;
+    $usuario_id_insert = $usuario_logado > 0 ? $usuario_logado : null;
     $ip_rate = function_exists('obterIPReal') ? obterIPReal() : ($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0');
     $endpoint_rate = 'busca_feed';
 
@@ -74,14 +101,14 @@ if (!empty($busca) && isset($_SESSION['usuario_id'])) {
     $result_rate = $stmt_rate->get_result()->fetch_assoc();
     $stmt_rate->close();
 
-    if ((int)($result_rate['user_total'] ?? 0) >= 15 || (int)($result_rate['ip_total'] ?? 0) >= 30) {
+    if (($usuario_logado > 0 && (int)($result_rate['user_total'] ?? 0) >= 15) || (int)($result_rate['ip_total'] ?? 0) >= 30) {
         http_response_code(429);
         echo "FIM_DADOS"; // O JS vai parar de carregar
         exit;
     }
 
     $stmt_log_rate = $conn->prepare("INSERT INTO fenda_rate_limits (endpoint, usuario_id, ip_address) VALUES (?, ?, ?)");
-    $stmt_log_rate->bind_param('sis', $endpoint_rate, $usuario_id_rate, $ip_rate);
+    $stmt_log_rate->bind_param('sis', $endpoint_rate, $usuario_id_insert, $ip_rate);
     $stmt_log_rate->execute();
     $stmt_log_rate->close();
 }
@@ -89,6 +116,10 @@ if (!empty($busca) && isset($_SESSION['usuario_id'])) {
 // ==================================================
 // 1. QUERY PRINCIPAL (COM SUBQUERIES PARA CONTAGENS)
 // ==================================================
+$join_usuarios = ($categoria === 'perdidos')
+    ? "LEFT JOIN usuarios u ON m.usuario_id = u.id"
+    : "INNER JOIN usuarios u ON m.usuario_id = u.id";
+
 $sql = "SELECT m.*, u.username, u.foto, u.pref_vibe_padrao, u.pref_cor_padrao,
         (SELECT COUNT(c.id) FROM comentarios c WHERE c.id_mensagem = m.id) as total_comentarios,
         (SELECT COUNT(r.id) FROM curtidas r WHERE r.mensagem_id = m.id) as total_reacoes,
@@ -101,7 +132,7 @@ $sql = "SELECT m.*, u.username, u.foto, u.pref_vibe_padrao, u.pref_cor_padrao,
               AND cm.status = 'ativo'
         ) AS autor_admin_comunidade
         FROM mensagens m 
-        INNER JOIN usuarios u ON m.usuario_id = u.id
+        $join_usuarios
         WHERE m.status = 'ativo'";
 
 $filtros = [];
@@ -112,6 +143,11 @@ if (!empty($categoria)) {
     $filtros[] = "m.categoria = ?";
     $tipos .= "s";
     $params[] = $categoria;
+}
+if ($categoria === 'perdidos' && in_array($subcategoria, ['achei', 'perdi'], true)) {
+    $filtros[] = "m.subcategoria = ?";
+    $tipos .= "s";
+    $params[] = $subcategoria;
 }
 if ($tipo_feed === 'perfil' && !empty($user_alvo)) {
     $filtros[] = "u.username = ?";
@@ -164,7 +200,9 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
 mysqli_data_seek($resultado, 0);
 
 $reacoes_por_post = [];
-if (!empty($posts_ids)) {
+$minhas_reacoes_por_post = [];
+
+if (!empty($posts_ids) && $tipo_feed !== 'perdidos') {
     $placeholders = implode(',', array_fill(0, count($posts_ids), '?'));
     $sql_react = "SELECT mensagem_id, tipo_reacao, COUNT(*) as total 
                   FROM curtidas 
@@ -179,30 +217,28 @@ if (!empty($posts_ids)) {
         $reacoes_por_post[$row['mensagem_id']][$row['tipo_reacao']] = $row['total'];
     }
     mysqli_stmt_close($stmt_react);
-}
 
-// Buscar reações do usuário logado
-$minhas_reacoes_por_post = [];
-if (isset($_SESSION['usuario_id'])) {
-    $meu_id = $_SESSION['usuario_id'];
-    $sql_my = "SELECT mensagem_id, tipo_reacao 
-               FROM curtidas 
-               WHERE usuario_id = ? AND mensagem_id IN ($placeholders)";
-    $stmt_my = mysqli_prepare($conn, $sql_my);
-    mysqli_stmt_bind_param($stmt_my, 'i' . $types, $meu_id, ...$posts_ids);
-    mysqli_stmt_execute($stmt_my);
-    $res_my = mysqli_stmt_get_result($stmt_my);
-    while ($row = mysqli_fetch_assoc($res_my)) {
-        $minhas_reacoes_por_post[$row['mensagem_id']][] = $row['tipo_reacao'];
+    // Buscar reações do usuário logado
+    if (isset($_SESSION['usuario_id'])) {
+        $meu_id = $_SESSION['usuario_id'];
+        $sql_my = "SELECT mensagem_id, tipo_reacao 
+                   FROM curtidas 
+                   WHERE usuario_id = ? AND mensagem_id IN ($placeholders)";
+        $stmt_my = mysqli_prepare($conn, $sql_my);
+        mysqli_stmt_bind_param($stmt_my, 'i' . $types, $meu_id, ...$posts_ids);
+        mysqli_stmt_execute($stmt_my);
+        $res_my = mysqli_stmt_get_result($stmt_my);
+        while ($row = mysqli_fetch_assoc($res_my)) {
+            $minhas_reacoes_por_post[$row['mensagem_id']][] = $row['tipo_reacao'];
+        }
+        mysqli_stmt_close($stmt_my);
     }
-    mysqli_stmt_close($stmt_my);
 }
 
 // ==================================================
 // 🔥 PRÉ-BUSCA: usuário é admin/criador da comunidade?
 // ==================================================
 $is_comunidade = ($comunidade_id > 0);
-$usuario_logado = isset($_SESSION['usuario_id']) ? (int)$_SESSION['usuario_id'] : 0;
 $sou_admin_ou_criador = false;
 
 if ($is_comunidade && $usuario_logado > 0) {
@@ -294,12 +330,12 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     $total_reacoes = $linha['total_reacoes'] ?? 0;
     $comunidade_do_post = (int)($linha['comunidade_id'] ?? 0);
 
-    $sou_eu = ($linha['usuario_id'] == $usuario_logado);
+    $sou_eu = ($usuario_logado > 0 && !empty($linha['usuario_id']) && (int)$linha['usuario_id'] === $usuario_logado);
 
     $cor_post = $sou_eu ? '#ffbb00' : ($linha['pref_cor_padrao'] ?? '#70cde4');
     $vibe_post = $linha['pref_vibe_padrao'] ?? 'vibe-glass';
     $classe_admin = $sou_eu ? 'post-admin-gold' : '';
-    $autor_id = (int)$linha['usuario_id'];
+    $autor_id = (int)($linha['usuario_id'] ?? 0);
     $exibir_selo_adm = $categoria_atual !== 'anonimo'
         && (
             in_array($autor_id, [1, 60002], true)
@@ -322,8 +358,13 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
             }
         }
         $username = $linha['username'] ?? '';
-        $nome_autor = !empty($username) ? '@' . htmlspecialchars($username) : 'Usuário';
-        $link_autor = !empty($username) ? 'ver-perfil.php?user=' . urlencode($username) : '#';
+        if (!empty($username)) {
+            $nome_autor = '@' . htmlspecialchars($username);
+            $link_autor = 'ver-perfil.php?user=' . urlencode($username);
+        } else {
+            $nome_autor = ($categoria_atual === 'perdidos') ? '@Anônimo' : 'Usuário';
+            $link_autor = '#';
+        }
     }
     $mensagem_corpo = nl2br(formatarMencoes($linha['mensagem']));
 
@@ -410,6 +451,43 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
     // 🔥 DATA DO POST COM FUSO BRASILEIRO
     $data_post = exibirDataHoraBrasil($linha['data_post'], 'd/m H:i');
 
+   // ============================================================
+    // 📦 MOLDE DEDICADO PARA PÁGINA ACHADOS E PERDIDOS (tipo=perdidos)
+    // ============================================================
+    if ($categoria_atual === 'perdidos' && $tipo_feed === 'perdidos'):
+        $sub_atual = $linha['subcategoria'] ?? '';
+        $username_perdido = !empty($linha['username']) ? htmlspecialchars($linha['username'], ENT_QUOTES, 'UTF-8') : 'Anônimo';
+?>
+    <article class="spotted-card perdidos-item <?php echo ($sub_atual === 'achei') ? 'card-achado' : 'card-perdido'; ?>"
+        data-id="<?php echo (int)$post_id_atual; ?>">
+        <div class="card-header">
+            <span class="category-tag">
+                <?php if ($sub_atual === 'achei'): ?>
+                    <span class="badge-achado"><i class="fas fa-check-circle" aria-hidden="true"></i> ACHADO</span>
+                <?php else: ?>
+                    <span class="badge-perdido"><i class="fas fa-search" aria-hidden="true"></i> PERDIDO</span>
+                <?php endif; ?>
+                <small class="usuario-perdido">@<?php echo $username_perdido; ?></small>
+            </span>
+            <span class="data-post">
+                <time datetime="<?php echo date('Y-m-d', strtotime($linha['data_post'])); ?>"><?php echo date('d/m', strtotime($linha['data_post'])); ?></time>
+            </span>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="card-body">
+            <p><?php echo nl2br(htmlspecialchars($linha['mensagem'], ENT_QUOTES, 'UTF-8')); ?></p>
+            <?php echo $anexos_html; ?>
+        </div>
+        <div class="card-footer">
+            <a href="comentarios-post.php?id=<?php echo (int)$post_id_atual; ?>" class="link-fofoca" aria-label="Ver detalhes / ajudar a encontrar o objeto de @<?php echo $username_perdido; ?>">
+                <i class="fas fa-comment-dots" aria-hidden="true"></i> Ver detalhes / Ajudar a encontrar →
+            </a>
+        </div>
+    </article>
+<?php
+        continue;
+    endif;
+
     // ============================================================
     // 🔥 BOTÃO ELLIPSIS
     // Visível quando estamos em comunidade E (sou o autor OU sou admin/criador)
@@ -451,6 +529,7 @@ while ($linha = mysqli_fetch_assoc($resultado)) {
         <div class="user-info-post">
             <img src="<?php echo $avatar; ?>"
                 class="avatar-p"
+                alt=""
                 width="48"
                 height="48"
                 decoding="async"

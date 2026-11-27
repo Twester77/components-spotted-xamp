@@ -47,7 +47,8 @@ if (!function_exists('asset_versao')) {
         class="drawer-perfil-container"
         role="region"
         aria-label="Configurações de Perfil"
-        aria-hidden="true">
+        aria-hidden="true"
+        inert>
 
         <button type="button" class="btn-fechar-drawer" onclick="fecharPerfilDrawer()" aria-label="Fechar">
             <i class="fas fa-times"></i>

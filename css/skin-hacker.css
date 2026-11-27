@@ -494,12 +494,14 @@
 }
 
 [data-theme="hacker"] .menu li a,
+[data-theme="hacker"] .menu-trigger,
 [data-theme="hacker"] .navbar-nav .nav-link,
 [data-theme="hacker"] .dropdown-item,
 [data-theme="hacker"] .item-menu,
 [data-theme="hacker"] .btn-header,
 [data-theme="hacker"] .submenu li a {
     color: var(--hacker-green);
+    font-family: var(--hacker-font, monospace);
     text-transform: uppercase;
     transition: all 0.1s steps(2);
     position: relative;
@@ -510,6 +512,8 @@
 
 [data-theme="hacker"] .navbar-nav .nav-link:hover,
 [data-theme="hacker"] .menu li a:hover,
+[data-theme="hacker"] .menu-trigger:hover,
+[data-theme="hacker"] .menu-trigger:focus-visible,
 [data-theme="hacker"] .dropdown-item:hover,
 [data-theme="hacker"] .item-menu:hover,
 [data-theme="hacker"] .lista-conselhos li:hover,
@@ -528,6 +532,8 @@
 
 [data-theme="hacker"] .navbar-nav .nav-link:hover::before,
 [data-theme="hacker"] .menu li a:hover::before,
+[data-theme="hacker"] .menu-trigger:hover::before,
+[data-theme="hacker"] .menu-trigger:focus-visible::before,
 [data-theme="hacker"] .lista-conselhos li:hover::before,
 [data-theme="hacker"] .bloco-diretrizes li:hover::before,
 [data-theme="hacker"] .btn-editar-atalho:hover::before,
@@ -547,6 +553,13 @@
     color: var(--hacker-hover-text);
     font-weight: bold;
     animation: blink-cursor 0.5s infinite;
+}
+
+[data-theme="hacker"] .header-icons a:focus-visible,
+[data-theme="hacker"] .notificacao-trigger:focus-visible,
+[data-theme="hacker"] .btn-config:focus-visible {
+    outline-color: var(--hacker-green);
+    border-radius: 0;
 }
 
 [data-theme="hacker"] .dropdown-menu,
@@ -809,9 +822,21 @@
 [data-theme="hacker"] #toggle-chat-barra,
 [data-theme="hacker"] .fenda-btn-glow:hover i,
 [data-theme="hacker"] .nav-link:hover i,
-[data-theme="hacker"] .menu li a:hover i {
+[data-theme="hacker"] .menu li a:hover i,
+[data-theme="hacker"] .menu-trigger:hover i,
+[data-theme="hacker"] .menu-trigger:focus-visible i {
     color: var(--hacker-hover-text);
     text-shadow: none;
+}
+
+[data-theme="hacker"] .header-icons a:hover i,
+[data-theme="hacker"] .header-icons a:focus-visible i,
+[data-theme="hacker"] .notificacao-trigger:hover i,
+[data-theme="hacker"] .notificacao-trigger:focus-visible i,
+[data-theme="hacker"] .btn-config:hover i,
+[data-theme="hacker"] .btn-config:focus-visible i {
+    color: #fff;
+    text-shadow: 0 0 6px var(--hacker-green);
 }
 
 
@@ -834,6 +859,7 @@
 [data-theme="hacker"] .badge-perdido,
 [data-theme="hacker"] .badge-achado {
     border: 1px solid var(--hacker-green);
+    color: #0e1d0e;
     color: oklch(0.212 0.0356 144.19);
     text-transform: uppercase;
     font-family: monospace;
@@ -1859,6 +1885,15 @@
     cursor: not-allowed;
     box-shadow: none;
 }
+[data-theme="hacker"] .sessao-item.sessao-atual {
+    background: rgba(0, 248, 227, 0.07);                             /* fallback */
+    background: oklch(from rgba(0, 248, 227, 0.07) l c h / 0.06);    /* 🎨 azul-neon específico */
+}
+
+[data-theme="hacker"] .sessao-item.sessao-atual:hover {
+    background: rgba(0, 248, 227, 0.16);                             /* fallback */
+    background: oklch(87.979% 0.1558 184.088 / 0.16);                      /* 🎨 azul ciano com alpha específico */
+}
 
 /* --- EVENTOS (Balanga Teras) — identidade preservada --- */
 
@@ -1947,6 +1982,7 @@
 
 [data-theme="hacker"] .navbar-nav .nav-link,
 [data-theme="hacker"] .menu li a,
+[data-theme="hacker"] .menu-trigger,
 [data-theme="hacker"] .dropdown-menu a,
 [data-theme="hacker"] .submenu li a,
 [data-theme="hacker"] .item-menu,

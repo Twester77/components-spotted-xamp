@@ -378,6 +378,10 @@ body.modo-swipe-ativo .container-load-more {
     display: none !important;
 }
 
+/* 🔥 ECO-03: Esconde o rodapé global no modo swipe para confinar o foco do leitor de tela */
+body.modo-swipe-ativo .footer-global {
+    display: none ;
+}
 /* ============================================================
    9. BOTÃO DE FILTRO E GAVETA + MOTOSSERRA
    ============================================================ */

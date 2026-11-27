@@ -191,8 +191,8 @@ $username_json = json_encode($dados_user['username'], JSON_HEX_TAG | JSON_HEX_AM
 
                     if (html.trim() === 'FIM_DADOS') {
                         body.innerHTML = abaId === 'posts'
-                            ? '<p style="text-align:center; color:#aaa; padding:30px;">Você ainda não fez nenhuma publicação.</p>'
-                            : '<p style="text-align:center; color:#aaa; padding:30px;">Nenhum registro encontrado nesta aba.</p>';
+                            ? '<p style="text-align:center; padding:30px;">Você ainda não fez nenhuma publicação.</p>'
+                            : '<p style="text-align:center; padding:30px;">Nenhum registro encontrado nesta aba.</p>';
                         return;
                     }
 

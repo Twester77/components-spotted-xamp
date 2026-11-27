@@ -236,8 +236,8 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
 }
 
 .modo-tinder-ativo #bt-container-eventos .bt-card.translate-l-dragging {

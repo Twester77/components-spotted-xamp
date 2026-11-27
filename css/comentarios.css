@@ -1312,16 +1312,16 @@ select#vibe-comentario {
 
 @container feedComentarios (min-width: 801px) {
     .comentario-item {
-        max-width: 60%;
+        max-width: 55%;
     }
 
     .comentario-item.meu-comentario {
-        max-width: 55%;
+        max-width: 45%;
     }
 
     .comentario-filho {
         margin-left: 0;
-        max-width: 52%;
+        max-width: 48%;
     }
 
     .comentario-linha-filha {
@@ -1809,7 +1809,7 @@ body.pagina-post .header-principal {
     display: grid;
     /* Força sempre 2 colunas dinâmicas (50% do espaço disponível cada) */
     grid-template-columns: repeat(2, minmax(50px, 120px)); 
-    grid-template-columns: repeat(2, minmax(12cqi, 25cqi)); 
+    grid-template-columns: repeat(2, minmax(12cqi, 25cqh)); 
     gap: 5px;
     padding: 4px 0;
     /* SOLUÇÃO CHAVE: O container abraça estritamente o tamanho das imagens */
@@ -1824,6 +1824,8 @@ body.pagina-post .header-principal {
 .comentario-media-wrapper-grid:has(.comentario-media-item:only-child) {
     display: flex;
     justify-content: center;
+    margin: 0 auto;
+    margin-inline: auto;
     max-width: 220px;
     max-width: clamp(120px, 25vh, 250px);
 }

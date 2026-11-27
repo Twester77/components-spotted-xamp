@@ -554,7 +554,7 @@ body.modal-aberto .main-perfil-container-publico *::after {
 
 /* Conteúdo da aba (onde o motor-perfil.php injeta o HTML) */
 #perfil-conteudo {
-    min-height: 200px;
+    min-height: 220px;
     width: 100%;
     display: flex;
     flex-direction: column;

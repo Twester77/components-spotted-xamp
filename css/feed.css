@@ -133,6 +133,8 @@
 body:not(.modo-swipe-ativo) .post-content {
     display: -webkit-box;
     margin: 5px 0;
+    color: #ffff;
+    color: var(--texto-primario, #ffff);
     font-size: 0.9rem;
     font-size: clamp(0.86rem, 1.041vw, 1.05rem);
     overflow: hidden;
@@ -379,16 +381,17 @@ body:not(.modo-swipe-ativo) .container-feed .spotted-card {
     display: flex;
 }
 
-.spotted-card.comunidade .user-info-post::after { content: '\f0c0'; color: #ffffffb6; }
-.spotted-card.tenho-ranco .user-info-post::after { content: "\f071"; color: #ff6417; }
-.spotted-card.elogio .user-info-post::after { content: "\f004"; color: #ff4fd0; }
-.spotted-card.games .user-info-post::after { content: "\f11b"; color: #08ccef; }
-.spotted-card.academico .user-info-post::after { content: "\f518"; color: #b822f3b7; }
-.spotted-card.caronas .user-info-post::after { content: "\f1b9"; color: #000000cc; }
-.spotted-card.perdidos .user-info-post::after { content: "\f002"; color: #504f05ee; }
-.spotted-card.esportes .user-info-post::after { content: "\f45f"; color: #0db344; }
-.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after { content: "\f253"; color: #f78605; }
-.spotted-card.desapego .user-info-post::after { content: "\f02b"; color: #00bfff; }
+/* Seção 7 – Ícones de Categoria (com correção ECO-08) */
+.spotted-card.comunidade .user-info-post::after { content: '\f0c0'; content: '\f0c0' / ""; color: #ffffffb6; }
+.spotted-card.tenho-ranco .user-info-post::after { content: "\f071"; content: "\f071" / ""; color: #ff6417; }
+.spotted-card.elogio .user-info-post::after { content: "\f004"; content: "\f004" / ""; color: #ff4fd0; }
+.spotted-card.games .user-info-post::after { content: "\f11b"; content: "\f11b" / ""; color: #08ccef; }
+.spotted-card.academico .user-info-post::after { content: "\f518"; content: "\f518" / ""; color: #b822f3b7; }
+.spotted-card.caronas .user-info-post::after { content: "\f1b9"; content: "\f1b9" / ""; color: #000000cc; }
+.spotted-card.perdidos .user-info-post::after { content: "\f002"; content: "\f002" / ""; color: #504f05ee; }
+.spotted-card.esportes .user-info-post::after { content: "\f45f"; content: "\f45f" / ""; color: #0db344; }
+.spotted-card.acaba-pelo-amor-de-deus .user-info-post::after { content: "\f253"; content: "\f253" / ""; color: #f78605; }
+.spotted-card.desapego .user-info-post::after { content: "\f02b"; content: "\f02b" / ""; color: #00bfff; }
 
 /* ============================================================
    8. HEADER, BODY E ESTRUTURA DO CARD
@@ -975,12 +978,10 @@ span.data-post {
 /* 1. Para 2 ou mais itens (peso: 5 classes - vence o peso 4 do nth-child) */
 .main-perdidos .spotted-card.perdidos-item .card-body .feed-anexos-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(80px, 120px));
-    grid-template-columns: repeat(2, minmax(15cqi, 30cqi));
+    grid-template-columns: repeat(2, minmax(60px, 120px));
+    grid-template-columns: repeat(2, minmax(15cqi, 25cqh));
     grid-template-rows: auto;
     width: 100%;
-    max-width: 35vh;
-    max-width: 35dvh;
     gap: 8px;
     align-items: center;
     align-content: center;
@@ -994,10 +995,10 @@ span.data-post {
 /* 2. Para APENAS 1 item (peso: 7 - sempre vence a regra de cima) */
 .main-perdidos .spotted-card.perdidos-item .card-body .feed-anexos-grid:has(.feed-anexo-item:only-child) {
     display: block;
-    max-height: 320px;
-    max-width: 100%;
-    height: 100%;
     width: 100%;
+    max-height: 100%;
+    height: 25vh;
+    height: 25svh;
     background: transparent;
     object-fit: cover;
     border-radius: 4px;
@@ -1083,9 +1084,6 @@ body:not(.modo-swipe-ativo) .spotted-card .feed-gif-fallback[hidden] {
     grid-template-rows: 1fr;
     gap: 6px;
     aspect-ratio: 2 / 1;
-    border: none;
-    background: transparent;
-    padding: 0;
 }
 
 /* --- 14.5. 3 mídias: 1 grande + 2 empilhadas --- */
@@ -1095,9 +1093,6 @@ body:not(.modo-swipe-ativo) .spotted-card .feed-gif-fallback[hidden] {
     grid-template-rows: 1fr 1fr;
     gap: 8px;
     aspect-ratio: 3 / 2;
-    border: none;
-    background: transparent;
-    padding: 0;
 }
 
 .feed-anexos-grid:has(.feed-anexo-item:nth-child(3):last-child) .feed-anexo-item:first-child {
@@ -1113,9 +1108,6 @@ body:not(.modo-swipe-ativo) .spotted-card .feed-gif-fallback[hidden] {
     grid-template-rows: 1fr 1fr;
     gap: 5px;
     aspect-ratio: 1 / 1;
-    border: none;
-    background: transparent;
-    padding: 0;
 }
 
 /* --- 14.7. 5+ mídias: hero 2x2 + resto --- */
@@ -1125,10 +1117,8 @@ body:not(.modo-swipe-ativo) .spotted-card .feed-gif-fallback[hidden] {
     grid-template-rows: repeat(2, 1fr);
     gap: 5px;
     aspect-ratio: 2 / 1;
-    border: none;
-    background: transparent;
-    padding: 0;
 }
+
 
 .feed-anexos-grid:has(.feed-anexo-item:nth-child(5)) .feed-anexo-item:first-child {
     grid-row: 1 / span 2;
@@ -1139,6 +1129,21 @@ body:not(.modo-swipe-ativo) .spotted-card .feed-gif-fallback[hidden] {
 .feed-anexos-grid:has(.feed-anexo-item:nth-child(6)) .feed-anexo-item:nth-child(6) {
     grid-column: span 2;
 }
+
+/* BASE GERAL DE ANEXOS */
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(2)),
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(3)),
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(4)),
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(5)),
+.feed-anexos-grid:has(.feed-anexo-item:nth-child(6)) {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: auto ;
+    margin-inline: auto;
+    max-width: 250px;
+ }
+
 
 /* --- 14.8. PC: modo revista --- */
 @media (min-width: 1024px) {

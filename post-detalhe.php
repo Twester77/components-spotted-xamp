@@ -38,6 +38,11 @@
  *            fallback, gerando URL pra si mesmo (404 garantido).
  *      Ambos agora apontam para 'uploads/ui/fallback-post.webp', espelhando
  *      a correção da Iara em motor-feed.php.
+ *
+ * 🛡️ DJÊ – 2026-11-26 (Achados e Perdidos + privacidade deslogados)
+ *    - LEFT JOIN em usuarios para exibir posts órfãos (usuario_id = NULL) sem 404.
+ *    - Trava de acesso: visitantes deslogados só visualizam posts da categoria 'perdidos'.
+ *    - Fallback '@Anônimo' em posts de 'perdidos' sem autor vinculado.
  */
 
 /**
@@ -105,7 +110,7 @@ try {
                 u.pref_vibe_padrao
             FROM mensagens m
             LEFT JOIN comunidades com ON com.id = m.comunidade_id
-            INNER JOIN usuarios u ON m.usuario_id = u.id
+            LEFT JOIN usuarios u ON m.usuario_id = u.id
             WHERE m.id = ? AND m.status = 'ativo'
             LIMIT 1";
 
@@ -119,6 +124,14 @@ try {
     if (!$post) {
         http_response_code(404);
         echo '<div class="lightbox-erro">❌ Post não encontrado ou foi removido.</div>';
+        exit();
+    }
+
+    $is_perdidos = (($post['categoria'] ?? '') === 'perdidos');
+
+    if (!isset($_SESSION['usuario_id']) && !$is_perdidos) {
+        http_response_code(403);
+        echo '<div class="lightbox-erro">🔒 Faça login para ver os detalhes deste post.</div>';
         exit();
     }
 
@@ -343,8 +356,12 @@ if ($is_anonimo) {
     $avatar_autor  = 'uploads/ui/anonimo-default.webp';
 } else {
     $username_atual = htmlspecialchars($post['username'] ?? '', ENT_QUOTES, 'UTF-8');
-    $nome_exibicao  = !empty($username_atual) ? '@' . $username_atual : 'Usuário';
-    $avatar_autor   = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
+    if (!empty($username_atual)) {
+        $nome_exibicao = '@' . $username_atual;
+    } else {
+        $nome_exibicao = $is_perdidos ? '@Anônimo' : 'Usuário';
+    }
+    $avatar_autor = obterUrlComFallback($post['foto'] ?? null, 'uploads/ui/default_masculino.webp', $b2, true);
 }
 
 $cor_autor = htmlspecialchars($post['pref_cor_padrao'] ?? '#70cde4', ENT_QUOTES, 'UTF-8');

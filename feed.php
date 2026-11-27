@@ -113,16 +113,45 @@ include 'includes/barra-busca.php';
         const gaveta = document.getElementById('gaveta-filtros-swipe');
         const btn = document.getElementById('btn-abrir-filtros');
         if (gaveta) {
+            const isOpening = !gaveta.classList.contains('aberto');
             gaveta.classList.toggle('aberto');
-            if (gaveta.classList.contains('aberto')) {
+            
+            if (isOpening) {
+                // 🔥 ECO-02: Remove inert e atualiza aria
+                gaveta.inert = false;
+                gaveta.setAttribute('aria-hidden', 'false');
                 btn.innerHTML = '<i class="fas fa-times"></i> FECHAR FILTROS';
                 btn.setAttribute('aria-expanded', 'true');
             } else {
+                // 🔥 ECO-02: Aplica inert e atualiza aria
+                gaveta.inert = true;
+                gaveta.setAttribute('aria-hidden', 'true');
                 btn.innerHTML = '<i class="fas fa-filter"></i> FILTRAR CATEGORIAS';
                 btn.setAttribute('aria-expanded', 'false');
             }
         }
     };
+
+    // 🔥 ECO-02: Sincroniza inert/aria-hidden da gaveta de filtros
+    function syncFiltrosAcessibilidade() {
+        const gaveta = document.getElementById('gaveta-filtros-swipe');
+        if (!gaveta) return;
+        const isSwipe = document.body.classList.contains('modo-swipe-ativo');
+        const isDesktop = window.innerWidth > 768;
+
+        if (isDesktop && !isSwipe) {
+            // No desktop fora do modo swipe, a gaveta é visível por CSS
+            gaveta.inert = false;
+            gaveta.setAttribute('aria-hidden', 'false');
+        } else {
+            // No mobile ou modo swipe, depende da classe .aberto
+            const isAberto = gaveta.classList.contains('aberto');
+            gaveta.inert = !isAberto;
+            gaveta.setAttribute('aria-hidden', isAberto ? 'false' : 'true');
+        }
+    }
+    window.addEventListener('load', syncFiltrosAcessibilidade);
+    window.addEventListener('resize', syncFiltrosAcessibilidade);
 
     // ==================== DECLARAÇÃO GLOBAL ====================
     window._modalAberto = false;
@@ -622,8 +651,13 @@ include 'includes/barra-busca.php';
 
     const observerModoSwipe = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
-            if (mutation.attributeName === 'class' && !document.body.classList.contains('modo-swipe-ativo')) {
-                if (typeof configurarPosts === 'function') configurarPosts();
+            if (mutation.attributeName === 'class') {
+                // 🔥 ECO-02: Sincroniza gaveta de filtros ao entrar/sair do modo swipe
+                syncFiltrosAcessibilidade();
+                
+                if (!document.body.classList.contains('modo-swipe-ativo')) {
+                    if (typeof configurarPosts === 'function') configurarPosts();
+                }
             }
         });
     });

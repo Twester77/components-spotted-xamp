@@ -171,7 +171,7 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema $classe_est
                     aria-label="Abrir menu de navegação"
                     aria-expanded="false"
                     aria-controls="sidebar-fenda">
-                    <svg class="btn-menu-hamburguer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="btn-menu-hamburguer" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M3 7l6 -3l6 3l6 -3v13l-6 3l-6 -3l-6 3v-13" />
                         <path d="M9 12v.01" />
                         <path d="M6 13v.01" />
@@ -188,41 +188,49 @@ $classes_finais = trim($ativar_modo_app ? "$classe_pref $classe_tema $classe_est
             <div class="header-right">
                 <div class="header-icons">
                     <a href="buscar-usuario.php" class="btn-header" title="Pesquisar Habitantes" aria-label="Pesquisar habitantes">
-                        <i class="fas fa-search"></i>
+                        <i class="fas fa-search" aria-hidden="true"></i>
                     </a>
 
-                    <div class="notificacao-wrapper" onclick="toggleJanelaNotificacoes()" aria-label="Suas Notificações">
-                        <i class="fa-solid fa-bell"></i>
+                    <!-- 🔥 ECO-04: Sino de Notificações acessível por teclado e leitor de tela -->
+                    <div class="notificacao-wrapper">
+                        <button type="button" class="notificacao-trigger" 
+                                onclick="toggleJanelaNotificacoes()" 
+                                aria-label="Suas Notificações" 
+                                aria-expanded="false" 
+                                aria-controls="dropdown-notificacoes">
+                            <i class="fa-solid fa-bell" aria-hidden="true"></i>
 
-                        <?php
-                        $total_n = 0;
-                        if (isset($conn)) {
-                            $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
-                            $stmt_count_header->bind_param("i", $u_id);
-                            $stmt_count_header->execute();
-                            $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
-                            $total_n = $res_header_notif['total'] ?? 0;
-                        }
-                        ?>
+                            <?php
+                            $total_n = 0;
+                            if (isset($conn)) {
+                                $stmt_count_header = $conn->prepare("SELECT COUNT(*) as total FROM notificacoes WHERE usuario_id = ? AND lida = 0");
+                                $stmt_count_header->bind_param("i", $u_id);
+                                $stmt_count_header->execute();
+                                $res_header_notif = $stmt_count_header->get_result()->fetch_assoc();
+                                $total_n = $res_header_notif['total'] ?? 0;
+                            }
+                            ?>
 
-                        <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
-                            <?php echo $total_n; ?>
-                        </span>
-
-                        <div id="dropdown-notificacoes" class="notificacao-dropdown-content">
+                            <span id="badge-alertas" class="badge-alertas" style="<?php echo ($total_n > 0) ? '' : 'display:none;'; ?>">
+                                <?php echo $total_n; ?>
+                            </span>
+                        </button>
+                        
+                        <div id="dropdown-notificacoes" class="notificacao-dropdown-content" aria-hidden="true">
                             <p style="padding:10px; color:#999;">Carregando fofocas...</p>
                         </div>
                     </div>
 
-                    <a href="#"
+                    <!-- 🔥 ECO-05: Botão de configurações semântico em vez de <a href="#"> -->
+                    <button type="button"
                         class="btn-config"
                         onclick="event.preventDefault(); abrirPerfilDrawer();"
                         title="Configurações do Perfil"
                         aria-label="Configurar seu perfil"
                         aria-expanded="false"
                         aria-controls="perfil-drawer">
-                        <i class="fas fa-cog"></i>
-                    </a>
+                        <i class="fas fa-cog" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
         <?php endif; ?>

@@ -3,9 +3,10 @@
    ============================================================ */
 
 let _drawerTecladoHandler = null;
-
+let _drawerTriggerElement = null;
 window.abrirDrawerComentarios = function(postId) {
     if (!postId) return;
+        _drawerTriggerElement = document.activeElement; // 🔥 ECO-03: Salva o gatilho para devolver o foco
 
     if (typeof window.HeaderManager?.limpar === 'function') {
         window.HeaderManager.limpar();
@@ -36,7 +37,7 @@ window.abrirDrawerComentarios = function(postId) {
     panel.className = 'drawer-cmt-panel';
     panel.innerHTML = `
         <div class="drawer-cmt-handle-area"><div class="drawer-cmt-handle"></div></div>
-        <button class="drawer-cmt-close" onclick="window.fecharDrawerComentarios()"><i class="fas fa-times"></i></button>
+        <button type="button" class="drawer-cmt-close" aria-label="Fechar comentários" onclick="window.fecharDrawerComentarios()"><i class="fas fa-times" aria-hidden="true"></i></button>        
         <div class="drawer-cmt-content" id="drawer-cmt-content">
             <div style="display:flex; align-items:center; justify-content:center; height:100%; color:#888; flex-direction:column; gap:10px;">
                 <i class="fas fa-spinner fa-spin" style="font-size:2rem; font-size: clamp(2rem, 2.5vw, 5rem); color:#ffbc00;"></i>
@@ -196,11 +197,17 @@ window.fecharDrawerComentarios = function() {
         panel.classList.remove('ativo');
         backdrop.classList.remove('ativo');
         
-        setTimeout(() => {
+            setTimeout(() => {
             backdrop.remove();
             panel.remove();
             document.body.style.overflow = '';
             document.body.classList.remove('modal-aberto');
+            
+            // 🔥 ECO-03: Devolve o foco ao elemento que abriu o drawer
+            if (_drawerTriggerElement && typeof _drawerTriggerElement.focus === 'function') {
+                _drawerTriggerElement.focus();
+                _drawerTriggerElement = null; // Limpa a referência
+            }
         }, 350);
     }
 };

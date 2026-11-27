@@ -40,7 +40,7 @@
     /* ─── FUNDOS ─── */
     --bg-page: #0246859d;
     --bg-page-dark: #0d0d0d;
-    --bg-card: rgba(21, 21, 29, 0.42);
+    --bg-card: rgba(26, 26, 36, 0.25);
     --bg-central: oklch(0.7 0 0 / 0.24);
     --bg-card-hover: rgba(0, 0, 0, 0.35);
     --bg-card-hover-strong: rgba(0, 0, 0, 0.55); /*.spotted-card:hover (com backdrop) - 🐚 FAROL – Fase 2 (PEC) */
@@ -207,7 +207,7 @@ html {
     --bg-drawer: rgba(0, 10, 0, 0.9);
     --bg-input: rgba(0, 40, 0, 0.4);            /* inputs com fundo verde-translúcido */
     --bg-input-hover: rgba(0, 60, 0, 0.6);
-    --bg-glass: rgba(0, 30, 0, 0.3);
+    --bg-glass: rgba(6, 36, 0, 0.37);
     --bg-card-dark: rgba(0, 10, 0, 0.9);
     --bg-footer: rgba(0, 10, 0, 0.95);
 

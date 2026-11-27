@@ -68,7 +68,7 @@ include 'includes/bolhas.php';
         </div>
     <?php else: ?>
        <div class="painel-sessao" role="region" aria-label="Informações da Sessão">
-            <p>Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?></strong> <span aria-hidden="true" style="font-size: 36ox;">🎓</span></p>
+            <p>Logado como: <strong><?php echo htmlspecialchars($_SESSION['usuario_nome'] ?? '', ENT_QUOTES, 'UTF-8'); ?></strong> <span aria-hidden="true" style="font-size: 36px;">🎓</span></p>
             <button onclick="deslogarUsuario()" class="fenda-btn-glow fenda-outline">🔒 Sair da Conta</button>
         </div>
 
@@ -84,7 +84,7 @@ include 'includes/bolhas.php';
                 <source srcset="imagensfoto/capa-achados-e-perdidos.webp" type="image/webp">
                 <img src="imagensfoto/capa-achados-e-perdidos.jpg"
                     alt="Ilustração de um mural de achados e perdidos com chaves, óculos e objetos esquecidos"
-                    style="width: 100%; max-width: 800px; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5);"
+                    style="width: 100%; max-width: 900px; height: auto; border-radius: 15px; opacity: 0.7; margin: 15px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.5);"
                     loading="lazy">
             </picture>
             <div style="font-size: 14px; font-size: clamp(14px, 2vw, 18px); font-style: italic; line-height: 1.5; text-align: center; color: #ccc; max-width: 800px; margin-bottom: 25px;">
@@ -149,6 +149,7 @@ include 'includes/bolhas.php';
     <?php
     $placeholder_busca = 'Buscar nos perdidos...';
     $categoria_busca = 'perdidos'; // Força a busca a filtrar apenas esta categoria
+    $filtro_busca = $filtro;
     include 'includes/barra-busca.php';
     ?>
 
@@ -306,6 +307,8 @@ include 'includes/bolhas.php';
         const gifHiddenInput = document.getElementById('gif-url-perdidos');
         const subcategoriaInput = document.getElementById('subcategoria-perdidos');
         const botoesToggle = document.querySelectorAll('.btn-toggle-perdido');
+
+        if (!form || !textarea) return;
 
         const PerdidosAnexos = {
             anexos: [],
@@ -571,6 +574,21 @@ include 'includes/bolhas.php';
         PerdidosAnexos.verificarConteudo();
 
     })();
+
+    // ============================================================
+    // 🔍 LIGHTBOX DE IMAGEM NOS CARDS (LOGADOS E DESLOGADOS)
+    // ============================================================
+    document.addEventListener('click', function(e) {
+        const img = e.target.closest('.feed-filtrado .feed-anexo-item img, .feed-filtrado .container-img-post img');
+        if (!img || !img.src) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof window.abrirLightboxManual === 'function') {
+            window.abrirLightboxManual(img.src);
+        } else {
+            window.open(img.src, '_blank', 'noopener');
+        }
+    });
 </script>
 
 <?php include 'includes/footer.php'; ?>

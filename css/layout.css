@@ -74,8 +74,8 @@ header h1 {
 
 }
 
-/* --- ESTILO BASE DOS ÍCONES --- */
-.header-icons  {
+/* --- ESTILO BASE DOS ÍCONES (LINKS + BOTÕES ACESSÍVEIS ECO-04/05) --- */
+.header-icons {
     display: flex;
     gap: 5px;
     gap: clamp(0.5rem, 1vw, 1.2em);
@@ -86,15 +86,32 @@ header h1 {
     -moz-user-select: none;
     user-select: none;
     pointer-events: auto;
-    
 }
 
 .header-icons a {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
     text-decoration: none;
-    display: flex;
-    align-items: center;
+    cursor: pointer;
     transition: all 0.3s ease;
-    /* Transição suave para todos */
+}
+
+.header-icons .notificacao-trigger,
+.header-icons .btn-config {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    font: inherit;
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .header-icons i {
@@ -105,22 +122,32 @@ header h1 {
     transition: all 0.3s ease;
 }
 
-/* HOVER GERAL */
-.header-icons a:hover i {
+/* HOVER E FOCO GERAL */
+.header-icons a:hover i,
+.header-icons a:focus-visible i,
+.header-icons .notificacao-trigger:hover i,
+.header-icons .notificacao-trigger:focus-visible i {
     color: #fff;
     transform: scale(1.2);
 }
 
-/*  HOVER ESPECÍFICO DA ENGRENAGEM  */
-.btn-config:hover i {
+/* HOVER E FOCO ESPECÍFICO DA ENGRENAGEM */
+.btn-config:hover i,
+.btn-config:focus-visible i {
     transform: rotate(90deg) scale(1.2) !important;
     color: #fff;
 }
 
+.header-icons a:focus-visible,
+.notificacao-trigger:focus-visible,
+.btn-config:focus-visible {
+    outline: 2px solid var(--texto-dourado, #ffbc00);
+    outline-offset: 4px;
+    border-radius: 6px;
+}
 
-.notificacao-wrapper:hover .badge-alerta {
+.notificacao-wrapper:hover .badge-alertas {
     transform: scale(0.8) translateY(-5px);
-
 }
 
 .btn-feed-home:hover {
@@ -129,20 +156,17 @@ header h1 {
     filter: brightness(1.2);
 }
 
-
-/* --- MENU NAVBAR (RECUPERADO) --- */
-
+/* --- MENU NAVBAR UNIFICADO (LINKS <a> + BOTÕES .menu-trigger COM CLAMP) --- */
 .fenda-saudacao {
     margin: 20px auto;
-    font-size: 1.3rem; 
+    font-size: 1.3rem;
     font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-    font-family: 'Segoe UI', BlinkMacSystemFont, system-ui, -apple-system, Roboto, sans-serif; 
+    font-family: 'Segoe UI', BlinkMacSystemFont, system-ui, -apple-system, Roboto, sans-serif;
     letter-spacing: 1px;
     padding: 12px;
     width: 100%;
     justify-content: center;
 }
-
 
 main article {
     text-align: left;
@@ -152,11 +176,9 @@ main article {
     box-sizing: border-box;
 }
 
-
 nav {
     width: 100%;
     position: relative;
-    /* Ela sobe com o scroll */
     transition: all 0.3s ease;
 }
 
@@ -170,28 +192,68 @@ nav {
     padding: 15px;
 }
 
-
-/* Ajuste fino dos itens */
-.menu-item a {
+/* Ajuste fino unificado: preserva clamps, peso e espaçamento do menu antigo */
+.menu-item a,
+.menu-trigger {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    font-family: inherit;
     color: #ffffff;
+    color: var(--texto-primario, #ffffff);
     text-decoration: none;
     font-weight: bold;
     font-size: 0.9rem;
     font-size: clamp(0.86rem, 0.6rem + 0.5cqi, 1.2rem);
     line-height: 1.5;
     padding: 8px 16px;
-    display: block;
-    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
     border-radius: 5px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* lógica de setinha no dropdown */
-.dropdown>a::after {
+/* Garante largura total e setinha alinhada à direita dentro da sidebar */
+.sidebar-fenda .menu-item,
+.sidebar-fenda .dropdown,
+.sidebar-fenda .menu-trigger {
+    width: 100%;
+}
+
+.menu-trigger:focus-visible,
+.menu-item a:focus-visible {
+    outline: 2px solid var(--texto-dourado, #ffbc00);
+    outline-offset: -2px;
+    background: rgba(255, 255, 255, 0.11);
+}
+
+/* Lógica de setinha no dropdown (<a> legado e <button class="menu-trigger">) */
+.dropdown > a::after,
+.menu-trigger::after {
     content: ' ▼';
     font-size: 12px;
     opacity: 0.7;
     margin-left: 5px;
+}
+
+.sidebar-fenda .menu-trigger::after {
+    margin-left: auto;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown:hover > a::after,
+.menu-item.dropdown.active .menu-trigger::after,
+.menu-item.dropdown:hover .menu-trigger::after {
+    content: ' ▲';
 }
 
 .menu {
@@ -205,21 +267,12 @@ nav {
     justify-content: center;
     position: relative;
     z-index: 100;
-
 }
 
-.menu-item:hover>a {
+.menu-item:hover > a,
+.menu-trigger:hover {
     background: rgba(255, 255, 255, 0.11);
     border-radius: 5px;
-}
-
-
-.dropdown {
-    position: relative;
-}
-
-.dropdown:hover>a::after {
-    content: ' ▲';
 }
 
 .submenu {
@@ -260,7 +313,8 @@ nav {
     transition: color 0.3s ease;
 }
 
-.menu-item:hover .submenu {
+.menu-item:hover .submenu,
+.menu-item.dropdown.active .submenu {
     display: flex;
     flex-direction: column;
 }
@@ -274,21 +328,19 @@ nav {
     left: 0;
     transform: translate3d(-100%, 0, 0);
     max-width: 350px;
+    height: 100vh;
     height: 100dvh;
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y ;
-    -webkit-overflow-scrolling: touch;
+    overflow-y: auto ;
     background: rgba(10, 25, 47, 0.95);
     background: var(--bg-sidebar, rgba(10, 25, 47, 0.95));  /* 🐚 CORRENTE – Fase 2 */
-    -webkit-backdrop-filter: blur(1px);
-    backdrop-filter: blur(1px);
     border: 2px solid #222;
     border-radius: 20px;
     padding: 15px;
     z-index: 999999;
     transition: transform 0.35s ease-out;
-    overflow-y: auto ;
-
+   
 }
 
 /* --- CABEÇALHO DA GAVETA (SIDEBAR HEADER) --- */
@@ -1403,8 +1455,8 @@ footer a {
     max-width: 600px;
     background: rgba(255, 255, 255, 0.08);                        /* fallback */
     background: var(--bg-input, rgba(255, 255, 255, 0.08));       /* 🐚 FAROL – Fase 2 */
-    color: white;                                                 /* fallback */
-    color: var(--texto-primario, white);                          /* 🐚 FAROL – Fase 2 */
+    color: #ffffff;                                                 /* fallback */
+    color: var(--texto-primario, #ffffff);                          /* 🐚 FAROL – Fase 2 */
     border: 2px solid rgba(255, 188, 0, 0.5);
     outline: none;
     box-shadow: none;
@@ -2019,7 +2071,7 @@ textarea {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    padding: 10px;
+    padding: 10px 12px;
     border-radius: 10px;
     border: none;
     outline: none;
@@ -2051,7 +2103,7 @@ textarea {
     background: #00000094;
     background: oklch(0% 0 0 / 0.58);
     border-radius: 16px;
-    padding: 24px 20px;
+    padding: 20px 18px;
     margin: 0 auto 20px auto;
 }
 
@@ -2072,7 +2124,7 @@ textarea[name="bio"] {
 }
 
 
-/* Tooglezinho de Notificção */
+/* Tooglezinho de Notificação */
 
 .notificacao-dropdown-content {
     display: none;
@@ -2103,13 +2155,16 @@ textarea[name="bio"] {
     align-items: center;
     padding: 12px;
     text-decoration: none;
-    color: white;
+    color: #fff;
+    color: var(--texto-primario, #fff);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--borda-sutil, rgba(255, 255, 255, 0.05));
     transition: 0.3s;
 }
 
 .item-notif-rapida:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.15);
+    background: var(--borda-card, rgba(255, 255, 255, 0.15));
 }
 
 .notif-nova {
@@ -2129,8 +2184,9 @@ textarea[name="bio"] {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    margin-right: 12px;
+    margin-right: 14px;
     font-size: 0.8rem;
+    font-size: clamp(0.75rem, 1cqi, 0.92rem);
 }
 
 .notif-txt {
@@ -2139,18 +2195,21 @@ textarea[name="bio"] {
 }
 
 .notif-txt strong {
-    font-size: 0.85rem;
-    color: var(--dourado);
+    font-size: 0.84rem;
+    font-size: clamp(0.77rem, 1cqi, 0.92rem);
+    color:  #ffbc00;
     color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🐚 FAROL – Fase 2 */
 }
 
 .notif-txt span {
     font-size: 0.8rem;
+    font-size: clamp(0.75rem, 1cqi, 0.9rem);
     opacity: 0.9;
 }
 
 .notif-txt small {
     font-size: 0.75rem;
+    font-size: clamp(0.72rem, 1cqi, 0.86rem);
     opacity: 0.5;
     margin-top: 2px;
 }
@@ -2160,10 +2219,16 @@ textarea[name="bio"] {
     text-align: center;
     padding: 10px;
     font-size: 0.8rem;
-    color: var(--dourado);
+    font-size: clamp(0.76rem, 1.5cqi, 0.92rem);
+    color: #ffbc00;
     color: var(--texto-dourado, var(--dourado, #ffbc00));         /* 🐚 FAROL – Fase 2 */
-    text-decoration: none;
     background: rgba(0, 0, 0, 0.2);                               /* fica local */
+}
+
+.ver-todas-notif:hover {
+    filter: brightness(1.02);
+    background: rgba(255,255,255, 0.05);
+    background: var(--bg-glass, rgba(255,255,255, 0.05)); 
 }
 
 /* Efeito especial para o post do Leonardo */
@@ -2220,12 +2285,6 @@ textarea[name="bio"] {
         padding: 6px;
     }
 
-
-    #conteudo-principal.main-perdidos {
-        padding: 10px;
-    }
-
-
     /* Esconde elementos não essenciais para ganhar altura */
     .avatar-p {
         width: 40px;
@@ -2239,7 +2298,7 @@ textarea[name="bio"] {
         left: 0;
         right: 0;
         margin: 12px auto;
-        padding: 4px;
+        padding: 0;
     }
 
 
@@ -2249,8 +2308,10 @@ textarea[name="bio"] {
     .main-perdidos .feed-anexos-grid {
         margin: 8px auto;
         width: 100%;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        padding: 8px;
+        min-width: 200px ;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+        padding: 5px;
     }
 
     /* Os cards ocupam a largura total sem margem extra */
@@ -2377,6 +2438,7 @@ textarea[name="bio"] {
         visibility: visible !important;
         max-width: 250px;
         max-height: 100vh;
+        max-height: 100dvh;
         position: fixed !important;
         top: 0;
         left: 0;

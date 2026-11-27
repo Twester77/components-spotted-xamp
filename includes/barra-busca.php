@@ -13,14 +13,18 @@
   - Bússola, a que encontrou o Norte.
   - 23/10/2026 – 28/10/2026 */
 $placeholder_busca = isset($placeholder_busca) ? $placeholder_busca : 'Buscar no feed...';
-$busca_atual = isset($_GET['q']) ? htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') : '';
+$categoria_busca   = isset($categoria_busca) ? htmlspecialchars($categoria_busca, ENT_QUOTES, 'UTF-8') : '';
+$filtro_busca      = isset($filtro_busca) ? htmlspecialchars($filtro_busca, ENT_QUOTES, 'UTF-8') : '';
+$busca_atual       = isset($_GET['q']) ? htmlspecialchars($_GET['q'], ENT_QUOTES, 'UTF-8') : '';
 ?>
 <div class="container-busca-feed">
     <div class="busca-wrapper">
         <i class="fas fa-search busca-icone"></i>
         <input type="search" id="input-busca-global" class="busca-input" 
                placeholder="<?= $placeholder_busca ?>" 
-               value="<?= $busca_atual ?>" 
+               value="<?= $busca_atual ?>"
+               data-categoria="<?= $categoria_busca ?>"
+               data-filtro="<?= $filtro_busca ?>"
                autocomplete="off">
         <button type="button" id="btn-limpar-busca" class="btn-limpar-busca" style="<?= empty($busca_atual) ? 'display:none;' : ''; ?>">
             <i class="fas fa-times"></i>

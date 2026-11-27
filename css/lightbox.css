@@ -319,7 +319,7 @@ body.modo-swipe-ativo .lightbox-post-body .feed-anexos-grid {
        Mínimo de 260px, tenta ocupar 70% da tela (70vw), e trava no máximo de 370px (2 colunas de 180px + 10px de gap) */
     max-width: clamp(260px, 75vw, 380px);
     /* Navegadores modernos sobrescrevem a linha de cima */
-    max-width: 75cqw;
+    max-width: 75cqi;
     display: grid;
     /* Fallback: 2 colunas de até 180px (ou 50% cada) */
     grid-template-columns: repeat(2, 180px);
