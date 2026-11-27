@@ -2013,9 +2013,6 @@ textarea[name="bio"] {
 
 .campo-grupo input:focus-visible,
 .campo-grupo textarea:focus-visible {
-    outline: none;
-    border-color: var(--dourado, #ffbc00);                          /* fallback */
-    border-color: var(--texto-dourado, var(--dourado, #ffbc00));   /* 🌅 FAGULHA – Fase 2 */
     background: #222;                                               /* 🎨 cinza-escuro específico do focus */
     box-shadow: 0 0 8px rgba(255, 188, 0, 0.2);                     /* 🎨 glow dourado específico */
 }

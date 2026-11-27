@@ -1,6 +1,6 @@
 // sw.js – Service Worker da Fenda
-// 🛡️ VERSÃO v1.7.5 – Atualização das estratégias de cache
-const CACHE_VERSION = 'fenda-v1.7.5';
+// 🛡️ VERSÃO v1.7.6 – Atualização das estratégias de cache
+const CACHE_VERSION = 'fenda-v1.7.6';
 const CACHE_STATIC = `${CACHE_VERSION}-static`;
 const CACHE_DYNAMIC = `${CACHE_VERSION}-dynamic`;
 const STATIC_FILES = [

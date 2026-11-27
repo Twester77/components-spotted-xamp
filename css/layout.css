@@ -5,7 +5,7 @@ header {
     z-index: 9994;
     display: flex;
     flex: 0 1 auto; 
-    gap: 12px;
+    gap: 10px;
     min-height: fit-content;
     height: auto;
     justify-content: center;
@@ -34,7 +34,7 @@ header::before {
     /* Bordas e Sombra */
     border-radius: 0 0 10px 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    
+    background: #fc5f21;
     /* Efeitos Visuais (Gradiente + Blur) */
     background: linear-gradient(165deg, #fc5f21, rgba(155, 90, 185, 0.824));
     -webkit-backdrop-filter: blur(1.5px);
@@ -56,13 +56,13 @@ header::before {
     display: flex;
     align-items: center;
     gap: 6px;
-    gap: clamp(6px, 1.5cqi, 15px);
+    gap: clamp(6px, 1.3cqi, 18px);
     /* Espaço entre o botão hamburguer e o título */
 }
 
 header h1 {
-    font-size: 0.95rem;
-    font-size: var(--tamanho-fonte-header, clamp(0.9rem, 4cqi, 2rem));
+    font-size: 0.92rem;
+    font-size: var(--tamanho-fonte-header, clamp(0.86rem, 4cqi, 2rem));
     letter-spacing: 0.5px;
     line-height: 1.3;
     text-transform: uppercase;
@@ -71,7 +71,6 @@ header h1 {
     font-family: 'Urbanist', sans-serif;
     font-weight: bold; 
     margin: 0;
-
 }
 
 /* --- ESTILO BASE DOS ÍCONES (LINKS + BOTÕES ACESSÍVEIS ECO-04/05) --- */
@@ -1106,7 +1105,7 @@ footer a {
 }
 
 .notificacao-popup:hover {
-    transform: translateY(-5px) !important;
+    transform: translateY(-5px) ;
     /* Adicionei o !important para não brigar com o transform do keyframe */
     border-color: var(--dourado);
     box-shadow: 0 15px 30px rgba(255, 188, 0, 0.4);
@@ -1180,29 +1179,42 @@ footer a {
 /* ESTADO ATIVO: Quando o som está selecionado */
 .btn-audio-choice.active {
     background: rgba(255, 188, 0, 0.15) !important;
-    border-color: #ddc80e !important;
+    border-color: #ddc80e ;
     /* Cor Dourada da Fenda */
     color: #ddc80e;
-    box-shadow: 0 0 15px rgba(255, 188, 0, 0.1);
+    box-shadow: 0 0 8px rgba(255, 188, 0, 0.1);
 }
 
 .btn-bolhas-on.active-blue {
     background-color: rgb(27, 158, 219) !important;
-    color: white !important;
+    color: #ffff ;
+    color: var(--texto-primario, #ffff);
 }
 
 /* Estilo para as bolhas desligadas */
 .btn-bolhas-off.active-red {
     background-color: rgba(243, 76, 53, 0.87) !important;
-    color: white !important;
+    color: #ffff ;
+    color: var(--texto-primario, #fff);
 }
-
 
 .campo-grupo input[type="color"] {
     width: 80px;
     height: 40px;
     justify-content: center;
 }
+
+/* ✨ DJÊ – 2026-11-27: Destaque visual de foco por teclado (Tab) nos checkboxes e seletor de cor */
+.config-item input[type="checkbox"]:focus-visible,
+.switch input[type="checkbox"]:focus-visible,
+.campo-grupo input[type="color"]:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="color"]:focus-visible {
+    outline: 2px solid var(--dourado, #ffbc00);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgba(255, 188, 0, 0.25);
+}
+
 
 /* Botão de Toggle (Radar/Notificações) */
 .btn-stealth-toggle {
@@ -2041,6 +2053,7 @@ article.conteudo-principal {
 }
 
 input[type="checkbox" i] {
+    display: inline-block;
     height: 12px;
     width: 12px;
     height: clamp(13px, 1.3cqi, 18px);
@@ -2048,6 +2061,8 @@ input[type="checkbox" i] {
     margin: 4px auto;
     accent-color: #efb71c;
     accent-color: oklch(80.867% 0.16047 85.448);
+    vertical-align: middle;
+    cursor: pointer;
 }
 
 /* OS CAMPOS (Organização vertical) */
@@ -2094,7 +2109,28 @@ textarea {
     border-radius: 8px;
     color: #fff;
     color: oklch(100% 0.00011 271.152);
+
 }
+
+/* ✨ DJÊ – 2026-11-27: Restaura indicador de foco por teclado nos campos de formulário */
+input[type="text"]:focus-visible,
+input[type="email"]:focus-visible,
+input[type="password"]:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.campo-grupo input[type="text"]:focus-visible,
+.campo-grupo select:focus-visible,
+.campo-grupo textarea:focus-visible,
+.input-username-wrapper:focus-within {
+    outline: 2px solid var(--dourado, #ffbc00);
+    outline-offset: 2px;
+}
+
+/* Evita contorno duplo dentro da cápsula do @username */
+.input-username-wrapper input[type="text"]:focus-visible {
+    outline: none;
+}
+
 
 /* Formulários (criar/editar posts) – fundo escuro com leve vidro */
 .form-container {
@@ -2247,7 +2283,7 @@ textarea[name="bio"] {
     border: 1px solid rgba(255, 215, 0, 0.3);
     border-radius: 4px;
     background: rgba(255, 215, 0, 0.1);
-    font-size: clamp(0.64rem, 2cqi, 0.96rem);
+    font-size: clamp(0.63rem, 2cqi, 0.94rem);
     font-weight: bold;
     color: #ffd700;
     letter-spacing: 2px;
@@ -2836,7 +2872,7 @@ body.modal-aberto #fenda-nexus {
 
 @media (hover: hover) and (pointer: fine) {
     .nexus-item:hover {
-        background: var(--bg-card-hover,);
+        background: var(--bg-card-hover);
         transform: translateY(-6px);
         transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
     }
@@ -3136,7 +3172,6 @@ section.sessao-publicar .form-publicar .anexos-grid {
 
 .btn-marcar-todas:hover {
     background: var(--texto-dourado);
-    border-color: var(--dourado, #ffbc00);
     transform: scale(1.02);
     color: #0a0a0a;
     transition: 0.2s background ease-in;

@@ -42,10 +42,13 @@ if (!function_exists('asset_versao')) {
 
 <?php if ($u_id > 0): ?>
     <div id="drawer-backdrop" class="drawer-backdrop" onclick="fecharPerfilDrawer()"></div>
-
+    
+<!-- ✨ DJÊ – 2026-11-27: alterado de role="region" para role="dialog" + aria-modal="true"
+         para leitores de tela (TalkBack/VoiceOver) isolarem a navegação dentro da gaveta -->
     <div id="perfil-drawer"
         class="drawer-perfil-container"
-        role="region"
+        role="dialog"
+        aria-modal="true"
         aria-label="Configurações de Perfil"
         aria-hidden="true"
         inert>

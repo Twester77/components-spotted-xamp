@@ -40,7 +40,7 @@
     /* ─── FUNDOS ─── */
     --bg-page: #0246859d;
     --bg-page-dark: #0d0d0d;
-    --bg-card: rgba(26, 26, 36, 0.25);
+    --bg-card: rgba(26, 26, 35, 0.32);
     --bg-central: oklch(0.7 0 0 / 0.24);
     --bg-card-hover: rgba(0, 0, 0, 0.35);
     --bg-card-hover-strong: rgba(0, 0, 0, 0.55); /*.spotted-card:hover (com backdrop) - 🐚 FAROL – Fase 2 (PEC) */
@@ -124,7 +124,8 @@ html, body {
     -webkit-font-smoothing: antialiased;
     -webkit-overflow-scrolling: auto;
     overflow-x: hidden;
-    max-width: 100vw;
+    max-width: 100vw;  
+    max-width: 100dvw;
     position: relative;
     width: 100%;
     scrollbar-width: thin;
@@ -165,6 +166,8 @@ html {
 #input-busca-global { word-break: break-word; overflow-wrap:anywhere ; white-space: nowrap; overflow: hidden; }
 .btn-limpar-busca { background: transparent; border: none; color: #888; color: var(--texto-muted, #888); cursor: pointer; padding: 5px; font-size: 1.1rem; transition: color 0.2s; }
 .btn-limpar-busca:hover { color: var(--cor-erro); }
+
+
 
 /* ============================================================
    🌅 FAGULHA — 2026-10-16 — Fase 5 (Hacker Theme)

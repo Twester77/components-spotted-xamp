@@ -226,63 +226,77 @@ $classe_presenca = ($id_meu == 1) ? 'perfil-gold' : '';
                 </small>
             </div>
 
+            <!-- ✨ DJÊ – 2026-11-27: Vinculação ARIA (aria-labelledby / aria-describedby) nos switches e label for na Cor da Aura -->
             <!-- PiP -->
             <div class="config-item">
-                <span>Notificações Flutuantes (PiP):</span>
+                <span id="lbl-pref-pip">Notificações Flutuantes (PiP):</span>
                 <label class="switch">
-                    <input type="checkbox" name="pref_pip" value="1" <?php echo (isset($dados['pref_pip']) && $dados['pref_pip'] == 1) ? 'checked' : ''; ?>>
-                    <span class="slider round"></span>
+                    <input type="checkbox" name="pref_pip" value="1"
+                        aria-labelledby="lbl-pref-pip"
+                        aria-describedby="desc-pref-pip"
+                        <?php echo (isset($dados['pref_pip']) && $dados['pref_pip'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round" aria-hidden="true"></span>
                 </label>
-                <small>Receba notificações em janela flutuante (experimental, disponível apenas em desktop Chrome/Edge)</small>
+                <small id="desc-pref-pip">Receba notificações em janela flutuante (experimental, disponível apenas em desktop Chrome/Edge)</small>
             </div>
 
             <!-- Badge -->
             <div class="config-item">
-                <span>Badge no Ícone:</span>
+                <span id="lbl-pref-badge">Badge no Ícone:</span>
                 <label class="switch">
-                    <input type="checkbox" name="pref_badge" value="1" <?php echo (isset($dados['pref_badge']) && $dados['pref_badge'] == 1) ? 'checked' : ''; ?>>
-                    <span class="slider round"></span>
+                    <input type="checkbox" name="pref_badge" value="1"
+                        aria-labelledby="lbl-pref-badge"
+                        aria-describedby="desc-pref-badge"
+                        <?php echo (isset($dados['pref_badge']) && $dados['pref_badge'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round" aria-hidden="true"></span>
                 </label>
-                <small>Em apps instalados e sistemas compatíveis, mostra notificações não lidas no ícone enquanto a Fenda está aberta. Com o app fechado, a atualização exige notificações push.</small>
+                <small id="desc-pref-badge">Em apps instalados e sistemas compatíveis, mostra notificações não lidas no ícone enquanto a Fenda está aberta. Com o app fechado, a atualização exige notificações push.</small>
             </div>
 
             <!-- Notificações da Comunidade -->
             <div class="config-item">
-                <span>Notificações da Comunidade:</span>
+                <span id="lbl-pref-notif-comunidade">Notificações da Comunidade:</span>
                 <label class="switch">
                     <input type="checkbox" name="pref_notif_comunidade" value="1"
+                        aria-labelledby="lbl-pref-notif-comunidade"
+                        aria-describedby="desc-pref-notif-comunidade"
                         <?php echo (isset($dados['pref_notif_comunidade']) && $dados['pref_notif_comunidade'] == 1) ? 'checked' : ''; ?>>
-                    <span class="slider round"></span>
+                    <span class="slider round" aria-hidden="true"></span>
                 </label>
-                <small>Receba notificações de novos posts nas comunidades que você participa</small>
+                <small id="desc-pref-notif-comunidade">Receba notificações de novos posts nas comunidades que você participa</small>
             </div>
 
             <!-- 🔥 Toggle: Modo Swipe Balanga Teras (COM HIDDEN + CHECKBOX) -->
             <div class="config-item">
-                <span>Modo Swipe Balanga Teras (Beta):</span>
+                <span id="lbl-pref-swipe-balanga">Modo Swipe Balanga Teras (Beta):</span>
                 <label class="switch">
                     <!-- Hidden garante envio 0 quando desmarcado -->
                     <input type="hidden" name="pref_swipe_balanga" value="0">
                     <input type="checkbox" name="pref_swipe_balanga" value="1"
+                        aria-labelledby="lbl-pref-swipe-balanga"
+                        aria-describedby="desc-pref-swipe-balanga"
                         <?php echo (isset($dados['pref_swipe_balanga']) && $dados['pref_swipe_balanga'] == 1) ? 'checked' : ''; ?>>
-                    <span class="slider round"></span>
+                    <span class="slider round" aria-hidden="true"></span>
                 </label>
-                <small>Ative o modo Pilha para os eventos do Balanga Teras (Swipe)</small>
+                <small id="desc-pref-swipe-balanga">Ative o modo Pilha para os eventos do Balanga Teras (Swipe)</small>
             </div>
 
             <!-- Modo Swipe Feed -->
             <div class="config-item">
-                <span>Modo Swipe no Feed (Beta):</span>
+                <span id="lbl-pref-swipe">Modo Swipe no Feed (Beta):</span>
                 <label class="switch">
-                    <input type="checkbox" name="pref_swipe" value="1" <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
-                    <span class="slider round"></span>
+                    <input type="checkbox" name="pref_swipe" value="1"
+                        aria-labelledby="lbl-pref-swipe"
+                        aria-describedby="desc-pref-swipe"
+                        <?php echo ($dados['pref_swipe'] == 1) ? 'checked' : ''; ?>>
+                    <span class="slider round" aria-hidden="true"></span>
                 </label>
-                <small>Isso mudará seu feed para o modo empilhado (Swipe)</small>
+                <small id="desc-pref-swipe">Isso mudará seu feed para o modo empilhado (Swipe)</small>
             </div>
 
             <div class="campo-grupo">
-                <label>Cor da Aura</label>
-                <input type="color" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style="border: none; background: none; cursor: pointer;">
+                <label for="pref_cor_padrao">Cor da Aura</label>
+                <input type="color" id="pref_cor_padrao" name="pref_cor_padrao" value="<?php echo $cor_default; ?>" style="border: none; background: none; cursor: pointer;">
             </div>
 
             <div class="perfil-controles">

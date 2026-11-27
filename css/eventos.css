@@ -41,7 +41,7 @@
     /* será sobrescrito pelo JS */
     --bt-text-max-height: 80px;
     /* será sobrescrito pelo JS */
-    --bt-card-max-height: 650px;
+    --bt-card-max-height: 700px;
     /* será sobrescrito pelo JS */
     --bt-capa-height: 260px;
     /* será sobrescrito pelo JS */
@@ -183,7 +183,7 @@
     max-width: var(--bt-card-width, 650px);
     padding: var(--bt-card-padding, clamp(10px, 2cqi, 20px));
     font-size: var(--bt-card-font-size, clamp(0.85rem, 2.5cqi, 1.1rem));
-    max-height: var(--bt-card-max-height, 600px);
+    max-height: var(--bt-card-max-height, 700px);
     height: auto;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -802,6 +802,7 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
 .bt-titulo {
     color: #fff;                                                  /* fallback */
     color: var(--texto-primario, #fff);                          /* 🐚 FAROL – Fase 2 */
+    font-size: 1.1rem;
     font-size: var(--bt-titulo-size, clamp(1rem, 5cqi, 1.7rem));
     font-weight: 700;
     margin: 0;
@@ -872,8 +873,8 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
 }
 
 .bt-participacao span {
-    font-size: 0.85rem;
-    font-size: var(--bt-meta-size, clamp(0.75rem, 1cqi, 0.95rem));
+    font-size: 0.84rem;
+    font-size: var(--bt-meta-size, clamp(0.75rem, 1cqi, 1rem));
     display: flex;
     align-items: center;
     gap: 6px;
@@ -1264,8 +1265,8 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
 .bt-avatar-item img {
     width: 42px;
     height: 42px;
-    width: clamp(40px, 6vw, 65px);
-    height: clamp(40px, 6vw, 65px);
+    width: clamp(44px, 6vw, 68px);
+    height: clamp(44px, 6vw, 68px);
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid rgba(255, 188, 0, 0.3);
@@ -2077,11 +2078,11 @@ body:not(.modo-tinder-ativo) #bt-container-eventos .bt-card {
 }
 
 .bt-radar .fa-search:before {
-    font-size: clamp(3rem, 8vw, 7rem);
-    color: var(--bt-dourado, #ffbc00);                            /* fallback */
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #ffbc00;                            /* fallback */
     color: var(--texto-dourado, var(--bt-dourado, #ffbc00));      /* 🐚 FAROL – Fase 2 */
     display: block;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 .bt-radar strong {

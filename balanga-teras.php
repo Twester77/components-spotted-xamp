@@ -493,7 +493,7 @@ $stmt_com->close();
                 <i class="fas fa-search"></i>
                 <strong>Fim da pilha!</strong>
                 <p>Que tal buscar novos eventos?</p>
-                <button onclick="btRecarregarPilha()" class="bt-btn-empty" style="border:none; cursor:pointer;">
+                <button onclick="btRecarregarPilha()" class="bt-btn-empty" style=" opacity: 1; cursor:pointer;">
                     <i class="fas fa-sync-alt"></i> Buscar Eventos
                 </button>
             </div>

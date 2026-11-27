@@ -204,7 +204,94 @@ function abrirDenuncia(idPost) {
 }
 
 // ==================== PERFIL DRAWER (GAVETA) ====================
-let perfilDrawerAbortController = null;
+// ✨ DJÊ – 2026-11-27 (auditoria a11y / isolamento com translateL)
+//    - Adicionada trava de foco (Tab / Shift+Tab + focusin em captura) e
+//      fechamento via tecla Escape (_ativarTravaPerfilDrawer).
+//    - Motivo: como a gaveta injeta perfil.php via fetch sobre o feed, o Tab
+//      escapava para os cards de trás e abria o fallback de acessibilidade do
+//      translateL por cima da tela.
+//    - Ignora a interceptação se houver modal superior aberto (dialog-confirmacao
+//      ou lightboxes) e devolve o foco ao botão gatilho ao fechar.let perfilDrawerAbortController = null;
+
+let _perfilDrawerTrigger = null;
+let _removerTravaPerfilDrawer = null;
+
+function _obterFocaveisPerfilDrawer(drawer) {
+    const seletor = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    return Array.from(drawer.querySelectorAll(seletor)).filter((el) => {
+        if (el.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
+        const style = window.getComputedStyle(el);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+}
+
+function _ativarTravaPerfilDrawer(drawer) {
+    if (typeof _removerTravaPerfilDrawer === 'function') {
+        _removerTravaPerfilDrawer();
+    }
+
+    const haModalSuperiorAberto = () => {
+        const dialogConfirm = document.getElementById('dialog-confirmacao');
+        const lightboxManual = document.getElementById('modal-lightbox-fenda');
+        const lightboxUniversal = document.getElementById('lightbox-modal');
+        return Boolean(
+            (dialogConfirm && dialogConfirm.open) ||
+            lightboxManual ||
+            (lightboxUniversal && lightboxUniversal.style.display !== 'none')
+        );
+    };
+
+    const keyHandler = (e) => {
+        if (!drawer.classList.contains('ativa') || haModalSuperiorAberto()) return;
+
+        if (e.key === 'Escape') {
+            if (e.defaultPrevented) return;
+            e.preventDefault();
+            e.stopPropagation();
+            window.fecharPerfilDrawer();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            const focaveis = _obterFocaveisPerfilDrawer(drawer);
+            if (focaveis.length === 0) {
+                e.preventDefault();
+                return;
+            }
+
+            const primeiro = focaveis[0];
+            const ultimo = focaveis[focaveis.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === primeiro || !drawer.contains(document.activeElement)) {
+                    e.preventDefault();
+                    ultimo.focus();
+                }
+            } else if (document.activeElement === ultimo || !drawer.contains(document.activeElement)) {
+                e.preventDefault();
+                primeiro.focus();
+            }
+        }
+    };
+
+    const focusinHandler = (e) => {
+        if (!drawer.classList.contains('ativa') || haModalSuperiorAberto()) return;
+        if (!drawer.contains(e.target)) {
+            e.stopPropagation();
+            const focaveis = _obterFocaveisPerfilDrawer(drawer);
+            if (focaveis[0]) focaveis[0].focus();
+        }
+    };
+
+    document.addEventListener('keydown', keyHandler, true);
+    document.addEventListener('focusin', focusinHandler, true);
+
+    _removerTravaPerfilDrawer = () => {
+        document.removeEventListener('keydown', keyHandler, true);
+        document.removeEventListener('focusin', focusinHandler, true);
+        _removerTravaPerfilDrawer = null;
+    };
+}
 
 window.abrirPerfilDrawer = function (e) {
     if (e) e.preventDefault();
@@ -216,22 +303,28 @@ window.abrirPerfilDrawer = function (e) {
     if (!drawer || !containerPerfil) return;
     if (drawer.classList.contains('ativa')) return;
 
+    _perfilDrawerTrigger = document.activeElement;
+
     if (typeof window.suspenderVideosGifFeed === 'function') {
         window.suspenderVideosGifFeed('perfil-drawer');
     }
 
     containerPerfil.innerHTML = '<p class="drawer-perfil-loading" role="status">Carregando configurações de perfil...</p>';
-    
+
     // 🔥 ECO-02: Remove o inert ao abrir
     drawer.inert = false;
     drawer.classList.add('ativa');
     drawer.setAttribute('aria-hidden', 'false');
-    
+
     if (backdrop) backdrop.style.display = 'block';
     document.body.style.overflow = 'hidden';
 
     const botaoConfig = document.querySelector('.btn-config');
     if (botaoConfig) botaoConfig.setAttribute('aria-expanded', 'true');
+
+    _ativarTravaPerfilDrawer(drawer);
+    const btnFechar = drawer.querySelector('.btn-fechar-drawer');
+    if (btnFechar) btnFechar.focus();
 
     const controller = new AbortController();
     perfilDrawerAbortController = controller;
@@ -270,9 +363,20 @@ window.fecharPerfilDrawer = function () {
         perfilDrawerAbortController = null;
     }
 
-    // 🔥 ECO-01/02: Devolve o foco antes de aplicar inert
+    if (typeof _removerTravaPerfilDrawer === 'function') {
+        _removerTravaPerfilDrawer();
+    }
+
     const botaoConfig = document.querySelector('.btn-config');
-    if (botaoConfig) botaoConfig.focus();
+    const destinoFoco = (
+        _perfilDrawerTrigger &&
+        _perfilDrawerTrigger !== document.body &&
+        document.body.contains(_perfilDrawerTrigger) &&
+        typeof _perfilDrawerTrigger.focus === 'function'
+    ) ? _perfilDrawerTrigger : botaoConfig;
+    _perfilDrawerTrigger = null;
+
+    if (destinoFoco) destinoFoco.focus();
 
     if (drawer) {
         drawer.inert = true; // 🔥 ECO-02: Aplica inert ao fechar
@@ -281,7 +385,7 @@ window.fecharPerfilDrawer = function () {
     }
     if (backdrop) backdrop.style.display = 'none';
     if (botaoConfig) botaoConfig.setAttribute('aria-expanded', 'false');
-    
+
     document.body.style.overflow = 'auto';
     if (typeof window.retomarVideosGifFeed === 'function') {
         window.retomarVideosGifFeed('perfil-drawer');
@@ -1910,7 +2014,13 @@ function toggleNexus() {
 
 
 // ==================== MODAL DE CONFIRMAÇÃO (DIALOG NATIVO - GLOBAL) ====================
-let _fecharConfirmacaoAtiva = null;
+// ✨ DJÊ – 2026-11-27 (blindagem de interação + acessibilidade)
+//    - Como o diálogo usa .show() (não-modal), foi adicionado um escudo na fase
+//      de captura (pointerdown, click, focusin, keydown) que:
+//      1) Trava gestos de arraste do translateL e cliques na camada de trás;
+//      2) Prende o ciclo de Tab entre "Cancelar" e "Sim" sem vazar foco;
+//      3) Fecha com Escape e cancela qualquer diálogo anterior ainda aberto
+//         (_fecharConfirmacaoAtiva) sem vazar Promise nem listeners.let _fecharConfirmacaoAtiva = null;
 
 window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') {
     // Se já houver uma confirmação aberta, encerra a anterior como cancelada antes de abrir a nova
