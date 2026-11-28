@@ -301,8 +301,6 @@ nav {
 
 .submenu li:hover {
     background: rgba(255, 255, 255, 0.11);
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
     border-radius: 8px;
 }
@@ -2714,8 +2712,8 @@ textarea[name="bio"] {
         transform: translateX(-50%);
     }
 
-    .lista-comentarios-social {
-        padding: 30px 20px;
+     .lista-comentarios-social {
+        padding: 20px 16px;
         max-width: 700px;
     }
 
@@ -2747,6 +2745,20 @@ textarea[name="bio"] {
 
 
 }
+
+@media (min-width: 1024px) and (min-height: 768px) {
+     body.modo-swipe-ativo .filtros-wrapper-retratil.aberto {
+        top: 80px;
+        top: calc(1cqi + 80px);
+    }
+
+ .lista-comentarios-social {
+        padding: 30px 24px;
+        max-width: 900px;
+    }
+    
+}
+
 
 
 @media (orientation: landscape) and (max-height: 500px) {

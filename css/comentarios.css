@@ -1294,14 +1294,20 @@ select#vibe-comentario {
     }
 }
 
-@container feedComentarios (min-width: 501px) and (max-width: 800px) {
+
+@container feedComentarios (min-width: 501px) and (max-width: 700px) {
     .comentario-item {
-        max-width: 65%;
+        max-width: 62%;
     }
 
     .comentario-filho {
         margin-left: 0;
-        max-width: 60%;
+        max-width: 57%;
+    }
+
+     .comentario-filho {
+        margin-left: 0;
+        max-width: 52%;
     }
 
     .comentario-linha-filha {
@@ -1310,18 +1316,19 @@ select#vibe-comentario {
     }
 }
 
-@container feedComentarios (min-width: 801px) {
+
+@container feedComentarios (min-width: 701px) {
     .comentario-item {
-        max-width: 55%;
+        max-width: 48%;
     }
 
     .comentario-item.meu-comentario {
-        max-width: 45%;
+        max-width: 44%;
     }
 
     .comentario-filho {
         margin-left: 0;
-        max-width: 48%;
+        max-width: 40%;
     }
 
     .comentario-linha-filha {
@@ -1329,6 +1336,7 @@ select#vibe-comentario {
         margin-left: 40px;
     }
 }
+
 
 /* IMAGENS NOS COMENTÁRIOS */
 .comentario-media-wrapper {

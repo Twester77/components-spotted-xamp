@@ -158,10 +158,11 @@ if (!in_array($pagina_atual, $paginas_comunidade)) {
 <!-- ============================================================
      LIGHTBOX UNIVERSAL – MODAL PARA POSTS
      ============================================================ -->
-<div id="lightbox-modal" class="lightbox-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="lightbox-titulo">
+<div id="lightbox-modal" class="lightbox-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="lightbox-titulo" aria-hidden="true" inert>
     <div class="lightbox-content">
-        <button class="lightbox-fechar-btn" onclick="fecharLightbox()" aria-label="Fechar">
-            <i class="fas fa-times"></i>
+        <h2 id="lightbox-titulo" class="sr-only">Detalhes da publicação</h2>
+        <button type="button" class="lightbox-fechar-btn" onclick="fecharLightbox()" aria-label="Fechar">
+            <i class="fas fa-times" aria-hidden="true"></i>
         </button>
         <div id="lightbox-body">
             <!-- O conteúdo será carregado via AJAX -->

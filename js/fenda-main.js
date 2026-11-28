@@ -211,8 +211,9 @@ function abrirDenuncia(idPost) {
 //      escapava para os cards de trás e abria o fallback de acessibilidade do
 //      translateL por cima da tela.
 //    - Ignora a interceptação se houver modal superior aberto (dialog-confirmacao
-//      ou lightboxes) e devolve o foco ao botão gatilho ao fechar.let perfilDrawerAbortController = null;
+//      ou lightboxes) e devolve o foco ao botão gatilho ao fechar.
 
+let perfilDrawerAbortController = null;
 let _perfilDrawerTrigger = null;
 let _removerTravaPerfilDrawer = null;
 
@@ -302,6 +303,9 @@ window.abrirPerfilDrawer = function (e) {
 
     if (!drawer || !containerPerfil) return;
     if (drawer.classList.contains('ativa')) return;
+    if (typeof window.fecharSidebarFenda === 'function') {
+        window.fecharSidebarFenda({ restaurarFoco: false });
+    }
 
     _perfilDrawerTrigger = document.activeElement;
 
@@ -389,6 +393,164 @@ window.fecharPerfilDrawer = function () {
     document.body.style.overflow = 'auto';
     if (typeof window.retomarVideosGifFeed === 'function') {
         window.retomarVideosGifFeed('perfil-drawer');
+    }
+};
+
+// ==================== SIDEBAR DRAWER (MENU PRINCIPAL) ====================
+// ✨ DJÊ – 2026-11-27: centraliza abertura/fechamento da sidebar com trava de foco
+//    (Tab / Shift+Tab + focusin), Escape e suporte a role="dialog" aria-modal="true".
+let _sidebarTrigger = null;
+let _removerTravaSidebar = null;
+
+function _obterFocaveisSidebar(sidebar) {
+    const seletor = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    return Array.from(sidebar.querySelectorAll(seletor)).filter((el) => {
+        if (el.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
+        const submenu = el.closest('.submenu');
+        if (submenu && !submenu.closest('.menu-item.dropdown.active')) {
+            return false;
+        }
+        const style = window.getComputedStyle(el);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+    });
+}
+
+function _ativarTravaSidebar(sidebar) {
+    if (typeof _removerTravaSidebar === 'function') {
+        _removerTravaSidebar();
+    }
+
+    const haCamadaSuperiorAberta = () => {
+        const perfilDrawer = document.getElementById('perfil-drawer');
+        const dialogConfirm = document.getElementById('dialog-confirmacao');
+        const lightboxManual = document.getElementById('modal-lightbox-fenda');
+        const lightboxUniversal = document.getElementById('lightbox-modal');
+        const modalSair = document.getElementById('modal-sair-fenda');
+        return Boolean(
+            (perfilDrawer && perfilDrawer.classList.contains('ativa')) ||
+            (dialogConfirm && dialogConfirm.open) ||
+            lightboxManual ||
+            (lightboxUniversal && lightboxUniversal.style.display !== 'none') ||
+            (modalSair && modalSair.style.display !== 'none')
+        );
+    };
+
+    const keyHandler = (e) => {
+        if (!sidebar.classList.contains('ativa') || haCamadaSuperiorAberta()) return;
+
+        if (e.key === 'Escape') {
+            if (e.defaultPrevented) return;
+            e.preventDefault();
+            e.stopPropagation();
+            window.fecharSidebarFenda();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            const focaveis = _obterFocaveisSidebar(sidebar);
+            if (focaveis.length === 0) {
+                e.preventDefault();
+                return;
+            }
+
+            const primeiro = focaveis[0];
+            const ultimo = focaveis[focaveis.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === primeiro || !sidebar.contains(document.activeElement)) {
+                    e.preventDefault();
+                    ultimo.focus();
+                }
+            } else if (document.activeElement === ultimo || !sidebar.contains(document.activeElement)) {
+                e.preventDefault();
+                primeiro.focus();
+            }
+        }
+    };
+
+    const focusinHandler = (e) => {
+        if (!sidebar.classList.contains('ativa') || haCamadaSuperiorAberta()) return;
+        if (!sidebar.contains(e.target)) {
+            e.stopPropagation();
+            const focaveis = _obterFocaveisSidebar(sidebar);
+            if (focaveis[0]) focaveis[0].focus();
+        }
+    };
+
+    document.addEventListener('keydown', keyHandler, true);
+    document.addEventListener('focusin', focusinHandler, true);
+
+    _removerTravaSidebar = () => {
+        document.removeEventListener('keydown', keyHandler, true);
+        document.removeEventListener('focusin', focusinHandler, true);
+        _removerTravaSidebar = null;
+    };
+}
+
+window.abrirSidebarFenda = function () {
+    const sidebar = document.getElementById('sidebar-fenda');
+    const overlay = document.getElementById('overlay-fenda');
+    const btnMenu = document.getElementById('btn-menu-hamburguer');
+    const btnFechar = document.getElementById('btn-fechar-menu');
+
+    if (!sidebar || sidebar.classList.contains('ativa')) return;
+
+    const perfilDrawer = document.getElementById('perfil-drawer');
+    if (perfilDrawer && perfilDrawer.classList.contains('ativa') && typeof window.fecharPerfilDrawer === 'function') {
+        window.fecharPerfilDrawer();
+    }
+
+    _sidebarTrigger = document.activeElement;
+
+    if (typeof window.suspenderVideosGifFeed === 'function') {
+        window.suspenderVideosGifFeed('sidebar-fenda');
+    }
+
+    sidebar.inert = false;
+    sidebar.classList.add('ativa');
+    sidebar.setAttribute('aria-hidden', 'false');
+    if (overlay) overlay.classList.add('ativa');
+    if (btnMenu) btnMenu.setAttribute('aria-expanded', 'true');
+
+    _ativarTravaSidebar(sidebar);
+    if (btnFechar) btnFechar.focus();
+};
+
+window.fecharSidebarFenda = function ({ restaurarFoco = true } = {}) {
+    const sidebar = document.getElementById('sidebar-fenda');
+    const overlay = document.getElementById('overlay-fenda');
+    const btnMenu = document.getElementById('btn-menu-hamburguer');
+
+    if (typeof _removerTravaSidebar === 'function') {
+        _removerTravaSidebar();
+    }
+
+    if (restaurarFoco) {
+        const destinoFoco = (
+            _sidebarTrigger &&
+            _sidebarTrigger !== document.body &&
+            document.body.contains(_sidebarTrigger) &&
+            typeof _sidebarTrigger.focus === 'function'
+        ) ? _sidebarTrigger : btnMenu;
+        if (destinoFoco) destinoFoco.focus();
+    }
+    _sidebarTrigger = null;
+
+    if (sidebar) {
+        sidebar.querySelectorAll('.menu-item.dropdown').forEach((item) => {
+            item.classList.remove('active');
+            const trigger = item.querySelector('.menu-trigger');
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        });
+        sidebar.inert = true;
+        sidebar.classList.remove('ativa');
+        sidebar.setAttribute('aria-hidden', 'true');
+    }
+    if (overlay) overlay.classList.remove('ativa');
+    if (btnMenu) btnMenu.setAttribute('aria-expanded', 'false');
+
+    if (typeof window.retomarVideosGifFeed === 'function') {
+        window.retomarVideosGifFeed('sidebar-fenda');
     }
 };
 
@@ -1803,31 +1965,42 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log('[PERFIL] configurarFormularioPerfil() executado.');
     }
 
-    // 🔥 ECO-05: Alterado o seletor de 'a' para '.menu-trigger'
-    const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > .menu-trigger');
-    dropdownLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            if (window.innerWidth <= 1024) {
-                const pai = this.parentElement;
-                const estaAberto = pai.classList.contains('active');
-                
-                if (!estaAberto) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    document.querySelectorAll('.menu-item.dropdown').forEach(m => {
-                        m.classList.remove('active');
-                        const t = m.querySelector('.menu-trigger');
-                        if (t) t.setAttribute('aria-expanded', 'false');
-                    });
-                    pai.classList.add('active');
-                    this.setAttribute('aria-expanded', 'true');
-                } else {
-                    pai.classList.remove('active');
-                    this.setAttribute('aria-expanded', 'false');
-                }
-            }
+    // 🔥 ECO-05 + ✨ DJÊ – 2026-11-27: expande/recolhe submenus via click, Enter ou Espaço em qualquer tela
+const dropdownLinks = document.querySelectorAll('.menu-item.dropdown > .menu-trigger');
+dropdownLinks.forEach(link => {
+    link.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const pai = this.parentElement;
+        const estaAberto = pai.classList.contains('active');
+
+        document.querySelectorAll('.menu-item.dropdown').forEach(m => {
+            m.classList.remove('active');
+            const t = m.querySelector('.menu-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
         });
+
+        if (!estaAberto) {
+            pai.classList.add('active');
+            this.setAttribute('aria-expanded', 'true');
+        }
     });
+});
+
+    const btnMenuSidebar = document.getElementById('btn-menu-hamburguer');
+    const btnFecharSidebar = document.getElementById('btn-fechar-menu');
+    const overlaySidebar = document.getElementById('overlay-fenda');
+
+    if (btnMenuSidebar) {
+        btnMenuSidebar.addEventListener('click', () => window.abrirSidebarFenda());
+    }
+    if (btnFecharSidebar) {
+        btnFecharSidebar.addEventListener('click', () => window.fecharSidebarFenda());
+    }
+    if (overlaySidebar) {
+        overlaySidebar.addEventListener('click', () => window.fecharSidebarFenda());
+    }
 
     // INICIALIZA AS PREFERÊNCIAS A PARTIR DOS INPUTS HIDDEN (FONTE DA VERDADE)
     inicializarPreferenciasAPartirDoDOM();
@@ -2020,8 +2193,9 @@ function toggleNexus() {
 //      1) Trava gestos de arraste do translateL e cliques na camada de trás;
 //      2) Prende o ciclo de Tab entre "Cancelar" e "Sim" sem vazar foco;
 //      3) Fecha com Escape e cancela qualquer diálogo anterior ainda aberto
-//         (_fecharConfirmacaoAtiva) sem vazar Promise nem listeners.let _fecharConfirmacaoAtiva = null;
+//         (_fecharConfirmacaoAtiva) sem vazar Promise nem listeners.
 
+let _fecharConfirmacaoAtiva = null;
 window.exibirConfirmacao = function (mensagem, titulo = '⚠️ Confirmação') {
     // Se já houver uma confirmação aberta, encerra a anterior como cancelada antes de abrir a nova
     if (typeof _fecharConfirmacaoAtiva === 'function') {
@@ -2227,6 +2401,8 @@ const LightboxManager = {
     modalElement: null,
     bodyElement: null,
     abortController: null,
+    triggerElement: null,
+    _removerTravaFoco: null,
     isOpen: false,
 
     init() {
@@ -2243,17 +2419,84 @@ const LightboxManager = {
             }
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isOpen) {
-                this.fechar();
-            }
-        });
-
         document.addEventListener('lightbox-fechar', () => {
             this.fechar();
         });
 
         console.log('[LightboxManager] Inicializado.');
+    },
+
+    _obterFocaveis() {
+        if (!this.modalElement) return [];
+        const seletor = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+        return Array.from(this.modalElement.querySelectorAll(seletor)).filter((el) => {
+            if (el.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
+            const style = window.getComputedStyle(el);
+            return style.display !== 'none' && style.visibility !== 'hidden';
+        });
+    },
+
+    _ativarTravaFoco() {
+        if (typeof this._removerTravaFoco === 'function') {
+            this._removerTravaFoco();
+        }
+
+        const haCamadaSuperior = () => {
+            const lightboxImagem = document.getElementById('modal-lightbox-fenda');
+            const dialogConfirm = document.getElementById('dialog-confirmacao');
+            return Boolean(lightboxImagem || (dialogConfirm && dialogConfirm.open));
+        };
+
+        const keyHandler = (e) => {
+            if (!this.isOpen || haCamadaSuperior()) return;
+
+            if (e.key === 'Escape') {
+                if (e.defaultPrevented) return;
+                e.preventDefault();
+                e.stopPropagation();
+                this.fechar();
+                return;
+            }
+
+            if (e.key === 'Tab') {
+                const focaveis = this._obterFocaveis();
+                if (focaveis.length === 0) {
+                    e.preventDefault();
+                    return;
+                }
+
+                const primeiro = focaveis[0];
+                const ultimo = focaveis[focaveis.length - 1];
+
+                if (e.shiftKey) {
+                    if (document.activeElement === primeiro || !this.modalElement.contains(document.activeElement)) {
+                        e.preventDefault();
+                        ultimo.focus();
+                    }
+                } else if (document.activeElement === ultimo || !this.modalElement.contains(document.activeElement)) {
+                    e.preventDefault();
+                    primeiro.focus();
+                }
+            }
+        };
+
+        const focusinHandler = (e) => {
+            if (!this.isOpen || haCamadaSuperior()) return;
+            if (!this.modalElement.contains(e.target)) {
+                e.stopPropagation();
+                const focaveis = this._obterFocaveis();
+                if (focaveis[0]) focaveis[0].focus();
+            }
+        };
+
+        document.addEventListener('keydown', keyHandler, true);
+        document.addEventListener('focusin', focusinHandler, true);
+
+        this._removerTravaFoco = () => {
+            document.removeEventListener('keydown', keyHandler, true);
+            document.removeEventListener('focusin', focusinHandler, true);
+            this._removerTravaFoco = null;
+        };
     },
 
     // 🔥 NOVO: parâmetro 'apenasPost' – se true, suprime os comentários
@@ -2263,8 +2506,8 @@ const LightboxManager = {
             return;
         }
 
-        if (this.isOpen) {
-            this.fechar();
+        if (!this.isOpen) {
+            this.triggerElement = document.activeElement;
         }
 
         if (this.abortController) {
@@ -2274,15 +2517,22 @@ const LightboxManager = {
 
         this.abortController = new AbortController();
 
+        this.modalElement.inert = false;
+        this.modalElement.setAttribute('aria-hidden', 'false');
         this.modalElement.style.display = 'flex';
         this.bodyElement.innerHTML = `
-            <div class="lightbox-loading">
+            <div class="lightbox-loading" role="status">
                 <div class="spinner"></div>
                 <p>Carregando post...</p>
             </div>
         `;
         this.isOpen = true;
+        window._modalAberto = true;
         document.body.style.overflow = 'hidden';
+
+        this._ativarTravaFoco();
+        const btnFechar = this.modalElement.querySelector('.lightbox-fechar-btn');
+        if (btnFechar) btnFechar.focus();
 
         // 🔥 CONSTRÓI A URL COM O PARÂMETRO ADICIONAL
         const url = `post-detalhe.php?id=${postId}&_=${Date.now()}` + (apenasPost ? '&apenas_post=1' : '');
@@ -2317,9 +2567,9 @@ const LightboxManager = {
                 if (this.isOpen) {
                     this.bodyElement.innerHTML = `
                         <div class="lightbox-erro">
-                            <i class="fas fa-exclamation-triangle"></i>
+                            <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
                             <p>Erro ao carregar o post. Tente novamente.</p>
-                            <button onclick="LightboxManager.fechar()" class="btn-fechar-erro">Fechar</button>
+                            <button type="button" onclick="LightboxManager.fechar()" class="btn-fechar-erro">Fechar</button>
                         </div>
                     `;
                 }
@@ -2334,9 +2584,26 @@ const LightboxManager = {
             this.abortController = null;
         }
 
+        if (typeof this._removerTravaFoco === 'function') {
+            this._removerTravaFoco();
+        }
+
+        const destinoFoco = (
+            this.triggerElement &&
+            this.triggerElement !== document.body &&
+            document.body.contains(this.triggerElement) &&
+            typeof this.triggerElement.focus === 'function'
+        ) ? this.triggerElement : null;
+        this.triggerElement = null;
+
+        if (destinoFoco) destinoFoco.focus();
+
+        this.modalElement.inert = true;
+        this.modalElement.setAttribute('aria-hidden', 'true');
         this.modalElement.style.display = 'none';
         this.bodyElement.innerHTML = '';
         this.isOpen = false;
+        window._modalAberto = false;
         document.body.style.overflow = '';
     },
 

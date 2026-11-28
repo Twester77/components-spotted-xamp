@@ -177,7 +177,7 @@ body:not(.modo-swipe-ativo) .post-content {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
     -webkit-user-drag: none;
     -webkit-font-smoothing: antialiased;
     height: auto;
@@ -224,7 +224,7 @@ body.modo-swipe-ativo .spotted-card * {
 /* Renderização sob demanda apenas no Grid tradicional de rolagem */
 body:not(.modo-swipe-ativo) .container-feed .spotted-card {
     content-visibility: auto;
-    contain-intrinsic-size: auto 400px; 
+    contain-intrinsic-size: auto 380px; 
 }
 
 

@@ -1,4 +1,11 @@
-<aside id="sidebar-fenda" class="sidebar-fenda" aria-hidden="true" inert>
+<!-- ✨ DJÊ – 2026-11-27: role="dialog" + aria-modal="true" para isolar navegação do TalkBack/VoiceOver -->
+<aside id="sidebar-fenda"
+    class="sidebar-fenda"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menu de navegação"
+    aria-hidden="true"
+    inert>
     <div class="sidebar-header">
         <button id="btn-fechar-menu" aria-label="Fechar menu de navegação">✕</button>
     </div>
@@ -82,37 +89,3 @@
 </aside>
 
 <div id="overlay-fenda" class="overlay" aria-hidden="true"></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const btnMenu = document.getElementById('btn-menu-hamburguer');
-        const sidebar = document.getElementById('sidebar-fenda');
-        const overlay = document.getElementById('overlay-fenda');
-        const btnFechar = document.getElementById('btn-fechar-menu');
-
-        function fecharTudo() {
-            // 🔥 ECO-01: Devolve o foco ao botão hambúrguer antes de ocultar
-            if (btnMenu) btnMenu.focus();
-
-            // 🔥 ECO-02: Aplica inert ao fechar
-            sidebar.inert = true;
-            sidebar.classList.remove('ativa');
-            overlay.classList.remove('ativa');
-            btnMenu.setAttribute('aria-expanded', 'false');
-            sidebar.setAttribute('aria-hidden', 'true');
-        }
-
-        if (btnMenu) btnMenu.addEventListener('click', () => {
-            // 🔥 ECO-02: Remove inert ao abrir
-            sidebar.inert = false;
-            sidebar.classList.add('ativa');
-            overlay.classList.add('ativa');
-            btnMenu.setAttribute('aria-expanded', 'true');
-            sidebar.setAttribute('aria-hidden', 'false');
-            if (btnFechar) btnFechar.focus();
-        });
-
-        if (btnFechar) btnFechar.addEventListener('click', fecharTudo);
-        if (overlay) overlay.addEventListener('click', fecharTudo);
-    });
-</script>
